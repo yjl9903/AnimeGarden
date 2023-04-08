@@ -65,6 +65,9 @@ importers:
 
   packages/worker:
     dependencies:
+      animegarden:
+        specifier: workspace:*
+        version: link:../animegarden
       itty-router:
         specifier: ^3.0.12
         version: 3.0.12
@@ -74,10 +77,6 @@ importers:
       kysely-d1:
         specifier: ^0.3.0
         version: 0.3.0(kysely@0.24.2)
-    devDependencies:
-      breadc:
-        specifier: ^0.9.0
-        version: 0.9.0
 
 packages:
 
@@ -391,10 +390,6 @@ packages:
       '@babel/helper-string-parser': 7.19.4
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
-
-  /@breadc/color@0.9.0:
-    resolution: {integrity: sha512-NDOrslds8q+pSwpZyFRdFsMoIkHsf5czDAPsG9kFHdN/JUcOHILYk5DL5L8Ewig2rZ9VqCmxcUK5MgzTOOI2Gw==}
-    dev: true
 
   /@cloudflare/kv-asset-handler@0.2.0:
     resolution: {integrity: sha512-MVbXLbTcAotOPUj0pAMhVtJ+3/kFkwJqc5qNOleOZTv6QkZZABDMS21dSrSlVswEHwrpWC03e4fWytjqKvuE2A==}
@@ -1704,12 +1699,6 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       fill-range: 7.0.1
-
-  /breadc@0.9.0:
-    resolution: {integrity: sha512-+xB2332Xmo3e8xe7lBu07OQJGx7TKGOWMuwZ34FmWzQ1mJKidr6Hb0Mm5vxnMoXHlxIxc40XdRm2TD9D59H0Kg==}
-    dependencies:
-      '@breadc/color': 0.9.0
-    dev: true
 
   /browserslist@4.21.4:
     resolution: {integrity: sha512-CBHJJdDmgjl3daYjN5Cp5kbTf1mUhZoS+beLklHIvkOWscs83YAhLlF3Wsh/lciQYAcbBJgTOD44VtG31ZM4Hw==}
