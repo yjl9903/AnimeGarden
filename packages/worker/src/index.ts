@@ -7,7 +7,7 @@ import { handleScheduled } from './scheduled';
 
 const router = Router();
 
-router.get('/', () => makeResponse('This is AnimeGarden'));
+router.get('/', () => makeResponse({ message: 'This is AnimeGarden' }));
 
 router.get('/resources', async (request, env: Env) => {
   const database = makeDatabase(env.database);
