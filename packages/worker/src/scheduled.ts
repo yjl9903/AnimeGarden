@@ -62,7 +62,7 @@ export async function handleScheduled(event: ScheduledEvent, env: Env, ctx: Exec
           publisher: +r.publisher.id
         }))
       )
-      .onConflict((oc) => oc.doUpdateSet((eb) => ({ createdAt: eb.ref('createdAt') })));
+      .onConflict((oc) => oc.doNothing());
     const insert = await query.execute();
     const inserted = insert.reduce((acc, r) => acc + (r.numInsertedOrUpdatedRows ?? 0n), 0n);
     if (inserted === 0n) {
