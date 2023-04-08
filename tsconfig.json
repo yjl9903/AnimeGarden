@@ -3,7 +3,10 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "lib": ["ESNext"],
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
     "moduleResolution": "Node",
     "esModuleInterop": true,
     "strict": true,
@@ -12,5 +15,7 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

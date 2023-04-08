@@ -1,3 +1,3 @@
-export function hello() {
-  return 'world';
-}
+export * from './dmhy';
+
+export * from './types';
