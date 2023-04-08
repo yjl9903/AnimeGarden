@@ -6,8 +6,13 @@ export const get: APIRoute = (context) => {
   const cf = getRuntime(context.request);
 
   return {
+    headers: {
+      'Cache-Control': `public, max-age=3600`,
+      'Content-Type': 'application/json;charset=utf-8'
+    },
     body: JSON.stringify({
-      status: 'ok'
+      status: 'ok',
+      resources: []
     })
   };
 };
