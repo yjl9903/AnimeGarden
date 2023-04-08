@@ -20,7 +20,16 @@ router.get('/resources', async (request, env: Env) => {
 
   const sql = database
     .selectFrom('resource')
-    .selectAll()
+    .innerJoin('user', 'user.id', 'resource.publisher')
+    .select([
+      'title',
+      'href',
+      'type',
+      'magnet',
+      'user.id as publisher_id',
+      'user.name as publisher_name',
+      'createdAt'
+    ])
     .offset((page - 1) * pageSize)
     .limit(pageSize);
 
