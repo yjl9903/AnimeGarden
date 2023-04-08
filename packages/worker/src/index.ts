@@ -27,6 +27,7 @@ router.get('/resources', async (request, env: Env) => {
       'href',
       'type',
       'magnet',
+      'size',
       'user.id as publisher_id',
       'user.name as publisher_name',
       'team.id as fansub_id',
@@ -42,6 +43,7 @@ router.get('/resources', async (request, env: Env) => {
     href: r.href,
     type: r.type,
     magnet: r.magnet,
+    size: r.size,
     createdAt: new Date(r.createdAt),
     fansub:
       r.fansub_id && r.fansub_name
