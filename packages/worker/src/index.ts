@@ -7,6 +7,12 @@ import { handleScheduled } from './scheduled';
 
 const router = Router();
 
+router.get('/resources', async (request, env: Env) => {
+  const database = makeDatabase(env.database);
+  const params = request.query;
+  return makeResponse({});
+});
+
 router.get('/users', async (request, env: Env) => {
   const database = makeDatabase(env.database);
   const users = await database.selectFrom('user').selectAll().execute();
@@ -31,7 +37,7 @@ export default {
 };
 
 function makeResponse(body: Object, init?: ResponseInit) {
-  return new Response(JSON.stringify({ ...body, status: 'ok' }), {
+  return new Response(JSON.stringify({ status: 'ok', ...body }), {
     ...init,
     headers: { ...init?.headers, 'Content-Type': 'application/json;charset=utf-8' }
   });
