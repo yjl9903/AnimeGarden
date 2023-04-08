@@ -56,12 +56,13 @@ export async function handleScheduled(event: ScheduledEvent, env: Env, ctx: Exec
           type: r.type,
           magnet: r.magnet,
           size: r.size,
-          createdAt: new Date(r.createdAt).getTime(),
+          // Convert to UTC+8
+          createdAt: new Date(r.createdAt).getTime() - 8 * 60 * 60 * 1000,
           fansub: r.fansub ? +r.fansub.id : undefined,
           publisher: +r.publisher.id
         }))
       )
-      .onConflict((oc) => oc.doNothing());
+      .onConflict((oc) => oc.doUpdateSet((eb) => ({ createdAt: eb.ref('createdAt') })));
     const insert = await query.execute();
     const inserted = insert.reduce((acc, r) => acc + (r.numInsertedOrUpdatedRows ?? 0n), 0n);
     if (inserted === 0n) {
