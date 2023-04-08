@@ -9,17 +9,6 @@ const router = Router();
 
 router.get('/', () => makeResponse({ message: 'This is AnimeGarden' }));
 
-router.get('/refresh', async (request, env: Env) => {
-  try {
-    // @ts-ignore
-    await handleScheduled(undefined, env, undefined);
-    return makeResponse({});
-  } catch (error) {
-    console.log(error);
-    return makeErrorResponse({}, { status: 400 });
-  }
-});
-
 router.get('/resources', async (request, env: Env) => {
   const database = makeDatabase(env.database);
 
@@ -83,6 +72,16 @@ router.get('/resources', async (request, env: Env) => {
   }
 });
 
+router.put('/resources', async (request, env: Env) => {
+  try {
+    await handleScheduled(env);
+    return makeResponse({});
+  } catch (error) {
+    console.log(error);
+    return makeErrorResponse({}, { status: 400 });
+  }
+});
+
 router.get('/users', async (request, env: Env) => {
   const database = makeDatabase(env.database);
   const users = await database.selectFrom('user').selectAll().execute();
@@ -102,7 +101,7 @@ export default {
     return router.handle(request, env, ctx);
   },
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
-    ctx.waitUntil(handleScheduled(event, env, ctx));
+    ctx.waitUntil(handleScheduled(env));
   }
 };
 

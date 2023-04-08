@@ -3,7 +3,7 @@ import type { Env } from './types';
 
 import { fetchPage } from 'animegarden';
 
-export async function handleScheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
+export async function handleScheduled(env: Env) {
   const database = makeDatabase(env.database);
   const teams = new Set<number>();
   const users = new Set<number>();
