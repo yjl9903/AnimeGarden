@@ -12,7 +12,18 @@ router.get('/', () => makeResponse({ message: 'This is AnimeGarden' }));
 router.get('/resources', async (request, env: Env) => {
   const database = makeDatabase(env.database);
   const params = request.query;
-  return makeResponse({});
+
+  const { page = '1' } = params;
+  const pageSize = 100;
+
+  const resources = await database
+    .selectFrom('resource')
+    .selectAll()
+    .offset((+page - 1) * pageSize)
+    .limit(pageSize)
+    .execute();
+
+  return makeResponse({ resources });
 });
 
 router.get('/users', async (request, env: Env) => {
@@ -27,7 +38,7 @@ router.get('/teams', async (request, env: Env) => {
   return makeResponse({ teams });
 });
 
-router.all('*', () => makeResponse({ status: 'error', message: '404 NOT FOUND' }, { status: 404 }));
+router.all('*', () => makeErrorResponse({ message: '404 NOT FOUND' }, { status: 404 }));
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
@@ -37,6 +48,13 @@ export default {
     ctx.waitUntil(handleScheduled(event, env, ctx));
   }
 };
+
+function makeErrorResponse(body: Object, init?: ResponseInit) {
+  return new Response(JSON.stringify({ status: 'error', ...body }), {
+    ...init,
+    headers: { ...init?.headers, 'Content-Type': 'application/json;charset=utf-8' }
+  });
+}
 
 function makeResponse(body: Object, init?: ResponseInit) {
   return new Response(JSON.stringify({ status: 'ok', ...body }), {
