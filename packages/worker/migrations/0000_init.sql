@@ -25,7 +25,7 @@ create table resource
     type      TEXT    not null,
     magnet    TEXT    not null,
     size      TEXT    not null,
-    createdAt TEXT    not null,
+    createdAt integer not null,
     publisher integer not null,
     fansub    integer
 );

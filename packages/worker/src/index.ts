@@ -31,14 +31,15 @@ router.get('/resources', async (request, env: Env) => {
       'createdAt'
     ])
     .offset((page - 1) * pageSize)
-    .limit(pageSize);
+    .limit(pageSize)
+    .orderBy('createdAt', 'desc');
 
   const resources = (await sql.execute()).map((r) => ({
     title: r.title,
     href: r.href,
     type: r.type,
     magnet: r.magnet,
-    createdAt: r.createdAt,
+    createdAt: new Date(r.createdAt),
     publisher: {
       id: r.publisher_id,
       name: r.publisher_name

@@ -14,7 +14,7 @@ cli.command('resource', 'Generate resources sql').action(async (option) => {
     lines.push(`INSERT OR IGNORE INTO resource (title, href, type, magnet, size, createdAt, publisher, fansub)
     VALUES ('${escape(r.title)}', '${escape(r.href)}', '${escape(r.type)}', '${escape(
       r.magnet
-    )}', '${escape(r.size)}', '${escape(r.createdAt)}', ${r.publisher.id}, ${
+    )}', '${escape(r.size)}', ${new Date(r.createdAt).getTime()}, ${r.publisher.id}, ${
       r.fansub ? r.fansub.id : 'null'
     });
     `);

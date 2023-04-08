@@ -29,7 +29,7 @@ export interface ResourceTable {
 
   publisher: number;
 
-  createdAt: string;
+  createdAt: number;
 }
 
 export interface Database {
