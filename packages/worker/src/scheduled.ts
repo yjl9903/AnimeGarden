@@ -47,6 +47,9 @@ export async function handleScheduled(event: ScheduledEvent, env: Env, ctx: Exec
       }
     }
 
+    console.log(teams);
+    console.log(users);
+
     const query = database.insertInto('resource').values(
       res.map((r) => ({
         title: r.title,
@@ -61,6 +64,7 @@ export async function handleScheduled(event: ScheduledEvent, env: Env, ctx: Exec
     );
     const insert = await query.execute();
     const inserted = insert.reduce((acc, r) => acc + (r.numInsertedOrUpdatedRows ?? 0n), 0n);
+    console.log('Insert:', inserted);
     if (inserted === 0n) {
       break;
     }
