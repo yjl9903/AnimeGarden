@@ -11,19 +11,31 @@ router.get('/', () => makeResponse({ message: 'This is AnimeGarden' }));
 
 router.get('/resources', async (request, env: Env) => {
   const database = makeDatabase(env.database);
-  const params = request.query;
 
-  const { page = '1' } = params;
-  const pageSize = 100;
+  const params = resolveParams();
+  if (!params) {
+    return makeErrorResponse({ message: 'Request is not valid' });
+  }
+  const { page, pageSize } = params;
 
-  const resources = await database
+  const sql = database
     .selectFrom('resource')
     .selectAll()
-    .offset((+page - 1) * pageSize)
-    .limit(pageSize)
-    .execute();
+    .offset((page - 1) * pageSize)
+    .limit(pageSize);
+
+  const resources = await sql.execute();
 
   return makeResponse({ resources });
+
+  function resolveParams(): { page: number; pageSize: number } | undefined {
+    const rawPage = request.params.page || '1';
+    if (!(typeof rawPage === 'string' && /^\d+$/.test(rawPage))) {
+      return undefined;
+    }
+    const pageSize = 100;
+    return { page: +rawPage, pageSize };
+  }
 });
 
 router.get('/users', async (request, env: Env) => {
