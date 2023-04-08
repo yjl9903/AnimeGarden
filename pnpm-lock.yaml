@@ -57,6 +57,19 @@ importers:
         specifier: ^0.29.8
         version: 0.29.8
 
+  packages/anitomy:
+    dependencies:
+      cheerio:
+        specifier: 1.0.0-rc.12
+        version: 1.0.0-rc.12
+      ofetch:
+        specifier: ^1.0.1
+        version: 1.0.1
+    devDependencies:
+      vitest:
+        specifier: ^0.29.8
+        version: 0.29.8
+
   packages/app:
     dependencies:
       '@astrojs/cloudflare':

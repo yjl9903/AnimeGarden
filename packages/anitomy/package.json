@@ -1,0 +1,47 @@
+{
+  "name": "anitomy",
+  "version": "0.0.0",
+  "description": "",
+  "keywords": [],
+  "homepage": "https://github.com/yjl9903/AnimeGarden#readme",
+  "bugs": {
+    "url": "https://github.com/yjl9903/AnimeGarden/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yjl9903/AnimeGarden.git"
+  },
+  "license": "MIT",
+  "author": "XLor",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "format": "prettier --write src/**/*.ts test/**/*.ts",
+    "test": "vitest",
+    "test:ci": "vitest --run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "vitest": "^0.29.8"
+  },
+  "engines": {
+    "node": ">=v18.15.0"
+  },
+  "dependencies": {
+    "cheerio": "1.0.0-rc.12",
+    "ofetch": "^1.0.1"
+  }
+}
