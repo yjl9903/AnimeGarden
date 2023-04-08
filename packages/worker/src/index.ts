@@ -21,6 +21,7 @@ router.get('/resources', async (request, env: Env) => {
   const sql = database
     .selectFrom('resource')
     .innerJoin('user', 'user.id', 'resource.publisher')
+    .leftJoin('team', 'team.id', 'resource.fansub')
     .select([
       'title',
       'href',
@@ -28,6 +29,8 @@ router.get('/resources', async (request, env: Env) => {
       'magnet',
       'user.id as publisher_id',
       'user.name as publisher_name',
+      'team.id as fansub_id',
+      'team.name as fansub_name',
       'createdAt'
     ])
     .offset((page - 1) * pageSize)
@@ -40,6 +43,13 @@ router.get('/resources', async (request, env: Env) => {
     type: r.type,
     magnet: r.magnet,
     createdAt: new Date(r.createdAt),
+    fansub:
+      r.fansub_id && r.fansub_name
+        ? {
+            id: r.fansub_id,
+            name: r.fansub_name
+          }
+        : undefined,
     publisher: {
       id: r.publisher_id,
       name: r.publisher_name
