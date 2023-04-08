@@ -1,7 +1,32 @@
+import { Router } from 'itty-router';
+
 import type { Env } from './types';
+
+import { makeDatabase } from './database';
+
+const router = Router();
+
+router.get('/users', async (request, env: Env) => {
+  const database = makeDatabase(env.database);
+  const users = await database.selectFrom('user').selectAll().execute();
+  return makeResponse({ users });
+});
+
+router.get('/users', async (request, env: Env) => {
+  const database = makeDatabase(env.database);
+  const teams = await database.selectFrom('team').selectAll().execute();
+  return makeResponse({ teams });
+});
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
-    return new Response('hello');
+    return router.handle(request, env, ctx);
   }
 };
+
+function makeResponse(body: Object, init?: ResponseInit) {
+  return new Response(JSON.stringify({ ...body, status: 'ok' }), {
+    ...init,
+    headers: { ...init?.headers, 'Content-Type': 'application/json;charset=utf-8' }
+  });
+}
