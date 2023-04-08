@@ -1,18 +1,20 @@
 import type { APIRoute } from 'astro';
 
-import { getRuntime } from '@astrojs/cloudflare/runtime';
+import useReflare from 'reflare';
 
-export const get: APIRoute = (context) => {
-  const cf = getRuntime<Env>(context.request);
+export const get: APIRoute = async ({ request }) => {
+  const reflare = await useReflare();
 
-  return {
-    headers: {
-      'Cache-Control': `public, max-age=3600`,
-      'Content-Type': 'application/json;charset=utf-8'
-    },
-    body: JSON.stringify({
-      status: 'ok',
-      resources: []
-    })
-  };
+  reflare.push({
+    path: '/*',
+    upstream: {
+      domain: 'animegarden.yjl9903.workers.dev',
+      protocol: 'https',
+      onRequest: (request: Request, url: string): Request => {
+        return new Request(url.replace(/^\/api/, ''), request);
+      }
+    }
+  });
+
+  return reflare.handle(request);
 };
