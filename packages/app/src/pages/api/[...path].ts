@@ -11,7 +11,7 @@ export const get: APIRoute = async ({ request }) => {
   return new Response(response.body, {
     headers: {
       'cache-control': `public, max-age=3600`,
-      ...response.headers,
+      ...Object.fromEntries(response.headers.entries()),
       'access-control-allow-origin': '*',
       'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
       'access-control-allow-headers': 'Content-Type, Cache-Control, Authorization'
