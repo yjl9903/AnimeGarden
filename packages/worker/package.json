@@ -5,7 +5,13 @@
   "scripts": {
     "deploy": "wrangler publish",
     "dev": "wrangler dev",
+    "migration:apply": "wrangler d1 migrations apply animegarden",
+    "migration:create": "wrangler d1 migrations create animegarden",
     "test": "vitest"
+  },
+  "dependencies": {
+    "kysely": "^0.24.2",
+    "kysely-d1": "^0.3.0"
   },
   "packageManager": "pnpm@8.1.1"
 }
