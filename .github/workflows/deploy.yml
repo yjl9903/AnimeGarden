@@ -1,10 +1,10 @@
 name: CI
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-  pull_request:
 
 jobs:
   build:
@@ -24,8 +24,7 @@ jobs:
       - name: Install
         run: pnpm install
 
-      - name: Build
-        run: pnpm build
-
-      - name: Test
-        run: pnpm test:ci
+      - name: Deploy
+        run: pnpm -C packages/worker run deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}

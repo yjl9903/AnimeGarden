@@ -4,6 +4,9 @@ importers:
 
   .:
     devDependencies:
+      '@cloudflare/workers-types':
+        specifier: ^4.20230404.0
+        version: 4.20230404.0
       '@types/fs-extra':
         specifier: ^11.0.1
         version: 11.0.1
@@ -59,10 +62,8 @@ importers:
       astro:
         specifier: ^2.0.10
         version: 2.0.10(@types/node@18.15.11)
-    devDependencies:
-      '@cloudflare/workers-types':
-        specifier: ^4.20230404.0
-        version: 4.20230404.0
+
+  packages/worker: {}
 
 packages:
 
