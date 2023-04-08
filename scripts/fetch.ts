@@ -24,4 +24,4 @@ async function main(start: number, dist: string) {
   }
 }
 
-main(1, 'chunk/0');
+main(1196, 'chunk/1');

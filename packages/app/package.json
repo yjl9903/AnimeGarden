@@ -1,0 +1,17 @@
+{
+  "name": "@animegarden/app",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "astro": "astro",
+    "build": "astro build && node scripts/postbuild.mjs",
+    "dev": "astro dev",
+    "preview": "astro preview",
+    "start": "astro dev"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^6.2.2",
+    "astro": "^2.0.10"
+  }
+}
