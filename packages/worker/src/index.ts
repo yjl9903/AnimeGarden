@@ -3,6 +3,7 @@ import { Router } from 'itty-router';
 import type { Env } from './types';
 
 import { makeDatabase } from './database';
+import { handleScheduled } from './scheduled';
 
 const router = Router();
 
@@ -23,6 +24,9 @@ router.all('*', () => makeResponse({ status: 'error', message: '404 NOT FOUND' }
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
     return router.handle(request, env, ctx);
+  },
+  async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
+    ctx.waitUntil(handleScheduled(event, env, ctx));
   }
 };
 
