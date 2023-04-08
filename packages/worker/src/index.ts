@@ -47,12 +47,14 @@ router.get('/resources', async (request, env: Env) => {
       r.fansub_id && r.fansub_name
         ? {
             id: r.fansub_id,
-            name: r.fansub_name
+            name: r.fansub_name,
+            href: `https://share.dmhy.org/topics/list/team_id/${r.fansub_id}`
           }
         : undefined,
     publisher: {
       id: r.publisher_id,
-      name: r.publisher_name
+      name: r.publisher_name,
+      href: `https://share.dmhy.org/topics/list/user_id/${r.publisher_id}`
     }
   }));
 
