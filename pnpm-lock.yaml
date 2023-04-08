@@ -62,9 +62,6 @@ importers:
       astro:
         specifier: ^2.0.10
         version: 2.0.10(@types/node@18.15.11)
-      reflare:
-        specifier: ^1.1.1
-        version: 1.1.1
 
   packages/worker:
     dependencies:
@@ -3748,10 +3745,6 @@ packages:
     dependencies:
       picomatch: 2.3.1
     dev: true
-
-  /reflare@1.1.1:
-    resolution: {integrity: sha512-W3S78aCwbVVPzmmgK7PYhHSQBkDaX1ZzaOAarTHFHawoKmlg714b/fpv8gv7hnkOyIbQP0qlFn2laIBgCwOtWA==}
-    dev: false
 
   /rehype-parse@8.0.4:
     resolution: {integrity: sha512-MJJKONunHjoTh4kc3dsM1v3C9kGrrxvA3U8PxZlP2SjH8RNUSrb+lF7Y0KVaUDnGH2QZ5vAn7ulkiajM9ifuqg==}
