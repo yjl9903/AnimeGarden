@@ -18,6 +18,8 @@ router.get('/teams', async (request, env: Env) => {
   return makeResponse({ teams });
 });
 
+router.all('*', () => makeResponse({ status: 'error', message: '404 NOT FOUND' }, { status: 404 }));
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
     return router.handle(request, env, ctx);
