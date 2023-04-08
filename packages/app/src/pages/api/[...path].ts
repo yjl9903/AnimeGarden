@@ -7,6 +7,9 @@ export const get: APIRoute = async ({ request }) => {
   url.port = '';
   url.pathname = url.pathname.replace(/^\/api/, '');
   const response = await fetch(new Request(url, request));
-  response.headers.set('Cache-Control', `public, max-age=3600`);
+  response.headers.set('cache-control', `public, max-age=3600`);
+  response.headers.set('access-control-allow-origin', `*`);
+  response.headers.set('access-control-allow-methods', `GET, POST, PUT, DELETE, OPTIONS`);
+  response.headers.set('access-control-allow-headers', `Content-Type, Cache-Control`);
   return response;
 };
