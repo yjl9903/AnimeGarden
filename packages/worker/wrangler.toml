@@ -4,9 +4,8 @@ compatibility_date = "2023-03-22"
 
 [triggers]
 crons = [
-  "*/30 * * * *",
+  "5 */1 * * *",
   "*/5 0 * * *",
-  "*/10 1 * * *",
 ]
 
 [[d1_databases]]
