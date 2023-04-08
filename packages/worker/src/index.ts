@@ -9,6 +9,12 @@ const router = Router();
 
 router.get('/', () => makeResponse({ message: 'This is AnimeGarden' }));
 
+router.get('/refresh', async (request, env: Env) => {
+  // @ts-ignore
+  await handleScheduled(undefined, env, undefined);
+  return makeResponse({});
+});
+
 router.get('/resources', async (request, env: Env) => {
   const database = makeDatabase(env.database);
 
