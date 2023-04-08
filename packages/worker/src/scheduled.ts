@@ -20,9 +20,9 @@ export async function handleScheduled(event: ScheduledEvent, env: Env, ctx: Exec
       }))
     );
     const insert = await query.execute();
-    for (const r of insert) {
-      console.log(r);
+    const inserted = insert.reduce((acc, r) => acc + (r.numInsertedOrUpdatedRows ?? 0n), 0n);
+    if (inserted === 0n) {
+      break;
     }
-    break;
   }
 }
