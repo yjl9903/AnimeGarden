@@ -33,7 +33,17 @@ router.get('/resources', async (request, env: Env) => {
     .offset((page - 1) * pageSize)
     .limit(pageSize);
 
-  const resources = await sql.execute();
+  const resources = (await sql.execute()).map((r) => ({
+    title: r.title,
+    href: r.href,
+    type: r.type,
+    magnet: r.magnet,
+    createdAt: r.createdAt,
+    publisher: {
+      id: r.publisher_id,
+      name: r.publisher_name
+    }
+  }));
 
   return makeResponse({ resources });
 
