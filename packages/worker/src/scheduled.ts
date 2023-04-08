@@ -50,18 +50,21 @@ export async function handleScheduled(event: ScheduledEvent, env: Env, ctx: Exec
     console.log(teams);
     console.log(users);
 
-    const query = database.insertInto('resource').values(
-      res.map((r) => ({
-        title: r.title,
-        href: r.href,
-        type: r.type,
-        magnet: r.magnet,
-        size: r.size,
-        createdAt: new Date(r.createdAt).getTime(),
-        fansub: r.fansub ? +r.fansub.id : undefined,
-        publisher: +r.publisher.id
-      }))
-    );
+    const query = database
+      .insertInto('resource')
+      .values(
+        res.map((r) => ({
+          title: r.title,
+          href: r.href,
+          type: r.type,
+          magnet: r.magnet,
+          size: r.size,
+          createdAt: new Date(r.createdAt).getTime(),
+          fansub: r.fansub ? +r.fansub.id : undefined,
+          publisher: +r.publisher.id
+        }))
+      )
+      .onConflict((oc) => oc.doNothing());
     const insert = await query.execute();
     const inserted = insert.reduce((acc, r) => acc + (r.numInsertedOrUpdatedRows ?? 0n), 0n);
     console.log('Insert:', inserted);
