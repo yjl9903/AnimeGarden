@@ -10,9 +10,14 @@ const router = Router();
 router.get('/', () => makeResponse({ message: 'This is AnimeGarden' }));
 
 router.get('/refresh', async (request, env: Env) => {
-  // @ts-ignore
-  await handleScheduled(undefined, env, undefined);
-  return makeResponse({});
+  try {
+    // @ts-ignore
+    await handleScheduled(undefined, env, undefined);
+    return makeResponse({});
+  } catch (error) {
+    console.log(error);
+    return makeErrorResponse({}, { status: 400 });
+  }
 });
 
 router.get('/resources', async (request, env: Env) => {
