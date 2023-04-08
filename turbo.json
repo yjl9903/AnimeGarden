@@ -1,0 +1,23 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**/*.ts", "test/**/*.ts"]
+    },
+    "test:ci": {
+      "dependsOn": ["build", "typecheck"],
+      "inputs": ["src/**/*.ts", "test/**/*.ts"]
+    },
+    "format": {
+      "inputs": ["src/**/*.ts", "test/**/*.ts"]
+    },
+    "dev": {
+      "cache": false
+    }
+  }
+}

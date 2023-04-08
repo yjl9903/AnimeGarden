@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "packageRules": [
+    {
+      "matchDepTypes": ["devDependencies", "packageManager"],
+      "automerge": true
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "automerge": true
+    }
+  ],
+  "rangeStrategy": "bump"
+}

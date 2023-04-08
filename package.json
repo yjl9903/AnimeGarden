@@ -1,0 +1,28 @@
+{
+  "name": "@animegarden/monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "format": "turbo run format --parallel",
+    "release": "bumpp package.json packages/*/package.json --commit --push --tag && pnpm -r publish --access public",
+    "test:ci": "turbo run test:ci",
+    "typecheck": "turbo run typecheck",
+    "preversion": "turbo run test:ci",
+    "postversion": "turbo run build"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.11",
+    "bumpp": "latest",
+    "turbo": "^1.8.8",
+    "typescript": "^5.0.4",
+    "unbuild": "^1.2.0",
+    "vite": "^4.2.1",
+    "vitest": "^0.29.8"
+  },
+  "packageManager": "pnpm@8.1.1",
+  "engines": {
+    "node": ">=v18.15.0"
+  }
+}
