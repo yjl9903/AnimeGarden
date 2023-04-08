@@ -12,7 +12,7 @@ router.get('/users', async (request, env: Env) => {
   return makeResponse({ users });
 });
 
-router.get('/users', async (request, env: Env) => {
+router.get('/teams', async (request, env: Env) => {
   const database = makeDatabase(env.database);
   const teams = await database.selectFrom('team').selectAll().execute();
   return makeResponse({ teams });
