@@ -72,7 +72,7 @@ router.get('/resources', async (request, env: Env) => {
   }
 });
 
-router.put('/resources', async (request, env: Env) => {
+router.post('/resources', async (request, env: Env) => {
   try {
     await handleScheduled(env);
     return makeResponse({});
