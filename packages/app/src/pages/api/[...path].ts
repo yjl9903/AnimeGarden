@@ -6,5 +6,7 @@ export const get: APIRoute = async ({ request }) => {
   url.host = 'animegarden.yjl9903.workers.dev';
   url.port = '';
   url.pathname = url.pathname.replace(/^\/api/, '');
-  return fetch(new Request(url, request));
+  const response = await fetch(new Request(url, request));
+  response.headers.set('Cache-Control', `public, max-age=3600`);
+  return response;
 };
