@@ -59,6 +59,10 @@ importers:
       astro:
         specifier: ^2.0.10
         version: 2.0.10(@types/node@18.15.11)
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: ^4.20230404.0
+        version: 4.20230404.0
 
 packages:
 
@@ -377,6 +381,10 @@ packages:
     resolution: {integrity: sha512-MVbXLbTcAotOPUj0pAMhVtJ+3/kFkwJqc5qNOleOZTv6QkZZABDMS21dSrSlVswEHwrpWC03e4fWytjqKvuE2A==}
     dependencies:
       mime: 3.0.0
+    dev: true
+
+  /@cloudflare/workers-types@4.20230404.0:
+    resolution: {integrity: sha512-fG3oaJX1icfsGV74nhx1+AC6opvZsGqnpx6FvrcVqQaBmCNkjKNqDRFrpasXWFiOIvysBXHKQAzsAJkBZgnM+A==}
     dev: true
 
   /@emmetio/abbreviation@2.3.1:
