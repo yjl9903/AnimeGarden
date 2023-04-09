@@ -11,7 +11,7 @@ cli.command('resource', 'Generate resources sql').action(async (option) => {
   const res = await readResources();
   const lines = [];
   for (const r of res) {
-    lines.push(`INSERT IGNORE INTO resource (title, href, type, magnet, size, createdAt, publisher, fansub)
+    lines.push(`INSERT IGNORE INTO resource (title, href, type, magnet, size, createdAt, publisherId, fansubId)
     VALUES ('${escape(r.title)}', '${escape(r.href)}', '${escape(r.type)}', '${escape(
       r.magnet
     )}', '${escape(r.size)}', ${new Date(r.createdAt).getTime()}, ${r.publisher.id}, ${
