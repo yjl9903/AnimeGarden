@@ -5,13 +5,13 @@ import type { Env } from './types';
 
 import { handleScheduled } from './scheduled';
 
-const prisma = new PrismaClient();
-
 const router = Router();
 
 router.get('/', () => makeResponse({ message: 'This is AnimeGarden' }));
 
 router.get('/resources', async (request, env: Env) => {
+  const prisma = new PrismaClient();
+
   const params = resolveParams();
   if (!params) {
     return makeErrorResponse({ message: 'Request is not valid' });
@@ -74,11 +74,13 @@ router.put('/resources', async (request, env: Env) => {
 });
 
 router.get('/users', async (request, env: Env) => {
+  const prisma = new PrismaClient();
   const users = await prisma.user.findMany();
   return makeResponse({ users });
 });
 
 router.get('/teams', async (request, env: Env) => {
+  const prisma = new PrismaClient();
   const teams = await prisma.team.findMany();
   return makeResponse({ teams });
 });
