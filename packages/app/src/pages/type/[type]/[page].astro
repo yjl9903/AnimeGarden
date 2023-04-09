@@ -37,7 +37,7 @@ const resources = await fetchResources(page, { type: type in QueryType ? QueryTy
 ---
 
 <Layout title={`${type} 资源 | Anime Garden`}>
-  <div class="mt-4vh">
+  <div class="mt-4vh w-full">
     <ResourceTable resources={resources} />
     <Pagination page={page} prefix={`/type/${type}/`} />
   </div>

@@ -15,7 +15,7 @@ const resources = await fetchResources(page, { publisher: +publisher });
 ---
 
 <Layout title="所有资源 | Anime Garden">
-  <div class="mt-4vh">
+  <div class="mt-4vh w-full">
     <ResourceTable resources={resources} />
     <Pagination page={page} prefix={`/publisher/${publisher}/`} />
   </div>
