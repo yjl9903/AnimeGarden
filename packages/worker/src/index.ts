@@ -54,17 +54,17 @@ router.get('/resources', async (request, env: Env) => {
   return makeResponse({ resources });
 
   function resolveParams(): { page: number; pageSize: number } | undefined {
-    let page = readNum(request.params.page || '1');
-    let pageSize = readNum(request.params.count || '100');
-    if (!page || !pageSize) return undefined;
+    let page = readNum(request.query.page || '1');
+    let pageSize = readNum(request.query.count || '100');
 
+    if (!page || !pageSize) return undefined;
     if (page <= 0) page = 1;
     if (pageSize <= 0) pageSize = 100;
     if (pageSize > 100) pageSize = 100;
 
     return { page, pageSize };
 
-    function readNum(raw: string) {
+    function readNum(raw: string | string[]) {
       if (typeof raw === 'string' && /^\d+$/.test(raw)) {
         return +raw;
       } else {
