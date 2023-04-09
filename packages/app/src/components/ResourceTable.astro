@@ -8,20 +8,39 @@ export interface Props {
 const { resources } = Astro.props;
 ---
 
-<table>
-  <thead>
-    <tr>
-      <th>标题</th>
+<table class="resources-table border border-collapse rounded-md">
+  <thead class="resources-table-head text-xl border-b">
+    <tr class="divide-x">
+      <th class="py4 w-[200px]">上传时间</th>
+      <th class="py4">标题</th>
+      <th class="py4 w-[64px]">下载</th>
     </tr>
   </thead>
-  <tbody
+  <tbody class="resources-table-body divide-y"
     >{
       resources.map((r) => (
-        <tr>
-          <td>{r.title}</td>
+        <tr class="divide-x">
+          <td class="text-center">{new Date(r.createdAt).toLocaleString()}</td>
+          <td>
+            <a href={r.href} target="_blank" class="text-link">
+              {r.title}
+            </a>
+          </td>
+          <td class="text-center">
+            <a
+              href={r.magnet}
+              class="i-carbon-download text-xl text-base-500 hover:text-base-900"
+            />
+          </td>
         </tr>
       ))
     }</tbody
   >
   <tfoot></tfoot>
 </table>
+
+<style>
+  .resources-table-body td {
+    --at-apply: px2 py1;
+  }
+</style>

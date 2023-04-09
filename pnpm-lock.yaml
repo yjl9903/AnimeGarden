@@ -88,6 +88,9 @@ importers:
         specifier: ^2.0.10
         version: 2.0.10(@types/node@18.15.11)
     devDependencies:
+      '@iconify-json/carbon':
+        specifier: ^1.1.16
+        version: 1.1.16
       '@onekuma/preset.css':
         specifier: ^0.1.9
         version: 0.1.9
@@ -1071,6 +1074,12 @@ packages:
 
   /@iarna/toml@2.2.5:
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
+    dev: true
+
+  /@iconify-json/carbon@1.1.16:
+    resolution: {integrity: sha512-AD8bcnRSGA0WfcGEass2FbA0sagrUzrpFx5WchuDy3uf7yKBWumdypdQK121DH321fQDl5+zZQ26T6gC9knwUQ==}
+    dependencies:
+      '@iconify/types': 2.0.0
     dev: true
 
   /@iconify/types@2.0.0:
