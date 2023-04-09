@@ -20,10 +20,10 @@ cli.command('resource', 'Generate resources sql').action(async (option) => {
     `);
   }
   const sc: string[] = [];
-  const chunkSize = 500;
+  const chunkSize = 1000;
   for (let i = 0, p = 0; i < lines.length; p += 1, i += chunkSize) {
     const chunk = lines.slice(i, i + chunkSize);
-    sc.push(`pnpm -C packages/worker d1:execute data/resource-${p}.sql`);
+    sc.push(`pnpm -C packages/worker db:exec data/resource-${p}.sql`);
     fs.writeFile(`./packages/worker/data/resource-${p}.sql`, chunk.join('\n'), 'utf-8');
   }
   await fs.writeFile('upload.ps1', sc.join('\n'), 'utf-8');
