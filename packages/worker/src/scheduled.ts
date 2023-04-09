@@ -70,6 +70,7 @@ export async function handleScheduled(env: Env) {
       skipDuplicates: true
     });
 
+    if (count === 0) break;
     console.log(`There are ${count} resources inserted`);
   }
 }
