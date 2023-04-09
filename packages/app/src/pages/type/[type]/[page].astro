@@ -11,7 +11,7 @@ if (!type) {
   return Astro.redirect('/');
 }
 
-const QueryType = {
+const QueryType: Record<string, string> = {
   动画: '動畫',
   季度全集: '季度全集',
   音乐: '音樂',
@@ -36,7 +36,7 @@ const QueryType = {
 const resources = await fetchResources(page, { type: type in QueryType ? QueryType[type] : type });
 ---
 
-<Layout title={`${type} | Anime Garden`}>
+<Layout title={`${type} 资源 | Anime Garden`}>
   <div class="mt-4vh">
     <ResourceTable resources={resources} />
     <Pagination page={page} prefix={`/type/${type}/`} />

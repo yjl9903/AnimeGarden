@@ -1,8 +1,6 @@
 ---
 import now from '~build/time';
 
-import { ResourceType } from 'animegarden';
-
 import Dropdown from '../components/Dropdown.astro'
 
 export interface Props {
@@ -13,7 +11,7 @@ const { title } = Astro.props;
 
 const url = Astro.url.pathname;
 
-const types = ["动画", "季度全集", "音乐", "动漫音乐", "同人音乐", "流行音乐", "日剧", "RAW", "其他", "漫画", "港台原版", "日文原版", "游戏", "电脑游戏", "主机游戏", "掌机游戏", "网络游戏 ", "游戏周边", "特摄"]
+const types = ["动画", "季度全集", "音乐", "动漫音乐", "同人音乐", "流行音乐", "日剧", "RAW", "其他", "漫画", "港台原版", "日文原版", "游戏", "电脑游戏", "主机游戏", "掌机游戏", "网络游戏 ", "游戏周边", "特摄"];
 ---
 
 <!DOCTYPE html>
