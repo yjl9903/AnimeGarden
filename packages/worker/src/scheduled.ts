@@ -1,10 +1,10 @@
-import type { Env } from './types';
-
 import { fetchPage } from 'animegarden';
-import { PrismaClient } from '@prisma/client/edge';
+
+import type { Env } from './types';
+import { makePrisma } from './prisma';
 
 export async function handleScheduled(env: Env) {
-  const prisma = new PrismaClient();
+  const prisma = makePrisma(env);
 
   const teams = new Set<number>();
   const users = new Set<number>();

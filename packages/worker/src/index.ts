@@ -1,16 +1,16 @@
 import { Router } from 'itty-router';
-import { PrismaClient } from '@prisma/client/edge';
 
 import type { Env } from './types';
 
 import { handleScheduled } from './scheduled';
+import { makePrisma } from './prisma';
 
 const router = Router();
 
 router.get('/', () => makeResponse({ message: 'This is AnimeGarden' }));
 
 router.get('/resources', async (request, env: Env) => {
-  const prisma = new PrismaClient();
+  const prisma = makePrisma(env);
 
   const params = resolveParams();
   if (!params) {
@@ -74,13 +74,13 @@ router.put('/resources', async (request, env: Env) => {
 });
 
 router.get('/users', async (request, env: Env) => {
-  const prisma = new PrismaClient();
+  const prisma = makePrisma(env);
   const users = await prisma.user.findMany();
   return makeResponse({ users });
 });
 
 router.get('/teams', async (request, env: Env) => {
-  const prisma = new PrismaClient();
+  const prisma = makePrisma(env);
   const teams = await prisma.team.findMany();
   return makeResponse({ teams });
 });
