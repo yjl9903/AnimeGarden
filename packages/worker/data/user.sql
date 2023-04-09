@@ -1780,7 +1780,6 @@ INSERT IGNORE INTO user (id, name) VALUES (64545, '公子扶蘇');
 INSERT IGNORE INTO user (id, name) VALUES (448087, 'a1271428');
 INSERT IGNORE INTO user (id, name) VALUES (435774, '253357094');
 INSERT IGNORE INTO user (id, name) VALUES (253734, 'kleela');
-INSERT IGNORE INTO user (id, name) VALUES (0, '');
 INSERT IGNORE INTO user (id, name) VALUES (278432, '水妙梅');
 INSERT IGNORE INTO user (id, name) VALUES (55712, 'neoswatty');
 INSERT IGNORE INTO user (id, name) VALUES (46089, '7ue');
