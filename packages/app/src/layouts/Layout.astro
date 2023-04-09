@@ -1,0 +1,85 @@
+---
+import now from '~build/time';
+
+export interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main class="main pt-16vh lt-lg:pt-4vh pb-8vh">
+      <slot />
+    </main>
+    <footer class="main pb-8vh" select-none>
+      <div font-sm text-base-400>
+        <a href="https://github.com/yjl9903" target="_blank" class="text-link-active">XLor</a>
+        <span> © 2023</span>
+      </div>
+      <div font-sm text-base-400>
+        Rendered at {now.toLocaleString('zh-CN', { timeZone: 'Asia/ShangHai' })}
+      </div>
+      <div font-sm text-base-400>Powered by Astro</div>
+      <div font-sm text-base-400>Hosted on Cloudflare Pages</div>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  @import '@onekuma/preset.css';
+
+  :root {
+    /* --accent: 124, 58, 237; */
+    --accent: 0, 204, 170;
+    --accent-gradient: linear-gradient(
+      45deg,
+      rgb(var(--accent)),
+      /* #da62c4 30%, */ #08c,
+      white 60%
+    );
+
+    --color-bg-primary: #fcfcfc;
+    --color-bg-secondary: #fafafa;
+  }
+
+  html {
+    background-color: var(--color-bg-primary);
+
+    --at-apply: font-sans;
+  }
+
+  code {
+    --at-apply: font-mono;
+  }
+
+  .main {
+    --at-apply: mx-w-[68vw] lg:w-4xl md:w-[46rem] lt-md:mx-w-[90vw] lt-md:w-[90vw];
+    --at-apply: mx-auto;
+  }
+
+  .text-gradient {
+    background-image: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 400%;
+    background-position: 0%;
+  }
+
+  .text-link {
+    --at-apply: text-sky-700 hover:text-sky-500;
+  }
+
+  .text-link-active {
+    --at-apply: hover:text-sky-600;
+  }
+</style>
