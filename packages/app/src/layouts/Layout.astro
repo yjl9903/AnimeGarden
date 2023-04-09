@@ -1,6 +1,10 @@
 ---
 import now from '~build/time';
 
+import { ResourceType } from 'animegarden';
+
+import Dropdown from '../components/Dropdown.astro'
+
 export interface Props {
   title: string;
 }
@@ -8,6 +12,8 @@ export interface Props {
 const { title } = Astro.props;
 
 const url = Astro.url.pathname;
+
+const types = ["动画", "季度全集", "音乐", "动漫音乐", "同人音乐", "流行音乐", "日剧", "RAW", "其他", "漫画", "港台原版", "日文原版", "游戏", "电脑游戏", "主机游戏", "掌机游戏", "网络游戏 ", "游戏周边", "特摄"]
 ---
 
 <!DOCTYPE html>
@@ -27,7 +33,16 @@ const url = Astro.url.pathname;
       <div class="main flex gap6 justify-start select-none text-base-500">
         <a href="/" class="header-item block" x-active={url === '/'}>首页</a>
         <a href="/resources/1" class="header-item block" x-active={url.startsWith('/resources/')}>所有资源</a>
-        <div class="header-item cursor-pointer" x-active={url.startsWith('/type/')}>类型</div>
+        <div class="header-item cursor-pointer" x-active={url.startsWith('/type/')}>
+          <Dropdown>
+            <span>类型</span>
+            <div slot="dropdown" class="mt4">
+              <div class="w-[120px] rounded-md border bg-light-100 divide-y">
+                {types.map(t => <a href={`/type/${t}/1`} class="px2 py1 block text-base-600 text-link-active">{t}</a>)}
+              </div>
+            </div>
+          </Dropdown>
+        </div>
         <div class="header-item cursor-pointer" x-active={url.startsWith('/fansub/')}>字幕组</div>
         <a href="https://share.dmhy.org/" target="_blank" class="header-item block">动漫花园</a>
       </div>
