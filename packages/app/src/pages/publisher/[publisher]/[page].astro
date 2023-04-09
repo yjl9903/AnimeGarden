@@ -1,0 +1,22 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ResourceTable from '../../../components/ResourceTable.astro';
+import Pagination from '../../../components/Pagination.astro';
+
+import { fetchResources } from '../../../fetch';
+
+const { page: _page, publisher } = Astro.params;
+const page = _page ? +_page : 1;
+if (!publisher) {
+  return Astro.redirect('/');
+}
+
+const resources = await fetchResources(page, { publisher: +publisher });
+---
+
+<Layout title="Anime Garden">
+  <div class="mt-8vh">
+    <ResourceTable resources={resources} />
+    <Pagination page={page} prefix={`/publisher/${publisher}/`} />
+  </div>
+</Layout>

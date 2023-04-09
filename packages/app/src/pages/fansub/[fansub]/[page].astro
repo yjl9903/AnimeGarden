@@ -1,0 +1,22 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ResourceTable from '../../../components/ResourceTable.astro';
+import Pagination from '../../../components/Pagination.astro';
+
+import { fetchResources } from '../../../fetch';
+
+const { page: _page, fansub } = Astro.params;
+const page = _page ? +_page : 1;
+if (!fansub) {
+  return Astro.redirect('/');
+}
+
+const resources = await fetchResources(page, { fansub: +fansub });
+---
+
+<Layout title="Anime Garden">
+  <div class="mt-8vh">
+    <ResourceTable resources={resources} />
+    <Pagination page={page} prefix={`/fansub/${fansub}/`} />
+  </div>
+</Layout>

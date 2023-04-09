@@ -79,11 +79,7 @@ const DisplayTypeColor: Record<ResourceType, string> = {
           <td class="py2 pl2">
             <div class="flex items-center justify-start">
               {r.fansub && (
-                <a
-                  href={`https://share.dmhy.org/topics/list/team_id/${r.fansub.id}`}
-                  target="_blank"
-                  class="block"
-                >
+                <a href={`/fansub/${r.fansub.id}/1`} class="block">
                   <Tag text={r.fansub.name} className={`text-xs mr2 hover:bg-gray-300`} />
                 </a>
               )}
@@ -93,10 +89,7 @@ const DisplayTypeColor: Record<ResourceType, string> = {
             </div>
           </td>
           <td class="py2 pl2 text-center">
-            <a
-              href={`https://share.dmhy.org/topics/list/user_id/${r.publisher.id}`}
-              target="_blank"
-            >
+            <a href={`/publisher/${r.publisher.id}/1`}>
               <Tag text={r.publisher.name} className={`text-xs mr2 hover:bg-gray-300`} />
             </a>
           </td>
