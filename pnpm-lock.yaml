@@ -91,6 +91,9 @@ importers:
       '@onekuma/preset.css':
         specifier: ^0.1.9
         version: 0.1.9
+      '@onekuma/reset':
+        specifier: ^0.1.9
+        version: 0.1.9
       '@unocss/reset':
         specifier: ^0.51.0
         version: 0.51.0
@@ -1331,6 +1334,11 @@ packages:
 
   /@onekuma/preset.css@0.1.9:
     resolution: {integrity: sha512-2O3dOqFuPDHIXSTblh/XhWggkN2CLEYWdbW40bHs7l75baThqFtvSsEX5N7ayMzrA8x5imGGxjegKlKous2u9Q==}
+    engines: {node: '>=v16.19.0'}
+    dev: true
+
+  /@onekuma/reset@0.1.9:
+    resolution: {integrity: sha512-xWwdtLrtLB9a1Z0/kFhzcLdk/2EJNbgw1HBybY+CazJQEsYQAzeJ0fQnQzzeVim8dayPvI9xPbf4KyGvmumBrA==}
     engines: {node: '>=v16.19.0'}
     dev: true
 
