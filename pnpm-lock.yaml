@@ -98,8 +98,8 @@ importers:
         specifier: ^0.1.9
         version: 0.1.9
       '@unocss/reset':
-        specifier: ^0.51.0
-        version: 0.51.0
+        specifier: ^0.51.2
+        version: 0.51.2
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -1550,6 +1550,10 @@ packages:
 
   /@unocss/reset@0.51.0:
     resolution: {integrity: sha512-4JPcqWLvhce1LX+t2YAx8dkaFvizbP1Qy/VgpUI8ZmYLCeCifhmAA+N/MYmsg2VpLfkEUBPMhZfPqd7V60vEiw==}
+    dev: true
+
+  /@unocss/reset@0.51.2:
+    resolution: {integrity: sha512-HWn3qSdYT+VE1IiMgsXz5bE9pQF5SXWr7EIjFj2seb+YQkaf266vaUNUM5ln/uD6mWWwuo3TZSrA5+Vz4darkw==}
     dev: true
 
   /@unocss/scope@0.51.0:
