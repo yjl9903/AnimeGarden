@@ -15,7 +15,7 @@ const resources = await fetchResources(page, { fansub: +fansub });
 ---
 
 <Layout title="Anime Garden">
-  <div class="mt-8vh">
+  <div class="mt-4vh">
     <ResourceTable resources={resources} />
     <Pagination page={page} prefix={`/fansub/${fansub}/`} />
   </div>
