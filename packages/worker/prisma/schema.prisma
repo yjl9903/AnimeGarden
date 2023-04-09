@@ -30,5 +30,5 @@ model Resource {
   publisherId Int
   fansub      Team?  @relation(fields: [fansubId], references: [id])
   publisher   User   @relation(fields: [publisherId], references: [id])
-  createdAt   Int
+  createdAt   BigInt
 }
