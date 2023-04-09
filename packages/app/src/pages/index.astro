@@ -1,21 +1,16 @@
 ---
-import type { Resource } from 'animegarden';
-
 import Layout from '../layouts/Layout.astro';
 import ResourceTable from '../components/ResourceTable.astro';
-import { WORKER_BASE } from '../constant';
+import Pagination from '../components/Pagination.astro';
 
-const resources = await fetch(new URL('/resources', 'https://' + WORKER_BASE))
-  .then((r) => r.json())
-  .then((r: any) => r.resources as Resource[]);
+import { fetchResources } from '../fetch';
+
+const resources = await fetchResources(1);
 ---
 
 <Layout title="Anime Garden">
   <div class="mt-8vh">
-    <h1 class="text-4xl font-quicksand font-bold text-center select-none">🌸 Anime Garden</h1>
-  </div>
-
-  <div class="mt-8vh">
     <ResourceTable resources={resources} />
+    <Pagination page={1} prefix="/resources/" />
   </div>
 </Layout>

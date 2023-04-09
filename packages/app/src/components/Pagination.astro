@@ -1,0 +1,22 @@
+---
+export interface Props {
+  page: number;
+
+  prefix: string;
+}
+
+const { page, prefix } = Astro.props;
+---
+
+<div class="flex justify-around mt4 text-base-500 text-lg">
+  <div>
+    <a
+      href={page > 1 ? `${prefix}${page - 1}` : ''}
+      class="underline underline-dotted text-link-active">上一页</a
+    >
+  </div>
+  <div>第 {page} 页</div>
+  <div>
+    <a href={`${prefix}${page + 1}`} class="underline underline-dotted text-link-active">下一页</a>
+  </div>
+</div>

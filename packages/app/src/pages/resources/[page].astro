@@ -1,0 +1,19 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Pagination from '../../components/Pagination.astro';
+import ResourceTable from '../../components/ResourceTable.astro';
+
+import { fetchResources } from '../../fetch';
+
+const { page: _page } = Astro.params;
+
+const page = _page ? +_page : 1;
+const resources = await fetchResources(page);
+---
+
+<Layout title="Resources | Anime Garden">
+  <div class="mt-8vh">
+    <ResourceTable resources={resources} />
+    <Pagination page={page} prefix="/resources/" />
+  </div>
+</Layout>
