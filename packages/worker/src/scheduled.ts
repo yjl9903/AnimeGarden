@@ -13,41 +13,44 @@ export async function handleScheduled(env: Env) {
     const res = await fetchPage({ page, retry: 5 });
 
     // Check teams and users
-    for (const r of res) {
-      if (!users.has(+r.publisher.id)) {
-        const u = await prisma.user.findUnique({
-          where: {
-            id: +r.publisher.id
-          }
-        });
-        if (u) {
+    {
+      const curUsers = new Map(
+        res
+          .map((r) => [+r.publisher.id, r.publisher] as const)
+          .filter(([id, _value]) => !users.has(id))
+      );
+      if (curUsers.size > 0) {
+        const list = await prisma.user.findMany({ where: { id: { in: [...curUsers.keys()] } } });
+        for (const u of list) {
           users.add(u.id);
-        } else {
-          await prisma.user.create({
-            data: {
-              id: +r.publisher.id,
-              name: r.publisher.name
-            }
-          });
-          users.add(+r.publisher.id);
+          curUsers.delete(u.id);
+        }
+        await prisma.user.createMany({
+          data: [...curUsers.values()].map((u) => ({ id: +u.id, name: u.name }))
+        });
+        for (const uid of curUsers.keys()) {
+          users.add(uid);
         }
       }
-      if (r.fansub && !teams.has(+r.fansub.id)) {
-        const u = await prisma.team.findUnique({
-          where: {
-            id: +r.fansub.id
-          }
-        });
-        if (u) {
+    }
+    {
+      const curTeams = new Map(
+        res
+          .filter((r) => r.fansub)
+          .map((r) => [+r.fansub!.id, r.fansub!] as const)
+          .filter(([id, _value]) => !teams.has(id))
+      );
+      if (curTeams.size > 0) {
+        const list = await prisma.team.findMany({ where: { id: { in: [...curTeams.keys()] } } });
+        for (const u of list) {
           teams.add(u.id);
-        } else {
-          await prisma.team.create({
-            data: {
-              id: +r.fansub.id,
-              name: r.fansub.name
-            }
-          });
-          teams.add(+r.fansub.id);
+          curTeams.delete(u.id);
+        }
+        await prisma.team.createMany({
+          data: [...curTeams.values()].map((u) => ({ id: +u.id, name: u.name }))
+        });
+        for (const tid of curTeams.keys()) {
+          teams.add(tid);
         }
       }
     }
