@@ -10,7 +10,7 @@ export const all: APIRoute = async ({ request }) => {
   const response = await fetch(new Request(url, request));
   return new Response(response.body, {
     headers: {
-      'cache-control': `public, max-age=3600`,
+      'cache-control': request.method === 'GET' ? `public, max-age=3600` : 'no-store',
       ...Object.fromEntries(response.headers.entries()),
       'access-control-allow-origin': '*',
       'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
