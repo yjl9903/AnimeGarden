@@ -3,11 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "d1:execute": "wrangler d1 execute animegarden --file",
-    "d1:migration:apply": "wrangler d1 migrations apply animegarden",
-    "d1:migration:create": "wrangler d1 migrations create animegarden",
+    "db:gen": "prisma generate --data-proxy",
     "deploy": "wrangler publish",
     "dev": "wrangler dev",
+    "postinstall": "prisma generate --data-proxy",
     "test": "vitest"
   },
   "dependencies": {
@@ -15,6 +14,10 @@
     "itty-router": "^3.0.12",
     "kysely": "^0.24.2",
     "kysely-d1": "^0.3.0"
+  },
+  "devDependencies": {
+    "@prisma/client": "^4.12.0",
+    "prisma": "^4.12.0"
   },
   "packageManager": "pnpm@8.1.1"
 }
