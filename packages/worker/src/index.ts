@@ -36,7 +36,7 @@ router.get('/resources', async (request, env: Env) => {
     type: r.type,
     magnet: r.magnet,
     size: r.size,
-    createdAt: new Date(r.createdAt),
+    createdAt: new Date(Number(r.createdAt)),
     fansub: r.fansub
       ? {
           id: r.fansub.id,
