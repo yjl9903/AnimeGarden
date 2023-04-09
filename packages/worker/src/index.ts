@@ -16,9 +16,13 @@ router.get('/resources', async (request, env: Env) => {
   if (!params) {
     return makeErrorResponse({ message: 'Request is not valid' });
   }
-  const { page, pageSize } = params;
+  const { page, pageSize, fansub, publisher } = params;
 
   const plan = await prisma.resource.findMany({
+    where: {
+      fansubId: fansub,
+      publisherId: publisher
+    },
     skip: (page - 1) * pageSize,
     take: pageSize,
     orderBy: {
@@ -53,16 +57,20 @@ router.get('/resources', async (request, env: Env) => {
 
   return makeResponse({ resources });
 
-  function resolveParams(): { page: number; pageSize: number } | undefined {
+  function resolveParams():
+    | { page: number; pageSize: number; fansub: number | undefined; publisher: number | undefined }
+    | undefined {
     let page = readNum(request.query.page || '1');
     let pageSize = readNum(request.query.count || '100');
+    const fansub = request.query.fansub ? readNum(request.query.fansub) : undefined;
+    const publisher = request.query.publisher ? readNum(request.query.publisher) : undefined;
 
     if (!page || !pageSize) return undefined;
     if (page <= 0) page = 1;
     if (pageSize <= 0) pageSize = 100;
     if (pageSize > 100) pageSize = 100;
 
-    return { page, pageSize };
+    return { page, pageSize, fansub, publisher };
 
     function readNum(raw: string | string[]) {
       if (typeof raw === 'string' && /^\d+$/.test(raw)) {
