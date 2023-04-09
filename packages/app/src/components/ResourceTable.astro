@@ -1,6 +1,8 @@
 ---
 import type { Resource } from 'animegarden';
 
+import { formatInTimeZone } from 'date-fns-tz';
+
 export interface Props {
   resources: Resource[];
 }
@@ -20,7 +22,9 @@ const { resources } = Astro.props;
     >{
       resources.map((r) => (
         <tr class="divide-x">
-          <td class="text-center">{new Date(r.createdAt).toLocaleString()}</td>
+          <td class="text-center">
+            {formatInTimeZone(new Date(r.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}
+          </td>
           <td>
             <a href={r.href} target="_blank" class="text-link">
               {r.title}
