@@ -76,8 +76,7 @@ router.get('/resources', async (request, env: Env) => {
 
 router.put('/resources', async (request, env: Env) => {
   try {
-    await handleScheduled(env);
-    return makeResponse({});
+    return makeResponse(await handleScheduled(env));
   } catch (error) {
     console.log(error);
     return makeErrorResponse({}, { status: 400 });

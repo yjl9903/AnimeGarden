@@ -6,6 +6,7 @@ import { makePrisma } from './prisma';
 export async function handleScheduled(env: Env) {
   const prisma = makePrisma(env);
 
+  let sum = 0;
   const teams = new Set<number>();
   const users = new Set<number>();
 
@@ -71,6 +72,9 @@ export async function handleScheduled(env: Env) {
     });
 
     if (count === 0) break;
+    sum += count;
     console.log(`There are ${count} resources inserted`);
   }
+
+  return { count: sum };
 }
