@@ -6,6 +6,8 @@ export interface Props {
 }
 
 const { title } = Astro.props;
+
+const url = Astro.url.pathname;
 ---
 
 <!DOCTYPE html>
@@ -18,10 +20,17 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
-    <header class="py-8vh bg-[#fef8f7] border-b">
-      <h1 class="text-4xl font-quicksand font-bold text-center select-none">
+    <header class="w-screen pt-8vh bg-[#fef8f7] border-b">
+      <h1 class="text-4xl pb-8vh font-quicksand font-bold text-center select-none">
         <a href="/">🌸 Anime Garden</a>
       </h1>
+      <div class="main flex gap6 justify-start select-none text-base-500">
+        <a href="/" class="header-item block" x-active={url === '/'}>首页</a>
+        <a href="/resources/1" class="header-item block" x-active={url.startsWith('/resources/')}>所有资源</a>
+        <div class="header-item cursor-pointer" x-active={url.startsWith('/type/')}>类型</div>
+        <div class="header-item cursor-pointer" x-active={url.startsWith('/fansub/')}>字幕组</div>
+        <a href="https://share.dmhy.org/" target="_blank" class="header-item block">动漫花园</a>
+      </div>
     </header>
     <main class="main pb-8vh">
       <slot />
@@ -87,5 +96,15 @@ const { title } = Astro.props;
 
   .text-link-active {
     --at-apply: hover:text-sky-600;
+  }
+
+  /* Header style */
+  .header-item {
+    --at-apply: py2 border-b border-b-3 border-transparent;
+    --at-apply: hover:text-base-800 hover:border-dark-700;
+  }
+  
+  .header-item[x-active] {
+    --at-apply: border-orange-500;
   }
 </style>
