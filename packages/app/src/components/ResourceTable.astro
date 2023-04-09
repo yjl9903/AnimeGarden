@@ -10,18 +10,18 @@ export interface Props {
 const { resources } = Astro.props;
 ---
 
-<table class="resources-table border border-collapse rounded-md">
-  <thead class="resources-table-head text-xl border-b">
-    <tr class="divide-x">
-      <th class="py4 w-[200px]">上传时间</th>
-      <th class="py4">标题</th>
-      <th class="py4 w-[64px]">下载</th>
+<table class="resources-table border-collapse">
+  <thead class="resources-table-head text-lg border-t border-b border-b-2">
+    <tr class="">
+      <th class="py3 w-[200px]">上传时间</th>
+      <th class="py3">标题</th>
+      <th class="py3 w-[128px] text-left px2">下载</th>
     </tr>
   </thead>
-  <tbody class="resources-table-body divide-y"
+  <tbody class="resources-table-body divide-y border-b text-sm"
     >{
       resources.map((r) => (
-        <tr class="divide-x">
+        <tr class="">
           <td class="text-center">
             {formatInTimeZone(new Date(r.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}
           </td>
@@ -30,11 +30,14 @@ const { resources } = Astro.props;
               {r.title}
             </a>
           </td>
-          <td class="text-center">
-            <a
-              href={r.magnet}
-              class="i-carbon-download text-xl text-base-500 hover:text-base-900"
-            />
+          <td class="">
+            <div class="flex gap1 items-center justify-start">
+              <a
+                href={r.magnet}
+                class="i-carbon-download text-xl text-base-500 hover:text-base-900"
+              />
+              <span class="text-xs text-base-400">{r.size}</span>
+            </div>
           </td>
         </tr>
       ))
@@ -45,6 +48,6 @@ const { resources } = Astro.props;
 
 <style>
   .resources-table-body td {
-    --at-apply: px2 py1;
+    --at-apply: px2 py2;
   }
 </style>
