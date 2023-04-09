@@ -11,7 +11,7 @@ cli.command('resource', 'Generate resources sql').action(async (option) => {
   const res = await readResources();
   const lines = [];
   for (const r of res) {
-    lines.push(`INSERT OR IGNORE INTO resource (title, href, type, magnet, size, createdAt, publisher, fansub)
+    lines.push(`INSERT IGNORE INTO resource (title, href, type, magnet, size, createdAt, publisher, fansub)
     VALUES ('${escape(r.title)}', '${escape(r.href)}', '${escape(r.type)}', '${escape(
       r.magnet
     )}', '${escape(r.size)}', ${new Date(r.createdAt).getTime()}, ${r.publisher.id}, ${
@@ -39,7 +39,7 @@ cli.command('user', 'Generate user sql').action(async (option) => {
   }
   const lines = [];
   for (const u of user.values()) {
-    lines.push(`INSERT OR IGNORE INTO user (id, name) VALUES (${u.id}, '${u.name}');`);
+    lines.push(`INSERT IGNORE INTO user (id, name) VALUES (${u.id}, '${escape(u.name)}');`);
   }
   fs.writeFile('./packages/worker/data/user.sql', lines.join('\n'), 'utf-8');
 });
@@ -56,9 +56,7 @@ cli.command('team', 'Generate team sql').action(async (option) => {
   }
   const lines = [];
   for (const u of team.values()) {
-    lines.push(
-      `INSERT OR IGNORE INTO team (id, name) VALUES (${u.id}, '${u.name.replace(`'`, `''`)}');`
-    );
+    lines.push(`INSERT IGNORE INTO team (id, name) VALUES (${u.id}, '${escape(u.name)}');`);
   }
   fs.writeFile('./packages/worker/data/team.sql', lines.join('\n'), 'utf-8');
 });
@@ -66,7 +64,7 @@ cli.command('team', 'Generate team sql').action(async (option) => {
 cli.run(process.argv.slice(2)).catch((err) => console.error(err));
 
 function escape(text: string) {
-  return text.replace(/'/g, `''`);
+  return text.replace(/'/g, `\\'`);
 }
 
 async function readResources(root = 'chunk') {

@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "db:exec": "prisma db execute --file",
     "db:gen": "prisma generate --data-proxy",
     "deploy": "wrangler publish",
     "dev": "wrangler dev",
