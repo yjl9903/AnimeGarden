@@ -55,7 +55,7 @@ router.get('/resources', async (request, env: Env) => {
 
   function resolveParams(): { page: number; pageSize: number } | undefined {
     let page = readNum(request.params.page || '1');
-    let pageSize = readNum(request.params.count || '1');
+    let pageSize = readNum(request.params.count || '100');
     if (!page || !pageSize) return undefined;
 
     if (page <= 0) page = 1;
