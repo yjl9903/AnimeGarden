@@ -13,7 +13,8 @@ const { resources } = Astro.props;
 <table class="resources-table border-collapse">
   <thead class="resources-table-head text-lg border-t border-b border-b-2">
     <tr class="">
-      <th class="py3 w-[200px]">上传时间</th>
+      <th class="py3 w-[160px]">上传时间</th>
+      <th class="py3">类型</th>
       <th class="py3">标题</th>
       <th class="py3 w-[128px] text-left px2">下载</th>
     </tr>
@@ -22,15 +23,16 @@ const { resources } = Astro.props;
     >{
       resources.map((r) => (
         <tr class="">
-          <td class="text-center">
+          <td class="py2 text-center">
             {formatInTimeZone(new Date(r.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}
           </td>
-          <td>
+          <td class="py2 px2 text-center text-base-600">{r.type}</td>
+          <td class="py2 pl2">
             <a href={r.href} target="_blank" class="text-link">
               {r.title}
             </a>
           </td>
-          <td class="">
+          <td class="py2 pl2">
             <div class="flex gap1 items-center justify-start">
               <a
                 href={r.magnet}
@@ -45,9 +47,3 @@ const { resources } = Astro.props;
   >
   <tfoot></tfoot>
 </table>
-
-<style>
-  .resources-table-body td {
-    --at-apply: px2 py2;
-  }
-</style>
