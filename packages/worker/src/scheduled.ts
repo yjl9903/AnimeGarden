@@ -3,13 +3,13 @@ import { fetchPage } from 'animegarden';
 import type { Env } from './types';
 import { makePrisma } from './prisma';
 
+const teams = new Set<number>();
+const users = new Set<number>();
+
 export async function handleScheduled(env: Env) {
   const prisma = makePrisma(env);
 
   let sum = 0;
-  const teams = new Set<number>();
-  const users = new Set<number>();
-
   for (let page = 1; ; page++) {
     const res = await fetchPage({ page, retry: 5 });
 
