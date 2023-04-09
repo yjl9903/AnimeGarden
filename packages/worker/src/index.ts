@@ -54,12 +54,23 @@ router.get('/resources', async (request, env: Env) => {
   return makeResponse({ resources });
 
   function resolveParams(): { page: number; pageSize: number } | undefined {
-    const rawPage = request.params.page || '1';
-    if (!(typeof rawPage === 'string' && /^\d+$/.test(rawPage))) {
-      return undefined;
+    let page = readNum(request.params.page || '1');
+    let pageSize = readNum(request.params.count || '1');
+    if (!page || !pageSize) return undefined;
+
+    if (page <= 0) page = 1;
+    if (pageSize <= 0) pageSize = 100;
+    if (pageSize > 100) pageSize = 100;
+
+    return { page, pageSize };
+
+    function readNum(raw: string) {
+      if (typeof raw === 'string' && /^\d+$/.test(raw)) {
+        return +raw;
+      } else {
+        return undefined;
+      }
     }
-    const pageSize = 100;
-    return { page: +rawPage, pageSize };
   }
 });
 
