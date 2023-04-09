@@ -97,6 +97,9 @@ importers:
       '@unocss/reset':
         specifier: ^0.51.0
         version: 0.51.0
+      animegarden:
+        specifier: workspace:*
+        version: link:../animegarden
       unocss:
         specifier: ^0.51.0
         version: 0.51.0(postcss@8.4.21)(rollup@3.20.2)(vite@4.2.1)

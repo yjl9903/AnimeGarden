@@ -1,0 +1,27 @@
+---
+import type { Resource } from 'animegarden';
+
+export interface Props {
+  resources: Resource[];
+}
+
+const { resources } = Astro.props;
+---
+
+<table>
+  <thead>
+    <tr>
+      <th>标题</th>
+    </tr>
+  </thead>
+  <tbody
+    >{
+      resources.map((r) => (
+        <tr>
+          <td>{r.title}</td>
+        </tr>
+      ))
+    }</tbody
+  >
+  <tfoot></tfoot>
+</table>

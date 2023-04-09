@@ -1,9 +1,11 @@
 import type { APIRoute } from 'astro';
 
+import { WORKER_BASE } from '../../constant';
+
 export const all: APIRoute = async ({ request }) => {
   const url = new URL(request.url);
   url.protocol = 'https:';
-  url.host = 'animegarden.yjl9903.workers.dev';
+  url.host = WORKER_BASE;
   url.port = '';
   url.pathname = url.pathname.replace(/^\/api/, '');
 
