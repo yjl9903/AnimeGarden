@@ -87,12 +87,6 @@ importers:
       itty-router:
         specifier: ^3.0.12
         version: 3.0.12
-      kysely:
-        specifier: ^0.24.2
-        version: 0.24.2
-      kysely-d1:
-        specifier: ^0.3.0
-        version: 0.3.0(kysely@0.24.2)
     devDependencies:
       '@prisma/client':
         specifier: ^4.12.0
@@ -2847,19 +2841,6 @@ packages:
   /kleur@4.1.5:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
-
-  /kysely-d1@0.3.0(kysely@0.24.2):
-    resolution: {integrity: sha512-9wTbE6ooLiYtBa4wPg9e4fjfcmvRtgE/2j9pAjYrIq+iz+EsH/Hj9YbtxpEXA6JoRgfulVQ1EtGj6aycGGRpYw==}
-    peerDependencies:
-      kysely: '*'
-    dependencies:
-      kysely: 0.24.2
-    dev: false
-
-  /kysely@0.24.2:
-    resolution: {integrity: sha512-+7eaTJNUYm2yRq1x+lEOZc+78TO35dTZ9b0dh49+Z9CTt2byMSbMiOKpwPlOyCAaHD4kILkAYWYZNywFlmBwRA==}
-    engines: {node: '>=14.0.0'}
-    dev: false
 
   /load-yaml-file@0.2.0:
     resolution: {integrity: sha512-OfCBkGEw4nN6JLtgRidPX6QxjBQGQf72q3si2uvqyFEMbycSFFHwAZeXx6cJgFM9wmLrf9zBwCP3Ivqa+LLZPw==}

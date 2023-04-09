@@ -1,62 +1,53 @@
 import { Router } from 'itty-router';
+import { PrismaClient } from '@prisma/client/edge';
 
 import type { Env } from './types';
 
-import { makeDatabase } from './database';
 import { handleScheduled } from './scheduled';
+
+const prisma = new PrismaClient();
 
 const router = Router();
 
 router.get('/', () => makeResponse({ message: 'This is AnimeGarden' }));
 
 router.get('/resources', async (request, env: Env) => {
-  const database = makeDatabase(env.database);
-
   const params = resolveParams();
   if (!params) {
     return makeErrorResponse({ message: 'Request is not valid' });
   }
   const { page, pageSize } = params;
 
-  const sql = database
-    .selectFrom('resource')
-    .innerJoin('user', 'user.id', 'resource.publisher')
-    .leftJoin('team', 'team.id', 'resource.fansub')
-    .select([
-      'title',
-      'href',
-      'type',
-      'magnet',
-      'size',
-      'user.id as publisher_id',
-      'user.name as publisher_name',
-      'team.id as fansub_id',
-      'team.name as fansub_name',
-      'createdAt'
-    ])
-    .offset((page - 1) * pageSize)
-    .limit(pageSize)
-    .orderBy('createdAt', 'desc');
+  const plan = await prisma.resource.findMany({
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+    orderBy: {
+      createdAt: 'desc'
+    },
+    include: {
+      fansub: true,
+      publisher: true
+    }
+  });
 
-  const resources = (await sql.execute()).map((r) => ({
+  const resources = plan.map((r) => ({
     title: r.title,
     href: r.href,
     type: r.type,
     magnet: r.magnet,
     size: r.size,
     createdAt: new Date(r.createdAt),
-    fansub:
-      r.fansub_id && r.fansub_name
-        ? {
-            id: r.fansub_id,
-            name: r.fansub_name,
-            href: `https://share.dmhy.org/topics/list/team_id/${r.fansub_id}`
-          }
-        : undefined,
+    fansub: r.fansub
+      ? {
+          id: r.fansub.id,
+          name: r.fansub.name,
+          href: `https://share.dmhy.org/topics/list/team_id/${r.fansub.id}`
+        }
+      : undefined,
     publisher: {
-      id: r.publisher_id,
-      name: r.publisher_name,
-      href: `https://share.dmhy.org/topics/list/user_id/${r.publisher_id}`
+      id: r.publisher.id,
+      name: r.publisher.name,
+      href: `https://share.dmhy.org/topics/list/user_id/${r.publisher.id}`
     }
   }));
 
@@ -83,14 +74,12 @@ router.put('/resources', async (request, env: Env) => {
 });
 
 router.get('/users', async (request, env: Env) => {
-  const database = makeDatabase(env.database);
-  const users = await database.selectFrom('user').selectAll().execute();
+  const users = await prisma.user.findMany();
   return makeResponse({ users });
 });
 
 router.get('/teams', async (request, env: Env) => {
-  const database = makeDatabase(env.database);
-  const teams = await database.selectFrom('team').selectAll().execute();
+  const teams = await prisma.team.findMany();
   return makeResponse({ teams });
 });
 

@@ -21,14 +21,14 @@ model User {
 }
 
 model Resource {
-  title     String
-  href      String @id
-  type      String
-  magnet    String
-  size      String
-  teamId    Int
-  userId    Int
-  fansub    Team?  @relation(fields: [teamId], references: [id])
-  publisher User   @relation(fields: [userId], references: [id])
-  createdAt Int
+  title       String
+  href        String @id
+  type        String
+  magnet      String
+  size        String
+  fansubId    Int?
+  publisherId Int
+  fansub      Team?  @relation(fields: [fansubId], references: [id])
+  publisher   User   @relation(fields: [publisherId], references: [id])
+  createdAt   Int
 }
