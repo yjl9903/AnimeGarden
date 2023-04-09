@@ -56,55 +56,57 @@ const DisplayTypeColor: Record<ResourceType, string> = {
 };
 ---
 
-<table class="resources-table border-collapse">
-  <thead class="resources-table-head text-lg border-b border-b-2">
-    <tr class="">
-      <th class="py3 w-[160px]">发布时间</th>
-      <th class="py3 w-[80px]">类型</th>
-      <th class="py3 text-left px2">标题</th>
-      <th class="py3">发布者</th>
-      <th class="py3 w-[128px] text-left px2">下载</th>
-    </tr>
-  </thead>
-  <tbody class="resources-table-body divide-y border-b text-sm"
-    >{
-      resources.map((r) => (
-        <tr class="">
-          <td class="py2 text-center">
-            {formatInTimeZone(new Date(r.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}
-          </td>
-          <td class={`py2 px2 text-center text-base-600 ${DisplayTypeColor[r.type]}`}>
-            {r.type in DisplayType ? DisplayType[r.type] : r.type}
-          </td>
-          <td class="py2 pl2">
-            <div class="flex items-center justify-start">
-              {r.fansub && (
-                <a href={`/fansub/${r.fansub.id}/1`} class="block">
-                  <Tag text={r.fansub.name} className={`text-xs mr2 hover:bg-gray-300`} />
+<div class="overflow-y-auto">
+  <table class="resources-table border-collapse min-y-[1080px]">
+    <thead class="resources-table-head text-lg border-b border-b-2">
+      <tr class="">
+        <th class="py3 w-[160px]">发布时间</th>
+        <th class="py3 w-[80px]">类型</th>
+        <th class="py3 text-left px2">标题</th>
+        <th class="py3">发布者</th>
+        <th class="py3 w-[128px] text-left px2">下载</th>
+      </tr>
+    </thead>
+    <tbody class="resources-table-body divide-y border-b text-sm"
+      >{
+        resources.map((r) => (
+          <tr class="">
+            <td class="py2 text-center">
+              {formatInTimeZone(new Date(r.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}
+            </td>
+            <td class={`py2 px2 text-center text-base-600 ${DisplayTypeColor[r.type]}`}>
+              {r.type in DisplayType ? DisplayType[r.type] : r.type}
+            </td>
+            <td class="py2 pl2">
+              <div class="flex items-center justify-start">
+                {r.fansub && (
+                  <a href={`/fansub/${r.fansub.id}/1`} class="block">
+                    <Tag text={r.fansub.name} className={`text-xs mr2 hover:bg-gray-300`} />
+                  </a>
+                )}
+                <a href={r.href} target="_blank" class="flex-1  text-link">
+                  {r.title}
                 </a>
-              )}
-              <a href={r.href} target="_blank" class="flex-1  text-link">
-                {r.title}
+              </div>
+            </td>
+            <td class="py2 pl2 text-center">
+              <a href={`/publisher/${r.publisher.id}/1`}>
+                <Tag text={r.publisher.name} className={`text-xs mr2 hover:bg-gray-300`} />
               </a>
-            </div>
-          </td>
-          <td class="py2 pl2 text-center">
-            <a href={`/publisher/${r.publisher.id}/1`}>
-              <Tag text={r.publisher.name} className={`text-xs mr2 hover:bg-gray-300`} />
-            </a>
-          </td>
-          <td class="py2 pl2">
-            <div class="flex gap1 items-center justify-start">
-              <a
-                href={r.magnet}
-                class="i-carbon-download text-2xl text-base-500 hover:text-base-900"
-              />
-              <span class="text-xs text-base-400">{r.size}</span>
-            </div>
-          </td>
-        </tr>
-      ))
-    }</tbody
-  >
-  <tfoot></tfoot>
-</table>
+            </td>
+            <td class="py2 pl2">
+              <div class="flex gap1 items-center justify-start">
+                <a
+                  href={r.magnet}
+                  class="i-carbon-download text-2xl text-base-500 hover:text-base-900"
+                />
+                <span class="text-xs text-base-400">{r.size}</span>
+              </div>
+            </td>
+          </tr>
+        ))
+      }</tbody
+    >
+    <tfoot></tfoot>
+  </table>
+</div>

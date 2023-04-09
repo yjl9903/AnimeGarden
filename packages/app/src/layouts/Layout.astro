@@ -20,7 +20,7 @@ const url = Astro.url.pathname;
     <title>{title}</title>
   </head>
   <body>
-    <header class="w-screen pt-8vh bg-[#fef8f7] border-b">
+    <header class="w-full pt-8vh bg-[#fef8f7] border-b">
       <h1 class="text-4xl pb-8vh font-quicksand font-bold text-center select-none">
         <a href="/">🌸 Anime Garden</a>
       </h1>
@@ -103,7 +103,7 @@ const url = Astro.url.pathname;
     --at-apply: py2 border-b border-b-3 border-transparent;
     --at-apply: hover:text-base-800 hover:border-dark-700;
   }
-  
+
   .header-item[x-active] {
     --at-apply: border-orange-500;
   }
