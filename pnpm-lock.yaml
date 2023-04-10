@@ -50,8 +50,8 @@ importers:
         specifier: ^0.30.0
         version: 0.30.0
       wrangler:
-        specifier: ^2.14.0
-        version: 2.14.0
+        specifier: ^2.15.0
+        version: 2.15.0
 
   packages/animegarden:
     dependencies:
@@ -4335,7 +4335,7 @@ packages:
     dev: false
 
   /stack-trace@0.0.10:
-    resolution: {integrity: sha1-VHxws0fo0ytOEI6hoqFZ5f3eGcA=}
+    resolution: {integrity: sha512-KGzahc7puUKkzyMt+IqAep+TVNbKP+k2Lmwhub39m1AsTSkaDutx56aDCo+HLDzf/D26BIHTJWNiTG1KAJiQCg==}
     dev: true
 
   /stackback@0.0.2:
@@ -5132,8 +5132,8 @@ packages:
       string-width: 5.1.2
     dev: false
 
-  /wrangler@2.14.0:
-    resolution: {integrity: sha512-LTmSQ0jyd8c6bRhOAZZOh21Tr/HKkx7eWebCV2QmOHyacEeWLgc3Nu6KrOVBpqFVKCPCXHvcgqiN97I/nJHvFA==}
+  /wrangler@2.15.0:
+    resolution: {integrity: sha512-VCjmpztOXfY9h5vbkkcxVe0wCS3ZjEph9AG5tvO72bwAeX95eYGts/rQv6APjN5WFigrKKyvm92TDldW2XYEWA==}
     engines: {node: '>=16.13.0'}
     hasBin: true
     dependencies:
