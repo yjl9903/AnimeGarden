@@ -1,6 +1,6 @@
 import type { Resource } from 'animegarden';
 
-// import { ProxyAgent } from 'undici';
+import { ProxyAgent } from 'undici';
 
 import { WORKER_BASE } from './constant';
 
@@ -20,10 +20,10 @@ export async function fetchResources(
   }
   // @ts-ignore
   const resources = await fetch(url, {
-    // dispatcher:
-    //   import.meta.env.DEV && import.meta.env.HTTPS_PROXY
-    //     ? new ProxyAgent(import.meta.env.HTTPS_PROXY)
-    //     : undefined
+    dispatcher:
+      import.meta.env.DEV && import.meta.env.HTTPS_PROXY
+        ? new ProxyAgent(import.meta.env.HTTPS_PROXY)
+        : undefined
   })
     .then((r) => r.json())
     .then((r: any) => r.resources as Resource[]);
