@@ -9,6 +9,8 @@ More features:
 + Implemented without any dependencies, which supports run in Node, browser
 + Optimized for parsing chinese torrent name from [動漫花園](https://share.dmhy.org/)
 
+> 👷‍♂️ Still work in progress.
+
 ## Installation
 
 ```bash
