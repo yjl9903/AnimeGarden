@@ -34,14 +34,14 @@
     "test:ci": "vitest --run",
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "cheerio": "1.0.0-rc.12",
+    "ofetch": "^1.0.1"
+  },
   "devDependencies": {
     "vitest": "^0.30.0"
   },
   "engines": {
     "node": ">=v18.15.0"
-  },
-  "dependencies": {
-    "cheerio": "1.0.0-rc.12",
-    "ofetch": "^1.0.1"
   }
 }

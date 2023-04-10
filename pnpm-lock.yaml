@@ -67,13 +67,6 @@ importers:
         version: 0.30.0
 
   packages/anitomy:
-    dependencies:
-      cheerio:
-        specifier: 1.0.0-rc.12
-        version: 1.0.0-rc.12
-      ofetch:
-        specifier: ^1.0.1
-        version: 1.0.1
     devDependencies:
       vitest:
         specifier: ^0.30.0
