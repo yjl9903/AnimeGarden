@@ -23,7 +23,7 @@ export function parse(filename: string, _options: Partial<AnitomyOptions> = {}):
   return result;
 }
 
-function resolveOptions(options: Partial<AnitomyOptions>): AnitomyOptions {
+export function resolveOptions(options: Partial<AnitomyOptions>): AnitomyOptions {
   return {
     delimiters: ' _.&+,|',
     episode: true,

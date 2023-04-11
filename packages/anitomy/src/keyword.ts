@@ -1,4 +1,7 @@
-import { ElementCategory } from './element';
+import type { ElementCategory } from './element';
+import type { ParsedResult } from './types';
+
+import { TextRange, Token, rangeToStr } from './token';
 
 export interface KeywordOptions {
   identifiable: boolean;
@@ -16,6 +19,13 @@ export class KeywordManager {
   private static keys = new Map<string, Keyword>();
 
   private static extensions = new Map<string, Keyword>();
+
+  private static peekEntries: Array<{ category: ElementCategory; list: string[] }> = [
+    { category: 'audioTerm', list: ['Dual Audio'] },
+    { category: 'videoTerm', list: ['H264', 'H.264', 'h264', 'h.264'] },
+    { category: 'videoResolution', list: ['480p', '720p', '1080p'] },
+    { category: 'source', list: ['Blu-Ray'] }
+  ];
 
   static {
     const optionsDefault: KeywordOptions = { identifiable: true, searchable: true, valid: true };
@@ -196,12 +206,29 @@ export class KeywordManager {
   }
 
   public static contains(category: ElementCategory, keyword: string) {
-    const map = KeywordManager.container(category);
+    const map = this.container(category);
     const value = map.get(keyword);
     return value && value.category === category;
   }
 
   public static container(category: ElementCategory) {
-    return category === 'extension' ? KeywordManager.extensions : KeywordManager.keys;
+    return category === 'extension' ? this.extensions : this.keys;
+  }
+
+  public static peek(range: TextRange) {
+    const search = rangeToStr(range);
+    const result: ParsedResult = {};
+    const predefined: TextRange[] = [];
+    for (const { category, list } of this.peekEntries) {
+      for (const key of list) {
+        // StringComparison.CurrentCulture
+        // https://learn.microsoft.com/ja-jp/dotnet/api/system.stringcomparison?view=net-7.0
+        const foundIdx = search.indexOf(key);
+        if (foundIdx === -1) continue;
+        result[category] = key;
+        predefined.push({ text: range.text, offset: foundIdx + range.offset, size: key.length });
+      }
+    }
+    return { result, predefined };
   }
 }
