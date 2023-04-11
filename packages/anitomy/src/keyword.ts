@@ -46,7 +46,10 @@ export class KeywordManager {
       valid: true
     };
 
+    // Season
     add('seasonPrefix', optionsUnidentifiable, ['SAISON', 'SEASON']);
+
+    // Type
     add('type', optionsUnidentifiable, [
       'GEKIJOUBAN',
       'MOVIE',
@@ -69,6 +72,7 @@ export class KeywordManager {
       'PREVIEW',
       'PV'
     ]);
+
     add('audioTerm', optionsDefault, [
       // Audio channels
       '2.0CH',
@@ -147,6 +151,57 @@ export class KeywordManager {
       'SD'
     ]);
 
+    add('source', optionsDefault, [
+      'BD',
+      'BDRIP',
+      'BLURAY',
+      'BLU-RAY',
+      'DVD',
+      'DVD5',
+      'DVD9',
+      'DVD-R2J',
+      'DVDRIP',
+      'DVD-RIP',
+      'R2DVD',
+      'R2J',
+      'R2JDVD',
+      'R2JDVDRIP',
+      'HDTV',
+      'HDTVRIP',
+      'TVRIP',
+      'TV-RIP',
+      'WEBCAST',
+      'WEBRIP'
+    ]);
+
+    // Language
+    add('language', optionsDefault, [
+      'ENG',
+      'ENGLISH',
+      'ESPANO',
+      'JAP',
+      'PT-BR',
+      'SPANISH',
+      'VOSTFR'
+    ]);
+    add('language', optionsUnidentifiable, ['ESP', 'ITA']);
+
+    add('subtitles', optionsDefault, [
+      'ASS',
+      'BIG5',
+      'DUB',
+      'DUBBED',
+      'HARDSUB',
+      'HARDSUBS',
+      'RAW',
+      'SOFTSUB',
+      'SOFTSUBS',
+      'SUB',
+      'SUBBED',
+      'SUBTITLED'
+    ]);
+
+    // Episode
     add('episodePrefix', optionsDefault, [
       'EP',
       'EP.',
@@ -161,6 +216,39 @@ export class KeywordManager {
     ]);
     add('episodePrefix', optionsInvalid, ['E', '\\x7B2C']);
 
+    // Volume
+    add('volumePrefix', optionsDefault, ['VOL', 'VOL.', 'VOLUME']);
+
+    // Release
+    add('releaseGroup', optionsDefault, ['THORA']);
+    add('releaseInformation', optionsDefault, ['BATCH', 'COMPLETE', 'PATCH', 'REMUX']);
+    add('releaseInformation', optionsUnidentifiable, ['END', 'FINAL']);
+    add('releaseVersion', optionsDefault, [
+      'V0',
+      'V1',
+      'V2',
+      'V3',
+      'V4',
+      'V5',
+      'V6',
+      'V7',
+      'V8',
+      'V9'
+    ]);
+
+    // Other
+    add('other', optionsDefault, [
+      'REMASTER',
+      'REMASTERED',
+      'UNCENSORED',
+      'UNCUT',
+      'TS',
+      'VFR',
+      'WIDESCREEN',
+      'WS'
+    ]);
+
+    // File extension
     add('extension', optionsDefault, [
       '3GP',
       'AVI',
