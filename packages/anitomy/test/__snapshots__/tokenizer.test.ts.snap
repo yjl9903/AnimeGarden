@@ -4,7 +4,7 @@ exports[`tokenize > should work 1`] = `
 {
   "ok": true,
   "result": {
-    "videoResolution": "1080p",
+    "video.resolution": "1080p",
   },
   "tokens": [
     {
@@ -235,7 +235,7 @@ exports[`tokenize > should work 2`] = `
 {
   "ok": true,
   "result": {
-    "videoResolution": "1080P",
+    "video.resolution": "1080P",
   },
   "tokens": [
     {
@@ -426,7 +426,7 @@ exports[`tokenize > should work 3`] = `
 {
   "ok": true,
   "result": {
-    "videoResolution": "1080P",
+    "video.resolution": "1080P",
   },
   "tokens": [
     {
@@ -602,7 +602,7 @@ exports[`tokenize > should work 4`] = `
 {
   "ok": true,
   "result": {
-    "videoResolution": "1080p",
+    "video.resolution": "1080p",
   },
   "tokens": [
     {
@@ -738,7 +738,7 @@ exports[`tokenize > should work 5`] = `
 {
   "ok": true,
   "result": {
-    "videoResolution": "720p",
+    "video.resolution": "720p",
   },
   "tokens": [
     {

@@ -1,16 +1,16 @@
 export enum ElementCategory {
   AnimeSeason = 'season',
-  AnimeSeasonPrefix = 'seasonPrefix',
+  AnimeSeasonPrefix = 'prefix.season',
   AnimeTitle = 'title',
   AnimeType = 'type',
   AnimeYear = 'year',
   DeviceCompatibility = 'DeviceCompatibility',
   Source = 'source',
   // Episode
-  EpisodeNumber = 'episodeNumber',
-  EpisodeNumberAlt = 'episodeNumberAlt',
-  EpisodePrefix = 'episodePrefix',
-  EpisodeTitle = 'episodeTitle',
+  EpisodeNumber = 'episode.number',
+  EpisodeNumberAlt = 'episode.numberAlt',
+  EpisodePrefix = 'prefix.episode',
+  EpisodeTitle = 'episode.title',
   // File
   FileChecksum = 'checksum',
   FileExtension = 'extension',
@@ -19,16 +19,16 @@ export enum ElementCategory {
   Language = 'language',
   Subtitles = 'subtitles',
   // Audio and Video
-  AudioTerm = 'audioTerm',
-  VideoResolution = 'videoResolution',
-  VideoTerm = 'videoTerm',
+  AudioTerm = 'audio.term',
+  VideoResolution = 'video.resolution',
+  VideoTerm = 'video.term',
   // Volume
-  VolumeNumber = 'volumeNumber',
-  VolumePrefix = 'volumePrefix',
+  VolumeNumber = 'volume',
+  VolumePrefix = 'prefix.volume',
   // Release
-  ReleaseGroup = 'releaseGroup',
-  ReleaseInformation = 'releaseInformation',
-  ReleaseVersion = 'releaseVersion',
+  ReleaseGroup = 'release.group',
+  ReleaseInformation = 'release.information',
+  ReleaseVersion = 'release.version',
   // Other
   Unknown = 'unknown',
   Other = 'other'

@@ -1,4 +1,4 @@
-import type { AnitomyOptions, ParsedResult } from './types';
+import type { AnitomyOptions, AnitomyResult, ParsedResult } from './types';
 
 import { mergeResult } from './utils';
 import { KeywordManager } from './keyword';
@@ -8,8 +8,11 @@ import { tokenize as doTokenize } from './tokenizer';
 
 export type * from './types';
 
-export function parse(filename: string, _options: Partial<AnitomyOptions> = {}): ParsedResult {
-  if (filename === '') return {};
+export function parse(
+  filename: string,
+  _options: Partial<AnitomyOptions> = {}
+): AnitomyResult | undefined {
+  if (filename === '') return undefined;
 
   let result: ParsedResult = {};
 
@@ -27,13 +30,13 @@ export function parse(filename: string, _options: Partial<AnitomyOptions> = {}):
   const tokenized = doTokenize(result.filename!, options);
   result = mergeResult(result, tokenized.result);
   if (!tokenized.ok) {
-    return result;
+    return resolveResult(result);
   }
 
   const parsed = doParse(tokenized.tokens, options);
   result = mergeResult(result, parsed.result);
 
-  return result;
+  return resolveResult(result);
 }
 
 export function resolveOptions(options: Partial<AnitomyOptions>): AnitomyOptions {
@@ -43,6 +46,42 @@ export function resolveOptions(options: Partial<AnitomyOptions>): AnitomyOptions
     extension: true,
     ...options
   };
+}
+
+function resolveResult(result: ParsedResult): AnitomyResult {
+  const resolved: AnitomyResult = {
+    title: result['title'],
+    season: result['season'],
+    type: result['type'],
+    language: result['language'],
+    subtitles: result['subtitles'],
+    episode: {
+      number: result['episode.number'],
+      numberAlt: result['episode.numberAlt'],
+      title: result['episode.title']
+    },
+    volume: {
+      number: result['volume']
+    },
+    video: {
+      term: result['video.term'],
+      resolution: result['video.resolution']
+    },
+    audio: {
+      term: result['audio.term']
+    },
+    file: {
+      name: result['filename']!,
+      extension: result['extension'],
+      checksum: result['checksum']
+    },
+    prefix: {
+      season: result['prefix.season'],
+      volume: result['prefix.volume'],
+      episode: result['prefix.episode']
+    }
+  };
+  return resolved;
 }
 
 function removeExtension(filename: string) {
