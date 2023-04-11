@@ -20,7 +20,7 @@ export function tokenize(filename: string, options: AnitomyOptions) {
 
   tokenizeByBrackets();
 
-  return { result, tokens };
+  return { ok: tokens.length > 0, result, tokens };
 
   function addToken(category: TokenCategory, enclosed: boolean, range: TextRange) {
     tokens.push({

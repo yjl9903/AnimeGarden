@@ -24,6 +24,9 @@ export function parse(filename: string, _options: Partial<AnitomyOptions> = {}):
 
   const tokenized = tokenize(result.filename!, options);
   result = mergeResult(result, tokenized.result);
+  if (!tokenized.ok) {
+    return result;
+  }
 
   return result;
 }
