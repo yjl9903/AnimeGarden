@@ -1,14 +1,14 @@
 import { describe, it, expect } from 'vitest';
 
 import { tokenize } from '../src/tokenizer';
-import { parse, resolveOptions } from '../src';
+import { resolveOptions } from '../src';
 
 import { filesnames } from './testcase';
 
-describe('parse', () => {
+describe('tokenize', () => {
   it('should work', () => {
     for (const filename of filesnames) {
-      expect(parse(filename)).toMatchSnapshot();
+      expect(tokenize(filename, resolveOptions({}))).toMatchSnapshot();
     }
   });
 });
