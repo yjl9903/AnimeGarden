@@ -1,5 +1,7 @@
 import type { AnitomyOptions, ParsedResult } from './types';
 
+import { tokenize } from './tokenizer';
+import { mergeResult } from './utils';
 import { KeywordManager } from './keyword';
 
 export type * from './types';
@@ -7,7 +9,7 @@ export type * from './types';
 export function parse(filename: string, _options: Partial<AnitomyOptions> = {}): ParsedResult {
   if (filename === '') return {};
 
-  const result: ParsedResult = {};
+  let result: ParsedResult = {};
 
   const options = resolveOptions(_options);
 
@@ -19,6 +21,9 @@ export function parse(filename: string, _options: Partial<AnitomyOptions> = {}):
       result.extension = ext.extension;
     }
   }
+
+  const tokenized = tokenize(result.filename!, options);
+  result = mergeResult(result, tokenized.result);
 
   return result;
 }

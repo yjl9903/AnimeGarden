@@ -1,7 +1,7 @@
 import type { ElementCategory } from './element';
 import type { ParsedResult } from './types';
 
-import { TextRange, Token, rangeToStr } from './token';
+import { TextRange, Token } from './token';
 
 export interface KeywordOptions {
   identifiable: boolean;
@@ -23,7 +23,7 @@ export class KeywordManager {
   private static peekEntries: Array<{ category: ElementCategory; list: string[] }> = [
     { category: 'audioTerm', list: ['Dual Audio'] },
     { category: 'videoTerm', list: ['H264', 'H.264', 'h264', 'h.264'] },
-    { category: 'videoResolution', list: ['480p', '720p', '1080p'] },
+    { category: 'videoResolution', list: ['480p', '480P', '720p', '720P', '1080p', '1080P'] },
     { category: 'source', list: ['Blu-Ray'] }
   ];
 
@@ -216,7 +216,7 @@ export class KeywordManager {
   }
 
   public static peek(range: TextRange) {
-    const search = rangeToStr(range);
+    const search = range.toString();
     const result: ParsedResult = {};
     const predefined: TextRange[] = [];
     for (const { category, list } of this.peekEntries) {
@@ -226,7 +226,7 @@ export class KeywordManager {
         const foundIdx = search.indexOf(key);
         if (foundIdx === -1) continue;
         result[category] = key;
-        predefined.push({ text: range.text, offset: foundIdx + range.offset, size: key.length });
+        predefined.push(range.fork(foundIdx + range.offset, key.length));
       }
     }
     return { result, predefined };

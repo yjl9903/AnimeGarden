@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { tokenize } from '../src/tokenizer';
-import { parse, resolveOptions } from '../src';
+import { parse } from '../src';
 
 import { filesnames } from './testcase';
 
