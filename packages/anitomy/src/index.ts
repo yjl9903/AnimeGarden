@@ -2,6 +2,7 @@ import type { AnitomyOptions, ParsedResult } from './types';
 
 import { mergeResult } from './utils';
 import { KeywordManager } from './keyword';
+import { ElementCategory } from './element';
 import { parse as doParse } from './parser';
 import { tokenize as doTokenize } from './tokenizer';
 
@@ -53,7 +54,7 @@ function removeExtension(filename: string) {
     return undefined;
   }
 
-  if (!KeywordManager.contains('extension', extension)) {
+  if (!KeywordManager.contains(ElementCategory.FileExtension, extension)) {
     return undefined;
   }
 

@@ -1,29 +1,35 @@
-export type ElementCategory =
-  | 'season'
-  | 'seasonPrefix'
-  | 'title'
-  | 'type'
-  | 'year'
-  | 'episodeNumber'
-  | 'episodePrefix'
-  | 'episodeTitle'
-  | 'language'
-  | 'releaseGroup'
-  | 'releaseInformation'
-  | 'releaseVersion'
-  | 'source'
-  | 'subtitles'
+export enum ElementCategory {
+  AnimeSeason = 'season',
+  AnimeSeasonPrefix = 'seasonPrefix',
+  AnimeTitle = 'title',
+  AnimeType = 'type',
+  AnimeYear = 'year',
+  DeviceCompatibility = 'DeviceCompatibility',
+  Source = 'source',
+  // Episode
+  EpisodeNumber = 'episodeNumber',
+  EpisodeNumberAlt = 'episodeNumberAlt',
+  EpisodePrefix = 'episodePrefix',
+  EpisodeTitle = 'episodeTitle',
+  // File
+  FileChecksum = 'checksum',
+  FileExtension = 'extension',
+  FileName = 'filename',
+  // Language
+  Language = 'language',
+  Subtitles = 'subtitles',
   // Audio and Video
-  | 'audioTerm'
-  | 'videoResolution'
-  | 'videoTerm'
+  AudioTerm = 'audioTerm',
+  VideoResolution = 'videoResolution',
+  VideoTerm = 'videoTerm',
   // Volume
-  | 'volumeNumber'
-  | 'volumePrefix'
-  // File related
-  | 'checksum'
-  | 'extension'
-  | 'filename'
+  VolumeNumber = 'volumeNumber',
+  VolumePrefix = 'volumePrefix',
+  // Release
+  ReleaseGroup = 'releaseGroup',
+  ReleaseInformation = 'releaseInformation',
+  ReleaseVersion = 'releaseVersion',
   // Other
-  | 'other'
-  | 'unknown';
+  Unknown = 'unknown',
+  Other = 'other'
+}

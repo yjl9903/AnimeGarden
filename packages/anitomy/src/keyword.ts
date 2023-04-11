@@ -1,7 +1,7 @@
-import type { ElementCategory } from './element';
+import { ElementCategory } from './element';
 import type { ParsedResult } from './types';
 
-import { TextRange, Token } from './token';
+import { TextRange } from './token';
 
 export interface KeywordOptions {
   identifiable: boolean;
@@ -21,10 +21,13 @@ export class KeywordManager {
   private static extensions = new Map<string, Keyword>();
 
   private static peekEntries: Array<{ category: ElementCategory; list: string[] }> = [
-    { category: 'audioTerm', list: ['Dual Audio'] },
-    { category: 'videoTerm', list: ['H264', 'H.264', 'h264', 'h.264'] },
-    { category: 'videoResolution', list: ['480p', '480P', '720p', '720P', '1080p', '1080P'] },
-    { category: 'source', list: ['Blu-Ray'] }
+    { category: ElementCategory.AudioTerm, list: ['Dual Audio'] },
+    { category: ElementCategory.VideoTerm, list: ['H264', 'H.264', 'h264', 'h.264'] },
+    {
+      category: ElementCategory.VideoResolution,
+      list: ['480p', '480P', '720p', '720P', '1080p', '1080P']
+    },
+    { category: ElementCategory.Source, list: ['Blu-Ray'] }
   ];
 
   static {
@@ -47,10 +50,10 @@ export class KeywordManager {
     };
 
     // Season
-    add('seasonPrefix', optionsUnidentifiable, ['SAISON', 'SEASON']);
+    add(ElementCategory.AnimeSeasonPrefix, optionsUnidentifiable, ['SAISON', 'SEASON']);
 
     // Type
-    add('type', optionsUnidentifiable, [
+    add(ElementCategory.AnimeType, optionsUnidentifiable, [
       'GEKIJOUBAN',
       'MOVIE',
       'OAD',
@@ -61,8 +64,8 @@ export class KeywordManager {
       'SPECIALS',
       'TV'
     ]);
-    add('type', optionsUnidentifiableUnsearchable, ['SP']);
-    add('type', optionsUnidentifiableInvalid, [
+    add(ElementCategory.AnimeType, optionsUnidentifiableUnsearchable, ['SP']);
+    add(ElementCategory.AnimeType, optionsUnidentifiableInvalid, [
       'ED',
       'ENDING',
       'NCED',
@@ -73,7 +76,7 @@ export class KeywordManager {
       'PV'
     ]);
 
-    add('audioTerm', optionsDefault, [
+    add(ElementCategory.AudioTerm, optionsDefault, [
       // Audio channels
       '2.0CH',
       '2CH',
@@ -103,7 +106,7 @@ export class KeywordManager {
       'DUALAUDIO',
       'DUAL AUDIO'
     ]);
-    add('videoTerm', optionsDefault, [
+    add(ElementCategory.VideoTerm, optionsDefault, [
       // Frame rate
       '23.976FPS',
       '24FPS',
@@ -151,7 +154,7 @@ export class KeywordManager {
       'SD'
     ]);
 
-    add('source', optionsDefault, [
+    add(ElementCategory.Source, optionsDefault, [
       'BD',
       'BDRIP',
       'BLURAY',
@@ -175,7 +178,7 @@ export class KeywordManager {
     ]);
 
     // Language
-    add('language', optionsDefault, [
+    add(ElementCategory.Language, optionsDefault, [
       'ENG',
       'ENGLISH',
       'ESPANO',
@@ -184,9 +187,9 @@ export class KeywordManager {
       'SPANISH',
       'VOSTFR'
     ]);
-    add('language', optionsUnidentifiable, ['ESP', 'ITA']);
+    add(ElementCategory.Language, optionsUnidentifiable, ['ESP', 'ITA']);
 
-    add('subtitles', optionsDefault, [
+    add(ElementCategory.Subtitles, optionsDefault, [
       'ASS',
       'BIG5',
       'DUB',
@@ -202,7 +205,7 @@ export class KeywordManager {
     ]);
 
     // Episode
-    add('episodePrefix', optionsDefault, [
+    add(ElementCategory.EpisodePrefix, optionsDefault, [
       'EP',
       'EP.',
       'EPS',
@@ -214,16 +217,21 @@ export class KeywordManager {
       'EPISODIO',
       'FOLGE'
     ]);
-    add('episodePrefix', optionsInvalid, ['E', '\\x7B2C']);
+    add(ElementCategory.EpisodePrefix, optionsInvalid, ['E', '\\x7B2C']);
 
     // Volume
-    add('volumePrefix', optionsDefault, ['VOL', 'VOL.', 'VOLUME']);
+    add(ElementCategory.VolumePrefix, optionsDefault, ['VOL', 'VOL.', 'VOLUME']);
 
     // Release
-    add('releaseGroup', optionsDefault, ['THORA']);
-    add('releaseInformation', optionsDefault, ['BATCH', 'COMPLETE', 'PATCH', 'REMUX']);
-    add('releaseInformation', optionsUnidentifiable, ['END', 'FINAL']);
-    add('releaseVersion', optionsDefault, [
+    add(ElementCategory.ReleaseGroup, optionsDefault, ['THORA']);
+    add(ElementCategory.ReleaseInformation, optionsDefault, [
+      'BATCH',
+      'COMPLETE',
+      'PATCH',
+      'REMUX'
+    ]);
+    add(ElementCategory.ReleaseInformation, optionsUnidentifiable, ['END', 'FINAL']);
+    add(ElementCategory.ReleaseVersion, optionsDefault, [
       'V0',
       'V1',
       'V2',
@@ -237,7 +245,7 @@ export class KeywordManager {
     ]);
 
     // Other
-    add('other', optionsDefault, [
+    add(ElementCategory.Other, optionsDefault, [
       'REMASTER',
       'REMASTERED',
       'UNCENSORED',
@@ -249,7 +257,7 @@ export class KeywordManager {
     ]);
 
     // File extension
-    add('extension', optionsDefault, [
+    add(ElementCategory.FileExtension, optionsDefault, [
       '3GP',
       'AVI',
       'DIVX',
@@ -266,7 +274,7 @@ export class KeywordManager {
       'WEBM',
       'WMV'
     ]);
-    add('extension', optionsInvalid, [
+    add(ElementCategory.FileExtension, optionsInvalid, [
       'AAC',
       'AIFF',
       'FLAC',
@@ -293,6 +301,10 @@ export class KeywordManager {
     }
   }
 
+  public static normalize(text: string) {
+    return text.toLocaleUpperCase();
+  }
+
   public static contains(category: ElementCategory, keyword: string) {
     const map = this.container(category);
     const value = map.get(keyword);
@@ -301,6 +313,15 @@ export class KeywordManager {
 
   public static container(category: ElementCategory) {
     return category === 'extension' ? this.extensions : this.keys;
+  }
+
+  public static find(keyword: string, category: ElementCategory) {
+    const map = this.container(category);
+    if (!map.has(keyword)) {
+      return undefined;
+    }
+    if (category === 'unknown') {
+    }
   }
 
   public static peek(range: TextRange) {

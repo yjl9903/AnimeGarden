@@ -1,8 +1,8 @@
 import type { AnitomyOptions, ParsedResult } from './types';
 
 import { KeywordManager } from './keyword';
+import { isNumericString, mergeResult } from './utils';
 import { TextRange, Token, TokenCategory, TokenFlag, findNextToken, findPrevToken } from './token';
-import { isNumericString } from './utils';
 
 const Brackets: Array<[string, string]> = [
   ['(', ')'],
@@ -15,7 +15,7 @@ const Brackets: Array<[string, string]> = [
 ];
 
 export function tokenize(filename: string, options: AnitomyOptions) {
-  const result: ParsedResult = {};
+  let result: ParsedResult = {};
   const tokens: Token[] = [];
 
   tokenizeByBrackets();
@@ -70,7 +70,7 @@ export function tokenize(filename: string, options: AnitomyOptions) {
 
   function tokenizeByPreidentified(enclosed: boolean, range: TextRange) {
     const { result: _result, predefined } = KeywordManager.peek(range);
-    Object.assign(result, _result);
+    result = mergeResult(result, _result);
 
     let offset = range.offset;
     let subRange = range.fork(range.offset, 0);
