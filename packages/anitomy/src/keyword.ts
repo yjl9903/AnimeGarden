@@ -320,8 +320,11 @@ export class KeywordManager {
     if (!map.has(keyword)) {
       return undefined;
     }
-    if (category === 'unknown') {
+    const entry = map.get(keyword)!;
+    if (category !== 'unknown' && entry.category !== category) {
+      return undefined;
     }
+    return entry;
   }
 
   public static peek(range: TextRange) {

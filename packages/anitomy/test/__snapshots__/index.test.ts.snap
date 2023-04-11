@@ -2,15 +2,19 @@
 
 exports[`parse > should work 1`] = `
 {
+  "audioTerm": "AAC",
   "filename": "[Lilith-Raws] 熊熊勇闖異世界 PUNCH！ / Kuma Kuma Kuma Bear S02 - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]",
   "videoResolution": "1080p",
+  "videoTerm": "AVC",
 }
 `;
 
 exports[`parse > should work 2`] = `
 {
+  "audioTerm": "AAC",
   "filename": "[ANi] 機動戰士鋼彈 水星的魔女 Season 2 - 13 [1080P][Baha][WEB-DL][AAC AVC][CHT][MP4]",
   "videoResolution": "1080P",
+  "videoTerm": "AVC",
 }
 `;
 
