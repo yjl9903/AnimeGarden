@@ -1,7 +1,7 @@
 import type { AnitomyOptions, ParsedResult } from './types';
 
-import { TextRange, Token, TokenCategory, rangeToStr } from './token';
 import { KeywordManager } from './keyword';
+import { TextRange, Token, TokenCategory } from './token';
 
 const Brackets: Array<[string, string]> = [
   ['(', ')'],
@@ -24,7 +24,7 @@ export function tokenize(filename: string, options: AnitomyOptions) {
   function addToken(category: TokenCategory, enclosed: boolean, range: TextRange) {
     tokens.push({
       category,
-      content: rangeToStr(range),
+      content: range.toString(),
       enclosed
     });
   }
@@ -39,18 +39,14 @@ export function tokenize(filename: string, options: AnitomyOptions) {
           ? findFirstBracket(i, filename.length)
           : filename.indexOf(matchingBracket, i);
 
-      const range: TextRange = {
-        text: filename,
-        offset: i,
-        size: foundIdx === -1 ? filename.length : foundIdx - i
-      };
+      const range = new TextRange(filename, i, foundIdx === -1 ? filename.length : foundIdx - i);
       if (range.size > 0) {
         // Check if our range contains any known anime identifiers
         tokenizeByPreidentified(isBracketOpen, range);
       }
 
       if (foundIdx !== -1) {
-        addToken('Bracket', true, { text: filename, offset: range.offset + range.size, size: 1 });
+        addToken(TokenCategory.Bracket, true, range.fork(range.offset + range.size, 1));
         isBracketOpen = !isBracketOpen;
         i = foundIdx + 1;
       } else {
@@ -76,7 +72,7 @@ export function tokenize(filename: string, options: AnitomyOptions) {
     Object.assign(result, _result);
 
     let offset = range.offset;
-    let subRange: TextRange = { text: range.text, offset: range.offset, size: 0 };
+    let subRange = range.fork(range.offset, 0);
     while (offset < range.offset + range.size) {
       for (const predefToken of predefined) {
         if (offset !== predefToken.offset) continue;
@@ -84,7 +80,7 @@ export function tokenize(filename: string, options: AnitomyOptions) {
           tokenizeByDelimiters(enclosed, subRange);
         }
 
-        addToken('Identifier', enclosed, predefToken);
+        addToken(TokenCategory.Identifier, enclosed, predefToken);
         subRange.offset = predefToken.offset + predefToken.size;
         offset = subRange.offset - 1;
       }
@@ -100,7 +96,7 @@ export function tokenize(filename: string, options: AnitomyOptions) {
   function tokenizeByDelimiters(enclosed: boolean, range: TextRange) {
     const delimiters = getDelimiters(range);
     if (delimiters.size === 0) {
-      addToken('Unknown', enclosed, range);
+      addToken(TokenCategory.Unknown, enclosed, range);
       return;
     }
     for (let i = range.offset, end = range.offset + range.size; i < end; ) {
@@ -112,24 +108,24 @@ export function tokenize(filename: string, options: AnitomyOptions) {
         }
       }
 
-      const subRange: TextRange = { text: range.text, offset: i, size: found - i };
+      const subRange = range.fork(i, found - i);
       if (subRange.size > 0) {
-        addToken('Unknown', enclosed, subRange);
+        addToken(TokenCategory.Unknown, enclosed, subRange);
       }
 
       if (found !== end) {
-        addToken('Delimiter', enclosed, {
-          text: range.text,
-          offset: subRange.offset + subRange.size,
-          size: 1
-        });
+        addToken(
+          TokenCategory.Delimiter,
+          enclosed,
+          subRange.fork(subRange.offset + subRange.size, 1)
+        );
         i = found + 1;
       } else {
         break;
       }
     }
 
-    // TODO: validate
+    validateDelimiterTokens();
   }
 
   function getDelimiters(range: TextRange) {
@@ -141,4 +137,14 @@ export function tokenize(filename: string, options: AnitomyOptions) {
     }
     return delimiters;
   }
+
+  function validateDelimiterTokens() {
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i];
+      if (token.category !== TokenCategory.Delimiter) continue;
+      const delimiter = token.content[0];
+    }
+  }
 }
+
+function findPrevToken(tokens: Token[], position: number) {}

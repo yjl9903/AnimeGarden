@@ -1,4 +1,10 @@
-export type TokenCategory = 'Unknown' | 'Bracket' | 'Delimiter' | 'Identifier' | 'Invalid';
+export enum TokenCategory {
+  Unknown = 'Unknown',
+  Bracket = 'Bracket',
+  Delimiter = 'Delimiter',
+  Identifier = 'Identifier',
+  Invalid = 'Invalid'
+}
 
 export interface Token {
   category: TokenCategory;
@@ -8,14 +14,24 @@ export interface Token {
   enclosed: boolean;
 }
 
-export interface TextRange {
-  text: string;
+export class TextRange {
+  public text: string;
 
-  offset: number;
+  public offset: number;
 
-  size: number;
-}
+  public size: number;
 
-export function rangeToStr(range: TextRange) {
-  return range.text.slice(range.offset, range.offset + range.size);
+  public constructor(text: string, offset: number, size: number) {
+    this.text = text;
+    this.offset = offset;
+    this.size = size;
+  }
+
+  public fork(offset: number, size: number) {
+    return new TextRange(this.text, offset, size);
+  }
+
+  public toString() {
+    return this.text.slice(this.offset, this.offset + this.size);
+  }
 }
