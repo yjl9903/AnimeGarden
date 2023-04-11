@@ -232,7 +232,9 @@ exports[`tokenize > should work 1`] = `
 
 exports[`tokenize > should work 2`] = `
 {
-  "result": {},
+  "result": {
+    "videoResolution": "1080P",
+  },
   "tokens": [
     {
       "category": "Bracket",
@@ -320,7 +322,7 @@ exports[`tokenize > should work 2`] = `
       "enclosed": true,
     },
     {
-      "category": "Unknown",
+      "category": "Identifier",
       "content": "1080P",
       "enclosed": true,
     },
@@ -420,7 +422,9 @@ exports[`tokenize > should work 2`] = `
 
 exports[`tokenize > should work 3`] = `
 {
-  "result": {},
+  "result": {
+    "videoResolution": "1080P",
+  },
   "tokens": [
     {
       "category": "Bracket",
@@ -533,7 +537,7 @@ exports[`tokenize > should work 3`] = `
       "enclosed": true,
     },
     {
-      "category": "Unknown",
+      "category": "Identifier",
       "content": "1080P",
       "enclosed": true,
     },
