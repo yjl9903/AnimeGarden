@@ -1,5 +1,7 @@
 ---
-import now from '~build/time';
+import { getRuntime } from "@astrojs/cloudflare/runtime";
+
+import type { Env } from '../env';
 
 import Dropdown from '../components/Dropdown.astro'
 
@@ -12,6 +14,9 @@ const { title } = Astro.props;
 const url = Astro.url.pathname;
 
 const types = ["动画", "季度全集", "音乐", "动漫音乐", "同人音乐", "流行音乐", "日剧", "RAW", "其他", "漫画", "港台原版", "日文原版", "游戏", "电脑游戏", "主机游戏", "掌机游戏", "网络游戏 ", "游戏周边", "特摄"];
+
+const runtime = getRuntime<Env>(Astro.request);
+const timestamp = new Date((await runtime?.env.animegarden.get('state/refresh-timestamp')) ?? 0);
 ---
 
 <!DOCTYPE html>
@@ -54,7 +59,7 @@ const types = ["动画", "季度全集", "音乐", "动漫音乐", "同人音乐
         <span> © 2023</span>
       </div>
       <div font-sm text-base-400>
-        Rendered at {now.toLocaleString('zh-CN', { timeZone: 'Asia/ShangHai' })}
+        Refreshed at {timestamp.toLocaleString('zh-CN', { timeZone: 'Asia/ShangHai' })}
       </div>
       <div font-sm text-base-400>Powered by Astro</div>
       <div font-sm text-base-400>Hosted on Cloudflare Pages</div>

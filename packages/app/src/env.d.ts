@@ -1,4 +1,6 @@
 /// <reference types="astro/client" />
 /// <reference types="vite-plugin-info/client" />
 
-interface Env {}
+export interface Env {
+  animegarden: KVNamespace;
+}
