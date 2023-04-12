@@ -1,100 +1,111 @@
-import type { AnitomyOptions, ParsedResult } from '../types';
+import type { AnitomyOptions } from '../types';
 
-import { isNumericString, mergeResult, trim } from '../utils';
-import { Token, TokenCategory } from '../token';
 import { KeywordManager } from '../keyword';
 import { ElementCategory } from '../element';
+import { Token, TokenCategory } from '../token';
+import { isNumericString, trim } from '../utils';
+
 import {
   isCRC32,
   isElementCategorySearchable,
   isElementCategorySingular,
   isResolution
 } from './utils';
-import { checkAnimeSeasonKeyword, checkExtentKeyword } from './parser';
+import { ParserContext, hasResult, setResult } from './context';
+import { checkAnimeSeasonKeyword, checkExtentKeyword, indexOfDigit } from './parser';
 
 export function parse(tokens: Token[], options: AnitomyOptions) {
-  let result: ParsedResult = {};
+  const context: ParserContext = {
+    tokens,
+    options,
+    result: {},
+    isEpisodeKeywordsFound: false
+  };
 
-  searchForKeywords();
-  searchForIsolatedNumbers();
+  searchForKeywords(context);
+  searchForIsolatedNumbers(context);
 
   if (options.parseEpisodeNumber) {
-    searchForEpisodeNumber();
+    searchForEpisodeNumber(context);
   }
 
-  searchForAnimeTitle();
+  searchForAnimeTitle(context);
 
-  return { result };
+  return { result: context.result };
+}
 
-  function searchForKeywords() {
-    for (let i = 0; i < tokens.length; i++) {
-      const token = tokens[i];
-      if (token.category !== TokenCategory.Unknown) continue;
+function searchForKeywords(context: ParserContext) {
+  const tokens = context.tokens;
+  const options = context.options;
 
-      let word = trim(token.content, [' ', '-']);
-      if (word === '') continue;
+  for (let i = 0; i < tokens.length; i++) {
+    const token = tokens[i];
+    if (token.category !== TokenCategory.Unknown) continue;
 
-      // Don't bother if the word is a number that cannot be CRC
-      if (word.length !== 8 && isNumericString(word)) continue;
+    let word = trim(token.content, [' ', '-']);
+    if (word === '') continue;
 
-      let category = ElementCategory.Unknown;
-      const keyword = KeywordManager.normalize(word);
-      const found = KeywordManager.find(keyword, ElementCategory.Unknown);
-      if (found) {
-        category = found.category;
-        if (!options.parseReleaseGroup && category === ElementCategory.ReleaseGroup) {
-          continue;
-        }
-        if (!isElementCategorySearchable(category) || !found.searchable) {
-          continue;
-        }
-        if (isElementCategorySingular(category)) {
-          continue;
-        }
+    // Don't bother if the word is a number that cannot be CRC
+    if (word.length !== 8 && isNumericString(word)) continue;
 
-        switch (found.category) {
-          case ElementCategory.AnimeSeasonPrefix:
-            result = mergeResult(result, checkAnimeSeasonKeyword(tokens, i));
-            continue;
-          case ElementCategory.EpisodePrefix:
-            if (found.valid) {
-              result = mergeResult(
-                result,
-                checkExtentKeyword(ElementCategory.EpisodeNumber, tokens, i)
-              );
-            }
-            continue;
-          case ElementCategory.ReleaseVersion:
-            word = word.slice(1);
-            break;
-          case ElementCategory.VolumePrefix:
-            result = mergeResult(
-              result,
-              checkExtentKeyword(ElementCategory.VolumeNumber, tokens, i)
-            );
-            continue;
-        }
-      } else {
-        // CRC32 checksum
-        if (!result[ElementCategory.FileChecksum] && isCRC32(word)) {
-          category = ElementCategory.FileChecksum;
-        } else if (!result[ElementCategory.VideoResolution] && isResolution(word)) {
-          category = ElementCategory.VideoResolution;
-        }
+    let category = ElementCategory.Unknown;
+    const keyword = KeywordManager.normalize(word);
+    const found = KeywordManager.find(keyword, ElementCategory.Unknown);
+    if (found) {
+      category = found.category;
+      if (!options.parseReleaseGroup && category === ElementCategory.ReleaseGroup) {
+        continue;
+      }
+      if (!isElementCategorySearchable(category) || !found.searchable) {
+        continue;
+      }
+      if (isElementCategorySingular(category)) {
+        continue;
       }
 
-      if (category !== ElementCategory.Unknown) {
-        result = mergeResult(result, { [category]: word });
-        if (!found || found.identifiable) {
-          token.category = TokenCategory.Identifier;
-        }
+      switch (found.category) {
+        case ElementCategory.AnimeSeasonPrefix:
+          checkAnimeSeasonKeyword(context, i);
+          continue;
+        case ElementCategory.EpisodePrefix:
+          if (found.valid) {
+            checkExtentKeyword(context, ElementCategory.EpisodeNumber, i);
+          }
+          continue;
+        case ElementCategory.ReleaseVersion:
+          word = word.slice(1);
+          break;
+        case ElementCategory.VolumePrefix:
+          checkExtentKeyword(context, ElementCategory.VolumeNumber, i);
+          continue;
+      }
+    } else {
+      // CRC32 checksum
+      if (!hasResult(context, ElementCategory.FileChecksum) && isCRC32(word)) {
+        category = ElementCategory.FileChecksum;
+      } else if (!hasResult(context, ElementCategory.VideoResolution) && isResolution(word)) {
+        category = ElementCategory.VideoResolution;
+      }
+    }
+
+    if (category !== ElementCategory.Unknown) {
+      setResult(context, category, word);
+      if (!found || found.identifiable) {
+        token.category = TokenCategory.Identifier;
       }
     }
   }
-
-  function searchForIsolatedNumbers() {}
-
-  function searchForEpisodeNumber() {}
-
-  function searchForAnimeTitle() {}
 }
+
+function searchForIsolatedNumbers(context: ParserContext) {
+  const tokens = context.tokens.filter(
+    (t) => t.category === TokenCategory.Unknown && indexOfDigit(t.content) !== -1
+  );
+  if (tokens.length === 0) return;
+
+  context.isEpisodeKeywordsFound = hasResult(context, ElementCategory.EpisodeNumber);
+}
+
+function searchForEpisodeNumber(context: ParserContext) {}
+
+function searchForAnimeTitle(context: ParserContext) {}
