@@ -174,7 +174,10 @@ export class KeywordManager {
       'TVRIP',
       'TV-RIP',
       'WEBCAST',
-      'WEBRIP'
+      'WEBDL',
+      'WEB-DL',
+      'WEBRIP',
+      'WEB-RIP'
     ]);
 
     // Language
@@ -185,7 +188,9 @@ export class KeywordManager {
       'JAP',
       'PT-BR',
       'SPANISH',
-      'VOSTFR'
+      'VOSTFR',
+      'CHT',
+      'CHS'
     ]);
     add(ElementCategory.Language, optionsUnidentifiable, ['ESP', 'ITA']);
 

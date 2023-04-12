@@ -68,6 +68,10 @@ export function parse(tokens: Token[], options: AnitomyOptions) {
             word = word.slice(1);
             break;
           case ElementCategory.VolumePrefix:
+            result = mergeResult(
+              result,
+              checkExtentKeyword(ElementCategory.VolumeNumber, tokens, i)
+            );
             continue;
         }
       } else {

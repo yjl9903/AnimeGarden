@@ -53,8 +53,10 @@ export function resolveOptions(options: Partial<AnitomyOptions>): AnitomyOptions
 function resolveResult(result: ParsedResult): AnitomyResult {
   const resolved: AnitomyResult = {
     title: result['title'],
-    season: result['season'],
     type: result['type'],
+    season: result['season'],
+    year: result['year'],
+    month: undefined,
     language: result['language'],
     subtitles: result['subtitles'],
     episode: {

@@ -17,9 +17,13 @@ export type ParsedResult = Partial<Record<ElementCategory, string>>;
 export interface AnitomyResult {
   title: string | undefined;
 
+  type: string | undefined;
+
   season: string | undefined;
 
-  type: string | undefined;
+  year: string | undefined;
+
+  month: string | undefined;
 
   language: string | undefined;
 
