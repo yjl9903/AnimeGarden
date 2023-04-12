@@ -2,8 +2,8 @@ import { Router } from 'itty-router';
 
 import type { Env } from './types';
 
-import { handleScheduled } from './scheduled';
 import { makePrisma } from './prisma';
+import { handleScheduled } from './scheduled';
 
 const router = Router();
 

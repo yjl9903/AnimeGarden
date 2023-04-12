@@ -13,7 +13,7 @@ export interface FetchOptions {
   fetch?: OFetchOptions & { agent?: Agent };
 }
 
-export async function fetchPage(options: FetchOptions = {}): Promise<Resource[]> {
+export async function fetchResourcePage(options: FetchOptions = {}): Promise<Resource[]> {
   const { page = 1, retry = 5 } = options;
 
   const ofetch = _ofetch.create(options.fetch ?? {});

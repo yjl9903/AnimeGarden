@@ -1,4 +1,4 @@
-import { fetchPage } from 'animegarden';
+import { fetchResourcePage } from 'animegarden';
 
 import type { Env } from './types';
 import { makePrisma } from './prisma';
@@ -11,7 +11,7 @@ export async function handleScheduled(env: Env) {
 
   let sum = 0;
   for (let page = 1; ; page++) {
-    const res = await fetchPage({ page, retry: 5 });
+    const res = await fetchResourcePage({ page, retry: 5 });
 
     // Check teams and users
     {
