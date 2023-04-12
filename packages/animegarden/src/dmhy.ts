@@ -1,7 +1,4 @@
-import type { Agent } from 'https';
-
 import { load } from 'cheerio';
-import { ofetch as _ofetch, FetchOptions as OFetchOptions } from 'ofetch';
 
 import type { Resource, ResourceType } from './types';
 
@@ -9,18 +6,18 @@ export interface FetchOptions {
   page?: number;
 
   retry?: number;
-
-  fetch?: OFetchOptions & { agent?: Agent };
 }
 
-export async function fetchResourcePage(options: FetchOptions = {}): Promise<Resource[]> {
+export async function fetchResourcePage(
+  ofetch: (request: RequestInfo) => Promise<Response>,
+  options: FetchOptions = {}
+): Promise<Resource[]> {
   const { page = 1, retry = 5 } = options;
 
-  const ofetch = _ofetch.create(options.fetch ?? {});
-  const html: string = await ofetch(`https://share.dmhy.org/topics/list/page/${page}`, {
-    parseResponse: (txt) => txt,
+  const html = await retryFn(
+    () => ofetch(`https://share.dmhy.org/topics/list/page/${page}`).then((r) => r.text()),
     retry
-  });
+  );
   const $ = load(html);
 
   const res: Resource[] = [];
@@ -53,17 +50,17 @@ export async function fetchResourcePage(options: FetchOptions = {}): Promise<Res
   return res;
 }
 
-// async function retryFn<T>(fn: () => Promise<T>, count: number): Promise<T> {
-//   if (count < 0) {
-//     count = Number.MAX_SAFE_INTEGER;
-//   }
-//   let e: any;
-//   for (let i = 0; i < count; i++) {
-//     try {
-//       return await fn();
-//     } catch (err) {
-//       e = err;
-//     }
-//   }
-//   throw e;
-// }
+async function retryFn<T>(fn: () => Promise<T>, count: number): Promise<T> {
+  if (count < 0) {
+    count = Number.MAX_SAFE_INTEGER;
+  }
+  let e: any;
+  for (let i = 0; i < count; i++) {
+    try {
+      return await fn();
+    } catch (err) {
+      e = err;
+    }
+  }
+  throw e;
+}
