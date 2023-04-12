@@ -8,7 +8,9 @@ import { getRefreshTimestamp } from './state';
 
 const router = Router();
 
-router.get('/', () => makeResponse({ message: 'This is AnimeGarden' }));
+router.get('/', async (request, env: Env) =>
+  makeResponse({ message: 'This is AnimeGarden', timestamp: await getRefreshTimestamp(env) })
+);
 
 router.get('/resources', async (request, env: Env) => {
   const prisma = makePrisma(env);
