@@ -33,8 +33,8 @@ export function parse(
     return resolveResult(result);
   }
 
-  const parsed = doParse(tokenized.tokens, options);
-  result = mergeResult(result, parsed.result);
+  const parsed = doParse(result, tokenized.tokens, options);
+  result = parsed.result;
 
   return resolveResult(result);
 }

@@ -1,4 +1,4 @@
-import type { AnitomyOptions } from '../types';
+import type { AnitomyOptions, ParsedResult } from '../types';
 
 import { KeywordManager } from '../keyword';
 import { ElementCategory } from '../element';
@@ -14,11 +14,11 @@ import {
 import { ParserContext, hasResult, setResult } from './context';
 import { checkAnimeSeasonKeyword, checkExtentKeyword, indexOfDigit } from './parser';
 
-export function parse(tokens: Token[], options: AnitomyOptions) {
+export function parse(result: ParsedResult, tokens: Token[], options: AnitomyOptions) {
   const context: ParserContext = {
     tokens,
     options,
-    result: {},
+    result,
     isEpisodeKeywordsFound: false
   };
 
