@@ -31,7 +31,17 @@ export function parse(tokens: Token[], options: AnitomyOptions) {
 
   searchForAnimeTitle(context);
 
-  return { result: context.result };
+  if (options.parseReleaseGroup && !hasResult(context, ElementCategory.ReleaseGroup)) {
+    searchForReleaseGroup(context);
+  }
+
+  if (options.parseEpisodeTitle && hasResult(context, ElementCategory.EpisodeNumber)) {
+    searchForEpisodeTitle(context);
+  }
+
+  validateElements(context);
+
+  return { ok: hasResult(context, ElementCategory.AnimeTitle), result: context.result };
 }
 
 function searchForKeywords(context: ParserContext) {
@@ -109,3 +119,9 @@ function searchForIsolatedNumbers(context: ParserContext) {
 function searchForEpisodeNumber(context: ParserContext) {}
 
 function searchForAnimeTitle(context: ParserContext) {}
+
+function searchForReleaseGroup(context: ParserContext) {}
+
+function searchForEpisodeTitle(context: ParserContext) {}
+
+function validateElements(context: ParserContext) {}
