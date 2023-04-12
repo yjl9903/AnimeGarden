@@ -19,7 +19,7 @@ export function parse(
   const options = resolveOptions(_options);
 
   result.filename = filename;
-  if (options.extension) {
+  if (options.parseFileExtension) {
     const ext = removeExtension(filename);
     if (ext) {
       result.filename = filename;
@@ -42,8 +42,10 @@ export function parse(
 export function resolveOptions(options: Partial<AnitomyOptions>): AnitomyOptions {
   return {
     delimiters: ' _.&+,|',
-    episode: true,
-    extension: true,
+    parseEpisodeNumber: true,
+    parseEpisodeTitle: true,
+    parseFileExtension: true,
+    parseReleaseGroup: true,
     ...options
   };
 }

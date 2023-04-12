@@ -3,9 +3,13 @@ import type { ElementCategory } from './element';
 export interface AnitomyOptions {
   delimiters: string;
 
-  episode: boolean;
+  parseEpisodeNumber: boolean;
 
-  extension: boolean;
+  parseEpisodeTitle: boolean;
+
+  parseFileExtension: boolean;
+
+  parseReleaseGroup: boolean;
 }
 
 export type ParsedResult = Partial<Record<ElementCategory, string>>;

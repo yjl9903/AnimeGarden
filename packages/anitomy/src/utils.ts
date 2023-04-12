@@ -1,5 +1,9 @@
 import type { ParsedResult } from './types';
 
+export function inRange<T>(list: T[], idx: number) {
+  return 0 <= idx && idx < list.length;
+}
+
 export function isNumericString(text: string) {
   return /^\d+$/.test(text);
 }
@@ -16,7 +20,7 @@ export function trim(text: string, removal: string[]) {
   return text.slice(start, end + 1);
 }
 
-export function mergeResult(source: ParsedResult, income: ParsedResult) {
+export function mergeResult(source: ParsedResult, income: ParsedResult = {}) {
   return {
     ...source,
     ...income

@@ -1,7 +1,7 @@
 import type { AnitomyOptions, ParsedResult } from './types';
 
 import { KeywordManager } from './keyword';
-import { isNumericString, mergeResult } from './utils';
+import { inRange, isNumericString, mergeResult } from './utils';
 import { TextRange, Token, TokenCategory, TokenFlag, findNextToken, findPrevToken } from './token';
 
 const Brackets: Array<[string, string]> = [
@@ -204,10 +204,6 @@ export function tokenize(filename: string, options: AnitomyOptions) {
 
     // Remove invalid tokens
     tokens.splice(0, tokens.length, ...tokens.filter((t) => t.category !== TokenCategory.Invalid));
-
-    function inRange<T>(list: T[], idx: number) {
-      return 0 <= idx && idx < list.length;
-    }
 
     function isDelimiterToken(idx: number) {
       return inRange(tokens, idx) && tokens[idx].category === TokenCategory.Delimiter;

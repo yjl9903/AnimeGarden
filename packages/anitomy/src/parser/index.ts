@@ -1,17 +1,24 @@
 import type { AnitomyOptions, ParsedResult } from '../types';
 
-import { isNumericString, trim } from '../utils';
+import { isNumericString, mergeResult, trim } from '../utils';
 import { Token, TokenCategory } from '../token';
 import { KeywordManager } from '../keyword';
 import { ElementCategory } from '../element';
+import {
+  isCRC32,
+  isElementCategorySearchable,
+  isElementCategorySingular,
+  isResolution
+} from './utils';
+import { checkAnimeSeasonKeyword, checkExtentKeyword } from './parser';
 
 export function parse(tokens: Token[], options: AnitomyOptions) {
-  const result: ParsedResult = {};
+  let result: ParsedResult = {};
 
   searchForKeywords();
   searchForIsolatedNumbers();
 
-  if (options.episode) {
+  if (options.parseEpisodeNumber) {
     searchForEpisodeNumber();
   }
 
@@ -35,10 +42,27 @@ export function parse(tokens: Token[], options: AnitomyOptions) {
       const found = KeywordManager.find(keyword, ElementCategory.Unknown);
       if (found) {
         category = found.category;
+        if (!options.parseReleaseGroup && category === ElementCategory.ReleaseGroup) {
+          continue;
+        }
+        if (!isElementCategorySearchable(category) || !found.searchable) {
+          continue;
+        }
+        if (isElementCategorySingular(category)) {
+          continue;
+        }
+
         switch (found.category) {
           case ElementCategory.AnimeSeasonPrefix:
+            result = mergeResult(result, checkAnimeSeasonKeyword(tokens, i));
             continue;
           case ElementCategory.EpisodePrefix:
+            if (found.valid) {
+              result = mergeResult(
+                result,
+                checkExtentKeyword(ElementCategory.EpisodeNumber, tokens, i)
+              );
+            }
             continue;
           case ElementCategory.ReleaseVersion:
             word = word.slice(1);
@@ -47,12 +71,19 @@ export function parse(tokens: Token[], options: AnitomyOptions) {
             continue;
         }
       } else {
+        // CRC32 checksum
+        if (!result[ElementCategory.FileChecksum] && isCRC32(word)) {
+          category = ElementCategory.FileChecksum;
+        } else if (!result[ElementCategory.VideoResolution] && isResolution(word)) {
+          category = ElementCategory.VideoResolution;
+        }
       }
 
-      if (category === ElementCategory.Unknown) continue;
-      result[category] = word;
-      if (!found || found.identifiable) {
-        token.category = TokenCategory.Identifier;
+      if (category !== ElementCategory.Unknown) {
+        result = mergeResult(result, { [category]: word });
+        if (!found || found.identifiable) {
+          token.category = TokenCategory.Identifier;
+        }
       }
     }
   }
