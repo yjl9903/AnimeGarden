@@ -84,9 +84,11 @@ const DisplayTypeColor: Record<ResourceType, string> = {
                     <Tag text={r.fansub.name} className={`text-xs mr2 hover:bg-gray-300`} />
                   </a>
                 )}
-                <a href={r.href} target="_blank" class="flex-1  text-link">
-                  {r.title}
-                </a>
+                <div class="flex-1">
+                  <a href={r.href} target="_blank" class="text-link">
+                    {r.title}
+                  </a>
+                </div>
               </div>
             </td>
             <td class="py2 pl2 text-center">
