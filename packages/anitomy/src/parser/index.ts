@@ -1,9 +1,9 @@
-import type { AnitomyOptions, ParsedResult } from './types';
+import type { AnitomyOptions, ParsedResult } from '../types';
 
-import { isNumericString, trim } from './utils';
-import { Token, TokenCategory } from './token';
-import { KeywordManager } from './keyword';
-import { ElementCategory } from './element';
+import { isNumericString, trim } from '../utils';
+import { Token, TokenCategory } from '../token';
+import { KeywordManager } from '../keyword';
+import { ElementCategory } from '../element';
 
 export function parse(tokens: Token[], options: AnitomyOptions) {
   const result: ParsedResult = {};
