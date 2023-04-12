@@ -59,6 +59,7 @@ function resolveResult(result: ParsedResult): AnitomyResult {
     month: undefined,
     language: result['language'],
     subtitles: result['subtitles'],
+    source: result['source'],
     episode: {
       number: result['episode.number'],
       numberAlt: result['episode.numberAlt'],

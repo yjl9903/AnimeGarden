@@ -189,13 +189,19 @@ export class KeywordManager {
       'PT-BR',
       'SPANISH',
       'VOSTFR',
+      // feat: chinese
       'CHT',
-      'CHS'
+      'CHS',
+      '简中',
+      '繁中',
+      '简体',
+      '繁體'
     ]);
     add(ElementCategory.Language, optionsUnidentifiable, ['ESP', 'ITA']);
 
     add(ElementCategory.Subtitles, optionsDefault, [
       'ASS',
+      'GB', // feat: 简体字幕
       'BIG5',
       'DUB',
       'DUBBED',

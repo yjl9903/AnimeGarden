@@ -29,6 +29,8 @@ export interface AnitomyResult {
 
   subtitles: string | undefined;
 
+  source: string | undefined;
+
   episode: {
     number: string | undefined;
 
