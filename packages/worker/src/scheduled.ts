@@ -3,6 +3,7 @@ import { fetchResourcePage } from 'animegarden';
 import type { Env } from './types';
 
 import { makePrisma } from './prisma';
+import { updateRefreshTimestamp } from './state';
 
 const teams = new Set<number>();
 const users = new Set<number>();
@@ -76,6 +77,8 @@ export async function handleScheduled(env: Env) {
     sum += count;
     console.log(`There are ${count} resources inserted`);
   }
+
+  await updateRefreshTimestamp(env);
 
   return { count: sum };
 }

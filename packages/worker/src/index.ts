@@ -4,6 +4,7 @@ import type { Env } from './types';
 
 import { makePrisma } from './prisma';
 import { handleScheduled } from './scheduled';
+import { getRefreshTimestamp } from './state';
 
 const router = Router();
 
@@ -56,7 +57,7 @@ router.get('/resources', async (request, env: Env) => {
     }
   }));
 
-  return makeResponse({ resources });
+  return makeResponse({ resources, timestamp: await getRefreshTimestamp(env) });
 
   function resolveParams():
     | {
