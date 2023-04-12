@@ -2,7 +2,10 @@ import { ElementCategory } from '../element';
 import { inRange, isNumericString } from '../utils';
 import { Token, TokenCategory, TokenFlag, findNextToken, findPrevToken } from '../token';
 
+import { indexOfDigit } from './number';
 import { ParserContext, setResult } from './context';
+import { matchVolumePatterns, setVolumeNumber } from './volume';
+import { matchEpisodePatterns, setEpisodeNumber } from './episode';
 import { getNumberFromOrdinal, isMatchTokenCategory } from './utils';
 
 export function checkAnimeSeasonKeyword(context: ParserContext, position: number) {
@@ -44,29 +47,29 @@ export function checkExtentKeyword(
   const token = tokens[position];
   const nextToken = findNextToken(tokens, position, TokenFlag.NotDelimiter);
   if (!isMatchTokenCategory(TokenCategory.Unknown, tokens[nextToken])) {
-    return undefined;
+    return false;
   }
   if (indexOfDigit(tokens[nextToken].content) !== 0) {
-    return undefined;
+    return false;
   }
 
   switch (category) {
     case ElementCategory.EpisodeNumber:
+      if (!matchEpisodePatterns(context, tokens[nextToken].content, tokens[nextToken])) {
+        setEpisodeNumber(context, tokens[nextToken].content, tokens[nextToken], false);
+      }
       break;
     case ElementCategory.VolumeNumber:
+      if (!matchVolumePatterns(context, tokens[nextToken].content, tokens[nextToken])) {
+        setVolumeNumber(context, tokens[nextToken].content, tokens[nextToken], false);
+      }
       break;
   }
 
   token.category = TokenCategory.Identifier;
+  return true;
 }
 
-export function indexOfDigit(str: string) {
-  for (let i = 0; i < str.length; i++) {
-    if (/[0-9]/.test(str[i])) {
-      return i;
-    }
-  }
-  return -1;
+export function isTokenIsolated(context: ParserContext, position: number) {
+  return false;
 }
-
-function matchEpisodePatterns(word: string, token: Token) {}

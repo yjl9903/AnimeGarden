@@ -20,3 +20,7 @@ export function hasResult(context: ParserContext, category: ElementCategory) {
   const value = context.result[category];
   return value !== undefined && value !== null && value !== '';
 }
+
+export function getResult(context: ParserContext, category: ElementCategory) {
+  return context.result[category];
+}

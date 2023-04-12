@@ -11,8 +11,9 @@ import {
   isElementCategorySingular,
   isResolution
 } from './utils';
+import { indexOfDigit } from './number';
 import { ParserContext, hasResult, setResult } from './context';
-import { checkAnimeSeasonKeyword, checkExtentKeyword, indexOfDigit } from './parser';
+import { checkAnimeSeasonKeyword, checkExtentKeyword, isTokenIsolated } from './parser';
 
 export function parse(result: ParsedResult, tokens: Token[], options: AnitomyOptions) {
   const context: ParserContext = {
@@ -69,7 +70,7 @@ function searchForKeywords(context: ParserContext) {
       if (!isElementCategorySearchable(category) || !found.searchable) {
         continue;
       }
-      if (isElementCategorySingular(category)) {
+      if (isElementCategorySingular(category) && !hasResult(context, category)) {
         continue;
       }
 
@@ -108,12 +109,18 @@ function searchForKeywords(context: ParserContext) {
 }
 
 function searchForIsolatedNumbers(context: ParserContext) {
-  const tokens = context.tokens.filter(
-    (t) => t.category === TokenCategory.Unknown && indexOfDigit(t.content) !== -1
-  );
-  if (tokens.length === 0) return;
+  for (let i = 0; i < context.tokens.length; i++) {
+    const token = context.tokens[i];
+    if (
+      token.category !== TokenCategory.Unknown ||
+      !isNumericString(token.content) ||
+      !isTokenIsolated(context, i)
+    ) {
+      continue;
+    }
 
-  context.isEpisodeKeywordsFound = hasResult(context, ElementCategory.EpisodeNumber);
+    const num = +token.content;
+  }
 }
 
 function searchForEpisodeNumber(context: ParserContext) {}
