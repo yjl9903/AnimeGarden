@@ -79,12 +79,12 @@ function resolveResult(result: ParsedResult): AnitomyResult {
       name: result['filename']!,
       extension: result['extension'],
       checksum: result['checksum']
-    },
-    prefix: {
-      season: result['prefix.season'],
-      volume: result['prefix.volume'],
-      episode: result['prefix.episode']
     }
+    // prefix: {
+    //   season: result['prefix.season'],
+    //   volume: result['prefix.volume'],
+    //   episode: result['prefix.episode']
+    // }
   };
   return resolved;
 }

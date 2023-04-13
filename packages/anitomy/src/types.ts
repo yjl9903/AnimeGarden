@@ -61,11 +61,9 @@ export interface AnitomyResult {
     extension: string | undefined;
   };
 
-  prefix: {
-    season: string | undefined;
-
-    volume: string | undefined;
-
-    episode: string | undefined;
-  };
+  // prefix: {
+  //   season: string | undefined;
+  //   volume: string | undefined;
+  //   episode: string | undefined;
+  // };
 }

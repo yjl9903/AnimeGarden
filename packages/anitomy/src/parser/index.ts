@@ -13,7 +13,7 @@ import {
 } from './utils';
 import { AnimeYearMax, AnimeYearMin } from './number';
 import { ParserContext, hasResult, setResult } from './context';
-import { CheckAndSetAnimeSeasonKeyword, checkExtentKeyword, isTokenIsolated } from './parser';
+import { checkAndSetAnimeSeasonKeyword, checkExtentKeyword, isTokenIsolated } from './parser';
 
 export function parse(result: ParsedResult, tokens: Token[], options: AnitomyOptions) {
   const context: ParserContext = {
@@ -76,7 +76,7 @@ function searchForKeywords(context: ParserContext) {
 
       switch (found.category) {
         case ElementCategory.AnimeSeasonPrefix:
-          CheckAndSetAnimeSeasonKeyword(context, i);
+          checkAndSetAnimeSeasonKeyword(context, i);
           continue;
         case ElementCategory.EpisodePrefix:
           if (found.valid) {

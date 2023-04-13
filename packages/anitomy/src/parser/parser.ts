@@ -11,7 +11,7 @@ import { getNumberFromOrdinal, isMatchTokenCategory } from './utils';
 /**
  * Finds and sets the anime season keyword.
  */
-export function CheckAndSetAnimeSeasonKeyword(context: ParserContext, position: number) {
+export function checkAndSetAnimeSeasonKeyword(context: ParserContext, position: number) {
   const tokens = context.tokens;
   const token = tokens[position];
   const prevToken = findPrevToken(tokens, position, TokenFlag.NotDelimiter);
@@ -24,7 +24,7 @@ export function CheckAndSetAnimeSeasonKeyword(context: ParserContext, position: 
   }
 
   const nextToken = findNextToken(tokens, position, TokenFlag.NotDelimiter);
-  if (!inRange(tokens, nextToken) || isNumericString(tokens[nextToken].content)) {
+  if (!inRange(tokens, nextToken) || !isNumericString(tokens[nextToken].content)) {
     return undefined;
   }
 
