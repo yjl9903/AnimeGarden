@@ -11,7 +11,7 @@ import {
   isElementCategorySingular,
   isResolution
 } from './utils';
-import { indexOfDigit } from './number';
+import { AnimeYearMax, AnimeYearMin } from './number';
 import { ParserContext, hasResult, setResult } from './context';
 import { checkAnimeSeasonKeyword, checkExtentKeyword, isTokenIsolated } from './parser';
 
@@ -70,7 +70,7 @@ function searchForKeywords(context: ParserContext) {
       if (!isElementCategorySearchable(category) || !found.searchable) {
         continue;
       }
-      if (isElementCategorySingular(category) && !hasResult(context, category)) {
+      if (isElementCategorySingular(category) && hasResult(context, category)) {
         continue;
       }
 
@@ -119,7 +119,23 @@ function searchForIsolatedNumbers(context: ParserContext) {
       continue;
     }
 
+    // Anime Year
     const num = +token.content;
+    if (AnimeYearMin <= num && num <= AnimeYearMax) {
+      if (!hasResult(context, ElementCategory.AnimeYear)) {
+        setResult(context, ElementCategory.AnimeYear, token.content);
+        token.category = TokenCategory.Identifier;
+        continue;
+      }
+    }
+
+    // Video Resolution
+    if (num !== 480 && num !== 720 && num !== 1080) continue;
+    // If these numbers are isolated, it's more likely for them to be the
+    // video resolution rather than the episode number. Some fansub groups use these without the "p" suffix.
+    if (hasResult(context, ElementCategory.VideoResolution)) continue;
+    setResult(context, ElementCategory.VideoResolution, token.content);
+    token.category = TokenCategory.Identifier;
   }
 }
 

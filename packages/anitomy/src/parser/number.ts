@@ -2,10 +2,10 @@ import { KeywordManager } from '../keyword';
 import { ElementCategory } from '../element';
 import { Token, TokenCategory } from '../token';
 
-const AnimeYearMin = 1900;
-const AnimeYearMax = 2100;
-const EpisodeNumberMax = AnimeYearMax - 1;
-const VolumeNumberMax = 50;
+export const AnimeYearMin = 1900;
+export const AnimeYearMax = 2100;
+export const EpisodeNumberMax = AnimeYearMax - 1;
+export const VolumeNumberMax = 50;
 
 export function indexOfDigit(str: string) {
   for (let i = 0; i < str.length; i++) {
