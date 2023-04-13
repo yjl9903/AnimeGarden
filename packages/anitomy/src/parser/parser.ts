@@ -71,5 +71,8 @@ export function checkExtentKeyword(
 }
 
 export function isTokenIsolated(context: ParserContext, position: number) {
-  return false;
+  const prevToken = findPrevToken(context.tokens, position, TokenFlag.NotDelimiter);
+  if (!isMatchTokenCategory(TokenCategory.Bracket, context.tokens[prevToken])) return false;
+  const nextToken = findNextToken(context.tokens, position, TokenFlag.NotDelimiter);
+  return isMatchTokenCategory(TokenCategory.Bracket, context.tokens[nextToken]);
 }
