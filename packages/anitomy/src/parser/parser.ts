@@ -8,7 +8,10 @@ import { matchVolumePatterns, setVolumeNumber } from './volume';
 import { matchEpisodePatterns, setEpisodeNumber } from './episode';
 import { getNumberFromOrdinal, isMatchTokenCategory } from './utils';
 
-export function checkAnimeSeasonKeyword(context: ParserContext, position: number) {
+/**
+ * Finds and sets the anime season keyword.
+ */
+export function CheckAndSetAnimeSeasonKeyword(context: ParserContext, position: number) {
   const tokens = context.tokens;
   const token = tokens[position];
   const prevToken = findPrevToken(tokens, position, TokenFlag.NotDelimiter);
@@ -70,6 +73,9 @@ export function checkExtentKeyword(
   return true;
 }
 
+/**
+ * Returns whether or not a token at the current position is isolated (surrounded by braces).
+ */
 export function isTokenIsolated(context: ParserContext, position: number) {
   const prevToken = findPrevToken(context.tokens, position, TokenFlag.NotDelimiter);
   if (!isMatchTokenCategory(TokenCategory.Bracket, context.tokens[prevToken])) return false;
