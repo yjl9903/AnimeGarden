@@ -116,6 +116,7 @@ function searchForKeywords(context: ParserContext) {
       } else if (!hasResult(context, ElementCategory.VideoResolution) && isResolution(word)) {
         category = ElementCategory.VideoResolution;
       }
+      // Added by https://github.com/yjl9903/AnimeGarden
       // Video extension may appear in the title
       {
         const found = KeywordManager.find(keyword, ElementCategory.FileExtension);
