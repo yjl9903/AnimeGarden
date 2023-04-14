@@ -234,7 +234,7 @@ export class KeywordManager {
     add(ElementCategory.VolumePrefix, optionsDefault, ['VOL', 'VOL.', 'VOLUME']);
 
     // Release
-    add(ElementCategory.ReleaseGroup, optionsDefault, ['THORA']);
+    add(ElementCategory.ReleaseGroup, optionsDefault, ['Baha', 'THORA']);
     add(ElementCategory.ReleaseInformation, optionsDefault, [
       'BATCH',
       'COMPLETE',
