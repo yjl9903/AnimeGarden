@@ -1,9 +1,10 @@
 import { ElementCategory } from '../element';
+import { KeywordManager } from '../keyword';
 import { Token, TokenCategory } from '../token';
 import { isNumericString, trim } from '../utils';
 
 import { ParserContext, getResult, hasResult, setResult } from './context';
-import { isDigit, isValidEpisodeNumber } from './number';
+import { indexOfDigit, isDigit, isValidEpisodeNumber } from './number';
 
 export function matchEpisodePatterns(context: ParserContext, word: string, token: Token) {
   if (isNumericString(word)) return false;
@@ -42,15 +43,22 @@ export function matchEpisodePatterns(context: ParserContext, word: string, token
     }
   }
 
-  if (!numericFront) {
-    // TODO
+  // e.g. "ED1", "OP4a", "OVA2"
+  if (!numericFront && matchTypeAndEpisodePattern(context, word, token)) {
+    return true;
   }
 
-  if (numericFront) {
-    // TODO
+  // e.g. "4a", "111C"
+  if (numericFront && !numericBack && matchPartialEpisodePattern(context, word, token)) {
+    return true;
   }
 
-  return true;
+  // U+8A71 is used as counter for stories, episodes of TV series, etc.
+  if (numericFront && matchJapaneseCounterPattern(context, word, token)) {
+    return true;
+  }
+
+  return false;
 }
 
 /**
@@ -143,6 +151,74 @@ function matchNumberSignPattern(context: ParserContext, word: string, token: Tok
     setResult(context, ElementCategory.ReleaseVersion, match[3]);
   }
 
+  return true;
+}
+
+/**
+ * Match type and episode. e.g. "ED1", "OP4a", "OVA2".
+ */
+function matchTypeAndEpisodePattern(context: ParserContext, word: string, token: Token) {
+  const numberBegin = indexOfDigit(word);
+  const prefix = word.slice(0, numberBegin);
+
+  const entry = KeywordManager.find(KeywordManager.normalize(prefix), ElementCategory.AnimeType);
+  if (entry) {
+    setResult(context, entry.category, prefix);
+
+    const num = word.slice(numberBegin);
+    if (matchEpisodePatterns(context, num, token) || setEpisodeNumber(context, num, token, true)) {
+      const foundIdx = context.tokens.indexOf(token);
+      if (foundIdx !== -1) {
+        // Split token (we do this last in order to avoid invalidating our token reference earlier)
+        token.content = num;
+        context.tokens.splice(foundIdx, 0, {
+          category: entry.identifiable ? TokenCategory.Identifier : TokenCategory.Unknown,
+          content: prefix,
+          enclosed: token.enclosed
+        });
+      }
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
+ * Match partial episodes. e.g. "4a", "111C".
+ */
+function matchPartialEpisodePattern(context: ParserContext, word: string, token: Token) {
+  if (!word) return false;
+  let foundIdx = word.length;
+  for (let i = 0; i < word.length; i++) {
+    if (!isDigit(word[i])) {
+      foundIdx = i;
+      break;
+    }
+  }
+
+  const suffixLength = word.length - foundIdx;
+  const isValid = (c: string) => ('A' <= c && c <= 'c') || ('a' <= c && c <= 'c');
+
+  return (
+    suffixLength === 1 && isValid(word[foundIdx]) && setEpisodeNumber(context, word, token, true)
+  );
+}
+
+/**
+ * Match Japanese patterns. e.g. U+8A71 is used as counter for stories, episodes of TV series, etc.
+ * e.g. 01話, 第02集
+ */
+function matchJapaneseCounterPattern(context: ParserContext, word: string, token: Token) {
+  const hua = ['話', '话', '集'];
+  if (word.length > 0 && hua.includes(word.at(-1)!)) {
+    return false;
+  }
+
+  const RE = /^第?(\d{1,3})(?:話|话|集)$/;
+  const match = RE.exec(word);
+  if (!match) return false;
+  setEpisodeNumber(context, match[1], token, false);
   return true;
 }
 
