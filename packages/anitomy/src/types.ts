@@ -21,9 +21,9 @@ export interface AnitomyResult {
 
   season: string | undefined;
 
-  year: string | undefined;
+  year: number | undefined;
 
-  month: string | undefined;
+  month: number | undefined;
 
   language: string | undefined;
 
@@ -32,15 +32,15 @@ export interface AnitomyResult {
   source: string | undefined;
 
   episode: {
-    number: string | undefined;
+    number: number | undefined;
 
-    numberAlt: string | undefined;
+    numberAlt: number | undefined;
 
     title: string | undefined;
   };
 
   volume: {
-    number: string | undefined;
+    number: number | undefined;
   };
 
   video: {

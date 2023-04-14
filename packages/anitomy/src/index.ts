@@ -54,19 +54,19 @@ function resolveResult(result: ParsedResult): AnitomyResult {
   const resolved: AnitomyResult = {
     title: result['title'],
     type: result['type'],
-    season: result['season'],
-    year: result['year'],
-    month: undefined,
+    season: normalizeSeason(result['season']),
+    year: normalizeNumber(result['year']),
+    month: normalizeNumber(undefined),
     language: result['language'],
     subtitles: result['subtitles'],
     source: result['source'],
     episode: {
-      number: result['episode.number'],
-      numberAlt: result['episode.numberAlt'],
+      number: normalizeNumber(result['episode.number']),
+      numberAlt: normalizeNumber(result['episode.numberAlt']),
       title: result['episode.title']
     },
     volume: {
-      number: result['volume']
+      number: normalizeNumber(result['volume'])
     },
     video: {
       term: result['video.term'],
@@ -80,13 +80,26 @@ function resolveResult(result: ParsedResult): AnitomyResult {
       extension: result['extension'],
       checksum: result['checksum']
     }
-    // prefix: {
-    //   season: result['prefix.season'],
-    //   volume: result['prefix.volume'],
-    //   episode: result['prefix.episode']
-    // }
   };
   return resolved;
+
+  function normalizeSeason(num: string | undefined) {
+    if (num !== undefined && num !== null) {
+      return /^\d+$/.test(num) ? String(+num) : num;
+    } else {
+      return undefined;
+    }
+  }
+
+  function normalizeNumber(num: string | undefined) {
+    try {
+      if (num !== undefined && num !== null) {
+        const n = parseFloat(num);
+        return !Number.isNaN(n) ? n : undefined;
+      }
+    } catch {}
+    return undefined;
+  }
 }
 
 function removeExtension(filename: string) {
