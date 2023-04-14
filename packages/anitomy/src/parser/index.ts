@@ -11,9 +11,23 @@ import {
   isElementCategorySingular,
   isResolution
 } from './utils';
-import { AnimeYearMax, AnimeYearMin } from './number';
+import {
+  AnimeYearMax,
+  AnimeYearMin,
+  indexOfDigit,
+  searchForEquivalentNumbers,
+  searchForIsolatedEpisodeNumber,
+  searchForLastNumber,
+  searchForSeparatedNumbers
+} from './number';
 import { ParserContext, hasResult, setResult } from './context';
-import { checkAndSetAnimeSeasonKeyword, checkExtentKeyword, isTokenIsolated } from './parser';
+import {
+  checkAndSetAnimeSeasonKeyword,
+  checkAndSetAnimeSeason,
+  checkExtentKeyword,
+  isTokenIsolated
+} from './parser';
+import { searchForEpisodePatterns } from './episode';
 
 export function parse(result: ParsedResult, tokens: Token[], options: AnitomyOptions) {
   const context: ParserContext = {
@@ -91,6 +105,11 @@ function searchForKeywords(context: ParserContext) {
           continue;
       }
     } else {
+      // Added by https://github.com/yjl9903/AnimeGarden
+      // e.g. S2, S02
+      if (checkAndSetAnimeSeason(context, i)) {
+        continue;
+      }
       // CRC32 checksum
       if (!hasResult(context, ElementCategory.FileChecksum) && isCRC32(word)) {
         category = ElementCategory.FileChecksum;
@@ -139,7 +158,41 @@ function searchForIsolatedNumbers(context: ParserContext) {
   }
 }
 
-function searchForEpisodeNumber(context: ParserContext) {}
+function searchForEpisodeNumber(context: ParserContext) {
+  const tokens = context.tokens
+    .map((token, idx) => [token, idx] as const)
+    .filter(([token]) => indexOfDigit(token.content) !== -1)
+    .map(([_token, idx]) => idx);
+  if (tokens.length === 0) return;
+
+  context.isEpisodeKeywordsFound = hasResult(context, ElementCategory.EpisodeNumber);
+
+  // If a token matches a known episode pattern, it has to be the episode number
+  if (searchForEpisodePatterns(context, tokens)) return;
+
+  // We have previously found an episode number via keywords
+  context.isEpisodeKeywordsFound = hasResult(context, ElementCategory.EpisodeNumber);
+  if (context.isEpisodeKeywordsFound) return;
+
+  // From now on, we're only interested in numeric tokens
+  tokens.splice(
+    0,
+    tokens.length,
+    ...tokens.filter((t) => isNumericString(context.tokens[t].content))
+  );
+
+  // e.g. "01 (176)", "29 (04)"
+  if (searchForEquivalentNumbers(context, tokens)) return;
+
+  // e.g. " - 08"
+  if (searchForSeparatedNumbers(context, tokens)) return;
+
+  // "e.g. "[12]", "(2006)"
+  if (searchForIsolatedEpisodeNumber(context, tokens)) return;
+
+  // Consider using the last number as a last resort
+  searchForLastNumber(context, tokens);
+}
 
 function searchForAnimeTitle(context: ParserContext) {}
 

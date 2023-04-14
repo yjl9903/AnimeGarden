@@ -1,6 +1,4 @@
-import { KeywordManager } from '../keyword';
-import { ElementCategory } from '../element';
-import { Token, TokenCategory } from '../token';
+import { ParserContext } from './context';
 
 export const AnimeYearMin = 1900;
 export const AnimeYearMax = 2100;
@@ -20,40 +18,21 @@ export function isDigit(str: string) {
   return /^[0-9]$/.test(str);
 }
 
-// export function searchForEpisodePatterns(tokens: Token[]) {
-//   for (const token of tokens) {
-//     const numericFront = token.content.length > 0 && /0-9/.test(token.content[0]);
+export function searchForEquivalentNumbers(context: ParserContext, tokens: number[]) {
+  return false;
+}
 
-//     if (!numericFront) {
-//     } else {
-//     }
-//   }
-// }
+export function searchForSeparatedNumbers(context: ParserContext, tokens: number[]) {
+  return false;
+}
 
-// function numberComesAfterPrefix(category: ElementCategory, token: Token) {
-//   const numberBegin = indexOfDigit(token.content);
-//   const prefix = KeywordManager.normalize(token.content.slice(0, numberBegin));
-//   if (KeywordManager.contains(category, prefix)) return undefined;
+export function searchForIsolatedEpisodeNumber(context: ParserContext, tokens: number[]) {
+  return false;
+}
 
-//   const number = token.content.slice(numberBegin);
-//   switch (category) {
-//     case ElementCategory.EpisodePrefix:
-//       if (!matchEpisodePatterns(number, token)) {
-//       }
-//       return true;
-//     case ElementCategory.VolumePrefix:
-//       return true;
-//     default:
-//       return undefined;
-//   }
-// }
-
-// function getEpisodeNumber(num: string, token: Token, validate: boolean) {
-//   if (validate && !isValidEpisodeNumber(num)) return false;
-
-//   token.category = TokenCategory.Identifier;
-//   const category = ElementCategory.EpisodeNumber;
-// }
+export function searchForLastNumber(context: ParserContext, tokens: number[]) {
+  return false;
+}
 
 export function isValidEpisodeNumber(num: string) {
   const temp = [];

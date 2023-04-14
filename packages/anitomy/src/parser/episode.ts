@@ -1,10 +1,103 @@
-import { ElementCategory } from '../element';
 import { KeywordManager } from '../keyword';
-import { Token, TokenCategory } from '../token';
-import { isNumericString, trim } from '../utils';
+import { ElementCategory } from '../element';
+import { Token, TokenCategory, TokenFlag, findNextToken, findPrevToken } from '../token';
+import { inRange, isNumericString, trim } from '../utils';
 
-import { ParserContext, getResult, hasResult, setResult } from './context';
+import { matchVolumePatterns, setVolumeNumber } from './volume';
 import { indexOfDigit, isDigit, isValidEpisodeNumber } from './number';
+import { ParserContext, getResult, hasResult, setResult } from './context';
+
+export function searchForEpisodePatterns(context: ParserContext, tokens: number[]) {
+  for (const it of tokens) {
+    const token = context.tokens[it];
+    const numericFront = token.content.length > 0 && /0-9/.test(token.content[0]);
+    if (!numericFront) {
+      // e.g. "EP.1", "Vol.1"
+      if (numberComesAfterPrefix(context, ElementCategory.EpisodePrefix, token)) {
+        return true;
+      }
+      if (numberComesAfterPrefix(context, ElementCategory.VolumePrefix, token)) {
+        return true;
+      }
+    } else {
+      // e.g. "8 & 10", "01 of 24"
+      if (numberComesBeforeAnotherNumber(context, it)) {
+        return true;
+      }
+    }
+
+    // Look for other patterns
+    if (matchEpisodePatterns(context, token.content, token)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Checks if a number follows the specified token
+ */
+function numberComesAfterPrefix(context: ParserContext, category: ElementCategory, token: Token) {
+  const numberBegin = indexOfDigit(token.content);
+  const prefix = KeywordManager.normalize(token.content.slice(0, numberBegin));
+  if (!KeywordManager.contains(category, prefix)) return false;
+  const num = token.content.slice(numberBegin);
+
+  switch (category) {
+    case ElementCategory.EpisodePrefix:
+      if (!matchEpisodePatterns(context, num, token)) {
+        setEpisodeNumber(context, num, token, false);
+      }
+      return true;
+    case ElementCategory.VolumePrefix:
+      if (!matchVolumePatterns(context, num, token)) {
+        setVolumeNumber(context, num, token, false);
+      }
+      return true;
+  }
+  return false;
+}
+
+/**
+ * Checks whether the number precedes the word "of"
+ */
+function numberComesBeforeAnotherNumber(context: ParserContext, position: number) {
+  const separatorToken = findPrevToken(context.tokens, position, TokenFlag.NotDelimiter);
+  if (!inRange(context.tokens, separatorToken)) return false;
+
+  const separators = [
+    ['&', true],
+    ['of', false]
+  ] as const;
+
+  for (const sep of separators) {
+    if (context.tokens[separatorToken].content !== sep[0]) continue;
+
+    const otherToken = findNextToken(context.tokens, separatorToken, TokenFlag.NotDelimiter);
+    if (
+      !inRange(context.tokens, otherToken) ||
+      !isNumericString(context.tokens[otherToken].content)
+    ) {
+      continue;
+    }
+    setEpisodeNumber(context, context.tokens[position].content, context.tokens[position], false);
+
+    if (sep[1]) {
+      setEpisodeNumber(
+        context,
+        context.tokens[otherToken].content,
+        context.tokens[otherToken],
+        false
+      );
+    }
+
+    context.tokens[separatorToken].category = TokenCategory.Identifier;
+    context.tokens[otherToken].category = TokenCategory.Identifier;
+    return true;
+  }
+
+  return false;
+}
 
 export function matchEpisodePatterns(context: ParserContext, word: string, token: Token) {
   if (isNumericString(word)) return false;

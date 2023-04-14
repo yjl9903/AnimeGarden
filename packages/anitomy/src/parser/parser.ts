@@ -38,6 +38,20 @@ export function checkAndSetAnimeSeasonKeyword(context: ParserContext, position: 
 }
 
 /**
+ * Added by https://github.com/yjl9903/AnimeGarden
+ * e.g. S02, S2
+ */
+export function checkAndSetAnimeSeason(context: ParserContext, position: number) {
+  const token = context.tokens[position];
+  const RE = /^S-?(\d{1,3})$/;
+  const match = RE.exec(token.content);
+  if (!match) return false;
+  context.tokens[position].category = TokenCategory.Identifier;
+  setResult(context, ElementCategory.AnimeSeason, match[1]);
+  return true;
+}
+
+/**
  * A Method to find the correct volume/episode number when prefixed (i.e. Vol.4).
  */
 export function checkExtentKeyword(
