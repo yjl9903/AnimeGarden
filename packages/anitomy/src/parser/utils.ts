@@ -18,6 +18,7 @@ const SearchableElementCategories = new Set([
   ElementCategory.DeviceCompatibility,
   ElementCategory.EpisodePrefix,
   ElementCategory.FileChecksum,
+  ElementCategory.FileExtension,
   ElementCategory.Language,
   ElementCategory.Other,
   ElementCategory.ReleaseGroup,

@@ -116,6 +116,13 @@ function searchForKeywords(context: ParserContext) {
       } else if (!hasResult(context, ElementCategory.VideoResolution) && isResolution(word)) {
         category = ElementCategory.VideoResolution;
       }
+      {
+        // Video extension may appear in the title
+        const found = KeywordManager.find(keyword, ElementCategory.FileExtension);
+        if (found) {
+          category = found.category;
+        }
+      }
     }
 
     if (category !== ElementCategory.Unknown) {
