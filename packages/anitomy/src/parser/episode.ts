@@ -147,7 +147,7 @@ export function matchEpisodePatterns(context: ParserContext, word: string, token
   }
 
   // U+8A71 is used as counter for stories, episodes of TV series, etc.
-  if (numericFront && matchJapaneseCounterPattern(context, word, token)) {
+  if (matchJapaneseCounterPattern(context, word, token)) {
     return true;
   }
 
@@ -306,14 +306,13 @@ function matchPartialEpisodePattern(context: ParserContext, word: string, token:
 function matchJapaneseCounterPattern(context: ParserContext, word: string, token: Token) {
   const hua = ['話', '话', '集'];
   if (word.length > 0 && hua.includes(word.at(-1)!)) {
-    return false;
+    const RE = /^第?(\d{1,4})(?:話|话|集)$/;
+    const match = RE.exec(word);
+    if (!match) return false;
+    setEpisodeNumber(context, match[1], token, false);
+    return true;
   }
-
-  const RE = /^第?(\d{1,3})(?:話|话|集)$/;
-  const match = RE.exec(word);
-  if (!match) return false;
-  setEpisodeNumber(context, match[1], token, false);
-  return true;
+  return false;
 }
 
 export function setEpisodeNumber(

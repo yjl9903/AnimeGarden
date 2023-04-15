@@ -234,8 +234,9 @@ function searchForAnimeTitle(context: ParserContext) {
       tokenBegin = findToken(context.tokens, tokenBegin, context.tokens.length, TokenFlag.Unknown);
       if (!inRange(context.tokens, tokenBegin)) break;
 
-      // Ignore groups that are composed of non-Latin characters
-      if (isMostlyLatinString(context.tokens[tokenBegin].content) && skippedPreviousGroup) {
+      // Changed by https://github.com/yjl9903/AnimeGarden
+      // Ignore groups that are composed of Latin characters
+      if (!isMostlyLatinString(context.tokens[tokenBegin].content) && skippedPreviousGroup) {
         break;
       }
 

@@ -4,7 +4,7 @@ import { parse } from '../src';
 
 import { other } from './testcase';
 
-describe('Lilith-Raws', () => {
+describe('Other filenames', () => {
   it('should parse', () => {
     for (const filename of other) {
       expect(parse(filename)).toMatchSnapshot();
