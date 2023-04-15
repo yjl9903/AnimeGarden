@@ -1,4 +1,8 @@
 import { ParserContext } from './context';
+import { isMatchTokenCategory } from './utils';
+
+import { TokenCategory, TokenFlag, findPrevToken } from '../token';
+import { setEpisodeNumber } from './episode';
 
 export const AnimeYearMin = 1900;
 export const AnimeYearMax = 2100;
@@ -31,6 +35,32 @@ export function searchForIsolatedEpisodeNumber(context: ParserContext, tokens: n
 }
 
 export function searchForLastNumber(context: ParserContext, tokens: number[]) {
+  for (const it of tokens) {
+    // Assuming that episode number always comes after the title,
+    // the first token cannot be what we're looking for
+    if (it === 0) continue;
+    if (context.tokens[it].enclosed) continue;
+
+    // Ignore if it's the first non-enclosed, non-delimiter token
+    if (
+      context.tokens.slice(0, it).every((t) => t.enclosed || t.category === TokenCategory.Delimiter)
+    ) {
+      continue;
+    }
+
+    const prevToken = findPrevToken(context.tokens, it, TokenFlag.NotDelimiter);
+    if (isMatchTokenCategory(TokenCategory.Unknown, context.tokens[prevToken])) {
+      const prevContent = context.tokens[prevToken].content;
+      if (prevContent === 'Movie' || prevContent === 'Part') {
+        continue;
+      }
+    }
+
+    // We'll use this number after all
+    if (setEpisodeNumber(context, context.tokens[it].content, context.tokens[it], true)) {
+      return true;
+    }
+  }
   return false;
 }
 
