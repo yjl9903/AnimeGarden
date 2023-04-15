@@ -38,7 +38,8 @@ router.get('/resources', async (request, env: Env) => {
     },
     include: {
       fansub: true,
-      publisher: true
+      publisher: true,
+      anitomy: true
     }
   });
 
