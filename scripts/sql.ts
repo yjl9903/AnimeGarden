@@ -20,7 +20,7 @@ cli.command('resource', 'Generate resources sql').action(async (option) => {
     `);
   }
   const sc: string[] = [];
-  const chunkSize = 1000;
+  const chunkSize = 100;
   for (let i = 0, p = 0; i < lines.length; p += 1, i += chunkSize) {
     const chunk = lines.slice(i, i + chunkSize);
     sc.push(`pnpm -C packages/worker db:exec data/resource-${p}.sql`);
@@ -92,5 +92,5 @@ async function readResources(root = 'chunk') {
       }
     }
   }
-  return [...map.values()];
+  return [...map.values()].sort((lhs, rhs) => rhs.createdAt.localeCompare(lhs.createdAt));
 }
