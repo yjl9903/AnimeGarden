@@ -36,7 +36,7 @@ export function searchForLastNumber(context: ParserContext, tokens: number[]) {
 
 export function isValidEpisodeNumber(num: string) {
   const temp = [];
-  for (let i = 0; i < num.length && /0-9/.test(num[i]); i++) {
+  for (let i = 0; i < num.length && /[0-9\.]/.test(num[i]); i++) {
     temp.push(num[i]);
   }
   return temp.length > 0 && parseFloat(temp.join('')) <= EpisodeNumberMax;

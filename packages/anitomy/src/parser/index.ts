@@ -169,7 +169,10 @@ function searchForIsolatedNumbers(context: ParserContext) {
 function searchForEpisodeNumber(context: ParserContext) {
   const tokens = context.tokens
     .map((token, idx) => [token, idx] as const)
-    .filter(([token]) => indexOfDigit(token.content) !== -1)
+    .filter(
+      // fix: only use Unknown token and it must have digit char
+      ([token]) => token.category === TokenCategory.Unknown && indexOfDigit(token.content) !== -1
+    )
     .map(([_token, idx]) => idx);
   if (tokens.length === 0) return;
 

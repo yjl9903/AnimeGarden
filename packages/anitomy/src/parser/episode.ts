@@ -182,20 +182,21 @@ function matchMultiEpisodePattern(context: ParserContext, word: string, token: T
   const upperBound = match[3];
 
   // Avoid matching expressions such as "009-1" or "5-2"
-  if (+lowerBound >= +upperBound) return false;
-  if (!setEpisodeNumber(context, lowerBound, token, true)) {
-    return false;
-  }
-  setEpisodeNumber(context, upperBound, token, true);
+  if (+lowerBound <= +upperBound) {
+    if (setEpisodeNumber(context, lowerBound, token, true)) {
+      setEpisodeNumber(context, upperBound, token, true);
 
-  if (match[2]) {
-    setResult(context, ElementCategory.ReleaseVersion, match[2]);
-  }
-  if (match[4]) {
-    setResult(context, ElementCategory.ReleaseVersion, match[4]);
+      if (match[2]) {
+        setResult(context, ElementCategory.ReleaseVersion, match[2]);
+      }
+      if (match[4]) {
+        setResult(context, ElementCategory.ReleaseVersion, match[4]);
+      }
+      return true;
+    }
   }
 
-  return true;
+  return false;
 }
 
 /**
@@ -325,7 +326,7 @@ export function setEpisodeNumber(
 
   token.category = TokenCategory.Identifier;
 
-  if (context.isEpisodeKeywordsFound && hasResult(context, ElementCategory.EpisodeNumber)) {
+  if (hasResult(context, ElementCategory.EpisodeNumber)) {
     const oldEp = getResult(context, ElementCategory.EpisodeNumber)!;
     const diff = +num - +oldEp;
     if (diff > 0) {
