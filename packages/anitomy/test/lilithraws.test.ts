@@ -7,7 +7,9 @@ import { LilithRaws } from './testcase';
 describe('Lilith-Raws', () => {
   it('should parse', () => {
     for (const filename of LilithRaws) {
-      expect(parse(filename)).toMatchSnapshot();
+      const info = parse(filename);
+      expect(info).toMatchSnapshot();
+      expect(info?.title).toBeTruthy();
     }
   });
 });

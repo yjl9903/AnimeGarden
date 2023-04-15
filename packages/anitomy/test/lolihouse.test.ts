@@ -7,7 +7,9 @@ import { LoliHouse } from './testcase';
 describe('LoliHouse', () => {
   it('should parse', () => {
     for (const filename of LoliHouse) {
-      expect(parse(filename)).toMatchSnapshot();
+      const info = parse(filename);
+      expect(info).toMatchSnapshot();
+      expect(info?.title).toBeTruthy();
     }
   });
 });
