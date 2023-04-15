@@ -82,3 +82,14 @@ const Dashes = '-\u2010\u2011\u2012\u2013\u2014\u2015';
 export function isDashCharacter(c: string) {
   return c.length === 1 && Dashes.includes(c);
 }
+
+export function isLatinChar(c: string) {
+  // We're just checking until the end of the Latin Extended-B block,
+  // rather than all the blocks that belong to the Latin script.
+  return c[0] <= '\u024F';
+}
+
+export function isMostlyLatinString(str: string) {
+  if (str.length === 0) return false;
+  return str.split('').filter(isLatinChar).length / str.length >= 0.5;
+}

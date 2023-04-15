@@ -56,7 +56,7 @@ function resolveResult(result: ParsedResult): AnitomyResult {
     type: result['type'],
     season: normalizeSeason(result['season']),
     year: normalizeNumber(result['year']),
-    month: normalizeNumber(undefined),
+    month: normalizeNumber(result['month']),
     language: result['language'],
     subtitles: result['subtitles'],
     source: result['source'],

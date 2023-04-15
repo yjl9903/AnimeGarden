@@ -854,217 +854,6 @@ exports[`tokenize > should work 6`] = `
     },
     {
       "category": "Unknown",
-      "content": "喵萌Production",
-      "enclosed": true,
-    },
-    {
-      "category": "Delimiter",
-      "content": "&",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "LoliHouse",
-      "enclosed": true,
-    },
-    {
-      "category": "Bracket",
-      "content": "]",
-      "enclosed": true,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "偶像大师",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "灰姑娘女孩",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "U149",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "/",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "THE",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "IDOLM@STER",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "CINDERELLA",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "GIRLS",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "U149",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "-",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "02",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Bracket",
-      "content": "[",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "WebRip",
-      "enclosed": true,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": true,
-    },
-    {
-      "category": "Identifier",
-      "content": "1080p",
-      "enclosed": true,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "HEVC-10bit",
-      "enclosed": true,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "AAC",
-      "enclosed": true,
-    },
-    {
-      "category": "Bracket",
-      "content": "]",
-      "enclosed": true,
-    },
-    {
-      "category": "Bracket",
-      "content": "[",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "简繁日内封字幕",
-      "enclosed": true,
-    },
-    {
-      "category": "Bracket",
-      "content": "]",
-      "enclosed": true,
-    },
-  ],
-}
-`;
-
-exports[`tokenize > should work 7`] = `
-{
-  "ok": true,
-  "result": {
-    "video.resolution": "1080p",
-  },
-  "tokens": [
-    {
-      "category": "Bracket",
-      "content": "[",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
       "content": "喵萌奶茶屋",
       "enclosed": true,
     },
@@ -1222,7 +1011,7 @@ exports[`tokenize > should work 7`] = `
 }
 `;
 
-exports[`tokenize > should work 8`] = `
+exports[`tokenize > should work 7`] = `
 {
   "ok": true,
   "result": {
@@ -1403,7 +1192,7 @@ exports[`tokenize > should work 8`] = `
 }
 `;
 
-exports[`tokenize > should work 9`] = `
+exports[`tokenize > should work 8`] = `
 {
   "ok": true,
   "result": {
@@ -1584,7 +1373,7 @@ exports[`tokenize > should work 9`] = `
 }
 `;
 
-exports[`tokenize > should work 10`] = `
+exports[`tokenize > should work 9`] = `
 {
   "ok": true,
   "result": {
@@ -1745,7 +1534,7 @@ exports[`tokenize > should work 10`] = `
 }
 `;
 
-exports[`tokenize > should work 11`] = `
+exports[`tokenize > should work 10`] = `
 {
   "ok": true,
   "result": {
@@ -1946,7 +1735,7 @@ exports[`tokenize > should work 11`] = `
 }
 `;
 
-exports[`tokenize > should work 12`] = `
+exports[`tokenize > should work 11`] = `
 {
   "ok": true,
   "result": {
@@ -2147,7 +1936,7 @@ exports[`tokenize > should work 12`] = `
 }
 `;
 
-exports[`tokenize > should work 13`] = `
+exports[`tokenize > should work 12`] = `
 {
   "ok": true,
   "result": {
@@ -2358,7 +2147,7 @@ exports[`tokenize > should work 13`] = `
 }
 `;
 
-exports[`tokenize > should work 14`] = `
+exports[`tokenize > should work 13`] = `
 {
   "ok": true,
   "result": {
@@ -2594,7 +2383,7 @@ exports[`tokenize > should work 14`] = `
 }
 `;
 
-exports[`tokenize > should work 15`] = `
+exports[`tokenize > should work 14`] = `
 {
   "ok": true,
   "result": {
@@ -2770,7 +2559,7 @@ exports[`tokenize > should work 15`] = `
 }
 `;
 
-exports[`tokenize > should work 16`] = `
+exports[`tokenize > should work 15`] = `
 {
   "ok": true,
   "result": {
@@ -2961,7 +2750,7 @@ exports[`tokenize > should work 16`] = `
 }
 `;
 
-exports[`tokenize > should work 17`] = `
+exports[`tokenize > should work 16`] = `
 {
   "ok": true,
   "result": {
@@ -3162,7 +2951,7 @@ exports[`tokenize > should work 17`] = `
 }
 `;
 
-exports[`tokenize > should work 18`] = `
+exports[`tokenize > should work 17`] = `
 {
   "ok": true,
   "result": {
@@ -3333,7 +3122,7 @@ exports[`tokenize > should work 18`] = `
 }
 `;
 
-exports[`tokenize > should work 19`] = `
+exports[`tokenize > should work 18`] = `
 {
   "ok": true,
   "result": {
@@ -3534,7 +3323,7 @@ exports[`tokenize > should work 19`] = `
 }
 `;
 
-exports[`tokenize > should work 20`] = `
+exports[`tokenize > should work 19`] = `
 {
   "ok": true,
   "result": {
@@ -3750,7 +3539,7 @@ exports[`tokenize > should work 20`] = `
 }
 `;
 
-exports[`tokenize > should work 21`] = `
+exports[`tokenize > should work 20`] = `
 {
   "ok": true,
   "result": {
@@ -3911,7 +3700,7 @@ exports[`tokenize > should work 21`] = `
 }
 `;
 
-exports[`tokenize > should work 22`] = `
+exports[`tokenize > should work 21`] = `
 {
   "ok": true,
   "result": {
@@ -4112,7 +3901,7 @@ exports[`tokenize > should work 22`] = `
 }
 `;
 
-exports[`tokenize > should work 23`] = `
+exports[`tokenize > should work 22`] = `
 {
   "ok": true,
   "result": {
@@ -4333,409 +4122,208 @@ exports[`tokenize > should work 23`] = `
 }
 `;
 
+exports[`tokenize > should work 23`] = `
+{
+  "ok": true,
+  "result": {
+    "video.resolution": "1080p",
+  },
+  "tokens": [
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "LoliHouse",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "第二次被异世界召唤",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "/",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "異世界召喚は二度目です",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "/",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Isekai",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Shoukan",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "wa",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Nidome",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "desu",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "-",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "01",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "WebRip",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Identifier",
+      "content": "1080p",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "HEVC-10bit",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "AAC",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "简繁内封字幕",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+  ],
+}
+`;
+
 exports[`tokenize > should work 24`] = `
-{
-  "ok": true,
-  "result": {
-    "video.resolution": "1080p",
-  },
-  "tokens": [
-    {
-      "category": "Bracket",
-      "content": "[",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "LoliHouse",
-      "enclosed": true,
-    },
-    {
-      "category": "Bracket",
-      "content": "]",
-      "enclosed": true,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "第二次被异世界召唤",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "/",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "異世界召喚は二度目です",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "/",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "Isekai",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "Shoukan",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "wa",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "Nidome",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "desu",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "-",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "01",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Bracket",
-      "content": "[",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "WebRip",
-      "enclosed": true,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": true,
-    },
-    {
-      "category": "Identifier",
-      "content": "1080p",
-      "enclosed": true,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "HEVC-10bit",
-      "enclosed": true,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "AAC",
-      "enclosed": true,
-    },
-    {
-      "category": "Bracket",
-      "content": "]",
-      "enclosed": true,
-    },
-    {
-      "category": "Bracket",
-      "content": "[",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "简繁内封字幕",
-      "enclosed": true,
-    },
-    {
-      "category": "Bracket",
-      "content": "]",
-      "enclosed": true,
-    },
-  ],
-}
-`;
-
-exports[`tokenize > should work 25`] = `
-{
-  "ok": true,
-  "result": {
-    "video.resolution": "1080p",
-  },
-  "tokens": [
-    {
-      "category": "Bracket",
-      "content": "[",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "LoliHouse",
-      "enclosed": true,
-    },
-    {
-      "category": "Bracket",
-      "content": "]",
-      "enclosed": true,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "第二次被异世界召唤",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "/",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "異世界召喚は二度目です",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "/",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "Isekai",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "Shoukan",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "wa",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "Nidome",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "desu",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "-",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Unknown",
-      "content": "01",
-      "enclosed": false,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": false,
-    },
-    {
-      "category": "Bracket",
-      "content": "[",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "WebRip",
-      "enclosed": true,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": true,
-    },
-    {
-      "category": "Identifier",
-      "content": "1080p",
-      "enclosed": true,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "HEVC-10bit",
-      "enclosed": true,
-    },
-    {
-      "category": "Delimiter",
-      "content": " ",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "AAC",
-      "enclosed": true,
-    },
-    {
-      "category": "Bracket",
-      "content": "]",
-      "enclosed": true,
-    },
-    {
-      "category": "Bracket",
-      "content": "[",
-      "enclosed": true,
-    },
-    {
-      "category": "Unknown",
-      "content": "简繁内封字幕",
-      "enclosed": true,
-    },
-    {
-      "category": "Bracket",
-      "content": "]",
-      "enclosed": true,
-    },
-  ],
-}
-`;
-
-exports[`tokenize > should work 26`] = `
 {
   "ok": true,
   "result": {
@@ -4896,7 +4484,7 @@ exports[`tokenize > should work 26`] = `
 }
 `;
 
-exports[`tokenize > should work 27`] = `
+exports[`tokenize > should work 25`] = `
 {
   "ok": true,
   "result": {
@@ -5127,7 +4715,7 @@ exports[`tokenize > should work 27`] = `
 }
 `;
 
-exports[`tokenize > should work 28`] = `
+exports[`tokenize > should work 26`] = `
 {
   "ok": true,
   "result": {
@@ -5318,7 +4906,7 @@ exports[`tokenize > should work 28`] = `
 }
 `;
 
-exports[`tokenize > should work 29`] = `
+exports[`tokenize > should work 27`] = `
 {
   "ok": true,
   "result": {
@@ -5494,7 +5082,7 @@ exports[`tokenize > should work 29`] = `
 }
 `;
 
-exports[`tokenize > should work 30`] = `
+exports[`tokenize > should work 28`] = `
 {
   "ok": true,
   "result": {
@@ -5630,7 +5218,7 @@ exports[`tokenize > should work 30`] = `
 }
 `;
 
-exports[`tokenize > should work 31`] = `
+exports[`tokenize > should work 29`] = `
 {
   "ok": true,
   "result": {

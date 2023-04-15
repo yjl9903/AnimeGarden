@@ -2,13 +2,15 @@ import type { AnitomyOptions, ParsedResult } from '../types';
 
 import { KeywordManager } from '../keyword';
 import { ElementCategory } from '../element';
-import { Token, TokenCategory } from '../token';
-import { isNumericString, trim } from '../utils';
+import { Token, TokenCategory, TokenFlag, findPrevToken, findToken } from '../token';
+import { inRange, isNumericString, trim } from '../utils';
 
 import {
   isCRC32,
   isElementCategorySearchable,
   isElementCategorySingular,
+  isMatchTokenCategory,
+  isMostlyLatinString,
   isResolution
 } from './utils';
 import {
@@ -25,7 +27,9 @@ import {
   checkAndSetAnimeSeasonKeyword,
   checkAndSetAnimeSeason,
   checkExtentKeyword,
-  isTokenIsolated
+  isTokenIsolated,
+  buildElement,
+  checkAndSetAnimeMonth
 } from './parser';
 import { searchForEpisodePatterns } from './episode';
 
@@ -106,10 +110,17 @@ function searchForKeywords(context: ParserContext) {
       }
     } else {
       // Added by https://github.com/yjl9903/AnimeGarden
-      // e.g. S2, S02
+      // e.g. S2, S02, 第2季, 第二季
       if (checkAndSetAnimeSeason(context, i)) {
         continue;
       }
+
+      // Added by https://github.com/yjl9903/AnimeGarden
+      // e.g. 1月新番, 4月新番
+      if (checkAndSetAnimeMonth(context, i)) {
+        continue;
+      }
+
       // CRC32 checksum
       if (!hasResult(context, ElementCategory.FileChecksum) && isCRC32(word)) {
         category = ElementCategory.FileChecksum;
@@ -205,7 +216,84 @@ function searchForEpisodeNumber(context: ParserContext) {
   searchForLastNumber(context, tokens);
 }
 
-function searchForAnimeTitle(context: ParserContext) {}
+function searchForAnimeTitle(context: ParserContext) {
+  let enclosedTitle = false;
+  let tokenBegin = findToken(
+    context.tokens,
+    0,
+    context.tokens.length,
+    TokenFlag.NotEnclosed,
+    TokenFlag.Unknown
+  );
+
+  if (!inRange(context.tokens, tokenBegin)) {
+    tokenBegin = 0;
+    enclosedTitle = true;
+    let skippedPreviousGroup = false;
+    do {
+      tokenBegin = findToken(context.tokens, tokenBegin, context.tokens.length, TokenFlag.Unknown);
+      if (!inRange(context.tokens, tokenBegin)) break;
+
+      // Ignore groups that are composed of non-Latin characters
+      if (isMostlyLatinString(context.tokens[tokenBegin].content) && skippedPreviousGroup) {
+        break;
+      }
+
+      tokenBegin = findToken(context.tokens, tokenBegin, context.tokens.length, TokenFlag.Bracket);
+      tokenBegin = findToken(context.tokens, tokenBegin, context.tokens.length, TokenFlag.Unknown);
+      skippedPreviousGroup = true;
+    } while (inRange(context.tokens, tokenBegin));
+  }
+
+  if (!inRange(context.tokens, tokenBegin)) return;
+
+  let tokenEnd = findToken(
+    context.tokens,
+    tokenBegin,
+    context.tokens.length,
+    TokenFlag.Identifier,
+    enclosedTitle ? TokenFlag.Bracket : TokenFlag.None
+  );
+
+  // If within the interval there's an open bracket without its matching pair,
+  // move the upper endpoint back to the bracket
+  if (!enclosedTitle) {
+    let lastBracket = tokenEnd;
+    let bracketOpen = false;
+    for (let i = tokenBegin; i < tokenEnd; i++) {
+      if (context.tokens[i].category === TokenCategory.Bracket) {
+        lastBracket = i;
+        bracketOpen = !bracketOpen;
+      }
+    }
+    if (bracketOpen) tokenEnd = lastBracket;
+  }
+
+  // If the interval ends with an enclosed group (e.g. "Anime Title [Fansub]"),
+  // move the upper endpoint back to the beginning of the group. We ignore
+  // parentheses in order to keep certain groups (e.g. "(TV)") intact.
+  if (!enclosedTitle) {
+    let token = findPrevToken(context.tokens, tokenEnd, TokenFlag.NotDelimiter);
+    while (
+      isMatchTokenCategory(TokenCategory.Bracket, context.tokens[token]) &&
+      context.tokens[token].content[0] != ')'
+    ) {
+      token = findPrevToken(context.tokens, token, TokenFlag.Bracket);
+      if (inRange(context.tokens, token)) {
+        tokenEnd = token;
+        token = findPrevToken(context.tokens, tokenEnd, TokenFlag.NotDelimiter);
+      }
+    }
+  }
+
+  // Build title element
+  buildElement(
+    context,
+    ElementCategory.AnimeTitle,
+    false,
+    context.tokens.slice(tokenBegin, tokenEnd)
+  );
+}
 
 function searchForReleaseGroup(context: ParserContext) {}
 

@@ -4,7 +4,6 @@ export const LoliHouse = [
   `[喵萌Production&LoliHouse] UniteUp! 众星齐聚 - 10 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]`,
   `[豌豆字幕组&风之圣殿字幕组&LoliHouse] 新石纪 第三季 / 石纪元 第三季 / Dr.STONE S3 - 02 [WebRip 1080p HEVC-10bit AAC][简繁外挂字幕]`,
   `[喵萌Production&LoliHouse] 偶像大师 灰姑娘女孩 U149 / THE IDOLM@STER CINDERELLA GIRLS U149 - 02 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]`,
-  `[喵萌Production&LoliHouse] 偶像大师 灰姑娘女孩 U149 / THE IDOLM@STER CINDERELLA GIRLS U149 - 02 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]`,
   `[喵萌奶茶屋&LoliHouse] 跃动青春 / Skip to Loafer - 02 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]`,
   `[动漫国字幕组&LoliHouse] 关于我在无意间被隔壁的天使变成废柴这件事 / Otonari no Tenshi-sama [01-12 修正合集] [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]`,
   `[喵萌奶茶屋&LoliHouse] 放学后失眠的你 / Kimi wa Houkago Insomnia - 01 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]`,
@@ -22,7 +21,6 @@ export const LoliHouse = [
   `[动漫国字幕组&LoliHouse] 伊甸星原 / EDENS ZERO - 27 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]`,
   `[喵萌奶茶屋&LoliHouse] 我内心的糟糕念头 / Boku no Kokoro no Yabai Yatsu - 02 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]`,
   `[喵萌奶茶屋&LoliHouse] 机动战士高达 水星的魔女 / Mobile Suit Gundam THE WITCH FROM MERCURY - 13 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]`,
-  `[LoliHouse] 第二次被异世界召唤 / 異世界召喚は二度目です / Isekai Shoukan wa Nidome desu - 01 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]`,
   `[LoliHouse] 第二次被异世界召唤 / 異世界召喚は二度目です / Isekai Shoukan wa Nidome desu - 01 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]`,
   `[SweetSub&LoliHouse] 天国大魔境 / Tengoku Daimakyou - 02 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]`
 ];

@@ -1,5 +1,5 @@
 import { ElementCategory } from '../element';
-import { inRange, isNumericString } from '../utils';
+import { inRange, isNumericString, trim } from '../utils';
 import { Token, TokenCategory, TokenFlag, findNextToken, findPrevToken } from '../token';
 
 import { indexOfDigit } from './number';
@@ -39,15 +39,86 @@ export function checkAndSetAnimeSeasonKeyword(context: ParserContext, position: 
 
 /**
  * Added by https://github.com/yjl9903/AnimeGarden
- * e.g. S02, S2
  */
 export function checkAndSetAnimeSeason(context: ParserContext, position: number) {
   const token = context.tokens[position];
-  const RE = /^S-?(\d{1,3})$/;
-  const match = RE.exec(token.content);
+
+  // S02, S2, S-2
+  if (matchPrefixS()) {
+    return true;
+  }
+
+  // 第2季
+  if (matchPrefixChinese()) {
+    return true;
+  }
+
+  // 第二季
+  if (matchFullChinese()) {
+    return true;
+  }
+
+  return false;
+
+  function matchPrefixS() {
+    const RE = /^S-?(\d{1,3})$/;
+    const match = RE.exec(token.content);
+    if (!match) return false;
+    // context.tokens[position].category = TokenCategory.Identifier;
+    setResult(context, ElementCategory.AnimeSeason, match[1]);
+    return true;
+  }
+
+  function matchPrefixChinese() {
+    const RE = /^第(\d+)季$/;
+    const match = RE.exec(token.content);
+    if (!match) return false;
+    // context.tokens[position].category = TokenCategory.Identifier;
+    setResult(context, ElementCategory.AnimeSeason, match[1]);
+    return true;
+  }
+
+  function matchFullChinese() {
+    const RE = /^第(十?[零一二三四五六七八九十])季$/;
+    const match = RE.exec(token.content);
+    if (!match) return false;
+    // context.tokens[position].category = TokenCategory.Identifier;
+    setResult(context, ElementCategory.AnimeSeason, extractNumber(match[1]));
+    return true;
+
+    function extractNumber(word: string) {
+      const DICT = {
+        零: '0',
+        一: '1',
+        二: '2',
+        三: '3',
+        四: '4',
+        五: '5',
+        六: '6',
+        七: '7',
+        八: '8',
+        九: '9',
+        十: '10'
+      } as Record<string, string>;
+      if (word.length === 1) {
+        return DICT[word[0]]!;
+      } else {
+        return '1' + DICT[word[1]]!;
+      }
+    }
+  }
+}
+
+/**
+ * Added by https://github.com/yjl9903/AnimeGarden
+ */
+export function checkAndSetAnimeMonth(context: ParserContext, position: number) {
+  const word = trim(context.tokens[position].content, ['★']);
+  const RE = /^(\d{1,2})月新番$/;
+  const match = RE.exec(word);
   if (!match) return false;
   context.tokens[position].category = TokenCategory.Identifier;
-  setResult(context, ElementCategory.AnimeSeason, match[1]);
+  setResult(context, ElementCategory.AnimeMonth, match[1]);
   return true;
 }
 
@@ -85,6 +156,53 @@ export function checkExtentKeyword(
 
   token.category = TokenCategory.Identifier;
   return true;
+}
+
+export function buildElement(
+  context: ParserContext,
+  category: ElementCategory,
+  keepDelimiters: boolean,
+  tokens: Token[]
+) {
+  const element = [];
+
+  for (const token of tokens) {
+    switch (token.category) {
+      case TokenCategory.Unknown:
+        element.push(token.content);
+        token.category = TokenCategory.Identifier;
+        break;
+      case TokenCategory.Bracket:
+        element.push(token.content);
+        break;
+      case TokenCategory.Delimiter:
+        const delimiter = token.content[0] ?? '';
+        if (keepDelimiters) {
+          element.push(delimiter);
+        } else {
+          switch (delimiter) {
+            case ',':
+            case '&':
+              element.push(delimiter);
+              break;
+            default:
+              element.push(' ');
+              break;
+          }
+        }
+        break;
+    }
+  }
+
+  if (!keepDelimiters) {
+    const t = trim(element.join(''), ' -\u2010\u2011\u2012\u2013\u2014\u2015'.split(''));
+    element.splice(0, element.length, t);
+  }
+
+  const title = element.join('');
+  if (title) {
+    setResult(context, category, title);
+  }
 }
 
 /**

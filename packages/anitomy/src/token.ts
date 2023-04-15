@@ -100,3 +100,12 @@ export function findPrevToken(tokens: Token[], position: number, ...flags: Token
   }
   return -1;
 }
+
+export function findToken(tokens: Token[], start: number, end: number, ...flags: TokenFlag[]) {
+  for (let i = start; i < end; i++) {
+    if (checkTokenFlags(tokens[i], flags)) {
+      return i;
+    }
+  }
+  return -1;
+}

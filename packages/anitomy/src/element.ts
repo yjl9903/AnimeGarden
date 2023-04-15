@@ -4,6 +4,7 @@ export enum ElementCategory {
   AnimeTitle = 'title',
   AnimeType = 'type',
   AnimeYear = 'year',
+  AnimeMonth = 'month', // Added by https://github.com/yjl9903/AnimeGarden
   DeviceCompatibility = 'DeviceCompatibility',
   Source = 'source',
   // Episode

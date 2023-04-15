@@ -20,7 +20,7 @@ exports[`parse > should work 1`] = `
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "肌肉魔法使-MASHLE- / Mashle",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -53,7 +53,7 @@ exports[`parse > should work 2`] = `
   "season": undefined,
   "source": "BDRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "赤色光弹Zillion / Akai Koudan Zillion",
   "type": undefined,
   "video": {
     "resolution": "720p",
@@ -86,7 +86,7 @@ exports[`parse > should work 3`] = `
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "UniteUp! 众星齐聚",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -119,7 +119,7 @@ exports[`parse > should work 4`] = `
   "season": "3",
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "新石纪 第三季 / 石纪元 第三季 / Dr STONE S3",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -152,7 +152,7 @@ exports[`parse > should work 5`] = `
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "偶像大师 灰姑娘女孩 U149 / THE IDOLM@STER CINDERELLA GIRLS U149",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -178,14 +178,14 @@ exports[`parse > should work 6`] = `
   "file": {
     "checksum": undefined,
     "extension": undefined,
-    "name": "[喵萌Production&LoliHouse] 偶像大师 灰姑娘女孩 U149 / THE IDOLM@STER CINDERELLA GIRLS U149 - 02 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]",
+    "name": "[喵萌奶茶屋&LoliHouse] 跃动青春 / Skip to Loafer - 02 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]",
   },
   "language": undefined,
   "month": undefined,
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "跃动青春 / Skip to Loafer",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -199,39 +199,6 @@ exports[`parse > should work 6`] = `
 `;
 
 exports[`parse > should work 7`] = `
-{
-  "audio": {
-    "term": "AAC",
-  },
-  "episode": {
-    "number": 2,
-    "numberAlt": undefined,
-    "title": undefined,
-  },
-  "file": {
-    "checksum": undefined,
-    "extension": undefined,
-    "name": "[喵萌奶茶屋&LoliHouse] 跃动青春 / Skip to Loafer - 02 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]",
-  },
-  "language": undefined,
-  "month": undefined,
-  "season": undefined,
-  "source": "WebRip",
-  "subtitles": undefined,
-  "title": undefined,
-  "type": undefined,
-  "video": {
-    "resolution": "1080p",
-    "term": "HEVC-10bit",
-  },
-  "volume": {
-    "number": undefined,
-  },
-  "year": undefined,
-}
-`;
-
-exports[`parse > should work 8`] = `
 {
   "audio": {
     "term": "AAC",
@@ -251,7 +218,40 @@ exports[`parse > should work 8`] = `
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "关于我在无意间被隔壁的天使变成废柴这件事 / Otonari no Tenshi-sama",
+  "type": undefined,
+  "video": {
+    "resolution": "1080p",
+    "term": "HEVC-10bit",
+  },
+  "volume": {
+    "number": undefined,
+  },
+  "year": undefined,
+}
+`;
+
+exports[`parse > should work 8`] = `
+{
+  "audio": {
+    "term": "AAC",
+  },
+  "episode": {
+    "number": 1,
+    "numberAlt": undefined,
+    "title": undefined,
+  },
+  "file": {
+    "checksum": undefined,
+    "extension": undefined,
+    "name": "[喵萌奶茶屋&LoliHouse] 放学后失眠的你 / Kimi wa Houkago Insomnia - 01 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]",
+  },
+  "language": undefined,
+  "month": undefined,
+  "season": undefined,
+  "source": "WebRip",
+  "subtitles": undefined,
+  "title": "放学后失眠的你 / Kimi wa Houkago Insomnia",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -277,14 +277,14 @@ exports[`parse > should work 9`] = `
   "file": {
     "checksum": undefined,
     "extension": undefined,
-    "name": "[喵萌奶茶屋&LoliHouse] 放学后失眠的你 / Kimi wa Houkago Insomnia - 01 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]",
+    "name": "[喵萌奶茶屋&LoliHouse] 勇者死了！/ Yuusha ga Shinda! - 01 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]",
   },
   "language": undefined,
   "month": undefined,
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "勇者死了！/ Yuusha ga Shinda!",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -310,14 +310,14 @@ exports[`parse > should work 10`] = `
   "file": {
     "checksum": undefined,
     "extension": undefined,
-    "name": "[喵萌奶茶屋&LoliHouse] 勇者死了！/ Yuusha ga Shinda! - 01 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]",
+    "name": "[动漫国字幕组&LoliHouse] 魔法使的新娘 第二季 / Mahou Tsukai no Yome S2 - 01 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]",
   },
   "language": undefined,
   "month": undefined,
-  "season": undefined,
+  "season": "2",
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "魔法使的新娘 第二季 / Mahou Tsukai no Yome S2",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -343,14 +343,14 @@ exports[`parse > should work 11`] = `
   "file": {
     "checksum": undefined,
     "extension": undefined,
-    "name": "[动漫国字幕组&LoliHouse] 魔法使的新娘 第二季 / Mahou Tsukai no Yome S2 - 01 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]",
+    "name": "[动漫国字幕组&LoliHouse] 为美好的世界献上爆焰! / Kono Subarashii Sekai ni Bakuen wo! - 01 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]",
   },
   "language": undefined,
   "month": undefined,
-  "season": "2",
+  "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "为美好的世界献上爆焰! / Kono Subarashii Sekai ni Bakuen wo!",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -364,39 +364,6 @@ exports[`parse > should work 11`] = `
 `;
 
 exports[`parse > should work 12`] = `
-{
-  "audio": {
-    "term": "AAC",
-  },
-  "episode": {
-    "number": 1,
-    "numberAlt": undefined,
-    "title": undefined,
-  },
-  "file": {
-    "checksum": undefined,
-    "extension": undefined,
-    "name": "[动漫国字幕组&LoliHouse] 为美好的世界献上爆焰! / Kono Subarashii Sekai ni Bakuen wo! - 01 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]",
-  },
-  "language": undefined,
-  "month": undefined,
-  "season": undefined,
-  "source": "WebRip",
-  "subtitles": undefined,
-  "title": undefined,
-  "type": undefined,
-  "video": {
-    "resolution": "1080p",
-    "term": "HEVC-10bit",
-  },
-  "volume": {
-    "number": undefined,
-  },
-  "year": undefined,
-}
-`;
-
-exports[`parse > should work 13`] = `
 {
   "audio": {
     "term": "AAC",
@@ -416,7 +383,40 @@ exports[`parse > should work 13`] = `
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "与山田谈一场Lv999的恋爱 / Yamada-kun to Lv999 no Koi wo Suru",
+  "type": undefined,
+  "video": {
+    "resolution": "1080p",
+    "term": "HEVC-10bit",
+  },
+  "volume": {
+    "number": undefined,
+  },
+  "year": undefined,
+}
+`;
+
+exports[`parse > should work 13`] = `
+{
+  "audio": {
+    "term": "AAC",
+  },
+  "episode": {
+    "number": 12,
+    "numberAlt": undefined,
+    "title": undefined,
+  },
+  "file": {
+    "checksum": undefined,
+    "extension": undefined,
+    "name": "[悠哈璃羽字幕社&LoliHouse] 冰属性男子与无表情女子 / Koori Zokusei Danshi to Cool na Douryou Joshi - 12 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕][END]",
+  },
+  "language": undefined,
+  "month": undefined,
+  "season": undefined,
+  "source": "WebRip",
+  "subtitles": undefined,
+  "title": "冰属性男子与无表情女子 / Koori Zokusei Danshi to Cool na Douryou Joshi",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -442,14 +442,14 @@ exports[`parse > should work 14`] = `
   "file": {
     "checksum": undefined,
     "extension": undefined,
-    "name": "[悠哈璃羽字幕社&LoliHouse] 冰属性男子与无表情女子 / Koori Zokusei Danshi to Cool na Douryou Joshi - 12 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕][END]",
+    "name": "[悠哈璃羽字幕社&LoliHouse] 不相信人类的冒险者们好像要去拯救世界 / Ningen Fushin - 12 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕][END]",
   },
   "language": undefined,
   "month": undefined,
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "不相信人类的冒险者们好像要去拯救世界 / Ningen Fushin",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -468,21 +468,21 @@ exports[`parse > should work 15`] = `
     "term": "AAC",
   },
   "episode": {
-    "number": 12,
+    "number": 1,
     "numberAlt": undefined,
     "title": undefined,
   },
   "file": {
     "checksum": undefined,
     "extension": undefined,
-    "name": "[悠哈璃羽字幕社&LoliHouse] 不相信人类的冒险者们好像要去拯救世界 / Ningen Fushin - 12 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕][END]",
+    "name": "[LoliHouse] 亡骸游戏 / 尸体如山的死亡游戏 / Dead Mount Death Play - 01 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]",
   },
   "language": undefined,
   "month": undefined,
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "亡骸游戏 / 尸体如山的死亡游戏 / Dead Mount Death Play",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -508,14 +508,14 @@ exports[`parse > should work 16`] = `
   "file": {
     "checksum": undefined,
     "extension": undefined,
-    "name": "[LoliHouse] 亡骸游戏 / 尸体如山的死亡游戏 / Dead Mount Death Play - 01 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]",
+    "name": "[喵萌奶茶屋&LoliHouse] 女神咖啡厅 / 女神的露天咖啡厅 / Megami no Cafe Terrace - 01 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]",
   },
   "language": undefined,
   "month": undefined,
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "女神咖啡厅 / 女神的露天咖啡厅 / Megami no Cafe Terrace",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -541,14 +541,14 @@ exports[`parse > should work 17`] = `
   "file": {
     "checksum": undefined,
     "extension": undefined,
-    "name": "[喵萌奶茶屋&LoliHouse] 女神咖啡厅 / 女神的露天咖啡厅 / Megami no Cafe Terrace - 01 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]",
+    "name": "[喵萌Production&LoliHouse] 世界大明星 / World Dai Star - 01 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]",
   },
   "language": undefined,
   "month": undefined,
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "世界大明星 / World Dai Star",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -562,39 +562,6 @@ exports[`parse > should work 17`] = `
 `;
 
 exports[`parse > should work 18`] = `
-{
-  "audio": {
-    "term": "AAC",
-  },
-  "episode": {
-    "number": 1,
-    "numberAlt": undefined,
-    "title": undefined,
-  },
-  "file": {
-    "checksum": undefined,
-    "extension": undefined,
-    "name": "[喵萌Production&LoliHouse] 世界大明星 / World Dai Star - 01 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]",
-  },
-  "language": undefined,
-  "month": undefined,
-  "season": undefined,
-  "source": "WebRip",
-  "subtitles": undefined,
-  "title": undefined,
-  "type": undefined,
-  "video": {
-    "resolution": "1080p",
-    "term": "HEVC-10bit",
-  },
-  "volume": {
-    "number": undefined,
-  },
-  "year": undefined,
-}
-`;
-
-exports[`parse > should work 19`] = `
 {
   "audio": {
     "term": "AAC",
@@ -614,7 +581,7 @@ exports[`parse > should work 19`] = `
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "转生贵族的异世界冒险录 ~不知克制的众神的使徒~ / Tensei Kizoku no Isekai Boukenroku",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -627,7 +594,7 @@ exports[`parse > should work 19`] = `
 }
 `;
 
-exports[`parse > should work 20`] = `
+exports[`parse > should work 19`] = `
 {
   "audio": {
     "term": "AAC",
@@ -647,7 +614,7 @@ exports[`parse > should work 20`] = `
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "鬼灭之刃 刀匠村篇 01",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -660,7 +627,7 @@ exports[`parse > should work 20`] = `
 }
 `;
 
-exports[`parse > should work 21`] = `
+exports[`parse > should work 20`] = `
 {
   "audio": {
     "term": "AAC",
@@ -680,7 +647,7 @@ exports[`parse > should work 21`] = `
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "伊甸星原 / EDENS ZERO",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -693,7 +660,7 @@ exports[`parse > should work 21`] = `
 }
 `;
 
-exports[`parse > should work 22`] = `
+exports[`parse > should work 21`] = `
 {
   "audio": {
     "term": "AAC",
@@ -713,7 +680,7 @@ exports[`parse > should work 22`] = `
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "我内心的糟糕念头 / Boku no Kokoro no Yabai Yatsu",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -726,7 +693,7 @@ exports[`parse > should work 22`] = `
 }
 `;
 
-exports[`parse > should work 23`] = `
+exports[`parse > should work 22`] = `
 {
   "audio": {
     "term": "AAC",
@@ -746,7 +713,40 @@ exports[`parse > should work 23`] = `
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "机动战士高达 水星的魔女 / Mobile Suit Gundam THE WITCH FROM MERCURY",
+  "type": undefined,
+  "video": {
+    "resolution": "1080p",
+    "term": "HEVC-10bit",
+  },
+  "volume": {
+    "number": undefined,
+  },
+  "year": undefined,
+}
+`;
+
+exports[`parse > should work 23`] = `
+{
+  "audio": {
+    "term": "AAC",
+  },
+  "episode": {
+    "number": 1,
+    "numberAlt": undefined,
+    "title": undefined,
+  },
+  "file": {
+    "checksum": undefined,
+    "extension": undefined,
+    "name": "[LoliHouse] 第二次被异世界召唤 / 異世界召喚は二度目です / Isekai Shoukan wa Nidome desu - 01 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]",
+  },
+  "language": undefined,
+  "month": undefined,
+  "season": undefined,
+  "source": "WebRip",
+  "subtitles": undefined,
+  "title": "第二次被异世界召唤 / 異世界召喚は二度目です / Isekai Shoukan wa Nidome desu",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -760,72 +760,6 @@ exports[`parse > should work 23`] = `
 `;
 
 exports[`parse > should work 24`] = `
-{
-  "audio": {
-    "term": "AAC",
-  },
-  "episode": {
-    "number": 1,
-    "numberAlt": undefined,
-    "title": undefined,
-  },
-  "file": {
-    "checksum": undefined,
-    "extension": undefined,
-    "name": "[LoliHouse] 第二次被异世界召唤 / 異世界召喚は二度目です / Isekai Shoukan wa Nidome desu - 01 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]",
-  },
-  "language": undefined,
-  "month": undefined,
-  "season": undefined,
-  "source": "WebRip",
-  "subtitles": undefined,
-  "title": undefined,
-  "type": undefined,
-  "video": {
-    "resolution": "1080p",
-    "term": "HEVC-10bit",
-  },
-  "volume": {
-    "number": undefined,
-  },
-  "year": undefined,
-}
-`;
-
-exports[`parse > should work 25`] = `
-{
-  "audio": {
-    "term": "AAC",
-  },
-  "episode": {
-    "number": 1,
-    "numberAlt": undefined,
-    "title": undefined,
-  },
-  "file": {
-    "checksum": undefined,
-    "extension": undefined,
-    "name": "[LoliHouse] 第二次被异世界召唤 / 異世界召喚は二度目です / Isekai Shoukan wa Nidome desu - 01 [WebRip 1080p HEVC-10bit AAC][简繁内封字幕]",
-  },
-  "language": undefined,
-  "month": undefined,
-  "season": undefined,
-  "source": "WebRip",
-  "subtitles": undefined,
-  "title": undefined,
-  "type": undefined,
-  "video": {
-    "resolution": "1080p",
-    "term": "HEVC-10bit",
-  },
-  "volume": {
-    "number": undefined,
-  },
-  "year": undefined,
-}
-`;
-
-exports[`parse > should work 26`] = `
 {
   "audio": {
     "term": "AAC",
@@ -845,7 +779,7 @@ exports[`parse > should work 26`] = `
   "season": undefined,
   "source": "WebRip",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "天国大魔境 / Tengoku Daimakyou",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -858,7 +792,7 @@ exports[`parse > should work 26`] = `
 }
 `;
 
-exports[`parse > should work 27`] = `
+exports[`parse > should work 25`] = `
 {
   "audio": {
     "term": "AAC",
@@ -878,7 +812,7 @@ exports[`parse > should work 27`] = `
   "season": "2",
   "source": "WEB-DL",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "熊熊勇闖異世界 PUNCH！ / Kuma Kuma Kuma Bear S02",
   "type": undefined,
   "video": {
     "resolution": "1080p",
@@ -891,7 +825,7 @@ exports[`parse > should work 27`] = `
 }
 `;
 
-exports[`parse > should work 28`] = `
+exports[`parse > should work 26`] = `
 {
   "audio": {
     "term": "AAC",
@@ -911,11 +845,77 @@ exports[`parse > should work 28`] = `
   "season": "2",
   "source": "WEB-DL",
   "subtitles": undefined,
-  "title": undefined,
+  "title": "機動戰士鋼彈 水星的魔女",
   "type": undefined,
   "video": {
     "resolution": "1080P",
     "term": "AVC",
+  },
+  "volume": {
+    "number": undefined,
+  },
+  "year": undefined,
+}
+`;
+
+exports[`parse > should work 27`] = `
+{
+  "audio": {
+    "term": undefined,
+  },
+  "episode": {
+    "number": 1,
+    "numberAlt": undefined,
+    "title": undefined,
+  },
+  "file": {
+    "checksum": undefined,
+    "extension": "MP4",
+    "name": "[爱恋字幕社][4月新番][魔法使的新娘2][Mahoutsukai no Yome S2][01][1080P][MP4][GB][简中]",
+  },
+  "language": "简中",
+  "month": 4,
+  "season": "2",
+  "source": undefined,
+  "subtitles": "GB",
+  "title": "Mahoutsukai no Yome S2",
+  "type": undefined,
+  "video": {
+    "resolution": "1080P",
+    "term": undefined,
+  },
+  "volume": {
+    "number": undefined,
+  },
+  "year": undefined,
+}
+`;
+
+exports[`parse > should work 28`] = `
+{
+  "audio": {
+    "term": undefined,
+  },
+  "episode": {
+    "number": 1,
+    "numberAlt": undefined,
+    "title": undefined,
+  },
+  "file": {
+    "checksum": undefined,
+    "extension": undefined,
+    "name": "[桜都字幕组] 总之就是非常可爱 S2 / Tonikaku Kawaii S2 [01][1080p][简体内嵌]",
+  },
+  "language": undefined,
+  "month": undefined,
+  "season": "2",
+  "source": undefined,
+  "subtitles": undefined,
+  "title": "总之就是非常可爱 S2 / Tonikaku Kawaii S2",
+  "type": undefined,
+  "video": {
+    "resolution": "1080p",
+    "term": undefined,
   },
   "volume": {
     "number": undefined,
@@ -936,77 +936,11 @@ exports[`parse > should work 29`] = `
   },
   "file": {
     "checksum": undefined,
-    "extension": "MP4",
-    "name": "[爱恋字幕社][4月新番][魔法使的新娘2][Mahoutsukai no Yome S2][01][1080P][MP4][GB][简中]",
-  },
-  "language": "简中",
-  "month": undefined,
-  "season": "2",
-  "source": undefined,
-  "subtitles": "GB",
-  "title": undefined,
-  "type": undefined,
-  "video": {
-    "resolution": "1080P",
-    "term": undefined,
-  },
-  "volume": {
-    "number": undefined,
-  },
-  "year": undefined,
-}
-`;
-
-exports[`parse > should work 30`] = `
-{
-  "audio": {
-    "term": undefined,
-  },
-  "episode": {
-    "number": 1,
-    "numberAlt": undefined,
-    "title": undefined,
-  },
-  "file": {
-    "checksum": undefined,
-    "extension": undefined,
-    "name": "[桜都字幕组] 总之就是非常可爱 S2 / Tonikaku Kawaii S2 [01][1080p][简体内嵌]",
-  },
-  "language": undefined,
-  "month": undefined,
-  "season": "2",
-  "source": undefined,
-  "subtitles": undefined,
-  "title": undefined,
-  "type": undefined,
-  "video": {
-    "resolution": "1080p",
-    "term": undefined,
-  },
-  "volume": {
-    "number": undefined,
-  },
-  "year": undefined,
-}
-`;
-
-exports[`parse > should work 31`] = `
-{
-  "audio": {
-    "term": undefined,
-  },
-  "episode": {
-    "number": 1,
-    "numberAlt": undefined,
-    "title": undefined,
-  },
-  "file": {
-    "checksum": undefined,
     "extension": undefined,
     "name": "【喵萌奶茶屋】★04月新番★[百合是我的工作！/我的百合乃工作是也！/私の百合はお仕事です！/Watashi no Yuri wa Oshigoto desu!][01][720p][繁日雙語][招募翻譯校對]",
   },
   "language": undefined,
-  "month": undefined,
+  "month": 4,
   "season": undefined,
   "source": undefined,
   "subtitles": undefined,
