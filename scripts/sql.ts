@@ -67,7 +67,7 @@ cli.command('team', 'Generate team sql').action(async (option) => {
 cli.run(process.argv.slice(2)).catch((err) => console.error(err));
 
 function escape(text: string) {
-  return text.replace(/'/g, `\\'`);
+  return text.replace(/\\/g, '\\\\').replace(/'/g, `\\'`);
 }
 
 async function readResources(root = 'chunk') {
