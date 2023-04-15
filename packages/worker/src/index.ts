@@ -19,13 +19,17 @@ router.get('/resources', async (request, env: Env) => {
   if (!params) {
     return makeErrorResponse({ message: 'Request is not valid' });
   }
-  const { page, pageSize, fansub, publisher, type } = params;
+  const { page, pageSize, fansub, publisher, type, before, after } = params;
 
   const plan = await prisma.resource.findMany({
     where: {
       type,
       fansubId: fansub,
-      publisherId: publisher
+      publisherId: publisher,
+      createdAt: {
+        gte: after?.getTime(),
+        lte: before?.getTime()
+      }
     },
     skip: (page - 1) * pageSize,
     take: pageSize,
@@ -68,6 +72,8 @@ router.get('/resources', async (request, env: Env) => {
         fansub: number | undefined;
         publisher: number | undefined;
         type: string | undefined;
+        before: Date | undefined;
+        after: Date | undefined;
       }
     | undefined {
     let page = readNum(request.query.page || '1');
@@ -81,11 +87,23 @@ router.get('/resources', async (request, env: Env) => {
     if (pageSize <= 0) pageSize = 100;
     if (pageSize > 100) pageSize = 100;
 
-    return { page, pageSize, fansub, publisher, type };
+    const before = readDate(request.query.before);
+    const after = readDate(request.query.after);
+
+    return { page, pageSize, fansub, publisher, type, before, after };
 
     function readNum(raw: string | string[]) {
       if (typeof raw === 'string' && /^\d+$/.test(raw)) {
         return +raw;
+      } else {
+        return undefined;
+      }
+    }
+
+    function readDate(raw: string | string[] | undefined) {
+      if (typeof raw === 'string') {
+        const d = new Date(raw);
+        return !isNaN(d.getTime()) ? d : undefined;
       } else {
         return undefined;
       }
