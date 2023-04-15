@@ -7079,19 +7079,9 @@ exports[`tokenize > should work 37`] = `
       "enclosed": false,
     },
     {
-      "category": "Bracket",
-      "content": "【",
-      "enclosed": true,
-    },
-    {
       "category": "Unknown",
-      "content": "我推的孩子",
-      "enclosed": true,
-    },
-    {
-      "category": "Bracket",
-      "content": "】",
-      "enclosed": true,
+      "content": "【我推的孩子】",
+      "enclosed": false,
     },
     {
       "category": "Delimiter",

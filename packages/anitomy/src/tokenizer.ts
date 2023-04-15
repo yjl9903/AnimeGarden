@@ -142,7 +142,19 @@ export function tokenize(filename: string, options: AnitomyOptions) {
   function validateDelimiterTokens() {
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i];
-      if (token.category !== TokenCategory.Delimiter) continue;
+      if (token.category !== TokenCategory.Delimiter) {
+        // Hack for "【我推的孩子】"
+        if (token.content === '我推的孩子') {
+          if (tokens[i - 1]?.content === '【' && tokens[i + 1]?.content === '】') {
+            tokens[i - 1].category = TokenCategory.Invalid;
+            tokens[i].content = '【我推的孩子】';
+            tokens[i].enclosed = false;
+            tokens[i + 1].category = TokenCategory.Invalid;
+          }
+        }
+        continue;
+      }
+
       const delimiter = token.content[0];
 
       const prevToken = findPrevToken(tokens, i, TokenFlag.Valid);
