@@ -29,7 +29,8 @@ import {
   checkExtentKeyword,
   isTokenIsolated,
   buildElement,
-  checkAndSetAnimeMonth
+  checkAndSetAnimeMonth,
+  checkAndSetReleaseGroup
 } from './parser';
 import { searchForEpisodePatterns } from './episode';
 
@@ -118,6 +119,11 @@ function searchForKeywords(context: ParserContext) {
       // Added by https://github.com/yjl9903/AnimeGarden
       // e.g. 1月新番, 4月新番
       if (checkAndSetAnimeMonth(context, i)) {
+        continue;
+      }
+
+      // Added by https://github.com/yjl9903/AnimeGarden
+      if (checkAndSetReleaseGroup(context, i)) {
         continue;
       }
 
@@ -229,20 +235,18 @@ function searchForAnimeTitle(context: ParserContext) {
   if (!inRange(context.tokens, tokenBegin)) {
     tokenBegin = 0;
     enclosedTitle = true;
-    let skippedPreviousGroup = false;
     do {
       tokenBegin = findToken(context.tokens, tokenBegin, context.tokens.length, TokenFlag.Unknown);
       if (!inRange(context.tokens, tokenBegin)) break;
 
       // Changed by https://github.com/yjl9903/AnimeGarden
       // Ignore groups that are composed of Latin characters
-      if (!isMostlyLatinString(context.tokens[tokenBegin].content) && skippedPreviousGroup) {
+      if (!isMostlyLatinString(context.tokens[tokenBegin].content)) {
         break;
       }
 
       tokenBegin = findToken(context.tokens, tokenBegin, context.tokens.length, TokenFlag.Bracket);
       tokenBegin = findToken(context.tokens, tokenBegin, context.tokens.length, TokenFlag.Unknown);
-      skippedPreviousGroup = true;
     } while (inRange(context.tokens, tokenBegin));
   }
 

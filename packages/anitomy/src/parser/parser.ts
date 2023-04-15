@@ -1,3 +1,4 @@
+import { Fansubs } from '../keyword';
 import { ElementCategory } from '../element';
 import { inRange, isNumericString, trim } from '../utils';
 import { Token, TokenCategory, TokenFlag, findNextToken, findPrevToken } from '../token';
@@ -120,6 +121,22 @@ export function checkAndSetAnimeMonth(context: ParserContext, position: number) 
   context.tokens[position].category = TokenCategory.Identifier;
   setResult(context, ElementCategory.AnimeMonth, match[1]);
   return true;
+}
+
+/**
+ * Added by https://github.com/yjl9903/AnimeGarden
+ */
+export function checkAndSetReleaseGroup(context: ParserContext, position: number) {
+  const list = context.tokens[position].content.split(/&/);
+  const ok = list.every(
+    (f) => Fansubs.has(f) || f.endsWith('字幕组') || f.endsWith('字幕組') || f.endsWith('字幕社')
+  );
+  if (ok) {
+    context.tokens[position].category = TokenCategory.Identifier;
+    setResult(context, ElementCategory.ReleaseGroup, context.tokens[position].content);
+    return true;
+  }
+  return false;
 }
 
 /**

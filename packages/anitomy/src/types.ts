@@ -53,6 +53,11 @@ export interface AnitomyResult {
     term: string | undefined;
   };
 
+  release: {
+    version: number | undefined;
+    group: string | undefined;
+  };
+
   file: {
     name: string;
 

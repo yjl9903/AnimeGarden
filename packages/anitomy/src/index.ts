@@ -75,6 +75,10 @@ function resolveResult(result: ParsedResult): AnitomyResult {
     audio: {
       term: result['audio.term']
     },
+    release: {
+      version: normalizeNumber(result['release.version']),
+      group: result['release.group']
+    },
     file: {
       name: result['filename']!,
       extension: result['extension'],
