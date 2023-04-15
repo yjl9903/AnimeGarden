@@ -9,7 +9,7 @@ export interface FetchOptions {
 }
 
 export async function fetchResourcePage(
-  ofetch: (request: RequestInfo) => Promise<Response>,
+  ofetch: (request: string) => Promise<Response>,
   options: FetchOptions = {}
 ): Promise<Resource[]> {
   const { page = 1, retry = 5 } = options;
