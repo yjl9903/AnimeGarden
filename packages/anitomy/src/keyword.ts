@@ -136,6 +136,7 @@ export class KeywordManager {
       'AVC',
       'HEVC',
       'HEVC2',
+      'HEVC-10BIT',
       'DIVX',
       'DIVX5',
       'DIVX6',
