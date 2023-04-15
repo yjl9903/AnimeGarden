@@ -13,7 +13,15 @@
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true
+    "skipDefaultLibCheck": true,
+    "paths": {
+      "animegarden": [
+        "./packages/animegarden/src/index.ts"
+      ],
+      "anitomy": [
+        "./packages/anitomy/src/index.ts"
+      ]
+    }
   },
   "exclude": [
     "node_modules"
