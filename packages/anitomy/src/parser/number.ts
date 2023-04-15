@@ -3,6 +3,7 @@ import { isMatchTokenCategory } from './utils';
 
 import { TokenCategory, TokenFlag, findPrevToken } from '../token';
 import { setEpisodeNumber } from './episode';
+import { isTokenIsolated } from './parser';
 
 export const AnimeYearMin = 1900;
 export const AnimeYearMax = 2100;
@@ -31,6 +32,14 @@ export function searchForSeparatedNumbers(context: ParserContext, tokens: number
 }
 
 export function searchForIsolatedEpisodeNumber(context: ParserContext, tokens: number[]) {
+  const isolated = tokens.filter(
+    (it) => context.tokens[it].enclosed && isTokenIsolated(context, it)
+  );
+  for (const it of isolated.reverse()) {
+    if (setEpisodeNumber(context, context.tokens[it].content, context.tokens[it], true)) {
+      return true;
+    }
+  }
   return false;
 }
 
