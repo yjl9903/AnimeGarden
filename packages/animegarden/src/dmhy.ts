@@ -8,7 +8,7 @@ export interface FetchDmhyOptions {
   retry?: number;
 }
 
-export async function fetchResourcePage(
+export async function fetchDmhyPage(
   ofetch: (request: string) => Promise<Response>,
   options: FetchDmhyOptions = {}
 ): Promise<Resource[]> {

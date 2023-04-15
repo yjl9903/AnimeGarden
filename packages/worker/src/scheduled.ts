@@ -1,4 +1,4 @@
-import { fetchResourcePage } from 'animegarden';
+import { fetchDmhyPage } from 'animegarden';
 
 import type { Env } from './types';
 
@@ -13,7 +13,7 @@ export async function handleScheduled(env: Env) {
 
   let sum = 0;
   for (let page = 1; ; page++) {
-    const res = await fetchResourcePage(fetch, { page, retry: 5 });
+    const res = await fetchDmhyPage(fetch, { page, retry: 5 });
 
     // Check teams and users
     {

@@ -13,10 +13,13 @@ npm i animegarden
 ## Usage
 
 ```ts
-import { fetchPage } from 'animegarden'
+import { fetchDmhyPage, fetchResources } from 'animegarden'
 
-// Fetch the first list page of 動漫花園
-const resources = await fetchPage();
+// Fetch the first page of 動漫花園
+const dmhy = await fetchDmhyPage(fetch)
+
+// Fetch the first page of Anime Garden mirror site
+const resources = await fetchResources(fetch)
 ```
 
 ## Credits
