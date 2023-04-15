@@ -1,5 +1,7 @@
 import type { Resource } from './types';
 
+import { retryFn } from './utils';
+
 export interface FetchOptions {
   baseURL?: string;
 
@@ -22,6 +24,11 @@ export interface FetchOptions {
    * Query count resources
    */
   count?: number;
+
+  /**
+   * The number of retry
+   */
+  retry?: number;
 }
 
 /**
@@ -31,7 +38,7 @@ export async function fetchResources(
   fetch: (request: string) => Promise<Response>,
   options: FetchOptions = {}
 ) {
-  const { baseURL = 'https://garden.onekuma.cn/api/' } = options;
+  const { baseURL = 'https://garden.onekuma.cn/api/', retry = 1 } = options;
 
   const url = new URL('resources', baseURL);
   if (options.fansub) {
@@ -55,12 +62,16 @@ export async function fetchResources(
     let timestamp = new Date(0);
     for (let page = 1; map.size < options.count; page++) {
       url.searchParams.set('page', '' + page);
-      const resp = await fetch(url.toString())
-        .then((r) => r.json())
-        .then((r) => {
-          timestamp = new Date(r.timestamp);
-          return r.resources as Resource[];
-        });
+      const resp = await retryFn(
+        () =>
+          fetch(url.toString())
+            .then((r) => r.json())
+            .then((r) => {
+              timestamp = new Date(r.timestamp);
+              return r.resources as Resource[];
+            }),
+        retry
+      );
       for (const r of resp) {
         map.set(r.href, r);
       }
@@ -71,8 +82,12 @@ export async function fetchResources(
     };
   } else {
     url.searchParams.set('page', '' + (options.page ?? 1));
-    return await fetch(url.toString())
-      .then((r) => r.json())
-      .then((r) => ({ resources: r.resources as Resource[], timestam: new Date(r.timestamp) }));
+    return await retryFn(
+      () =>
+        fetch(url.toString())
+          .then((r) => r.json())
+          .then((r) => ({ resources: r.resources as Resource[], timestam: new Date(r.timestamp) })),
+      retry
+    );
   }
 }

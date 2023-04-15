@@ -2,6 +2,8 @@ import { load } from 'cheerio';
 
 import type { Resource, ResourceType } from './types';
 
+import { retryFn } from './utils';
+
 export interface FetchDmhyOptions {
   page?: number;
 
@@ -48,19 +50,4 @@ export async function fetchDmhyPage(
     });
   });
   return res;
-}
-
-async function retryFn<T>(fn: () => Promise<T>, count: number): Promise<T> {
-  if (count < 0) {
-    count = Number.MAX_SAFE_INTEGER;
-  }
-  let e: any;
-  for (let i = 0; i < count; i++) {
-    try {
-      return await fn();
-    } catch (err) {
-      e = err;
-    }
-  }
-  throw e;
 }
