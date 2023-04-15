@@ -2,7 +2,7 @@ import { load } from 'cheerio';
 
 import type { Resource, ResourceType } from './types';
 
-export interface FetchOptions {
+export interface FetchDmhyOptions {
   page?: number;
 
   retry?: number;
@@ -10,7 +10,7 @@ export interface FetchOptions {
 
 export async function fetchResourcePage(
   ofetch: (request: string) => Promise<Response>,
-  options: FetchOptions = {}
+  options: FetchDmhyOptions = {}
 ): Promise<Resource[]> {
   const { page = 1, retry = 5 } = options;
 
