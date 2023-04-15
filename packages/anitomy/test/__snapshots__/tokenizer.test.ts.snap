@@ -11053,6 +11053,102 @@ exports[`tokenize > should work 55`] = `
 {
   "ok": true,
   "result": {
+    "video.resolution": "1080P",
+  },
+  "tokens": [
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "银色子弹字幕组",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "名侦探柯南",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "第1080集",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "对准灰原的相机",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "简繁日多语MKV",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Identifier",
+      "content": "1080P",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+  ],
+}
+`;
+
+exports[`tokenize > should work 56`] = `
+{
+  "ok": true,
+  "result": {
     "video.resolution": "1080p",
   },
   "tokens": [
@@ -11280,7 +11376,7 @@ exports[`tokenize > should work 55`] = `
 }
 `;
 
-exports[`tokenize > should work 56`] = `
+exports[`tokenize > should work 57`] = `
 {
   "ok": true,
   "result": {
@@ -11471,7 +11567,7 @@ exports[`tokenize > should work 56`] = `
 }
 `;
 
-exports[`tokenize > should work 57`] = `
+exports[`tokenize > should work 58`] = `
 {
   "ok": true,
   "result": {
@@ -11647,7 +11743,7 @@ exports[`tokenize > should work 57`] = `
 }
 `;
 
-exports[`tokenize > should work 58`] = `
+exports[`tokenize > should work 59`] = `
 {
   "ok": true,
   "result": {
@@ -11783,7 +11879,7 @@ exports[`tokenize > should work 58`] = `
 }
 `;
 
-exports[`tokenize > should work 59`] = `
+exports[`tokenize > should work 60`] = `
 {
   "ok": true,
   "result": {
