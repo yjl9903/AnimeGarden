@@ -61,7 +61,7 @@ export async function handleScheduled(env: Env) {
     const { count } = await prisma.resource.createMany({
       data: res.map((r) => ({
         title: r.title,
-        href: r.href,
+        href: r.href.split('/').at(-1)!,
         type: r.type,
         magnet: r.magnet,
         size: r.size,
