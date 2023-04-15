@@ -45,7 +45,7 @@ router.get('/resources', async (request, env: Env) => {
 
   const resources = plan.map((r) => ({
     title: r.title,
-    href: r.href,
+    href: `https://share.dmhy.org/topics/view/${r.href}`,
     type: r.type,
     magnet: r.magnet,
     size: r.size,

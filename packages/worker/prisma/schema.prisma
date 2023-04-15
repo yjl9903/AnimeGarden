@@ -21,11 +21,11 @@ model User {
 }
 
 model Resource {
-  title       String
-  href        String   @id
-  type        String
-  magnet      String
-  size        String
+  title       String   @db.VarChar(1024)
+  href        String   @id @db.VarChar(600)
+  type        String   @db.TinyText
+  size        String   @db.TinyText
+  magnet      String   @db.MediumText
   fansubId    Int?
   publisherId Int
   createdAt   BigInt
@@ -37,10 +37,10 @@ model Resource {
 }
 
 model Anitomy {
-  href    String  @id
-  title   String
+  href    String  @id @db.VarChar(600)
+  title   String  @db.TinyText
   episode Int?
-  type    String?
+  type    String? @db.TinyText
   meta    Json?
 
   Resource Resource @relation(fields: [href], references: [href])
