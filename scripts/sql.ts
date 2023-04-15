@@ -20,7 +20,7 @@ cli.command('resource', 'Generate resources sql').action(async (option) => {
     `);
   }
   const sc: string[] = [];
-  const chunkSize = 100;
+  const chunkSize = 2000;
   for (let i = 0, p = 0; i < lines.length; p += 1, i += chunkSize) {
     const chunk = lines.slice(i, i + chunkSize);
     sc.push(`pnpm -C packages/worker db:exec data/resource-${p}.sql`);
@@ -65,12 +65,7 @@ cli.command('team', 'Generate team sql').action(async (option) => {
 cli.run(process.argv.slice(2)).catch((err) => console.error(err));
 
 function escape(text: string) {
-  return text
-    .replace(/%/g, '\\%')
-    .replace(/\\/g, '\\\\')
-    .replace(/"/, '\\"')
-    .replace(/_/g, '\\_')
-    .replace(/'/g, `\\'`);
+  return text.replace(/'/g, `\\'`);
 }
 
 async function readResources(root = 'chunk') {
