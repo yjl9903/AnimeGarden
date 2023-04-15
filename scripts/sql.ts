@@ -27,6 +27,7 @@ cli.command('resource', 'Generate resources sql').action(async (option) => {
     fs.writeFile(`./packages/worker/data/resource-${p}.sql`, chunk.join('\n'), 'utf-8');
   }
   await fs.writeFile('upload.ps1', sc.join('\n'), 'utf-8');
+  console.log(`There are ${res.length} resources`);
 });
 
 cli.command('user', 'Generate user sql').action(async (option) => {
@@ -64,7 +65,12 @@ cli.command('team', 'Generate team sql').action(async (option) => {
 cli.run(process.argv.slice(2)).catch((err) => console.error(err));
 
 function escape(text: string) {
-  return text.replace(/'/g, `\\'`);
+  return text
+    .replace(/%/g, '\\%')
+    .replace(/\\/g, '\\\\')
+    .replace(/"/, '\\"')
+    .replace(/_/g, '\\_')
+    .replace(/'/g, `\\'`);
 }
 
 async function readResources(root = 'chunk') {
