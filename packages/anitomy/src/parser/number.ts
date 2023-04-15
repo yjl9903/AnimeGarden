@@ -31,6 +31,9 @@ export function searchForSeparatedNumbers(context: ParserContext, tokens: number
   return false;
 }
 
+/**
+ * Searches for isolated numbers in a list of tokens, e.g. [01].
+ */
 export function searchForIsolatedEpisodeNumber(context: ParserContext, tokens: number[]) {
   const isolated = tokens.filter(
     (it) => context.tokens[it].enclosed && isTokenIsolated(context, it)
@@ -43,6 +46,9 @@ export function searchForIsolatedEpisodeNumber(context: ParserContext, tokens: n
   return false;
 }
 
+/**
+ * Searches for the last number token in a list of tokens.
+ */
 export function searchForLastNumber(context: ParserContext, tokens: number[]) {
   for (const it of tokens) {
     // Assuming that episode number always comes after the title,
