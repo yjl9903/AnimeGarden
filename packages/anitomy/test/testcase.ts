@@ -25,8 +25,42 @@ export const LoliHouse = [
   `[SweetSub&LoliHouse] 天国大魔境 / Tengoku Daimakyou - 02 [WebRip 1080p HEVC-10bit AAC][简繁日内封字幕]`
 ];
 
+export const LilithRaws = [
+  `[Lilith-Raws] MIX 第二季 ~第二個夏天，邁向晴空~ / MIX S02 - 03 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 江戶前精靈 / Edomae Elf - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 肌肉魔法使 / Mashle - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 小鳥之翼 / Birdie Wing - Golf Girls Story S02 - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 國王排名 勇氣的寶箱 / Ousama Ranking - Yuuki no Takarabako - 01 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 勇者死了！ / Yuusha ga Shinda! - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] Opus.COLORs 色彩高校星 / Opus.COLORs - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 百合是我的工作！ / Watashi no Yuri wa Oshigoto desu! - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] Dr.STONE 新石紀 / Dr. Stone S03 - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 魔法使的新娘 / Mahoutsukai no Yome S02 - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 為美好的世界獻上爆焰！ / Kono Subarashii Sekai ni Bakuen wo! - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 怕痛的我，把防禦力點滿就對了 / Bofuri S02 - 11 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 【我推的孩子】 / Oshi no Ko - 01 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 魔術士歐菲 流浪之旅 聖域篇 / Majutsushi Orphen Hagure Tabi S04 Seiiki Hen - 01 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 第二次被異世界召喚 / Isekai Shoukan wa Nidome desu - 01 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 絆之 Allele / Kizuna no Allele - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 在異世界獲得超強能力的我，在現實世界照樣無敵～等級提升改變人生命運～ / Iseleve - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 屍體如山的死亡遊戲 / Dead Mount Death Play - 01 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 帶著智慧型手機闖蕩異世界 / Isekai wa Smartphone to Tomo ni S02 - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 熊熊勇闖異世界 PUNCH！ / Kuma Kuma Kuma Bear S02 - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 她去公爵家的理由 / Kanojo ga Koushaku-tei ni Itta Riyuu - 01 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 機戰少女 Alice Expansion / Alice Gear Aegis Expansion - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 鬼滅之刃 刀匠村篇 / Kimetsu no Yaiba - Katanakaji no Sato-Hen - 01 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 我與機器子 / Boku to Roboko - 18 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 我家的英雄 / My Home Hero - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 轉生貴族的異世界冒險錄～不知自重的眾神使徒～ / Tensei Kizoku no Isekai Boukenroku - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 機動戰士鋼彈 水星的魔女 / Mobile Suit Gundam：The Witch from Mercury S02 - 01 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 鄰人似銀河 / Otonari ni Ginga - 01 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] 和山田談場 Lv999 的戀愛 / Yamada-kun to Lv999 no Koi wo Suru - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
+  `[Lilith-Raws] UniteUp! 眾星齊聚 / UniteUp! - 11 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`
+];
+
 export const filesnames = [
   ...LoliHouse,
+  ...LilithRaws,
   `[Lilith-Raws] 熊熊勇闖異世界 PUNCH！ / Kuma Kuma Kuma Bear S02 - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
   `[ANi] 機動戰士鋼彈 水星的魔女 Season 2 - 13 [1080P][Baha][WEB-DL][AAC AVC][CHT][MP4]`,
   `[爱恋字幕社][4月新番][魔法使的新娘2][Mahoutsukai no Yome S2][01][1080P][MP4][GB][简中]`,
