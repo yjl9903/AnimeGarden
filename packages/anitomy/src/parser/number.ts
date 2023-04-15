@@ -1,9 +1,9 @@
 import { ParserContext } from './context';
+import { isTokenIsolated } from './parser';
+import { setEpisodeNumber } from './episode';
 import { isMatchTokenCategory } from './utils';
 
 import { TokenCategory, TokenFlag, findPrevToken } from '../token';
-import { setEpisodeNumber } from './episode';
-import { isTokenIsolated } from './parser';
 
 export const AnimeYearMin = 1900;
 export const AnimeYearMax = 2100;
