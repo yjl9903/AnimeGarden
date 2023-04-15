@@ -22,13 +22,26 @@ model User {
 
 model Resource {
   title       String
-  href        String @id
+  href        String   @id
   type        String
   magnet      String
   size        String
   fansubId    Int?
   publisherId Int
-  fansub      Team?  @relation(fields: [fansubId], references: [id])
-  publisher   User   @relation(fields: [publisherId], references: [id])
   createdAt   BigInt
+  fansub      Team?    @relation(fields: [fansubId], references: [id])
+  publisher   User     @relation(fields: [publisherId], references: [id])
+  anitomy     Anitomy?
+
+  @@index([createdAt(sort: Desc)])
+}
+
+model Anitomy {
+  href    String  @id
+  title   String
+  episode Int?
+  type    String?
+  meta    Json?
+
+  Resource Resource @relation(fields: [href], references: [href])
 }

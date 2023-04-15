@@ -29,4 +29,4 @@ async function main(start: number, dist: string) {
   }
 }
 
-main(1196, 'chunk/1');
+main(1, 'chunk/latest');

@@ -5,6 +5,7 @@
   "scripts": {
     "db:exec": "prisma db execute --file",
     "db:gen": "prisma generate --data-proxy",
+    "db:migrate": "pnpm prisma migrate dev --name",
     "deploy": "wrangler publish",
     "dev": "wrangler dev",
     "postinstall": "prisma generate --data-proxy",
