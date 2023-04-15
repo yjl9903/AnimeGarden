@@ -77,3 +77,8 @@ export function getNumberFromOrdinal(str: string) {
 export function isMatchTokenCategory(category: TokenCategory, token: Token | undefined) {
   return token?.category === category;
 }
+
+const Dashes = '-\u2010\u2011\u2012\u2013\u2014\u2015';
+export function isDashCharacter(c: string) {
+  return c.length === 1 && Dashes.includes(c);
+}

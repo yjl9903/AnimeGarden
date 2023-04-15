@@ -1,9 +1,10 @@
 import { ParserContext } from './context';
 import { isTokenIsolated } from './parser';
 import { setEpisodeNumber } from './episode';
-import { isMatchTokenCategory } from './utils';
+import { isDashCharacter, isMatchTokenCategory } from './utils';
 
-import { TokenCategory, TokenFlag, findPrevToken } from '../token';
+import { TokenCategory, TokenFlag, findNextToken, findPrevToken } from '../token';
+import { isNumericString } from '../utils';
 
 export const AnimeYearMin = 1900;
 export const AnimeYearMax = 2100;
@@ -23,11 +24,64 @@ export function isDigit(str: string) {
   return /^[0-9]$/.test(str);
 }
 
+/**
+ * Searches for equivalent number in a list of tokens. e.g. 08(114)
+ */
 export function searchForEquivalentNumbers(context: ParserContext, tokens: number[]) {
+  for (const it of tokens) {
+    if (isTokenIsolated(context, it) || !isValidEpisodeNumber(context.tokens[it].content)) {
+      continue;
+    }
+
+    let nextToken = findNextToken(context.tokens, it, TokenFlag.NotDelimiter);
+    if (isMatchTokenCategory(TokenCategory.Bracket, context.tokens[nextToken])) {
+      nextToken = findNextToken(
+        context.tokens,
+        nextToken,
+        TokenFlag.Enclosed,
+        TokenFlag.NotDelimiter
+      );
+      if (isMatchTokenCategory(TokenCategory.Unknown, context.tokens[nextToken])) {
+        // Check if it's an isolated number
+        if (
+          isTokenIsolated(context, nextToken) &&
+          isNumericString(context.tokens[nextToken].content) &&
+          isValidEpisodeNumber(context.tokens[nextToken].content)
+        ) {
+          // Not generate alt episode number
+          // setEpisodeNumber(context, context.tokens[it].content, context.tokens[it], true);
+          setEpisodeNumber(
+            context,
+            context.tokens[nextToken].content,
+            context.tokens[nextToken],
+            true
+          );
+          return true;
+        }
+      }
+    }
+  }
   return false;
 }
 
+/**
+ * Searches for separated numbers in a list of tokens
+ */
 export function searchForSeparatedNumbers(context: ParserContext, tokens: number[]) {
+  for (const it of tokens) {
+    const prevToken = findPrevToken(context.tokens, it, TokenFlag.NotDelimiter);
+
+    // See if the number has a preceding "-" separator
+    if (
+      isMatchTokenCategory(TokenCategory.Unknown, context.tokens[prevToken]) &&
+      isDashCharacter(context.tokens[prevToken].content[0])
+    ) {
+      if (setEpisodeNumber(context, context.tokens[it].content, context.tokens[it], true)) {
+        context.tokens[prevToken].category = TokenCategory.Identifier;
+        return true;
+      }
+    }
+  }
   return false;
 }
 
