@@ -1,0 +1,44 @@
+### List the first page of resources
+GET https://garden.onekuma.cn/api/resources
+Content-Type: application/json
+
+### List the second page of resources
+GET https://garden.onekuma.cn/api/resources?page=2
+Content-Type: application/json
+
+### List the resources from the 21st to 40th
+GET https://garden.onekuma.cn/api/resources?page=2&count=20
+Content-Type: application/json
+
+### Search resources
+GET https://garden.onekuma.cn/api/resources/search
+Content-Type: application/json
+
+{
+  "contains": ["機動戰士鋼彈 水星的魔女"]
+}
+
+### Only search 動畫
+GET https://garden.onekuma.cn/api/resources/search?type=動畫
+Content-Type: application/json
+
+{
+  "contains": ["间谍过家家"]
+}
+
+### Search resources with exclude
+GET https://garden.onekuma.cn/api/resources/search
+Content-Type: application/json
+
+{
+  "contains": ["复仇者"],
+  "exclude": ["东京复仇者"]
+}
+
+### List all the users
+GET https://garden.onekuma.cn/api/users
+Content-Type: application/json
+
+### List all the teams
+GET https://garden.onekuma.cn/api/teams
+Content-Type: application/json
