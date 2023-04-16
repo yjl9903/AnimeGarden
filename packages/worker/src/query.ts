@@ -64,7 +64,7 @@ export async function searchResources(request: IRequest, req: Request, env: Env)
           }
         },
         {
-          AND: keywords.include.map((t) => ({ title: { contains: t } }))
+          AND: keywords.include.map((arr) => ({ OR: arr.map((t) => ({ title: { contains: t } })) }))
         }
       ],
       NOT: keywords.exclude.map((t) => ({ title: { contains: t } }))
@@ -85,11 +85,11 @@ export async function searchResources(request: IRequest, req: Request, env: Env)
 
   async function resolveBody(request: Request) {
     try {
-      const body = await request.json<{ keywords?: { include: unknown; exclude: unknown } }>();
+      const body = await request.json<{ include: unknown; exclude: unknown }>();
       return {
         keywords: {
-          include: getStringArray(body.keywords?.include),
-          exclude: getStringArray(body.keywords?.exclude)
+          include: getStringArrayArray(body.include),
+          exclude: getStringArray(body.exclude)
         }
       };
     } catch (error) {
@@ -99,6 +99,17 @@ export async function searchResources(request: IRequest, req: Request, env: Env)
           exclude: []
         }
       };
+    }
+
+    function getStringArrayArray(arr: unknown): string[][] {
+      if (Array.isArray(arr)) {
+        return arr.map((x) => getStringArray(x)).filter((x) => x.length > 0);
+      } else if (typeof arr === 'string') {
+        const t = arr.trim();
+        return !!t ? [[t]] : [];
+      } else {
+        return [];
+      }
     }
 
     function getStringArray(arr: unknown): string[] {
