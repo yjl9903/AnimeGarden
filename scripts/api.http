@@ -15,7 +15,9 @@ GET https://garden.onekuma.cn/api/resources/search
 Content-Type: application/json
 
 {
-  "contains": ["機動戰士鋼彈 水星的魔女"]
+  "keywords": {
+    "include": ["機動戰士鋼彈 水星的魔女"]
+  }
 }
 
 ### Only search 動畫
@@ -23,7 +25,9 @@ GET https://garden.onekuma.cn/api/resources/search?type=動畫
 Content-Type: application/json
 
 {
-  "contains": ["间谍过家家"]
+  "keywords": {
+    "include": ["间谍过家家"]
+  }
 }
 
 ### Search resources with exclude
@@ -31,8 +35,10 @@ GET https://garden.onekuma.cn/api/resources/search
 Content-Type: application/json
 
 {
-  "contains": ["复仇者"],
-  "exclude": ["东京复仇者"]
+  "keywords": {
+    "include": ["复仇者"],
+    "exclude": ["东京复仇者"]
+  }
 }
 
 ### List all the users

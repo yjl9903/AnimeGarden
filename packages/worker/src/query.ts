@@ -50,7 +50,7 @@ export async function searchResources(request: IRequest, req: Request, env: Env)
   }
 
   const { page, pageSize, fansub, publisher, type, before, after } = params;
-  const { contains = [], exclude = [] } = await resolveBody(req);
+  const { keywords } = await resolveBody(req);
   const result = await prisma.resource.findMany({
     where: {
       AND: [
@@ -64,10 +64,10 @@ export async function searchResources(request: IRequest, req: Request, env: Env)
           }
         },
         {
-          OR: contains.map((t) => ({ title: { contains: t } }))
+          OR: keywords.include.map((t) => ({ title: { contains: t } }))
         }
       ],
-      NOT: exclude.map((t) => ({ title: { contains: t } }))
+      NOT: keywords.exclude.map((t) => ({ title: { contains: t } }))
     },
     skip: (page - 1) * pageSize,
     take: pageSize,
@@ -85,14 +85,20 @@ export async function searchResources(request: IRequest, req: Request, env: Env)
 
   async function resolveBody(request: Request) {
     try {
-      const body = await request.json<{ contains: string[]; exclude: string[] }>();
-
+      const body = await request.json<{ keywords?: { include: unknown; exclude: unknown } }>();
       return {
-        contains: getStringArray(body.contains),
-        exclude: getStringArray(body.exclude)
+        keywords: {
+          include: getStringArray(body.keywords?.include),
+          exclude: getStringArray(body.keywords?.exclude)
+        }
       };
     } catch (error) {
-      return {};
+      return {
+        keywords: {
+          include: [],
+          exclude: []
+        }
+      };
     }
 
     function getStringArray(arr: unknown): string[] {
