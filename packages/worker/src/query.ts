@@ -101,6 +101,9 @@ export async function searchResources(request: IRequest, req: Request, env: Env)
           .filter((x) => typeof x === 'string')
           .map((x: string) => x.trim())
           .filter(Boolean);
+      } else if (typeof arr === 'string') {
+        const t = arr.trim();
+        return !!t ? [t] : [];
       } else {
         return [];
       }
