@@ -10,23 +10,23 @@ import { makeErrorResponse, makeResponse } from './utils';
 
 const router = Router();
 
-router.get('/', async (request, env: Env) =>
+router.get('/', async (_request, req: Request, env: Env) =>
   makeResponse({ message: 'This is AnimeGarden', timestamp: await getRefreshTimestamp(env) })
 );
 
-router.get('/resources', async (request, env: Env) => {
-  return queryResources(request, env);
+router.get('/resources', async (_request, req: Request, env: Env) => {
+  return queryResources(_request, req, env);
 });
 
-router.get('/resources/search', async (request, env: Env) => {
-  return searchResources(request, env);
+router.get('/resources/search', async (_request, req: Request, env: Env) => {
+  return searchResources(_request, req, env);
 });
 
-router.post('/resources/search', async (request, env: Env) => {
-  return searchResources(request, env);
+router.post('/resources/search', async (_request, req: Request, env: Env) => {
+  return searchResources(_request, req, env);
 });
 
-router.put('/resources', async (request, env: Env) => {
+router.put('/resources', async (_request, req: Request, env: Env) => {
   try {
     return makeResponse(await handleScheduled(env));
   } catch (error) {
@@ -35,13 +35,13 @@ router.put('/resources', async (request, env: Env) => {
   }
 });
 
-router.get('/users', async (request, env: Env) => {
+router.get('/users', async (_request, req: Request, env: Env) => {
   const prisma = makePrisma(env);
   const users = await prisma.user.findMany();
   return makeResponse({ users });
 });
 
-router.get('/teams', async (request, env: Env) => {
+router.get('/teams', async (_request, req: Request, env: Env) => {
   const prisma = makePrisma(env);
   const teams = await prisma.team.findMany();
   return makeResponse({ teams });
@@ -51,7 +51,7 @@ router.all('*', () => makeErrorResponse({ message: '404 NOT FOUND' }, { status: 
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
-    return router.handle(request, env, ctx);
+    return router.handle(request, request, env, ctx);
   },
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
     ctx.waitUntil(handleScheduled(env));

@@ -1,4 +1,3 @@
-import type { IRequest } from 'itty-router';
 import type { Resource, Team, User, Anitomy } from '@prisma/client';
 
 import type { Env } from './types';
@@ -6,8 +5,9 @@ import type { Env } from './types';
 import { makePrisma } from './prisma';
 import { getRefreshTimestamp } from './state';
 import { makeErrorResponse, makeResponse } from './utils';
+import { IRequest } from 'itty-router';
 
-export async function queryResources(request: IRequest, env: Env) {
+export async function queryResources(request: IRequest, req: Request, env: Env) {
   const prisma = makePrisma(env);
 
   const params = resolveQueryParams(request.query);
@@ -41,7 +41,7 @@ export async function queryResources(request: IRequest, env: Env) {
   return makeResponse({ resources, timestamp: await getRefreshTimestamp(env) });
 }
 
-export async function searchResources(request: IRequest, env: Env) {
+export async function searchResources(request: IRequest, req: Request, env: Env) {
   const prisma = makePrisma(env);
 
   const params = resolveQueryParams(request.query);
@@ -50,6 +50,7 @@ export async function searchResources(request: IRequest, env: Env) {
   }
 
   const { page, pageSize, fansub, publisher, type, before, after } = params;
+  const { contains = [], exclude = [] } = await resolveBody(req);
   const result = await prisma.resource.findMany({
     where: {
       AND: [
@@ -63,9 +64,10 @@ export async function searchResources(request: IRequest, env: Env) {
           }
         },
         {
-          OR: []
+          OR: contains.map((t) => ({ title: { contains: t } }))
         }
-      ]
+      ],
+      NOT: exclude.map((t) => ({ title: { contains: t } }))
     },
     skip: (page - 1) * pageSize,
     take: pageSize,
@@ -80,6 +82,30 @@ export async function searchResources(request: IRequest, env: Env) {
   });
   const resources = resolveQueryResult(result);
   return makeResponse({ resources });
+
+  async function resolveBody(request: Request) {
+    try {
+      const body = await request.json<{ contains: string[]; exclude: string[] }>();
+
+      return {
+        contains: getStringArray(body.contains),
+        exclude: getStringArray(body.exclude)
+      };
+    } catch (error) {
+      return {};
+    }
+
+    function getStringArray(arr: unknown): string[] {
+      if (Array.isArray(arr)) {
+        return arr
+          .filter((x) => typeof x === 'string')
+          .map((x: string) => x.trim())
+          .filter(Boolean);
+      } else {
+        return [];
+      }
+    }
+  }
 }
 
 interface QueryParams {
