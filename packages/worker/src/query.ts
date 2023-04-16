@@ -64,7 +64,7 @@ export async function searchResources(request: IRequest, req: Request, env: Env)
           }
         },
         {
-          OR: keywords.include.map((t) => ({ title: { contains: t } }))
+          AND: keywords.include.map((t) => ({ title: { contains: t } }))
         }
       ],
       NOT: keywords.exclude.map((t) => ({ title: { contains: t } }))
