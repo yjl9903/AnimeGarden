@@ -1,46 +1,21 @@
-# Astro Starter Kit: Minimal
+# 🌸 AnimeGarden Web Application
 
-```
-npm create astro@latest -- --template minimal
-```
+[![version](https://img.shields.io/npm/v/animegarden?color=rgb%2850%2C203%2C86%29&label=animegarden)](https://www.npmjs.com/package/animegarden) [![version](https://img.shields.io/npm/v/anitomy?color=rgb%2850%2C203%2C86%29&label=anitomy)](https://www.npmjs.com/package/anitomy) [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml) [![Deploy Worker](https://github.com/yjl9903/AnimeGarden/actions/workflows/deploy.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/deploy.yml) [![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://garden.onekuma.cn)
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
+動漫花園 3-rd party [mirror site](https://garden.onekuma.cn) and [API endpoint](https://garden.onekuma.cn/api/resources).
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## API Usage
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+curl https://garden.onekuma.cn/api/resources?page=1&count=1
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Credits
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
++ [動漫花園](https://share.dmhy.org/)
++ [erengy/anitomy](https://github.com/erengy/anitomy)
++ [tabratton/AnitomySharp](https://github.com/tabratton/AnitomySharp)
 
-Any static assets, like images, can be placed in the `public/` directory.
+## License
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `npm install`          | Installs dependencies                            |
-| `npm run dev`          | Starts local dev server at `localhost:3000`      |
-| `npm run build`        | Build your production site to `./dist/`          |
-| `npm run preview`      | Preview your build locally, before deploying     |
-| `npm run astro ...`    | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+MIT License © 2023 [XLor](https://github.com/yjl9903)
