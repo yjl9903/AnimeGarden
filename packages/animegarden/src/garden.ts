@@ -15,6 +15,11 @@ export interface FetchOptions {
 
   after?: Date;
 
+  search?: {
+    include?: string | (string | string[])[];
+    exclude?: string[];
+  };
+
   /**
    * Query the specified page
    */
@@ -35,12 +40,12 @@ export interface FetchOptions {
  * Fetch resources data from dmhy mirror site
  */
 export async function fetchResources(
-  fetch: (request: string) => Promise<Response>,
+  fetch: (request: RequestInfo, init?: RequestInit) => Promise<Response>,
   options: FetchOptions = {}
 ) {
   const { baseURL = 'https://garden.onekuma.cn/api/', retry = 1 } = options;
 
-  const url = new URL('resources', baseURL);
+  const url = new URL(options.search ? 'resources/search' : 'resources', baseURL);
   if (options.fansub) {
     url.searchParams.set('fansub', '' + options.fansub);
   }
@@ -61,18 +66,9 @@ export async function fetchResources(
     const map = new Map<string, Resource>();
     let timestamp = new Date(0);
     for (let page = 1; map.size < options.count; page++) {
-      url.searchParams.set('page', '' + page);
-      const resp = await retryFn(
-        () =>
-          fetch(url.toString())
-            .then((r) => r.json())
-            .then((r) => {
-              timestamp = new Date(r.timestamp);
-              return r.resources as Resource[];
-            }),
-        retry
-      );
-      for (const r of resp) {
+      const resp = await fetchPage(page);
+      timestamp = resp.timestamp;
+      for (const r of resp.resources) {
         map.set(r.href, r);
       }
     }
@@ -81,13 +77,39 @@ export async function fetchResources(
       timestamp
     };
   } else {
-    url.searchParams.set('page', '' + (options.page ?? 1));
-    return await retryFn(
-      () =>
-        fetch(url.toString())
-          .then((r) => r.json())
-          .then((r) => ({ resources: r.resources as Resource[], timestam: new Date(r.timestamp) })),
-      retry
-    );
+    return fetchPage(options.page ?? 1);
+  }
+
+  async function fetchPage(page: number) {
+    url.searchParams.set('page', '' + page);
+    if (options.search) {
+      return await retryFn(
+        () =>
+          fetch(url.toString(), {
+            method: 'POST',
+            body: JSON.stringify(options.search),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+            .then((r) => r.json())
+            .then((r) => ({
+              resources: r.resources as Resource[],
+              timestamp: new Date(r.timestamp)
+            })),
+        retry
+      );
+    } else {
+      return await retryFn(
+        () =>
+          fetch(url.toString())
+            .then((r) => r.json())
+            .then((r) => ({
+              resources: r.resources as Resource[],
+              timestamp: new Date(r.timestamp)
+            })),
+        retry
+      );
+    }
   }
 }

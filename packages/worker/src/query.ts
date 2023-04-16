@@ -81,7 +81,7 @@ export async function searchResources(request: IRequest, req: Request, env: Env)
     }
   });
   const resources = resolveQueryResult(result);
-  return makeResponse({ resources });
+  return makeResponse({ resources, timestamp: await getRefreshTimestamp(env) });
 
   async function resolveBody(request: Request) {
     try {
