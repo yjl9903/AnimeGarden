@@ -3,7 +3,7 @@ import { Router } from 'itty-router';
 import type { Env } from './types';
 
 import { makePrisma } from './prisma';
-import { queryResources } from './query';
+import { queryResources, searchResources } from './query';
 import { handleScheduled } from './scheduled';
 import { getRefreshTimestamp } from './state';
 import { makeErrorResponse, makeResponse } from './utils';
@@ -16,6 +16,14 @@ router.get('/', async (request, env: Env) =>
 
 router.get('/resources', async (request, env: Env) => {
   return queryResources(request, env);
+});
+
+router.get('/resources/search', async (request, env: Env) => {
+  return searchResources(request, env);
+});
+
+router.post('/resources/search', async (request, env: Env) => {
+  return searchResources(request, env);
 });
 
 router.put('/resources', async (request, env: Env) => {

@@ -1,4 +1,5 @@
 import type { IRequest } from 'itty-router';
+import type { Resource, Team, User, Anitomy } from '@prisma/client';
 
 import type { Env } from './types';
 
@@ -9,13 +10,13 @@ import { makeErrorResponse, makeResponse } from './utils';
 export async function queryResources(request: IRequest, env: Env) {
   const prisma = makePrisma(env);
 
-  const params = resolveParams();
+  const params = resolveQueryParams(request.query);
   if (!params) {
     return makeErrorResponse({ message: 'Request is not valid' });
   }
   const { page, pageSize, fansub, publisher, type, before, after } = params;
 
-  const plan = await prisma.resource.findMany({
+  const result = await prisma.resource.findMany({
     where: {
       type,
       fansubId: fansub,
@@ -36,8 +37,102 @@ export async function queryResources(request: IRequest, env: Env) {
       anitomy: true
     }
   });
+  const resources = resolveQueryResult(result);
+  return makeResponse({ resources, timestamp: await getRefreshTimestamp(env) });
+}
 
-  const resources = plan.map((r) => ({
+export async function searchResources(request: IRequest, env: Env) {
+  const prisma = makePrisma(env);
+
+  const params = resolveQueryParams(request.query);
+  if (!params) {
+    return makeErrorResponse({ message: 'Request is not valid' });
+  }
+
+  const { page, pageSize, fansub, publisher, type, before, after } = params;
+  const result = await prisma.resource.findMany({
+    where: {
+      AND: [
+        {
+          type,
+          fansubId: fansub,
+          publisherId: publisher,
+          createdAt: {
+            gte: after?.getTime(),
+            lte: before?.getTime()
+          }
+        },
+        {
+          OR: []
+        }
+      ]
+    },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+    orderBy: {
+      createdAt: 'desc'
+    },
+    include: {
+      fansub: true,
+      publisher: true,
+      anitomy: true
+    }
+  });
+  const resources = resolveQueryResult(result);
+  return makeResponse({ resources });
+}
+
+interface QueryParams {
+  page: number;
+  pageSize: number;
+  fansub: number | undefined;
+  publisher: number | undefined;
+  type: string | undefined;
+  before: Date | undefined;
+  after: Date | undefined;
+}
+
+function resolveQueryParams(
+  query: Record<string, string | string[] | undefined>
+): QueryParams | undefined {
+  let page = readNum(query.page || '1');
+  let pageSize = readNum(query.count || '100');
+  const fansub = query.fansub ? readNum(query.fansub) : undefined;
+  const publisher = query.publisher ? readNum(query.publisher) : undefined;
+  const type = typeof query.type === 'string' ? query.type : undefined;
+
+  if (!page || !pageSize) return undefined;
+  if (page <= 0) page = 1;
+  if (pageSize <= 0) pageSize = 100;
+  if (pageSize > 100) pageSize = 100;
+
+  const before = readDate(query.before);
+  const after = readDate(query.after);
+
+  return { page, pageSize, fansub, publisher, type, before, after };
+
+  function readNum(raw: string | string[]) {
+    if (typeof raw === 'string' && /^\d+$/.test(raw)) {
+      return +raw;
+    } else {
+      return undefined;
+    }
+  }
+
+  function readDate(raw: string | string[] | undefined) {
+    if (typeof raw === 'string') {
+      const d = new Date(raw);
+      return !isNaN(d.getTime()) ? d : undefined;
+    } else {
+      return undefined;
+    }
+  }
+}
+
+function resolveQueryResult(
+  result: (Resource & { fansub: Team | null; publisher: User; anitomy: Anitomy | null })[]
+) {
+  return result.map((r) => ({
     title: r.title,
     href: `https://share.dmhy.org/topics/view/${r.href}`,
     type: r.type,
@@ -57,51 +152,4 @@ export async function queryResources(request: IRequest, env: Env) {
       href: `https://share.dmhy.org/topics/list/user_id/${r.publisher.id}`
     }
   }));
-
-  return makeResponse({ resources, timestamp: await getRefreshTimestamp(env) });
-
-  function resolveParams():
-    | {
-        page: number;
-        pageSize: number;
-        fansub: number | undefined;
-        publisher: number | undefined;
-        type: string | undefined;
-        before: Date | undefined;
-        after: Date | undefined;
-      }
-    | undefined {
-    let page = readNum(request.query.page || '1');
-    let pageSize = readNum(request.query.count || '100');
-    const fansub = request.query.fansub ? readNum(request.query.fansub) : undefined;
-    const publisher = request.query.publisher ? readNum(request.query.publisher) : undefined;
-    const type = typeof request.query.type === 'string' ? request.query.type : undefined;
-
-    if (!page || !pageSize) return undefined;
-    if (page <= 0) page = 1;
-    if (pageSize <= 0) pageSize = 100;
-    if (pageSize > 100) pageSize = 100;
-
-    const before = readDate(request.query.before);
-    const after = readDate(request.query.after);
-
-    return { page, pageSize, fansub, publisher, type, before, after };
-
-    function readNum(raw: string | string[]) {
-      if (typeof raw === 'string' && /^\d+$/.test(raw)) {
-        return +raw;
-      } else {
-        return undefined;
-      }
-    }
-
-    function readDate(raw: string | string[] | undefined) {
-      if (typeof raw === 'string') {
-        const d = new Date(raw);
-        return !isNaN(d.getTime()) ? d : undefined;
-      } else {
-        return undefined;
-      }
-    }
-  }
 }
