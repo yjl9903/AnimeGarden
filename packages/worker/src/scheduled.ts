@@ -78,7 +78,9 @@ export async function handleScheduled(env: Env) {
     console.log(`There are ${count} resources inserted`);
   }
 
-  await updateRefreshTimestamp(env);
+  if (sum > 0) {
+    await updateRefreshTimestamp(env);
+  }
 
   return { count: sum };
 }
