@@ -6,8 +6,12 @@ Content-Type: application/json
 GET https://garden.onekuma.cn/api/resources?page=2
 Content-Type: application/json
 
-### List the resources from the 21st to 40th
+### List resources from the 21st to 40th
 GET https://garden.onekuma.cn/api/resources?page=2&count=20
+Content-Type: application/json
+
+### List resources with more filter
+GET https://garden.onekuma.cn/api/resources?type=動畫&after=2023-04-15T16:00:00.000Z&before=1681578000000
 Content-Type: application/json
 
 ### Search resources
@@ -15,9 +19,7 @@ GET https://garden.onekuma.cn/api/resources/search
 Content-Type: application/json
 
 {
-  "keywords": {
-    "include": ["機動戰士鋼彈 水星的魔女"]
-  }
+  "include": ["機動戰士鋼彈 水星的魔女"]
 }
 
 ### Only search 動畫
@@ -25,9 +27,7 @@ GET https://garden.onekuma.cn/api/resources/search?type=動畫
 Content-Type: application/json
 
 {
-  "keywords": {
-    "include": ["间谍过家家"]
-  }
+  "include": ["间谍过家家"]
 }
 
 ### Search resources with exclude
@@ -35,10 +35,22 @@ GET https://garden.onekuma.cn/api/resources/search
 Content-Type: application/json
 
 {
-  "keywords": {
-    "include": ["复仇者"],
-    "exclude": ["东京复仇者"]
-  }
+  "include": ["复仇者"],
+  "exclude": ["东京复仇者"]
+}
+
+### Search resources with complicated search
+### Resource must has type "動畫"
+### Resource title must contains ("機動戰士鋼彈" or "机动战士高达") and "水星的魔女" and ("第二季" or "Season 2" or "S2")
+GET https://garden.onekuma.cn/api/resources/search?type=動畫
+Content-Type: application/json
+
+{
+  "include": [
+    ["機動戰士鋼彈", "机动战士高达"],
+    "水星的魔女",
+    ["第二季", "Season 2", "S2"]
+  ]
 }
 
 ### List all the users

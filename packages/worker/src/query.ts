@@ -167,7 +167,7 @@ function resolveQueryParams(
 
   function readDate(raw: string | string[] | undefined) {
     if (typeof raw === 'string') {
-      const d = new Date(raw);
+      const d = /^\d+$/.test(raw) ? new Date(+raw) : new Date(raw);
       return !isNaN(d.getTime()) ? d : undefined;
     } else {
       return undefined;
