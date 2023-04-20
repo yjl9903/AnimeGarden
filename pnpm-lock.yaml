@@ -47,8 +47,8 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1
       vite:
-        specifier: ^4.2.2
-        version: 4.2.2(@types/node@18.15.12)
+        specifier: ^4.3.0
+        version: 4.3.0(@types/node@18.15.12)
       vitest:
         specifier: ^0.30.1
         version: 0.30.1
@@ -107,10 +107,10 @@ importers:
         version: 2.0.0(date-fns@2.29.3)
       unocss:
         specifier: ^0.51.5
-        version: 0.51.5(postcss@8.4.21)(rollup@3.20.2)(vite@4.2.2)
+        version: 0.51.5(postcss@8.4.21)(rollup@3.20.2)(vite@4.3.0)
       vite-plugin-info:
         specifier: ^0.4.0
-        version: 0.4.0(vite@4.2.2)
+        version: 0.4.0(vite@4.3.0)
 
   packages/worker:
     dependencies:
@@ -1590,12 +1590,12 @@ packages:
     resolution: {integrity: sha512-iO9ZQHkZxHn4mSakYV0vFHAVDyEOIJQrV2uZ06HxEPcx+mt8swXoZHIbaaJ2crJYFfErySgktuTZ3BeLz+XmFA==}
     dev: false
 
-  /@unocss/astro@0.51.5(rollup@3.20.2)(vite@4.2.2):
+  /@unocss/astro@0.51.5(rollup@3.20.2)(vite@4.3.0):
     resolution: {integrity: sha512-NQ3KrhtmTWXBk7a/RuZvMTK2e4L83W/TZ5v5ok82mdooOAdOrxmwpdU9qUixISDSxCPDOCs3NLxYutw66ErC3g==}
     dependencies:
       '@unocss/core': 0.51.5
       '@unocss/reset': 0.51.5
-      '@unocss/vite': 0.51.5(rollup@3.20.2)(vite@4.2.2)
+      '@unocss/vite': 0.51.5(rollup@3.20.2)(vite@4.3.0)
     transitivePeerDependencies:
       - rollup
       - vite
@@ -1759,7 +1759,7 @@ packages:
       '@unocss/core': 0.51.5
     dev: true
 
-  /@unocss/vite@0.51.5(rollup@3.20.2)(vite@4.2.2):
+  /@unocss/vite@0.51.5(rollup@3.20.2)(vite@4.3.0):
     resolution: {integrity: sha512-Esg7PnQ93Ao7i9EZdfDNysaOpfIUgbYmKkTVWs/yi0R7wnEPCRS24PhNAEysC1x1B+JHnfsddPSisS3RDrGQSg==}
     peerDependencies:
       vite: ^2.9.0 || ^3.0.0-0 || ^4.0.0
@@ -1774,7 +1774,7 @@ packages:
       chokidar: 3.5.3
       fast-glob: 3.2.12
       magic-string: 0.30.0
-      vite: 4.2.2(@types/node@18.15.12)
+      vite: 4.3.0(@types/node@18.15.12)
     transitivePeerDependencies:
       - rollup
     dev: true
@@ -4979,7 +4979,7 @@ packages:
     engines: {node: '>= 10.0.0'}
     dev: true
 
-  /unocss@0.51.5(postcss@8.4.21)(rollup@3.20.2)(vite@4.2.2):
+  /unocss@0.51.5(postcss@8.4.21)(rollup@3.20.2)(vite@4.3.0):
     resolution: {integrity: sha512-stHCKGlkGAaKdjr18lAysEy+Zjk02nBIwHSg5IzQ9AaHQNRuBpcIeDZelW3+AKwaxDjH6FHasfE/SDJ09wZdGA==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -4988,7 +4988,7 @@ packages:
       '@unocss/webpack':
         optional: true
     dependencies:
-      '@unocss/astro': 0.51.5(rollup@3.20.2)(vite@4.2.2)
+      '@unocss/astro': 0.51.5(rollup@3.20.2)(vite@4.3.0)
       '@unocss/cli': 0.51.5(rollup@3.20.2)
       '@unocss/core': 0.51.5
       '@unocss/extractor-arbitrary-variants': 0.51.5
@@ -5007,7 +5007,7 @@ packages:
       '@unocss/transformer-compile-class': 0.51.5
       '@unocss/transformer-directives': 0.51.5
       '@unocss/transformer-variant-group': 0.51.5
-      '@unocss/vite': 0.51.5(rollup@3.20.2)(vite@4.2.2)
+      '@unocss/vite': 0.51.5(rollup@3.20.2)(vite@4.3.0)
     transitivePeerDependencies:
       - postcss
       - rollup
@@ -5099,7 +5099,7 @@ packages:
       mlly: 1.2.0
       pathe: 1.1.0
       picocolors: 1.0.0
-      vite: 4.2.2(@types/node@18.15.11)
+      vite: 4.3.0(@types/node@18.15.11)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -5110,7 +5110,7 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-info@0.4.0(vite@4.2.2):
+  /vite-plugin-info@0.4.0(vite@4.3.0):
     resolution: {integrity: sha512-KCDhf637MLkr3T5Pv2X7qo9qDOjXsFPD+EGhMAkOMnoYfsrJA68hvLNBqwxFpRGvHWCDmBKfggWER2bJadLlyg==}
     peerDependencies:
       vite: ^2.9.13 || ^3.0.0 || ^4.0.0
@@ -5119,7 +5119,7 @@ packages:
       git-repo-info: 2.1.1
       parse-github-url: 1.0.2
       remote-origin-url: 2.0.0
-      vite: 4.2.2(@types/node@18.15.12)
+      vite: 4.3.0(@types/node@18.15.12)
     dev: true
 
   /vite@4.2.1(@types/node@18.15.11):
@@ -5190,8 +5190,8 @@ packages:
       fsevents: 2.3.2
     dev: false
 
-  /vite@4.2.2(@types/node@18.15.11):
-    resolution: {integrity: sha512-PcNtT5HeDxb3QaSqFYkEum8f5sCVe0R3WK20qxgIvNBZPXU/Obxs/+ubBMeE7nLWeCo2LDzv+8hRYSlcaSehig==}
+  /vite@4.3.0(@types/node@18.15.11):
+    resolution: {integrity: sha512-JTGFgDh3dVxeGBpuQX04Up+JZmuG6wu9414Ei36vQzaEruY/M4K0AgwtuB2b4HaBgB7R8l+LHxjB0jcgz4d2qQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -5218,14 +5218,13 @@ packages:
       '@types/node': 18.15.11
       esbuild: 0.17.16
       postcss: 8.4.21
-      resolve: 1.22.1
       rollup: 3.20.2
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
 
-  /vite@4.2.2(@types/node@18.15.12):
-    resolution: {integrity: sha512-PcNtT5HeDxb3QaSqFYkEum8f5sCVe0R3WK20qxgIvNBZPXU/Obxs/+ubBMeE7nLWeCo2LDzv+8hRYSlcaSehig==}
+  /vite@4.3.0(@types/node@18.15.12):
+    resolution: {integrity: sha512-JTGFgDh3dVxeGBpuQX04Up+JZmuG6wu9414Ei36vQzaEruY/M4K0AgwtuB2b4HaBgB7R8l+LHxjB0jcgz4d2qQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -5252,7 +5251,6 @@ packages:
       '@types/node': 18.15.12
       esbuild: 0.17.16
       postcss: 8.4.21
-      resolve: 1.22.1
       rollup: 3.20.2
     optionalDependencies:
       fsevents: 2.3.2
