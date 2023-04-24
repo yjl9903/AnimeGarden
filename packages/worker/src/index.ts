@@ -3,30 +3,34 @@ import { Router } from 'itty-router';
 import type { Env } from './types';
 
 import { makePrisma } from './prisma';
-import { queryResources, searchResources } from './query';
 import { handleScheduled } from './scheduled';
 import { getRefreshTimestamp } from './state';
 import { makeErrorResponse, makeResponse } from './utils';
+import { queryResourceDetail, queryResources, searchResources } from './query';
 
 const router = Router();
 
-router.get('/', async (_request, req: Request, env: Env) =>
+router.get('/', async (_request, _req: Request, env: Env) =>
   makeResponse({ message: 'This is AnimeGarden', timestamp: await getRefreshTimestamp(env) })
 );
 
-router.get('/resources', async (_request, req: Request, env: Env) => {
-  return queryResources(_request, req, env);
+router.get('/resources', async (request, req: Request, env: Env) => {
+  return queryResources(request, req, env);
 });
 
-router.get('/resources/search', async (_request, req: Request, env: Env) => {
-  return searchResources(_request, req, env);
+router.get('/resource/:href', async (request, req: Request, env: Env) => {
+  return queryResourceDetail(request, req, env);
 });
 
-router.post('/resources/search', async (_request, req: Request, env: Env) => {
-  return searchResources(_request, req, env);
+router.get('/resources/search', async (request, req: Request, env: Env) => {
+  return searchResources(request, req, env);
 });
 
-router.put('/resources', async (_request, req: Request, env: Env) => {
+router.post('/resources/search', async (request, req: Request, env: Env) => {
+  return searchResources(request, req, env);
+});
+
+router.put('/resources', async (_request, _req: Request, env: Env) => {
   try {
     return makeResponse(await handleScheduled(env));
   } catch (error) {

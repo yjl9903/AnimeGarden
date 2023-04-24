@@ -1,11 +1,19 @@
+import type { IRequest } from 'itty-router';
 import type { Resource, Team, User, Anitomy } from '@prisma/client';
+
+import { fetchDmhyDetail } from 'animegarden';
 
 import type { Env } from './types';
 
 import { makePrisma } from './prisma';
 import { getRefreshTimestamp } from './state';
 import { makeErrorResponse, makeResponse } from './utils';
-import { IRequest } from 'itty-router';
+
+export async function queryResourceDetail(request: IRequest, _req: Request, _env: Env) {
+  const href = request.params.href;
+  const detail = await fetchDmhyDetail(fetch, href);
+  return makeResponse({ detail });
+}
 
 export async function queryResources(request: IRequest, req: Request, env: Env) {
   const prisma = makePrisma(env);
