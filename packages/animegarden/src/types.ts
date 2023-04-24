@@ -84,5 +84,7 @@ export interface ResourceDetail {
     ddplay: string;
 
     files: Array<{ name: string; size: string }>;
+
+    hasMoreFiles: boolean;
   };
 }

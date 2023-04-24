@@ -97,6 +97,7 @@ export async function fetchDmhyDetail(
   const magnetDdplay =
     $('#resource-tabs #tabs-1 p:nth-child(7) a:first-of-type').text().trim() ?? '';
 
+  let hasMoreFiles = false;
   const files = $('.file_list li')
     .map((_idx, el) => {
       const size = $(el).children('span').text().trim();
@@ -108,7 +109,12 @@ export async function fetchDmhyDetail(
       return { size, name };
     })
     .toArray()
-    .filter((f) => !!f.size);
+    .filter((f) => {
+      if (/More Than \d+ Files/.test(f.name)) {
+        hasMoreFiles = true;
+      }
+      return !!f.size;
+    });
 
   return {
     title,
@@ -135,7 +141,8 @@ export async function fetchDmhyDetail(
       href: magnetHref,
       href2: magnetHref2,
       ddplay: magnetDdplay,
-      files
+      files,
+      hasMoreFiles
     }
   };
 }
