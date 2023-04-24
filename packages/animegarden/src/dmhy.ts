@@ -125,14 +125,20 @@ export async function fetchDmhyDetail(
     publisher: {
       id: publisherId,
       name: publisherName,
-      avatar: publisherAvatar
+      avatar: publisherAvatar.replace(
+        '/images/defaultUser.png',
+        'https://share.dmhy.org/images/defaultUser.png'
+      )
     },
     fansub:
       fansubId !== undefined
         ? {
             id: fansubId,
             name: fansubName,
-            avatar: fansubAvatar
+            avatar: fansubAvatar.replace(
+              '/images/defaultTeam.gif',
+              'https://share.dmhy.org/images/defaultTeam.gif'
+            )
           }
         : undefined,
     description,
