@@ -73,7 +73,9 @@ export async function fetchDmhyDetail(
   const size = $('.topic-main>.topic-title li:nth-child(4) span').text().trim();
   const createdAt = $('.topic-main>.topic-title li:nth-child(2) span').text().trim();
 
-  const publisherAvatar = $('.topics_bk .avatar:first-child img').attr('src')?.trim() ?? '';
+  const publisherAvatar =
+    $('.topics_bk .avatar:first-child img').attr('src')?.trim() ??
+    'https://share.dmhy.org/images/defaultUser.png';
   const publisherName = $('.topics_bk .avatar:first-child p:nth-child(2) a').text().trim();
   const publisherId = $('.topics_bk .avatar:first-child p:nth-child(2) a')
     .attr('href')
@@ -81,7 +83,9 @@ export async function fetchDmhyDetail(
     .split('/')
     .at(-1)!;
 
-  const fansubAvatar = $('.topics_bk .avatar:nth-child(2) img').attr('src')?.trim() ?? '';
+  const fansubAvatar =
+    $('.topics_bk .avatar:nth-child(2) img').attr('src')?.trim() ??
+    'https://share.dmhy.org/images/defaultTeam.gif';
   const fansubName = $('.topics_bk .avatar:nth-child(2) p:nth-child(2) a').text().trim();
   const fansubId = $('.topics_bk .avatar:nth-child(2) p:nth-child(2) a')
     .attr('href')
