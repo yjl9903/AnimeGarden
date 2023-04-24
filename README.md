@@ -4,6 +4,8 @@
 
 動漫花園 3-rd party [mirror site](https://garden.onekuma.cn) and [API endpoint](https://garden.onekuma.cn/api/resources).
 
+![home](./assets/home.png)
+
 ## API Usage
 
 ```bash
