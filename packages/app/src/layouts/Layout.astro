@@ -39,7 +39,7 @@ const timestamp = new Date((await runtime?.env.animegarden.get('state/refresh-ti
           <Dropdown>
             <span>类型</span>
             <div slot="dropdown" class="mt4">
-              <div class="w-[120px] max-h-[640px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y">
+              <div class="w-[120px] max-h-[600px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y">
                 {types.map(t => <a href={`/type/${t}/1`} class="px2 py1 block text-base-600 text-link-active">{t}</a>)}
               </div>
             </div>
@@ -49,7 +49,7 @@ const timestamp = new Date((await runtime?.env.animegarden.get('state/refresh-ti
           <Dropdown>
             <span>字幕组</span>
             <div slot="dropdown" class="mt4">
-              <div class="w-[200px] max-h-[640px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y">
+              <div class="w-[180px] max-h-[600px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y">
                 {fansubs.map(t => <a href={`/fansub/${t.id}/1`} class="px2 py1 block text-base-600 text-link-active">{t.name}</a>)}
               </div>
             </div>
