@@ -71,7 +71,17 @@ export default function Search() {
         {search && (
           <>
             {loading ? (
-              <Command.Loading>正在搜索 {search} ...</Command.Loading>
+              <Command.Loading>
+                <div className="flex items-center">
+                  <div className="lds-ring">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                  <span>正在搜索 {search} ...</span>
+                </div>
+              </Command.Loading>
             ) : (
               <Command.Empty>没有找到任何结果.</Command.Empty>
             )}
