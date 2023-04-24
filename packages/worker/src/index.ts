@@ -1,4 +1,5 @@
 import { Router } from 'itty-router';
+import { createCors } from 'itty-cors';
 
 import type { Env } from './types';
 
@@ -9,6 +10,10 @@ import { makeErrorResponse, makeResponse } from './utils';
 import { queryResourceDetail, queryResources, searchResources } from './query';
 
 const router = Router();
+
+const { preflight, corsify } = createCors();
+
+router.all('*', (_request, req: Request) => preflight(req));
 
 router.get('/', async (_request, _req: Request, env: Env) =>
   makeResponse({ message: 'This is AnimeGarden', timestamp: await getRefreshTimestamp(env) })
@@ -55,7 +60,10 @@ router.all('*', () => makeErrorResponse({ message: '404 NOT FOUND' }, { status: 
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
-    return router.handle(request, request, env, ctx);
+    return router
+      .handle(request, request, env, ctx)
+      .catch(() => makeErrorResponse({ message: 'Interal Error' }, { status: 500 }))
+      .then(corsify);
   },
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
     ctx.waitUntil(handleScheduled(env));
