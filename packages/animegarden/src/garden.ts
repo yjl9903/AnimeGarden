@@ -82,11 +82,15 @@ export async function fetchResources(
       }
     }
     return {
-      resources: [...map.values()].sort((lhs, rhs) => rhs.createdAt.localeCompare(lhs.createdAt)),
+      resources: uniq([...map.values()]),
       timestamp
     };
   } else {
-    return fetchPage(options.page ?? 1);
+    const r = await fetchPage(options.page ?? 1);
+    return {
+      resources: uniq(r.resources),
+      timestamp: r.timestamp
+    };
   }
 
   async function fetchPage(page: number) {
@@ -120,6 +124,14 @@ export async function fetchResources(
         retry
       );
     }
+  }
+
+  function uniq(resources: Resource[]) {
+    const map = new Map<string, Resource>();
+    for (const r of resources) {
+      map.set(r.href, r);
+    }
+    return [...map.values()].sort((lhs, rhs) => rhs.createdAt.localeCompare(lhs.createdAt));
   }
 }
 
