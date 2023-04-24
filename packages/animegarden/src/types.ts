@@ -44,3 +44,9 @@ export interface Resource {
 
   createdAt: string;
 }
+
+export interface ResourceDetail {
+  title: string;
+
+  href: string;
+}

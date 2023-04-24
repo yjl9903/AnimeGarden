@@ -1,18 +1,22 @@
 import { load } from 'cheerio';
 
-import type { Resource, ResourceType } from './types';
+import type { Resource, ResourceDetail, ResourceType } from './types';
 
 import { retryFn } from './utils';
 
-export interface FetchDmhyOptions {
+export interface FetchDmhyPageOptions {
   page?: number;
 
   retry?: number;
 }
 
+export interface FetchDmhyDetailOptions {
+  retry?: number;
+}
+
 export async function fetchDmhyPage(
   ofetch: (request: string) => Promise<Response>,
-  options: FetchDmhyOptions = {}
+  options: FetchDmhyPageOptions = {}
 ): Promise<Resource[]> {
   const { page = 1, retry = 5 } = options;
 
@@ -50,4 +54,23 @@ export async function fetchDmhyPage(
     });
   });
   return res;
+}
+
+export async function fetchDmhyDetail(
+  ofetch: (request: string) => Promise<Response>,
+  href: string,
+  options: FetchDmhyDetailOptions = {}
+): Promise<ResourceDetail> {
+  const url = new URL(href, `https://share.dmhy.org/topics/view/`);
+  const { retry = 5 } = options;
+
+  const html = await retryFn(() => ofetch(url.href).then((r) => r.text()), retry);
+  const $ = load(html);
+
+  const title = $('.topic-main>.topic-title>h3').text().trim();
+
+  return {
+    title,
+    href: url.href
+  };
 }
