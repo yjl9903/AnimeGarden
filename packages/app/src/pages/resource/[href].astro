@@ -11,7 +11,7 @@ if (!href) {
 const detail = await fetchResourceDetail(href);
 ---
 
-<Layout title="资源 | Anime Garden">
+<Layout title={`${detail.title} | Anime Garden`}>
   <div class="detail mt-4vh w-full space-y-4">
     <h3 class="text-xl font-bold">
       <a href={detail.href} target="_blank" class="text-link-active">{detail.title}</a>
