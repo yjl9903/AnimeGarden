@@ -3,27 +3,37 @@ import {
   fetchResourceDetail as rawFetchResourceDetail
 } from 'animegarden';
 
-// import { ProxyAgent } from 'undici';
-
 import { WORKER_BASE } from './constant';
 
-const ofetch = (url: string | RequestInfo) =>
-  fetch(url, {
-    // @ts-ignore
-    // dispatcher:
-    //   import.meta.env.DEV && import.meta.env.HTTPS_PROXY
-    //     ? new ProxyAgent(import.meta.env.HTTPS_PROXY)
-    //     : undefined
-  });
+const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
+  if (import.meta.env.DEV && import.meta.env.HTTPS_PROXY) {
+    const { ProxyAgent } = await import('undici');
+    return fetch(url, {
+      ...init,
+      // @ts-ignore
+      dispatcher:
+        import.meta.env.DEV && import.meta.env.HTTPS_PROXY
+          ? new ProxyAgent(import.meta.env.HTTPS_PROXY)
+          : undefined
+    });
+  } else {
+    return fetch(url, init);
+  }
+};
 
 export async function fetchResources(
   page: number,
-  options: { fansub?: number; publisher?: number; type?: string } = {}
+  options: { search?: string[]; fansub?: number; publisher?: number; type?: string } = {}
 ) {
   return (
     await rawFetchResources(ofetch, {
       baseURL: 'https://' + WORKER_BASE,
       page,
+      search: options.search
+        ? {
+            include: options.search
+          }
+        : undefined,
       fansub: options.fansub ? '' + options.fansub : undefined,
       publisher: options.publisher ? '' + options.publisher : undefined,
       type: options.type ? '' + options.type : undefined
