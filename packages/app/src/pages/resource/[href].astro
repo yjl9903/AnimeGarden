@@ -54,6 +54,47 @@ const detail = await fetchResourceDetail(href);
         {detail.magnet.hasMoreFiles ? <div class="text-base-400">...</div> : undefined}
       </div>
     </div>
+    <div class="publisher rounded-md shadow-box">
+      <h4 class="text-lg font-bold border-b px4 py2">
+        {detail.fansub ? '发布者 / 字幕组' : '发布者'}
+      </h4>
+      <div class="p4 flex gap4">
+        <div>
+          <div class="w-[120px] text-left">
+            <img
+              src={detail.publisher.avatar.replace(
+                '/images/defaultUser.png',
+                'https://share.dmhy.org/images/defaultUser.png'
+              )}
+              alt="Publisher Avatar"
+              class="inline-block w-[100px] h-[100px]"
+            />
+            <a href={`/publisher/${detail.publisher.id}/1`} class="text-link block mt2"
+              >{detail.publisher.name}</a
+            >
+          </div>
+        </div>
+        {
+          detail.fansub && (
+            <div>
+              <div class="w-[120px] text-left">
+                <img
+                  src={detail.fansub.avatar.replace(
+                    '/images/defaultTeam.gif',
+                    'https://share.dmhy.org/images/defaultTeam.gif'
+                  )}
+                  alt="Publisher Avatar"
+                  class="inline-block w-[100px] h-[100px]"
+                />
+                <a href={`/fansub/${detail.fansub.id}/1`} class="text-link block mt2">
+                  {detail.fansub.name}
+                </a>
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </div>
   </div>
 </Layout>
 
