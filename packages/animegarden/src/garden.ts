@@ -129,7 +129,7 @@ export async function fetchResourceDetail(
   options: FetchResourceDetailOptions = {}
 ): Promise<ResourceDetail> {
   const { baseURL = 'https://garden.onekuma.cn/api/', retry = 1 } = options;
-  const url = new URL('resources/' + href, baseURL);
+  const url = new URL('resource/' + href, baseURL);
 
   return await retryFn(
     () =>
