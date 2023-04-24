@@ -15,7 +15,7 @@ async function main(id: string) {
       retry: Number.MAX_SAFE_INTEGER
     }
   );
-  console.log(r);
+  console.log(JSON.stringify(r, null, 2));
 }
 
 main(process.argv[2]);

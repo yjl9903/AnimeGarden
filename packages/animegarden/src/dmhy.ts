@@ -97,6 +97,19 @@ export async function fetchDmhyDetail(
   const magnetDdplay =
     $('#resource-tabs #tabs-1 p:nth-child(7) a:first-of-type').text().trim() ?? '';
 
+  const files = $('.file_list li')
+    .map((_idx, el) => {
+      const size = $(el).children('span').text().trim();
+      const name = $(el)
+        .text()
+        .trim()
+        .replace(new RegExp(`${size}$`), '')
+        .trim();
+      return { size, name };
+    })
+    .toArray()
+    .filter((f) => !!f.size);
+
   return {
     title,
     href: url.href,
@@ -122,7 +135,7 @@ export async function fetchDmhyDetail(
       href: magnetHref,
       href2: magnetHref2,
       ddplay: magnetDdplay,
-      files: []
+      files
     }
   };
 }
