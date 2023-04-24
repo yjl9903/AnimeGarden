@@ -1,7 +1,7 @@
 import type { Resource } from 'animegarden';
 
 import { Command } from 'cmdk';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import '../styles/cmdk.css';
 
@@ -13,21 +13,55 @@ export default function Search() {
 
   const [search, setSearch] = useState('');
   const [searchResult, setSearchResult] = useState<Resource[]>([]);
+  const [loading, setLoading] = useState(false);
   const searchResources = useCallback(
     debounce(async (search: string) => {
       setSearchResult([]);
       const r = await fetchResources(1, { search: search.split(' ').filter(Boolean) });
       setSearchResult(r);
+      setLoading(false);
     }),
     []
   );
   const onSearchChange = useCallback((value: string) => {
     setSearch(value);
-    searchResources(value);
+    if (value) {
+      setLoading(true);
+      searchResources(value);
+    }
+  }, []);
+
+  const cleanUp = useCallback(() => {
+    setLoading(false);
+    setSearch('');
+    setSearchResult([]);
+  }, []);
+
+  useEffect(() => {
+    const fn = () => {
+      cleanUp();
+    };
+    document.addEventListener('click', fn);
+    return () => {
+      document.removeEventListener('click', fn);
+    };
   }, []);
 
   return (
-    <Command label="Command Menu" ref={ref}>
+    <Command
+      label="Command Menu"
+      ref={ref}
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+      onKeyDown={(e: React.KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          cleanUp();
+          e.preventDefault();
+        }
+      }}
+    >
       <Command.Input
         value={search}
         onValueChange={onSearchChange}
@@ -36,17 +70,17 @@ export default function Search() {
       <Command.List>
         {search && (
           <>
-            <Command.Empty>没有找到任何结果.</Command.Empty>
-            <Command.Group heading="搜索结果">
-              {searchResult.map((r) => (
-                <Command.Item key={r.href}>{r.title}</Command.Item>
-              ))}
-            </Command.Group>
+            {loading ? (
+              <Command.Loading>正在搜索 {search} ...</Command.Loading>
+            ) : (
+              <Command.Empty>没有找到任何结果.</Command.Empty>
+            )}
             <Command.Group heading="类型">
               {types.map((type) => (
                 <Command.Item
                   key={type}
                   onSelect={() => {
+                    cleanUp();
                     window.location.pathname = `/type/${type}/1`;
                   }}
                 >
@@ -59,10 +93,24 @@ export default function Search() {
                 <Command.Item
                   key={fansub.id}
                   onSelect={() => {
+                    cleanUp();
                     window.location.pathname = `/fansub/${fansub.id}/1`;
                   }}
                 >
                   {fansub.name}
+                </Command.Item>
+              ))}
+            </Command.Group>
+            <Command.Group heading="搜索结果">
+              {searchResult.map((r) => (
+                <Command.Item
+                  key={r.href}
+                  onSelect={() => {
+                    cleanUp();
+                    window.location.pathname = `/resource/${r.href.split('/').at(-1)}`;
+                  }}
+                >
+                  {r.title}
                 </Command.Item>
               ))}
             </Command.Group>

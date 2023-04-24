@@ -86,7 +86,7 @@
 }
 
 .vercel [cmdk-root] {
-  max-width: 640px;
+  max-width: 800px;
   width: 100%;
   padding: 8px;
   background: #fff;
@@ -145,8 +145,13 @@
   font-weight: 500;
 }
 
+.vercel [cmdk-loading] {
+  cursor: auto !important;
+}
+
 .vercel [cmdk-item],
-.vercel [cmdk-vercel-badge] {
+.vercel [cmdk-vercel-badge],
+.vercel [cmdk-loading] {
   align-items: center;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -154,7 +159,8 @@
   user-select: none;
 }
 
-.vercel [cmdk-item] {
+.vercel [cmdk-item],
+.vercel [cmdk-loading] {
   content-visibility: auto;
   cursor: pointer;
   height: 48px;
