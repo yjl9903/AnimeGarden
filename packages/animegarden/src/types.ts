@@ -73,4 +73,16 @@ export interface ResourceDetail {
   };
 
   description: string;
+
+  magnet: {
+    user: string;
+
+    href: string;
+
+    href2: string;
+
+    ddplay: string;
+
+    files: Array<{ name: string; size: string }>;
+  };
 }

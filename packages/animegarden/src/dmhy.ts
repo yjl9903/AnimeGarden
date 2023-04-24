@@ -91,6 +91,12 @@ export async function fetchDmhyDetail(
 
   const description = $('.topic-nfo').html()?.trim() ?? '';
 
+  const magnetUser = $('#resource-tabs #tabs-1 p:nth-child(1) a').attr('href')?.trim() ?? '';
+  const magnetHref = $('#resource-tabs #tabs-1 p:nth-child(2) a').attr('href')?.trim() ?? '';
+  const magnetHref2 = $('#resource-tabs #tabs-1 #magnet2').attr('href')?.trim() ?? '';
+  const magnetDdplay =
+    $('#resource-tabs #tabs-1 p:nth-child(7) a:first-of-type').text().trim() ?? '';
+
   return {
     title,
     href: url.href,
@@ -110,6 +116,13 @@ export async function fetchDmhyDetail(
             avatar: fansubAvatar
           }
         : undefined,
-    description
+    description,
+    magnet: {
+      user: magnetUser.startsWith('https://') ? magnetUser : `https:${magnetUser}`,
+      href: magnetHref,
+      href2: magnetHref2,
+      ddplay: magnetDdplay,
+      files: []
+    }
   };
 }
