@@ -16,7 +16,30 @@ const detail = await fetchResourceDetail(href);
     <h3 class="text-xl font-bold">
       <a href={detail.href} target="_blank" class="text-link-active">{detail.title}</a>
     </h3>
-    <div class="description" set:html={detail.description} />
+    <div class="download-link rounded-md shadow-box">
+      <h4 class="text-lg font-bold border-b px4 py2">
+        <a href={detail.magnet.href} class="text-link-active">下载链接</a>
+      </h4>
+      <div class="p4 space-y-1 [&>div>span]:(inline-block w-[150px])">
+        <div>
+          <span>会员链接</span>
+          <a href={detail.magnet.user} class="text-link">{detail.magnet.user}</a>
+        </div>
+        <div>
+          <span>Magnet 链接</span>
+          <a href={detail.magnet.href} class="text-link">{detail.magnet.href.split('&')[0]}</a>
+        </div>
+        <div>
+          <span>Magnet 链接 type II</span>
+          <a href={detail.magnet.href2} class="text-link">{detail.magnet.href2}</a>
+        </div>
+        <div>
+          <span>弹幕播放链接</span>
+          <a href={detail.magnet.ddplay} class="text-link">{detail.magnet.ddplay}</a>
+        </div>
+      </div>
+    </div>
+    <div class="description" set:html={detail.description.replace('簡介', '简介')} />
     <div class="file-list rounded-md shadow-box">
       <h4 class="text-lg font-bold border-b px4 py2">文件列表</h4>
       <div class="mb4 max-h-[80vh] overflow-auto px4">
