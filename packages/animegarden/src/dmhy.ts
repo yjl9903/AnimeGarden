@@ -68,9 +68,48 @@ export async function fetchDmhyDetail(
   const $ = load(html);
 
   const title = $('.topic-main>.topic-title>h3').text().trim();
+  const type = $('.topic-main>.topic-title li:first-child a:last-of-type').text().trim();
+
+  const size = $('.topic-main>.topic-title li:nth-child(4) span').text().trim();
+  const createdAt = $('.topic-main>.topic-title li:nth-child(2) span').text().trim();
+
+  const publisherAvatar = $('.topics_bk .avatar:first-child img').attr('src')?.trim() ?? '';
+  const publisherName = $('.topics_bk .avatar:first-child p:nth-child(2) a').text().trim();
+  const publisherId = $('.topics_bk .avatar:first-child p:nth-child(2) a')
+    .attr('href')
+    ?.trim()
+    .split('/')
+    .at(-1)!;
+
+  const fansubAvatar = $('.topics_bk .avatar:nth-child(2) img').attr('src')?.trim() ?? '';
+  const fansubName = $('.topics_bk .avatar:nth-child(2) p:nth-child(2) a').text().trim();
+  const fansubId = $('.topics_bk .avatar:nth-child(2) p:nth-child(2) a')
+    .attr('href')
+    ?.trim()
+    .split('/')
+    .at(-1);
+
+  const description = $('.topic-nfo').html()?.trim() ?? '';
 
   return {
     title,
-    href: url.href
+    href: url.href,
+    type,
+    size,
+    createdAt,
+    publisher: {
+      id: publisherId,
+      name: publisherName,
+      avatar: publisherAvatar
+    },
+    fansub:
+      fansubId !== undefined
+        ? {
+            id: fansubId,
+            name: fansubName,
+            avatar: fansubAvatar
+          }
+        : undefined,
+    description
   };
 }

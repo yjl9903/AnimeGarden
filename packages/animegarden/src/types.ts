@@ -49,4 +49,28 @@ export interface ResourceDetail {
   title: string;
 
   href: string;
+
+  type: string;
+
+  size: string;
+
+  createdAt: string;
+
+  fansub?: {
+    id: string;
+
+    name: string;
+
+    avatar: string;
+  };
+
+  publisher: {
+    id: string;
+
+    name: string;
+
+    avatar: string;
+  };
+
+  description: string;
 }
