@@ -1,7 +1,7 @@
 import type { Resource } from 'animegarden';
 
 import { Command } from 'cmdk';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import '../styles/cmdk.css';
 
@@ -26,8 +26,14 @@ export default function Search() {
   const onSearchChange = useCallback((value: string) => {
     setSearch(value);
     if (value) {
-      setLoading(true);
-      searchResources(value);
+      const hasBuiltin =
+        fansubs.some((f) => f.name.includes(value)) || types.some((t) => t.includes(value));
+      if (!hasBuiltin) {
+        setLoading(true);
+        searchResources(value);
+      } else {
+        setLoading(false);
+      }
     }
   }, []);
 
