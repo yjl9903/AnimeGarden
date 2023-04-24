@@ -56,7 +56,7 @@ const DisplayTypeColor: Record<ResourceType, string> = {
 };
 
 function getMirrorHref(href: string) {
-  return `/resource/${href.split('/').at(-1)}`
+  return `/resource/${href.split('/').at(-1)}`;
 }
 ---
 
@@ -89,7 +89,7 @@ function getMirrorHref(href: string) {
                   </a>
                 )}
                 <div class="flex-1">
-                  <a href={getMirrorHref(r.href)} target="_blank" class="text-link">
+                  <a href={getMirrorHref(r.href)} class="text-link">
                     {r.title}
                   </a>
                 </div>
