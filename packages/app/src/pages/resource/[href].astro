@@ -64,10 +64,7 @@ const detail = await fetchResourceDetail(href);
         <div>
           <div class="w-[120px] text-left">
             <img
-              src={detail.publisher.avatar.replace(
-                '/images/defaultUser.png',
-                'https://share.dmhy.org/images/defaultUser.png'
-              )}
+              src={detail.publisher.avatar}
               alt="Publisher Avatar"
               class="inline-block w-[100px] h-[100px]"
             />
@@ -81,10 +78,7 @@ const detail = await fetchResourceDetail(href);
             <div>
               <div class="w-[120px] text-left">
                 <img
-                  src={detail.fansub.avatar.replace(
-                    '/images/defaultTeam.gif',
-                    'https://share.dmhy.org/images/defaultTeam.gif'
-                  )}
+                  src={detail.fansub.avatar}
                   alt="Publisher Avatar"
                   class="inline-block w-[100px] h-[100px]"
                 />
