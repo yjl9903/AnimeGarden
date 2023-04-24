@@ -54,6 +54,10 @@ const DisplayTypeColor: Record<ResourceType, string> = {
   特攝: 'text-rose-600',
   其他: 'text-base-800'
 };
+
+function getMirrorHref(href: string) {
+  return `/resource/${href.split('/').at(-1)}`
+}
 ---
 
 <div class="overflow-y-auto w-full">
@@ -85,7 +89,7 @@ const DisplayTypeColor: Record<ResourceType, string> = {
                   </a>
                 )}
                 <div class="flex-1">
-                  <a href={r.href} target="_blank" class="text-link">
+                  <a href={getMirrorHref(r.href)} target="_blank" class="text-link">
                     {r.title}
                   </a>
                 </div>
