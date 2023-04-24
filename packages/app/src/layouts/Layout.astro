@@ -3,6 +3,7 @@ import { getRuntime } from "@astrojs/cloudflare/runtime";
 
 import type { Env } from '../env';
 
+import Search from '../components/Search'
 import Dropdown from '../components/Dropdown.astro'
 import { types, fansubs } from "../constant";
 
@@ -29,9 +30,12 @@ const timestamp = new Date((await runtime?.env.animegarden.get('state/refresh-ti
   </head>
   <body>
     <header class="w-full pt-8vh bg-[#fef8f7] border-b">
-      <h1 class="text-4xl pb-8vh font-quicksand font-bold text-center select-none">
+      <h1 class="text-4xl pb-10rem font-quicksand font-bold text-center select-none">
         <a href="/">🌸 Anime Garden</a>
       </h1>
+      <div class="relative z-100">
+        <div class="vercel absolute top-[-7rem] w-full flex justify-center"><Search client:load></Search></div>
+      </div>
       <div class="main flex gap6 justify-start select-none text-base-500">
         <a href="/" class="header-item block" x-active={url === '/'}>首页</a>
         <a href="/resources/1" class="header-item block" x-active={url.startsWith('/resources/')}>所有资源</a>

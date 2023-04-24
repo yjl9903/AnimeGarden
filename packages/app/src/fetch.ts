@@ -3,17 +3,17 @@ import {
   fetchResourceDetail as rawFetchResourceDetail
 } from 'animegarden';
 
-// import { ProxyAgent } from 'undici';
+import { ProxyAgent } from 'undici';
 
 import { WORKER_BASE } from './constant';
 
 const ofetch = (url: string | RequestInfo) =>
   fetch(url, {
     // @ts-ignore
-    // dispatcher:
-    //   import.meta.env.DEV && import.meta.env.HTTPS_PROXY
-    //     ? new ProxyAgent(import.meta.env.HTTPS_PROXY)
-    //     : undefined
+    dispatcher:
+      import.meta.env.DEV && import.meta.env.HTTPS_PROXY
+        ? new ProxyAgent(import.meta.env.HTTPS_PROXY)
+        : undefined
   });
 
 export async function fetchResources(

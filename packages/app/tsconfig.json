@@ -20,6 +20,8 @@
     "esModuleInterop": true,
     // Skip typechecking libraries and .d.ts files
     "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
     "types": [
       "@cloudflare/workers-types"
     ]
