@@ -19,6 +19,10 @@ export async function queryResourceDetail(request: IRequest, _req: Request, env:
   }
 
   const detail = await fetchDmhyDetail(fetch, href);
+  if (!detail) {
+    return makeErrorResponse({ message: 'NOT FOUND' }, { status: 404 });
+  }
+
   await store.put(href, detail);
 
   return makeResponse({ detail });

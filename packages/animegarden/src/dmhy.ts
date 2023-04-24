@@ -60,7 +60,7 @@ export async function fetchDmhyDetail(
   ofetch: (request: string) => Promise<Response>,
   href: string,
   options: FetchDmhyDetailOptions = {}
-): Promise<ResourceDetail> {
+): Promise<ResourceDetail | undefined> {
   const url = new URL(href, `https://share.dmhy.org/topics/view/`);
   const { retry = 5 } = options;
 
@@ -68,6 +68,12 @@ export async function fetchDmhyDetail(
   const $ = load(html);
 
   const title = $('.topic-main>.topic-title>h3').text().trim();
+
+  // Resource may be deleted
+  if (!title) {
+    return undefined;
+  }
+
   const type = $('.topic-main>.topic-title li:first-child a:last-of-type').text().trim();
 
   const size = $('.topic-main>.topic-title li:nth-child(4) span').text().trim();
