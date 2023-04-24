@@ -1,0 +1,18 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+import { fetchResourceDetail } from '../../fetch';
+
+const { href } = Astro.params;
+if (!href) {
+  return Astro.redirect('/');
+}
+
+const detail = await fetchResourceDetail(href);
+---
+
+<Layout title="资源 | Anime Garden">
+  <div class="mt-4vh w-full">
+    <h3>{detail.title}</h3>
+  </div>
+</Layout>

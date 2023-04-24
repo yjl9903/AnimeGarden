@@ -1,8 +1,8 @@
-import type { Resource } from './types';
+import type { Resource, ResourceDetail } from './types';
 
 import { retryFn } from './utils';
 
-export interface FetchOptions {
+export interface FetchResourcesOptions {
   baseURL?: string;
 
   fansub?: string;
@@ -36,12 +36,21 @@ export interface FetchOptions {
   retry?: number;
 }
 
+export interface FetchResourceDetailOptions {
+  baseURL?: string;
+
+  /**
+   * The number of retry
+   */
+  retry?: number;
+}
+
 /**
  * Fetch resources data from dmhy mirror site
  */
 export async function fetchResources(
   fetch: (request: RequestInfo, init?: RequestInit) => Promise<Response>,
-  options: FetchOptions = {}
+  options: FetchResourcesOptions = {}
 ) {
   const { baseURL = 'https://garden.onekuma.cn/api/', retry = 1 } = options;
 
@@ -112,4 +121,21 @@ export async function fetchResources(
       );
     }
   }
+}
+
+export async function fetchResourceDetail(
+  fetch: (request: RequestInfo, init?: RequestInit) => Promise<Response>,
+  href: string,
+  options: FetchResourceDetailOptions = {}
+): Promise<ResourceDetail> {
+  const { baseURL = 'https://garden.onekuma.cn/api/', retry = 1 } = options;
+  const url = new URL('resources/' + href, baseURL);
+
+  return await retryFn(
+    () =>
+      fetch(url.toString())
+        .then((r) => r.json())
+        .then((r) => r.detail),
+    retry
+  );
 }
