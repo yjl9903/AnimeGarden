@@ -1,6 +1,7 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import { formatInTimeZone } from 'date-fns-tz';
 
+import Layout from '../../layouts/Layout.astro';
 import { fetchResourceDetail } from '../../fetch';
 
 const { href } = Astro.params;
@@ -45,6 +46,42 @@ if (!detail) {
       </div>
     </div>
     <div class="description" set:html={detail.description.replace('簡介', '简介')} />
+    <div class="publisher">
+      <h4 class="text-lg font-bold pb4">
+        {detail.fansub ? '发布者 / 字幕组' : '发布者'}
+      </h4>
+      <div class="flex gap8">
+        <div>
+          <a href={`/publisher/${detail.publisher.id}/1`} class="block text-left">
+            <img
+              src={detail.publisher.avatar}
+              alt="Publisher Avatar"
+              class="inline-block w-[100px] h-[100px] rounded"
+            />
+            <span class="text-link block mt2">{detail.publisher.name}</span>
+          </a>
+        </div>
+        {
+          detail.fansub && (
+            <div>
+              <a href={`/fansub/${detail.fansub.id}/1`} class="block w-auto text-left">
+                <img
+                  src={detail.fansub.avatar}
+                  alt="Fansub Avatar"
+                  class="inline-block w-[100px] h-[100px] rounded"
+                />
+                <span class="text-link block mt2">{detail.fansub.name}</span>
+              </a>
+            </div>
+          )
+        }
+      </div>
+    </div>
+    <div>
+      <span class="font-bold">发布于&nbsp;</span><span
+        >{formatInTimeZone(new Date(detail.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}</span
+      >
+    </div>
     <div class="file-list rounded-md shadow-box">
       <h4 class="text-lg font-bold border-b px4 py2">文件列表</h4>
       <div class="mb4 max-h-[80vh] overflow-auto px4">
@@ -52,46 +89,11 @@ if (!detail) {
           detail.magnet.files.map((f) => (
             <div class="py2 flex justify-between gap4">
               <div class="text-sm text-base-600">{f.name}</div>
-              <div class="text-xs text-base-400">{f.size}</div>
+              <div class="text-xs text-base-400 select-none">{f.size}</div>
             </div>
           ))
         }
         {detail.magnet.hasMoreFiles ? <div class="text-base-400">...</div> : undefined}
-      </div>
-    </div>
-    <div class="publisher rounded-md shadow-box">
-      <h4 class="text-lg font-bold border-b px4 py2">
-        {detail.fansub ? '发布者 / 字幕组' : '发布者'}
-      </h4>
-      <div class="p4 flex gap4">
-        <div>
-          <div class="w-[120px] text-left">
-            <img
-              src={detail.publisher.avatar}
-              alt="Publisher Avatar"
-              class="inline-block w-[100px] h-[100px]"
-            />
-            <a href={`/publisher/${detail.publisher.id}/1`} class="text-link block mt2"
-              >{detail.publisher.name}</a
-            >
-          </div>
-        </div>
-        {
-          detail.fansub && (
-            <div>
-              <div class="w-[120px] text-left">
-                <img
-                  src={detail.fansub.avatar}
-                  alt="Fansub Avatar"
-                  class="inline-block w-[100px] h-[100px]"
-                />
-                <a href={`/fansub/${detail.fansub.id}/1`} class="text-link block mt2">
-                  {detail.fansub.name}
-                </a>
-              </div>
-            </div>
-          )
-        }
       </div>
     </div>
   </div>
@@ -107,6 +109,8 @@ if (!detail) {
     margin-bottom: 0.5rem;
     max-width: 60%;
     max-height: 60vh;
+    border-radius: 4px;
+    object-fit: cover;
   }
 
   @media (max-width: 767.9px) {
