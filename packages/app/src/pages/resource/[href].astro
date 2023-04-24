@@ -12,7 +12,37 @@ const detail = await fetchResourceDetail(href);
 ---
 
 <Layout title="资源 | Anime Garden">
-  <div class="mt-4vh w-full">
-    <h3>{detail.title}</h3>
+  <div class="detail mt-4vh w-full space-y-4">
+    <h3 class="text-xl font-bold">
+      <a href={detail.href} target="_blank" class="text-link-active">{detail.title}</a>
+    </h3>
+    <div class="description" set:html={detail.description} />
+    <div class="file-list rounded-md shadow-box">
+      <h4 class="text-lg font-bold border-b px4 py2">文件列表</h4>
+      <div class="mb4 max-h-[80vh] overflow-auto px4">
+        {
+          detail.magnet.files.map((f) => (
+            <div class="py2 flex justify-between gap4">
+              <div class="text-sm text-base-600">{f.name}</div>
+              <div class="text-xs text-base-400">{f.size}</div>
+            </div>
+          ))
+        }
+        {detail.magnet.hasMoreFiles ? <div class="text-base-400">...</div> : undefined}
+      </div>
+    </div>
   </div>
 </Layout>
+
+<style is:global>
+  .detail .description hr {
+    margin-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .detail .description img {
+    margin-bottom: 0.5rem;
+    max-width: 60%;
+    max-height: 60vh;
+  }
+</style>
