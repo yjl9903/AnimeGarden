@@ -20,7 +20,9 @@ const detail = await fetchResourceDetail(href);
       <h4 class="text-lg font-bold border-b px4 py2">
         <a href={detail.magnet.href} class="text-link-active">下载链接</a>
       </h4>
-      <div class="p4 space-y-1 [&>div>span]:(inline-block w-[150px])">
+      <div
+        class="p4 space-y-1 overflow-auto whitespace-nowrap [&>div>span]:(inline-block w-[150px] min-w-[150px]) [&>div]:(flex) [&>div>a]:(inline-block flex-1)"
+      >
         <div>
           <span>会员链接</span>
           <a href={detail.magnet.user} class="text-link">{detail.magnet.user}</a>
