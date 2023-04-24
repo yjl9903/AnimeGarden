@@ -6,12 +6,21 @@ import { fetchDmhyDetail } from 'animegarden';
 import type { Env } from './types';
 
 import { makePrisma } from './prisma';
-import { getRefreshTimestamp } from './state';
 import { makeErrorResponse, makeResponse } from './utils';
+import { getDetailStore, getRefreshTimestamp } from './state';
 
-export async function queryResourceDetail(request: IRequest, _req: Request, _env: Env) {
+export async function queryResourceDetail(request: IRequest, _req: Request, env: Env) {
+  const store = getDetailStore(env);
   const href = request.params.href;
+
+  const cache = await store.get(href);
+  if (!!cache) {
+    return makeResponse({ detail: cache });
+  }
+
   const detail = await fetchDmhyDetail(fetch, href);
+  await store.put(href, detail);
+
   return makeResponse({ detail });
 }
 
