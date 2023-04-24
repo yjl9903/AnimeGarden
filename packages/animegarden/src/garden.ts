@@ -78,7 +78,9 @@ export async function fetchResources(
       const resp = await fetchPage(page);
       timestamp = resp.timestamp;
       for (const r of resp.resources) {
-        map.set(r.href, r);
+        if (!map.has(r.href)) {
+          map.set(r.href, r);
+        }
       }
     }
     return {
@@ -129,7 +131,9 @@ export async function fetchResources(
   function uniq(resources: Resource[]) {
     const map = new Map<string, Resource>();
     for (const r of resources) {
-      map.set(r.href, r);
+      if (!map.has(r.href)) {
+        map.set(r.href, r);
+      }
     }
     return [...map.values()].sort((lhs, rhs) => rhs.createdAt.localeCompare(lhs.createdAt));
   }
