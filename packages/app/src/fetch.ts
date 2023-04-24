@@ -32,7 +32,12 @@ export async function fetchResources(
 }
 
 export async function fetchResourceDetail(href: string) {
-  return await rawFetchResourceDetail(ofetch, href, {
-    baseURL: 'https://' + WORKER_BASE
-  });
+  try {
+    return await rawFetchResourceDetail(ofetch, href, {
+      baseURL: 'https://' + WORKER_BASE
+    });
+  } catch (error) {
+    console.error(error);
+    return undefined;
+  }
 }

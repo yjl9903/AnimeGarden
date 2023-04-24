@@ -9,6 +9,9 @@ if (!href) {
 }
 
 const detail = await fetchResourceDetail(href);
+if (!detail) {
+  return Astro.redirect('/');
+}
 ---
 
 <Layout title={`${detail.title} | Anime Garden`}>
