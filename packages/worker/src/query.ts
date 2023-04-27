@@ -23,7 +23,8 @@ export async function queryResourceDetail(request: IRequest, _req: Request, env:
     return makeErrorResponse({ message: 'NOT FOUND' }, { status: 404 });
   }
 
-  await store.put(href, detail);
+  // Ignore cache put error
+  await store.put(href, detail).catch(() => {});
 
   return makeResponse({ detail });
 }
