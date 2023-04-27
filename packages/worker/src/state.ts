@@ -3,7 +3,9 @@ import type { ResourceDetail } from 'animegarden';
 import type { Env } from './types';
 
 export async function updateRefreshTimestamp(env: Env) {
-  await env.animegarden.put('state/refresh-timestamp', new Date().toISOString());
+  try {
+    await env.animegarden.put('state/refresh-timestamp', new Date().toISOString());
+  } catch {}
 }
 
 export async function getRefreshTimestamp(env: Env) {
