@@ -28,7 +28,7 @@ export class KVStore<V> {
       if (!!text) {
         const result = JSON.parse(text);
         const created = new Date(result.timestamp);
-        if (now.getTime() - created.getTime() <= 1000 * 60 * 60 * 24) {
+        if (now.getTime() - created.getTime() <= 1000 * 60 * 60 * 24 * 30) {
           return result.value;
         } else {
           await this.remove(key);
