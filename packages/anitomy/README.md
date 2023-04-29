@@ -25,6 +25,43 @@ import { parse } from 'anitomy'
 const info = parse(`[Lilith-Raws] 熊熊勇闖異世界 PUNCH！ / Kuma Kuma Kuma Bear S02 - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`)
 ```
 
+```js
+{
+  "audio": {
+    "term": "AAC",
+  },
+  "episode": {
+    "number": 2,
+    "numberAlt": undefined,
+    "title": undefined,
+  },
+  "file": {
+    "checksum": undefined,
+    "extension": "MP4",
+    "name": "[Lilith-Raws] 熊熊勇闖異世界 PUNCH！ / Kuma Kuma Kuma Bear S02 - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]",
+  },
+  "language": "CHT",
+  "month": undefined,
+  "release": {
+    "group": "Lilith-Raws",
+    "version": undefined,
+  },
+  "season": "2",
+  "source": "WEB-DL",
+  "subtitles": undefined,
+  "title": "熊熊勇闖異世界 PUNCH！ / Kuma Kuma Kuma Bear S02",
+  "type": undefined,
+  "video": {
+    "resolution": "1080p",
+    "term": "AVC",
+  },
+  "volume": {
+    "number": undefined,
+  },
+  "year": undefined,
+}
+```
+
 ## License
 
 MIT License © 2023 [XLor](https://github.com/yjl9903)
