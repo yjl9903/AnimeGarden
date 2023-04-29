@@ -14,13 +14,22 @@ export default function Search() {
   const [search, setSearch] = useState('');
   const [searchResult, setSearchResult] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(false);
+
+  const enable = !!search;
+  const hasSearchResult = searchResult.length > 0;
+
   const searchResources = useCallback(
     debounce(async (search: string) => {
       setSearchResult([]);
-      const r = await fetchResources(1, { search: search.split(' ').filter(Boolean) });
-      setSearchResult(r);
-      setLoading(false);
-    }),
+      try {
+        const r = await fetchResources(1, { search: search.split(' ').filter(Boolean) });
+        setSearchResult(r);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }, 500),
     []
   );
   const onSearchChange = useCallback((value: string) => {
@@ -57,6 +66,7 @@ export default function Search() {
     <Command
       label="Command Menu"
       ref={ref}
+      shouldFilter={!hasSearchResult}
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -73,51 +83,57 @@ export default function Search() {
         onValueChange={onSearchChange}
         className={`${!!search ? 'searched' : ''}`}
       />
-      <Command.List>
-        {search && (
-          <>
-            {loading ? (
-              <Command.Loading>
-                <div className="flex items-center">
-                  <div className="lds-ring">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                  </div>
-                  <span>正在搜索 {search} ...</span>
+      {enable && (
+        <>
+          {loading ? (
+            <Command.Loading>
+              <div className="flex items-center">
+                <div className="lds-ring">
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
                 </div>
-              </Command.Loading>
-            ) : (
-              <Command.Empty>没有找到任何结果.</Command.Empty>
-            )}
-            <Command.Group heading="类型">
-              {types.map((type) => (
-                <Command.Item
-                  key={type}
-                  onSelect={() => {
-                    cleanUp();
-                    window.location.pathname = `/type/${type}/1`;
-                  }}
-                >
-                  {type}
-                </Command.Item>
-              ))}
-            </Command.Group>
-            <Command.Group heading="字幕组">
-              {fansubs.map((fansub) => (
-                <Command.Item
-                  key={fansub.id}
-                  onSelect={() => {
-                    cleanUp();
-                    window.location.pathname = `/fansub/${fansub.id}/1`;
-                  }}
-                >
-                  {fansub.name}
-                </Command.Item>
-              ))}
-            </Command.Group>
-            <Command.Group heading="搜索结果">
+                <span>正在搜索 {search} ...</span>
+              </div>
+            </Command.Loading>
+          ) : (
+            <Command.Empty>没有找到任何结果.</Command.Empty>
+          )}
+          {!hasSearchResult && (
+            <>
+              <Command.Group heading="类型">
+                <Command.List>
+                  {types.map((type) => (
+                    <Command.Item
+                      key={type}
+                      onSelect={() => {
+                        cleanUp();
+                        window.location.pathname = `/type/${type}/1`;
+                      }}
+                    >
+                      {type}
+                    </Command.Item>
+                  ))}
+                </Command.List>
+              </Command.Group>
+              <Command.Group heading="字幕组">
+                {fansubs.map((fansub) => (
+                  <Command.Item
+                    key={fansub.id}
+                    onSelect={() => {
+                      cleanUp();
+                      window.location.pathname = `/fansub/${fansub.id}/1`;
+                    }}
+                  >
+                    {fansub.name}
+                  </Command.Item>
+                ))}
+              </Command.Group>
+            </>
+          )}
+          <Command.Group heading="搜索结果">
+            <Command.List>
               {searchResult.map((r) => (
                 <Command.Item
                   key={r.href}
@@ -129,10 +145,10 @@ export default function Search() {
                   {r.title}
                 </Command.Item>
               ))}
-            </Command.Group>
-          </>
-        )}
-      </Command.List>
+            </Command.List>
+          </Command.Group>
+        </>
+      )}
     </Command>
   );
 }
