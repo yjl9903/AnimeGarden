@@ -32,7 +32,7 @@ export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
 export async function queryResources(ctx: Context<{ Bindings: Env }>) {
   const prisma = makePrisma(ctx.env);
 
-  const params = resolveQueryParams(ctx.req.queries());
+  const params = resolveQueryParams(ctx);
   if (!params) {
     return ctx.json({ message: 'Request is not valid' }, 400);
   }
@@ -66,7 +66,7 @@ export async function queryResources(ctx: Context<{ Bindings: Env }>) {
 export async function searchResources(ctx: Context<{ Bindings: Env }>) {
   const prisma = makePrisma(ctx.env);
 
-  const params = resolveQueryParams(ctx.req.queries());
+  const params = resolveQueryParams(ctx);
   if (!params) {
     return ctx.json({ message: 'Request is not valid' }, 400);
   }
@@ -160,30 +160,33 @@ interface QueryParams {
   after: Date | undefined;
 }
 
-function resolveQueryParams(
-  query: Record<string, string | string[] | undefined>
-): QueryParams | undefined {
-  let page = readNum(query.page || '1');
-  let pageSize = readNum(query.count || '100');
-  const fansub = query.fansub ? readNum(query.fansub) : undefined;
-  const publisher = query.publisher ? readNum(query.publisher) : undefined;
-  const type = typeof query.type === 'string' ? query.type : undefined;
+function resolveQueryParams(ctx: Context): QueryParams | undefined {
+  let page = readNum('page', 1);
+  let pageSize = readNum('count', 100);
+  const fansub = readNum('fansub', undefined);
+  const publisher = readNum('publisher', undefined);
+
+  const _type = ctx.req.query('type');
+  const type = typeof _type === 'string' ? _type : undefined;
 
   if (!page || !pageSize) return undefined;
   if (page <= 0) page = 1;
   if (pageSize <= 0) pageSize = 100;
   if (pageSize > 100) pageSize = 100;
 
-  const before = readDate(query.before);
-  const after = readDate(query.after);
+  const before = readDate(ctx.req.query('before'));
+  const after = readDate(ctx.req.query('after'));
 
   return { page, pageSize, fansub, publisher, type, before, after };
 
-  function readNum(raw: string | string[]) {
-    if (typeof raw === 'string' && /^\d+$/.test(raw)) {
+  function readNum(key: string, defaultValue: number | undefined) {
+    const raw = ctx.req.query(key);
+    if (!raw) {
+      return defaultValue;
+    } else if (typeof raw === 'string' && /^\d+$/.test(raw)) {
       return +raw;
     } else {
-      return undefined;
+      return defaultValue;
     }
   }
 
