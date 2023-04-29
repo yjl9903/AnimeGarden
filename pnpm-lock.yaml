@@ -141,16 +141,13 @@ importers:
       anitomy:
         specifier: workspace:*
         version: link:../anitomy
-      itty-router:
-        specifier: ^3.0.12
-        version: 3.0.12
+      hono:
+        specifier: ^3.1.7
+        version: 3.1.7
     devDependencies:
       '@prisma/client':
         specifier: ^4.13.0
         version: 4.13.0(prisma@4.13.0)
-      itty-cors:
-        specifier: ^0.3.6
-        version: 0.3.6
       prisma:
         specifier: ^4.13.0
         version: 4.13.0
@@ -3286,6 +3283,11 @@ packages:
       space-separated-tokens: 2.0.2
     dev: false
 
+  /hono@3.1.7:
+    resolution: {integrity: sha512-AJto2QdBUutbJ4bVU3Vdf3IoWmtyiSoypRHfEJtTnG0WkGKhS7XVWwcwjQwbtNxoXd/iXu6mkJw0sYpVvySIAQ==}
+    engines: {node: '>=16.0.0'}
+    dev: false
+
   /hookable@5.5.3:
     resolution: {integrity: sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ==}
     dev: true
@@ -3467,14 +3469,6 @@ packages:
 
   /isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
-
-  /itty-cors@0.3.6:
-    resolution: {integrity: sha512-VlDDB9CLneCyjqtg8kShl6oBZrJxxwKd8sXWrYC77H6BcW9sDMRDwx7JgCB2T+18pQv/Tau3OIlchEKrEHKKKQ==}
-    dev: true
-
-  /itty-router@3.0.12:
-    resolution: {integrity: sha512-s98XTPhle6GGbaFf0kYrOD3Q8gyhnqvOqkwYijC3AmkceNKqWUp13YHg6dWmqmVv4pP7l7c94XI92I0EXVGO0w==}
-    dev: false
 
   /jiti@1.18.2:
     resolution: {integrity: sha512-QAdOptna2NYiSSpv0O/BwoHBSmz4YhpzJHyi+fnMRTXFjp7B8i/YG5Z8IfusxB1ufjcD2Sre1F3R+nX3fvy7gg==}

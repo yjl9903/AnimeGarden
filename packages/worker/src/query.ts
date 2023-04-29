@@ -1,4 +1,4 @@
-import type { IRequest } from 'itty-router';
+import type { Context } from 'hono';
 import type { Resource, Team, User, Anitomy } from '@prisma/client';
 
 import { fetchDmhyDetail } from 'animegarden';
@@ -6,38 +6,38 @@ import { fetchDmhyDetail } from 'animegarden';
 import type { Env } from './types';
 
 import { makePrisma } from './prisma';
-import { makeErrorResponse, makeResponse } from './utils';
 import { getDetailStore, getRefreshTimestamp } from './state';
 
-export async function queryResourceDetail(request: IRequest, _req: Request, env: Env) {
-  const store = getDetailStore(env);
-  const href = request.params.href;
+export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
+  const store = getDetailStore(ctx.env);
+
+  const href = ctx.req.param('href');
 
   const cache = await store.get(href);
   if (!!cache) {
-    return makeResponse({ detail: cache });
+    return ctx.json({ detail: cache });
   }
 
   const detail = await fetchDmhyDetail(fetch, href);
   if (!detail) {
-    return makeErrorResponse({ message: 'NOT FOUND' }, { status: 404 });
+    return ctx.json({ message: '404 NOT FOUND' }, 404);
   }
 
   // Ignore cache put error
   await store.put(href, detail).catch(() => {});
 
-  return makeResponse({ detail });
+  return ctx.json({ detail });
 }
 
-export async function queryResources(request: IRequest, req: Request, env: Env) {
-  const prisma = makePrisma(env);
+export async function queryResources(ctx: Context<{ Bindings: Env }>) {
+  const prisma = makePrisma(ctx.env);
 
-  const params = resolveQueryParams(request.query);
+  const params = resolveQueryParams(ctx.req.queries());
   if (!params) {
-    return makeErrorResponse({ message: 'Request is not valid' });
+    return ctx.json({ message: 'Request is not valid' }, 400);
   }
-  const { page, pageSize, fansub, publisher, type, before, after } = params;
 
+  const { page, pageSize, fansub, publisher, type, before, after } = params;
   const result = await prisma.resource.findMany({
     where: {
       type,
@@ -60,19 +60,19 @@ export async function queryResources(request: IRequest, req: Request, env: Env) 
     }
   });
   const resources = resolveQueryResult(result);
-  return makeResponse({ resources, timestamp: await getRefreshTimestamp(env) });
+  return ctx.json({ resources, timestamp: await getRefreshTimestamp(ctx.env) });
 }
 
-export async function searchResources(request: IRequest, req: Request, env: Env) {
-  const prisma = makePrisma(env);
+export async function searchResources(ctx: Context<{ Bindings: Env }>) {
+  const prisma = makePrisma(ctx.env);
 
-  const params = resolveQueryParams(request.query);
+  const params = resolveQueryParams(ctx.req.queries());
   if (!params) {
-    return makeErrorResponse({ message: 'Request is not valid' });
+    return ctx.json({ message: 'Request is not valid' }, 400);
   }
 
   const { page, pageSize, fansub, publisher, type, before, after } = params;
-  const { keywords } = await resolveBody(req);
+  const { keywords } = await resolveBody(ctx);
   const result = await prisma.resource.findMany({
     where: {
       AND: [
@@ -103,11 +103,11 @@ export async function searchResources(request: IRequest, req: Request, env: Env)
     }
   });
   const resources = resolveQueryResult(result);
-  return makeResponse({ resources, timestamp: await getRefreshTimestamp(env) });
+  return ctx.json({ resources, timestamp: await getRefreshTimestamp(ctx.env) });
 
-  async function resolveBody(request: Request) {
+  async function resolveBody(ctx: Context) {
     try {
-      const body = await request.json<{ include: unknown; exclude: unknown }>();
+      const body = await ctx.req.json<{ include: unknown; exclude: unknown }>();
       return {
         keywords: {
           include: getStringArrayArray(body.include),

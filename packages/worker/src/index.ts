@@ -1,69 +1,75 @@
-import { Router } from 'itty-router';
-import { createCors } from 'itty-cors';
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
+import { cache } from 'hono/cache';
+import { logger } from 'hono/logger';
+import { prettyJSON } from 'hono/pretty-json';
 
 import type { Env } from './types';
 
 import { makePrisma } from './prisma';
 import { handleScheduled } from './scheduled';
 import { getRefreshTimestamp } from './state';
-import { makeErrorResponse, makeResponse } from './utils';
 import { queryResourceDetail, queryResources, searchResources } from './query';
 
-const router = Router();
+const app = new Hono<{ Bindings: Env }>();
 
-const { preflight, corsify } = createCors();
+app.use('*', cors());
+app.use('*', logger());
+app.use('*', prettyJSON());
 
-router.all('*', (_request, req: Request) => preflight(req));
+app.get('/', async (c) => {
+  return c.json({ message: 'This is AnimeGarden', timestamp: await getRefreshTimestamp(c.env) });
+});
 
-router.get('/', async (_request, _req: Request, env: Env) =>
-  makeResponse({ message: 'This is AnimeGarden', timestamp: await getRefreshTimestamp(env) })
+app.get(
+  '/resources',
+  cache({ cacheName: 'animegarden', cacheControl: 'max-age=60' }),
+  async (c) => {
+    return queryResources(c);
+  }
 );
 
-router.get('/resources', async (request, req: Request, env: Env) => {
-  return queryResources(request, req, env);
-});
-
-router.get('/resource/:href', async (request, req: Request, env: Env) => {
-  return queryResourceDetail(request, req, env);
-});
-
-router.get('/resources/search', async (request, req: Request, env: Env) => {
-  return searchResources(request, req, env);
-});
-
-router.post('/resources/search', async (request, req: Request, env: Env) => {
-  return searchResources(request, req, env);
-});
-
-router.put('/resources', async (_request, _req: Request, env: Env) => {
-  try {
-    return makeResponse(await handleScheduled(env));
-  } catch (error) {
-    console.log(error);
-    return makeErrorResponse({}, { status: 400 });
+app.get(
+  '/resource/:href',
+  cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }),
+  async (c) => {
+    return queryResourceDetail(c);
   }
+);
+
+app.get('/resources/search', async (c) => {
+  return searchResources(c);
 });
 
-router.get('/users', async (_request, req: Request, env: Env) => {
-  const prisma = makePrisma(env);
+app.post('/resources/search', async (c) => {
+  return searchResources(c);
+});
+
+app.put('/resources', async (c) => {
+  return c.json(await handleScheduled(c.env));
+});
+
+app.get('/users', cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }), async (c) => {
+  const prisma = makePrisma(c.env);
   const users = await prisma.user.findMany();
-  return makeResponse({ users });
+  return c.json({ users });
 });
 
-router.get('/teams', async (_request, req: Request, env: Env) => {
-  const prisma = makePrisma(env);
+app.get('/teams', cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }), async (c) => {
+  const prisma = makePrisma(c.env);
   const teams = await prisma.team.findMany();
-  return makeResponse({ teams });
+  return c.json({ teams });
 });
 
-router.all('*', () => makeErrorResponse({ message: '404 NOT FOUND' }, { status: 404 }));
+app.all('*', (c) => c.json({ message: '404 NOT FOUND' }, 404));
+
+app.onError((_err, c) => {
+  return c.json({ messsage: 'Internal Error' }, 500);
+});
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
-    return router
-      .handle(request, request, env, ctx)
-      .catch(() => makeErrorResponse({ message: 'Interal Error' }, { status: 500 }))
-      .then(corsify);
+    return app.fetch(request, env, ctx);
   },
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
     ctx.waitUntil(handleScheduled(env));
