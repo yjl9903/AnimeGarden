@@ -142,8 +142,8 @@ importers:
         specifier: workspace:*
         version: link:../anitomy
       hono:
-        specifier: ^3.1.7
-        version: 3.1.7
+        specifier: ^3.1.8
+        version: 3.1.8
     devDependencies:
       '@prisma/client':
         specifier: ^4.13.0
@@ -3079,8 +3079,8 @@ packages:
       space-separated-tokens: 2.0.2
     dev: false
 
-  /hono@3.1.7:
-    resolution: {integrity: sha512-AJto2QdBUutbJ4bVU3Vdf3IoWmtyiSoypRHfEJtTnG0WkGKhS7XVWwcwjQwbtNxoXd/iXu6mkJw0sYpVvySIAQ==}
+  /hono@3.1.8:
+    resolution: {integrity: sha512-7UZQWuQaqn8MENla09Jdb28qiR5uXii4xR/TNQuVNxZ3+T+ZixWiQUpJG85BXNqhJ5s1SkPbLGjbc3L5wKsv5g==}
     engines: {node: '>=16.0.0'}
     dev: false
 
