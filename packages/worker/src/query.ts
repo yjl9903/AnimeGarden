@@ -107,20 +107,31 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
 
   async function resolveBody(ctx: Context) {
     try {
-      const body = await ctx.req.json<{ include: unknown; exclude: unknown }>();
+      const include = JSON.parse(ctx.req.query('include') ?? '[]');
+      const exclude = JSON.parse(ctx.req.query('exclude') ?? '[]');
       return {
         keywords: {
-          include: getStringArrayArray(body.include),
-          exclude: getStringArray(body.exclude)
+          include: getStringArrayArray(include),
+          exclude: getStringArray(exclude)
         }
       };
     } catch (error) {
-      return {
-        keywords: {
-          include: [],
-          exclude: []
-        }
-      };
+      try {
+        const body = await ctx.req.json<{ include: unknown; exclude: unknown }>();
+        return {
+          keywords: {
+            include: getStringArrayArray(body.include),
+            exclude: getStringArray(body.exclude)
+          }
+        };
+      } catch (error) {
+        return {
+          keywords: {
+            include: [],
+            exclude: []
+          }
+        };
+      }
     }
 
     function getStringArrayArray(arr: unknown): string[][] {
