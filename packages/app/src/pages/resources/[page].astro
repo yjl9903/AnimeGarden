@@ -4,15 +4,26 @@ import Pagination from '../../components/Pagination.astro';
 import ResourceTable from '../../components/ResourceTable.astro';
 
 import { fetchResources } from '../../fetch';
+import { QueryType } from '../../constant';
 
 const { page: _page } = Astro.params;
 const page = _page ? +_page : 1;
-const resources = await fetchResources(page);
+
+const url = Astro.url;
+const publisher = url.searchParams.get('publisher');
+const fansub = url.searchParams.get('fansub');
+const rawType = url.searchParams.get('type');
+const type = rawType && rawType in QueryType ? QueryType[rawType] : rawType;
+const resources = await fetchResources(page, {
+  publisher: publisher ? +publisher : undefined,
+  fansub: fansub ? +fansub : undefined,
+  type: type ? type : undefined
+});
 ---
 
 <Layout title="所有资源 | Anime Garden">
   <div class="mt-4vh w-full">
     <ResourceTable resources={resources} />
-    <Pagination page={page} prefix="/resources/" />
+    <Pagination page={page} href={(page) => `/resources/${page}${url.search}`} />
   </div>
 </Layout>

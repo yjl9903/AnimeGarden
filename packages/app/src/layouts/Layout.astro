@@ -1,11 +1,11 @@
 ---
-import { getRuntime } from "@astrojs/cloudflare/runtime";
+import { getRuntime } from '@astrojs/cloudflare/runtime';
 
 import type { Env } from '../env';
 
-import Search from '../components/Search'
-import Dropdown from '../components/Dropdown.astro'
-import { types, fansubs } from "../constant";
+import Search from '../components/Search';
+import Dropdown from '../components/Dropdown.astro';
+import { types, fansubs } from '../constant';
 
 export interface Props {
   title: string;
@@ -14,6 +14,7 @@ export interface Props {
 const { title } = Astro.props;
 
 const url = Astro.url.pathname;
+const search = Astro.url.searchParams;
 
 const runtime = getRuntime<Env>(Astro.request);
 const timestamp = new Date((await runtime?.env.animegarden.get('state/refresh-timestamp')) ?? 0);
@@ -34,27 +35,56 @@ const timestamp = new Date((await runtime?.env.animegarden.get('state/refresh-ti
         <a href="/">🌸 Anime Garden</a>
       </h1>
       <div class="relative z-100">
-        <div class="vercel absolute top-[-7rem] w-full flex justify-center"><Search client:load></Search></div>
+        <div class="vercel absolute top-[-7rem] w-full flex justify-center">
+          <Search client:load />
+        </div>
       </div>
       <div class="main flex gap6 justify-start select-none text-base-500">
         <a href="/" class="header-item block" x-active={url === '/'}>首页</a>
-        <a href="/resources/1" class="header-item block" x-active={url.startsWith('/resources/')}>所有资源</a>
-        <div class="header-item cursor-pointer" x-active={url.startsWith('/type/')}>
+        <a
+          href="/resources/1"
+          class="header-item block"
+          x-active={url.startsWith('/resources/') && !search.has('type') && !search.has('fansub')}
+          >所有资源</a
+        >
+        <div class="header-item cursor-pointer" x-active={search.has('type')}>
           <Dropdown>
             <span>类型</span>
             <div slot="dropdown" class="mt4">
-              <div class="w-[120px] max-h-[600px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y">
-                {types.map(t => <a href={`/type/${t}/1`} class="px2 py1 block text-base-600 text-link-active">{t}</a>)}
+              <div
+                class="w-[120px] max-h-[600px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y"
+              >
+                {
+                  types.map((t) => (
+                    <a
+                      href={`/resources/1?type=${t}`}
+                      class="px2 py1 block text-base-600 text-link-active"
+                    >
+                      {t}
+                    </a>
+                  ))
+                }
               </div>
             </div>
           </Dropdown>
         </div>
-        <div class="header-item cursor-pointer" x-active={url.startsWith('/fansub/')}>
+        <div class="header-item cursor-pointer" x-active={search.has('fansub')}>
           <Dropdown>
             <span>字幕组</span>
             <div slot="dropdown" class="mt4">
-              <div class="w-[180px] max-h-[600px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y">
-                {fansubs.map(t => <a href={`/fansub/${t.id}/1`} class="px2 py1 block text-base-600 text-link-active">{t.name}</a>)}
+              <div
+                class="w-[180px] max-h-[600px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y"
+              >
+                {
+                  fansubs.map((t) => (
+                    <a
+                      href={`/resources/1?fansub=${t.id}`}
+                      class="px2 py1 block text-base-600 text-link-active"
+                    >
+                      {t.name}
+                    </a>
+                  ))
+                }
               </div>
             </div>
           </Dropdown>

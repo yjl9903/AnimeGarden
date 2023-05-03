@@ -84,7 +84,7 @@ function getMirrorHref(href: string) {
             <td class="py2 pl2">
               <div class="flex items-center justify-start">
                 {r.fansub && (
-                  <a href={`/fansub/${r.fansub.id}/1`} class="block">
+                  <a href={`/resources/1?fansub=${r.fansub.id}`} class="block">
                     <Tag text={r.fansub.name} className={`text-xs mr2 hover:bg-gray-300`} />
                   </a>
                 )}
@@ -96,7 +96,7 @@ function getMirrorHref(href: string) {
               </div>
             </td>
             <td class="py2 pl2 text-center">
-              <a href={`/publisher/${r.publisher.id}/1`}>
+              <a href={`/resources/1?publisher=${r.publisher.id}`}>
                 <Tag text={r.publisher.name} className={`text-xs mr2 hover:bg-gray-300`} />
               </a>
             </td>

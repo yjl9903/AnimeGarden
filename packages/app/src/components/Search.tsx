@@ -100,7 +100,7 @@ export default function Search() {
                       key={type}
                       onSelect={() => {
                         cleanUp();
-                        window.location.pathname = `/type/${type}/1`;
+                        window.location.href = `/resources/1?type=${type}`;
                       }}
                     >
                       {type}
@@ -114,7 +114,7 @@ export default function Search() {
                     key={fansub.id}
                     onSelect={() => {
                       cleanUp();
-                      window.location.pathname = `/fansub/${fansub.id}/1`;
+                      window.location.href = `/resources/1?fansub=${fansub.id}`;
                     }}
                   >
                     {fansub.name}

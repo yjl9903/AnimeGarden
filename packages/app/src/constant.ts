@@ -22,6 +22,28 @@ export const types = [
   '特摄'
 ];
 
+export const QueryType: Record<string, string> = {
+  动画: '動畫',
+  季度全集: '季度全集',
+  音乐: '音樂',
+  动漫音乐: '動漫音樂',
+  同人音乐: '同人音樂',
+  流行音乐: '流行音樂',
+  日剧: '日劇',
+  RAW: 'ＲＡＷ',
+  其他: '其他',
+  漫画: '漫畫',
+  港台原版: '港台原版',
+  日文原版: '日文原版',
+  游戏: '遊戲',
+  电脑游戏: '電腦遊戲',
+  主机游戏: '電視遊戲',
+  掌机游戏: '掌機遊戲',
+  '网络游戏 ': '網絡遊戲',
+  游戏周边: '遊戲周邊',
+  特摄: '特攝'
+};
+
 export const fansubs = [
   { id: 619, name: '桜都字幕组' },
   { id: 185, name: '极影字幕社' },
@@ -92,7 +114,7 @@ export const fansubs = [
   { id: 734, name: 'TD-RAWS' },
   { id: 447, name: '夢幻戀櫻' },
   { id: 790, name: 'WBX-SUB' },
-  { id: 814, name: 'Amor字幕组' },
+  { id: 814, name: 'Amor字幕组' }
   // 停更
   // { id: 217, name: 'AQUA工作室' },
   // { id: 832, name: 'Sakura' },
