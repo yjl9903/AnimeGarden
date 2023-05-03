@@ -18,15 +18,19 @@ if (!detail) {
 <Layout title={`${detail.title} | Anime Garden`}>
   <div class="detail mt-4vh w-full space-y-4">
     <h3 class="text-xl font-bold">
-      <a href={detail.href} target="_blank" class="text-link-active">{detail.title}</a>
+      <span>{detail.title}</span>
     </h3>
     <div class="download-link rounded-md shadow-box">
       <h4 class="text-lg font-bold border-b px4 py2">
         <a href={detail.magnet.href} class="text-link-active">下载链接</a>
       </h4>
       <div
-        class="p4 space-y-1 overflow-auto whitespace-nowrap [&>div>span]:(inline-block w-[150px] min-w-[150px]) [&>div]:(flex) [&>div>a]:(inline-block flex-1)"
+        class="p4 space-y-1 overflow-auto whitespace-nowrap [&>div>span]:(text-base-600 select-none inline-block w-[160px] min-w-[160px]) [&>div]:(flex) [&>div>a]:(inline-block flex-1)"
       >
+        <div>
+          <span>原链接</span>
+          <a href={detail.href} target="_blank" class="text-link">{detail.href}</a>
+        </div>
         <div>
           <span>会员链接</span>
           <a href={detail.magnet.user} class="text-link">{detail.magnet.user}</a>
