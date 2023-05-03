@@ -111,8 +111,11 @@ export async function fetchResources(
     };
   } else {
     const r = await fetchPage(options.page ?? 1);
+    const resources = uniq(r.resources);
+    await options.progress?.(resources, { url: url.toString(), page: 1, timestamp: r.timestamp });
+
     return {
-      resources: uniq(r.resources),
+      resources,
       timestamp: r.timestamp
     };
   }
