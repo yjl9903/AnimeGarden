@@ -7,6 +7,13 @@ import '../styles/cmdk.css';
 import { fansubs, types } from '../constant';
 import { fetchResources } from '../fetch';
 
+function parseSearch(search: string) {
+  return search
+    .split(' ')
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 export default function Search() {
   const ref = useRef<HTMLDivElement | null>(null);
 
@@ -26,12 +33,12 @@ export default function Search() {
       return search;
     },
     async (search) => {
-      return await fetchResources(1, { search: search.split(' ').filter(Boolean) });
+      return await fetchResources(1, { include: parseSearch(search) });
     }
   );
 
   const enable = !!input;
-  const hasSearchResult = searchResult && searchResult.length > 0;
+  const shouldFilter = (!searchResult || searchResult.length === 0) && !isLoading;
 
   const onInputChange = useCallback((value: string) => {
     setInput(value);
@@ -57,7 +64,7 @@ export default function Search() {
     <Command
       label="Command Menu"
       ref={ref}
-      shouldFilter={!hasSearchResult}
+      shouldFilter={shouldFilter}
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -91,7 +98,8 @@ export default function Search() {
           ) : (
             <Command.Empty>没有找到任何结果.</Command.Empty>
           )}
-          {!hasSearchResult && (
+
+          {shouldFilter && (
             <>
               <Command.Group heading="类型">
                 <Command.List>
@@ -109,26 +117,44 @@ export default function Search() {
                 </Command.List>
               </Command.Group>
               <Command.Group heading="字幕组">
-                {fansubs.map((fansub) => (
-                  <Command.Item
-                    key={fansub.id}
-                    onSelect={() => {
-                      cleanUp();
-                      window.location.href = `/resources/1?fansub=${fansub.id}`;
-                    }}
-                  >
-                    {fansub.name}
-                  </Command.Item>
-                ))}
+                <Command.List>
+                  {fansubs.map((fansub) => (
+                    <Command.Item
+                      key={fansub.id}
+                      onSelect={() => {
+                        cleanUp();
+                        window.location.href = `/resources/1?fansub=${fansub.id}`;
+                      }}
+                    >
+                      {fansub.name}
+                    </Command.Item>
+                  ))}
+                </Command.List>
               </Command.Group>
             </>
           )}
           <Command.Group heading="搜索结果">
             <Command.List>
+              {search && (
+                <Command.Item
+                  value="go-to-search-page"
+                  onSelect={() => {
+                    if (search) {
+                      cleanUp();
+                      window.location.href = `/resources/1?include=${JSON.stringify(
+                        parseSearch(search)
+                      )}`;
+                    }
+                  }}
+                >
+                  在本页列出 {search} 的搜索结果...
+                </Command.Item>
+              )}
               {searchResult &&
                 searchResult.map((r) => (
                   <Command.Item
                     key={r.href}
+                    value={r.href}
                     onSelect={() => {
                       cleanUp();
                       window.location.pathname = `/resource/${r.href.split('/').at(-1)}`;

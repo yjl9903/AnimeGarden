@@ -12,12 +12,20 @@ const page = _page ? +_page : 1;
 const url = Astro.url;
 const publisher = url.searchParams.get('publisher');
 const fansub = url.searchParams.get('fansub');
-const rawType = url.searchParams.get('type');
-const type = rawType && rawType in QueryType ? QueryType[rawType] : rawType;
+const _type = url.searchParams.get('type');
+const type = _type && _type in QueryType ? QueryType[_type] : _type;
+
+const _include = url.searchParams.get('include');
+const include = _include ? JSON.parse(_include) : undefined;
+const _exclude = url.searchParams.get('exclude');
+const exclude = _exclude ? JSON.parse(_exclude) : undefined;
+
 const resources = await fetchResources(page, {
   publisher: publisher ? +publisher : undefined,
   fansub: fansub ? +fansub : undefined,
-  type: type ? type : undefined
+  type: type ? type : undefined,
+  include,
+  exclude
 });
 ---
 
