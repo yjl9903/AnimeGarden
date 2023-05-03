@@ -71,18 +71,25 @@ export async function fetchResources(
     url.searchParams.set('after', '' + options.after.getTime());
   }
 
-  if (options.count) {
+  if (options.count !== undefined && options.count !== null) {
+    // Prefer the original count or -1 for inf
+    const count = options.count < 0 ? Number.MAX_SAFE_INTEGER : options.count;
+
     const map = new Map<string, Resource>();
     let timestamp = new Date(0);
-    for (let page = 1; map.size < options.count; page++) {
+    for (let page = 1; map.size < count; page++) {
       const resp = await fetchPage(page);
       timestamp = resp.timestamp;
+      if (resp.resources.length === 0) {
+        break;
+      }
       for (const r of resp.resources) {
         if (!map.has(r.href)) {
           map.set(r.href, r);
         }
       }
     }
+
     return {
       resources: uniq([...map.values()]),
       timestamp
