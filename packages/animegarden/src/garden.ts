@@ -34,6 +34,14 @@ export interface FetchResourcesOptions {
    * The number of retry
    */
   retry?: number;
+
+  /**
+   * Progress callback when querying multiple pages
+   */
+  progress?: (
+    delta: Resource[],
+    payload: { url: string; page: number; timestamp: Date }
+  ) => void | Promise<void>;
 }
 
 export interface FetchResourceDetailOptions {
@@ -83,11 +91,14 @@ export async function fetchResources(
       if (resp.resources.length === 0) {
         break;
       }
+      const newRes = [];
       for (const r of resp.resources) {
         if (!map.has(r.href)) {
           map.set(r.href, r);
+          newRes.push(r);
         }
       }
+      await options.progress?.(newRes, { url: url.toString(), page, timestamp });
     }
 
     return {
