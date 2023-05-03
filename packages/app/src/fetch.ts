@@ -29,6 +29,8 @@ export async function fetchResources(
     fansub?: number;
     publisher?: number;
     type?: string;
+    after?: Date;
+    before?: Date;
   } = {}
 ) {
   return (
@@ -43,7 +45,9 @@ export async function fetchResources(
         : undefined,
       fansub: options.fansub ? '' + options.fansub : undefined,
       publisher: options.publisher ? '' + options.publisher : undefined,
-      type: options.type ? '' + options.type : undefined
+      type: options.type ? '' + options.type : undefined,
+      after: options.after,
+      before: options.before
     })
   ).resources;
 }

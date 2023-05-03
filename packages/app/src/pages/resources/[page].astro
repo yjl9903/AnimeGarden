@@ -15,6 +15,11 @@ const fansub = url.searchParams.get('fansub');
 const _type = url.searchParams.get('type');
 const type = _type && _type in QueryType ? QueryType[_type] : _type;
 
+const _after = url.searchParams.get('after');
+const after = _after ? new Date(_after) : undefined;
+const _before = url.searchParams.get('before');
+const before = _before ? new Date(_before) : undefined;
+
 const _include = url.searchParams.get('include');
 const include = _include ? JSON.parse(_include) : undefined;
 const _exclude = url.searchParams.get('exclude');
@@ -25,7 +30,9 @@ const resources = await fetchResources(page, {
   fansub: fansub ? +fansub : undefined,
   type: type ? type : undefined,
   include,
-  exclude
+  exclude,
+  after,
+  before
 });
 ---
 
