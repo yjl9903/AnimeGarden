@@ -78,6 +78,10 @@ export async function fetchResources(
   if (options.after) {
     url.searchParams.set('after', '' + options.after.getTime());
   }
+  if (options.search) {
+    url.searchParams.set('include', JSON.stringify(options.search.include ?? []));
+    url.searchParams.set('exclude', JSON.stringify(options.search.exclude ?? []));
+  }
 
   if (options.count !== undefined && options.count !== null) {
     // Prefer the original count or -1 for inf
@@ -115,35 +119,16 @@ export async function fetchResources(
 
   async function fetchPage(page: number) {
     url.searchParams.set('page', '' + page);
-    if (options.search) {
-      return await retryFn(
-        () =>
-          fetch(url.toString(), {
-            method: 'POST',
-            body: JSON.stringify(options.search),
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          })
-            .then((r) => r.json())
-            .then((r) => ({
-              resources: r.resources as Resource[],
-              timestamp: new Date(r.timestamp)
-            })),
-        retry
-      );
-    } else {
-      return await retryFn(
-        () =>
-          fetch(url.toString())
-            .then((r) => r.json())
-            .then((r) => ({
-              resources: r.resources as Resource[],
-              timestamp: new Date(r.timestamp)
-            })),
-        retry
-      );
-    }
+    return await retryFn(
+      () =>
+        fetch(url.toString())
+          .then((r) => r.json())
+          .then((r) => ({
+            resources: r.resources as Resource[],
+            timestamp: new Date(r.timestamp)
+          })),
+      retry
+    );
   }
 
   function uniq(resources: Resource[]) {
