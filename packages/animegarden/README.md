@@ -20,7 +20,12 @@ const dmhy = await fetchDmhyPage(fetch)
 
 // Fetch the first page of Anime Garden mirror site
 const resources = await fetchResources(fetch)
+
+// Fetch all the resources which match some filter conditions
+const sakurato = await fetchResources(fetch, { count: -1, fansub: 619 })
 ```
+
+You can check more conditions [here](https://github.com/yjl9903/AnimeGarden/blob/main/packages/animegarden/src/garden.ts).
 
 ## Credits
 
