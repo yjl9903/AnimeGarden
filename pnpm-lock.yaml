@@ -78,8 +78,8 @@ importers:
   packages/app:
     dependencies:
       '@astrojs/cloudflare':
-        specifier: ^6.2.3
-        version: 6.2.3(astro@2.3.4)
+        specifier: ^6.2.4
+        version: 6.2.4(astro@2.3.4)
       '@astrojs/react':
         specifier: ^2.1.1
         version: 2.1.1(@types/react-dom@18.2.1)(@types/react@18.2.0)(react-dom@18.2.0)(react@18.2.0)
@@ -176,10 +176,10 @@ packages:
     resolution: {integrity: sha512-vy9fM3pIxZmX07dL+VX1aZe7ynZ+YyB0jY+jE6r3hOK6GNY2t6W8rzpFC4tgpbXUYABkFQwgJq2XYXlxbXAI0g==}
     dev: true
 
-  /@astrojs/cloudflare@6.2.3(astro@2.3.4):
-    resolution: {integrity: sha512-VT0WFtNme+skmib6pnkQC5LooZyHAvn/RlUZOXn+dSflo6IQ2kvczAuHBcZrzBOtyKOhf00mAphfUkQjOJZr8g==}
+  /@astrojs/cloudflare@6.2.4(astro@2.3.4):
+    resolution: {integrity: sha512-hA8ede9+TQdeg3x8XaPyciYq6yfHAUKqgqjYIvd6vJUMFis97mOCFE5A/J+DGsXs7i7qK2VjZmq05ZBwVdnILw==}
     peerDependencies:
-      astro: ^2.3.2
+      astro: ^2.3.3
     dependencies:
       astro: 2.3.4(@types/node@18.16.3)
       esbuild: 0.17.16
