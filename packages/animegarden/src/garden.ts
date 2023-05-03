@@ -1,20 +1,46 @@
-import type { Resource, ResourceDetail } from './types';
+import type { Resource, ResourceDetail, ResourceType } from './types';
 
 import { retryFn } from './utils';
 
 export interface FetchResourcesOptions {
+  /**
+   * The base URL of anime garden API
+   *
+   * @default 'https://garden.onekuma.cn/api/'
+   */
   baseURL?: string;
 
+  /**
+   * Filter by the group id of fansub
+   */
   fansub?: string;
 
+  /**
+   * Filter by the user id of publisher
+   */
   publisher?: string;
 
+  /**
+   * Filter by the resource type
+   *
+   * @type ResourceType
+   */
   type?: string;
 
+  /**
+   * Resources uploaded before the specified date
+   */
   before?: Date;
 
+  /**
+   * Resources uploaded after the specified date
+   */
   after?: Date;
 
+  /**
+   * Search in titles, it must contains at least one word in each of the include array,
+   * and should not contain any excluded word
+   */
   search?: {
     include?: string | (string | string[])[];
     exclude?: string[];
@@ -31,7 +57,7 @@ export interface FetchResourcesOptions {
   count?: number;
 
   /**
-   * The number of retry
+   * The number of retry times
    */
   retry?: number;
 
