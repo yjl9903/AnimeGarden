@@ -1,5 +1,4 @@
-import type { Resource } from 'animegarden';
-
+import useSWR from 'swr';
 import { Command } from 'cmdk';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -11,45 +10,37 @@ import { fetchResources } from '../fetch';
 export default function Search() {
   const ref = useRef<HTMLDivElement | null>(null);
 
+  const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
-  const [searchResult, setSearchResult] = useState<Resource[]>([]);
-  const [loading, setLoading] = useState(false);
 
-  const enable = !!search;
-  const hasSearchResult = searchResult.length > 0;
-
-  const searchResources = useCallback(
-    debounce(async (search: string) => {
-      setSearchResult([]);
-      try {
-        const r = await fetchResources(1, { search: search.split(' ').filter(Boolean) });
-        setSearchResult(r);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }, 500),
-    []
-  );
-  const onSearchChange = useCallback((value: string) => {
+  const setDebounceSearch = debounce((value: string) => {
     setSearch(value);
-    if (value) {
+  }, 500);
+
+  const { data: searchResult, isLoading } = useSWR(
+    () => {
+      if (!search) return null;
       const hasBuiltin =
-        fansubs.some((f) => f.name.includes(value)) || types.some((t) => t.includes(value));
-      if (!hasBuiltin) {
-        setLoading(true);
-        searchResources(value);
-      } else {
-        setLoading(false);
-      }
+        fansubs.some((f) => f.name.includes(search)) || types.some((t) => t.includes(search));
+      if (hasBuiltin) return null;
+      return search;
+    },
+    async (search) => {
+      return await fetchResources(1, { search: search.split(' ').filter(Boolean) });
     }
+  );
+
+  const enable = !!input;
+  const hasSearchResult = searchResult && searchResult.length > 0;
+
+  const onInputChange = useCallback((value: string) => {
+    setInput(value);
+    setDebounceSearch(value);
   }, []);
 
   const cleanUp = useCallback(() => {
-    setLoading(false);
+    setInput('');
     setSearch('');
-    setSearchResult([]);
   }, []);
 
   useEffect(() => {
@@ -79,13 +70,13 @@ export default function Search() {
       }}
     >
       <Command.Input
-        value={search}
-        onValueChange={onSearchChange}
-        className={`${!!search ? 'searched' : ''}`}
+        value={input}
+        onValueChange={onInputChange}
+        className={`${!!input ? 'searched' : ''}`}
       />
       {enable && (
         <>
-          {loading ? (
+          {isLoading ? (
             <Command.Loading>
               <div className="flex items-center">
                 <div className="lds-ring">
@@ -134,17 +125,18 @@ export default function Search() {
           )}
           <Command.Group heading="搜索结果">
             <Command.List>
-              {searchResult.map((r) => (
-                <Command.Item
-                  key={r.href}
-                  onSelect={() => {
-                    cleanUp();
-                    window.location.pathname = `/resource/${r.href.split('/').at(-1)}`;
-                  }}
-                >
-                  {r.title}
-                </Command.Item>
-              ))}
+              {searchResult &&
+                searchResult.map((r) => (
+                  <Command.Item
+                    key={r.href}
+                    onSelect={() => {
+                      cleanUp();
+                      window.location.pathname = `/resource/${r.href.split('/').at(-1)}`;
+                    }}
+                  >
+                    {r.title}
+                  </Command.Item>
+                ))}
             </Command.List>
           </Command.Group>
         </>
