@@ -14,6 +14,8 @@ curl https://garden.onekuma.cn/api/resources?page=1&count=1
 
 You can find more API usage example in [scripts/api.http](./scripts/api.http).
 
+If you are using JavaScript, you can just use the API wrapper `fetchResources` and `fetchResourceDetail` in package [animegarden](https://www.npmjs.com/package/animegarden).
+
 ## Packages
 
 ### animegarden
