@@ -17,10 +17,11 @@ import {
   AnimeYearMax,
   AnimeYearMin,
   indexOfDigit,
+  searchForLastNumber,
+  searchForSeparatedNumbers,
   searchForEquivalentNumbers,
   searchForIsolatedEpisodeNumber,
-  searchForLastNumber,
-  searchForSeparatedNumbers
+  searchForEpisodeNumberWithVersion
 } from './number';
 import { ParserContext, hasResult, setResult } from './context';
 import {
@@ -215,8 +216,11 @@ function searchForEpisodeNumber(context: ParserContext) {
   // e.g. " - 08"
   if (searchForSeparatedNumbers(context, tokens)) return;
 
-  // "e.g. "[12]", "(2006)"
+  // e.g. "[12]", "(2006)"
   if (searchForIsolatedEpisodeNumber(context, tokens)) return;
+
+  // e.g. " 03 v2"
+  if (searchForEpisodeNumberWithVersion(context, tokens)) return;
 
   // Consider using the last number as a last resort
   searchForLastNumber(context, tokens);

@@ -58,6 +58,13 @@ export const LilithRaws = [
   `[Lilith-Raws] UniteUp! 眾星齊聚 / UniteUp! - 11 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`
 ];
 
+export const KitaujiSub = [
+  '[北宇治字幕组&7³ACG] 镜之孤城 / Kagami no Kojou [Webrip][1080p][HEVC_AAC][简繁内封]',
+  '[北宇治字幕组] 赛马娘 Pretty Derby Road to the Top / Uma Musume - Pretty Derby - Road to the Top [03 v2][Webrip][1080p][HEVC_AAC][简体内封]',
+  '[北宇治Anarchism字幕组] 魔法少女毀滅者/Mahou Shoujo Magical Destroyers [04][Webrip][1080p][HEVC_AAC][CHT][MP4]',
+  '[北宇治字幕组&霜庭云花Sub&氢气烤肉架]【我推的孩子】/【Oshi no ko】[03 V2][Webrip][1080p][HEVC_AAC][简繁日内封]'
+];
+
 export const other = [
   '[银色子弹字幕组][名侦探柯南][第1080集 对准灰原的相机][简繁日多语MKV][1080P]',
   `[Lilith-Raws] 熊熊勇闖異世界 PUNCH！ / Kuma Kuma Kuma Bear S02 - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`,
@@ -67,4 +74,4 @@ export const other = [
   `【喵萌奶茶屋】★04月新番★[百合是我的工作！/我的百合乃工作是也！/私の百合はお仕事です！/Watashi no Yuri wa Oshigoto desu!][01][720p][繁日雙語][招募翻譯校對]`
 ];
 
-export const filesnames = [...LoliHouse, ...LilithRaws, ...other];
+export const filesnames = [...LoliHouse, ...LilithRaws, ...KitaujiSub, ...other];
