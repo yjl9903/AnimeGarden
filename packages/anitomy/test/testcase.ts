@@ -60,7 +60,9 @@ export const LilithRaws = [
 
 export const KitaujiSub = [
   '[北宇治字幕组&7³ACG] 镜之孤城 / Kagami no Kojou [Webrip][1080p][HEVC_AAC][简繁内封]',
+  '[KitaujiSub&7鲁ACG] Kagami no Kojou [Webrip][1080p][HEVC_AAC][CHS&CHT].mkv',
   '[北宇治字幕组] 赛马娘 Pretty Derby Road to the Top / Uma Musume - Pretty Derby - Road to the Top [03 v2][Webrip][1080p][HEVC_AAC][简体内封]',
+  '[KitaujiSub] Uma Musume - Pretty Derby - Road to the Top [03][Webrip][1080P][HEVC_AAC][CHS][v2].mkv',
   '[北宇治Anarchism字幕组] 魔法少女毀滅者/Mahou Shoujo Magical Destroyers [04][Webrip][1080p][HEVC_AAC][CHT][MP4]',
   '[北宇治字幕组&霜庭云花Sub&氢气烤肉架]【我推的孩子】/【Oshi no ko】[03 V2][Webrip][1080p][HEVC_AAC][简繁日内封]'
 ];

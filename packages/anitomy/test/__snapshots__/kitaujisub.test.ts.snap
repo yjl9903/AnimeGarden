@@ -43,6 +43,43 @@ exports[`Kitaujisub > should parse 2`] = `
     "term": "AAC",
   },
   "episode": {
+    "number": undefined,
+    "numberAlt": undefined,
+    "title": undefined,
+  },
+  "file": {
+    "checksum": undefined,
+    "extension": "mkv",
+    "name": "[KitaujiSub&7鲁ACG] Kagami no Kojou [Webrip][1080p][HEVC_AAC][CHS&CHT].mkv",
+  },
+  "language": "CHT",
+  "month": undefined,
+  "release": {
+    "group": undefined,
+    "version": undefined,
+  },
+  "season": undefined,
+  "source": "Webrip",
+  "subtitles": undefined,
+  "title": "Kagami no Kojou",
+  "type": undefined,
+  "video": {
+    "resolution": "1080p",
+    "term": "HEVC",
+  },
+  "volume": {
+    "number": undefined,
+  },
+  "year": undefined,
+}
+`;
+
+exports[`Kitaujisub > should parse 3`] = `
+{
+  "audio": {
+    "term": "AAC",
+  },
+  "episode": {
     "number": 3,
     "numberAlt": undefined,
     "title": undefined,
@@ -74,7 +111,44 @@ exports[`Kitaujisub > should parse 2`] = `
 }
 `;
 
-exports[`Kitaujisub > should parse 3`] = `
+exports[`Kitaujisub > should parse 4`] = `
+{
+  "audio": {
+    "term": "AAC",
+  },
+  "episode": {
+    "number": 3,
+    "numberAlt": undefined,
+    "title": undefined,
+  },
+  "file": {
+    "checksum": undefined,
+    "extension": "mkv",
+    "name": "[KitaujiSub] Uma Musume - Pretty Derby - Road to the Top [03][Webrip][1080P][HEVC_AAC][CHS][v2].mkv",
+  },
+  "language": "CHS",
+  "month": undefined,
+  "release": {
+    "group": undefined,
+    "version": 2,
+  },
+  "season": undefined,
+  "source": "Webrip",
+  "subtitles": undefined,
+  "title": "Uma Musume - Pretty Derby - Road to the Top",
+  "type": undefined,
+  "video": {
+    "resolution": "1080P",
+    "term": "HEVC",
+  },
+  "volume": {
+    "number": undefined,
+  },
+  "year": undefined,
+}
+`;
+
+exports[`Kitaujisub > should parse 5`] = `
 {
   "audio": {
     "term": "AAC",
@@ -111,7 +185,7 @@ exports[`Kitaujisub > should parse 3`] = `
 }
 `;
 
-exports[`Kitaujisub > should parse 4`] = `
+exports[`Kitaujisub > should parse 6`] = `
 {
   "audio": {
     "term": "AAC",

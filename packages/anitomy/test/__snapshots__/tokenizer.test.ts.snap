@@ -11224,6 +11224,167 @@ exports[`tokenize > should work 56`] = `
     },
     {
       "category": "Unknown",
+      "content": "KitaujiSub",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": "&",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "7鲁ACG",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Kagami",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "no",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Kojou",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "Webrip",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Identifier",
+      "content": "1080p",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "HEVC",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": "_",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "AAC",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "CHS",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": "&",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "CHT",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": ".",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "mkv",
+      "enclosed": false,
+    },
+  ],
+}
+`;
+
+exports[`tokenize > should work 57`] = `
+{
+  "ok": true,
+  "result": {
+    "video.resolution": "1080p",
+  },
+  "tokens": [
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
       "content": "北宇治字幕组",
       "enclosed": true,
     },
@@ -11516,7 +11677,248 @@ exports[`tokenize > should work 56`] = `
 }
 `;
 
-exports[`tokenize > should work 57`] = `
+exports[`tokenize > should work 58`] = `
+{
+  "ok": true,
+  "result": {
+    "video.resolution": "1080P",
+  },
+  "tokens": [
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "KitaujiSub",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Uma",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Musume",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "-",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Pretty",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Derby",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "-",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Road",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "to",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "the",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Top",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "03",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "Webrip",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Identifier",
+      "content": "1080P",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "HEVC",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": "_",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "AAC",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "CHS",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "v2",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": ".",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "mkv",
+      "enclosed": false,
+    },
+  ],
+}
+`;
+
+exports[`tokenize > should work 59`] = `
 {
   "ok": true,
   "result": {
@@ -11687,7 +12089,7 @@ exports[`tokenize > should work 57`] = `
 }
 `;
 
-exports[`tokenize > should work 58`] = `
+exports[`tokenize > should work 60`] = `
 {
   "ok": true,
   "result": {
@@ -11873,7 +12275,7 @@ exports[`tokenize > should work 58`] = `
 }
 `;
 
-exports[`tokenize > should work 59`] = `
+exports[`tokenize > should work 61`] = `
 {
   "ok": true,
   "result": {
@@ -11969,7 +12371,7 @@ exports[`tokenize > should work 59`] = `
 }
 `;
 
-exports[`tokenize > should work 60`] = `
+exports[`tokenize > should work 62`] = `
 {
   "ok": true,
   "result": {
@@ -12200,7 +12602,7 @@ exports[`tokenize > should work 60`] = `
 }
 `;
 
-exports[`tokenize > should work 61`] = `
+exports[`tokenize > should work 63`] = `
 {
   "ok": true,
   "result": {
@@ -12391,7 +12793,7 @@ exports[`tokenize > should work 61`] = `
 }
 `;
 
-exports[`tokenize > should work 62`] = `
+exports[`tokenize > should work 64`] = `
 {
   "ok": true,
   "result": {
@@ -12567,7 +12969,7 @@ exports[`tokenize > should work 62`] = `
 }
 `;
 
-exports[`tokenize > should work 63`] = `
+exports[`tokenize > should work 65`] = `
 {
   "ok": true,
   "result": {
@@ -12703,7 +13105,7 @@ exports[`tokenize > should work 63`] = `
 }
 `;
 
-exports[`tokenize > should work 64`] = `
+exports[`tokenize > should work 66`] = `
 {
   "ok": true,
   "result": {
