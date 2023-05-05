@@ -23,8 +23,8 @@ importers:
         specifier: ^11.1.1
         version: 11.1.1
       https-proxy-agent:
-        specifier: ^5.0.1
-        version: 5.0.1
+        specifier: ^6.0.0
+        version: 6.0.0
       ofetch:
         specifier: ^1.0.1
         version: 1.0.1
@@ -1925,6 +1925,15 @@ packages:
       - supports-color
     dev: true
 
+  /agent-base@7.0.0:
+    resolution: {integrity: sha512-awaqsf16R0tAUMxWiVikaBDKrbt0im7XdzPMh3I8TFC097G4ZowjGgLBfXt+tGPsE+1U1FyLBGuWMd/EPVblWg==}
+    engines: {node: '>= 14'}
+    dependencies:
+      debug: 4.3.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
   /ansi-align@3.0.1:
     resolution: {integrity: sha512-IOfwwBF5iczOjp/WeY4YxyjqAFMQoZufdQWDd19SEExbVLNXqvpzSJ/M7Za4/sCPmQ0+GRquoA7bGcINcxew6w==}
     dependencies:
@@ -3119,6 +3128,16 @@ packages:
     engines: {node: '>= 6'}
     dependencies:
       agent-base: 6.0.2
+      debug: 4.3.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /https-proxy-agent@6.0.0:
+    resolution: {integrity: sha512-g821um/ZvXlENs8tqKh96b6G0wafab6ypfkZdFZImJEGZrn47oLeRhWMKvCYxrasOgNi3Yh6Cxkws2Zn13v2QA==}
+    engines: {node: '>= 14'}
+    dependencies:
+      agent-base: 7.0.0
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
