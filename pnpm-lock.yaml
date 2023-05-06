@@ -23,8 +23,8 @@ importers:
         specifier: ^11.1.1
         version: 11.1.1
       https-proxy-agent:
-        specifier: ^6.0.0
-        version: 6.0.0
+        specifier: ^6.1.0
+        version: 6.1.0
       ofetch:
         specifier: ^1.0.1
         version: 1.0.1
@@ -1930,8 +1930,8 @@ packages:
       - supports-color
     dev: true
 
-  /agent-base@7.0.0:
-    resolution: {integrity: sha512-awaqsf16R0tAUMxWiVikaBDKrbt0im7XdzPMh3I8TFC097G4ZowjGgLBfXt+tGPsE+1U1FyLBGuWMd/EPVblWg==}
+  /agent-base@7.0.1:
+    resolution: {integrity: sha512-V9to8gr2GK7eA+xskWGAFUX/TLSQKuH2TI06c/jGLL6yLp3oEjtnqM7a5tPV9fC1rabLeAgThZeBwsYX+WWHpw==}
     engines: {node: '>= 14'}
     dependencies:
       debug: 4.3.4
@@ -2389,10 +2389,6 @@ packages:
   /color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
     dev: false
-
-  /colorette@2.0.19:
-    resolution: {integrity: sha512-3tlv/dIP7FWvj3BsbHrGLJ6l/oKh1O3TcgBqMn+yyCagOxc23fyzDS6HypQbgxWbkpDnf52p1LuR4eWDQ/K9WQ==}
-    dev: true
 
   /colorette@2.0.20:
     resolution: {integrity: sha512-IfEDxwoWIjkeXL1eXcDiow4UbKjhLdq6/EuSVR9GMN7KVH3r9gQ83e73hsz1Nd1T3ijd5xv1wcWRYO+D6kCI2w==}
@@ -2921,7 +2917,7 @@ packages:
     resolution: {integrity: sha512-HsLoS07HiQ5oqvObOI+Qb2tyZH4Gj5nYGfF9qQcZNrPw+uEFhdXtgJr01aO2pWadGHucajYDLxxbtQkm97ON2A==}
     hasBin: true
     dependencies:
-      colorette: 2.0.19
+      colorette: 2.0.20
       defu: 6.1.2
       https-proxy-agent: 5.0.1
       mri: 1.2.0
@@ -3148,11 +3144,11 @@ packages:
       - supports-color
     dev: true
 
-  /https-proxy-agent@6.0.0:
-    resolution: {integrity: sha512-g821um/ZvXlENs8tqKh96b6G0wafab6ypfkZdFZImJEGZrn47oLeRhWMKvCYxrasOgNi3Yh6Cxkws2Zn13v2QA==}
+  /https-proxy-agent@6.1.0:
+    resolution: {integrity: sha512-rvGRAlc3y+iS7AC9Os2joN91mX8wHpJ4TEklmHHxr7Gz2Juqa7fJmJ8wWxXNpTaRt56MQTwojxV5d82UW/+jwg==}
     engines: {node: '>= 14'}
     dependencies:
-      agent-base: 7.0.0
+      agent-base: 7.0.1
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
