@@ -11,6 +11,8 @@ export interface Props {
 
 const { resources } = Astro.props;
 
+const search = Astro.url.searchParams;
+
 const DisplayType: Record<ResourceType, string> = {
   動畫: '动画',
   季度全集: '季度全集',
@@ -58,6 +60,14 @@ const DisplayTypeColor: Record<ResourceType, string> = {
 function getMirrorHref(href: string) {
   return `/resource/${href.split('/').at(-1)}`;
 }
+
+function followSearch(params: Record<string, string>) {
+  const s = new URLSearchParams(search);
+  for (const [key, value] of Object.entries(params)) {
+    s.set(key, value);
+  }
+  return s.toString();
+}
 ---
 
 <div class="overflow-y-auto w-full">
@@ -84,7 +94,7 @@ function getMirrorHref(href: string) {
             <td class="py2 pl2">
               <div class="flex items-center justify-start">
                 {r.fansub && (
-                  <a href={`/resources/1?fansub=${r.fansub.id}`} class="block">
+                  <a href={`/resources/1?${followSearch({ fansub: r.fansub.id })}`} class="block">
                     <Tag text={r.fansub.name} className={`text-xs mr2 hover:bg-gray-300`} />
                   </a>
                 )}
@@ -96,7 +106,7 @@ function getMirrorHref(href: string) {
               </div>
             </td>
             <td class="py2 pl2 text-center">
-              <a href={`/resources/1?publisher=${r.publisher.id}`}>
+              <a href={`/resources/1?${followSearch({ publisher: r.publisher.id })}`}>
                 <Tag text={r.publisher.name} className={`text-xs mr2 hover:bg-gray-300`} />
               </a>
             </td>

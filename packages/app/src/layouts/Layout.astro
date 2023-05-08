@@ -19,10 +19,12 @@ const search = Astro.url.searchParams;
 const runtime = getRuntime<Env>(Astro.request);
 const timestamp = new Date((await runtime?.env.animegarden.get('state/refresh-timestamp')) ?? 0);
 
+const hasFansubSearch = search.has('fansub');
+
 function followSearch(params: Record<string, string>) {
   const s = new URLSearchParams(search);
   for (const [key, value] of Object.entries(params)) {
-    s.set(key, value)
+    s.set(key, value);
   }
   return s.toString();
 }
@@ -83,6 +85,16 @@ function followSearch(params: Record<string, string>) {
               <div
                 class="w-[180px] max-h-[600px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y"
               >
+                {
+                  hasFansubSearch && (
+                    <a
+                      href={`/resources/1?${followSearch({ fansub: '' })}`}
+                      class="px2 py1 block text-base-600 text-link-active"
+                    >
+                      所有
+                    </a>
+                  )
+                }
                 {
                   fansubs.map((t) => (
                     <a

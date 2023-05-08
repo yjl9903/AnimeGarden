@@ -63,10 +63,11 @@ export const fansubs = [
   { id: 390, name: '天使动漫论坛' },
   { id: 804, name: '霜庭云花Sub' },
   { id: 731, name: '星空字幕组' },
+  { id: 321, name: '轻之国度' },
   { id: 764, name: 'MCE汉化组' },
   { id: 604, name: 'c.c动漫' },
   { id: 288, name: '诸神kamigami字幕组' },
-  { id: 321, name: '轻之国度' },
+  { id: 438, name: '白恋字幕组' },
   // 特摄
   { id: 648, name: '魔星字幕团' },
   { id: 805, name: 'DBD制作组' },
