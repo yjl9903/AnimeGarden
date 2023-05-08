@@ -57,7 +57,7 @@ export default function Search() {
       if (DMHY_RE.test(search)) {
         return [];
       } else {
-        return await fetchResources(1, { include: parseSearch(search) });
+        return await fetchResources(1, { ...parseSearch(search) });
       }
     }
   );
@@ -76,16 +76,6 @@ export default function Search() {
     setInput('');
     setSearch('');
   }, []);
-
-  // useEffect(() => {
-  //   const fn = () => {
-  //     cleanUp();
-  //   };
-  //   document.addEventListener('click', fn);
-  //   return () => {
-  //     document.removeEventListener('click', fn);
-  //   };
-  // }, []);
 
   return (
     <Command
@@ -192,10 +182,16 @@ export default function Search() {
 }
 
 function parseSearch(search: string) {
-  return search
+  const splitted = search
     .split(' ')
     .map((s) => s.trim())
     .filter(Boolean);
+  const include = splitted.filter((v) => v[0] !== '!' && v[0] !== '！');
+  const exclude = splitted.filter((v) => v[0] === '!' || v[0] === '！').map((v) => v.slice(1));
+  return {
+    include,
+    exclude
+  };
 }
 
 function goToSearch(search: string) {
@@ -203,7 +199,8 @@ function goToSearch(search: string) {
   if (match) {
     goTo(`/resource/${match[1]}`);
   } else {
-    goTo(`/resources/1?include=${JSON.stringify(parseSearch(search))}`);
+    const { include, exclude } = parseSearch(search);
+    goTo(`/resources/1?include=${JSON.stringify(include)}&exclude=${JSON.stringify(exclude)}`);
   }
 }
 
