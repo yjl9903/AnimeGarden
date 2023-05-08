@@ -77,15 +77,15 @@ export default function Search() {
     setSearch('');
   }, []);
 
-  useEffect(() => {
-    const fn = () => {
-      cleanUp();
-    };
-    document.addEventListener('click', fn);
-    return () => {
-      document.removeEventListener('click', fn);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const fn = () => {
+  //     cleanUp();
+  //   };
+  //   document.addEventListener('click', fn);
+  //   return () => {
+  //     document.removeEventListener('click', fn);
+  //   };
+  // }, []);
 
   return (
     <Command
@@ -98,7 +98,6 @@ export default function Search() {
       }}
       onKeyDown={(e: React.KeyboardEvent) => {
         if (e.key === 'Escape') {
-          cleanUp();
           e.preventDefault();
         }
       }}
@@ -107,10 +106,10 @@ export default function Search() {
         ref={inputRef}
         value={input}
         onValueChange={onInputChange}
-        className={`${!!input ? 'searched' : ''}`}
+        className={`${enable ? 'searched' : ''}`}
       />
       <Command.List>
-        {input && (
+        {input && enable && (
           <Command.Group heading="搜索结果">
             <Command.Item
               value="go-to-search-page"
@@ -123,6 +122,21 @@ export default function Search() {
             >
               {DMHY_RE.test(input) ? `前往 ${input}` : `在本页列出 ${input} 的搜索结果...`}
             </Command.Item>
+            {isLoading ? (
+              <Command.Loading>
+                <div className="flex items-center">
+                  <div className="lds-ring">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                  <span>正在搜索 {search} ...</span>
+                </div>
+              </Command.Loading>
+            ) : (
+              <Command.Empty>没有找到任何结果.</Command.Empty>
+            )}
             {searchResult &&
               searchResult.map((r) => (
                 <Command.Item
@@ -140,21 +154,6 @@ export default function Search() {
         )}
         {enable && (
           <>
-            {isLoading ? (
-              <Command.Loading>
-                <div className="flex items-center">
-                  <div className="lds-ring">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                  </div>
-                  <span>正在搜索 {search} ...</span>
-                </div>
-              </Command.Loading>
-            ) : (
-              <Command.Empty>没有找到任何结果.</Command.Empty>
-            )}
             {filteredTypes.length > 0 && (
               <Command.Group heading="类型">
                 {filteredTypes.map((type) => (
