@@ -9,8 +9,35 @@ import { fetchResources } from '../fetch';
 
 const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_\w+\.html)/;
 
+const useActiveElement = () => {
+  const [listenersReady, setListenersReady] = useState(false);
+  const [activeElement, setActiveElement] = useState(document.activeElement);
+
+  useEffect(() => {
+    const onFocus = (event: FocusEvent) => setActiveElement(event.target as any);
+    const onBlur = (event: FocusEvent) => setActiveElement(null);
+
+    window.addEventListener('focus', onFocus, true);
+    window.addEventListener('blur', onBlur, true);
+
+    setListenersReady(true);
+
+    return () => {
+      window.removeEventListener('focus', onFocus);
+      window.removeEventListener('blur', onBlur);
+    };
+  }, []);
+
+  return {
+    active: activeElement,
+    ready: listenersReady
+  };
+};
+
 export default function Search() {
   const ref = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const { active } = useActiveElement();
 
   const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
@@ -38,7 +65,7 @@ export default function Search() {
   const filteredFansub = fansubs.filter((f) => f.name.includes(input));
   const filteredTypes = types.filter((t) => t.includes(input));
 
-  const enable = !!input;
+  const enable = active === inputRef.current;
 
   const onInputChange = useCallback((value: string) => {
     setInput(value);
@@ -77,6 +104,7 @@ export default function Search() {
       }}
     >
       <Command.Input
+        ref={inputRef}
         value={input}
         onValueChange={onInputChange}
         className={`${!!input ? 'searched' : ''}`}

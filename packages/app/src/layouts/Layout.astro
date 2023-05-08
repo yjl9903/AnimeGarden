@@ -36,7 +36,7 @@ const timestamp = new Date((await runtime?.env.animegarden.get('state/refresh-ti
       </h1>
       <div class="relative z-100">
         <div class="vercel absolute top-[-7rem] w-full flex justify-center">
-          <Search client:load />
+          <Search client:only />
         </div>
       </div>
       <div class="main flex gap6 justify-start select-none text-base-500">
