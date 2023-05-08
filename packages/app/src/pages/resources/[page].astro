@@ -21,9 +21,9 @@ const _before = url.searchParams.get('before');
 const before = _before ? new Date(_before) : undefined;
 
 const _include = url.searchParams.get('include');
-const include = _include ? JSON.parse(_include) : undefined;
+const include: string[] | undefined = _include ? JSON.parse(_include) : undefined;
 const _exclude = url.searchParams.get('exclude');
-const exclude = _exclude ? JSON.parse(_exclude) : undefined;
+const exclude: string[] | undefined = _exclude ? JSON.parse(_exclude) : undefined;
 
 const resources = await fetchResources(page, {
   publisher: publisher ? +publisher : undefined,
@@ -38,6 +38,30 @@ const resources = await fetchResources(page, {
 
 <Layout title="所有资源 | Anime Garden">
   <div class="mt-4vh w-full">
+    {
+      (include || exclude) && (
+        <>
+          <div class="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
+            {include && include.length > 0 && (
+              <div class="space-x-1 select-none">
+                <span class="text-base-800 font-bold inline-block">包含关键词</span>
+                {include.map((i) => (
+                  <span class="select-text">{i}</span>
+                ))}
+              </div>
+            )}
+            {exclude && exclude.length > 0 && (
+              <div class="space-x-1">
+                <span class="select-none text-base-800 font-bold mr2 inline-block">排除关键词</span>
+                {exclude.map((i) => (
+                  <span class="select-text">{i}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        </>
+      )
+    }
     <ResourceTable resources={resources} />
     <Pagination page={page} href={(page) => `/resources/${page}${url.search}`} />
   </div>
