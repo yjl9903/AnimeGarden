@@ -50,47 +50,50 @@ const resources = await fetchResources(page, {
         <>
           <div class="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
             {fansubItem && (
-              <div class="space-x-1 select-none">
-                <span class="text-base-800 font-bold inline-block">字幕组</span>
-                <a href={`/resources/1?fansub=${fansubItem.id}`} class="select-text text-link">
+              <div class="space-x-1 select-none text-0">
+                <span class="text-4 text-base-800 font-bold inline-block mr2">字幕组</span>
+                <a
+                  href={`/resources/1?fansub=${fansubItem.id}`}
+                  class="text-4 select-text text-link"
+                >
                   {fansubItem.name}
                 </a>
               </div>
             )}
             {after && (
-              <div class="space-x-1 select-none">
-                <span class="text-base-800 font-bold inline-block">搜索开始于</span>
-                <span class="select-text">{format(after, 'yyyy 年 M 月 d 日 hh:mm')}</span>
+              <div class="space-x-1 select-none text-0">
+                <span class="text-4 text-base-800 font-bold inline-block mr2">搜索开始于</span>
+                <span class="text-4 select-text">{format(after, 'yyyy 年 M 月 d 日 hh:mm')}</span>
               </div>
             )}
             {before && (
-              <div class="space-x-1 select-none">
-                <span class="text-base-800 font-bold inline-block">搜索结束于</span>
-                <span class="select-text">{format(before, 'yyyy 年 M 月 d 日 hh:mm')}</span>
+              <div class="space-x-1 select-none text-0">
+                <span class="text-4 text-base-800 font-bold inline-block mr2">搜索结束于</span>
+                <span class="text-4 select-text">{format(before, 'yyyy 年 M 月 d 日 hh:mm')}</span>
               </div>
             )}
             {include && include.length > 0 && (
-              <div class="space-x-1 select-none">
-                <span class="text-base-800 font-bold inline-block">包含关键词</span>
+              <div class="space-x-1 select-none text-0">
+                <span class="text-4 text-base-800 font-bold inline-block mr2">包含关键词</span>
                 {include.map((i, idx) => (
                   <>
-                    {idx > 0 && isComplicated && <span class="text-base-500">+</span>}
+                    {idx > 0 && isComplicated && <span class="text-4 text-base-500">+</span>}
                     {Array.isArray(i) ? (
                       <>
-                        {include.length > 1 && <span class="text-base-500">&#40;</span>}
+                        {include.length > 1 && <span class="text-4 text-base-500">&#40;</span>}
                         {i.map((t, idx) => (
                           <>
-                            {idx > 0 && <span class="text-base-500">|</span>}
+                            {idx > 0 && <span class="text-4 text-base-500 mx1">|</span>}
                             {/* prettier-ignore */}
-                            <span class="select-text underline underline-dotted underline-gray-500">{t}</span>
+                            <span class="text-4 select-text underline underline-dotted underline-gray-500">{t}</span>
                           </>
                         ))}
-                        {include.length > 1 && <span class="text-base-500">&#41;</span>}
+                        {include.length > 1 && <span class="text-4 text-base-500">&#41;</span>}
                       </>
                     ) : (
                       <>
                         {/* prettier-ignore */}
-                        <span class="select-text underline underline-dotted underline-gray-500">{i}</span>
+                        <span class="text-4 select-text underline underline-dotted underline-gray-500">{i}</span>
                       </>
                     )}
                   </>
@@ -98,10 +101,11 @@ const resources = await fetchResources(page, {
               </div>
             )}
             {exclude && exclude.length > 0 && (
-              <div class="space-x-1">
-                <span class="select-none text-base-800 font-bold mr2 inline-block">排除关键词</span>
+              <div class="space-x-1 text-0">
+                {/* prettier-ignore */}
+                <span class="text-4 select-none text-base-800 font-bold mr2 inline-block">排除关键词</span>
                 {exclude.map((i) => (
-                  <span class="select-text">{i}</span>
+                  <span class="text-4 select-text">{i}</span>
                 ))}
               </div>
             )}
