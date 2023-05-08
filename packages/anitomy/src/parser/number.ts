@@ -3,8 +3,8 @@ import { isTokenIsolated } from './parser';
 import { setEpisodeNumber } from './episode';
 import { isDashCharacter, isMatchTokenCategory } from './utils';
 
-import { TokenCategory, TokenFlag, findNextToken, findPrevToken } from '../token';
 import { isNumericString } from '../utils';
+import { TokenCategory, TokenFlag, findNextToken, findPrevToken } from '../token';
 
 export const AnimeYearMin = 1900;
 export const AnimeYearMax = 2100;
@@ -95,6 +95,24 @@ export function searchForIsolatedEpisodeNumber(context: ParserContext, tokens: n
   for (const it of isolated.reverse()) {
     if (setEpisodeNumber(context, context.tokens[it].content, context.tokens[it], true)) {
       return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Search for episode number followed with version, e.g. "03 v2"
+ */
+export function searchForEpisodeNumberWithVersion(context: ParserContext, tokens: number[]) {
+  const enclosed = tokens.filter((it) => context.tokens[it].enclosed);
+  for (const it of enclosed) {
+    const nextToken = findNextToken(context.tokens, it, TokenFlag.NotDelimiter);
+    const nextContent = context.tokens[nextToken].content;
+    if (/^[vV]\d+$/.test(nextContent)) {
+      if (setEpisodeNumber(context, context.tokens[it].content, context.tokens[it], true)) {
+        context.tokens[it].category = TokenCategory.Identifier;
+        return true;
+      }
     }
   }
   return false;

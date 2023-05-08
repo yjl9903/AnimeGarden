@@ -8,6 +8,34 @@ import { tokenize as doTokenize } from './tokenizer';
 
 export type * from './types';
 
+/**
+ * Parser instance with shared options and parsed result cache
+ */
+export class Parser {
+  private readonly options: AnitomyOptions;
+
+  private readonly cache = new Map<string, AnitomyResult | null>();
+
+  public constructor(options: Partial<AnitomyOptions> = {}) {
+    this.options = resolveOptions(options);
+  }
+
+  public parse(filename: string, force = false) {
+    if (!force && this.cache.has(filename)) {
+      const result = this.cache.get(filename);
+      return result ? result : undefined;
+    } else {
+      const result = parse(filename, this.options);
+      if (result) {
+        this.cache.set(filename, result);
+      } else {
+        this.cache.set(filename, null);
+      }
+      return result;
+    }
+  }
+}
+
 export function parse(
   filename: string,
   _options: Partial<AnitomyOptions> = {}
