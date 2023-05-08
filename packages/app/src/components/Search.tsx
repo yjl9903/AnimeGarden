@@ -7,7 +7,7 @@ import '../styles/cmdk.css';
 import { fansubs, types } from '../constant';
 import { fetchResources } from '../fetch';
 
-const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_\w+\.html)/;
+const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
 
 const useActiveElement = () => {
   const [listenersReady, setListenersReady] = useState(false);
