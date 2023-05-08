@@ -46,6 +46,7 @@ export const QueryType: Record<string, string> = {
 
 export const fansubs = [
   { id: 619, name: '桜都字幕组' },
+  { id: 833, name: '北宇治字幕组' },
   { id: 185, name: '极影字幕社' },
   { id: 669, name: '喵萌奶茶屋' },
   { id: 151, name: '悠哈C9字幕社' },
@@ -53,7 +54,6 @@ export const fansubs = [
   { id: 803, name: 'Lilith-Raws' },
   { id: 767, name: '天月動漫&發佈組' },
   { id: 283, name: '千夏字幕组' },
-  { id: 833, name: '北宇治字幕组' },
   { id: 816, name: 'ANi' },
   { id: 813, name: 'MingYSub' },
   { id: 650, name: 'SweetSub' },
