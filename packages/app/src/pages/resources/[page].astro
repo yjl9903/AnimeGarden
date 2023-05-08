@@ -7,6 +7,7 @@ import ResourceTable from '../../components/ResourceTable.astro';
 
 import { fetchResources } from '../../fetch';
 import { fansubs, QueryType } from '../../constant';
+import { spawn } from 'child_process';
 
 const { page: _page } = Astro.params;
 const page = _page ? +_page : 1;
@@ -25,7 +26,9 @@ const _before = url.searchParams.get('before');
 const before = _before ? new Date(_before) : undefined;
 
 const _include = url.searchParams.get('include');
-const include: string[] | undefined = _include ? JSON.parse(_include) : undefined;
+const include: (string | string[])[] | undefined = _include ? JSON.parse(_include) : undefined;
+const isComplicated = include?.some((i) => Array.isArray(i)) ?? false;
+
 const _exclude = url.searchParams.get('exclude');
 const exclude: string[] | undefined = _exclude ? JSON.parse(_exclude) : undefined;
 
@@ -69,8 +72,24 @@ const resources = await fetchResources(page, {
             {include && include.length > 0 && (
               <div class="space-x-1 select-none">
                 <span class="text-base-800 font-bold inline-block">包含关键词</span>
-                {include.map((i) => (
-                  <span class="select-text">{i}</span>
+                {include.map((i, idx) => (
+                  <>
+                    {idx > 0 && isComplicated && <span class="text-base-500">+</span>}
+                    {Array.isArray(i) ? (
+                      i.map((t, idx) => (
+                        <>
+                          {idx > 0 && <span class="text-base-500">|</span>}
+                          {/* prettier-ignore */}
+                          <span class="select-text underline underline-dotted underline-gray-500">{t}</span>
+                        </>
+                      ))
+                    ) : (
+                      <>
+                        {/* prettier-ignore */}
+                        <span class="select-text underline underline-dotted underline-gray-500">{i}</span>
+                      </>
+                    )}
+                  </>
                 ))}
               </div>
             )}
