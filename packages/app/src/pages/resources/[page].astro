@@ -76,13 +76,17 @@ const resources = await fetchResources(page, {
                   <>
                     {idx > 0 && isComplicated && <span class="text-base-500">+</span>}
                     {Array.isArray(i) ? (
-                      i.map((t, idx) => (
-                        <>
-                          {idx > 0 && <span class="text-base-500">|</span>}
-                          {/* prettier-ignore */}
-                          <span class="select-text underline underline-dotted underline-gray-500">{t}</span>
-                        </>
-                      ))
+                      <>
+                        {include.length > 1 && <span class="text-base-500">&#40;</span>}
+                        {i.map((t, idx) => (
+                          <>
+                            {idx > 0 && <span class="text-base-500">|</span>}
+                            {/* prettier-ignore */}
+                            <span class="select-text underline underline-dotted underline-gray-500">{t}</span>
+                          </>
+                        ))}
+                        {include.length > 1 && <span class="text-base-500">&#41;</span>}
+                      </>
                     ) : (
                       <>
                         {/* prettier-ignore */}
