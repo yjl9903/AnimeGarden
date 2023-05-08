@@ -7,12 +7,7 @@ import '../styles/cmdk.css';
 import { fansubs, types } from '../constant';
 import { fetchResources } from '../fetch';
 
-function parseSearch(search: string) {
-  return search
-    .split(' ')
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
+const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_\w+\.html)/;
 
 export default function Search() {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -27,18 +22,23 @@ export default function Search() {
   const { data: searchResult, isLoading } = useSWR(
     () => {
       if (!search) return null;
-      const hasBuiltin =
-        fansubs.some((f) => f.name.includes(search)) || types.some((t) => t.includes(search));
+      const hasBuiltin = types.some((t) => t.includes(search));
       if (hasBuiltin) return null;
       return search;
     },
     async (search) => {
-      return await fetchResources(1, { include: parseSearch(search) });
+      if (DMHY_RE.test(search)) {
+        return [];
+      } else {
+        return await fetchResources(1, { include: parseSearch(search) });
+      }
     }
   );
 
+  const filteredFansub = fansubs.filter((f) => f.name.includes(input));
+  const filteredTypes = types.filter((t) => t.includes(input));
+
   const enable = !!input;
-  const shouldFilter = (!searchResult || searchResult.length === 0) && !isLoading;
 
   const onInputChange = useCallback((value: string) => {
     setInput(value);
@@ -64,7 +64,7 @@ export default function Search() {
     <Command
       label="Command Menu"
       ref={ref}
-      shouldFilter={shouldFilter}
+      shouldFilter={false}
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -81,94 +81,107 @@ export default function Search() {
         onValueChange={onInputChange}
         className={`${!!input ? 'searched' : ''}`}
       />
-      {enable && (
-        <>
-          {isLoading ? (
-            <Command.Loading>
-              <div className="flex items-center">
-                <div className="lds-ring">
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                </div>
-                <span>正在搜索 {search} ...</span>
-              </div>
-            </Command.Loading>
-          ) : (
-            <Command.Empty>没有找到任何结果.</Command.Empty>
-          )}
-
-          {shouldFilter && (
-            <>
-              <Command.Group heading="类型">
-                <Command.List>
-                  {types.map((type) => (
-                    <Command.Item
-                      key={type}
-                      onSelect={() => {
-                        cleanUp();
-                        window.location.href = `/resources/1?type=${type}`;
-                      }}
-                    >
-                      {type}
-                    </Command.Item>
-                  ))}
-                </Command.List>
-              </Command.Group>
-              <Command.Group heading="字幕组">
-                <Command.List>
-                  {fansubs.map((fansub) => (
-                    <Command.Item
-                      key={fansub.id}
-                      onSelect={() => {
-                        cleanUp();
-                        window.location.href = `/resources/1?fansub=${fansub.id}`;
-                      }}
-                    >
-                      {fansub.name}
-                    </Command.Item>
-                  ))}
-                </Command.List>
-              </Command.Group>
-            </>
-          )}
+      <Command.List>
+        {input && (
           <Command.Group heading="搜索结果">
-            <Command.List>
-              {search && (
+            <Command.Item
+              value="go-to-search-page"
+              onSelect={() => {
+                if (input) {
+                  cleanUp();
+                  goToSearch(input);
+                }
+              }}
+            >
+              {DMHY_RE.test(input) ? `前往 ${input}` : `在本页列出 ${input} 的搜索结果...`}
+            </Command.Item>
+            {searchResult &&
+              searchResult.map((r) => (
                 <Command.Item
-                  value="go-to-search-page"
+                  key={r.href}
+                  value={r.href}
                   onSelect={() => {
-                    if (search) {
-                      cleanUp();
-                      window.location.href = `/resources/1?include=${JSON.stringify(
-                        parseSearch(search)
-                      )}`;
-                    }
+                    cleanUp();
+                    goTo(`/resource/${r.href.split('/').at(-1)}`);
                   }}
                 >
-                  在本页列出 {search} 的搜索结果...
+                  {r.title}
                 </Command.Item>
-              )}
-              {searchResult &&
-                searchResult.map((r) => (
+              ))}
+          </Command.Group>
+        )}
+        {enable && (
+          <>
+            {isLoading ? (
+              <Command.Loading>
+                <div className="flex items-center">
+                  <div className="lds-ring">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                  </div>
+                  <span>正在搜索 {search} ...</span>
+                </div>
+              </Command.Loading>
+            ) : (
+              <Command.Empty>没有找到任何结果.</Command.Empty>
+            )}
+            {filteredTypes.length > 0 && (
+              <Command.Group heading="类型">
+                {filteredTypes.map((type) => (
                   <Command.Item
-                    key={r.href}
-                    value={r.href}
+                    key={type}
                     onSelect={() => {
                       cleanUp();
-                      window.location.pathname = `/resource/${r.href.split('/').at(-1)}`;
+                      goTo(`/resources/1?type=${type}`);
                     }}
                   >
-                    {r.title}
+                    {type}
                   </Command.Item>
                 ))}
-            </Command.List>
-          </Command.Group>
-        </>
-      )}
+              </Command.Group>
+            )}
+            {filteredFansub.length > 0 && (
+              <Command.Group heading="字幕组">
+                {filteredFansub.map((fansub) => (
+                  <Command.Item
+                    key={fansub.id}
+                    onSelect={() => {
+                      cleanUp();
+                      goTo(`/resources/1?fansub=${fansub.id}`);
+                    }}
+                  >
+                    {fansub.name}
+                  </Command.Item>
+                ))}
+              </Command.Group>
+            )}
+          </>
+        )}
+      </Command.List>
     </Command>
   );
+}
+
+function parseSearch(search: string) {
+  return search
+    .split(' ')
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function goToSearch(search: string) {
+  const match = DMHY_RE.exec(search);
+  if (match) {
+    goTo(`/resource/${match[1]}`);
+  } else {
+    goTo(`/resources/1?include=${JSON.stringify(parseSearch(search))}`);
+  }
+}
+
+function goTo(href: string) {
+  window.location.href = href;
 }
 
 function debounce<T extends (...args: any[]) => void>(fn: T, time = 1000): T {
