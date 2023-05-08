@@ -6,7 +6,7 @@ import Pagination from '../../components/Pagination.astro';
 import ResourceTable from '../../components/ResourceTable.astro';
 
 import { fetchResources } from '../../fetch';
-import { QueryType } from '../../constant';
+import { fansubs, QueryType } from '../../constant';
 
 const { page: _page } = Astro.params;
 const page = _page ? +_page : 1;
@@ -14,6 +14,8 @@ const page = _page ? +_page : 1;
 const url = Astro.url;
 const publisher = url.searchParams.get('publisher');
 const fansub = url.searchParams.get('fansub');
+const fansubItem = fansubs.find((f) => String(f.id) === fansub);
+
 const _type = url.searchParams.get('type');
 const type = _type && _type in QueryType ? QueryType[_type] : _type;
 
@@ -41,9 +43,17 @@ const resources = await fetchResources(page, {
 <Layout title="所有资源 | Anime Garden">
   <div class="mt-4vh w-full">
     {
-      (include || exclude || before || after) && (
+      (include || exclude || before || after || fansubItem) && (
         <>
           <div class="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
+            {fansubItem && (
+              <div class="space-x-1 select-none">
+                <span class="text-base-800 font-bold inline-block">字幕组</span>
+                <a href={`/resources/1?fansub=${fansubItem.id}`} class="select-text text-link">
+                  {fansubItem.name}
+                </a>
+              </div>
+            )}
             {after && (
               <div class="space-x-1 select-none">
                 <span class="text-base-800 font-bold inline-block">搜索开始于</span>
