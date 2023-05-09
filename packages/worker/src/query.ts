@@ -1,5 +1,5 @@
 import type { Context } from 'hono';
-import type { Resource, Team, User, Anitomy } from '@prisma/client';
+import type { Resource, Team, User } from '@prisma/client';
 
 import { fetchDmhyDetail } from 'animegarden';
 
@@ -44,8 +44,8 @@ export async function queryResources(ctx: Context<{ Bindings: Env }>) {
       fansubId: fansub,
       publisherId: publisher,
       createdAt: {
-        gte: after?.getTime(),
-        lte: before?.getTime()
+        gte: after,
+        lte: before
       }
     },
     skip: (page - 1) * pageSize,
@@ -55,8 +55,7 @@ export async function queryResources(ctx: Context<{ Bindings: Env }>) {
     },
     include: {
       fansub: true,
-      publisher: true,
-      anitomy: true
+      publisher: true
     }
   });
   const resources = resolveQueryResult(result);
@@ -81,8 +80,8 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
           fansubId: fansub,
           publisherId: publisher,
           createdAt: {
-            gte: after?.getTime(),
-            lte: before?.getTime()
+            gte: after,
+            lte: before
           }
         },
         {
@@ -98,8 +97,7 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
     },
     include: {
       fansub: true,
-      publisher: true,
-      anitomy: true
+      publisher: true
     }
   });
   const resources = resolveQueryResult(result);
@@ -211,9 +209,7 @@ function resolveQueryParams(ctx: Context): QueryParams | undefined {
   }
 }
 
-function resolveQueryResult(
-  result: (Resource & { fansub: Team | null; publisher: User; anitomy: Anitomy | null })[]
-) {
+function resolveQueryResult(result: (Resource & { fansub: Team | null; publisher: User })[]) {
   return result.map((r) => ({
     title: r.title,
     href: `https://share.dmhy.org/topics/view/${r.href}`,
