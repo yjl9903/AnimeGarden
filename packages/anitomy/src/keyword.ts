@@ -15,10 +15,14 @@ export type Keyword = {
   category: ElementCategory;
 } & KeywordOptions;
 
-export class KeywordManager {
-  private static keys = new Map<string, Keyword>();
+const keys = new Map<string, Keyword>();
 
-  private static extensions = new Map<string, Keyword>();
+const extensions = new Map<string, Keyword>();
+
+export class KeywordManager {
+  private static keys = keys;
+
+  private static extensions = extensions;
 
   private static peekEntries: Array<{ category: ElementCategory; list: string[] }> = [
     { category: ElementCategory.AudioTerm, list: ['Dual Audio'] },
@@ -303,9 +307,9 @@ export class KeywordManager {
       'SRT'
     ]);
 
-    function add(category: ElementCategory, options: KeywordOptions, keys: string[]) {
-      const map = KeywordManager.container(category);
-      for (const key of keys) {
+    function add(category: ElementCategory, options: KeywordOptions, input: string[]) {
+      const map = category === 'extension' ? extensions : keys;
+      for (const key of input) {
         if (!map.has(key)) {
           map.set(key, { category, ...options });
         }
