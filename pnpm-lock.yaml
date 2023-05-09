@@ -147,6 +147,9 @@ importers:
       hono:
         specifier: ^3.1.8
         version: 3.1.8
+      simptrad:
+        specifier: ^0.1.0
+        version: 0.1.0
     devDependencies:
       '@prisma/client':
         specifier: ^4.13.0
@@ -4699,6 +4702,10 @@ packages:
 
   /signal-exit@3.0.7:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
+
+  /simptrad@0.1.0:
+    resolution: {integrity: sha512-sK6XU47544K8i/QVDHlm3aEx+pgvKsI5AGEuCV6vV8m2QkD/W28e7A5EWAFVhEV3ADb7E/SZ90TZE/dhg6Nhog==}
+    dev: false
 
   /sirv@2.0.3:
     resolution: {integrity: sha512-O9jm9BsID1P+0HOi81VpXPoDxYP374pkOLzACAoyUQ/3OUVndNpsz6wMnY2z+yOxzbllCKZrM+9QrWsv4THnyA==}

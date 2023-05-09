@@ -4,31 +4,20 @@ import path from 'path';
 import { breadc } from 'breadc';
 
 import { Resource } from '../packages/animegarden/src';
+import { uploadUsers, uploadTeams, uploadResources } from '../packages/worker/scripts/upload';
 
-const cli = breadc('d1', { version: '0.0.0' });
+const cli = breadc('sql', { version: '0.0.0' });
 
-cli.command('resource', 'Generate resources sql').action(async (option) => {
+cli.command('resource [page]', 'Generate resources sql').action(async (page, option) => {
   const res = await readResources();
-  const lines = [];
-  for (const r of res) {
-    lines.push(
-      `INSERT IGNORE INTO resource (title, href, type, magnet, size, createdAt, publisherId, fansubId) VALUES ('${escape(
-        r.title
-      )}', '${escape(r.href.split('/').at(-1)!)}', '${escape(r.type)}', '${escape(
-        r.magnet
-      )}', '${escape(r.size)}', ${new Date(r.createdAt).getTime()}, ${r.publisher.id}, ${
-        r.fansub ? r.fansub.id : 'null'
-      });`
-    );
+  const chunkSize = 1000;
+  const start = +(page ?? '0');
+  for (let i = start * chunkSize, p = start; i < res.length; i += chunkSize, p += 1) {
+    const chunk = res.slice(i, i + chunkSize);
+    console.log(`Start uploading page ${p} having ${chunk.length} resources`);
+    const resp = await uploadResources(chunk);
+    console.log(`Uploaded ${resp.count} resources`);
   }
-  const sc: string[] = [];
-  const chunkSize = 2000;
-  for (let i = 0, p = 0; i < lines.length; p += 1, i += chunkSize) {
-    const chunk = lines.slice(i, i + chunkSize);
-    sc.push(`pnpm -C packages/worker db:exec data/resource-${p}.sql`);
-    fs.writeFile(`./packages/worker/data/resource-${p}.sql`, chunk.join('\n'), 'utf-8');
-  }
-  await fs.writeFile('upload.ps1', sc.join('\n'), 'utf-8');
   console.log(`There are ${res.length} resources`);
 });
 
@@ -40,11 +29,10 @@ cli.command('user', 'Generate user sql').action(async (option) => {
       user.set(r.publisher.id, r.publisher);
     }
   }
-  const lines = [];
-  for (const u of user.values()) {
-    lines.push(`INSERT IGNORE INTO user (id, name) VALUES (${u.id}, '${escape(u.name)}');`);
-  }
-  fs.writeFile('./packages/worker/data/user.sql', lines.join('\n'), 'utf-8');
+  const rows = [...user.values()].map((u) => ({ id: +u.id, name: u.name }));
+  console.log(`Start uploading ${rows.length} users`);
+  const resp = await uploadUsers(rows);
+  console.log(`Uploaded ${resp.count} users`);
 });
 
 cli.command('team', 'Generate team sql').action(async (option) => {
@@ -57,18 +45,11 @@ cli.command('team', 'Generate team sql').action(async (option) => {
       }
     }
   }
-  const lines = [];
-  for (const u of team.values()) {
-    lines.push(`INSERT IGNORE INTO team (id, name) VALUES (${u.id}, '${escape(u.name)}');`);
-  }
-  fs.writeFile('./packages/worker/data/team.sql', lines.join('\n'), 'utf-8');
+  const rows = [...team.values()].map((u) => ({ id: +u.id, name: u.name }));
+  console.log(`Start uploading ${rows.length} teams`);
+  const resp = await uploadTeams(rows);
+  console.log(`Uploaded ${resp.count} teams`);
 });
-
-cli.run(process.argv.slice(2)).catch((err) => console.error(err));
-
-function escape(text: string) {
-  return text.replace(/\\/g, '\\\\').replace(/'/g, `\\'`);
-}
 
 async function readResources(root = 'chunk') {
   const chunks = fs.readdirSync(root);
@@ -91,3 +72,5 @@ async function readResources(root = 'chunk') {
   }
   return [...map.values()].sort((lhs, rhs) => rhs.createdAt.localeCompare(lhs.createdAt));
 }
+
+cli.run(process.argv.slice(2)).catch((err) => console.error(err));

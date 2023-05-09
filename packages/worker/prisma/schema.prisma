@@ -1,11 +1,13 @@
-generator client {
-  provider = "prisma-client-js"
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  directUrl    = env("DIRECT_URL")
+  relationMode = "prisma"
 }
 
-datasource db {
-  provider  = "mysql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
 }
 
 model Team {
@@ -21,27 +23,22 @@ model User {
 }
 
 model Resource {
+  id          Int      @id
+  href        String   @db.VarChar(1024)
   title       String   @db.VarChar(1024)
-  href        String   @id @db.VarChar(600)
+  titleAlt    String   @db.VarChar(1024)
   type        String   @db.TinyText
   size        String   @db.TinyText
   magnet      String   @db.MediumText
+  createdAt   DateTime
+  anitomy     Json?
   fansubId    Int?
   publisherId Int
-  createdAt   BigInt
   fansub      Team?    @relation(fields: [fansubId], references: [id])
   publisher   User     @relation(fields: [publisherId], references: [id])
-  anitomy     Anitomy?
 
   @@index([createdAt(sort: Desc)])
-}
-
-model Anitomy {
-  href    String  @id @db.VarChar(600)
-  title   String  @db.TinyText
-  episode Int?
-  type    String? @db.TinyText
-  meta    Json?
-
-  Resource Resource @relation(fields: [href], references: [href])
+  @@index([fansubId])
+  @@index([publisherId])
+  @@fulltext([titleAlt])
 }

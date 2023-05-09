@@ -1,4 +1,8 @@
-import { fetchDmhyPage } from 'animegarden';
+import type { Prisma } from '@prisma/client/edge';
+
+import { parse } from 'anitomy';
+import { Resource, fetchDmhyPage } from 'animegarden';
+import { tradToSimple, fullToHalf } from 'simptrad';
 
 import type { Env } from './types';
 
@@ -59,17 +63,7 @@ export async function handleScheduled(env: Env) {
     }
 
     const { count } = await prisma.resource.createMany({
-      data: res.map((r) => ({
-        title: r.title,
-        href: r.href.split('/').at(-1)!,
-        type: r.type,
-        magnet: r.magnet,
-        size: r.size,
-        // Convert to UTC+8
-        createdAt: new Date(r.createdAt).getTime() - 8 * 60 * 60 * 1000,
-        fansubId: r.fansub ? +r.fansub.id : undefined,
-        publisherId: +r.publisher.id
-      })),
+      data: res.map(transformResource),
       skipDuplicates: true
     });
 
@@ -83,4 +77,35 @@ export async function handleScheduled(env: Env) {
   }
 
   return { count: sum };
+}
+
+export function transformResource(resource: Resource) {
+  const lastHref = resource.href.split('/').at(-1);
+
+  if (!lastHref) throw new Error(`Parse error: ${resource.title} (${resource.href})`);
+  const matchId = /^(\d+)/.exec(lastHref);
+
+  if (!matchId) throw new Error(`Parse error: ${resource.title} (${resource.href})`);
+  const id = +matchId[1];
+
+  const titleAlt = fullToHalf(tradToSimple(resource.title));
+
+  return {
+    id,
+    href: lastHref,
+    title: resource.title,
+    titleAlt,
+    type: resource.type,
+    size: resource.size,
+    magnet: resource.magnet,
+    // Convert to UTC+8
+    createdAt: new Date(new Date(resource.createdAt).getTime() - 8 * 60 * 60 * 1000),
+    // createdAt: new Date(resource.createdAt),
+    anitomy:
+      resource.type === '動畫'
+        ? (parse(resource.title) as Prisma.JsonObject | undefined)
+        : undefined,
+    fansubId: resource.fansub?.id ? +resource.fansub?.id : undefined,
+    publisherId: +resource.publisher.id
+  };
 }
