@@ -56,8 +56,8 @@ importers:
         specifier: ^0.31.0
         version: 0.31.0
       wrangler:
-        specifier: ^2.19.0
-        version: 2.19.0
+        specifier: ^2.20.0
+        version: 2.20.0
 
   packages/animegarden:
     dependencies:
@@ -5695,8 +5695,8 @@ packages:
       string-width: 5.1.2
     dev: false
 
-  /wrangler@2.19.0:
-    resolution: {integrity: sha512-/XykXkD7dtvBMWq2p84V/aHhkifZA15+HBD7nm/pV62s6MJrJ+DWd1QJB7CF2D7DqknBLxdWpmmZB6YCo0BtMw==}
+  /wrangler@2.20.0:
+    resolution: {integrity: sha512-UdKJ2LD7qgDxDvll/GkR1HnRP+bcEdqi/HJjDI+7eF4lv9V940jmm3orxCkSEosGyE14q0q6dBRM95+fBI8tdQ==}
     engines: {node: '>=16.13.0'}
     hasBin: true
     dependencies:
