@@ -2,6 +2,7 @@ import type { Context } from 'hono';
 import type { Resource, Team, User } from '@prisma/client/edge';
 
 import { fetchDmhyDetail } from 'animegarden';
+import { tradToSimple, fullToHalf } from 'simptrad';
 
 import type { Env } from './types';
 
@@ -71,7 +72,7 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
   }
 
   const { page, pageSize, fansub, publisher, type, before, after } = params;
-  const { keywords } = await resolveBody(ctx);
+  const { search, keywords } = await resolveSearch(ctx);
   const result = await prisma.resource.findMany({
     where: {
       AND: [
@@ -84,11 +85,24 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
             lte: before
           }
         },
-        {
-          AND: keywords.include.map((arr) => ({ OR: arr.map((t) => ({ title: { contains: t } })) }))
-        }
+        search.length > 0
+          ? {
+              titleAlt: {
+                search: search
+                  .map(normalizeTitle)
+                  .map((t) =>
+                    t.startsWith('+') || t.startsWith('-') ? `${t[0]}"${t.slice(1)}"` : `"${t}"`
+                  )
+                  .join(' ')
+              }
+            }
+          : {
+              AND: keywords.include.map((arr) => ({
+                OR: arr.map((t) => ({ titleAlt: { contains: normalizeTitle(t) } }))
+              }))
+            }
       ],
-      NOT: keywords.exclude.map((t) => ({ title: { contains: t } }))
+      NOT: keywords.exclude.map((t) => ({ titleAlt: { contains: normalizeTitle(t) } }))
     },
     skip: (page - 1) * pageSize,
     take: pageSize,
@@ -103,11 +117,13 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
   const resources = resolveQueryResult(result);
   return ctx.json({ resources, timestamp: await getRefreshTimestamp(ctx.env) });
 
-  async function resolveBody(ctx: Context) {
+  async function resolveSearch(ctx: Context) {
     try {
+      const search = JSON.parse(ctx.req.query('search') ?? '[]');
       const include = JSON.parse(ctx.req.query('include') ?? '[]');
       const exclude = JSON.parse(ctx.req.query('exclude') ?? '[]');
       return {
+        search: getStringArray(search),
         keywords: {
           include: getStringArrayArray(include),
           exclude: getStringArray(exclude)
@@ -115,8 +131,9 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
       };
     } catch (error) {
       try {
-        const body = await ctx.req.json<{ include: unknown; exclude: unknown }>();
+        const body = await ctx.req.json<{ search: unknown; include: unknown; exclude: unknown }>();
         return {
+          search: getStringArray(body.search),
           keywords: {
             include: getStringArrayArray(body.include),
             exclude: getStringArray(body.exclude)
@@ -124,6 +141,7 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
         };
       } catch (error) {
         return {
+          search: [],
           keywords: {
             include: [],
             exclude: []
@@ -230,4 +248,8 @@ function resolveQueryResult(result: (Resource & { fansub: Team | null; publisher
       href: `https://share.dmhy.org/topics/list/user_id/${r.publisher.id}`
     }
   }));
+}
+
+function normalizeTitle(title: string) {
+  return fullToHalf(tradToSimple(title));
 }
