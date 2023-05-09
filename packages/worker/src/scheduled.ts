@@ -1,6 +1,6 @@
 import type { Prisma } from '@prisma/client/edge';
 
-import { parse } from 'anitomy';
+// import { parse } from 'anitomy';
 import { Resource, fetchDmhyPage } from 'animegarden';
 import { tradToSimple, fullToHalf } from 'simptrad';
 
@@ -101,10 +101,10 @@ export function transformResource(resource: Resource) {
     // Convert to UTC+8
     createdAt: new Date(new Date(resource.createdAt).getTime() - 8 * 60 * 60 * 1000),
     // createdAt: new Date(resource.createdAt),
-    anitomy:
-      resource.type === '動畫'
-        ? (parse(resource.title) as Prisma.JsonObject | undefined)
-        : undefined,
+    anitomy: undefined,
+    // resource.type === '動畫'
+    //   ? (parse(resource.title) as Prisma.JsonObject | undefined)
+    //   : undefined,
     fansubId: resource.fansub?.id ? +resource.fansub?.id : undefined,
     publisherId: +resource.publisher.id
   };
