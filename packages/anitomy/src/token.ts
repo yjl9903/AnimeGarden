@@ -85,7 +85,7 @@ function checkTokenFlags(token: Token, flags: TokenFlag[]) {
 
 export function findNextToken(tokens: Token[], position: number, ...flags: TokenFlag[]) {
   for (let i = position + 1; i < tokens.length; i++) {
-    if (checkTokenFlags(tokens[i], flags)) {
+    if (tokens[i] && checkTokenFlags(tokens[i], flags)) {
       return i;
     }
   }
@@ -94,7 +94,7 @@ export function findNextToken(tokens: Token[], position: number, ...flags: Token
 
 export function findPrevToken(tokens: Token[], position: number, ...flags: TokenFlag[]) {
   for (let i = position - 1; i >= 0; i--) {
-    if (checkTokenFlags(tokens[i], flags)) {
+    if (tokens[i] && checkTokenFlags(tokens[i], flags)) {
       return i;
     }
   }
@@ -103,7 +103,7 @@ export function findPrevToken(tokens: Token[], position: number, ...flags: Token
 
 export function findToken(tokens: Token[], start: number, end: number, ...flags: TokenFlag[]) {
   for (let i = start; i < end; i++) {
-    if (checkTokenFlags(tokens[i], flags)) {
+    if (tokens[i] && checkTokenFlags(tokens[i], flags)) {
       return i;
     }
   }

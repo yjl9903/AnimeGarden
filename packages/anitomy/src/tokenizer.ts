@@ -226,6 +226,7 @@ export function tokenize(filename: string, options: AnitomyOptions) {
     }
 
     function isSingleCharacterToken(idx: number) {
+      if (!inRange(tokens, idx)) return false;
       const content = tokens[idx].content;
       return isUnknownToken(idx) && content.length === 1 && content !== '-';
     }
