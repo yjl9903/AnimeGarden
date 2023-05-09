@@ -81,11 +81,11 @@ export async function handleScheduled(env: Env) {
 
 export function transformResource(resource: Resource) {
   const lastHref = resource.href.split('/').at(-1);
-
   if (!lastHref) throw new Error(`Parse error: ${resource.title} (${resource.href})`);
-  const matchId = /^(\d+)/.exec(lastHref);
 
+  const matchId = /^(\d+)/.exec(lastHref);
   if (!matchId) throw new Error(`Parse error: ${resource.title} (${resource.href})`);
+
   const id = +matchId[1];
 
   const titleAlt = fullToHalf(tradToSimple(resource.title));
