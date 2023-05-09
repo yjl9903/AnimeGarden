@@ -1,5 +1,5 @@
 import type { Context } from 'hono';
-import type { Resource, Team, User } from '@prisma/client';
+import type { Resource, Team, User } from '@prisma/client/edge';
 
 import { fetchDmhyDetail } from 'animegarden';
 
