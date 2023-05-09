@@ -96,10 +96,14 @@ export function transformResource(resource: Resource) {
     size: resource.size,
     magnet: resource.magnet,
     // Convert to UTC+8
-    createdAt: new Date(new Date(resource.createdAt).getTime() - 8 * 60 * 60 * 1000),
-    // createdAt: new Date(resource.createdAt),
+    createdAt: toShanghai(new Date(resource.createdAt)),
     anitomy: undefined,
     fansubId: resource.fansub?.id ? +resource.fansub?.id : undefined,
     publisherId: +resource.publisher.id
   };
+}
+
+function toShanghai(date: Date) {
+  const offset = -480 - new Date().getTimezoneOffset();
+  return new Date(date.getTime() + offset * 60 * 1000);
 }
