@@ -3,6 +3,7 @@
   "version": "0.0.15",
   "private": true,
   "scripts": {
+    "build": "wrangler publish --dry-run",
     "db:exec": "prisma db execute --file",
     "db:gen": "prisma generate --data-proxy",
     "db:migrate": "pnpm prisma migrate dev --name",
@@ -19,8 +20,8 @@
     "simptrad": "^0.1.0"
   },
   "devDependencies": {
-    "@prisma/client": "4.14.0",
-    "prisma": "4.14.0"
+    "@prisma/client": "4.13.0",
+    "prisma": "4.13.0"
   },
   "packageManager": "pnpm@8.5.0"
 }
