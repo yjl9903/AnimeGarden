@@ -14,8 +14,8 @@ importers:
         specifier: ^18.16.8
         version: 18.16.8
       breadc:
-        specifier: ^0.9.4
-        version: 0.9.4
+        specifier: ^0.9.5
+        version: 0.9.5
       bumpp:
         specifier: latest
         version: 9.1.0
@@ -508,8 +508,8 @@ packages:
       '@babel/helper-validator-identifier': 7.19.1
       to-fast-properties: 2.0.0
 
-  /@breadc/color@0.9.4:
-    resolution: {integrity: sha512-uaoL8JdmQhkvqO2Pr7THGke11fY1dAS4FLYwsVE0qxD7A4XDEKNQfu3zfV+mgHH3/wiNcPrLGhn3aJbZ124gIw==}
+  /@breadc/color@0.9.5:
+    resolution: {integrity: sha512-dcd4Nsw7E6A2dFiji3W/C+jlqaXq8W4LydGnqH9blsxUlUmFwGd1dyt9B1E/8+PEkL3L7M96YM/M9AB8fAgHcA==}
     dev: true
 
   /@cloudflare/kv-asset-handler@0.2.0:
@@ -2143,10 +2143,10 @@ packages:
     dependencies:
       fill-range: 7.0.1
 
-  /breadc@0.9.4:
-    resolution: {integrity: sha512-X7C2lUYvN7qp8uUVZetAsrF54h5lVazJYt7soCCeqThzxkHl10V72wyselto3XvkQ4guL9UqxtArDiCVbKnfsQ==}
+  /breadc@0.9.5:
+    resolution: {integrity: sha512-BtVdCTEULkeM9CYczwosUSKZHQSfTGU0oMVb+Mk3/ZRvuyIaHA29M6e1SchsQBqrrAPDwoUX8HXdKq6+3dUHpQ==}
     dependencies:
-      '@breadc/color': 0.9.4
+      '@breadc/color': 0.9.5
     dev: true
 
   /browserslist@4.21.4:
