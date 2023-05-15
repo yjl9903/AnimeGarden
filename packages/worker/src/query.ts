@@ -80,6 +80,86 @@ export const getResources = memoAsync(
   }
 );
 
+export const getSearchResources = memoAsync(
+  async (
+    prisma: ReturnType<typeof makePrisma>,
+    params: QueryParams,
+    input: Awaited<ReturnType<typeof resolveSearch>>
+  ) => {
+    const { page, pageSize, fansub, publisher, type, before, after } = params;
+    const { search, keywords } = input;
+    return await prisma.resource.findMany({
+      where: {
+        AND: [
+          {
+            type,
+            fansubId: fansub,
+            publisherId: publisher,
+            createdAt: {
+              gte: after,
+              lte: before
+            }
+          },
+          search.length > 0
+            ? {
+                titleAlt: {
+                  search: search
+                    .map(normalizeTitle)
+                    .map((t) =>
+                      t.startsWith('+') || t.startsWith('-') ? `${t[0]}"${t.slice(1)}"` : `"${t}"`
+                    )
+                    .join(' ')
+                }
+              }
+            : {
+                AND: keywords.include.map((arr) => ({
+                  OR: arr.map((t) => ({ titleAlt: { contains: normalizeTitle(t) } }))
+                }))
+              }
+        ],
+        NOT: keywords.exclude.map((t) => ({ titleAlt: { contains: normalizeTitle(t) } }))
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      orderBy: {
+        createdAt: 'desc'
+      },
+      include: {
+        fansub: true,
+        publisher: true
+      }
+    });
+  },
+  {
+    serialize(_prisma, params, input) {
+      return [
+        params.page,
+        params.pageSize,
+        params.fansub,
+        params.before,
+        params.after,
+        params.type,
+        params.publisher,
+        JSON.stringify(input.keywords.include),
+        JSON.stringify(input.keywords.exclude),
+        input.search.join(' ')
+      ];
+    }
+  }
+);
+
+// Store the timestamp to refresh cache
+let cachedTimestamp: Date = new Date(0);
+async function getTimestamp(ctx: Context<{ Bindings: Env }>) {
+  const timestamp = await getRefreshTimestamp(ctx.env);
+  if (cachedTimestamp !== timestamp) {
+    cachedTimestamp = timestamp;
+    getResources.clear();
+    getSearchResources.clear();
+  }
+  return timestamp;
+}
+
 export async function queryResources(ctx: Context<{ Bindings: Env }>) {
   const prisma = makePrisma(ctx.env);
 
@@ -88,10 +168,11 @@ export async function queryResources(ctx: Context<{ Bindings: Env }>) {
     return ctx.json({ message: 'Request is not valid' }, 400);
   }
 
+  const timestamp = await getTimestamp(ctx);
   const result = await getResources(prisma, params);
   const resources = resolveQueryResult(result);
 
-  return ctx.json({ resources, timestamp: await getRefreshTimestamp(ctx.env) });
+  return ctx.json({ resources, timestamp });
 }
 
 export async function searchResources(ctx: Context<{ Bindings: Env }>) {
@@ -102,51 +183,15 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
     return ctx.json({ message: 'Request is not valid' }, 400);
   }
 
-  const { page, pageSize, fansub, publisher, type, before, after } = params;
-  const { search, keywords } = await resolveSearch(ctx);
-  const result = await prisma.resource.findMany({
-    where: {
-      AND: [
-        {
-          type,
-          fansubId: fansub,
-          publisherId: publisher,
-          createdAt: {
-            gte: after,
-            lte: before
-          }
-        },
-        search.length > 0
-          ? {
-              titleAlt: {
-                search: search
-                  .map(normalizeTitle)
-                  .map((t) =>
-                    t.startsWith('+') || t.startsWith('-') ? `${t[0]}"${t.slice(1)}"` : `"${t}"`
-                  )
-                  .join(' ')
-              }
-            }
-          : {
-              AND: keywords.include.map((arr) => ({
-                OR: arr.map((t) => ({ titleAlt: { contains: normalizeTitle(t) } }))
-              }))
-            }
-      ],
-      NOT: keywords.exclude.map((t) => ({ titleAlt: { contains: normalizeTitle(t) } }))
-    },
-    skip: (page - 1) * pageSize,
-    take: pageSize,
-    orderBy: {
-      createdAt: 'desc'
-    },
-    include: {
-      fansub: true,
-      publisher: true
-    }
-  });
+  const timestamp = await getTimestamp(ctx);
+  const searchInput = await resolveSearch(ctx);
+  const result =
+    searchInput.keywords.include.length > 0 || searchInput.search.length > 0
+      ? await getSearchResources(prisma, params, searchInput)
+      : await getResources(prisma, params);
   const resources = resolveQueryResult(result);
-  return ctx.json({ resources, timestamp: await getRefreshTimestamp(ctx.env) });
+
+  return ctx.json({ resources, timestamp });
 }
 
 function resolveQueryParams(ctx: Context): QueryParams | undefined {

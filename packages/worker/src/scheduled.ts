@@ -7,7 +7,7 @@ import { tradToSimple, fullToHalf } from 'simptrad';
 import type { Env } from './types';
 
 import { makePrisma } from './prisma';
-import { getResources } from './query';
+import { getResources, getSearchResources } from './query';
 import { updateRefreshTimestamp } from './state';
 
 const teams = new Set<number>();
@@ -75,7 +75,6 @@ export async function handleScheduled(env: Env) {
 
   if (sum > 0) {
     await updateRefreshTimestamp(env);
-    getResources.clear();
   }
 
   return { count: sum };
