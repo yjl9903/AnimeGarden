@@ -169,7 +169,9 @@ export async function queryResources(ctx: Context<{ Bindings: Env }>) {
   }
 
   const timestamp = await getTimestamp(ctx);
-  const result = await getResources(prisma, params);
+  const result = !isNoCache(ctx)
+    ? await getResources(prisma, params)
+    : await getResources.raw(prisma, params);
   const resources = resolveQueryResult(result);
 
   return ctx.json({ resources, timestamp });
@@ -187,8 +189,12 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
   const searchInput = await resolveSearch(ctx);
   const result =
     searchInput.keywords.include.length > 0 || searchInput.search.length > 0
-      ? await getSearchResources(prisma, params, searchInput)
-      : await getResources(prisma, params);
+      ? !isNoCache(ctx)
+        ? await getSearchResources(prisma, params, searchInput)
+        : await getSearchResources.raw(prisma, params, searchInput)
+      : !isNoCache(ctx)
+      ? await getResources(prisma, params)
+      : await getResources.raw(prisma, params);
   const resources = resolveQueryResult(result);
 
   return ctx.json({ resources, timestamp });
@@ -318,4 +324,10 @@ function resolveQueryResult(result: (Resource & { fansub: Team | null; publisher
 
 function normalizeTitle(title: string) {
   return fullToHalf(tradToSimple(title));
+}
+
+function isNoCache(ctx: Context) {
+  const cacheControl = ctx.req.header('cache-control');
+  const noCache = cacheControl === 'no-cache' || cacheControl === 'no-store';
+  return noCache;
 }
