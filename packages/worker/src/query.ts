@@ -1,6 +1,7 @@
 import type { Context } from 'hono';
 import type { Resource, Team, User } from '@prisma/client/edge';
 
+import { memoAsync } from 'memofunc';
 import { fetchDmhyDetail } from 'animegarden';
 import { tradToSimple, fullToHalf } from 'simptrad';
 
@@ -30,6 +31,55 @@ export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
   return ctx.json({ detail });
 }
 
+interface QueryParams {
+  page: number;
+  pageSize: number;
+  fansub: number | undefined;
+  publisher: number | undefined;
+  type: string | undefined;
+  before: Date | undefined;
+  after: Date | undefined;
+}
+
+export const getResources = memoAsync(
+  async (prisma: ReturnType<typeof makePrisma>, params: QueryParams) => {
+    const { page, pageSize, fansub, publisher, type, before, after } = params;
+    return await prisma.resource.findMany({
+      where: {
+        type,
+        fansubId: fansub,
+        publisherId: publisher,
+        createdAt: {
+          gte: after,
+          lte: before
+        }
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      orderBy: {
+        createdAt: 'desc'
+      },
+      include: {
+        fansub: true,
+        publisher: true
+      }
+    });
+  },
+  {
+    serialize(_prisma, params) {
+      return [
+        params.page,
+        params.pageSize,
+        params.fansub,
+        params.before,
+        params.after,
+        params.type,
+        params.publisher
+      ];
+    }
+  }
+);
+
 export async function queryResources(ctx: Context<{ Bindings: Env }>) {
   const prisma = makePrisma(ctx.env);
 
@@ -38,28 +88,9 @@ export async function queryResources(ctx: Context<{ Bindings: Env }>) {
     return ctx.json({ message: 'Request is not valid' }, 400);
   }
 
-  const { page, pageSize, fansub, publisher, type, before, after } = params;
-  const result = await prisma.resource.findMany({
-    where: {
-      type,
-      fansubId: fansub,
-      publisherId: publisher,
-      createdAt: {
-        gte: after,
-        lte: before
-      }
-    },
-    skip: (page - 1) * pageSize,
-    take: pageSize,
-    orderBy: {
-      createdAt: 'desc'
-    },
-    include: {
-      fansub: true,
-      publisher: true
-    }
-  });
+  const result = await getResources(prisma, params);
   const resources = resolveQueryResult(result);
+
   return ctx.json({ resources, timestamp: await getRefreshTimestamp(ctx.env) });
 }
 
@@ -116,75 +147,6 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
   });
   const resources = resolveQueryResult(result);
   return ctx.json({ resources, timestamp: await getRefreshTimestamp(ctx.env) });
-
-  async function resolveSearch(ctx: Context) {
-    try {
-      const search = JSON.parse(ctx.req.query('search') ?? '[]');
-      const include = JSON.parse(ctx.req.query('include') ?? '[]');
-      const exclude = JSON.parse(ctx.req.query('exclude') ?? '[]');
-      return {
-        search: getStringArray(search),
-        keywords: {
-          include: getStringArrayArray(include),
-          exclude: getStringArray(exclude)
-        }
-      };
-    } catch (error) {
-      try {
-        const body = await ctx.req.json<{ search: unknown; include: unknown; exclude: unknown }>();
-        return {
-          search: getStringArray(body.search),
-          keywords: {
-            include: getStringArrayArray(body.include),
-            exclude: getStringArray(body.exclude)
-          }
-        };
-      } catch (error) {
-        return {
-          search: [],
-          keywords: {
-            include: [],
-            exclude: []
-          }
-        };
-      }
-    }
-
-    function getStringArrayArray(arr: unknown): string[][] {
-      if (Array.isArray(arr)) {
-        return arr.map((x) => getStringArray(x)).filter((x) => x.length > 0);
-      } else if (typeof arr === 'string') {
-        const t = arr.trim();
-        return !!t ? [[t]] : [];
-      } else {
-        return [];
-      }
-    }
-
-    function getStringArray(arr: unknown): string[] {
-      if (Array.isArray(arr)) {
-        return arr
-          .filter((x) => typeof x === 'string')
-          .map((x: string) => x.trim())
-          .filter(Boolean);
-      } else if (typeof arr === 'string') {
-        const t = arr.trim();
-        return !!t ? [t] : [];
-      } else {
-        return [];
-      }
-    }
-  }
-}
-
-interface QueryParams {
-  page: number;
-  pageSize: number;
-  fansub: number | undefined;
-  publisher: number | undefined;
-  type: string | undefined;
-  before: Date | undefined;
-  after: Date | undefined;
 }
 
 function resolveQueryParams(ctx: Context): QueryParams | undefined {
@@ -223,6 +185,65 @@ function resolveQueryParams(ctx: Context): QueryParams | undefined {
       return !isNaN(d.getTime()) ? d : undefined;
     } else {
       return undefined;
+    }
+  }
+}
+
+async function resolveSearch(ctx: Context) {
+  try {
+    const search = JSON.parse(ctx.req.query('search') ?? '[]');
+    const include = JSON.parse(ctx.req.query('include') ?? '[]');
+    const exclude = JSON.parse(ctx.req.query('exclude') ?? '[]');
+    return {
+      search: getStringArray(search),
+      keywords: {
+        include: getStringArrayArray(include),
+        exclude: getStringArray(exclude)
+      }
+    };
+  } catch (error) {
+    try {
+      const body = await ctx.req.json<{ search: unknown; include: unknown; exclude: unknown }>();
+      return {
+        search: getStringArray(body.search),
+        keywords: {
+          include: getStringArrayArray(body.include),
+          exclude: getStringArray(body.exclude)
+        }
+      };
+    } catch (error) {
+      return {
+        search: [],
+        keywords: {
+          include: [],
+          exclude: []
+        }
+      };
+    }
+  }
+
+  function getStringArrayArray(arr: unknown): string[][] {
+    if (Array.isArray(arr)) {
+      return arr.map((x) => getStringArray(x)).filter((x) => x.length > 0);
+    } else if (typeof arr === 'string') {
+      const t = arr.trim();
+      return !!t ? [[t]] : [];
+    } else {
+      return [];
+    }
+  }
+
+  function getStringArray(arr: unknown): string[] {
+    if (Array.isArray(arr)) {
+      return arr
+        .filter((x) => typeof x === 'string')
+        .map((x: string) => x.trim())
+        .filter(Boolean);
+    } else if (typeof arr === 'string') {
+      const t = arr.trim();
+      return !!t ? [t] : [];
+    } else {
+      return [];
     }
   }
 }

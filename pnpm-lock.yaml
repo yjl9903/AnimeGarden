@@ -147,6 +147,9 @@ importers:
       hono:
         specifier: ^3.1.8
         version: 3.1.8
+      memofunc:
+        specifier: ^0.0.2
+        version: 0.0.2
       simptrad:
         specifier: ^0.1.0
         version: 0.1.0
@@ -3591,6 +3594,10 @@ packages:
   /mdn-data@2.0.30:
     resolution: {integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==}
     dev: true
+
+  /memofunc@0.0.2:
+    resolution: {integrity: sha512-9TZoYKR6t9A2HxgChchMsw88WqYSiFvWA5k1gsL8vTtgbSR9J/j7dlH59CbqSOzyyRc7LvI8h8rME1Tm017t3w==}
+    dev: false
 
   /merge-stream@2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
