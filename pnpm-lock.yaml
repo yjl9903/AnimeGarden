@@ -11,8 +11,8 @@ importers:
         specifier: ^11.0.1
         version: 11.0.1
       '@types/node':
-        specifier: ^18.16.10
-        version: 18.16.10
+        specifier: ^18.16.12
+        version: 18.16.12
       breadc:
         specifier: ^0.9.5
         version: 0.9.5
@@ -51,7 +51,7 @@ importers:
         version: 5.22.1
       vite:
         specifier: ^4.3.7
-        version: 4.3.7(@types/node@18.16.10)
+        version: 4.3.7(@types/node@18.16.12)
       vitest:
         specifier: ^0.31.0
         version: 0.31.0
@@ -85,7 +85,7 @@ importers:
         version: 2.1.3(@types/react-dom@18.2.4)(@types/react@18.2.6)(react-dom@18.2.0)(react@18.2.0)
       astro:
         specifier: ^2.4.5
-        version: 2.4.5(@types/node@18.16.10)
+        version: 2.4.5(@types/node@18.16.12)
       cmdk:
         specifier: ^0.2.0
         version: 0.2.0(@types/react@18.2.6)(react-dom@18.2.0)(react@18.2.0)
@@ -190,7 +190,7 @@ packages:
     peerDependencies:
       astro: ^2.3.3
     dependencies:
-      astro: 2.4.5(@types/node@18.16.10)
+      astro: 2.4.5(@types/node@18.16.12)
       esbuild: 0.17.16
       tiny-glob: 0.2.9
     dev: false
@@ -224,7 +224,7 @@ packages:
       astro: ^2.4.0
     dependencies:
       '@astrojs/prism': 2.1.1
-      astro: 2.4.5(@types/node@18.16.10)
+      astro: 2.4.5(@types/node@18.16.12)
       github-slugger: 1.5.0
       import-meta-resolve: 2.2.2
       rehype-raw: 6.1.1
@@ -1565,7 +1565,7 @@ packages:
   /@types/better-sqlite3@7.6.4:
     resolution: {integrity: sha512-dzrRZCYPXIXfSR1/surNbJ/grU3scTaygS0OMzjlGf71i9sc2fGyHPXXiXmEvNIoE0cGwsanEFMVJxPXmco9Eg==}
     dependencies:
-      '@types/node': 18.16.10
+      '@types/node': 18.16.12
     dev: true
 
   /@types/chai-subset@1.3.3:
@@ -1592,7 +1592,7 @@ packages:
     resolution: {integrity: sha512-MxObHvNl4A69ofaTRU8DFqvgzzv8s9yRtaPPm5gud9HDNvpB3GPQFvNuTWAI59B9huVGV5jXYJwbCsmBsOGYWA==}
     dependencies:
       '@types/jsonfile': 6.1.1
-      '@types/node': 18.16.10
+      '@types/node': 18.16.12
     dev: true
 
   /@types/hast@2.3.4:
@@ -1608,7 +1608,7 @@ packages:
   /@types/jsonfile@6.1.1:
     resolution: {integrity: sha512-GSgiRCVeapDN+3pqA35IkQwasaCh/0YFH5dEF6S88iDvEn901DjOeH3/QPY+XYP1DFzDZPvIvfeEgk+7br5png==}
     dependencies:
-      '@types/node': 18.16.10
+      '@types/node': 18.16.12
     dev: true
 
   /@types/mdast@3.0.11:
@@ -1627,8 +1627,8 @@ packages:
       '@types/unist': 2.0.6
     dev: false
 
-  /@types/node@18.16.10:
-    resolution: {integrity: sha512-sMo3EngB6QkMBlB9rBe1lFdKSLqljyWPPWv6/FzSxh/IDlyVWSzE9RiF4eAuerQHybrWdqBgAGb03PM89qOasA==}
+  /@types/node@18.16.12:
+    resolution: {integrity: sha512-tIRrjbY9C277MOfP8M3zjMIhtMlUJ6YVqkGgLjz+74jVsdf4/UjC6Hku4+1N0BS0qyC0JAS6tJLUk9H6JUKviQ==}
 
   /@types/node@18.16.3:
     resolution: {integrity: sha512-OPs5WnnT1xkCBiuQrZA4+YAV4HEJejmHneyraIaxsbev5yCEr6KMwINNFP9wQeFIw8FWcoTqF3vQsa5CDaI+8Q==}
@@ -1855,7 +1855,7 @@ packages:
       chokidar: 3.5.3
       fast-glob: 3.2.12
       magic-string: 0.30.0
-      vite: 4.3.7(@types/node@18.16.10)
+      vite: 4.3.7(@types/node@18.16.12)
     transitivePeerDependencies:
       - rollup
     dev: true
@@ -2011,7 +2011,7 @@ packages:
     resolution: {integrity: sha512-jgsaNduz+ndvGyFt3uSuWqvy4lCnIJiovtouQN5JZHOKCS2QuhEdbcQHFhVksz2N2U9hXJo8odG7ETyWlEeuDw==}
     dev: true
 
-  /astro@2.4.5(@types/node@18.16.10):
+  /astro@2.4.5(@types/node@18.16.12):
     resolution: {integrity: sha512-osxLnuLXaOX0FjWOVQH8cmK4N/Gdj/ZdEkeyMJWsUss7xQU4Q64tAxB/dAv75f/XZiu+PprmndJkyQ4sYLOv1g==}
     engines: {node: '>=16.12.0', npm: '>=6.14.0'}
     hasBin: true
@@ -2070,7 +2070,7 @@ packages:
       typescript: 5.0.4
       unist-util-visit: 4.1.2
       vfile: 5.3.7
-      vite: 4.3.5(@types/node@18.16.10)
+      vite: 4.3.5(@types/node@18.16.12)
       vitefu: 0.2.4(vite@4.3.5)
       yargs-parser: 21.1.1
       zod: 3.21.4
@@ -5382,7 +5382,7 @@ packages:
       git-repo-info: 2.1.1
       parse-github-url: 1.0.2
       remote-origin-url: 2.0.0
-      vite: 4.3.7(@types/node@18.16.10)
+      vite: 4.3.7(@types/node@18.16.12)
     dev: true
 
   /vite@4.3.4(@types/node@18.16.3):
@@ -5418,7 +5418,7 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vite@4.3.5(@types/node@18.16.10):
+  /vite@4.3.5(@types/node@18.16.12):
     resolution: {integrity: sha512-0gEnL9wiRFxgz40o/i/eTBwm+NEbpUeTWhzKrZDSdKm6nplj+z4lKz8ANDgildxHm47Vg8EUia0aicKbawUVVA==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -5443,7 +5443,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 18.16.10
+      '@types/node': 18.16.12
       esbuild: 0.17.16
       postcss: 8.4.23
       rollup: 3.21.0
@@ -5451,7 +5451,7 @@ packages:
       fsevents: 2.3.2
     dev: false
 
-  /vite@4.3.7(@types/node@18.16.10):
+  /vite@4.3.7(@types/node@18.16.12):
     resolution: {integrity: sha512-MTIFpbIm9v7Hh5b0wSBgkcWzSBz7SAa6K/cBTwS4kUiQJfQLFlZZRJRQgqunCVzhTPCk674tW+0Qaqh3Q00dBg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -5476,7 +5476,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 18.16.10
+      '@types/node': 18.16.12
       esbuild: 0.17.16
       postcss: 8.4.23
       rollup: 3.21.0
@@ -5525,7 +5525,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 4.3.5(@types/node@18.16.10)
+      vite: 4.3.5(@types/node@18.16.12)
     dev: false
 
   /vitest@0.31.0:
