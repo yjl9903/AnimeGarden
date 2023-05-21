@@ -7,6 +7,18 @@ import '../styles/cmdk.css';
 import { fansubs, types } from '../constant';
 import { fetchResources } from '../fetch';
 
+{
+  document.addEventListener('keypress', (ev) => {
+    if (ev.key === 's' || ev.key === '/') {
+      const input = document.querySelector('#animegarden-search input');
+      // @ts-ignore
+      input?.focus();
+      ev.preventDefault();
+      ev.stopPropagation();
+    }
+  });
+}
+
 const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
 
 const useActiveElement = () => {
@@ -80,6 +92,7 @@ export default function Search() {
 
   return (
     <Command
+      id="animegarden-search"
       label="Command Menu"
       ref={ref}
       shouldFilter={false}
@@ -94,6 +107,7 @@ export default function Search() {
       }}
     >
       <Command.Input
+        id="animegarden-search-input"
         ref={inputRef}
         value={input}
         onValueChange={onInputChange}
