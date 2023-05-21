@@ -66,6 +66,7 @@ export default function Search() {
   const filteredTypes = types.filter((t) => t.includes(input));
 
   const enable = active === inputRef.current;
+  const disable = useCallback(() => inputRef.current?.blur(), []);
 
   const onInputChange = useCallback((value: string) => {
     setInput(value);
@@ -107,6 +108,7 @@ export default function Search() {
                 if (input) {
                   cleanUp();
                   goToSearch(input);
+                  disable();
                 }
               }}
             >
