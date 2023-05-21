@@ -211,12 +211,18 @@ function parseSearch(search: string) {
 }
 
 function goToSearch(search: string) {
-  const match = DMHY_RE.exec(search);
-  if (match) {
-    goTo(`/resource/${match[1]}`);
+  if (search.startsWith(location.origin)) {
+    goTo(search.slice(location.origin.length));
+  } else if (search.startsWith(location.host)) {
+    goTo(search.slice(location.host.length));
   } else {
-    const { include, exclude } = parseSearch(search);
-    goTo(`/resources/1?include=${JSON.stringify(include)}&exclude=${JSON.stringify(exclude)}`);
+    const match = DMHY_RE.exec(search);
+    if (match) {
+      goTo(`/resource/${match[1]}`);
+    } else {
+      const { include, exclude } = parseSearch(search);
+      goTo(`/resources/1?include=${JSON.stringify(include)}&exclude=${JSON.stringify(exclude)}`);
+    }
   }
 }
 
