@@ -115,8 +115,8 @@ importers:
         specifier: 18.2.4
         version: 18.2.4
       '@unocss/reset':
-        specifier: ^0.52.0
-        version: 0.52.0
+        specifier: ^0.52.3
+        version: 0.52.3
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -1853,10 +1853,6 @@ packages:
     dependencies:
       '@unocss/core': 0.52.3
       '@unocss/preset-mini': 0.52.3
-    dev: true
-
-  /@unocss/reset@0.52.0:
-    resolution: {integrity: sha512-hRdgzpxWkDriRneLCv8cRNWBVNJ9FQVLY6jLk7C3MMaab0FH9JufdNwRw/yiqtEEhnnT2GF8IfN3HY69T01tNw==}
     dev: true
 
   /@unocss/reset@0.52.3:
