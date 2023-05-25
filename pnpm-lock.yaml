@@ -23,8 +23,8 @@ importers:
         specifier: ^11.1.1
         version: 11.1.1
       https-proxy-agent:
-        specifier: ^6.2.1
-        version: 6.2.1
+        specifier: ^7.0.0
+        version: 7.0.0
       ofetch:
         specifier: ^1.0.1
         version: 1.0.1
@@ -3132,8 +3132,8 @@ packages:
       - supports-color
     dev: true
 
-  /https-proxy-agent@6.2.1:
-    resolution: {integrity: sha512-ONsE3+yfZF2caH5+bJlcddtWqNI3Gvs5A38+ngvljxaBiRXRswym2c7yf8UAeFpRFKjFNHIFEHqR/OLAWJzyiA==}
+  /https-proxy-agent@7.0.0:
+    resolution: {integrity: sha512-0euwPCRyAPSgGdzD1IVN9nJYHtBhJwb6XPfbpQcYbPCwrBidX6GzxmchnaF4sfF/jPb74Ojx5g4yTg3sixlyPw==}
     engines: {node: '>= 14'}
     dependencies:
       agent-base: 7.0.2
