@@ -60,6 +60,13 @@ export default function Search() {
     }
   }, 500);
 
+  const signals = useRef<Set<AbortController>>(new Set());
+  const stopFetch = useCallback(() => {
+    for (const abort of signals.current) {
+      abort.abort();
+    }
+    signals.current.clear();
+  }, []);
   const { data: searchResult, isLoading } = useSWR(
     () => {
       if (!search) return null;
@@ -71,7 +78,11 @@ export default function Search() {
       if (DMHY_RE.test(search)) {
         return [];
       } else {
-        return await fetchResources(1, { ...parseSearch(search) });
+        const abort = new AbortController();
+        signals.current.add(abort);
+        const res = await fetchResources(1, { ...parseSearch(search), signal: abort.signal });
+        signals.current.delete(abort);
+        return res;
       }
     }
   );
@@ -123,6 +134,7 @@ export default function Search() {
               onSelect={() => {
                 if (input) {
                   cleanUp();
+                  stopFetch();
                   goToSearch(input);
                   disable();
                 }
