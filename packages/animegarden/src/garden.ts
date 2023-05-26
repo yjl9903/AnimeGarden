@@ -1,4 +1,4 @@
-import type { Resource, ResourceDetail, ResourceType } from './types';
+import type { Resource, ResourceDetail } from './types';
 
 import { retryFn } from './utils';
 
@@ -62,6 +62,11 @@ export interface FetchResourcesOptions {
   retry?: number;
 
   /**
+   * Abort fetch
+   */
+  signal?: AbortSignal;
+
+  /**
    * Progress callback when querying multiple pages
    */
   progress?: (
@@ -72,6 +77,11 @@ export interface FetchResourcesOptions {
 
 export interface FetchResourceDetailOptions {
   baseURL?: string;
+
+  /**
+   * Abort fetch
+   */
+  signal?: AbortSignal;
 
   /**
    * The number of retry
@@ -116,19 +126,27 @@ export async function fetchResources(
     const map = new Map<string, Resource>();
     let timestamp = new Date(0);
     for (let page = 1; map.size < count; page++) {
-      const resp = await fetchPage(page);
-      timestamp = resp.timestamp;
-      if (resp.resources.length === 0) {
-        break;
-      }
-      const newRes = [];
-      for (const r of resp.resources) {
-        if (!map.has(r.href)) {
-          map.set(r.href, r);
-          newRes.push(r);
+      try {
+        const resp = await fetchPage(page);
+        timestamp = resp.timestamp;
+        if (resp.resources.length === 0) {
+          break;
+        }
+        const newRes = [];
+        for (const r of resp.resources) {
+          if (!map.has(r.href)) {
+            map.set(r.href, r);
+            newRes.push(r);
+          }
+        }
+        await options.progress?.(newRes, { url: url.toString(), page, timestamp });
+      } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
+          break;
+        } else {
+          throw error;
         }
       }
-      await options.progress?.(newRes, { url: url.toString(), page, timestamp });
     }
 
     return {
@@ -150,7 +168,7 @@ export async function fetchResources(
     url.searchParams.set('page', '' + page);
     return await retryFn(
       () =>
-        fetch(url.toString())
+        fetch(url.toString(), { signal: options.signal })
           .then((r) => r.json())
           .then((r) => ({
             resources: r.resources as Resource[],
@@ -181,7 +199,7 @@ export async function fetchResourceDetail(
 
   return await retryFn(
     () =>
-      fetch(url.toString())
+      fetch(url.toString(), { signal: options.signal })
         .then((r) => r.json())
         .then((r) => r.detail),
     retry

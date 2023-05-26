@@ -55,7 +55,9 @@ export default function Search() {
   const [search, setSearch] = useState('');
 
   const setDebounceSearch = debounce((value: string) => {
-    setSearch(value);
+    if (value !== search) {
+      setSearch(value);
+    }
   }, 500);
 
   const { data: searchResult, isLoading } = useSWR(

@@ -31,6 +31,7 @@ export async function fetchResources(
     type?: string;
     after?: Date;
     before?: Date;
+    signal?: AbortSignal;
   } = {}
 ) {
   return (
@@ -47,7 +48,8 @@ export async function fetchResources(
       publisher: options.publisher ? '' + options.publisher : undefined,
       type: options.type ? '' + options.type : undefined,
       after: options.after,
-      before: options.before
+      before: options.before,
+      signal: options.signal
     })
   ).resources;
 }
