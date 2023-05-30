@@ -44,7 +44,9 @@ interface QueryParams {
 export const getResources = memoAsync(
   async (prisma: ReturnType<typeof makePrisma>, params: QueryParams) => {
     const { page, pageSize, fansub, publisher, type, before, after } = params;
-    return await prisma.resource.findMany({
+    const key = `Query database at ${new Date().toLocaleString()}`;
+    console.time(key);
+    const result = await prisma.resource.findMany({
       where: {
         type,
         fansubId: fansub,
@@ -64,6 +66,8 @@ export const getResources = memoAsync(
         publisher: true
       }
     });
+    console.timeEnd(key);
+    return result;
   },
   {
     serialize(_prisma, params) {
@@ -88,7 +92,9 @@ export const getSearchResources = memoAsync(
   ) => {
     const { page, pageSize, fansub, publisher, type, before, after } = params;
     const { search, keywords } = input;
-    return await prisma.resource.findMany({
+    const key = `Query database at ${new Date().toLocaleString()}`;
+    console.time(key);
+    const result = await prisma.resource.findMany({
       where: {
         AND: [
           {
@@ -129,6 +135,8 @@ export const getSearchResources = memoAsync(
         publisher: true
       }
     });
+    console.timeEnd(key);
+    return result;
   },
   {
     serialize(_prisma, params, input) {
