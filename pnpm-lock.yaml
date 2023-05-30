@@ -83,13 +83,13 @@ importers:
     dependencies:
       '@astrojs/cloudflare':
         specifier: ^6.3.0
-        version: 6.3.0(astro@2.5.5)
+        version: 6.3.0(astro@2.5.6)
       '@astrojs/react':
-        specifier: ^2.2.0
-        version: 2.2.0(@types/react-dom@18.2.4)(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^2.2.1
+        version: 2.2.1(@types/react-dom@18.2.4)(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0)
       astro:
-        specifier: ^2.5.5
-        version: 2.5.5(@types/node@18.16.16)
+        specifier: ^2.5.6
+        version: 2.5.6(@types/node@18.16.16)
       cmdk:
         specifier: ^0.2.0
         version: 0.2.0(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0)
@@ -188,12 +188,12 @@ packages:
     resolution: {integrity: sha512-vy9fM3pIxZmX07dL+VX1aZe7ynZ+YyB0jY+jE6r3hOK6GNY2t6W8rzpFC4tgpbXUYABkFQwgJq2XYXlxbXAI0g==}
     dev: true
 
-  /@astrojs/cloudflare@6.3.0(astro@2.5.5):
+  /@astrojs/cloudflare@6.3.0(astro@2.5.6):
     resolution: {integrity: sha512-XBnVRA5iFIqN1r1Rv2bR4y2TLmAyzF2H7jgvUaBUxcx38Pup7HsfW9nfFjS/dOCL41SEWlQdzSAf0Fy0f+Tzhg==}
     peerDependencies:
       astro: ^2.5.0
     dependencies:
-      astro: 2.5.5(@types/node@18.16.16)
+      astro: 2.5.6(@types/node@18.16.16)
       esbuild: 0.17.19
       tiny-glob: 0.2.9
     dev: false
@@ -220,13 +220,13 @@ packages:
       vscode-uri: 3.0.7
     dev: false
 
-  /@astrojs/markdown-remark@2.2.1(astro@2.5.5):
+  /@astrojs/markdown-remark@2.2.1(astro@2.5.6):
     resolution: {integrity: sha512-VF0HRv4GpC1XEMLnsKf6jth7JSmlt9qpqP0josQgA2eSpCIAC/Et+y94mgdBIZVBYH/yFnMoIxgKVe93xfO2GA==}
     peerDependencies:
       astro: ^2.5.0
     dependencies:
       '@astrojs/prism': 2.1.2
-      astro: 2.5.5(@types/node@18.16.16)
+      astro: 2.5.6(@types/node@18.16.16)
       github-slugger: 1.5.0
       import-meta-resolve: 2.2.2
       rehype-raw: 6.1.1
@@ -250,8 +250,8 @@ packages:
       prismjs: 1.29.0
     dev: false
 
-  /@astrojs/react@2.2.0(@types/react-dom@18.2.4)(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-DwwbmSGVKtHwufatZQwmqIor2MN4RXDdAujwerT60m3xgbv8D0v+s6fX/uRJ0ApWYLLFDzJGLhrmI7UhufpmPg==}
+  /@astrojs/react@2.2.1(@types/react-dom@18.2.4)(@types/react@18.2.7)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-nq5Zr8iWdwjSp5fh1NReaCplwsnL4w5PXAY5XWu1jE/frxEfF/ycGHrrhwWW0uJHX9G+kUtmQLR0GBhlR4FmAw==}
     engines: {node: '>=16.12.0'}
     peerDependencies:
       '@types/react': ^17.0.50 || ^18.0.21
@@ -285,8 +285,8 @@ packages:
       - supports-color
     dev: false
 
-  /@astrojs/webapi@2.1.1:
-    resolution: {integrity: sha512-mHZ7VgPNMeV3TYIw3SGHTKaJosBxA8bTzZ3QhNw509qvCJca4Lkjes8JywimuwTn+TMjEiv7ksNfwRluad3jqA==}
+  /@astrojs/webapi@2.2.0:
+    resolution: {integrity: sha512-mHAOApWyjqSe5AQMOUD9rsZJqbMQqe3Wosb1a40JV6Okvyxj1G6GTlthwYadWCymq/lbgwh0PLiY8Fr4eFxtuQ==}
     dependencies:
       undici: 5.22.1
     dev: false
@@ -1885,8 +1885,8 @@ packages:
     resolution: {integrity: sha512-jgsaNduz+ndvGyFt3uSuWqvy4lCnIJiovtouQN5JZHOKCS2QuhEdbcQHFhVksz2N2U9hXJo8odG7ETyWlEeuDw==}
     dev: true
 
-  /astro@2.5.5(@types/node@18.16.16):
-    resolution: {integrity: sha512-VRwnlfRtPALeOxfE4e7To5Vlu9pGwlTRWN1zkn1QTizwfg0rLirFTm6t2MCG/fUhlu/p3QO9tz8SpAIyDq53/Q==}
+  /astro@2.5.6(@types/node@18.16.16):
+    resolution: {integrity: sha512-IdgEnjP8kqLEYgNbWcrRyqR4tUq1iEXI3AZ5RqV9PTaDd4l9H+UmN0oDjrzG8VTmCdpfSHGlQEr+0qkGPoIiOw==}
     engines: {node: '>=16.12.0', npm: '>=6.14.0'}
     hasBin: true
     peerDependencies:
@@ -1897,9 +1897,9 @@ packages:
     dependencies:
       '@astrojs/compiler': 1.4.2
       '@astrojs/language-server': 1.0.5
-      '@astrojs/markdown-remark': 2.2.1(astro@2.5.5)
+      '@astrojs/markdown-remark': 2.2.1(astro@2.5.6)
       '@astrojs/telemetry': 2.1.1
-      '@astrojs/webapi': 2.1.1
+      '@astrojs/webapi': 2.2.0
       '@babel/core': 7.22.1
       '@babel/generator': 7.22.3
       '@babel/parser': 7.22.3
