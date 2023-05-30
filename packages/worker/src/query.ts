@@ -44,8 +44,8 @@ interface QueryParams {
 export const getResources = memoAsync(
   async (prisma: ReturnType<typeof makePrisma>, params: QueryParams) => {
     const { page, pageSize, fansub, publisher, type, before, after } = params;
-    const key = `Query database at ${new Date().toLocaleString()}`;
-    console.time(key);
+    const timer = createTimer(`Get Resources`);
+    timer.start();
     const result = await prisma.resource.findMany({
       where: {
         type,
@@ -66,7 +66,7 @@ export const getResources = memoAsync(
         publisher: true
       }
     });
-    console.timeEnd(key);
+    timer.end();
     return result;
   },
   {
@@ -92,8 +92,7 @@ export const getSearchResources = memoAsync(
   ) => {
     const { page, pageSize, fansub, publisher, type, before, after } = params;
     const { search, keywords } = input;
-    const key = `Query database at ${new Date().toLocaleString()}`;
-    console.time(key);
+    const timer = createTimer(`Search Resources`);
     const result = await prisma.resource.findMany({
       where: {
         AND: [
@@ -135,7 +134,7 @@ export const getSearchResources = memoAsync(
         publisher: true
       }
     });
-    console.timeEnd(key);
+    timer.end();
     return result;
   },
   {
@@ -338,4 +337,17 @@ function isNoCache(ctx: Context) {
   const cacheControl = ctx.req.header('cache-control');
   const noCache = cacheControl === 'no-cache' || cacheControl === 'no-store';
   return noCache;
+}
+
+function createTimer(label: string) {
+  let start = new Date();
+  return {
+    start() {
+      start = new Date();
+    },
+    end() {
+      const end = new Date();
+      console.log(`${label}: ${((start.getTime() - end.getTime()) / 1000).toFixed(0)}ms`);
+    }
+  };
 }
