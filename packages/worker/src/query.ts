@@ -190,9 +190,6 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
   const timestamp = await getTimestamp(ctx);
   const searchInput = await resolveSearch(ctx);
 
-  console.log(params);
-  console.log(searchInput);
-
   const result =
     searchInput.keywords.include.length > 0 || searchInput.search.length > 0
       ? !isNoCache(ctx)
