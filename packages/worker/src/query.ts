@@ -108,12 +108,7 @@ export const getSearchResources = memoAsync(
           search.length > 0
             ? {
                 titleAlt: {
-                  search: search
-                    .map(normalizeTitle)
-                    .map((t) =>
-                      t.startsWith('+') || t.startsWith('-') ? `${t[0]}"${t.slice(1)}"` : `"${t}"`
-                    )
-                    .join(' ')
+                  search: search.join(' ')
                 }
               }
             : {
@@ -257,7 +252,9 @@ async function resolveSearch(ctx: Context) {
   const include = resolveQuery('include', body.keywords.include);
   const exclude = resolveQuery('exclude', body.keywords.exclude);
   return {
-    search: resolveStringArray(search),
+    search: resolveStringArray(search)
+      .map(normalizeTitle)
+      .map((t) => (t.startsWith('+') || t.startsWith('-') ? `${t[0]}"${t.slice(1)}"` : `"${t}"`)),
     keywords: {
       include: resolveStringArrayArray(include),
       exclude: resolveStringArray(exclude)
