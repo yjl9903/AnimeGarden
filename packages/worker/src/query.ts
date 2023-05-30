@@ -90,6 +90,8 @@ export const getSearchResources = memoAsync(
     params: QueryParams,
     input: Awaited<ReturnType<typeof resolveSearch>>
   ) => {
+    console.log(input);
+
     const { page, pageSize, fansub, publisher, type, before, after } = params;
     const { search, keywords } = input;
     const timer = createTimer(`Search Resources`);
@@ -147,9 +149,9 @@ export const getSearchResources = memoAsync(
         params.after,
         params.type,
         params.publisher,
-        JSON.stringify(input.keywords.include),
-        JSON.stringify(input.keywords.exclude),
-        input.search.join(' ')
+        JSON.stringify([...input.keywords.include].sort()),
+        JSON.stringify([...input.keywords.exclude].sort()),
+        [...input.search].sort().join(' ')
       ];
     }
   }
@@ -347,7 +349,7 @@ function createTimer(label: string) {
     },
     end() {
       const end = new Date();
-      console.log(`${label}: ${((start.getTime() - end.getTime()) / 1000).toFixed(0)}ms`);
+      console.log(`${label}: ${((end.getTime() - start.getTime()) / 1000).toFixed(0)}ms`);
     }
   };
 }
