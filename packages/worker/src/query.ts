@@ -90,8 +90,6 @@ export const getSearchResources = memoAsync(
     params: QueryParams,
     input: Awaited<ReturnType<typeof resolveSearch>>
   ) => {
-    console.log(input);
-
     const { page, pageSize, fansub, publisher, type, before, after } = params;
     const { search, keywords } = input;
     const timer = createTimer(`Search Resources`);
@@ -196,6 +194,10 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
 
   const timestamp = await getTimestamp(ctx);
   const searchInput = await resolveSearch(ctx);
+
+  console.log(params);
+  console.log(searchInput);
+
   const result =
     searchInput.keywords.include.length > 0 || searchInput.search.length > 0
       ? !isNoCache(ctx)
@@ -250,25 +252,39 @@ function resolveQueryParams(ctx: Context): QueryParams | undefined {
 }
 
 async function resolveSearch(ctx: Context) {
-  try {
-    const search = JSON.parse(ctx.req.query('search') ?? '[]');
-    const include = JSON.parse(ctx.req.query('include') ?? '[]');
-    const exclude = JSON.parse(ctx.req.query('exclude') ?? '[]');
-    return {
-      search: getStringArray(search),
-      keywords: {
-        include: getStringArrayArray(include),
-        exclude: getStringArray(exclude)
+  const body = await resolveBody();
+  const search = resolveQuery('search', body.search);
+  const include = resolveQuery('include', body.keywords.include);
+  const exclude = resolveQuery('exclude', body.keywords.exclude);
+  return {
+    search: resolveStringArray(search),
+    keywords: {
+      include: resolveStringArrayArray(include),
+      exclude: resolveStringArray(exclude)
+    }
+  };
+
+  function resolveQuery(key: string, fallback: unknown) {
+    const content = ctx.req.query(key);
+    if (!content) {
+      return fallback;
+    } else {
+      try {
+        return JSON.parse(content);
+      } catch (error) {
+        return fallback;
       }
-    };
-  } catch (error) {
+    }
+  }
+
+  async function resolveBody() {
     try {
       const body = await ctx.req.json<{ search: unknown; include: unknown; exclude: unknown }>();
       return {
-        search: getStringArray(body.search),
+        search: resolveStringArray(body.search),
         keywords: {
-          include: getStringArrayArray(body.include),
-          exclude: getStringArray(body.exclude)
+          include: resolveStringArrayArray(body.include),
+          exclude: resolveStringArray(body.exclude)
         }
       };
     } catch (error) {
@@ -282,9 +298,9 @@ async function resolveSearch(ctx: Context) {
     }
   }
 
-  function getStringArrayArray(arr: unknown): string[][] {
+  function resolveStringArrayArray(arr: unknown): string[][] {
     if (Array.isArray(arr)) {
-      return arr.map((x) => getStringArray(x)).filter((x) => x.length > 0);
+      return arr.map((x) => resolveStringArray(x)).filter((x) => x.length > 0);
     } else if (typeof arr === 'string') {
       const t = arr.trim();
       return !!t ? [[t]] : [];
@@ -293,7 +309,7 @@ async function resolveSearch(ctx: Context) {
     }
   }
 
-  function getStringArray(arr: unknown): string[] {
+  function resolveStringArray(arr: unknown): string[] {
     if (Array.isArray(arr)) {
       return arr
         .filter((x) => typeof x === 'string')
