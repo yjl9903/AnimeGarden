@@ -68,6 +68,9 @@ Content-Type: application/json
   ]
 }
 
+### Fetch rss
+GET https://garden.onekuma.cn/api/feed?bgmId=381666
+
 ### List all the users
 GET https://garden.onekuma.cn/api/users
 Content-Type: application/json

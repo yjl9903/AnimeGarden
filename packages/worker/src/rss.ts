@@ -17,5 +17,5 @@ export function generateFeed(ctx: Context<{ Bindings: Env }>) {
   });
 
   ctx.header('Content-Type', 'text/xml');
-  ctx.body(feed.rss2());
+  return ctx.body(feed.rss2());
 }
