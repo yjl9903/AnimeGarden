@@ -216,11 +216,39 @@ function parseSearch(search: string) {
     .split(' ')
     .map((s) => s.trim())
     .filter(Boolean);
-  const include = splitted.filter((v) => v[0] !== '!' && v[0] !== '！');
-  const exclude = splitted.filter((v) => v[0] === '!' || v[0] === '！').map((v) => v.slice(1));
+  const keywords: string[] = [];
+  const include: string[] = [];
+  const exclude: string[] = [];
+  const fansub: number[] = [];
+  const after: Date[] = [];
+
+  for (const word of splitted) {
+    if (word.startsWith('!') || word.startsWith('！')) {
+      keywords.push('-' + word);
+    } else if (word.startsWith('fansub:')) {
+      const value = word.slice('fansub:'.length);
+      if (/^\d$/.test(value)) {
+        fansub.push(+value);
+      } else {
+        const found = fansubs.find((t) => t.name === value);
+        if (found) {
+          fansub.push(found.id);
+        }
+      }
+    } else if (word.startsWith('after:')) {
+      const value = word.slice('after:'.length);
+      after.push(new Date(value));
+    } else {
+      keywords.push('%2b' + word);
+    }
+  }
+
   return {
+    search: keywords,
     include,
-    exclude
+    exclude,
+    fansub: fansub.at(-1),
+    after: after.at(-1)
   };
 }
 
@@ -234,8 +262,19 @@ function goToSearch(search: string) {
     if (match) {
       goTo(`/resource/${match[1]}`);
     } else {
-      const { include, exclude } = parseSearch(search);
-      goTo(`/resources/1?include=${JSON.stringify(include)}&exclude=${JSON.stringify(exclude)}`);
+      const { search: keywords, include, exclude, fansub, after } = parseSearch(search);
+      const query = [
+        `search=${JSON.stringify(keywords)}`,
+        `include=${JSON.stringify(include)}`,
+        `exclude=${JSON.stringify(exclude)}`
+      ];
+      if (fansub !== undefined) {
+        query.push(`fansub=${fansub}`);
+      }
+      if (after !== undefined) {
+        query.push(`after=${after.toISOString()}`);
+      }
+      goTo(`/resources/1?${query.join('&')}`);
     }
   }
 }

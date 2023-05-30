@@ -42,6 +42,7 @@ export interface FetchResourcesOptions {
    * and should not contain any excluded word
    */
   search?: {
+    search?: string[];
     include?: string | (string | string[])[];
     exclude?: string[];
   };
@@ -115,6 +116,7 @@ export async function fetchResources(
     url.searchParams.set('after', '' + options.after.getTime());
   }
   if (options.search) {
+    url.searchParams.set('search', JSON.stringify(options.search.search ?? []));
     url.searchParams.set('include', JSON.stringify(options.search.include ?? []));
     url.searchParams.set('exclude', JSON.stringify(options.search.exclude ?? []));
   }

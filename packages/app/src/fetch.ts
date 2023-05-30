@@ -26,6 +26,7 @@ const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
 export async function fetchResources(
   page: number,
   options: {
+    search?: string[];
     include?: (string | string[])[];
     exclude?: string[];
     fansub?: number;
@@ -40,12 +41,14 @@ export async function fetchResources(
     await rawFetchResources(ofetch, {
       baseURL,
       page,
-      search: options.include
-        ? {
-            include: options.include,
-            exclude: options.exclude
-          }
-        : undefined,
+      search:
+        options.include || options.search
+          ? {
+              search: options.search,
+              include: options.include,
+              exclude: options.exclude
+            }
+          : undefined,
       fansub: options.fansub ? '' + options.fansub : undefined,
       publisher: options.publisher ? '' + options.publisher : undefined,
       type: options.type ? '' + options.type : undefined,

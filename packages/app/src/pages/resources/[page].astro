@@ -7,7 +7,6 @@ import ResourceTable from '../../components/ResourceTable.astro';
 
 import { fetchResources } from '../../fetch';
 import { fansubs, QueryType } from '../../constant';
-import { spawn } from 'child_process';
 
 const { page: _page } = Astro.params;
 const page = _page ? +_page : 1;
@@ -25,6 +24,9 @@ const after = _after ? new Date(_after) : undefined;
 const _before = url.searchParams.get('before');
 const before = _before ? new Date(_before) : undefined;
 
+const _search = url.searchParams.get('search');
+const search: string[] | undefined = _search ? JSON.parse(_search) : undefined;
+
 const _include = url.searchParams.get('include');
 const include: (string | string[])[] | undefined = _include ? JSON.parse(_include) : undefined;
 const isComplicated = include?.some((i) => Array.isArray(i)) ?? false;
@@ -36,17 +38,33 @@ const resources = await fetchResources(page, {
   publisher: publisher ? +publisher : undefined,
   fansub: fansub ? +fansub : undefined,
   type: type ? type : undefined,
+  search,
   include,
   exclude,
   after,
   before
 });
+
+const keywords = {
+  include: [...(include ?? [])],
+  exclude: [...(exclude ?? [])]
+};
+
+if (search) {
+  for (const keyword of search) {
+    if (keyword.startsWith('+')) {
+      keywords.include.push(keyword.slice(1));
+    } else if (keyword.startsWith('-')) {
+      keywords.include.push(keyword.slice(1));
+    }
+  }
+}
 ---
 
 <Layout title="所有资源 | Anime Garden">
   <div class="mt-4vh w-full">
     {
-      (include || exclude || before || after || fansubItem) && (
+      (search || include || before || after || fansubItem) && (
         <>
           <div class="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
             {fansubItem && (
@@ -72,15 +90,17 @@ const resources = await fetchResources(page, {
                 <span class="text-4 select-text">{format(before, 'yyyy 年 M 月 d 日 hh:mm')}</span>
               </div>
             )}
-            {include && include.length > 0 && (
+            {keywords.include.length > 0 && (
               <div class="space-x-1 select-none text-0">
                 <span class="text-4 text-base-800 font-bold inline-block mr2">包含关键词</span>
-                {include.map((i, idx) => (
+                {keywords.include.map((i, idx) => (
                   <>
                     {idx > 0 && isComplicated && <span class="text-4 text-base-500">+</span>}
                     {Array.isArray(i) ? (
                       <>
-                        {include.length > 1 && <span class="text-4 text-base-500">&#40;</span>}
+                        {keywords.include.length > 1 && (
+                          <span class="text-4 text-base-500">&#40;</span>
+                        )}
                         {i.map((t, idx) => (
                           <>
                             {idx > 0 && <span class="text-4 text-base-500 mx1">|</span>}
@@ -88,7 +108,9 @@ const resources = await fetchResources(page, {
                             <span class="text-4 select-text underline underline-dotted underline-gray-500">{t}</span>
                           </>
                         ))}
-                        {include.length > 1 && <span class="text-4 text-base-500">&#41;</span>}
+                        {keywords.include.length > 1 && (
+                          <span class="text-4 text-base-500">&#41;</span>
+                        )}
                       </>
                     ) : (
                       <>
@@ -100,11 +122,11 @@ const resources = await fetchResources(page, {
                 ))}
               </div>
             )}
-            {exclude && exclude.length > 0 && (
+            {keywords.exclude.length > 0 && (
               <div class="space-x-1 text-0">
                 {/* prettier-ignore */}
                 <span class="text-4 select-none text-base-800 font-bold mr2 inline-block">排除关键词</span>
-                {exclude.map((i) => (
+                {keywords.exclude.map((i) => (
                   <span class="text-4 select-text">{i}</span>
                 ))}
               </div>
