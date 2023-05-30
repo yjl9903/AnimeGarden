@@ -5,6 +5,8 @@ import {
 
 import { WORKER_BASE } from './constant';
 
+const baseURL = 'https://' + (import.meta.env.SSR ? WORKER_BASE : 'garden.onekuma.cn/api');
+
 const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
   if (import.meta.env.DEV && import.meta.env.HTTPS_PROXY) {
     const { ProxyAgent } = await import('undici');
@@ -36,7 +38,7 @@ export async function fetchResources(
 ) {
   return (
     await rawFetchResources(ofetch, {
-      baseURL: 'https://' + WORKER_BASE,
+      baseURL,
       page,
       search: options.include
         ? {
@@ -57,7 +59,7 @@ export async function fetchResources(
 export async function fetchResourceDetail(href: string) {
   try {
     return await rawFetchResourceDetail(ofetch, href, {
-      baseURL: 'https://' + WORKER_BASE
+      baseURL
     });
   } catch (error) {
     console.error(error);
