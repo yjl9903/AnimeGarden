@@ -329,7 +329,11 @@ function resolveQueryResult(result: (Resource & { fansub: Team | null; publisher
     type: r.type,
     magnet: r.magnet,
     size: r.size,
-    createdAt: new Date(Number(r.createdAt)),
+    // When reading this field from cache, it will be transfromed to string
+    createdAt:
+      typeof r.createdAt === 'string' && /^\d+$/.test(r.createdAt)
+        ? new Date(Number(r.createdAt))
+        : new Date(r.createdAt),
     fansub: r.fansub
       ? {
           id: r.fansub.id,
