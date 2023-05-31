@@ -8,7 +8,7 @@ import { tradToSimple, fullToHalf } from 'simptrad';
 import type { Env } from './types';
 
 import { makePrisma } from './prisma';
-import { getDetailStore, getRefreshTimestamp } from './state';
+import { getDetailStore, getRefreshTimestamp, getSearchStore } from './state';
 
 export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
   const store = getDetailStore(ctx.env);
@@ -42,10 +42,13 @@ interface QueryParams {
 }
 
 export const getResources = memoAsync(
-  async (prisma: ReturnType<typeof makePrisma>, params: QueryParams) => {
-    const { page, pageSize, fansub, publisher, type, before, after } = params;
+  async (env: Env, params: QueryParams) => {
+    const prisma = makePrisma(env);
+
     const timer = createTimer(`Get Resources`);
     timer.start();
+
+    const { page, pageSize, fansub, publisher, type, before, after } = params;
     const result = await prisma.resource.findMany({
       where: {
         type,
@@ -70,7 +73,7 @@ export const getResources = memoAsync(
     return result;
   },
   {
-    serialize(_prisma, params) {
+    serialize(_env, params) {
       return [
         params.page,
         params.pageSize,
@@ -85,14 +88,14 @@ export const getResources = memoAsync(
 );
 
 export const getSearchResources = memoAsync(
-  async (
-    prisma: ReturnType<typeof makePrisma>,
-    params: QueryParams,
-    input: Awaited<ReturnType<typeof resolveSearch>>
-  ) => {
+  async (env: Env, params: QueryParams, input: Awaited<ReturnType<typeof resolveSearch>>) => {
+    const prisma = makePrisma(env);
+
+    const timer = createTimer(`Search Resources`);
+    timer.start();
+
     const { page, pageSize, fansub, publisher, type, before, after } = params;
     const { search, keywords } = input;
-    const timer = createTimer(`Search Resources`);
     const result = await prisma.resource.findMany({
       where: {
         AND: [
@@ -133,7 +136,7 @@ export const getSearchResources = memoAsync(
     return result;
   },
   {
-    serialize(_prisma, params, input) {
+    serialize(_env, params, input) {
       return [
         params.page,
         params.pageSize,
@@ -146,6 +149,18 @@ export const getSearchResources = memoAsync(
         JSON.stringify([...input.keywords.exclude].sort()),
         [...input.search].sort().join(' ')
       ];
+    },
+    external: {
+      async get([env, params, input]) {
+        return getSearchStore(env).get(JSON.stringify({ params, input }));
+      },
+      async set([env, params, input], value) {
+        return getSearchStore(env).put(JSON.stringify({ params, input }), value);
+      },
+      async remove([env, params, input]) {
+        return getSearchStore(env).remove(JSON.stringify({ params, input }));
+      },
+      async clear() {}
     }
   }
 );
@@ -156,15 +171,13 @@ async function getTimestamp(ctx: Context<{ Bindings: Env }>) {
   const timestamp = await getRefreshTimestamp(ctx.env);
   if (cachedTimestamp !== timestamp) {
     cachedTimestamp = timestamp;
-    getResources.clear();
-    getSearchResources.clear();
+    await getResources.clear();
+    await getSearchResources.clear();
   }
   return timestamp;
 }
 
 export async function queryResources(ctx: Context<{ Bindings: Env }>) {
-  const prisma = makePrisma(ctx.env);
-
   const params = resolveQueryParams(ctx);
   if (!params) {
     return ctx.json({ message: 'Request is not valid' }, 400);
@@ -172,16 +185,14 @@ export async function queryResources(ctx: Context<{ Bindings: Env }>) {
 
   const timestamp = await getTimestamp(ctx);
   const result = !isNoCache(ctx)
-    ? await getResources(prisma, params)
-    : await getResources.raw(prisma, params);
+    ? await getResources(ctx.env, params)
+    : await getResources.raw(ctx.env, params);
   const resources = resolveQueryResult(result);
 
   return ctx.json({ resources, timestamp });
 }
 
 export async function searchResources(ctx: Context<{ Bindings: Env }>) {
-  const prisma = makePrisma(ctx.env);
-
   const params = resolveQueryParams(ctx);
   if (!params) {
     return ctx.json({ message: 'Request is not valid' }, 400);
@@ -193,11 +204,11 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
   const result =
     searchInput.keywords.include.length > 0 || searchInput.search.length > 0
       ? !isNoCache(ctx)
-        ? await getSearchResources(prisma, params, searchInput)
-        : await getSearchResources.raw(prisma, params, searchInput)
+        ? await getSearchResources(ctx.env, params, searchInput)
+        : await getSearchResources.raw(ctx.env, params, searchInput)
       : !isNoCache(ctx)
-      ? await getResources(prisma, params)
-      : await getResources.raw(prisma, params);
+      ? await getResources(ctx.env, params)
+      : await getResources.raw(ctx.env, params);
   const resources = resolveQueryResult(result);
 
   return ctx.json({ resources, timestamp });

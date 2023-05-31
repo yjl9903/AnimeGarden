@@ -1,3 +1,4 @@
+import type { Resource, Team, User } from '@prisma/client/edge';
 import type { ResourceDetail } from 'animegarden';
 
 import type { Env } from './types';
@@ -14,6 +15,15 @@ export async function getRefreshTimestamp(env: Env) {
 
 export function getDetailStore(env: Env) {
   return new KVStore<ResourceDetail>(env.animegarden, 'detail/');
+}
+
+export function getSearchStore(env: Env) {
+  return new KVStore<
+    (Resource & {
+      fansub: Team | null;
+      publisher: User;
+    })[]
+  >(env.animegarden, 'search');
 }
 
 export class KVStore<V> {
@@ -49,13 +59,21 @@ export class KVStore<V> {
   }
 
   async put(key: string, value: V, options?: KVNamespacePutOptions): Promise<void> {
-    await this.store.put(this.prefix + key, JSON.stringify({ value }), {
-      expirationTtl: this.ttl,
-      ...options
-    });
+    try {
+      await this.store.put(this.prefix + key, JSON.stringify({ value }), {
+        expirationTtl: this.ttl,
+        ...options
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async remove(key: string): Promise<void> {
-    await this.store.delete(this.prefix + key);
+    try {
+      await this.store.delete(this.prefix + key);
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
