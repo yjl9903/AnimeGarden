@@ -14,7 +14,7 @@ export async function getRefreshTimestamp(env: Env) {
 }
 
 export function getDetailStore(env: Env) {
-  return new KVStore<ResourceDetail>(env.animegarden, 'detail/');
+  return new KVStore<ResourceDetail>(env.animegarden, 'detail');
 }
 
 export function getResourcesStore(env: Env) {
@@ -39,11 +39,6 @@ export class KVStore<V> {
   }
 
   async get(key: string): Promise<V | undefined> {
-    const keys = await this.keys();
-    for (const key of keys) {
-      await this.remove(key);
-    }
-
     try {
       const text = await this.store.get(this.prefix + key);
       if (!!text) {
