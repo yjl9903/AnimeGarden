@@ -59,6 +59,7 @@ Content-Type: application/json
 
 ### Search resources with full text index
 GET https://garden.onekuma.cn/api/resources/search?type=動畫
+Cache-Control: no-cache
 Content-Type: application/json
 
 {
