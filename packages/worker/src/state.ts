@@ -14,7 +14,7 @@ export async function getRefreshTimestamp(env: Env) {
 }
 
 export function getDetailStore(env: Env) {
-  return new KVStore<ResourceDetail>(env.animegarden, 'detail/');
+  return new KVStore<ResourceDetail>(env.animegarden, 'detail');
 }
 
 export function getResourcesStore(env: Env) {
