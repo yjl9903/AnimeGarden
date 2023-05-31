@@ -8,7 +8,7 @@ import { tradToSimple, fullToHalf } from 'simptrad';
 import type { Env } from './types';
 
 import { makePrisma } from './prisma';
-import { getDetailStore, getRefreshTimestamp, getSearchStore } from './state';
+import { getDetailStore, getRefreshTimestamp, getResourcesStore } from './state';
 
 export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
   const store = getDetailStore(ctx.env);
@@ -69,20 +69,24 @@ export const getResources = memoAsync(
         publisher: true
       }
     });
+
     timer.end();
     return result;
   },
   {
-    serialize(_env, params) {
-      return [
-        params.page,
-        params.pageSize,
-        params.fansub,
-        params.before,
-        params.after,
-        params.type,
-        params.publisher
-      ];
+    external: {
+      async get([env, params]) {
+        return getResourcesStore(env).get(JSON.stringify({ params }));
+      },
+      async set([env, params], value) {
+        return getResourcesStore(env).put(JSON.stringify({ params }), value, {
+          expirationTtl: 60
+        });
+      },
+      async remove([env, params]) {
+        return getResourcesStore(env).remove(JSON.stringify({ params }));
+      },
+      async clear() {}
     }
   }
 );
@@ -132,33 +136,22 @@ export const getSearchResources = memoAsync(
         publisher: true
       }
     });
+
     timer.end();
     return result;
   },
   {
-    serialize(_env, params, input) {
-      return [
-        params.page,
-        params.pageSize,
-        params.fansub,
-        params.before,
-        params.after,
-        params.type,
-        params.publisher,
-        JSON.stringify([...input.keywords.include].sort()),
-        JSON.stringify([...input.keywords.exclude].sort()),
-        [...input.search].sort().join(' ')
-      ];
-    },
     external: {
       async get([env, params, input]) {
-        return getSearchStore(env).get(JSON.stringify({ params, input }));
+        return getResourcesStore(env).get(JSON.stringify({ params, input }));
       },
       async set([env, params, input], value) {
-        return getSearchStore(env).put(JSON.stringify({ params, input }), value);
+        return getResourcesStore(env).put(JSON.stringify({ params, input }), value, {
+          expirationTtl: 300
+        });
       },
       async remove([env, params, input]) {
-        return getSearchStore(env).remove(JSON.stringify({ params, input }));
+        return getResourcesStore(env).remove(JSON.stringify({ params, input }));
       },
       async clear() {}
     }

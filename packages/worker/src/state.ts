@@ -17,19 +17,22 @@ export function getDetailStore(env: Env) {
   return new KVStore<ResourceDetail>(env.animegarden, 'detail/');
 }
 
-export function getSearchStore(env: Env) {
+export function getResourcesStore(env: Env) {
   return new KVStore<
     (Resource & {
       fansub: Team | null;
       publisher: User;
     })[]
-  >(env.animegarden, 'search');
+  >(env.animegarden, 'resources');
 }
 
 export class KVStore<V> {
   private readonly prefix: string;
 
-  private readonly ttl: number = 1000 * 60 * 60 * 24 * 30;
+  /**
+   * By default, 1 hour
+   */
+  private readonly ttl: number = 60 * 60;
 
   constructor(private readonly store: KVNamespace, prefix = '') {
     this.prefix = prefix + ':';
