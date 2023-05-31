@@ -264,7 +264,7 @@ async function resolveSearch(ctx: Context) {
       return fallback;
     } else {
       try {
-        return JSON.parse(decodeURIComponent(key));
+        return JSON.parse(decodeURIComponent(content));
       } catch (error) {
         return fallback;
       }
