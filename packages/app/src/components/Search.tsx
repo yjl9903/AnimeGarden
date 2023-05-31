@@ -1,5 +1,6 @@
 import useSWR from 'swr';
 import { Command } from 'cmdk';
+import { tradToSimple } from 'simptrad';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import '../styles/cmdk.css';
@@ -103,6 +104,21 @@ export default function Search() {
     setSearch('');
   }, []);
 
+  const selectGoToSearch = useCallback(() => {
+    if (input) {
+      cleanUp();
+      stopFetch();
+      goToSearch(input);
+      disable();
+    }
+  }, []);
+  const selectStatic = useCallback((key: string) => {
+    return () => {
+      cleanUp();
+      goTo(key);
+    };
+  }, []);
+
   return (
     <Command
       id="animegarden-search"
@@ -131,14 +147,8 @@ export default function Search() {
           <Command.Group heading="搜索结果">
             <Command.Item
               value="go-to-search-page"
-              onSelect={() => {
-                if (input) {
-                  cleanUp();
-                  stopFetch();
-                  goToSearch(input);
-                  disable();
-                }
-              }}
+              onClick={selectGoToSearch}
+              onSelect={selectGoToSearch}
             >
               {DMHY_RE.test(input) ? `前往 ${input}` : `在本页列出 ${input} 的搜索结果...`}
             </Command.Item>
@@ -162,10 +172,8 @@ export default function Search() {
                 <Command.Item
                   key={r.href}
                   value={r.href}
-                  onSelect={() => {
-                    cleanUp();
-                    goTo(`/resource/${r.href.split('/').at(-1)}`);
-                  }}
+                  onClick={selectStatic(`/resource/${r.href.split('/').at(-1)}`)}
+                  onSelect={selectStatic(`/resource/${r.href.split('/').at(-1)}`)}
                 >
                   {r.title}
                 </Command.Item>
@@ -179,10 +187,8 @@ export default function Search() {
                 {filteredTypes.map((type) => (
                   <Command.Item
                     key={type}
-                    onSelect={() => {
-                      cleanUp();
-                      goTo(`/resources/1?type=${type}`);
-                    }}
+                    onMouseDown={selectStatic(`/resources/1?type=${type}`)}
+                    onSelect={selectStatic(`/resources/1?type=${type}`)}
                   >
                     {type}
                   </Command.Item>
@@ -194,10 +200,8 @@ export default function Search() {
                 {filteredFansub.map((fansub) => (
                   <Command.Item
                     key={fansub.id}
-                    onSelect={() => {
-                      cleanUp();
-                      goTo(`/resources/1?fansub=${fansub.id}`);
-                    }}
+                    onClick={selectStatic(`/resources/1?fansub=${fansub.id}`)}
+                    onSelect={selectStatic(`/resources/1?fansub=${fansub.id}`)}
                   >
                     {fansub.name}
                   </Command.Item>
@@ -216,30 +220,58 @@ function parseSearch(search: string) {
     .split(' ')
     .map((s) => s.trim())
     .filter(Boolean);
+
   const keywords: string[] = [];
   const include: string[] = [];
   const exclude: string[] = [];
+
   const fansub: number[] = [];
   const after: Date[] = [];
+  const before: Date[] = [];
 
-  for (const word of splitted) {
-    if (word.startsWith('!') || word.startsWith('！')) {
+  const handlers: Record<string, (word: string) => void> = {
+    '!,！,-': (word) => {
       keywords.push('-' + word);
-    } else if (word.startsWith('fansub:')) {
-      const value = word.slice('fansub:'.length);
-      if (/^\d$/.test(value)) {
-        fansub.push(+value);
+    },
+    'fansub:,字幕:,字幕组:': (word) => {
+      if (/^\d$/.test(word)) {
+        fansub.push(+word);
       } else {
-        const found = fansubs.find((t) => t.name === value);
+        word = tradToSimple(word);
+        const found = fansubs.find((t) => tradToSimple(t.name).includes(word));
         if (found) {
           fansub.push(found.id);
+        } else {
+          word = word.replace('樱', '桜');
+          const found = fansubs.find((t) => tradToSimple(t.name).includes(word));
+          if (found) {
+            fansub.push(found.id);
+          }
         }
       }
-    } else if (word.startsWith('after:')) {
-      const value = word.slice('after:'.length);
-      after.push(new Date(value));
-    } else {
-      keywords.push('%2b' + word);
+    },
+    'after:': (word) => {
+      after.push(new Date(word));
+    },
+    'before:': (word) => {
+      before.push(new Date(word));
+    }
+  };
+
+  for (const word of splitted) {
+    let found = false;
+    for (const [keys, handler] of Object.entries(handlers)) {
+      for (const key of keys.split(',')) {
+        if (word.startsWith(key) || word.startsWith(key.replace(':', '：'))) {
+          handler(word.slice(key.length));
+          found = true;
+          break;
+        }
+      }
+      if (found) break;
+    }
+    if (!found) {
+      keywords.push(word.replace(/\+/g, '%2b'));
     }
   }
 
@@ -248,7 +280,8 @@ function parseSearch(search: string) {
     include,
     exclude,
     fansub: fansub.at(-1),
-    after: after.at(-1)
+    after: after.at(-1),
+    before: before.at(-1)
   };
 }
 
