@@ -46,19 +46,10 @@ const resources = await fetchResources(page, {
 });
 
 const keywords = {
+  search: [...(search ?? [])],
   include: [...(include ?? [])],
   exclude: [...(exclude ?? [])]
 };
-
-if (search) {
-  for (const keyword of search) {
-    if (keyword.startsWith('+')) {
-      keywords.include.push(keyword.slice(1));
-    } else if (keyword.startsWith('-')) {
-      keywords.include.push(keyword.slice(1));
-    }
-  }
-}
 ---
 
 <Layout title="所有资源 | Anime Garden">
@@ -88,6 +79,15 @@ if (search) {
               <div class="space-x-1 select-none text-0">
                 <span class="text-4 text-base-800 font-bold inline-block mr2">搜索结束于</span>
                 <span class="text-4 select-text">{format(before, 'yyyy 年 M 月 d 日 hh:mm')}</span>
+              </div>
+            )}
+            {keywords.search.length > 0 && (
+              <div class="space-x-1 text-0">
+                {/* prettier-ignore */}
+                <span class="text-4 select-none text-base-800 font-bold mr2 inline-block">模糊匹配</span>
+                {keywords.search.map((i) => (
+                  <span class="text-4 select-text">{i}</span>
+                ))}
               </div>
             )}
             {keywords.include.length > 0 && (

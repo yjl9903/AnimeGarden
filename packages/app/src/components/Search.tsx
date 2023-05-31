@@ -106,16 +106,16 @@ export default function Search() {
 
   const selectGoToSearch = useCallback(() => {
     if (input) {
-      cleanUp();
       stopFetch();
       goToSearch(input);
+      cleanUp();
       disable();
     }
-  }, []);
+  }, [input]);
   const selectStatic = useCallback((key: string) => {
     return () => {
-      cleanUp();
       goTo(key);
+      cleanUp();
     };
   }, []);
 
@@ -147,7 +147,7 @@ export default function Search() {
           <Command.Group heading="搜索结果">
             <Command.Item
               value="go-to-search-page"
-              onClick={selectGoToSearch}
+              onMouseDown={selectGoToSearch}
               onSelect={selectGoToSearch}
             >
               {DMHY_RE.test(input) ? `前往 ${input}` : `在本页列出 ${input} 的搜索结果...`}
@@ -172,7 +172,7 @@ export default function Search() {
                 <Command.Item
                   key={r.href}
                   value={r.href}
-                  onClick={selectStatic(`/resource/${r.href.split('/').at(-1)}`)}
+                  onMouseDown={selectStatic(`/resource/${r.href.split('/').at(-1)}`)}
                   onSelect={selectStatic(`/resource/${r.href.split('/').at(-1)}`)}
                 >
                   {r.title}
@@ -200,7 +200,7 @@ export default function Search() {
                 {filteredFansub.map((fansub) => (
                   <Command.Item
                     key={fansub.id}
-                    onClick={selectStatic(`/resources/1?fansub=${fansub.id}`)}
+                    onMouseDown={selectStatic(`/resources/1?fansub=${fansub.id}`)}
                     onSelect={selectStatic(`/resources/1?fansub=${fansub.id}`)}
                   >
                     {fansub.name}
