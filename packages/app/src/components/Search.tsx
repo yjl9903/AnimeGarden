@@ -108,7 +108,6 @@ export default function Search() {
     if (input) {
       stopFetch();
       goToSearch(input);
-      cleanUp();
       disable();
     }
   }, [input]);
