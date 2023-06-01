@@ -248,7 +248,7 @@ async function resolveSearch(ctx: Context) {
   const newSearch: string[] = [];
   for (const text of search) {
     const word = normalizeTitle(text)
-      .replace(/^(?:+|-)"([^"]*)"$/, '$1')
+      .replace(/^(?:\+|-)"([^"]*)"$/, '$1')
       .replace(/%2b/g, '+');
     if (word[0] === '+') {
       if (word.length - 1 < MIN_LEN) {
