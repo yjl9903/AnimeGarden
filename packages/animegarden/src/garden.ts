@@ -90,7 +90,7 @@ export interface FetchResourceDetailOptions {
   retry?: number;
 }
 
-interface SearchParams {
+export interface SearchParams {
   search: string[];
 
   include: string[][];

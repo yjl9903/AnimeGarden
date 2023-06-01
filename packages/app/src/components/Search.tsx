@@ -1,3 +1,5 @@
+import type { SearchParams } from 'animegarden';
+
 import useSWR from 'swr';
 import { Command } from 'cmdk';
 import { tradToSimple } from 'simptrad';
@@ -47,6 +49,10 @@ const useActiveElement = () => {
   };
 };
 
+const initialized = {
+  url: location as Location | undefined
+};
+
 export default function Search() {
   const ref = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -54,6 +60,17 @@ export default function Search() {
 
   const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
+
+  // Init search input
+  if (initialized.url !== undefined) {
+    const searchParams = new URLSearchParams(initialized.url.search);
+    const cmd = searchParams.get('cmd');
+    if (cmd !== undefined && typeof cmd === 'string') {
+      setInput(cmd);
+      setSearch(cmd);
+    }
+    initialized.url = undefined;
+  }
 
   const setDebounceSearch = debounce((value: string) => {
     if (value !== search) {
@@ -214,6 +231,11 @@ export default function Search() {
   );
 }
 
+function stringifySearch(search: SearchParams | undefined) {
+  if (!search) return '';
+  return `${search.search.join(' ')}`;
+}
+
 function parseSearch(search: string) {
   const splitted = search
     .split(' ')
@@ -309,6 +331,7 @@ function goToSearch(search: string) {
       if (after !== undefined) {
         query.push(`after=${after.toISOString()}`);
       }
+      query.push(`cmd=${encodeURIComponent(search)}`);
       goTo(`/resources/1?${query.join('&')}`);
     }
   }
