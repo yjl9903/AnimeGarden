@@ -94,19 +94,30 @@ function followSearch(params: Record<string, string>) {
             <td class="py2 pl2">
               <div class="flex items-center justify-start">
                 {r.fansub && (
-                  <a href={`/resources/1?${followSearch({ fansub: r.fansub.id })}`} class="block">
+                  <a
+                    href={`/resources/1?${followSearch({ fansub: r.fansub.id })}`}
+                    class="block"
+                    aria-label={`Go to resources list of fansub ${r.fansub.name}`}
+                  >
                     <Tag text={r.fansub.name} className={`text-xs mr2 hover:bg-gray-300`} />
                   </a>
                 )}
                 <div class="flex-1">
-                  <a href={getMirrorHref(r.href)} class="text-link">
+                  <a
+                    href={getMirrorHref(r.href)}
+                    class="text-link"
+                    aria-label={`Go to resources detail of ${r.title}`}
+                  >
                     {r.title}
                   </a>
                 </div>
               </div>
             </td>
             <td class="py2 pl2 text-center">
-              <a href={`/resources/1?${followSearch({ publisher: r.publisher.id })}`}>
+              <a
+                href={`/resources/1?${followSearch({ publisher: r.publisher.id })}`}
+                aria-label={`Go to resources list of publisher ${r.publisher.name}`}
+              >
                 <Tag text={r.publisher.name} className={`text-xs mr2 hover:bg-gray-300`} />
               </a>
             </td>
@@ -115,6 +126,7 @@ function followSearch(params: Record<string, string>) {
                 <a
                   href={r.magnet}
                   class="i-carbon-download text-2xl text-base-500 hover:text-base-900"
+                  aria-label="Download resource"
                 />
                 <span class="text-xs text-base-400">{r.size}</span>
               </div>
