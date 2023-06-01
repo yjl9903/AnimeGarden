@@ -155,15 +155,8 @@ export const getSearchResources = memoAsync(
   }
 );
 
-// Store the timestamp to refresh cache
-let cachedTimestamp: Date = new Date(0);
 async function getTimestamp(ctx: Context<{ Bindings: Env }>) {
   const timestamp = await getRefreshTimestamp(ctx.env);
-  if (cachedTimestamp !== timestamp) {
-    cachedTimestamp = timestamp;
-    await getResources.clear();
-    await getSearchResources.clear();
-  }
   return timestamp;
 }
 
@@ -173,13 +166,13 @@ export async function queryResources(ctx: Context<{ Bindings: Env }>) {
     return ctx.json({ message: 'Request is not valid' }, 400);
   }
 
-  const timestamp = await getTimestamp(ctx);
+  const timestampPromise = getTimestamp(ctx);
   const result = !isNoCache(ctx)
     ? await getResources(ctx.env, params)
     : await getResources.raw(ctx.env, params);
   const resources = resolveQueryResult(result);
 
-  return ctx.json({ resources, timestamp });
+  return ctx.json({ resources, timestamp: await timestampPromise });
 }
 
 export async function searchResources(ctx: Context<{ Bindings: Env }>) {
@@ -188,7 +181,7 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
     return ctx.json({ message: 'Request is not valid' }, 400);
   }
 
-  const timestamp = await getTimestamp(ctx);
+  const timestampPromise = getTimestamp(ctx);
   const searchInput = await resolveSearch(ctx);
 
   const result =
@@ -199,9 +192,10 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
       : !isNoCache(ctx)
       ? await getResources(ctx.env, params)
       : await getResources.raw(ctx.env, params);
+
   const resources = resolveQueryResult(result);
 
-  return ctx.json({ resources, timestamp });
+  return ctx.json({ resources, search: searchInput, timestamp: await timestampPromise });
 }
 
 function resolveQueryParams(ctx: Context): QueryParams | undefined {
@@ -246,16 +240,42 @@ function resolveQueryParams(ctx: Context): QueryParams | undefined {
 
 async function resolveSearch(ctx: Context) {
   const body = await resolveBody();
-  const search = resolveQuery('search', body.search);
-  const include = resolveQuery('include', body.keywords.include);
-  const exclude = resolveQuery('exclude', body.keywords.exclude);
+  const search = resolveStringArray(resolveQuery('search', body.search));
+  const include = resolveStringArrayArray(resolveQuery('include', body.keywords.include));
+  const exclude = resolveStringArray(resolveQuery('exclude', body.keywords.exclude));
+
+  const MIN_LEN = 4;
+  const newSearch: string[] = [];
+  for (const text of search) {
+    const word = normalizeTitle(text)
+      .replace(/^(?:+|-)"([^"]*)"$/, '$1')
+      .replace(/%2b/g, '+');
+    if (word[0] === '+') {
+      if (word.length - 1 < MIN_LEN) {
+        include.push([word.slice(1)]);
+      } else {
+        newSearch.push(`+"${word.slice(1)}"`);
+      }
+    } else if (word[0] === '-') {
+      if (word.length - 1 < MIN_LEN) {
+        exclude.push(word.slice(1));
+      } else {
+        newSearch.push(`-"${word.slice(1)}"`);
+      }
+    } else {
+      if (word.length < MIN_LEN) {
+        include.push([word]);
+      } else {
+        newSearch.push(`"${word}"`);
+      }
+    }
+  }
+
   return {
-    search: resolveStringArray(search)
-      .map(normalizeTitle)
-      .map((t) => (t.startsWith('+') || t.startsWith('-') ? `${t[0]}"${t.slice(1)}"` : `"${t}"`)),
+    search: newSearch,
     keywords: {
-      include: resolveStringArrayArray(include),
-      exclude: resolveStringArray(exclude)
+      include,
+      exclude
     }
   };
 
