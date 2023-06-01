@@ -104,7 +104,7 @@ function removeQuote(words: string[]) {
                     {idx > 0 && isComplicated && <span class="text-4 text-base-500">+</span>}
                     {Array.isArray(i) ? (
                       <>
-                        {keywords.include.length > 1 && (
+                        {keywords.include.length > 1 && i.length > 1 && (
                           <span class="text-4 text-base-500">&#40;</span>
                         )}
                         {i.map((t, idx) => (
@@ -114,7 +114,7 @@ function removeQuote(words: string[]) {
                             <span class="text-4 select-text underline underline-dotted underline-gray-500">{t}</span>
                           </>
                         ))}
-                        {keywords.include.length > 1 && (
+                        {keywords.include.length > 1 && i.length > 1 && (
                           <span class="text-4 text-base-500">&#41;</span>
                         )}
                       </>

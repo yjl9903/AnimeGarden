@@ -230,7 +230,7 @@ function parseSearch(search: string) {
   const before: Date[] = [];
 
   const handlers: Record<string, (word: string) => void> = {
-    '包含:': (word) => {
+    '+,包含:': (word) => {
       include.push(word);
     },
     '!,！,-,排除:': (word) => {
