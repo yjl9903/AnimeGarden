@@ -10,6 +10,12 @@
 curl https://garden.onekuma.cn/api/resources?page=1&count=1
 ```
 
+## Deploy
+
+Use the same KV namespace (named as `animegarden`) with the worker.
+
+Bind the worker service (named as `worker`).
+
 ## Credits
 
 + [動漫花園](https://share.dmhy.org/)

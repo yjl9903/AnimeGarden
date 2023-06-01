@@ -1,15 +1,22 @@
 import type { APIRoute } from 'astro';
 
+import { getRuntime } from '@astrojs/cloudflare/runtime';
+
+import type { Env } from '../../env';
+
 import { WORKER_BASE } from '../../constant';
 
 export const all: APIRoute = async ({ request }) => {
+  const runtime = getRuntime<Env>(request);
+
   const url = new URL(request.url);
   url.protocol = 'https:';
   url.host = WORKER_BASE;
   url.port = '';
   url.pathname = url.pathname.replace(/^\/api/, '');
 
-  const response = await fetch(new Request(url, request));
+  const subRequest = new Request(url, request);
+  const response = await (runtime?.env.worker.fetch ?? fetch)(subRequest);
 
   return new Response(response.body, {
     headers: {
