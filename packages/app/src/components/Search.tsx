@@ -234,7 +234,7 @@ function parseSearch(search: string) {
       include.push(word);
     },
     '!,！,-,排除:': (word) => {
-      keywords.push('-' + word);
+      exclude.push(word);
     },
     'fansub:,字幕:,字幕组:': (word) => {
       if (/^\d$/.test(word)) {
