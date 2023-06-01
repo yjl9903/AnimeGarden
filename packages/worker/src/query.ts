@@ -256,22 +256,22 @@ async function resolveSearch(ctx: Context) {
   const newSearch: string[] = [];
   for (const text of search) {
     const word = normalizeTitle(text)
-      .replace(/^(?:\+|-)?"([^"]*)"$/, '$1')
+      .replace(/^(\+|-)?"([^"]*)"$/, '$1$2')
       .replace(/%2b/g, '+');
     if (word[0] === '+') {
-      if (word.length - 1 < MIN_LEN) {
+      if (word.length - 1 <= MIN_LEN) {
         include.push([word.slice(1)]);
       } else {
         newSearch.push(`+"${word.slice(1)}"`);
       }
     } else if (word[0] === '-') {
-      if (word.length - 1 < MIN_LEN) {
+      if (word.length - 1 <= MIN_LEN) {
         exclude.push(word.slice(1));
       } else {
         newSearch.push(`-"${word.slice(1)}"`);
       }
     } else {
-      if (word.length < MIN_LEN) {
+      if (word.length <= MIN_LEN) {
         include.push([word]);
       } else {
         newSearch.push(`"${word}"`);
