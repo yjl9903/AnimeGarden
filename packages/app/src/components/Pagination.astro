@@ -11,7 +11,7 @@ const { page, href } = Astro.props;
 <div class="flex justify-around mt4 text-base-500 text-lg">
   <div>
     <a
-      href={page > 1 ? href(page - 1) : ''}
+      href={page > 1 ? href(page - 1) : '#'}
       class="underline underline-dotted text-link-active"
       aria-label="Go to previous page">上一页</a
     >
