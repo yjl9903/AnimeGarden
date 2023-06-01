@@ -34,7 +34,7 @@ const isComplicated = include?.some((i) => Array.isArray(i)) ?? false;
 const _exclude = url.searchParams.get('exclude');
 const exclude: string[] | undefined = _exclude ? JSON.parse(_exclude) : undefined;
 
-const resources = await fetchResources(page, {
+const { resources, search: searchParams } = await fetchResources(page, {
   publisher: publisher ? +publisher : undefined,
   fansub: fansub ? +fansub : undefined,
   type: type ? type : undefined,
@@ -46,10 +46,14 @@ const resources = await fetchResources(page, {
 });
 
 const keywords = {
-  search: [...(search ?? [])],
-  include: [...(include ?? [])],
-  exclude: [...(exclude ?? [])]
+  search: searchParams ? removeQuote(searchParams.search) : [...(search ?? [])],
+  include: searchParams ? searchParams.include : [...(include ?? [])],
+  exclude: searchParams ? searchParams.exclude : [...(exclude ?? [])]
 };
+
+function removeQuote(words: string[]) {
+  return words.map((w) => w.replace(/^(?:\+|-)?"([^"]*)"$/, '$1'));
+}
 ---
 
 <Layout title="所有资源 | Anime Garden">
@@ -86,7 +90,9 @@ const keywords = {
                 {/* prettier-ignore */}
                 <span class="text-4 select-none text-base-800 font-bold mr2 inline-block">模糊匹配</span>
                 {keywords.search.map((i) => (
-                  <span class="text-4 select-text">{i}</span>
+                  <span class="text-4 select-text underline underline-dotted underline-gray-500">
+                    {i}
+                  </span>
                 ))}
               </div>
             )}

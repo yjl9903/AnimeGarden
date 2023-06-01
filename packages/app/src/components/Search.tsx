@@ -83,7 +83,7 @@ export default function Search() {
         signals.current.add(abort);
         const res = await fetchResources(1, { ...parseSearch(search), signal: abort.signal });
         signals.current.delete(abort);
-        return res;
+        return res.resources;
       }
     }
   );

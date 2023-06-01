@@ -37,26 +37,24 @@ export async function fetchResources(
     signal?: AbortSignal;
   } = {}
 ) {
-  return (
-    await rawFetchResources(ofetch, {
-      baseURL,
-      page,
-      search:
-        options.include || options.search
-          ? {
-              search: options.search,
-              include: options.include,
-              exclude: options.exclude
-            }
-          : undefined,
-      fansub: options.fansub ? '' + options.fansub : undefined,
-      publisher: options.publisher ? '' + options.publisher : undefined,
-      type: options.type ? '' + options.type : undefined,
-      after: options.after,
-      before: options.before,
-      signal: options.signal
-    })
-  ).resources;
+  return await rawFetchResources(ofetch, {
+    baseURL,
+    page,
+    search:
+      options.include || options.search
+        ? {
+            search: options.search,
+            include: options.include,
+            exclude: options.exclude
+          }
+        : undefined,
+    fansub: options.fansub ? '' + options.fansub : undefined,
+    publisher: options.publisher ? '' + options.publisher : undefined,
+    type: options.type ? '' + options.type : undefined,
+    after: options.after,
+    before: options.before,
+    signal: options.signal
+  });
 }
 
 export async function fetchResourceDetail(href: string) {
