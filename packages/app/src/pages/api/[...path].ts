@@ -16,6 +16,8 @@ export const all: APIRoute = async ({ request }) => {
   url.pathname = url.pathname.replace(/^\/api/, '');
 
   const subRequest = new Request(url, request);
+  console.log(runtime?.env.worker)
+  console.log(subRequest)
   const response = await (runtime?.env.worker.fetch ?? fetch)(subRequest);
 
   return new Response(response.body, {
