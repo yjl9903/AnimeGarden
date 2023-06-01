@@ -2,12 +2,11 @@ import type { Prisma } from '@prisma/client/edge';
 
 import { parse } from 'anitomy';
 import { Resource, fetchDmhyPage } from 'animegarden';
-import { tradToSimple, fullToHalf } from 'simptrad';
 
 import type { Env } from './types';
 
 import { makePrisma } from './prisma';
-import { getResources, getSearchResources } from './query';
+import { normalizeTitle } from './util';
 import { updateRefreshTimestamp } from './state';
 
 const teams = new Set<number>();
@@ -89,7 +88,7 @@ export function transformResource(resource: Resource) {
 
   const id = +matchId[1];
 
-  const titleAlt = fullToHalf(tradToSimple(resource.title));
+  const titleAlt = normalizeTitle(resource.title);
 
   return {
     id,

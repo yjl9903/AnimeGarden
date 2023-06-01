@@ -3,11 +3,11 @@ import type { Resource, Team, User } from '@prisma/client/edge';
 
 import { memoAsync } from 'memofunc';
 import { fetchDmhyDetail } from 'animegarden';
-import { tradToSimple, fullToHalf } from 'simptrad';
 
 import type { Env } from './types';
 
 import { makePrisma } from './prisma';
+import { createTimer, isNoCache, normalizeTitle } from './util';
 import { getDetailStore, getRefreshTimestamp, getResourcesStore } from './state';
 
 export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
@@ -110,19 +110,16 @@ export const getSearchResources = memoAsync(
             createdAt: {
               gte: after,
               lte: before
+            },
+            titleAlt: {
+              search: search.length > 0 ? search.join(' ') : undefined
             }
           },
-          search.length > 0
-            ? {
-                titleAlt: {
-                  search: search.join(' ')
-                }
-              }
-            : {
-                AND: keywords.include.map((arr) => ({
-                  OR: arr.map((t) => ({ titleAlt: { contains: normalizeTitle(t) } }))
-                }))
-              }
+          {
+            AND: keywords.include.map((arr) => ({
+              OR: arr.map((t) => ({ titleAlt: { contains: normalizeTitle(t) } }))
+            }))
+          }
         ],
         NOT: keywords.exclude.map((t) => ({ titleAlt: { contains: normalizeTitle(t) } }))
       },
@@ -347,27 +344,4 @@ function resolveQueryResult(result: (Resource & { fansub: Team | null; publisher
       href: `https://share.dmhy.org/topics/list/user_id/${r.publisher.id}`
     }
   }));
-}
-
-function normalizeTitle(title: string) {
-  return fullToHalf(tradToSimple(title));
-}
-
-function isNoCache(ctx: Context) {
-  const cacheControl = ctx.req.header('cache-control');
-  const noCache = cacheControl === 'no-cache' || cacheControl === 'no-store';
-  return noCache;
-}
-
-function createTimer(label: string) {
-  let start = new Date();
-  return {
-    start() {
-      start = new Date();
-    },
-    end() {
-      const end = new Date();
-      console.log(`${label}: ${((end.getTime() - start.getTime()) / 1000).toFixed(0)}ms`);
-    }
-  };
 }
