@@ -195,7 +195,15 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
 
   const resources = resolveQueryResult(result);
 
-  return ctx.json({ resources, search: searchInput, timestamp: await timestampPromise });
+  return ctx.json({
+    resources,
+    search: {
+      search: searchInput.search,
+      include: searchInput.keywords.include,
+      exclude: searchInput.keywords.exclude
+    },
+    timestamp: await timestampPromise
+  });
 }
 
 function resolveQueryParams(ctx: Context): QueryParams | undefined {

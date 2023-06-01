@@ -90,13 +90,21 @@ export interface FetchResourceDetailOptions {
   retry?: number;
 }
 
+interface SearchParams {
+  search: string[];
+
+  include: string[][];
+
+  exclude: string[];
+}
+
 /**
  * Fetch resources data from dmhy mirror site
  */
 export async function fetchResources(
   fetch: (request: RequestInfo, init?: RequestInit) => Promise<Response>,
   options: FetchResourcesOptions = {}
-) {
+): Promise<{ resources: Resource[]; search?: SearchParams; timestamp: Date }> {
   const { baseURL = 'https://garden.onekuma.cn/api/', retry = 1 } = options;
 
   const url = new URL(options.search ? 'resources/search' : 'resources', baseURL);
@@ -127,10 +135,16 @@ export async function fetchResources(
 
     const map = new Map<string, Resource>();
     let timestamp = new Date(0);
+    let search: SearchParams | undefined = undefined;
+
     for (let page = 1; map.size < count; page++) {
       try {
         const resp = await fetchPage(page);
         timestamp = resp.timestamp;
+        if (resp.search) {
+          search = resp.search;
+        }
+
         if (resp.resources.length === 0) {
           break;
         }
@@ -153,6 +167,7 @@ export async function fetchResources(
 
     return {
       resources: uniq([...map.values()]),
+      search,
       timestamp
     };
   } else {
@@ -162,6 +177,7 @@ export async function fetchResources(
 
     return {
       resources,
+      search: r.search,
       timestamp: r.timestamp
     };
   }
@@ -174,6 +190,7 @@ export async function fetchResources(
           .then((r) => r.json())
           .then((r) => ({
             resources: r.resources as Resource[],
+            search: r.search as SearchParams | undefined,
             timestamp: new Date(r.timestamp)
           })),
       retry
