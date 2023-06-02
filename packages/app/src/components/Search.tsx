@@ -160,41 +160,67 @@ export default function Search() {
       />
       <Command.List>
         {input && enable && (
-          <Command.Group heading="搜索结果">
-            <Command.Item
-              value="go-to-search-page"
-              onMouseDown={selectGoToSearch}
-              onSelect={selectGoToSearch}
-            >
-              {DMHY_RE.test(input) ? `前往 ${input}` : `在本页列出 ${input} 的搜索结果...`}
-            </Command.Item>
-            {isLoading ? (
-              <Command.Loading>
-                <div className="flex items-center">
-                  <div className="lds-ring">
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
+          <>
+            <Command.Group heading="搜索">
+              {isLoading ? (
+                <Command.Loading>
+                  <div className="flex items-center">
+                    <div className="lds-ring">
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                    </div>
+                    <span>正在搜索 {search} ...</span>
                   </div>
-                  <span>正在搜索 {search} ...</span>
-                </div>
-              </Command.Loading>
-            ) : (
-              <Command.Empty>没有找到任何结果.</Command.Empty>
+                </Command.Loading>
+              ) : (
+                <Command.Empty>没有找到任何结果.</Command.Empty>
+              )}
+              <Command.Item
+                value="go-to-search-page"
+                onMouseDown={selectGoToSearch}
+                onSelect={selectGoToSearch}
+              >
+                {DMHY_RE.test(input) ? `前往 ${input}` : `在本页列出 ${input} 的搜索结果...`}
+              </Command.Item>
+              <Command.Item
+                onSelect={() => {
+                  onInputChange(input + ' 字幕组:');
+                }}
+              >
+                筛选字幕组
+              </Command.Item>
+              <Command.Item
+                onSelect={() => {
+                  onInputChange(input + ' 包含:');
+                }}
+              >
+                包含关键词
+              </Command.Item>
+              <Command.Item
+                onSelect={() => {
+                  onInputChange(input + ' 开始:');
+                }}
+              >
+                创建开始时间
+              </Command.Item>
+            </Command.Group>
+            {searchResult && (
+              <Command.Group heading="搜索结果">
+                {searchResult.map((r) => (
+                  <Command.Item
+                    key={r.href}
+                    value={r.href}
+                    onMouseDown={selectStatic(`/resource/${r.href.split('/').at(-1)}`)}
+                    onSelect={selectStatic(`/resource/${r.href.split('/').at(-1)}`)}
+                  >
+                    {r.title}
+                  </Command.Item>
+                ))}
+              </Command.Group>
             )}
-            {searchResult &&
-              searchResult.map((r) => (
-                <Command.Item
-                  key={r.href}
-                  value={r.href}
-                  onMouseDown={selectStatic(`/resource/${r.href.split('/').at(-1)}`)}
-                  onSelect={selectStatic(`/resource/${r.href.split('/').at(-1)}`)}
-                >
-                  {r.title}
-                </Command.Item>
-              ))}
-          </Command.Group>
+          </>
         )}
         {enable && (
           <>
@@ -274,10 +300,10 @@ function parseSearch(search: string) {
         }
       }
     },
-    'after:': (word) => {
+    'after:,开始:': (word) => {
       after.push(new Date(word));
     },
-    'before:': (word) => {
+    'before:,结束:': (word) => {
       before.push(new Date(word));
     }
   };
@@ -287,9 +313,12 @@ function parseSearch(search: string) {
     for (const [keys, handler] of Object.entries(handlers)) {
       for (const key of keys.split(',')) {
         if (word.startsWith(key) || word.startsWith(key.replace(':', '：'))) {
-          handler(word.slice(key.length));
-          found = true;
-          break;
+          const text = word.slice(key.length);
+          if (text.length > 0) {
+            handler(text);
+            found = true;
+            break;
+          }
         }
       }
       if (found) break;
