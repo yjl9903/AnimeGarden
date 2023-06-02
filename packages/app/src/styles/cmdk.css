@@ -88,6 +88,8 @@
 .vercel [cmdk-root] {
   max-width: 800px;
   width: 100%;
+  --at-apply: lg:w-[80vw] md:w-[46rem] lt-md:mx-w-[95vw] lt-md:w-[95vw];
+  
   padding: 8px;
   background: #fff;
   border-radius: 12px;
