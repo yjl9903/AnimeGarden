@@ -12,9 +12,10 @@ curl https://garden.onekuma.cn/api/resources?page=1&count=1
 
 ## Deploy
 
-Use the same KV namespace (named as `animegarden`) with the worker.
-
-Bind the worker service (named as `worker`).
++ Astro: in `astro.config.ts`, add the deployed site URL.
++ Cloudflare:
+  + use the same KV namespace (named as `animegarden`) with the worker.
+  + Bind the worker service (named as `worker`).
 
 ## Credits
 
