@@ -13,7 +13,20 @@ import TsconfigPaths from 'vite-plugin-tsconfig-paths';
 export default defineConfig({
   output: 'server',
   site: 'https://garden.onekuma.cn',
-  integrations: [uno(), react(), sitemap(), robotsTxt()],
+  integrations: [
+    uno(),
+    react(),
+    sitemap(),
+    robotsTxt({
+      policy: [
+        {
+          userAgent: '*',
+          allow: '/resources/',
+          disallow: ['/api/', '/rss/']
+        }
+      ]
+    })
+  ],
   adapter: cloudflare({
     mode: 'directory'
   }),
