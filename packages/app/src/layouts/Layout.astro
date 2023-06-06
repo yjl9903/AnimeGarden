@@ -17,6 +17,7 @@ const url = Astro.url.pathname;
 const search = Astro.url.searchParams;
 const feed = `/feed.xml${Astro.url.search}`;
 const page = Astro.params.page ?? Astro.url.searchParams.get('page') ?? '1';
+const enableFeed = page === '1' && !Astro.url.pathname.startsWith('/resource/');
 
 const runtime = getRuntime<Env>(Astro.request);
 const timestamp = new Date((await runtime?.env.animegarden.get('state/refresh-timestamp')) ?? 0);
@@ -118,7 +119,7 @@ function followSearch(params: Record<string, string>) {
         </div>
         <div>
           {
-            page === '1' && (
+            enableFeed && (
               <a href={feed} target="_blank" class="header-item block text-[#ee802f] hover:(text-[#ff7800] !border-b-[#ff7800])">
                 <span class="i-carbon-rss mr1"></span><span>RSS</span>
               </a>)
