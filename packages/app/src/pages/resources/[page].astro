@@ -63,7 +63,7 @@ function removeQuote(words: string[]) {
         <>
           <div class="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
             {fansubItem && (
-              <div class="space-x-1 select-none text-0">
+              <div class="space-x-2 select-none text-0">
                 <span class="text-4 text-base-800 font-bold inline-block mr2">字幕组</span>
                 <a
                   href={`/resources/1?fansub=${fansubItem.id}`}
@@ -74,19 +74,19 @@ function removeQuote(words: string[]) {
               </div>
             )}
             {after && (
-              <div class="space-x-1 select-none text-0">
+              <div class="space-x-2 select-none text-0">
                 <span class="text-4 text-base-800 font-bold inline-block mr2">搜索开始于</span>
                 <span class="text-4 select-text">{format(after, 'yyyy 年 M 月 d 日 hh:mm')}</span>
               </div>
             )}
             {before && (
-              <div class="space-x-1 select-none text-0">
+              <div class="space-x-2 select-none text-0">
                 <span class="text-4 text-base-800 font-bold inline-block mr2">搜索结束于</span>
                 <span class="text-4 select-text">{format(before, 'yyyy 年 M 月 d 日 hh:mm')}</span>
               </div>
             )}
             {keywords.search.length > 0 && (
-              <div class="space-x-1 text-0">
+              <div class="space-x-2 text-0">
                 {/* prettier-ignore */}
                 <span class="text-4 select-none text-base-800 font-bold mr2 inline-block">模糊匹配</span>
                 {keywords.search.map((i) => (
@@ -97,7 +97,7 @@ function removeQuote(words: string[]) {
               </div>
             )}
             {keywords.include.length > 0 && (
-              <div class="space-x-1 select-none text-0">
+              <div class="space-x-2 select-none text-0">
                 <span class="text-4 text-base-800 font-bold inline-block mr2">包含关键词</span>
                 {keywords.include.map((i, idx) => (
                   <>
@@ -129,7 +129,7 @@ function removeQuote(words: string[]) {
               </div>
             )}
             {keywords.exclude.length > 0 && (
-              <div class="space-x-1 text-0">
+              <div class="space-x-2 text-0">
                 {/* prettier-ignore */}
                 <span class="text-4 select-none text-base-800 font-bold mr2 inline-block">排除关键词</span>
                 {keywords.exclude.map((i) => (

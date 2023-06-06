@@ -13,6 +13,8 @@ export const get: APIRoute = async (context) => {
   url.host = WORKER_BASE;
   url.port = '';
   url.pathname = '/resources/search';
+  // Only allow generate rss for the first page
+  url.searchParams.set('page', '1');
   const request = new Request(url, context.request);
 
   const { resources } = await (ofetch(request).then((r) => r.json()) as ReturnType<
