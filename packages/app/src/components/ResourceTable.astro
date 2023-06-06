@@ -93,15 +93,6 @@ function followSearch(params: Record<string, string>) {
             </td>
             <td class="py2 pl2">
               <div class="flex items-center justify-start">
-                {r.fansub && (
-                  <a
-                    href={`/resources/1?${followSearch({ fansub: r.fansub.id })}`}
-                    class="block"
-                    aria-label={`Go to resources list of fansub ${r.fansub.name}`}
-                  >
-                    <Tag text={r.fansub.name} className={`text-xs mr2 hover:bg-gray-300`} />
-                  </a>
-                )}
                 <div class="flex-1">
                   <a
                     href={getMirrorHref(r.href)}
@@ -114,12 +105,22 @@ function followSearch(params: Record<string, string>) {
               </div>
             </td>
             <td class="py2 pl2 text-center">
-              <a
-                href={`/resources/1?${followSearch({ publisher: r.publisher.id })}`}
-                aria-label={`Go to resources list of publisher ${r.publisher.name}`}
-              >
-                <Tag text={r.publisher.name} className={`text-xs mr2 hover:bg-gray-300`} />
-              </a>
+              {r.fansub ? (
+                <a
+                  href={`/resources/1?${followSearch({ fansub: r.fansub.id })}`}
+                  class="block"
+                  aria-label={`Go to resources list of fansub ${r.fansub.name}`}
+                >
+                  <Tag text={r.fansub.name} className={`text-xs mr2 hover:bg-gray-300`} />
+                </a>
+              ) : r.publisher ? (
+                <a
+                  href={`/resources/1?${followSearch({ publisher: r.publisher.id })}`}
+                  aria-label={`Go to resources list of publisher ${r.publisher.name}`}
+                >
+                  <Tag text={r.publisher.name} className={`text-xs mr2 hover:bg-gray-300`} />
+                </a>
+              ) : null}
             </td>
             <td class="py2 pl2">
               <div class="flex gap1 items-center justify-start">
