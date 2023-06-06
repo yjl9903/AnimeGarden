@@ -64,7 +64,8 @@ function inferTitle(url: URL) {
           })
           .join(' ');
       }
-    } finally {
+      return undefined;
+    } catch {
       return undefined;
     }
   }
