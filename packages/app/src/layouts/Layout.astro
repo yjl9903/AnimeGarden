@@ -16,7 +16,7 @@ const { title } = Astro.props;
 const url = Astro.url.pathname;
 const search = Astro.url.searchParams;
 const feed = `/feed.xml${Astro.url.search}`;
-const page = Astro.url.searchParams.get('page') ?? '1';
+const page = Astro.params.page ?? Astro.url.searchParams.get('page') ?? '1';
 
 const runtime = getRuntime<Env>(Astro.request);
 const timestamp = new Date((await runtime?.env.animegarden.get('state/refresh-timestamp')) ?? 0);
