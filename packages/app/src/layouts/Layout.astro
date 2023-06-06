@@ -15,6 +15,7 @@ const { title } = Astro.props;
 
 const url = Astro.url.pathname;
 const search = Astro.url.searchParams;
+const feed = `/feed.xml${Astro.url.search}`;
 
 const runtime = getRuntime<Env>(Astro.request);
 const timestamp = new Date((await runtime?.env.animegarden.get('state/refresh-timestamp')) ?? 0);
@@ -51,67 +52,74 @@ function followSearch(params: Record<string, string>) {
           <Search client:only />
         </div>
       </div>
-      <div class="main flex gap6 justify-start select-none text-base-500">
-        <a href="/" class="header-item block" x-active={url === '/'}>首页</a>
-        <a
-          href="/resources/1"
-          class="header-item block"
-          x-active={url.startsWith('/resources/') && !search.has('type') && !search.has('fansub')}
-          >所有资源</a
-        >
-        <div class="header-item cursor-pointer" x-active={search.has('type')}>
-          <Dropdown>
-            <span>类型</span>
-            <div slot="dropdown" class="mt4">
-              <div
-                class="w-[120px] max-h-[600px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y"
-              >
-                {
-                  types.map((t) => (
-                    <a
-                      href={`/resources/1?${followSearch({ type: t })}`}
-                      class="px2 py1 block text-base-600 text-link-active"
-                    >
-                      {t}
-                    </a>
-                  ))
-                }
+      <div class="main flex gap6 overflow-x-auto hide-scrollbar justify-between select-none text-base-500">
+        <div class="flex gap6 justify-start">
+          <a href="/" class="header-item block" x-active={url === '/'}>首页</a>
+          <a
+            href="/resources/1"
+            class="header-item block"
+            x-active={url.startsWith('/resources/') && !search.has('type') && !search.has('fansub')}
+            >所有资源</a
+          >
+          <div class="header-item cursor-pointer" x-active={search.has('type')}>
+            <Dropdown>
+              <span>类型</span>
+              <div slot="dropdown" class="mt4">
+                <div
+                  class="w-[120px] max-h-[600px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y"
+                >
+                  {
+                    types.map((t) => (
+                      <a
+                        href={`/resources/1?${followSearch({ type: t })}`}
+                        class="px2 py1 block text-base-600 text-link-active"
+                      >
+                        {t}
+                      </a>
+                    ))
+                  }
+                </div>
               </div>
-            </div>
-          </Dropdown>
-        </div>
-        <div class="header-item cursor-pointer" x-active={search.has('fansub')}>
-          <Dropdown>
-            <span>字幕组</span>
-            <div slot="dropdown" class="mt4">
-              <div
-                class="w-[180px] max-h-[600px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y"
-              >
-                {
-                  hasFansubSearch && (
-                    <a
-                      href={`/resources/1?${followSearch({ fansub: '' })}`}
-                      class="px2 py1 block text-base-600 text-link-active"
-                    >
-                      所有
-                    </a>
-                  )
-                }
-                {
-                  fansubs.map((t) => (
-                    <a
-                      href={`/resources/1?${followSearch({ fansub: '' + t.id })}`}
-                      class="px2 py1 block text-base-600 text-link-active"
-                    >
-                      {t.name}
-                    </a>
-                  ))
-                }
+            </Dropdown>
+          </div>
+          <div class="header-item cursor-pointer" x-active={search.has('fansub')}>
+            <Dropdown>
+              <span>字幕组</span>
+              <div slot="dropdown" class="mt4">
+                <div
+                  class="w-[180px] max-h-[600px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y"
+                >
+                  {
+                    hasFansubSearch && (
+                      <a
+                        href={`/resources/1?${followSearch({ fansub: '' })}`}
+                        class="px2 py1 block text-base-600 text-link-active"
+                      >
+                        所有
+                      </a>
+                    )
+                  }
+                  {
+                    fansubs.map((t) => (
+                      <a
+                        href={`/resources/1?${followSearch({ fansub: '' + t.id })}`}
+                        class="px2 py1 block text-base-600 text-link-active"
+                      >
+                        {t.name}
+                      </a>
+                    ))
+                  }
+                </div>
               </div>
-            </div>
-          </Dropdown>
+            </Dropdown>
+          </div>
+          <a href="https://share.dmhy.org/" target="_blank" class="header-item block">动漫花园</a>
         </div>
-        <a href="https://share.dmhy.org/" target="_blank" class="header-item block">动漫花园</a>
+        <div>
+          <a href={feed} target="_blank" class="header-item block text-[#ee802f] hover:(text-[#ff7800] !border-b-[#ff7800])">
+            <span class="i-carbon-rss mr1"></span><span>RSS</span>
+          </a>
+        </div>
       </div>
     </header>
     <main class="main pb-8vh">
@@ -180,9 +188,18 @@ function followSearch(params: Record<string, string>) {
     --at-apply: hover:text-sky-600;
   }
 
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+
   /* Header style */
   .header-item {
-    --at-apply: py2 border-b border-b-3 border-transparent;
+    --at-apply: py2 border-b border-b-3 border-transparent w-max;
     --at-apply: hover:text-base-800 hover:border-dark-700;
   }
 

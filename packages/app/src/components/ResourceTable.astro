@@ -104,11 +104,11 @@ function followSearch(params: Record<string, string>) {
                 </div>
               </div>
             </td>
-            <td class="py2 pl2 text-center">
+            <td class="py2 pl2 text-center w-max">
               {r.fansub ? (
                 <a
                   href={`/resources/1?${followSearch({ fansub: r.fansub.id })}`}
-                  class="block"
+                  class="block w-max"
                   aria-label={`Go to resources list of fansub ${r.fansub.name}`}
                 >
                   <Tag text={r.fansub.name} className={`text-xs mr2 hover:bg-gray-300`} />
@@ -116,6 +116,7 @@ function followSearch(params: Record<string, string>) {
               ) : r.publisher ? (
                 <a
                   href={`/resources/1?${followSearch({ publisher: r.publisher.id })}`}
+                  class="block w-max"
                   aria-label={`Go to resources list of publisher ${r.publisher.name}`}
                 >
                   <Tag text={r.publisher.name} className={`text-xs mr2 hover:bg-gray-300`} />
