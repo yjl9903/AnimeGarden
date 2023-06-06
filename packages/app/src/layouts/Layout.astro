@@ -57,7 +57,7 @@ function followSearch(params: Record<string, string>) {
           <Search client:only />
         </div>
       </div>
-      <div class="main flex gap6 overflow-x-auto hide-scrollbar justify-between select-none text-base-500">
+      <div class="main flex gap6 hide-scrollbar justify-between select-none text-base-500">
         <div class="flex gap6 justify-start">
           <a href="/" class="header-item block" x-active={url === '/'}>首页</a>
           <a
@@ -123,7 +123,7 @@ function followSearch(params: Record<string, string>) {
         <div>
           {
             enableFeed && (
-              <a href={feed} target="_blank" class="header-item block text-[#ee802f] hover:(!text-[#ff7800] !border-b-[#ff7800])">
+              <a href={feed} target="_blank" class="header-item lt-sm:hidden block text-[#ee802f] hover:(!text-[#ff7800] !border-b-[#ff7800])">
                 <span class="i-carbon-rss mr1"></span><span>RSS</span>
               </a>)
           }
