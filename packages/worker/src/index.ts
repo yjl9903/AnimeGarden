@@ -7,7 +7,6 @@ import { prettyJSON } from 'hono/pretty-json';
 import type { Env } from './types';
 
 import { makePrisma } from './prisma';
-import { generateFeed } from './rss';
 import { handleScheduled } from './scheduled';
 import { getRefreshTimestamp } from './state';
 import { queryResourceDetail, queryResources, searchResources } from './query';
@@ -44,10 +43,6 @@ app.get('/resources/search', async (c) => {
 
 app.post('/resources/search', async (c) => {
   return searchResources(c);
-});
-
-app.get('/feed', async (c) => {
-  return generateFeed(c);
 });
 
 app.put('/resources', async (c) => {
