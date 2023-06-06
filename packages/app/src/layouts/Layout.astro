@@ -15,7 +15,10 @@ const { title } = Astro.props;
 
 const url = Astro.url.pathname;
 const search = Astro.url.searchParams;
-const feed = `/feed.xml${Astro.url.search}`;
+
+const searchParams = new URLSearchParams(Astro.url.search);
+searchParams.delete('cmd');
+const feed = `/feed.xml${searchParams.size > 0 ? '?' + searchParams.toString() : ''}`;
 const page = Astro.params.page ?? Astro.url.searchParams.get('page') ?? '1';
 const enableFeed = page === '1' && !Astro.url.pathname.startsWith('/resource/');
 
