@@ -60,8 +60,8 @@ importers:
         specifier: ^0.32.0
         version: 0.32.0
       wrangler:
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^3.1.0
+        version: 3.1.0
 
   packages/animegarden:
     dependencies:
@@ -5853,8 +5853,8 @@ packages:
       '@cloudflare/workerd-windows-64': 1.20230518.0
     dev: true
 
-  /wrangler@3.0.1:
-    resolution: {integrity: sha512-YamXlRjkMO/V3Fvq7IC9H9GDWIbNGc4IV3l1Z5q45XYTWxUYbkwXyiTAfpmqhyl5wx+XEPKe3k/ubqmW+r63yQ==}
+  /wrangler@3.1.0:
+    resolution: {integrity: sha512-oqVBJZoOQqSKxhgaPt4LcmtBf0FssIz/4F1VgjWOomeGQ3kN9pg3swPO0Zkf0aAphDodG9rekjrtccvKW7bSsA==}
     engines: {node: '>=16.13.0'}
     hasBin: true
     dependencies:
