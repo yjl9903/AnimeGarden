@@ -21,13 +21,9 @@ app.get('/', async (c) => {
   return c.json({ message: 'This is AnimeGarden', timestamp: await getRefreshTimestamp(c.env) });
 });
 
-app.get(
-  '/resources',
-  cache({ cacheName: 'animegarden', cacheControl: 'max-age=60' }),
-  async (c) => {
-    return queryResources(c);
-  }
-);
+app.get('/resources', async (c) => {
+  return queryResources(c);
+});
 
 app.get(
   '/resource/:href',
