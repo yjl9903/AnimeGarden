@@ -6,11 +6,11 @@ import ResourceTable from '../components/ResourceTable.astro';
 import Pagination from '../components/Pagination.astro';
 
 import type { Env } from '../env';
-import { fetchResources } from '../fetch';
+import { wfetch, fetchResources } from '../fetch';
 
 const runtime = getRuntime<Env>(Astro.request);
 
-const { resources } = await fetchResources(1, { fetch: runtime?.env?.worker?.fetch });
+const { resources } = await fetchResources(1, { fetch: wfetch(runtime?.env?.worker?.fetch) });
 ---
 
 <Layout title="Anime Garden">

@@ -23,10 +23,21 @@ export const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
   }
 };
 
+export const wfetch = (fn?: typeof fetch): typeof ofetch => {
+  if (fn) {
+    return (url: string | RequestInfo, init?: RequestInit) => {
+      const req = new Request(url, init);
+      return fn(req);
+    };
+  } else {
+    return ofetch;
+  }
+};
+
 export async function fetchResources(
   page: number,
   options: {
-    fetch?: typeof fetch;
+    fetch?: typeof ofetch;
     search?: string[];
     include?: (string | string[])[];
     exclude?: string[];

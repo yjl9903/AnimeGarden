@@ -7,8 +7,8 @@ import Pagination from '../../components/Pagination.astro';
 import ResourceTable from '../../components/ResourceTable.astro';
 
 import { Env } from '../../env';
-import { fetchResources } from '../../fetch';
 import { fansubs, QueryType } from '../../constant';
+import { wfetch, fetchResources } from '../../fetch';
 
 const { page: _page } = Astro.params;
 const page = _page ? +_page : 1;
@@ -39,7 +39,7 @@ const exclude: string[] | undefined = _exclude ? JSON.parse(_exclude) : undefine
 const runtime = getRuntime<Env>(Astro.request);
 
 const { resources, search: searchParams } = await fetchResources(page, {
-  fetch: runtime?.env?.worker?.fetch,
+  fetch: wfetch(runtime?.env?.worker?.fetch),
   publisher: publisher ? +publisher : undefined,
   fansub: fansub ? +fansub : undefined,
   type: type ? type : undefined,
