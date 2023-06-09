@@ -15,7 +15,7 @@ export const all: APIRoute = async ({ request }) => {
   url.port = '';
   url.pathname = url.pathname.replace(/^\/api/, '');
 
-  const subRequest = new Request(url, request);
+  const subRequest = new Request(url, request.clone());
   const response = await fetch(subRequest);
 
   try {
