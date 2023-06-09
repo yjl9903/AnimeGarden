@@ -16,15 +16,16 @@ export const all: APIRoute = async ({ request }) => {
   url.pathname = url.pathname.replace(/^\/api/, '');
 
   const subRequest = new Request(url, request.clone());
-  const response = await fetch(subRequest);
-
   try {
     console.log('Use service binding');
+    console.log('Used', subRequest.bodyUsed)
     const resp = await runtime.env.worker.fetch(subRequest);
     console.log(resp);
   } catch (error) {
     console.error(error);
   }
+
+  const response = await fetch(subRequest);
 
   return new Response(response.body, {
     headers: {
