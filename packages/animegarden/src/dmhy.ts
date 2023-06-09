@@ -2,7 +2,7 @@ import { load } from 'cheerio';
 
 import type { Resource, ResourceDetail, ResourceType } from './types';
 
-import { retryFn } from './utils';
+import { retryFn } from './garden/utils';
 
 export interface FetchDmhyPageOptions {
   page?: number;
