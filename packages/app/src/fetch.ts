@@ -33,6 +33,10 @@ export const wfetch = (fn?: typeof fetch): typeof ofetch => {
         return resp;
       } catch (error) {
         console.error(error);
+        if (error instanceof Error) {
+          console.log('Encounter: ' + error.name);
+          console.log(error.stack);
+        }
         return ofetch(url, init);
       }
     };
