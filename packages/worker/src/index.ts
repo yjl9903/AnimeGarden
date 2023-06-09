@@ -63,8 +63,9 @@ app.get('/teams', cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400
 
 app.all('*', (c) => c.json({ message: '404 NOT FOUND' }, 404));
 
-app.onError((_err, c) => {
-  return c.json({ messsage: 'Internal Error' }, 500);
+app.onError((err, c) => {
+  console.error(err);
+  return c.json({ status: 500, messsage: (err as Error)?.message ?? 'Internal Error' }, 500);
 });
 
 export default {
