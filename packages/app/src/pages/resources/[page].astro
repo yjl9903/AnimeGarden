@@ -39,7 +39,7 @@ const exclude: string[] | undefined = _exclude ? JSON.parse(_exclude) : undefine
 const runtime = getRuntime<Env>(Astro.request);
 
 const { resources, search: searchParams } = await fetchResources(page, {
-  fetch: wfetch(runtime?.env?.worker?.fetch),
+  fetch: wfetch(runtime?.env?.worker),
   publisher: publisher ? +publisher : undefined,
   fansub: fansub ? +fansub : undefined,
   type: type ? type : undefined,

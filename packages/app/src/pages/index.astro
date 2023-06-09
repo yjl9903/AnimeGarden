@@ -11,23 +11,6 @@ import { wfetch, fetchResources } from '../fetch';
 const runtime = getRuntime<Env>(Astro.request);
 
 const { resources } = await fetchResources(1, { fetch: wfetch(runtime?.env?.worker) });
-
-try {
-  const fet = runtime?.env?.worker;
-  if (fet) {
-    console.log(`Try fetch something with service binding`);
-    const resp = await fet.fetch(`/resources`);
-    const body = await resp.json();
-    console.log(JSON.stringify(body, null, 2));
-  }
-} catch (error) {
-  console.error(error);
-  if (error instanceof Error) {
-    if (error.stack) {
-      console.log(...error.stack.split('\n'));
-    }
-  }
-}
 ---
 
 <Layout title="Anime Garden">
