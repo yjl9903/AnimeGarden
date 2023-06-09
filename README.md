@@ -13,7 +13,7 @@
 ## API Usage
 
 ```bash
-curl https://garden.onekuma.cn/api/resources?page=1&count=1
+curl "https://garden.onekuma.cn/api/resources?page=1&count=1"
 ```
 
 You can find more API usage example in [scripts/api.http](./scripts/api.http).
