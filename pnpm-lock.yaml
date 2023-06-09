@@ -118,6 +118,9 @@ importers:
       '@iconify-json/carbon':
         specifier: ^1.1.17
         version: 1.1.17
+      '@iconify-json/devicon':
+        specifier: ^1.1.9
+        version: 1.1.9
       '@onekuma/preset.css':
         specifier: ^0.1.10
         version: 0.1.10
@@ -1040,6 +1043,12 @@ packages:
 
   /@iconify-json/carbon@1.1.17:
     resolution: {integrity: sha512-FJCHUNP+iEGZILqu5YjByV+RBrWCsMo7YWXBJSpRMvaeVH3yjK3TI8UIc7lmPGI1NRmjThiaqjxMqe7CgQY55Q==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
+
+  /@iconify-json/devicon@1.1.9:
+    resolution: {integrity: sha512-IdjobfMcu5OOcwWSKEWYLDETPrkqStgaoVP0DfAZj5j6I3dNIRYha1kce2lhtXzZfX/Zy02fepRSus70pNxOxw==}
     dependencies:
       '@iconify/types': 2.0.0
     dev: true

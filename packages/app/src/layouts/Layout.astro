@@ -133,16 +133,23 @@ function followSearch(params: Record<string, string>) {
     <main class="main pb-8vh">
       <slot />
     </main>
-    <footer class="main pb-8vh" select-none>
+    <footer class="main pb-8vh select-none [&>div]:(flex items-center)">
       <div font-sm text-base-400>
-        <a href="https://github.com/yjl9903" target="_blank" class="text-link-active">XLor</a>
-        <span> © 2023</span>
+        <span class="mr1 text-sm i-devicon-github op-80"></span>
+        <a href="https://github.com/yjl9903/AnimeGarden" target="_blank" class="text-link-active">yjl9903/AnimeGarden</a>
       </div>
       <div font-sm text-base-400>
+        <span class="mr1 text-sm i-carbon-update-now op-80"></span>
         Refreshed at {timestamp.toLocaleString('zh-CN', { timeZone: 'Asia/ShangHai' })}
       </div>
-      <div font-sm text-base-400>Powered by Astro</div>
-      <div font-sm text-base-400>Hosted on Cloudflare Pages</div>
+      <div font-sm text-base-400>
+        <span class="mr1 text-sm i-devicon-astro op-80"></span>
+        Powered by Astro
+      </div>
+      <div font-sm text-base-400>
+        <span class="mr1 text-sm i-devicon-cloudflare op-80"></span>
+        Hosted on Cloudflare Pages
+      </div>
     </footer>
   </body>
 </html>
