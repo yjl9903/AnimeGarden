@@ -4,7 +4,5 @@
 export interface Env {
   animegarden: KVNamespace;
 
-  worker: {
-    fetch: typeof fetch;
-  };
+  worker: Fetcher;
 }

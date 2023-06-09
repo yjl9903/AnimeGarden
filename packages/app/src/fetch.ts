@@ -28,8 +28,7 @@ export const wfetch = (fn?: typeof fetch): typeof ofetch => {
     const wrap = fn.bind(globalThis);
     return async (url: string | RequestInfo, init?: RequestInit) => {
       try {
-        const req = new Request(url, init);
-        const resp = await wrap(req);
+        const resp = await wrap(url, init);
         return resp;
       } catch (error) {
         console.error(error);

@@ -18,7 +18,7 @@ try {
     console.log(`Try fetch something with service binding`);
     console.log(`Fetch is ` + typeof fet);
     console.log(Object.entries(runtime?.env));
-    const resp = await fet(new Request(`/api`));
+    const resp = await fet(`/resources`);
     const body = await resp.json();
     console.log(JSON.stringify(body, null, 2));
   }
