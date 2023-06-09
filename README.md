@@ -24,7 +24,7 @@ If you are using JavaScript, you can just use the API wrapper `fetchResources` a
 
 ### animegarden
 
-[![version](https://img.shields.io/npm/v/animegarden?color=rgb%2850%2C203%2C86%29&label=animegarden)](https://www.npmjs.com/package/animegarden)
+[![version](https://img.shields.io/npm/v/animegarden?label=animegarden)](https://www.npmjs.com/package/animegarden)
 
 A scraper for [動漫花園](https://share.dmhy.org/).
 
@@ -45,7 +45,7 @@ You can check more conditions [here](https://github.com/yjl9903/AnimeGarden/blob
 
 ### anitomy
 
-[![version](https://img.shields.io/npm/v/anitomy?color=rgb%2850%2C203%2C86%29&label=anitomy)](https://www.npmjs.com/package/anitomy)
+[![version](https://img.shields.io/npm/v/anitomy?label=anitomy)](https://www.npmjs.com/package/anitomy)
 
 A TypeScript port of [Anitomy](https://github.com/erengy/anitomy) inspired by [AnitomySharp](https://github.com/tabratton/AnitomySharp) with more optimization for [動漫花園](https://share.dmhy.org/).
 
