@@ -1,4 +1,4 @@
-import type { Resource, ResourceDetail } from './types';
+import type { Resource, ResourceDetail } from '../types';
 
 import { retryFn } from './utils';
 
