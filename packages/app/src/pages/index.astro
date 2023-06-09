@@ -2,21 +2,21 @@
 import { getRuntime } from '@astrojs/cloudflare/runtime';
 
 import Layout from '../layouts/Layout.astro';
-import ResourceTable from '../components/ResourceTable.astro';
 import Pagination from '../components/Pagination.astro';
+import ResourceTable from '../components/ResourceTable.astro';
 
 import type { Env } from '../env';
 import { wfetch, fetchResources } from '../fetch';
 
 const runtime = getRuntime<Env>(Astro.request);
 
-const { resources } = await fetchResources(1, { fetch: wfetch(runtime?.env?.worker?.fetch) });
+const { resources } = await fetchResources(1, { fetch: wfetch(runtime?.env?.worker) });
 
 try {
-  const fet = runtime?.env?.worker?.fetch;
+  const fet = runtime?.env?.worker;
   if (fet) {
     console.log(`Try fetch something with service binding`);
-    const resp = await fet(`/resources`);
+    const resp = await fet.fetch(`/resources`);
     const body = await resp.json();
     console.log(JSON.stringify(body, null, 2));
   }

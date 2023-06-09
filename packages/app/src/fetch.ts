@@ -23,12 +23,11 @@ export const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
   }
 };
 
-export const wfetch = (fn?: Fetcher['fetch']): typeof ofetch => {
+export const wfetch = (fn?: Fetcher): typeof ofetch => {
   if (fn) {
-    const wrap = fn.bind(globalThis);
     return async (url: string | RequestInfo, init?: RequestInit) => {
       try {
-        const resp = await wrap(url, init);
+        const resp = await fn.fetch(url, init);
         return resp;
       } catch (error) {
         console.error(error);
