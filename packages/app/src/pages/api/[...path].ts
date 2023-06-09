@@ -18,6 +18,14 @@ export const all: APIRoute = async ({ request }) => {
   const subRequest = new Request(url, request);
   const response = await fetch(subRequest);
 
+  try {
+    console.log('Use service binding');
+    const resp = await runtime.env.worker.fetch(subRequest);
+    console.log(resp);
+  } catch (error) {
+    console.error(error);
+  }
+
   return new Response(response.body, {
     headers: {
       'cache-control': request.method === 'GET' ? `public, max-age=3600` : 'no-store',
