@@ -23,7 +23,7 @@ export const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
   }
 };
 
-export const wfetch = (fn?: typeof fetch): typeof ofetch => {
+export const wfetch = (fn?: Fetcher['fetch']): typeof ofetch => {
   if (fn) {
     const wrap = fn.bind(globalThis);
     return async (url: string | RequestInfo, init?: RequestInit) => {
@@ -33,8 +33,9 @@ export const wfetch = (fn?: typeof fetch): typeof ofetch => {
       } catch (error) {
         console.error(error);
         if (error instanceof Error) {
-          console.log('Encounter: ' + error.name);
-          console.log(error.stack);
+          if (error.stack) {
+            console.log(...error.stack.split('\n'));
+          }
         }
         return ofetch(url, init);
       }
