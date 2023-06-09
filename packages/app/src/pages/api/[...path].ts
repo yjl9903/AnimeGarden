@@ -15,26 +15,29 @@ export const all: APIRoute = async ({ request }) => {
   url.port = '';
   url.pathname = url.pathname.replace(/^\/api/, '');
 
-  const subRequest = new Request(url, request.clone());
   try {
-    console.log('Use service binding');
-    console.log('Used', subRequest.bodyUsed)
-    const resp = await runtime.env.worker.fetch(subRequest);
-    console.log(resp);
+    const subRequest = new Request(url, request.clone());
+    const response = runtime.env?.worker?.fetch
+      ? await runtime.env.worker.fetch(subRequest)
+      : await fetch(subRequest);
+    return new Response(response.body, {
+      headers: {
+        'cache-control': request.method === 'GET' ? `public, max-age=3600` : 'no-store',
+        // @ts-ignore
+        ...Object.fromEntries(response.headers.entries()),
+        'access-control-allow-origin': '*',
+        'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'access-control-allow-headers': 'Content-Type, Cache-Control, Authorization'
+      }
+    });
   } catch (error) {
     console.error(error);
+    return new Response(
+      JSON.stringify({
+        status: 500,
+        message: (error as any)?.message ?? 'unknown'
+      }),
+      { status: 500 }
+    );
   }
-
-  const response = await fetch(subRequest);
-
-  return new Response(response.body, {
-    headers: {
-      'cache-control': request.method === 'GET' ? `public, max-age=3600` : 'no-store',
-      // @ts-ignore
-      ...Object.fromEntries(response.headers.entries()),
-      'access-control-allow-origin': '*',
-      'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'access-control-allow-headers': 'Content-Type, Cache-Control, Authorization'
-    }
-  });
 };
