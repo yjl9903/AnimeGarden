@@ -20,8 +20,13 @@ try {
     const body = await resp.json();
     console.log(JSON.stringify(body, null, 2));
   }
-} catch (err) {
-  console.error(err);
+} catch (error) {
+  console.error(error);
+  if (error instanceof Error) {
+    if (error.stack) {
+      console.log(...error.stack.split('\n'));
+    }
+  }
 }
 ---
 
