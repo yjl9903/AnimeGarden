@@ -26,6 +26,7 @@ export const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
 export async function fetchResources(
   page: number,
   options: {
+    fetch?: typeof fetch;
     search?: string[];
     include?: (string | string[])[];
     exclude?: string[];
@@ -37,7 +38,7 @@ export async function fetchResources(
     signal?: AbortSignal;
   } = {}
 ) {
-  return await rawFetchResources(ofetch, {
+  return await rawFetchResources(options.fetch ?? ofetch, {
     baseURL,
     page,
     search:

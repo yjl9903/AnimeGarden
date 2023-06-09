@@ -1,11 +1,16 @@
 ---
+import { getRuntime } from '@astrojs/cloudflare/runtime';
+
 import Layout from '../layouts/Layout.astro';
 import ResourceTable from '../components/ResourceTable.astro';
 import Pagination from '../components/Pagination.astro';
 
+import type { Env } from '../env';
 import { fetchResources } from '../fetch';
 
-const { resources } = await fetchResources(1);
+const runtime = getRuntime<Env>(Astro.request);
+
+const { resources } = await fetchResources(1, { fetch: runtime?.env?.worker?.fetch });
 ---
 
 <Layout title="Anime Garden">

@@ -1,10 +1,12 @@
 ---
 import { format } from 'date-fns';
+import { getRuntime } from '@astrojs/cloudflare/runtime';
 
 import Layout from '../../layouts/Layout.astro';
 import Pagination from '../../components/Pagination.astro';
 import ResourceTable from '../../components/ResourceTable.astro';
 
+import { Env } from '../../env';
 import { fetchResources } from '../../fetch';
 import { fansubs, QueryType } from '../../constant';
 
@@ -34,7 +36,10 @@ const isComplicated = include?.some((i) => Array.isArray(i)) ?? false;
 const _exclude = url.searchParams.get('exclude');
 const exclude: string[] | undefined = _exclude ? JSON.parse(_exclude) : undefined;
 
+const runtime = getRuntime<Env>(Astro.request);
+
 const { resources, search: searchParams } = await fetchResources(page, {
+  fetch: runtime?.env?.worker?.fetch,
   publisher: publisher ? +publisher : undefined,
   fansub: fansub ? +fansub : undefined,
   type: type ? type : undefined,

@@ -17,9 +17,10 @@ export const all: APIRoute = async ({ request }) => {
 
   try {
     const subRequest = new Request(url, request.clone());
-    const response = runtime.env?.worker?.fetch
+    const response = runtime?.env?.worker?.fetch
       ? await runtime.env.worker.fetch(subRequest)
       : await fetch(subRequest);
+
     return new Response(response.body, {
       headers: {
         'cache-control': request.method === 'GET' ? `public, max-age=3600` : 'no-store',
