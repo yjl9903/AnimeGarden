@@ -13,15 +13,17 @@ const runtime = getRuntime<Env>(Astro.request);
 const { resources } = await fetchResources(1, { fetch: wfetch(runtime?.env?.worker?.fetch) });
 
 try {
-  const fet = runtime?.env?.worker?.fetch
+  const fet = runtime?.env?.worker?.fetch;
   if (fet) {
-    console.log(`Try fetch something with service binding`)
-    const resp = await fet(new Request(`/api`))
+    console.log(`Try fetch something with service binding`);
+    console.log(`Fetch is ` + typeof fet);
+    console.log(Object.entries(runtime?.env));
+    const resp = await fet(new Request(`/api`));
     const body = await resp.json();
-    console.log(JSON.stringify(body, null, 2))
+    console.log(JSON.stringify(body, null, 2));
   }
 } catch (err) {
-  console.error(err)
+  console.error(err);
 }
 ---
 
