@@ -25,9 +25,10 @@ export const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
 
 export const wfetch = (fn?: typeof fetch): typeof ofetch => {
   if (fn) {
+    const wrap = fn.bind(globalThis);
     return (url: string | RequestInfo, init?: RequestInit) => {
       const req = new Request(url, init);
-      return fn(req);
+      return wrap(req);
     };
   } else {
     return ofetch;
