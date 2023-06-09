@@ -51,7 +51,7 @@ function inferTitle(url: URL) {
     const content = url.searchParams.get(key);
     try {
       const arr = JSON.parse(content ?? '[]') as (string | string[])[];
-      if (Array.isArray(arr)) {
+      if (Array.isArray(arr) && arr.length >= 1) {
         return arr
           .map((a) => {
             if (typeof a === 'string') {
