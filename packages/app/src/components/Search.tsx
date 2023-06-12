@@ -2,13 +2,15 @@ import type { SearchParams } from 'animegarden';
 
 import useSWR from 'swr';
 import { Command } from 'cmdk';
+import { useStore } from '@nanostores/react';
 import { tradToSimple } from 'simptrad';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import '../styles/cmdk.css';
 
-import { fansubs, types } from '../constant';
+import { histories } from '../history';
 import { fetchResources } from '../fetch';
+import { fansubs, types } from '../constant';
 
 {
   document.addEventListener('keypress', (ev) => {
@@ -58,6 +60,7 @@ export default function Search() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { active } = useActiveElement();
 
+  const history = useStore(histories);
   const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
 
@@ -123,6 +126,9 @@ export default function Search() {
 
   const selectGoToSearch = useCallback(() => {
     if (input) {
+      const newHistories = [...new Set([input, ...histories.get()])];
+      histories.set(newHistories);
+
       stopFetch();
       goToSearch(input);
       disable();
@@ -221,6 +227,24 @@ export default function Search() {
               </Command.Group>
             )}
           </>
+        )}
+        {enable && history.length > 0 && (
+          <Command.Group heading="搜索历史">
+            {history.map((h) => (
+              <Command.Item
+                key={h}
+                value={h}
+                onMouseDown={() => {
+                  onInputChange(h);
+                }}
+                onSelect={() => {
+                  onInputChange(h);
+                }}
+              >
+                {h}
+              </Command.Item>
+            ))}
+          </Command.Group>
         )}
         {enable && (
           <>
