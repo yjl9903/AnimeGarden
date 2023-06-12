@@ -126,7 +126,7 @@ export default function Search() {
 
   const selectGoToSearch = useCallback(() => {
     if (input) {
-      const newHistories = [...new Set([input, ...histories.get()])];
+      const newHistories = [...new Set([input, ...histories.get()])].slice(0, 10);
       histories.set(newHistories);
 
       stopFetch();
