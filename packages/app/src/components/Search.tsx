@@ -128,7 +128,11 @@ export default function Search() {
     (text?: string) => {
       const target = text ?? input;
       if (target) {
-        const newHistories = [...new Set([target, ...histories.get()])].slice(0, 10);
+        // Filter old history item which is the substring of the current input
+        const oldHistories = histories.get().filter((o) => !target.includes(o));
+        // Remove duplicate items
+        const newHistories = [...new Set([target, ...oldHistories])].slice(0, 10);
+        // Set histories
         histories.set(newHistories);
 
         stopFetch();
