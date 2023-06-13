@@ -124,16 +124,20 @@ export default function Search() {
     setSearch('');
   }, []);
 
-  const selectGoToSearch = useCallback(() => {
-    if (input) {
-      const newHistories = [...new Set([input, ...histories.get()])].slice(0, 10);
-      histories.set(newHistories);
+  const selectGoToSearch = useCallback(
+    (text?: string) => {
+      const target = text ?? input;
+      if (target) {
+        const newHistories = [...new Set([target, ...histories.get()])].slice(0, 10);
+        histories.set(newHistories);
 
-      stopFetch();
-      goToSearch(input);
-      disable();
-    }
-  }, [input]);
+        stopFetch();
+        goToSearch(target);
+        disable();
+      }
+    },
+    [input]
+  );
   const selectStatic = useCallback((key: string) => {
     return () => {
       goTo(key);
@@ -185,8 +189,8 @@ export default function Search() {
               )}
               <Command.Item
                 value="go-to-search-page"
-                onMouseDown={selectGoToSearch}
-                onSelect={selectGoToSearch}
+                onMouseDown={() => selectGoToSearch()}
+                onSelect={() => selectGoToSearch()}
               >
                 {DMHY_RE.test(input) ? `前往 ${input}` : `在本页列出 ${input} 的搜索结果...`}
               </Command.Item>
@@ -235,7 +239,7 @@ export default function Search() {
                 key={h}
                 value={h}
                 onMouseDown={() => {
-                  onInputChange(h);
+                  selectGoToSearch(h);
                 }}
                 onSelect={() => {
                   onInputChange(h);
