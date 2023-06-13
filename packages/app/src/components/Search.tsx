@@ -8,9 +8,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import '../styles/cmdk.css';
 
-import { histories } from '../history';
 import { fetchResources } from '../fetch';
 import { fansubs, types } from '../constant';
+import { histories, loading } from '../state';
 
 {
   document.addEventListener('keypress', (ev) => {
@@ -391,6 +391,7 @@ function goToSearch(search: string) {
 }
 
 function goTo(href: string) {
+  loading.set(true);
   window.location.href = href;
 }
 
