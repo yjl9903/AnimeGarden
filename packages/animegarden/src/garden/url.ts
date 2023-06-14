@@ -116,6 +116,14 @@ export function parseSearchURL(params: URLSearchParams, body?: any): ResolvedFil
     }
   }
 
+  const isNaN = (d: unknown): boolean => d === undefined || d === null || Number.isNaN(d);
+  if (isNaN(filtered.page)) {
+    filtered.page = 1;
+  }
+  if (isNaN(filtered.pageSize)) {
+    filtered.pageSize = 100;
+  }
+
   return filtered;
 }
 
