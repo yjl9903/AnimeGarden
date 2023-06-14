@@ -102,10 +102,9 @@ export async function fetchDmhyDetail(
   const description = $('.topic-nfo').html()?.trim() ?? '';
 
   const magnetUser = $('#resource-tabs #tabs-1 p:nth-child(1) a').attr('href')?.trim() ?? '';
-  const magnetHref = $('#resource-tabs #tabs-1 p:nth-child(2) a').attr('href')?.trim() ?? '';
-  const magnetHref2 = $('#resource-tabs #tabs-1 #magnet2').attr('href')?.trim() ?? '';
-  const magnetDdplay =
-    $('#resource-tabs #tabs-1 p:nth-child(8) a:first-of-type').attr('href')?.trim() ?? '';
+  const magnetHref = $('#a_magnet').attr('href')?.trim() ?? '';
+  const magnetHref2 = $('#magnet2').attr('href')?.trim() ?? '';
+  const magnetDdplay = $('#ddplay').attr('href')?.trim() ?? '';
 
   let hasMoreFiles = false;
   const files = $('.file_list li')
