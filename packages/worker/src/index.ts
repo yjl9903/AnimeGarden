@@ -57,10 +57,10 @@ app.all('*', (c) => c.json({ message: '404 NOT FOUND' }, 404));
 
 app.onError((err, c) => {
   if (err.message) {
-    console.log(...err.message.split('\n'));
+    console.log(...err.message.trim().split('\n'));
   }
   if (err.stack) {
-    console.log(...err.stack.split('\n'));
+    console.log(...err.stack.trim().split('\n'));
   }
   return c.json({ status: 500, messsage: err?.message ?? 'Internal Error' }, 500);
 });
