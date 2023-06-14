@@ -38,7 +38,11 @@ const exclude: string[] | undefined = _exclude ? JSON.parse(_exclude) : undefine
 
 const runtime = getRuntime<Env>(Astro.request);
 
-const { resources, filter: searchParams } = await fetchResources(page, {
+const {
+  ok,
+  resources,
+  filter: searchParams
+} = await fetchResources(page, {
   fetch: wfetch(runtime?.env?.worker),
   publisher: publisher ? +publisher : undefined,
   fansub: fansub ? +fansub : undefined,
@@ -64,89 +68,104 @@ function removeQuote(words: string[]) {
 <Layout title="所有资源 | Anime Garden">
   <div class="mt-4vh w-full">
     {
-      (search || include || before || after || fansubItem) && (
+      ok ? (
         <>
-          <div class="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
-            {fansubItem && (
-              <div class="space-x-2 select-none text-0">
-                <span class="text-4 text-base-800 font-bold inline-block mr2">字幕组</span>
-                <a
-                  href={`/resources/1?fansub=${fansubItem.id}`}
-                  class="text-4 select-text text-link"
-                >
-                  {fansubItem.name}
-                </a>
-              </div>
-            )}
-            {after && (
-              <div class="space-x-2 select-none text-0">
-                <span class="text-4 text-base-800 font-bold inline-block mr2">搜索开始于</span>
-                <span class="text-4 select-text">{format(after, 'yyyy 年 M 月 d 日 hh:mm')}</span>
-              </div>
-            )}
-            {before && (
-              <div class="space-x-2 select-none text-0">
-                <span class="text-4 text-base-800 font-bold inline-block mr2">搜索结束于</span>
-                <span class="text-4 select-text">{format(before, 'yyyy 年 M 月 d 日 hh:mm')}</span>
-              </div>
-            )}
-            {keywords.search.length > 0 && (
-              <div class="space-x-2 text-0">
-                {/* prettier-ignore */}
-                <span class="text-4 select-none text-base-800 font-bold mr2 inline-block">模糊匹配</span>
-                {keywords.search.map((i) => (
-                  <span class="text-4 select-text underline underline-dotted underline-gray-500">
-                    {i}
-                  </span>
-                ))}
-              </div>
-            )}
-            {keywords.include.length > 0 && (
-              <div class="space-x-2 select-none text-0">
-                <span class="text-4 text-base-800 font-bold inline-block mr2">包含关键词</span>
-                {keywords.include.map((i, idx) => (
-                  <>
-                    {idx > 0 && isComplicated && <span class="text-4 text-base-500">+</span>}
-                    {Array.isArray(i) ? (
+          {(search || include || before || after || fansubItem) && (
+            <>
+              <div class="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
+                {fansubItem && (
+                  <div class="space-x-2 select-none text-0">
+                    <span class="text-4 text-base-800 font-bold inline-block mr2">字幕组</span>
+                    <a
+                      href={`/resources/1?fansub=${fansubItem.id}`}
+                      class="text-4 select-text text-link"
+                    >
+                      {fansubItem.name}
+                    </a>
+                  </div>
+                )}
+                {after && (
+                  <div class="space-x-2 select-none text-0">
+                    <span class="text-4 text-base-800 font-bold inline-block mr2">搜索开始于</span>
+                    <span class="text-4 select-text">
+                      {format(after, 'yyyy 年 M 月 d 日 hh:mm')}
+                    </span>
+                  </div>
+                )}
+                {before && (
+                  <div class="space-x-2 select-none text-0">
+                    <span class="text-4 text-base-800 font-bold inline-block mr2">搜索结束于</span>
+                    <span class="text-4 select-text">
+                      {format(before, 'yyyy 年 M 月 d 日 hh:mm')}
+                    </span>
+                  </div>
+                )}
+                {keywords.search.length > 0 && (
+                  <div class="space-x-2 text-0">
+                    {/* prettier-ignore */}
+                    <span class="text-4 select-none text-base-800 font-bold mr2 inline-block">模糊匹配</span>
+                    {keywords.search.map((i) => (
+                      <span class="text-4 select-text underline underline-dotted underline-gray-500">
+                        {i}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {keywords.include.length > 0 && (
+                  <div class="space-x-2 select-none text-0">
+                    <span class="text-4 text-base-800 font-bold inline-block mr2">包含关键词</span>
+                    {keywords.include.map((i, idx) => (
                       <>
-                        {keywords.include.length > 1 && i.length > 1 && (
-                          <span class="text-4 text-base-500">&#40;</span>
-                        )}
-                        {i.map((t, idx) => (
+                        {idx > 0 && isComplicated && <span class="text-4 text-base-500">+</span>}
+                        {Array.isArray(i) ? (
                           <>
-                            {idx > 0 && <span class="text-4 text-base-500 mx1">|</span>}
-                            {/* prettier-ignore */}
-                            <span class="text-4 select-text underline underline-dotted underline-gray-500">{t}</span>
+                            {keywords.include.length > 1 && i.length > 1 && (
+                              <span class="text-4 text-base-500">&#40;</span>
+                            )}
+                            {i.map((t, idx) => (
+                              <>
+                                {idx > 0 && <span class="text-4 text-base-500 mx1">|</span>}
+                                {/* prettier-ignore */}
+                                <span class="text-4 select-text underline underline-dotted underline-gray-500">{t}</span>
+                              </>
+                            ))}
+                            {keywords.include.length > 1 && i.length > 1 && (
+                              <span class="text-4 text-base-500">&#41;</span>
+                            )}
                           </>
-                        ))}
-                        {keywords.include.length > 1 && i.length > 1 && (
-                          <span class="text-4 text-base-500">&#41;</span>
+                        ) : (
+                          <>
+                            {/* prettier-ignore */}
+                            <span class="text-4 select-text underline underline-dotted underline-gray-500">{i}</span>
+                          </>
                         )}
                       </>
-                    ) : (
-                      <>
-                        {/* prettier-ignore */}
-                        <span class="text-4 select-text underline underline-dotted underline-gray-500">{i}</span>
-                      </>
-                    )}
-                  </>
-                ))}
+                    ))}
+                  </div>
+                )}
+                {keywords.exclude.length > 0 && (
+                  <div class="space-x-2 text-0">
+                    {/* prettier-ignore */}
+                    <span class="text-4 select-none text-base-800 font-bold mr2 inline-block">排除关键词</span>
+                    {keywords.exclude.map((i) => (
+                      <span class="text-4 select-text">{i}</span>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-            {keywords.exclude.length > 0 && (
-              <div class="space-x-2 text-0">
-                {/* prettier-ignore */}
-                <span class="text-4 select-none text-base-800 font-bold mr2 inline-block">排除关键词</span>
-                {keywords.exclude.map((i) => (
-                  <span class="text-4 select-text">{i}</span>
-                ))}
-              </div>
-            )}
+            </>
+          )}
+          <ResourceTable resources={resources} />
+          <Pagination page={page} href={(page) => `/resources/${page}${url.search}`} />
+        </>
+      ) : (
+        <>
+          <div class="h-20 text-2xl text-red-700/80 flex items-center justify-center">
+            <span class="mr2 i-carbon-error" />
+            <span>发生错误</span>
           </div>
         </>
       )
     }
-    <ResourceTable resources={resources} />
-    <Pagination page={page} href={(page) => `/resources/${page}${url.search}`} />
   </div>
 </Layout>

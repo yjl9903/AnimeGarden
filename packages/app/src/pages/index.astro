@@ -10,12 +10,25 @@ import { wfetch, fetchResources } from '../fetch';
 
 const runtime = getRuntime<Env>(Astro.request);
 
-const { resources } = await fetchResources(1, { fetch: wfetch(runtime?.env?.worker) });
+const { ok, resources } = await fetchResources(1, { fetch: wfetch(runtime?.env?.worker) });
 ---
 
 <Layout title="Anime Garden">
   <div class="mt-4vh w-full">
-    <ResourceTable resources={resources} />
-    <Pagination page={1} href={(page) => `/resources/${page}`} />
+    {
+      ok ? (
+        <>
+          <ResourceTable resources={resources} />
+          <Pagination page={1} href={(page) => `/resources/${page}`} />
+        </>
+      ) : (
+        <>
+          <div class="h-20 text-2xl text-red-700/80 flex items-center justify-center">
+            <span class="mr2 i-carbon-error" />
+            <span>发生错误</span>
+          </div>
+        </>
+      )
+    }
   </div>
 </Layout>
