@@ -105,7 +105,7 @@ export async function fetchDmhyDetail(
   const magnetHref = $('#resource-tabs #tabs-1 p:nth-child(2) a').attr('href')?.trim() ?? '';
   const magnetHref2 = $('#resource-tabs #tabs-1 #magnet2').attr('href')?.trim() ?? '';
   const magnetDdplay =
-    $('#resource-tabs #tabs-1 p:nth-child(7) a:first-of-type').text().trim() ?? '';
+    $('#resource-tabs #tabs-1 p:nth-child(8) a:first-of-type').attr('href')?.trim() ?? '';
 
   let hasMoreFiles = false;
   const files = $('.file_list li')
