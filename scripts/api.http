@@ -15,7 +15,7 @@ GET https://garden.onekuma.cn/api/resources?page=2&count=20
 Content-Type: application/json
 
 ### List resources with more filter
-GET https://garden.onekuma.cn/api/resources?type=動畫&fansub=803&publisher=727168&after=2023-04-16T13:00:00.000Z&before=1681653600000
+GET https://garden.onekuma.cn/api/resources?type=動畫&fansubId=803&publisherId=727168&after=2023-04-16T13:00:00.000Z&before=1681653600000
 Content-Type: application/json
 
 ### Search resources
