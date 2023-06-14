@@ -61,6 +61,8 @@ export async function handleScheduled(env: Env) {
       }
     }
 
+    console.log(...res.map((r) => ({ title: r.title, href: r.href })));
+
     const { count } = await prisma.resource.createMany({
       data: res.map(transformResource),
       skipDuplicates: true
