@@ -28,8 +28,8 @@ const parser = {
     .number()
     .default(100)
     .transform((ps) => Math.round(Math.max(1, Math.min(1000, ps)))),
-  fansub: z.coerce.number().optional(),
-  publisher: z.coerce.number().optional(),
+  fansubId: z.coerce.number().optional(),
+  publisherId: z.coerce.number().optional(),
   type: z.coerce.string().optional(),
   before: dateLike,
   after: dateLike,
@@ -133,11 +133,11 @@ export function stringifySearchURL(baseURL: string, options: FilterOptions): URL
   if (options.pageSize) {
     url.searchParams.set('pageSize', '' + options.pageSize);
   }
-  if (options.fansub) {
-    url.searchParams.set('fansub', '' + options.fansub);
+  if (options.fansubId) {
+    url.searchParams.set('fansubId', '' + options.fansubId);
   }
-  if (options.publisher) {
-    url.searchParams.set('publisher', '' + options.publisher);
+  if (options.publisherId) {
+    url.searchParams.set('publisherId', '' + options.publisherId);
   }
   if (options.type) {
     url.searchParams.set('type', '' + options.type);

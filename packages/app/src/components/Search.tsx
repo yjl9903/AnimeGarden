@@ -22,16 +22,14 @@ import { histories, loading } from '../state';
   });
 }
 
-const DMHY_RE =
-  /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
+const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
 
 const useActiveElement = () => {
   const [listenersReady, setListenersReady] = useState(false);
   const [activeElement, setActiveElement] = useState(document.activeElement);
 
   useEffect(() => {
-    const onFocus = (event: FocusEvent) =>
-      setActiveElement(event.target as any);
+    const onFocus = (event: FocusEvent) => setActiveElement(event.target as any);
     const onBlur = (event: FocusEvent) => setActiveElement(null);
 
     window.addEventListener('focus', onFocus, true);
@@ -133,10 +131,7 @@ export default function Search() {
         // Filter old history item which is the substring of the current input
         const oldHistories = histories.get().filter((o) => !target.includes(o));
         // Remove duplicate items
-        const newHistories = [...new Set([target, ...oldHistories])].slice(
-          0,
-          10
-        );
+        const newHistories = [...new Set([target, ...oldHistories])].slice(0, 10);
         // Set histories
         histories.set(newHistories);
 
@@ -201,9 +196,7 @@ export default function Search() {
                 onMouseDown={() => selectGoToSearch()}
                 onSelect={() => selectGoToSearch()}
               >
-                {DMHY_RE.test(input)
-                  ? `前往 ${input}`
-                  : `在本页列出 ${input} 的搜索结果...`}
+                {DMHY_RE.test(input) ? `前往 ${input}` : `在本页列出 ${input} 的搜索结果...`}
               </Command.Item>
               <Command.Item
                 onSelect={() => {
@@ -233,12 +226,8 @@ export default function Search() {
                   <Command.Item
                     key={r.href}
                     value={r.href}
-                    onMouseDown={selectStatic(
-                      `/resource/${r.href.split('/').at(-1)}`
-                    )}
-                    onSelect={selectStatic(
-                      `/resource/${r.href.split('/').at(-1)}`
-                    )}
+                    onMouseDown={selectStatic(`/resource/${r.href.split('/').at(-1)}`)}
+                    onSelect={selectStatic(`/resource/${r.href.split('/').at(-1)}`)}
                   >
                     {r.title}
                   </Command.Item>
@@ -285,9 +274,7 @@ export default function Search() {
                 {filteredFansub.map((fansub) => (
                   <Command.Item
                     key={fansub.id}
-                    onMouseDown={selectStatic(
-                      `/resources/1?fansub=${fansub.id}`
-                    )}
+                    onMouseDown={selectStatic(`/resources/1?fansub=${fansub.id}`)}
                     onSelect={selectStatic(`/resources/1?fansub=${fansub.id}`)}
                   >
                     {fansub.name}
@@ -333,9 +320,7 @@ function parseSearch(search: string) {
           fansub.push(found.id);
         } else {
           word = word.replace('樱', '桜');
-          const found = fansubs.find((t) =>
-            tradToSimple(t.name).includes(word)
-          );
+          const found = fansubs.find((t) => tradToSimple(t.name).includes(word));
           if (found) {
             fansub.push(found.id);
           }
@@ -390,20 +375,14 @@ function goToSearch(search: string) {
     if (match) {
       goTo(`/resource/${match[1]}`);
     } else {
-      const {
-        search: keywords,
-        include,
-        exclude,
-        fansub,
-        after
-      } = parseSearch(search);
+      const { search: keywords, include, exclude, fansub, after } = parseSearch(search);
       const query = [
         `search=${JSON.stringify(keywords)}`,
         `include=${JSON.stringify(include)}`,
         `exclude=${JSON.stringify(exclude)}`
       ];
       if (fansub !== undefined) {
-        query.push(`fansub=${fansub}`);
+        query.push(`fansubId=${fansub}`);
       }
       if (after !== undefined) {
         query.push(`after=${after.toISOString()}`);

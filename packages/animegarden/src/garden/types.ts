@@ -4,12 +4,12 @@ export interface FilterOptions {
   /**
    * Filter by the group id of fansub
    */
-  fansub?: number | string;
+  fansubId?: number | string;
 
   /**
    * Filter by the user id of publisher
    */
-  publisher?: number | string;
+  publisherId?: number | string;
 
   /**
    * Filter by the resource type
@@ -58,12 +58,12 @@ export interface ResolvedFilterOptions {
   /**
    * Filter by the group id of fansub
    */
-  fansub?: number;
+  fansubId?: number;
 
   /**
    * Filter by the user id of publisher
    */
-  publisher?: number;
+  publisherId?: number;
 
   /**
    * Filter by the resource type

@@ -43,15 +43,14 @@ export const getSearchResources = memoAsync(
     const timer = createTimer(`Search Resources`);
     timer.start();
 
-    const { page, pageSize, fansub, publisher, type, before, after, search, include, exclude } =
+    const { page, pageSize, fansubId, publisherId, type, before, after, search, include, exclude } =
       options;
+
     const result = await prisma.resource.findMany({
       where: {
         AND: [
           {
             type,
-            fansubId: fansub,
-            publisherId: publisher,
             createdAt: {
               gte: after,
               lte: before
@@ -59,6 +58,12 @@ export const getSearchResources = memoAsync(
             titleAlt: {
               search: search && search.length > 0 ? search.join(' ') : undefined
             }
+          },
+          {
+            fansubId: fansubId
+          },
+          {
+            publisherId: publisherId
           },
           {
             AND: include?.map((arr) => ({

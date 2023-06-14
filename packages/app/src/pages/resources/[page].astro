@@ -17,9 +17,9 @@ const page = _page ? +_page : 1;
 const url = Astro.url;
 const params = parseSearchURL(Astro.url.searchParams);
 
-const publisher = params.publisher;
-const fansub = params.fansub;
-const fansubItem = fansubs.find((f) => f.id === fansub);
+const publisherId = params.publisherId;
+const fansubId = params.fansubId;
+const fansub = fansubs.find((f) => f.id === fansubId);
 const type = params.type && params.type in QueryType ? QueryType[params.type] : params.type;
 const after = params.after;
 const before = params.before;
@@ -55,17 +55,17 @@ function removeQuote(words: string[]) {
     {
       ok ? (
         <>
-          {(search || include || before || after || fansubItem) && (
+          {(search || include || before || after || fansub) && (
             <>
               <div class="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
-                {fansubItem && (
+                {fansub && (
                   <div class="space-x-2 select-none text-0">
                     <span class="text-4 text-base-800 font-bold inline-block mr2">字幕组</span>
                     <a
-                      href={`/resources/1?fansub=${fansubItem.id}`}
+                      href={`/resources/1?fansub=${fansub.id}`}
                       class="text-4 select-text text-link"
                     >
-                      {fansubItem.name}
+                      {fansub.name}
                     </a>
                   </div>
                 )}
