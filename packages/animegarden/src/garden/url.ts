@@ -11,6 +11,7 @@ const stringArray = z.union([z.string().transform((s) => [s]), z.array(z.string(
 const stringArrayLike = z.coerce
   .string()
   .transform((t) => JSON.parse(t))
+  .catch(undefined)
   .pipe(stringArray)
   .optional();
 const stringArrayArray = z.union([
@@ -36,6 +37,7 @@ const parser = {
   include: z.coerce
     .string()
     .transform((t) => JSON.parse(t))
+    .catch(undefined)
     .pipe(stringArrayArray)
     .optional(),
   exclude: stringArrayLike
