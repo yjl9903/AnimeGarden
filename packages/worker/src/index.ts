@@ -56,7 +56,9 @@ app.get('/teams', cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400
 app.all('*', (c) => c.json({ message: '404 NOT FOUND' }, 404));
 
 app.onError((err, c) => {
-  console.error(err);
+  if (err.message) {
+    console.log(...err.message.split('\n'));
+  }
   if (err.stack) {
     console.log(...err.stack.split('\n'));
   }
