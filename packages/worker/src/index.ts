@@ -37,9 +37,10 @@ app.post('/resources', async (c) => {
   return searchResources(c);
 });
 
-app.put('/resources', async (c) => {
-  return c.json(await handleScheduled(c.env));
-});
+// Only used for debug
+// app.put('/resources', async (c) => {
+//   return c.json(await handleScheduled(c.env));
+// });
 
 app.get('/users', cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }), async (c) => {
   const prisma = makePrisma(c.env);
