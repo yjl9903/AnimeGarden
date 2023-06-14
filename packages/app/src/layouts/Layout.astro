@@ -162,7 +162,16 @@ function followSearch(params: Record<string, string>) {
       import { loading } from '../state';
 
       document.addEventListener('click', (ev) => {
-        const target = ev.target;
+        const find = (node: HTMLElement) => {
+          if (node && node.nodeName.toLowerCase() === 'a') {
+            return node;
+          }
+          node = node?.parentNode;
+          if (node && node.nodeName.toLowerCase() === 'a') {
+            return node;
+          }
+        };
+        const target = find(ev.target);
         if (target && target.nodeName.toLowerCase() === 'a') {
           const href = target.getAttribute('href');
           if (href && (href.startsWith('/') || href.startsWith(window.location.origin))) {
@@ -259,7 +268,7 @@ function followSearch(params: Record<string, string>) {
     height: 3px;
 
     border-radius: 1px;
-    background: linear-gradient(90deg, #3acbd4, #75ddcf);
+    background: linear-gradient(90deg, #fb923c, #fdba74);
 
     animation: loading-loop 1s;
     animation-timing-function: linear;
