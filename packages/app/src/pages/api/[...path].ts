@@ -16,10 +16,15 @@ export const all: APIRoute = async ({ request }) => {
   url.pathname = url.pathname.replace(/^\/api/, '');
 
   try {
+    const timer = createTimer(`Forward request to ${url.pathname}`);
+    timer.start();
+
     const subRequest = new Request(url, request.clone());
     const response = runtime?.env?.worker?.fetch
       ? await runtime.env.worker.fetch(subRequest)
       : await fetch(subRequest);
+
+    timer.end();
 
     return new Response(response.body, {
       headers: {
@@ -42,3 +47,16 @@ export const all: APIRoute = async ({ request }) => {
     );
   }
 };
+
+export function createTimer(label: string) {
+  let start = new Date();
+  return {
+    start() {
+      start = new Date();
+    },
+    end() {
+      const end = new Date();
+      console.log(`${label}: ${((end.getTime() - start.getTime()) / 1000).toFixed(0)}ms`);
+    }
+  };
+}
