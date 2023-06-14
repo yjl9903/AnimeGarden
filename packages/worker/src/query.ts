@@ -107,7 +107,7 @@ async function getTimestamp(ctx: Context<{ Bindings: Env }>) {
 
 export async function searchResources(ctx: Context<{ Bindings: Env }>) {
   const url = new URL(ctx.req.url);
-  const filter = parseSearchURL(url.searchParams, await ctx.req.json());
+  const filter = parseSearchURL(url.searchParams, await ctx.req.json().catch(() => undefined));
   if (!filter) {
     return ctx.json({ message: 'Request is not valid' }, 400);
   }
