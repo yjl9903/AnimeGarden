@@ -43,6 +43,8 @@ export const getSearchResources = memoAsync(
     const timer = createTimer(`Search Resources`);
     timer.start();
 
+    console.log(JSON.stringify(options, null, 2));
+
     const { page, pageSize, fansub, publisher, type, before, after, search, include, exclude } =
       options;
     const result = await prisma.resource.findMany({
