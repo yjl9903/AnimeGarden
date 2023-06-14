@@ -63,10 +63,14 @@ export class KVStore<V> {
 
   async put(key: string, value: V, options?: KVNamespacePutOptions): Promise<void> {
     try {
-      await this.store.put(this.prefix + key, JSON.stringify({ value }), {
-        expirationTtl: this.ttl,
-        ...options
-      });
+      await this.store.put(
+        this.prefix + key,
+        JSON.stringify({ value, timestamp: new Date().getTime() }),
+        {
+          expirationTtl: this.ttl,
+          ...options
+        }
+      );
     } catch (error) {
       console.error(error);
     }
