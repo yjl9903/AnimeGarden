@@ -38,7 +38,7 @@ const exclude: string[] | undefined = _exclude ? JSON.parse(_exclude) : undefine
 
 const runtime = getRuntime<Env>(Astro.request);
 
-const { resources, search: searchParams } = await fetchResources(page, {
+const { resources, filter: searchParams } = await fetchResources(page, {
   fetch: wfetch(runtime?.env?.worker),
   publisher: publisher ? +publisher : undefined,
   fansub: fansub ? +fansub : undefined,
@@ -51,9 +51,9 @@ const { resources, search: searchParams } = await fetchResources(page, {
 });
 
 const keywords = {
-  search: searchParams ? removeQuote(searchParams.search) : [...(search ?? [])],
-  include: searchParams ? searchParams.include : [...(include ?? [])],
-  exclude: searchParams ? searchParams.exclude : [...(exclude ?? [])]
+  search: searchParams?.search ? removeQuote(searchParams.search) : [...(search ?? [])],
+  include: searchParams?.include ? searchParams.include : [...(include ?? [])],
+  exclude: searchParams?.exclude ? searchParams.exclude : [...(exclude ?? [])]
 };
 
 function removeQuote(words: string[]) {

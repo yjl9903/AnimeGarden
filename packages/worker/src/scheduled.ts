@@ -1,12 +1,11 @@
 import type { Prisma } from '@prisma/client/edge';
 
 import { parse } from 'anitomy';
-import { Resource, fetchDmhyPage } from 'animegarden';
+import { Resource, fetchDmhyPage, normalizeTitle } from 'animegarden';
 
 import type { Env } from './types';
 
 import { makePrisma } from './prisma';
-import { normalizeTitle } from './util';
 import { updateRefreshTimestamp } from './state';
 
 const teams = new Set<number>();

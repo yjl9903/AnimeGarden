@@ -1,102 +1,21 @@
 import type { Resource, ResourceDetail } from '../types';
 
+import type {
+  ResolvedFilterOptions,
+  FetchResourcesOptions,
+  FetchResourceDetailOptions
+} from './types';
+import { stringifySearchURL } from './url';
+
 import { retryFn } from './utils';
 
-export interface FetchResourcesOptions {
-  /**
-   * The base URL of anime garden API
-   *
-   * @default 'https://garden.onekuma.cn/api/'
-   */
-  baseURL?: string;
+export * from './url';
 
-  /**
-   * Filter by the group id of fansub
-   */
-  fansub?: string;
+export * from './types';
 
-  /**
-   * Filter by the user id of publisher
-   */
-  publisher?: string;
+export { normalizeTitle } from './utils';
 
-  /**
-   * Filter by the resource type
-   *
-   * @type ResourceType
-   */
-  type?: string;
-
-  /**
-   * Resources uploaded before the specified date
-   */
-  before?: Date;
-
-  /**
-   * Resources uploaded after the specified date
-   */
-  after?: Date;
-
-  /**
-   * Search in titles, it must contains at least one word in each of the include array,
-   * and should not contain any excluded word
-   */
-  search?: {
-    search?: string[];
-    include?: string | (string | string[])[];
-    exclude?: string[];
-  };
-
-  /**
-   * Query the specified page
-   */
-  page?: number;
-
-  /**
-   * Query count resources
-   */
-  count?: number;
-
-  /**
-   * The number of retry times
-   */
-  retry?: number;
-
-  /**
-   * Abort fetch
-   */
-  signal?: AbortSignal;
-
-  /**
-   * Progress callback when querying multiple pages
-   */
-  progress?: (
-    delta: Resource[],
-    payload: { url: string; page: number; timestamp: Date }
-  ) => void | Promise<void>;
-}
-
-export interface FetchResourceDetailOptions {
-  baseURL?: string;
-
-  /**
-   * Abort fetch
-   */
-  signal?: AbortSignal;
-
-  /**
-   * The number of retry
-   */
-  retry?: number;
-}
-
-export interface SearchParams {
-  search: string[];
-
-  include: string[][];
-
-  exclude: string[];
-}
+export const DefaultBaseURL = 'https://garden.onekuma.cn/api/';
 
 /**
  * Fetch resources data from dmhy mirror site
@@ -104,30 +23,10 @@ export interface SearchParams {
 export async function fetchResources(
   fetch: (request: RequestInfo, init?: RequestInit) => Promise<Response>,
   options: FetchResourcesOptions = {}
-): Promise<{ resources: Resource[]; search?: SearchParams; timestamp: Date }> {
-  const { baseURL = 'https://garden.onekuma.cn/api/', retry = 1 } = options;
+): Promise<{ resources: Resource[]; filter?: ResolvedFilterOptions; timestamp: Date }> {
+  const { baseURL = DefaultBaseURL, retry = 1 } = options;
 
-  const url = new URL(options.search ? 'resources/search' : 'resources', baseURL);
-  if (options.fansub) {
-    url.searchParams.set('fansub', '' + options.fansub);
-  }
-  if (options.publisher) {
-    url.searchParams.set('publisher', '' + options.publisher);
-  }
-  if (options.type) {
-    url.searchParams.set('type', '' + options.type);
-  }
-  if (options.before) {
-    url.searchParams.set('before', '' + options.before.getTime());
-  }
-  if (options.after) {
-    url.searchParams.set('after', '' + options.after.getTime());
-  }
-  if (options.search) {
-    url.searchParams.set('search', JSON.stringify(options.search.search ?? []));
-    url.searchParams.set('include', JSON.stringify(options.search.include ?? []));
-    url.searchParams.set('exclude', JSON.stringify(options.search.exclude ?? []));
-  }
+  const url = stringifySearchURL(baseURL, options);
 
   if (options.count !== undefined && options.count !== null) {
     // Prefer the original count or -1 for inf
@@ -135,14 +34,14 @@ export async function fetchResources(
 
     const map = new Map<string, Resource>();
     let timestamp = new Date(0);
-    let search: SearchParams | undefined = undefined;
+    let filter: ResolvedFilterOptions | undefined = undefined;
 
     for (let page = 1; map.size < count; page++) {
       try {
         const resp = await fetchPage(page);
         timestamp = resp.timestamp;
-        if (resp.search) {
-          search = resp.search;
+        if (resp.filter) {
+          filter = resp.filter;
         }
 
         if (resp.resources.length === 0) {
@@ -167,7 +66,7 @@ export async function fetchResources(
 
     return {
       resources: uniq([...map.values()]),
-      search,
+      filter,
       timestamp
     };
   } else {
@@ -177,7 +76,7 @@ export async function fetchResources(
 
     return {
       resources,
-      search: r.search,
+      filter: r.filter,
       timestamp: r.timestamp
     };
   }
@@ -190,7 +89,7 @@ export async function fetchResources(
           .then((r) => r.json())
           .then((r) => ({
             resources: r.resources as Resource[],
-            search: r.search as SearchParams | undefined,
+            filter: r.filter as ResolvedFilterOptions | undefined,
             timestamp: new Date(r.timestamp)
           })),
       retry
@@ -213,7 +112,7 @@ export async function fetchResourceDetail(
   href: string,
   options: FetchResourceDetailOptions = {}
 ): Promise<ResourceDetail> {
-  const { baseURL = 'https://garden.onekuma.cn/api/', retry = 1 } = options;
+  const { baseURL = DefaultBaseURL, retry = 1 } = options;
   const url = new URL('resource/' + href, baseURL);
 
   return await retryFn(

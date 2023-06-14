@@ -1,3 +1,9 @@
+import { fullToHalf, tradToSimple } from 'simptrad';
+
+export function normalizeTitle(title: string) {
+  return fullToHalf(tradToSimple(title));
+}
+
 export async function retryFn<T>(fn: () => Promise<T>, count: number): Promise<T> {
   if (count < 0) {
     count = Number.MAX_SAFE_INTEGER;

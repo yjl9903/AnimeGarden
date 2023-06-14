@@ -9,7 +9,7 @@ import type { Env } from './types';
 import { makePrisma } from './prisma';
 import { handleScheduled } from './scheduled';
 import { getRefreshTimestamp } from './state';
-import { queryResourceDetail, queryResources, searchResources } from './query';
+import { queryResourceDetail, searchResources } from './query';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -21,10 +21,6 @@ app.get('/', async (c) => {
   return c.json({ message: 'This is AnimeGarden', timestamp: await getRefreshTimestamp(c.env) });
 });
 
-app.get('/resources', async (c) => {
-  return queryResources(c);
-});
-
 app.get(
   '/resource/:href',
   cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }),
@@ -33,11 +29,11 @@ app.get(
   }
 );
 
-app.get('/resources/search', async (c) => {
+app.get('/resources', async (c) => {
   return searchResources(c);
 });
 
-app.post('/resources/search', async (c) => {
+app.post('/resources', async (c) => {
   return searchResources(c);
 });
 

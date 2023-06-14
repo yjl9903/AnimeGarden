@@ -1,9 +1,4 @@
 import { Context } from 'hono';
-import { fullToHalf, tradToSimple } from 'simptrad';
-
-export function normalizeTitle(title: string) {
-  return fullToHalf(tradToSimple(title));
-}
 
 export function isNoCache(ctx: Context) {
   const cacheControl = ctx.req.header('cache-control');
