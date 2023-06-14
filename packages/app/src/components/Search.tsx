@@ -99,6 +99,7 @@ export default function Search() {
       } else {
         const abort = new AbortController();
         signals.current.add(abort);
+        console.log(parseSearch(search));
         const res = await fetchResources(1, parseSearch(search), {
           signal: abort.signal
         });
@@ -359,7 +360,7 @@ function parseSearch(search: string) {
     search: keywords,
     include,
     exclude,
-    fansub: fansub.at(-1),
+    fansubId: fansub.at(-1),
     after: after.at(-1),
     before: before.at(-1)
   };
@@ -375,14 +376,14 @@ function goToSearch(search: string) {
     if (match) {
       goTo(`/resource/${match[1]}`);
     } else {
-      const { search: keywords, include, exclude, fansub, after } = parseSearch(search);
+      const { search: keywords, include, exclude, fansubId, after } = parseSearch(search);
       const query = [
         `search=${JSON.stringify(keywords)}`,
         `include=${JSON.stringify(include)}`,
         `exclude=${JSON.stringify(exclude)}`
       ];
-      if (fansub !== undefined) {
-        query.push(`fansubId=${fansub}`);
+      if (fansubId !== undefined) {
+        query.push(`fansubId=${fansubId}`);
       }
       if (after !== undefined) {
         query.push(`after=${after.toISOString()}`);
