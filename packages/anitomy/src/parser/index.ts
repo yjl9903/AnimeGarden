@@ -62,7 +62,10 @@ export function parse(result: ParsedResult, tokens: Token[], options: AnitomyOpt
 
   validateElements(context);
 
-  return { ok: hasResult(context, ElementCategory.AnimeTitle), result: context.result };
+  return {
+    ok: hasResult(context, ElementCategory.AnimeTitle),
+    result: context.result
+  };
 }
 
 function searchForKeywords(context: ParserContext) {

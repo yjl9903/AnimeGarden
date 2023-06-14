@@ -1,5 +1,6 @@
 ---
 import { format } from 'date-fns';
+import { parseSearchURL } from 'animegarden';
 import { getRuntime } from '@astrojs/cloudflare/runtime';
 
 import Layout from '../../layouts/Layout.astro';
@@ -14,27 +15,19 @@ const { page: _page } = Astro.params;
 const page = _page ? +_page : 1;
 
 const url = Astro.url;
-const publisher = url.searchParams.get('publisher');
-const fansub = url.searchParams.get('fansub');
-const fansubItem = fansubs.find((f) => String(f.id) === fansub);
+const params = parseSearchURL(Astro.url.searchParams);
 
-const _type = url.searchParams.get('type');
-const type = _type && _type in QueryType ? QueryType[_type] : _type;
+const publisher = params.publisher;
+const fansub = params.fansub;
+const fansubItem = fansubs.find((f) => f.id === fansub);
+const type = params.type && params.type in QueryType ? QueryType[params.type] : params.type;
+const after = params.after;
+const before = params.before;
 
-const _after = url.searchParams.get('after');
-const after = _after ? new Date(_after) : undefined;
-const _before = url.searchParams.get('before');
-const before = _before ? new Date(_before) : undefined;
-
-const _search = url.searchParams.get('search');
-const search: string[] | undefined = _search ? JSON.parse(_search) : undefined;
-
-const _include = url.searchParams.get('include');
-const include: (string | string[])[] | undefined = _include ? JSON.parse(_include) : undefined;
+const search = params.search;
+const include = params.include;
 const isComplicated = include?.some((i) => Array.isArray(i)) ?? false;
-
-const _exclude = url.searchParams.get('exclude');
-const exclude: string[] | undefined = _exclude ? JSON.parse(_exclude) : undefined;
+const exclude = params.exclude;
 
 const runtime = getRuntime<Env>(Astro.request);
 
@@ -42,16 +35,8 @@ const {
   ok,
   resources,
   filter: searchParams
-} = await fetchResources(page, {
-  fetch: wfetch(runtime?.env?.worker),
-  publisher: publisher ? +publisher : undefined,
-  fansub: fansub ? +fansub : undefined,
-  type: type ? type : undefined,
-  search,
-  include,
-  exclude,
-  after,
-  before
+} = await fetchResources(page, params, {
+  fetch: wfetch(runtime?.env?.worker)
 });
 
 const keywords = {

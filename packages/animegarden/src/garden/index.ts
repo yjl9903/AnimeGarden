@@ -65,7 +65,11 @@ export async function fetchResources(
             newRes.push(r);
           }
         }
-        await options.progress?.(newRes, { url: url.toString(), page, timestamp });
+        await options.progress?.(newRes, {
+          url: url.toString(),
+          page,
+          timestamp
+        });
       } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {
           aborted = true;

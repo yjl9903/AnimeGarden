@@ -1,4 +1,5 @@
 import {
+  FilterOptions,
   fetchResources as rawFetchResources,
   fetchResourceDetail as rawFetchResourceDetail
 } from 'animegarden';
@@ -46,36 +47,17 @@ export const wfetch = (fn?: Fetcher): typeof ofetch => {
 
 export async function fetchResources(
   page: number,
+  filter: FilterOptions = {},
   options: {
     fetch?: typeof ofetch;
-    search?: string[];
-    include?: (string | string[])[];
-    exclude?: string[];
-    fansub?: number;
-    publisher?: number;
-    type?: string;
-    after?: Date;
-    before?: Date;
     signal?: AbortSignal;
   } = {}
 ) {
   return await rawFetchResources(options.fetch ?? ofetch, {
     baseURL,
     page,
-    search:
-      options.include || options.search
-        ? {
-            search: options.search,
-            include: options.include,
-            exclude: options.exclude
-          }
-        : undefined,
-    fansub: options.fansub ? '' + options.fansub : undefined,
-    publisher: options.publisher ? '' + options.publisher : undefined,
-    type: options.type ? '' + options.type : undefined,
-    after: options.after,
-    before: options.before,
-    signal: options.signal
+    signal: options.signal,
+    ...filter
   });
 }
 
