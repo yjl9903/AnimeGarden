@@ -97,7 +97,7 @@ function followSearch(params: Record<string, string>) {
                   {
                     hasFansubSearch && (
                       <a
-                        href={`/resources/1?${followSearch({ fansub: '' })}`}
+                        href={`/resources/1?${followSearch({ fansubId: '' })}`}
                         class="px2 py1 block text-base-600 text-link-active"
                       >
                         所有
@@ -107,7 +107,7 @@ function followSearch(params: Record<string, string>) {
                   {
                     fansubs.map((t) => (
                       <a
-                        href={`/resources/1?${followSearch({ fansub: '' + t.id })}`}
+                        href={`/resources/1?${followSearch({ fansubId: '' + t.id })}`}
                         class="px2 py1 block text-base-600 text-link-active"
                       >
                         {t.name}

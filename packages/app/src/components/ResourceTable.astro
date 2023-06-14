@@ -107,7 +107,7 @@ function followSearch(params: Record<string, string>) {
             <td class="py2 pl2 flex justify-center">
               {r.fansub ? (
                 <a
-                  href={`/resources/1?${followSearch({ fansub: r.fansub.id })}`}
+                  href={`/resources/1?${followSearch({ fansubId: r.fansub.id })}`}
                   class="block w-max"
                   aria-label={`Go to resources list of fansub ${r.fansub.name}`}
                 >
@@ -115,7 +115,7 @@ function followSearch(params: Record<string, string>) {
                 </a>
               ) : r.publisher ? (
                 <a
-                  href={`/resources/1?${followSearch({ publisher: r.publisher.id })}`}
+                  href={`/resources/1?${followSearch({ publisherId: r.publisher.id })}`}
                   class="block w-max"
                   aria-label={`Go to resources list of publisher ${r.publisher.name}`}
                 >
