@@ -34,6 +34,7 @@ const runtime = getRuntime<Env>(Astro.request);
 
 const {
   ok,
+  complete,
   resources,
   filter: searchParams
 } = await fetchResources(page, params, {
@@ -138,7 +139,9 @@ const keywords = {
             </>
           )}
           <ResourceTable resources={resources} />
-          <Pagination page={page} href={(page) => `/resources/${page}${url.search}`} />
+          {complete && (
+            <Pagination page={page} href={(page) => `/resources/${page}${url.search}`} />
+          )}
         </>
       ) : (
         <>
