@@ -19,7 +19,7 @@ GET https://garden.onekuma.cn/api/resources?type=動畫&fansubId=803&publisherId
 Content-Type: application/json
 
 ### Search resources
-GET https://garden.onekuma.cn/api/resources/search
+GET https://garden.onekuma.cn/api/resources
 Content-Type: application/json
 
 {
@@ -27,7 +27,7 @@ Content-Type: application/json
 }
 
 ### Only search 動畫
-GET https://garden.onekuma.cn/api/resources/search?type=動畫
+GET https://garden.onekuma.cn/api/resources?type=動畫
 Content-Type: application/json
 
 {
@@ -35,7 +35,7 @@ Content-Type: application/json
 }
 
 ### Search resources with exclude
-GET https://garden.onekuma.cn/api/resources/search
+GET https://garden.onekuma.cn/api/resources
 Content-Type: application/json
 
 {
@@ -46,7 +46,7 @@ Content-Type: application/json
 ### Search resources with complicated search
 ### Resource must has type "動畫"
 ### Resource title must contains ("機動戰士鋼彈" or "机动战士高达") and "水星的魔女" and ("第二季" or "Season 2" or "S2")
-GET https://garden.onekuma.cn/api/resources/search?type=動畫
+GET https://garden.onekuma.cn/api/resources?type=動畫
 Content-Type: application/json
 
 {
@@ -58,7 +58,7 @@ Content-Type: application/json
 }
 
 ### Search resources with full text index
-GET https://garden.onekuma.cn/api/resources/search?type=動畫
+GET https://garden.onekuma.cn/api/resources?type=動畫
 Cache-Control: no-cache
 Content-Type: application/json
 
