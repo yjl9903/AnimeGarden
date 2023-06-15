@@ -17,30 +17,36 @@ export { normalizeTitle } from './utils';
 
 export const DefaultBaseURL = 'https://garden.onekuma.cn/api/';
 
+interface FetchResourcesResult {
+  ok: boolean;
+  resources: Resource[];
+  complete: boolean;
+  filter?: Omit<ResolvedFilterOptions, 'page'>;
+  timestamp?: Date;
+}
+
 /**
  * Fetch resources data from dmhy mirror site
  */
 export async function fetchResources(
   fetch: (request: RequestInfo, init?: RequestInit) => Promise<Response>,
   options: FetchResourcesOptions = {}
-): Promise<{
-  ok: boolean;
-  resources: Resource[];
-  filter?: ResolvedFilterOptions;
-  timestamp?: Date;
-}> {
+): Promise<FetchResourcesResult> {
   const { baseURL = DefaultBaseURL, retry = 1 } = options;
 
   const url = stringifySearchURL(baseURL, options);
 
   if (options.count !== undefined && options.count !== null) {
+    // Fetch multiple pages
+
     // Prefer the original count or -1 for inf
     const count = options.count < 0 ? Number.MAX_SAFE_INTEGER : options.count;
 
     const map = new Map<string, Resource>();
     let aborted = false;
     let timestamp = new Date(0);
-    let filter: ResolvedFilterOptions | undefined = undefined;
+    let complete = false;
+    let filter: Omit<ResolvedFilterOptions, 'page'> | undefined = undefined;
 
     for (let page = 1; map.size < count; page++) {
       try {
@@ -51,6 +57,7 @@ export async function fetchResources(
         }
 
         timestamp = resp.timestamp;
+        complete = resp.complete;
         if (resp.filter) {
           filter = resp.filter;
         }
@@ -80,18 +87,26 @@ export async function fetchResources(
       }
     }
 
+    if (filter && 'page' in filter) {
+      delete filter['page'];
+    }
+
     return {
       ok: !aborted,
       resources: uniq([...map.values()]),
+      complete: aborted ? false : complete,
       filter,
       timestamp
     };
   } else {
+    // Fetch one page
+
     const resp = await fetchPage(options.page ?? 1);
     if (!resp) {
       return {
         ok: false,
         resources: [],
+        complete: false,
         filter: undefined,
         timestamp: undefined
       };
@@ -107,6 +122,7 @@ export async function fetchResources(
     return {
       ok: true,
       resources,
+      complete: resp.complete ?? false,
       filter: resp.filter,
       timestamp: resp.timestamp
     };
@@ -120,6 +136,7 @@ export async function fetchResources(
         const r = await resp.json();
         return {
           resources: r.resources as Resource[],
+          complete: r.complete as boolean,
           filter: r.filter as ResolvedFilterOptions | undefined,
           timestamp: new Date(r.timestamp)
         };
