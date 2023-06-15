@@ -39,6 +39,7 @@ export const get: APIRoute = async (context) => {
         description:
           'Anime Garden 是動漫花園資源網的第三方镜像站, 動漫花園資訊網是一個動漫愛好者交流的平台,提供最及時,最全面的動畫,漫畫,動漫音樂,動漫下載,BT,ED,動漫遊戲,資訊,分享,交流,讨论.',
         site: stringifySearchURL(context.site!.origin, filter.data[0]).toString(),
+        trailingSlash: false,
         items: resources.map((r) => {
           return {
             title: r.title,
