@@ -74,7 +74,7 @@ export const getSearchResources = memoAsync(
         NOT: exclude?.map((t) => ({ titleAlt: { contains: normalizeTitle(t) } }))
       },
       skip: (page - 1) * pageSize,
-      take: pageSize,
+      take: pageSize + 1, // Used for determining whether there are rest resources
       orderBy: {
         createdAt: 'desc'
       },
@@ -123,10 +123,12 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
     ? await getSearchResources(ctx.env, filter)
     : await getSearchResources.raw(ctx.env, filter);
 
-  const resources = resolveQueryResult(result);
+  const complete = result.length > filter.pageSize;
+  const resources = resolveQueryResult(result.slice(0, filter.pageSize));
 
   return ctx.json({
     resources,
+    complete,
     filter,
     timestamp: await timestampPromise
   });
