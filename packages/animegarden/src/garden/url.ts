@@ -170,13 +170,13 @@ export function stringifySearchURL(baseURL: string, options: FilterOptions): URL
   if (options.after) {
     url.searchParams.set('after', '' + options.after.getTime());
   }
-  if (options.search) {
+  if (options.search && options.search.length > 0) {
     url.searchParams.set('search', JSON.stringify(options.search ?? []));
   }
-  if (options.include) {
+  if (options.include && options.include.length > 0) {
     url.searchParams.set('include', JSON.stringify(options.include ?? []));
   }
-  if (options.exclude) {
+  if (options.exclude && options.exclude.length > 0) {
     url.searchParams.set('exclude', JSON.stringify(options.exclude ?? []));
   }
 

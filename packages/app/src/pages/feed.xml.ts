@@ -64,10 +64,10 @@ function inferTitle(params: URLSearchParams, options: ResolvedFilterOptions) {
   if (params.get('title')) {
     return params.get('title')!;
   }
-  if (options.search) {
+  if (options.search && options.search.length > 0) {
     return removeQuote(options.search).join(' ');
   }
-  if (options.include) {
+  if (options.include && options.include.length > 0) {
     return options.include
       .map((i) => i[0])
       .filter(Boolean)
