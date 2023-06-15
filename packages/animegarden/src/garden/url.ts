@@ -33,9 +33,9 @@ export const FilterSchema = z.object({
   type: z.string().optional(),
   before: z.date().optional(),
   after: z.date().optional(),
-  search: z.array(z.string()).optional(),
-  include: z.array(z.array(z.string())).optional(),
-  exclude: z.array(z.string()).optional()
+  search: stringArray.optional(),
+  include: stringArrayArray.optional(),
+  exclude: stringArray.optional()
 });
 
 const parser = {
@@ -62,21 +62,20 @@ const parser = {
   exclude: stringArrayLike
 };
 
-export function parseSearchURL(params: URLSearchParams, body?: any): ResolvedFilterOptions {
+type ParserKey = keyof typeof parser;
+
+export function parseSearchURL(
+  params: URLSearchParams,
+  body?: FilterOptions
+): ResolvedFilterOptions {
   const entries = [...Object.entries(parser)].map(([key, parser]) => {
     if (body && typeof body === 'object') {
-      const content = body[key] as any;
+      const content = body[key as ParserKey];
       if (content !== null && content !== undefined) {
-        if (key === 'search' || key === 'exclude') {
-          const parsed = stringArray.safeParse(content);
-          if (parsed.success) {
-            return [key, parsed.data];
-          }
-        } else if (key === 'include') {
-          const parsed = stringArrayArray.safeParse(content);
-          if (parsed.success) {
-            return [key, parsed.data];
-          }
+        const parser2 = FilterSchema.shape[key as ParserKey];
+        const parsed = parser2.safeParse(content);
+        if (parsed.success) {
+          return [key, parsed.data];
         }
       }
     }

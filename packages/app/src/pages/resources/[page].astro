@@ -16,7 +16,7 @@ const { page: _page } = Astro.params;
 const page = _page ? +_page : 1;
 
 const url = Astro.url;
-const params = parseSearchURL(Astro.url.searchParams);
+const params = parseSearchURL(url.searchParams, { pageSize: 80 });
 
 const publisherId = params.publisherId;
 const fansubId = params.fansubId;
@@ -37,9 +37,13 @@ const {
   complete,
   resources,
   filter: searchParams
-} = await fetchResources(page, params, {
-  fetch: wfetch(runtime?.env?.worker)
-});
+} = await fetchResources(
+  page,
+  { ...params },
+  {
+    fetch: wfetch(runtime?.env?.worker)
+  }
+);
 
 const keywords = {
   search: searchParams?.search ? removeQuote(searchParams.search) : [...(search ?? [])],
