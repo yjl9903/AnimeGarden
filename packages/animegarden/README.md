@@ -29,7 +29,9 @@ const resources = await fetchResources(fetch)
 const sakurato = await fetchResources(fetch, { count: -1, fansub: 619 })
 ```
 
-You can check more conditions [here](https://github.com/yjl9903/AnimeGarden/blob/main/packages/animegarden/src/garden.ts).
+Assume your environment has built-in [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch). If not you can use [undici](https://github.com/nodejs/undici) or [ofetch](https://github.com/unjs/ofetch).
+
+You can check more filter conditions [FilterOptions](https://github.com/yjl9903/AnimeGarden/blob/main/packages/animegarden/src/garden/types.ts) and usage examples in [./scripts/](https://github.com/yjl9903/AnimeGarden/blob/main/scripts/) directory.
 
 ## Credits
 

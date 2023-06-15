@@ -11,7 +11,7 @@ GET https://garden.onekuma.cn/api/resources?page=2
 Content-Type: application/json
 
 ### List resources from the 21st to 40th
-GET https://garden.onekuma.cn/api/resources?page=2&count=20
+GET https://garden.onekuma.cn/api/resources?page=2&pageSize=20
 Content-Type: application/json
 
 ### List resources with more filter
