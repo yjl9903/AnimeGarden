@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { QueryType } from './constant';
 import { normalizeTitle } from './utils';
 import { FilterOptions, ResolvedFilterOptions } from './types';
 
@@ -161,7 +162,8 @@ export function stringifySearchURL(baseURL: string, options: FilterOptions): URL
     url.searchParams.set('publisherId', '' + options.publisherId);
   }
   if (options.type) {
-    url.searchParams.set('type', '' + options.type);
+    const type = options.type;
+    url.searchParams.set('type', type in QueryType ? QueryType[type] : type);
   }
   if (options.before) {
     url.searchParams.set('before', '' + options.before.getTime());
