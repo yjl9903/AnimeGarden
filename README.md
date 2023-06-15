@@ -10,7 +10,7 @@
 
 + ☁️ Provide [API endpoint](https://garden.onekuma.cn/api/resources)
 + 🔖 Support Advanced search, i.e. `【我推的孩子】 fansub:桜都字幕组 include:简日内嵌`
-+ 📙 Generate RSS feed, i.e. [【我推的孩子】](https://garden.onekuma.cn/feed.xml?filter=[{"fansubId":619,"search":["\"【我推的孩子】\""],"include":[["简日内嵌"]],"exclude":[]}])
++ 📙 Generate RSS feed, i.e. [【我推的孩子】](https://garden.onekuma.cn/feed.xml?filter=[{%22fansubId%22:619,%22search%22:[%22%E3%80%90%E6%88%91%E6%8E%A8%E7%9A%84%E5%AD%A9%E5%AD%90%E3%80%91%22],%22include%22:[[%22%E7%AE%80%E6%97%A5%E5%86%85%E5%B5%8C%22]],%22exclude%22:[]}])
 
 ![home](./assets/home.png)
 
