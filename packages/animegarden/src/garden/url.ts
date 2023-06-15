@@ -147,11 +147,8 @@ export function parseSearchURL(params: URLSearchParams, body?: any): ResolvedFil
 }
 
 export function stringifySearchURL(baseURL: string, options: FilterOptions): URL {
-  const url = new URL('resources', baseURL);
+  const url = new URL('resources/' + (options.page ?? '1'), baseURL);
 
-  if (options.page) {
-    url.searchParams.set('page', '' + options.page);
-  }
   if (options.pageSize) {
     url.searchParams.set('pageSize', '' + options.pageSize);
   }
