@@ -1,46 +1,57 @@
 import type { APIRoute } from 'astro';
 
 import rss from '@astrojs/rss';
+import { z } from 'zod';
 import { toDate } from 'date-fns-tz';
-import { fetchResources } from 'animegarden';
+import { getRuntime } from '@astrojs/cloudflare/runtime';
+import { FilterSchema, fetchResources } from 'animegarden';
 
-import { ofetch } from '../fetch';
+import { Env } from '../env';
+import { wfetch } from '../fetch';
 import { WORKER_BASE } from '../constant';
 
+const ManyFilterSchema = z.union([z.array(FilterSchema), FilterSchema.transform((f) => [f])]);
+
 export const get: APIRoute = async (context) => {
-  const url = new URL(context.request.url);
-  url.protocol = 'https:';
-  url.host = WORKER_BASE;
-  url.port = '';
-  url.pathname = '/resources/search';
-  // Only allow generate rss for the first page
-  url.searchParams.set('page', '1');
-  const request = new Request(url, context.request);
+  try {
+    const filterString = context.url.searchParams.get('filter');
+    const rawFilter = filterString ? JSON.parse(filterString) : { page: 1, pageSize: 1000 };
+    const filter = ManyFilterSchema.safeParse(rawFilter);
 
-  const title = inferTitle(url);
+    if (filter.success && filter.data.length > 0) {
+      const title = inferTitle(context.url);
+      const runtime = getRuntime<Env>(context.request);
+      const { resources } = await fetchResources(wfetch(runtime?.env?.worker), {
+        ...filter.data[0],
+        page: 1,
+        pageSize: 1000,
+        baseURL: 'https://' + WORKER_BASE
+      });
 
-  const { resources } = await (ofetch(request).then((r) => r.json()) as ReturnType<
-    typeof fetchResources
-  >);
+      return rss({
+        title,
+        description:
+          'Anime Garden 是動漫花園資源網的第三方镜像站, 動漫花園資訊網是一個動漫愛好者交流的平台,提供最及時,最全面的動畫,漫畫,動漫音樂,動漫下載,BT,ED,動漫遊戲,資訊,分享,交流,讨论.',
+        site: context.site!.origin,
+        items: resources.map((r) => {
+          return {
+            title: r.title,
+            pubDate: toDate(r.createdAt, { timeZone: 'Asia/Shanghai' }),
+            link: toGardenURL(context.site!.origin, r.href),
+            enclosure: {
+              url: r.magnet,
+              length: r.size ? formatSize(r.size) : 1,
+              type: 'application/x-bittorrent'
+            }
+          };
+        })
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
 
-  return rss({
-    title,
-    description:
-      'Anime Garden 是動漫花園資源網的第三方镜像站, 動漫花園資訊網是一個動漫愛好者交流的平台,提供最及時,最全面的動畫,漫畫,動漫音樂,動漫下載,BT,ED,動漫遊戲,資訊,分享,交流,讨论.',
-    site: context.site!.origin,
-    items: resources.map((r) => {
-      return {
-        title: r.title,
-        pubDate: toDate(r.createdAt, { timeZone: 'Asia/Shanghai' }),
-        link: toGardenURL(context.site!.origin, r.href),
-        enclosure: {
-          url: r.magnet,
-          length: r.size ? formatSize(r.size) : 1,
-          type: 'application/x-bittorrent'
-        }
-      };
-    })
-  });
+  return new Response(JSON.stringify({ status: 400 }), { status: 400 });
 };
 
 function inferTitle(url: URL) {

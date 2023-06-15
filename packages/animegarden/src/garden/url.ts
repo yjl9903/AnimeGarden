@@ -19,6 +19,25 @@ const stringArrayArray = z.union([
   z.array(stringArray).default([])
 ]);
 
+export const FilterSchema = z.object({
+  page: z
+    .number()
+    .default(1)
+    .refine((p) => p >= 1),
+  pageSize: z
+    .number()
+    .default(100)
+    .refine((ps) => 1 <= ps && ps <= 1000),
+  fansubId: z.number().optional(),
+  publisherId: z.number().optional(),
+  type: z.string().optional(),
+  before: z.date().optional(),
+  after: z.date().optional(),
+  search: z.array(z.string()).optional(),
+  include: z.array(z.array(z.string())).optional(),
+  exclude: z.array(z.string()).optional()
+});
+
 const parser = {
   page: z.coerce
     .number()
