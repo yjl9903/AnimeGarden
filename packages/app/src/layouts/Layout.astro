@@ -176,10 +176,12 @@ function followSearch(params: Record<string, string>) {
           }
         };
         const target = find(ev.target);
-        if (target && target.nodeName.toLowerCase() === 'a') {
+        if (target) {
           const href = target.getAttribute('href');
-          if (href && (href.startsWith('/') || href.startsWith(window.location.origin))) {
-            loading.set(true);
+          if (target.getAttribute('target') !== '_blank') {
+            if (href && (href.startsWith('/') || href.startsWith(window.location.origin))) {
+              loading.set(true);
+            }
           }
         }
       });
