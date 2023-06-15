@@ -1,0 +1,9 @@
+---
+const href = new URL(Astro.url);
+if (href.pathname.endsWith('/')) {
+  href.pathname += '1';
+} else {
+  href.pathname += '/1';
+}
+return Astro.redirect(href);
+---
