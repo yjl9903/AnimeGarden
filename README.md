@@ -9,8 +9,8 @@
 動漫花園 3-rd party [mirror site](https://garden.onekuma.cn).
 
 + ☁️ Provide [API endpoint](https://garden.onekuma.cn/api/resources)
-+ 🔖 Support Advanced search, i.e. `我推的孩子 fansub:桜都字幕组 include:简日内嵌`
-+ 📙 Generate RSS feed, i.e. [我的百合乃工作是也！](https://garden.onekuma.cn/feed.xml?search=%5B%22%E6%88%91%E7%9A%84%E7%99%BE%E5%90%88%E4%B9%83%E5%B7%A5%E4%BD%9C%E6%98%AF%E4%B9%9F%22%5D&include=%5B%22%E7%AE%80%E4%BD%93%22%5D&exclude=%5B%5D&fansub=619)
++ 🔖 Support Advanced search, i.e. `【我推的孩子】 fansub:桜都字幕组 include:简日内嵌`
++ 📙 Generate RSS feed, i.e. [【我推的孩子】](https://garden.onekuma.cn/feed.xml?filter=[{%22fansubId%22:619,%22search%22:[%22\%22%E3%80%90%E6%88%91%E6%8E%A8%E7%9A%84%E5%AD%A9%E5%AD%90%E3%80%91\%22%22],%22include%22:[[%22%E7%AE%80%E6%97%A5%E5%86%85%E5%B5%8C%22]],%22exclude%22:[]}])
 
 ![home](./assets/home.png)
 
@@ -22,7 +22,7 @@ curl "https://garden.onekuma.cn/api/resources?page=1&count=1"
 
 You can find more API usage example in [scripts/api.http](./scripts/api.http).
 
-If you are using JavaScript, you can just use the API wrapper `fetchResources` and `fetchResourceDetail` in package [animegarden](https://www.npmjs.com/package/animegarden).
+If you are using JavaScript / TypeScript, you can just use the API wrapper `fetchResources` and `fetchResourceDetail` in package [animegarden](https://www.npmjs.com/package/animegarden).
 
 ## Packages
 
@@ -45,7 +45,9 @@ const resources = await fetchResources(fetch)
 const sakurato = await fetchResources(fetch, { count: -1, fansub: 619 })
 ```
 
-You can check more conditions [here](https://github.com/yjl9903/AnimeGarden/blob/main/packages/animegarden/src/garden.ts).
+Assume your environment has built-in [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch). If not you can use [undici](https://github.com/nodejs/undici) or [ofetch](https://github.com/unjs/ofetch).
+
+You can check more filter conditions [FilterOptions](https://github.com/yjl9903/AnimeGarden/blob/main/packages/animegarden/src/garden/types.ts) and usage examples in [./scripts/](https://github.com/yjl9903/AnimeGarden/blob/main/scripts/) directory.
 
 ### anitomy
 
