@@ -21,7 +21,9 @@ const ManyFilterSchema = z.union([z.array(FilterSchema), FilterSchema.transform(
 export const get: APIRoute = async (context) => {
   try {
     const filterString = context.url.searchParams.get('filter');
+    console.log(filterString)
     const rawFilter = filterString ? JSON.parse(filterString) : { page: 1, pageSize: 1000 };
+    console.log(rawFilter)
     const filter = ManyFilterSchema.safeParse(rawFilter);
 
     if (filter.success && filter.data.length > 0) {
