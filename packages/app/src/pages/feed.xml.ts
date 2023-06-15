@@ -4,7 +4,12 @@ import rss from '@astrojs/rss';
 import { z } from 'zod';
 import { toDate } from 'date-fns-tz';
 import { getRuntime } from '@astrojs/cloudflare/runtime';
-import { FilterSchema, ResolvedFilterOptions, fetchResources } from 'animegarden';
+import {
+  FilterSchema,
+  ResolvedFilterOptions,
+  fetchResources,
+  stringifySearchURL
+} from 'animegarden';
 
 import { Env } from '../env';
 import { wfetch } from '../fetch';
@@ -33,7 +38,7 @@ export const get: APIRoute = async (context) => {
         title,
         description:
           'Anime Garden 是動漫花園資源網的第三方镜像站, 動漫花園資訊網是一個動漫愛好者交流的平台,提供最及時,最全面的動畫,漫畫,動漫音樂,動漫下載,BT,ED,動漫遊戲,資訊,分享,交流,讨论.',
-        site: context.site!.origin,
+        site: stringifySearchURL(context.site!.origin, filter.data[0]).toString(),
         items: resources.map((r) => {
           return {
             title: r.title,
