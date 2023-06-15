@@ -8,6 +8,7 @@ import { FilterSchema, ResolvedFilterOptions, fetchResources } from 'animegarden
 
 import { Env } from '../env';
 import { wfetch } from '../fetch';
+import { removeQuote } from '../utils';
 import { WORKER_BASE } from '../constant';
 
 const ManyFilterSchema = z.union([z.array(FilterSchema), FilterSchema.transform((f) => [f])]);
@@ -59,7 +60,7 @@ function inferTitle(params: URLSearchParams, options: ResolvedFilterOptions) {
     return params.get('title')!;
   }
   if (options.search) {
-    return options.search.join(' ');
+    return removeQuote(options.search).join(' ');
   }
   if (options.include) {
     return options.include

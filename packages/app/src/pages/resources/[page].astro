@@ -8,6 +8,7 @@ import Pagination from '../../components/Pagination.astro';
 import ResourceTable from '../../components/ResourceTable.astro';
 
 import { Env } from '../../env';
+import { removeQuote } from '../../utils';
 import { fansubs, QueryType } from '../../constant';
 import { wfetch, fetchResources } from '../../fetch';
 
@@ -44,10 +45,6 @@ const keywords = {
   include: searchParams?.include ? searchParams.include : [...(include ?? [])],
   exclude: searchParams?.exclude ? searchParams.exclude : [...(exclude ?? [])]
 };
-
-function removeQuote(words: string[]) {
-  return words.map((w) => w.replace(/^(\+|-)?"([^"]*)"$/, '$1$2'));
-}
 ---
 
 <Layout title="所有资源 | Anime Garden">
