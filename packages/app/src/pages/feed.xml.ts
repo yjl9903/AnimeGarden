@@ -19,7 +19,7 @@ export const get: APIRoute = async (context) => {
     const filter = ManyFilterSchema.safeParse(rawFilter);
 
     if (filter.success && filter.data.length > 0) {
-      const title = inferTitle(filter.data[0]);
+      const title = inferTitle(context.url.searchParams, filter.data[0]);
       const runtime = getRuntime<Env>(context.request);
       const { resources } = await fetchResources(wfetch(runtime?.env?.worker), {
         ...filter.data[0],
@@ -54,7 +54,10 @@ export const get: APIRoute = async (context) => {
   return new Response(JSON.stringify({ status: 400 }), { status: 400 });
 };
 
-function inferTitle(options: ResolvedFilterOptions) {
+function inferTitle(params: URLSearchParams, options: ResolvedFilterOptions) {
+  if (params.get('title')) {
+    return params.get('title')!;
+  }
   if (options.search) {
     return options.search.join(' ');
   }
