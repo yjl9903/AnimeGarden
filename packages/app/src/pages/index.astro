@@ -10,7 +10,11 @@ import { wfetch, fetchResources } from '../fetch';
 
 const runtime = getRuntime<Env>(Astro.request);
 
-const { ok, resources } = await fetchResources(1, { fetch: wfetch(runtime?.env?.worker) });
+const { ok, resources } = await fetchResources(
+  1,
+  { pageSize: 80 },
+  { fetch: wfetch(runtime?.env?.worker) }
+);
 ---
 
 <Layout title="Anime Garden">
