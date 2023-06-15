@@ -9,8 +9,8 @@
 動漫花園 3-rd party [mirror site](https://garden.onekuma.cn).
 
 + ☁️ Provide [API endpoint](https://garden.onekuma.cn/api/resources)
-+ 🔖 Support Advanced search like `我推的孩子 fansub:桜都字幕组 include:简日内嵌`
-+ 📙 Generate RSS feed like [我的百合乃工作是也！](https://garden.onekuma.cn/feed.xml?search=%5B%22%E6%88%91%E7%9A%84%E7%99%BE%E5%90%88%E4%B9%83%E5%B7%A5%E4%BD%9C%E6%98%AF%E4%B9%9F%22%5D&include=%5B%22%E7%AE%80%E4%BD%93%22%5D&exclude=%5B%5D&fansub=619)
++ 🔖 Support Advanced search, i.e. `我推的孩子 fansub:桜都字幕组 include:简日内嵌`
++ 📙 Generate RSS feed, i.e. [我的百合乃工作是也！](https://garden.onekuma.cn/feed.xml?search=%5B%22%E6%88%91%E7%9A%84%E7%99%BE%E5%90%88%E4%B9%83%E5%B7%A5%E4%BD%9C%E6%98%AF%E4%B9%9F%22%5D&include=%5B%22%E7%AE%80%E4%BD%93%22%5D&exclude=%5B%5D&fansub=619)
 
 ![home](./assets/home.png)
 
