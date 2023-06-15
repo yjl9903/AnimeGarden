@@ -4,7 +4,7 @@ import rss from '@astrojs/rss';
 import { z } from 'zod';
 import { toDate } from 'date-fns-tz';
 import { getRuntime } from '@astrojs/cloudflare/runtime';
-import { FilterSchema, fetchResources } from 'animegarden';
+import { FilterSchema, ResolvedFilterOptions, fetchResources } from 'animegarden';
 
 import { Env } from '../env';
 import { wfetch } from '../fetch';
@@ -19,7 +19,7 @@ export const get: APIRoute = async (context) => {
     const filter = ManyFilterSchema.safeParse(rawFilter);
 
     if (filter.success && filter.data.length > 0) {
-      const title = inferTitle(context.url);
+      const title = inferTitle(filter.data[0]);
       const runtime = getRuntime<Env>(context.request);
       const { resources } = await fetchResources(wfetch(runtime?.env?.worker), {
         ...filter.data[0],
@@ -54,32 +54,17 @@ export const get: APIRoute = async (context) => {
   return new Response(JSON.stringify({ status: 400 }), { status: 400 });
 };
 
-function inferTitle(url: URL) {
-  const search = get('search') ?? get('include') ?? undefined;
-  return search ?? 'Anime Garden - 動漫花園資源網 第三方镜像站';
-
-  function get(key: string) {
-    const content = url.searchParams.get(key);
-    try {
-      const arr = JSON.parse(content ?? '[]') as (string | string[])[];
-      if (Array.isArray(arr) && arr.length >= 1) {
-        return arr
-          .map((a) => {
-            if (typeof a === 'string') {
-              return a;
-            } else if (Array.isArray(a) && a.length >= 1 && typeof a[0] === 'string') {
-              return a[0];
-            } else {
-              return '';
-            }
-          })
-          .join(' ');
-      }
-      return undefined;
-    } catch {
-      return undefined;
-    }
+function inferTitle(options: ResolvedFilterOptions) {
+  if (options.search) {
+    return options.search.join(' ');
   }
+  if (options.include) {
+    return options.include
+      .map((i) => i[0])
+      .filter(Boolean)
+      .join(' ');
+  }
+  return 'Anime Garden - 動漫花園資源網 第三方镜像站';
 }
 
 function toGardenURL(origin: string, href: string) {
