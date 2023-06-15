@@ -1,13 +1,12 @@
 ---
+import { parseSearchURL } from 'animegarden';
 import { getRuntime } from '@astrojs/cloudflare/runtime';
 
 import type { Env } from '../env';
 
 import Search from '../components/Search';
 import Dropdown from '../components/Dropdown.astro';
-
 import { types, fansubs } from '../constant';
-import { parseSearchURL } from 'animegarden';
 
 export interface Props {
   title: string;
