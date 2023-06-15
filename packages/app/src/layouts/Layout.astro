@@ -6,6 +6,7 @@ import type { Env } from '../env';
 
 import Search from '../components/Search';
 import Dropdown from '../components/Dropdown.astro';
+import { removeQuote } from '../utils'
 import { types, fansubs } from '../constant';
 
 export interface Props {
@@ -28,6 +29,9 @@ const hasFansubSearch = search.has('fansubId');
 
 function generateFeed(params: URLSearchParams) {
   const filter = parseSearchURL(params);
+  if (filter.search) {
+    filter.search = removeQuote(filter.search);
+  }
   return JSON.stringify([{...filter, page: undefined, pageSize: undefined}]);
 }
 
