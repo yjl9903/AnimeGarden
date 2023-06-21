@@ -30,8 +30,8 @@ importers:
         specifier: ^7.0.0
         version: 7.0.0
       ofetch:
-        specifier: ^1.1.0
-        version: 1.1.0
+        specifier: ^1.1.1
+        version: 1.1.1
       prettier:
         specifier: ^2.8.8
         version: 2.8.8
@@ -1707,7 +1707,7 @@ packages:
     dependencies:
       '@iconify/utils': 2.1.6
       '@unocss/core': 0.53.1
-      ofetch: 1.1.0
+      ofetch: 1.1.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -1744,7 +1744,7 @@ packages:
     resolution: {integrity: sha512-UwAYDkdIVwydw1UxXFVQ7HufzIPxY6Nf3ATb3cKgC134xLNGxbzIQx7DQRFSGe6hmqYC2S86U+URayboGlL1iA==}
     dependencies:
       '@unocss/core': 0.53.1
-      ofetch: 1.1.0
+      ofetch: 1.1.1
     dev: true
 
   /@unocss/preset-wind@0.53.1:
@@ -2618,6 +2618,10 @@ packages:
 
   /destr@1.2.2:
     resolution: {integrity: sha512-lrbCJwD9saUQrqUfXvl6qoM+QN3W7tLV5pAOs+OqOmopCCz/JkE05MHedJR1xfk4IAnZuJXPVuN5+7jNA2ZCiA==}
+    dev: true
+
+  /destr@2.0.0:
+    resolution: {integrity: sha512-FJ9RDpf3GicEBvzI3jxc2XhHzbqD8p4ANw/1kPsFBfTvP1b7Gn/Lg1vO7R9J4IVgoMbyUmFrFGZafJ1hPZpvlg==}
     dev: true
 
   /detect-libc@2.0.1:
@@ -4202,10 +4206,10 @@ packages:
       boolbase: 1.0.0
     dev: false
 
-  /ofetch@1.1.0:
-    resolution: {integrity: sha512-yjq2ZUUMto1ITpge2J5vNlUfteLzxfHn9aJC55WtVGD3okKwSfPoLaKpcHXmmKd2kZZUGo+jdkFuuj09Blyeig==}
+  /ofetch@1.1.1:
+    resolution: {integrity: sha512-SSMoktrp9SNLi20BWfB/BnnKcL0RDigXThD/mZBeQxkIRv1xrd9183MtLdsqRYLYSqW0eTr5t8w8MqjNhvoOQQ==}
     dependencies:
-      destr: 1.2.2
+      destr: 2.0.0
       node-fetch-native: 1.2.0
       ufo: 1.1.2
     dev: true
