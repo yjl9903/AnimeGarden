@@ -13260,3 +13260,142 @@ exports[`tokenize > should work 66`] = `
   ],
 }
 `;
+
+exports[`tokenize > should work 67`] = `
+{
+  "ok": true,
+  "result": {},
+  "tokens": [
+    {
+      "category": "Bracket",
+      "content": "【",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "幻樱字幕组",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "】",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "【",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "7月新番",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "】",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "【",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "异世界舅舅",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "Isekai",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "Ojisan",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "】",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "【",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "13",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": "_",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "END",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "】",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "【",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "BIG5",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": "_",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "MP4",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "】",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "【",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "1920X1080",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "】",
+      "enclosed": true,
+    },
+  ],
+}
+`;

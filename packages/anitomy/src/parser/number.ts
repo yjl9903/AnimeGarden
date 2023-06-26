@@ -86,15 +86,32 @@ export function searchForSeparatedNumbers(context: ParserContext, tokens: number
 }
 
 /**
- * Searches for isolated numbers in a list of tokens, e.g. [01].
+ * Searches for isolated numbers in a list of tokens, e.g. [01], [13_END].
  */
 export function searchForIsolatedEpisodeNumber(context: ParserContext, tokens: number[]) {
-  const isolated = tokens.filter(
-    (it) => context.tokens[it].enclosed && isTokenIsolated(context, it)
-  );
-  for (const it of isolated.reverse()) {
-    if (setEpisodeNumber(context, context.tokens[it].content, context.tokens[it], true)) {
-      return true;
+  {
+    const isolated = tokens.filter(
+      (it) => context.tokens[it].enclosed && isTokenIsolated(context, it)
+    );
+    for (const it of isolated.reverse()) {
+      if (setEpisodeNumber(context, context.tokens[it].content, context.tokens[it], true)) {
+        return true;
+      }
+    }
+  }
+  {
+    const isolated = tokens.filter((it) => context.tokens[it].enclosed);
+    for (const it of isolated.reverse()) {
+      // episode number
+      const prevToken = findPrevToken(context.tokens, it, TokenFlag.NotDelimiter);
+      if (!isMatchTokenCategory(TokenCategory.Bracket, context.tokens[prevToken])) continue;
+      // any word
+      const nextToken = findNextToken(context.tokens, it, TokenFlag.NotDelimiter);
+      const nextnextToken = findNextToken(context.tokens, nextToken, TokenFlag.NotDelimiter);
+      if (!isMatchTokenCategory(TokenCategory.Bracket, context.tokens[nextnextToken])) continue;
+      if (setEpisodeNumber(context, context.tokens[it].content, context.tokens[it], true)) {
+        return true;
+      }
     }
   }
   return false;
