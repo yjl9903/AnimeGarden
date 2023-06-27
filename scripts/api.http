@@ -18,6 +18,10 @@ Content-Type: application/json
 GET https://garden.onekuma.cn/api/resources?type=動畫&fansubId=803&publisherId=727168&after=2023-04-16T13:00:00.000Z&before=1681653600000
 Content-Type: application/json
 
+### List resources from specific fansubs
+GET https://garden.onekuma.cn/api/resources?fansubId=[833,619]
+Content-Type: application/json
+
 ### Search resources
 GET https://garden.onekuma.cn/api/resources
 Content-Type: application/json
