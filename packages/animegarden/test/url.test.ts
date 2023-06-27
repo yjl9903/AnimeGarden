@@ -10,6 +10,7 @@ describe('parse url', () => {
         "before": undefined,
         "exclude": undefined,
         "fansubId": undefined,
+        "fansubName": undefined,
         "include": undefined,
         "page": 1,
         "pageSize": 10,
@@ -25,6 +26,7 @@ describe('parse url', () => {
         "before": undefined,
         "exclude": undefined,
         "fansubId": undefined,
+        "fansubName": undefined,
         "include": undefined,
         "page": 2,
         "pageSize": 1000,
@@ -40,6 +42,7 @@ describe('parse url', () => {
         "before": undefined,
         "exclude": undefined,
         "fansubId": undefined,
+        "fansubName": undefined,
         "include": undefined,
         "page": 2,
         "pageSize": 5,
@@ -55,6 +58,7 @@ describe('parse url', () => {
         "before": undefined,
         "exclude": undefined,
         "fansubId": undefined,
+        "fansubName": undefined,
         "include": undefined,
         "page": 1,
         "pageSize": 1000,
@@ -72,6 +76,7 @@ describe('parse url', () => {
         "before": undefined,
         "exclude": undefined,
         "fansubId": undefined,
+        "fansubName": undefined,
         "include": undefined,
         "page": 1,
         "pageSize": 100,
@@ -88,6 +93,7 @@ describe('parse url', () => {
           "before": 2023-06-13T00:00:00.000Z,
           "exclude": undefined,
           "fansubId": undefined,
+          "fansubName": undefined,
           "include": undefined,
           "page": 1,
           "pageSize": 100,
@@ -135,7 +141,8 @@ describe('parse url', () => {
     const params = [
       'after=2023-06-10',
       'before=2023-06-13',
-      'fansubId=123',
+      'fansubId=[123]',
+      'fansubName="字幕组"',
       'publisherId=456',
       'page=2',
       'pageSize=100',
@@ -154,6 +161,9 @@ describe('parse url', () => {
         ],
         "fansubId": [
           123,
+        ],
+        "fansubName": [
+          "字幕组",
         ],
         "include": [
           [
@@ -182,6 +192,8 @@ describe('parse url', () => {
         `https://garden.onekuma.cn/api/`,
         parseSearchURL(new URLSearchParams(params.join('&')))
       )
-    ).toMatchInlineSnapshot('"https://garden.onekuma.cn/api/resources?page=2&pageSize=100&fansubId=123&publisherId=456&type=%E5%8B%95%E7%95%AB&before=1686614400000&after=1686355200000&search=%5B%22%5C%22hello%5C%22%22%2C%22%5C%22world%5C%22%22%5D&include=%5B%5B%22hello%22%5D%2C%5B%22world1%22%2C%22world3%22%5D%5D&exclude=%5B%22hi%22%5D"');
+    ).toMatchInlineSnapshot(
+      '"https://garden.onekuma.cn/api/resources?page=2&pageSize=100&fansubId=123&fansubName=%5B%22%E5%AD%97%E5%B9%95%E7%BB%84%22%5D&publisherId=456&type=%E5%8B%95%E7%95%AB&before=1686614400000&after=1686355200000&search=%5B%22%5C%22hello%5C%22%22%2C%22%5C%22world%5C%22%22%5D&include=%5B%5B%22hello%22%5D%2C%5B%22world1%22%2C%22world3%22%5D%5D&exclude=%5B%22hi%22%5D"'
+    );
   });
 });

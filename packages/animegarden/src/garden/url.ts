@@ -38,6 +38,7 @@ export const FilterSchema = z.object({
     .default(100)
     .refine((ps) => 1 <= ps && ps <= 1000),
   fansubId: z.number().array().optional(),
+  fansubName: z.string().array().optional(),
   publisherId: z.number().array().optional(),
   type: z.string().optional(),
   before: z.date().optional(),
@@ -57,6 +58,7 @@ const parser = {
     .default(100)
     .transform((ps) => Math.round(Math.max(1, Math.min(1000, ps)))),
   fansubId: numberArrayLike,
+  fansubName: stringArrayLike,
   publisherId: numberArrayLike,
   type: z.coerce.string().optional(),
   before: dateLike,
@@ -177,6 +179,9 @@ export function stringifySearchURL(baseURL: string, options: FilterOptions): URL
         }
       }
     }
+  }
+  if (options.fansubName && options.fansubName.length > 0) {
+    url.searchParams.set('fansubName', JSON.stringify(options.fansubName));
   }
   if (options.publisherId) {
     const publisherId = options.publisherId;

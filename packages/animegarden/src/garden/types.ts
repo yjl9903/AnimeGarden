@@ -7,6 +7,11 @@ export interface FilterOptions {
   fansubId?: number | string | (number | string)[];
 
   /**
+   * Filter by the group name of fansub
+   */
+  fansubName?: string | string[];
+
+  /**
    * Filter by the user id of publisher
    */
   publisherId?: number | string | (number | string)[];
@@ -59,6 +64,11 @@ export interface ResolvedFilterOptions {
    * Filter by the group id of fansub
    */
   fansubId?: number[];
+
+  /**
+   * Filter by the group name of fansub
+   */
+  fansubName?: string[];
 
   /**
    * Filter by the user id of publisher
