@@ -19,7 +19,7 @@ GET https://garden.onekuma.cn/api/resources?type=動畫&fansubId=803&publisherId
 Content-Type: application/json
 
 ### List resources from specific fansubs
-GET https://garden.onekuma.cn/api/resources?fansubId=[833,619]
+GET https://garden.onekuma.cn/api/resources?fansubId=[833,619]&fansubName="爱恋字幕社"
 Content-Type: application/json
 
 ### Search resources
