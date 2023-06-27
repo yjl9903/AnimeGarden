@@ -4,12 +4,12 @@ export interface FilterOptions {
   /**
    * Filter by the group id of fansub
    */
-  fansubId?: number | string;
+  fansubId?: number | string | (number | string)[];
 
   /**
    * Filter by the user id of publisher
    */
-  publisherId?: number | string;
+  publisherId?: number | string | (number | string)[];
 
   /**
    * Filter by the resource type
@@ -36,7 +36,7 @@ export interface FilterOptions {
   /**
    * Include keywords
    */
-  include?: string | (string | string[])[];
+  include?: (string | string[])[];
 
   /**
    * Exclude keywords
@@ -58,12 +58,12 @@ export interface ResolvedFilterOptions {
   /**
    * Filter by the group id of fansub
    */
-  fansubId?: number;
+  fansubId?: number[];
 
   /**
    * Filter by the user id of publisher
    */
-  publisherId?: number;
+  publisherId?: number[];
 
   /**
    * Filter by the resource type

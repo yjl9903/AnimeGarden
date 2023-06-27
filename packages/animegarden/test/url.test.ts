@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseSearchURL } from '../src';
+import { parseSearchURL, stringifySearchURL } from '../src';
 
 describe('parse url', () => {
   it('page and page size should work', () => {
@@ -135,8 +135,8 @@ describe('parse url', () => {
     const params = [
       'after=2023-06-10',
       'before=2023-06-13',
-      'fansub=123',
-      'publisher=456',
+      'fansubId=123',
+      'publisherId=456',
       'page=2',
       'pageSize=100',
       'search=' + JSON.stringify(['hello', 'world']),
@@ -144,6 +144,7 @@ describe('parse url', () => {
       'exclude=' + JSON.stringify(['hi']),
       'type=动画'
     ];
+
     expect(parseSearchURL(new URLSearchParams(params.join('&')))).toMatchInlineSnapshot(`
       {
         "after": 2023-06-10T00:00:00.000Z,
@@ -151,7 +152,9 @@ describe('parse url', () => {
         "exclude": [
           "hi",
         ],
-        "fansubId": undefined,
+        "fansubId": [
+          123,
+        ],
         "include": [
           [
             "hello",
@@ -163,7 +166,9 @@ describe('parse url', () => {
         ],
         "page": 2,
         "pageSize": 100,
-        "publisherId": undefined,
+        "publisherId": [
+          456,
+        ],
         "search": [
           "\\"hello\\"",
           "\\"world\\"",
@@ -171,5 +176,12 @@ describe('parse url', () => {
         "type": "动画",
       }
     `);
+
+    expect(
+      stringifySearchURL(
+        `https://garden.onekuma.cn/api/`,
+        parseSearchURL(new URLSearchParams(params.join('&')))
+      )
+    ).toMatchInlineSnapshot('"https://garden.onekuma.cn/api/resources?page=2&pageSize=100&fansubId=123&publisherId=456&type=%E5%8B%95%E7%95%AB&before=1686614400000&after=1686355200000&search=%5B%22%5C%22hello%5C%22%22%2C%22%5C%22world%5C%22%22%5D&include=%5B%5B%22hello%22%5D%2C%5B%22world1%22%2C%22world3%22%5D%5D&exclude=%5B%22hi%22%5D"');
   });
 });

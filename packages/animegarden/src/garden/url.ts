@@ -20,6 +20,14 @@ const stringArrayArray = z.union([
   z.array(stringArray).default([])
 ]);
 
+const numberArray = z.union([z.coerce.number().transform((n) => [n]), z.array(z.coerce.number())]);
+const numberArrayLike = z.coerce
+  .string()
+  .transform((t) => JSON.parse(t))
+  .catch(undefined)
+  .pipe(numberArray)
+  .optional();
+
 export const FilterSchema = z.object({
   page: z
     .number()
@@ -29,8 +37,8 @@ export const FilterSchema = z.object({
     .number()
     .default(100)
     .refine((ps) => 1 <= ps && ps <= 1000),
-  fansubId: z.number().optional(),
-  publisherId: z.number().optional(),
+  fansubId: z.number().array().optional(),
+  publisherId: z.number().array().optional(),
   type: z.string().optional(),
   before: z.date().optional(),
   after: z.date().optional(),
@@ -48,8 +56,8 @@ const parser = {
     .number()
     .default(100)
     .transform((ps) => Math.round(Math.max(1, Math.min(1000, ps)))),
-  fansubId: z.coerce.number().optional(),
-  publisherId: z.coerce.number().optional(),
+  fansubId: numberArrayLike,
+  publisherId: numberArrayLike,
   type: z.coerce.string().optional(),
   before: dateLike,
   after: dateLike,
@@ -155,12 +163,36 @@ export function stringifySearchURL(baseURL: string, options: FilterOptions): URL
   if (options.pageSize) {
     url.searchParams.set('pageSize', '' + options.pageSize);
   }
+
   if (options.fansubId) {
-    url.searchParams.set('fansubId', '' + options.fansubId);
+    const fansubId = options.fansubId;
+    const parsed = numberArray.safeParse(fansubId);
+    if (parsed.success) {
+      const data = parsed.data;
+      if (data.length > 0) {
+        if (data.length === 1) {
+          url.searchParams.set('fansubId', '' + data[0]);
+        } else {
+          url.searchParams.set('fansubId', JSON.stringify(data));
+        }
+      }
+    }
   }
   if (options.publisherId) {
-    url.searchParams.set('publisherId', '' + options.publisherId);
+    const publisherId = options.publisherId;
+    const parsed = numberArray.safeParse(publisherId);
+    if (parsed.success) {
+      const data = parsed.data;
+      if (data.length > 0) {
+        if (data.length === 1) {
+          url.searchParams.set('publisherId', '' + data[0]);
+        } else {
+          url.searchParams.set('publisherId', JSON.stringify(data));
+        }
+      }
+    }
   }
+
   if (options.type) {
     const type = options.type;
     url.searchParams.set('type', type in QueryType ? QueryType[type] : type);

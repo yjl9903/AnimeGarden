@@ -60,10 +60,14 @@ export const getSearchResources = memoAsync(
             }
           },
           {
-            fansubId: fansubId
+            fansubId: {
+              in: fansubId
+            }
           },
           {
-            publisherId: publisherId
+            publisherId: {
+              in: publisherId
+            }
           },
           {
             AND: include?.map((arr) => ({
