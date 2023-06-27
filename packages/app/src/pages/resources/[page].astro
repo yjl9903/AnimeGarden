@@ -20,7 +20,10 @@ const params = parseSearchURL(url.searchParams, { pageSize: 80 });
 
 const publisherId = params.publisherId;
 const fansubId = params.fansubId;
-const fansub = fansubs.find((f) => f.id === fansubId);
+const fansub = fansubId
+  ? fansubId.map((id) => fansubs.find((f) => f.id === id)).filter(Boolean)
+  : undefined;
+
 const type = params.type && params.type in QueryType ? QueryType[params.type] : params.type;
 const after = params.after;
 const before = params.before;
@@ -63,12 +66,14 @@ const keywords = {
                 {fansub && (
                   <div class="space-x-2 select-none text-0">
                     <span class="text-4 text-base-800 font-bold inline-block mr2">字幕组</span>
-                    <a
-                      href={`/resources/1?fansub=${fansub.id}`}
-                      class="text-4 select-text text-link"
-                    >
-                      {fansub.name}
-                    </a>
+                    {fansub.map((fansub) => (
+                      <a
+                        href={`/resources/1?fansub=${fansub.id}`}
+                        class="text-4 select-text text-link"
+                      >
+                        {fansub.name}
+                      </a>
+                    ))}
                   </div>
                 )}
                 {after && (

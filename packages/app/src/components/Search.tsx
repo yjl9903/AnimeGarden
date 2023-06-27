@@ -2,6 +2,7 @@ import useSWR from 'swr';
 import { Command } from 'cmdk';
 import { useStore } from '@nanostores/react';
 import { tradToSimple } from 'simptrad';
+import { stringifySearchURL } from 'animegarden';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import '../styles/cmdk.css';
@@ -99,7 +100,6 @@ export default function Search() {
       } else {
         const abort = new AbortController();
         signals.current.add(abort);
-        console.log(parseSearch(search));
         const res = await fetchResources(1, parseSearch(search), {
           signal: abort.signal
         });
@@ -360,7 +360,7 @@ function parseSearch(search: string) {
     search: keywords,
     include,
     exclude,
-    fansubId: fansub.at(-1),
+    fansubId: fansub,
     after: after.at(-1),
     before: before.at(-1)
   };
@@ -376,20 +376,9 @@ function goToSearch(search: string) {
     if (match) {
       goTo(`/resource/${match[1]}`);
     } else {
-      const { search: keywords, include, exclude, fansubId, after } = parseSearch(search);
-      const query = [
-        `search=${JSON.stringify(keywords)}`,
-        `include=${JSON.stringify(include)}`,
-        `exclude=${JSON.stringify(exclude)}`
-      ];
-      if (fansubId !== undefined) {
-        query.push(`fansubId=${fansubId}`);
-      }
-      if (after !== undefined) {
-        query.push(`after=${after.toISOString()}`);
-      }
-      query.push(`cmd=${encodeURIComponent(search)}`);
-      goTo(`/resources/1?${query.join('&')}`);
+      const url = stringifySearchURL(location.origin, parseSearch(search));
+      url.searchParams.set('cmd', search);
+      goTo(`${url.pathname}${url.search}`);
     }
   }
 }
