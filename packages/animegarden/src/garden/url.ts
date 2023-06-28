@@ -20,7 +20,7 @@ const stringArrayArray = z.union([
   z.array(stringArray).default([])
 ]);
 
-const numberArray = z.union([z.coerce.number().transform((n) => [n]), z.array(z.coerce.number())]);
+const numberArray = z.union([z.array(z.coerce.number()), z.coerce.number().transform((n) => [n])]);
 const numberArrayLike = z.coerce
   .string()
   .transform((t) => JSON.parse(t))
