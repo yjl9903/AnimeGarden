@@ -2385,11 +2385,19 @@ export const AllFansubs = [
   }
 ];
 
-export function findFansub(text: number): (typeof AllFansubs)[0];
-export function findFansub(text: string, options?: { fuzzy: boolean }): (typeof AllFansubs)[0];
+type Fansub = (typeof AllFansubs)[0];
+
+const fansubIdCache = new Map<number, Fansub>();
+const fansubNameCache = new Map<string, Fansub>();
+
+export function findFansub(text: number): Fansub | undefined;
+export function findFansub(text: string, options?: { fuzzy: boolean }): Fansub | undefined;
 export function findFansub(text: number | string, options: { fuzzy: boolean } = { fuzzy: false }) {
   if (typeof text === 'number') {
-    return AllFansubs.find((f) => f.id === text);
+    if (fansubIdCache.size === 0) {
+      AllFansubs.forEach((f) => fansubIdCache.set(f.id, f));
+    }
+    return fansubIdCache.get(text);
   } else if (typeof text === 'string') {
     if (options.fuzzy) {
       const word = tradToSimple(text);
@@ -2401,7 +2409,10 @@ export function findFansub(text: number | string, options: { fuzzy: boolean } = 
         return AllFansubs.find((f) => tradToSimple(f.name).includes(word2));
       }
     } else {
-      return AllFansubs.find((f) => f.name === text);
+      if (fansubNameCache.size === 0) {
+        AllFansubs.forEach((f) => fansubNameCache.set(f.name, f));
+      }
+      return fansubNameCache.get(text);
     }
   }
   return undefined;

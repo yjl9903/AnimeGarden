@@ -314,7 +314,7 @@ function parseSearch(search: string) {
       if (/^\d$/.test(word)) {
         fansub.push(+word);
       } else {
-        const found = findFansub(word);
+        const found = findFansub(word, { fuzzy: true });
         if (found) {
           fansub.push(found.id);
         }
