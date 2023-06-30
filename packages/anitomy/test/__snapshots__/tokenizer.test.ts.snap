@@ -13399,3 +13399,214 @@ exports[`tokenize > should work 67`] = `
   ],
 }
 `;
+
+exports[`tokenize > should work 68`] = `
+{
+  "ok": true,
+  "result": {
+    "video.resolution": "1080p",
+  },
+  "tokens": [
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "爱恋字幕社",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": "&",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "漫猫字幕社",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "4月新番",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "和山田进行LV999",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "的恋爱",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "Yamada-kun",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "to",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "Lv999",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "no",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "Koi",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "wo",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "Suru",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "13Fin",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Identifier",
+      "content": "1080p",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "MP4",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "简中",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+  ],
+}
+`;

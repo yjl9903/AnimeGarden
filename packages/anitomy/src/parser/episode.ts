@@ -279,7 +279,7 @@ function matchTypeAndEpisodePattern(context: ParserContext, word: string, token:
 }
 
 /**
- * Match partial episodes. e.g. "4a", "111C".
+ * Match partial episodes. e.g. "4a", "111C", "13fin".
  */
 function matchPartialEpisodePattern(context: ParserContext, word: string, token: Token) {
   if (!word) return false;
@@ -291,12 +291,10 @@ function matchPartialEpisodePattern(context: ParserContext, word: string, token:
     }
   }
 
-  const suffixLength = word.length - foundIdx;
-  const isValid = (c: string) => ('A' <= c && c <= 'c') || ('a' <= c && c <= 'c');
+  const suffix = word.slice(foundIdx);
+  const valid = ['a', 'b', 'c', 'fin', 'end'];
 
-  return (
-    suffixLength === 1 && isValid(word[foundIdx]) && setEpisodeNumber(context, word, token, true)
-  );
+  return valid.includes(suffix.toLocaleLowerCase()) && setEpisodeNumber(context, word, token, true);
 }
 
 /**

@@ -91,5 +91,5 @@ export function isLatinChar(c: string) {
 
 export function isMostlyLatinString(str: string) {
   if (str.length === 0) return false;
-  return str.split('').filter(isLatinChar).length / str.length >= 0.5;
+  return str.split('').filter(isLatinChar).length / str.length >= 0.6;
 }
