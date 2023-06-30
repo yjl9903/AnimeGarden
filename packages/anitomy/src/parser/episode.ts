@@ -113,13 +113,15 @@ export function matchEpisodePatterns(context: ParserContext, word: string, token
       return true;
     }
 
-    // e.g. "01-02", "03-05v2"
-    if (matchMultiEpisodePattern(context, word, token)) {
-      return true;
-    }
-
     // e.g. "07.5"
     if (matchFractionalEpisodePattern(context, word, token)) {
+      return true;
+    }
+  }
+
+  if (numericFront) {
+    // e.g. "01-02", "03-05v2", "01-12fin"
+    if (matchMultiEpisodePattern(context, word, token)) {
       return true;
     }
   }
@@ -174,7 +176,7 @@ function matchSingleEpisodePattern(context: ParserContext, word: string, token: 
  * Match a multi episode pattern. e.g. "01-02", "03-05v2".
  */
 function matchMultiEpisodePattern(context: ParserContext, word: string, token: Token) {
-  const RE = /^(\d{1,3})(?:[vV](\d))?[-~&+](\d{1,3})(?:[vV](\d))?$/;
+  const RE = /^(\d{1,3})(?:[vV](\d))?[-~&+](\d{1,3})(?:[vV](\d)|[Ff][Ii][Nn]|[Ee][Nn][Dd])?$/;
   const match = RE.exec(word);
 
   if (!match) return false;
