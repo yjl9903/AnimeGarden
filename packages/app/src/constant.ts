@@ -68,6 +68,13 @@ export const fansubs = [
   { id: 604, name: 'c.c动漫' },
   { id: 288, name: '诸神kamigami字幕组' },
   { id: 438, name: '白恋字幕组' },
+  { id: 834, name: '氢气烤肉架' },
+  { id: 837, name: '六道我大鸽汉化组' },
+  { id: 838, name: '云歌字幕组' },
+  { id: 840, name: '成子坂地下室' },
+  { id: 841, name: '失眠搬运组' },
+  { id: 842, name: 'SRVFI-Raws' },
+  { id: 843, name: 'Pharos of MyGO' },
   // 特摄
   { id: 648, name: '魔星字幕团' },
   { id: 805, name: 'DBD制作组' },
