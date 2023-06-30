@@ -13,6 +13,8 @@ export * from './url';
 
 export * from './types';
 
+export { AllFansubs, findFansub } from './constant';
+
 export { normalizeTitle } from './utils';
 
 export const DefaultBaseURL = 'https://garden.onekuma.cn/api/';

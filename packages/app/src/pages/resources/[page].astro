@@ -1,6 +1,6 @@
 ---
 import { format } from 'date-fns';
-import { parseSearchURL } from 'animegarden';
+import { findFansub, parseSearchURL } from 'animegarden';
 import { getRuntime } from '@astrojs/cloudflare/runtime';
 
 import Layout from '../../layouts/Layout.astro';
@@ -8,8 +8,8 @@ import Pagination from '../../components/Pagination.astro';
 import ResourceTable from '../../components/ResourceTable.astro';
 
 import { Env } from '../../env';
+import { QueryType } from '../../constant';
 import { removeQuote } from '../../utils';
-import { fansubs, QueryType } from '../../constant';
 import { wfetch, fetchResources } from '../../fetch';
 
 const { page: _page } = Astro.params;
@@ -21,7 +21,7 @@ const params = parseSearchURL(url.searchParams, { pageSize: 80 });
 const publisherId = params.publisherId;
 const fansubId = params.fansubId;
 const fansub = fansubId
-  ? fansubId.map((id) => fansubs.find((f) => f.id === id)).filter(Boolean)
+  ? fansubId.map((id) => findFansub(id)).filter(Boolean)
   : undefined;
 
 const type = params.type && params.type in QueryType ? QueryType[params.type] : params.type;

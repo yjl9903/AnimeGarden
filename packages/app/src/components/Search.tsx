@@ -1,8 +1,7 @@
 import useSWR from 'swr';
 import { Command } from 'cmdk';
 import { useStore } from '@nanostores/react';
-import { tradToSimple } from 'simptrad';
-import { stringifySearchURL } from 'animegarden';
+import { findFansub, stringifySearchURL } from 'animegarden';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import '../styles/cmdk.css';
@@ -315,16 +314,9 @@ function parseSearch(search: string) {
       if (/^\d$/.test(word)) {
         fansub.push(+word);
       } else {
-        word = tradToSimple(word);
-        const found = fansubs.find((t) => tradToSimple(t.name).includes(word));
+        const found = findFansub(word);
         if (found) {
           fansub.push(found.id);
-        } else {
-          word = word.replace('樱', '桜');
-          const found = fansubs.find((t) => tradToSimple(t.name).includes(word));
-          if (found) {
-            fansub.push(found.id);
-          }
         }
       }
     },
