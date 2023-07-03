@@ -13816,3 +13816,274 @@ exports[`tokenize > should work 69`] = `
   ],
 }
 `;
+
+exports[`tokenize > should work 70`] = `
+{
+  "ok": true,
+  "result": {
+    "video.resolution": "1080P",
+  },
+  "tokens": [
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "DMG",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": "&",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "RoxyLib",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "無職転生",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "BDRip",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Identifier",
+      "content": "1080P",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "CHS",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "MP4",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "/",
+      "enclosed": false,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "DMG",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": "&",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "RoxyLib",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "無職転生",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "番外編",
+      "enclosed": false,
+    },
+    {
+      "category": "Bracket",
+      "content": "「",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "エリスのゴブリン討伐",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "」",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "BDRip",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "AVC",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": "_",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "AAC",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Identifier",
+      "content": "1080P",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "CHS",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "(",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "08FF8DBF",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": ")",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": ".",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "mp4",
+      "enclosed": false,
+    },
+  ],
+}
+`;

@@ -76,7 +76,8 @@ export const other = [
   `【喵萌奶茶屋】★04月新番★[百合是我的工作！/我的百合乃工作是也！/私の百合はお仕事です！/Watashi no Yuri wa Oshigoto desu!][01][720p][繁日雙語][招募翻譯校對]`,
   `【幻樱字幕组】【7月新番】【异世界舅舅 Isekai Ojisan】【13_END】【BIG5_MP4】【1920X1080】`,
   `[爱恋字幕社&漫猫字幕社][4月新番][和山田进行LV999 的恋爱][Yamada-kun to Lv999 no Koi wo Suru][13Fin][1080p][MP4][简中]`,
-  `[爱恋字幕社&漫猫字幕社] 和山田进行LV999 的恋爱/Yamada-kun to Lv999 no Koi wo Suru (01-13Fin WEBRIP 720p AVC AAC MP4 2023年4月 简中)`
+  `[爱恋字幕社&漫猫字幕社] 和山田进行LV999 的恋爱/Yamada-kun to Lv999 no Koi wo Suru (01-13Fin WEBRIP 720p AVC AAC MP4 2023年4月 简中)`,
+  `[DMG&RoxyLib] 無職転生 [BDRip][1080P][CHS][MP4]/[DMG&RoxyLib] 無職転生 番外編「エリスのゴブリン討伐」[BDRip][AVC_AAC][1080P][CHS](08FF8DBF).mp4`
 ];
 
 export const filesnames = [...LoliHouse, ...LilithRaws, ...KitaujiSub, ...other];

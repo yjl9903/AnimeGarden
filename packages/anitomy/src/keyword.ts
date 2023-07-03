@@ -66,7 +66,11 @@ export class KeywordManager {
       'OVA',
       'SPECIAL',
       'SPECIALS',
-      'TV'
+      'TV',
+      '特别篇',
+      '特別編',
+      '番外篇',
+      '番外編'
     ]);
     add(ElementCategory.AnimeType, optionsUnidentifiableUnsearchable, ['SP']);
     add(ElementCategory.AnimeType, optionsUnidentifiableInvalid, [

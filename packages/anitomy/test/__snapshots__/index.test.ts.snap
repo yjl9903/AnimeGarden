@@ -332,3 +332,40 @@ exports[`Other filenames > should parse 9`] = `
   "year": undefined,
 }
 `;
+
+exports[`Other filenames > should parse 10`] = `
+{
+  "audio": {
+    "term": "AAC",
+  },
+  "episode": {
+    "number": undefined,
+    "numberAlt": undefined,
+    "title": undefined,
+  },
+  "file": {
+    "checksum": "08FF8DBF",
+    "extension": "mp4",
+    "name": "[DMG&RoxyLib] 無職転生 [BDRip][1080P][CHS][MP4]/[DMG&RoxyLib] 無職転生 番外編「エリスのゴブリン討伐」[BDRip][AVC_AAC][1080P][CHS](08FF8DBF).mp4",
+  },
+  "language": "CHS",
+  "month": undefined,
+  "release": {
+    "group": undefined,
+    "version": undefined,
+  },
+  "season": undefined,
+  "source": "BDRip",
+  "subtitles": undefined,
+  "title": "無職転生",
+  "type": "番外編",
+  "video": {
+    "resolution": "1080P",
+    "term": "AVC",
+  },
+  "volume": {
+    "number": undefined,
+  },
+  "year": undefined,
+}
+`;
