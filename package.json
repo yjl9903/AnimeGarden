@@ -15,7 +15,7 @@
     "postversion": "turbo run build"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20230518.0",
+    "@cloudflare/workers-types": "^4.20230628.0",
     "@types/fs-extra": "^11.0.1",
     "@types/node": "^18.16.19",
     "breadc": "^0.9.6",
@@ -23,18 +23,18 @@
     "fs-extra": "^11.1.1",
     "https-proxy-agent": "^7.0.0",
     "ofetch": "^1.1.1",
-    "prettier": "^2.8.8",
+    "prettier": "^3.0.0",
     "prettier-plugin-astro": "^0.10.0",
     "tsx": "^3.12.7",
     "turbo": "^1.10.7",
     "typescript": "^5.1.6",
     "unbuild": "^1.2.1",
     "undici": "^5.22.1",
-    "vite": "^4.3.9",
-    "vitest": "^0.32.4",
-    "wrangler": "^3.1.1"
+    "vite": "^4.4.2",
+    "vitest": "^0.33.0",
+    "wrangler": "^3.1.2"
   },
-  "packageManager": "pnpm@8.6.6",
+  "packageManager": "pnpm@8.6.7",
   "engines": {
     "node": ">=v18.16.0"
   }
