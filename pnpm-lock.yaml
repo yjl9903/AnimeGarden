@@ -100,8 +100,8 @@ importers:
         specifier: ^1.3.3
         version: 1.3.3
       '@nanostores/persistent':
-        specifier: ^0.9.0
-        version: 0.9.0(nanostores@0.9.3)
+        specifier: ^0.9.1
+        version: 0.9.1(nanostores@0.9.3)
       '@nanostores/react':
         specifier: ^0.7.1
         version: 0.7.1(nanostores@0.9.3)(react@18.2.0)
@@ -1314,8 +1314,8 @@ packages:
       type-detect: 4.0.8
     dev: true
 
-  /@nanostores/persistent@0.9.0(nanostores@0.9.3):
-    resolution: {integrity: sha512-9OvMOWs0NRiFXmZQXYsb7vGKTt+3XM0/gHl/gGdRTGvYBSaUwJrcmrOx8oc2jmj3QEGoT7JoeUStTGZUy0fSsw==}
+  /@nanostores/persistent@0.9.1(nanostores@0.9.3):
+    resolution: {integrity: sha512-ow57Hxm5VMaI5GHET/cVk8hX/iKMmbhcGrB9owfN8p8OHiiJgUlYxe1giacwlAALJXAh2t8bxXh42hHb64BCEA==}
     engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
     peerDependencies:
       nanostores: ^0.9.0
