@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: ^4.20230717.0
-        version: 4.20230717.0
+        specifier: ^4.20230717.1
+        version: 4.20230717.1
       '@types/fs-extra':
         specifier: ^11.0.1
         version: 11.0.1
@@ -171,7 +171,7 @@ importers:
         version: 2.0.0(date-fns@2.30.0)
       unocss:
         specifier: ^0.53.5
-        version: 0.53.5(postcss@8.4.25)(rollup@3.26.2)(vite@4.4.5)
+        version: 0.53.5(postcss@8.4.26)(rollup@3.26.2)(vite@4.4.5)
       vite-plugin-info:
         specifier: ^0.4.1
         version: 0.4.1(vite@4.4.5)
@@ -631,8 +631,8 @@ packages:
     resolution: {integrity: sha512-VqEY/ZqyHKBn6ivdePSWebpqojwbCXVEuwLkMYHs0UoOAqcGylkVcabdZYdQJKeNxXcOUZ9UBId/x9UsPUm2XQ==}
     dev: false
 
-  /@cloudflare/workers-types@4.20230717.0:
-    resolution: {integrity: sha512-OJWM1s0n9Il+GjfHvZhEcUGC+qY9IsijMtzRBDRpwSUR2jTy1WdjS9+SEh7sJlNQX2WzHQCgJMGjH2lI/Tf+tQ==}
+  /@cloudflare/workers-types@4.20230717.1:
+    resolution: {integrity: sha512-JmtYqsn/rc0gq83rlgItGsh/aJsTQh6ebJTDbq794kGOH7ym6MlpLtbCJj/Qz+hCPgdqoHDOLTlQQguARLi78A==}
     dev: true
 
   /@emmetio/abbreviation@2.3.3:
@@ -1885,7 +1885,7 @@ packages:
       sirv: 2.0.3
     dev: true
 
-  /@unocss/postcss@0.53.5(postcss@8.4.25):
+  /@unocss/postcss@0.53.5(postcss@8.4.26):
     resolution: {integrity: sha512-IfZl4GxrpegP/861bp3e0X3VcQJ9/M3VxC9UQ7zzxkOz/E8R09iMpbnznVLrTiLp2r96p5k/ggXLoadFm1FxGA==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -1896,7 +1896,7 @@ packages:
       css-tree: 2.3.1
       fast-glob: 3.3.0
       magic-string: 0.30.1
-      postcss: 8.4.25
+      postcss: 8.4.26
     dev: true
 
   /@unocss/preset-attributify@0.53.5:
@@ -5654,7 +5654,7 @@ packages:
     engines: {node: '>= 10.0.0'}
     dev: true
 
-  /unocss@0.53.5(postcss@8.4.25)(rollup@3.26.2)(vite@4.4.5):
+  /unocss@0.53.5(postcss@8.4.26)(rollup@3.26.2)(vite@4.4.5):
     resolution: {integrity: sha512-LXAdtzAaH8iEDWxW4t9i6TvJNw0OSrgdN+jw8rAZAWb73Nx51ZLoKPUB1rFvQMr2Li7LcsUj5hYpOrQbhhafYg==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -5667,7 +5667,7 @@ packages:
       '@unocss/cli': 0.53.5(rollup@3.26.2)
       '@unocss/core': 0.53.5
       '@unocss/extractor-arbitrary-variants': 0.53.5
-      '@unocss/postcss': 0.53.5(postcss@8.4.25)
+      '@unocss/postcss': 0.53.5(postcss@8.4.26)
       '@unocss/preset-attributify': 0.53.5
       '@unocss/preset-icons': 0.53.5
       '@unocss/preset-mini': 0.53.5
