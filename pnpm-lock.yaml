@@ -15,8 +15,8 @@ importers:
         specifier: ^11.0.1
         version: 11.0.1
       '@types/node':
-        specifier: ^18.17.0
-        version: 18.17.0
+        specifier: ^18.17.1
+        version: 18.17.1
       breadc:
         specifier: ^0.9.6
         version: 0.9.6
@@ -55,7 +55,7 @@ importers:
         version: 5.22.1
       vite:
         specifier: ^4.4.7
-        version: 4.4.7(@types/node@18.17.0)
+        version: 4.4.7(@types/node@18.17.1)
       vitest:
         specifier: ^0.33.0
         version: 0.33.0
@@ -107,7 +107,7 @@ importers:
         version: 0.7.1(nanostores@0.9.3)(react@18.2.0)
       astro:
         specifier: ^2.9.2
-        version: 2.9.2(@types/node@18.17.0)
+        version: 2.9.2(@types/node@18.17.1)
       astro-robots-txt:
         specifier: ^0.5.0
         version: 0.5.0
@@ -231,7 +231,7 @@ packages:
     dependencies:
       '@astrojs/underscore-redirects': 0.2.0
       '@cloudflare/workers-types': 4.20230717.1
-      astro: 2.9.2(@types/node@18.17.0)
+      astro: 2.9.2(@types/node@18.17.1)
       esbuild: 0.17.19
       tiny-glob: 0.2.9
     dev: false
@@ -268,7 +268,7 @@ packages:
       astro: ^2.5.0
     dependencies:
       '@astrojs/prism': 2.1.2
-      astro: 2.9.2(@types/node@18.17.0)
+      astro: 2.9.2(@types/node@18.17.1)
       github-slugger: 1.5.0
       import-meta-resolve: 2.2.2
       rehype-raw: 6.1.1
@@ -1735,7 +1735,7 @@ packages:
     resolution: {integrity: sha512-MxObHvNl4A69ofaTRU8DFqvgzzv8s9yRtaPPm5gud9HDNvpB3GPQFvNuTWAI59B9huVGV5jXYJwbCsmBsOGYWA==}
     dependencies:
       '@types/jsonfile': 6.1.1
-      '@types/node': 18.17.0
+      '@types/node': 18.17.1
     dev: true
 
   /@types/hast@2.3.5:
@@ -1751,7 +1751,7 @@ packages:
   /@types/jsonfile@6.1.1:
     resolution: {integrity: sha512-GSgiRCVeapDN+3pqA35IkQwasaCh/0YFH5dEF6S88iDvEn901DjOeH3/QPY+XYP1DFzDZPvIvfeEgk+7br5png==}
     dependencies:
-      '@types/node': 18.17.0
+      '@types/node': 18.17.1
     dev: true
 
   /@types/mdast@3.0.12:
@@ -1776,6 +1776,10 @@ packages:
 
   /@types/node@18.17.0:
     resolution: {integrity: sha512-GXZxEtOxYGFchyUzxvKI14iff9KZ2DI+A6a37o6EQevtg6uO9t+aUZKcaC1Te5Ng1OnLM7K9NVVj+FbecD9cJg==}
+    dev: true
+
+  /@types/node@18.17.1:
+    resolution: {integrity: sha512-xlR1jahfizdplZYRU59JlUx9uzF1ARa8jbhM11ccpCJya8kvos5jwdm2ZAgxSCwOl0fq21svP18EVwPBXMQudw==}
 
   /@types/parse5@6.0.3:
     resolution: {integrity: sha512-SuT16Q1K51EAVPz1K29DJ/sXjhSQ0zjvsypYJ6tlwVsRV9jwW5Adq2ch8Dq8kDBCkYnELS7N7VNCSB5nC56t/g==}
@@ -1802,7 +1806,7 @@ packages:
   /@types/sax@1.2.4:
     resolution: {integrity: sha512-pSAff4IAxJjfAXUG6tFkO7dsSbTmf8CtUpfhhZ5VhkRpC4628tJhh3+V6H1E+/Gs9piSzYKT5yzHO5M4GG9jkw==}
     dependencies:
-      '@types/node': 18.17.0
+      '@types/node': 18.17.1
     dev: false
 
   /@types/scheduler@0.16.3:
@@ -2000,7 +2004,7 @@ packages:
       chokidar: 3.5.3
       fast-glob: 3.3.1
       magic-string: 0.30.1
-      vite: 4.4.7(@types/node@18.17.0)
+      vite: 4.4.7(@types/node@18.17.1)
     transitivePeerDependencies:
       - rollup
     dev: true
@@ -2177,7 +2181,7 @@ packages:
       zod: 3.21.4
     dev: false
 
-  /astro@2.9.2(@types/node@18.17.0):
+  /astro@2.9.2(@types/node@18.17.1):
     resolution: {integrity: sha512-ejdGM9SbK58AvJS8lbkre/d5CoW8JftqaRxc9rGqzpiZQ8iU8gfdFmi3Hzkcvd2HrGvYYsJku88pM6tkBPniJQ==}
     engines: {node: '>=16.12.0', npm: '>=6.14.0'}
     hasBin: true
@@ -2240,7 +2244,7 @@ packages:
       typescript: 5.1.6
       unist-util-visit: 4.1.2
       vfile: 5.3.7
-      vite: 4.4.6(@types/node@18.17.0)
+      vite: 4.4.6(@types/node@18.17.1)
       vitefu: 0.2.4(vite@4.4.6)
       which-pm: 2.0.0
       yargs-parser: 21.1.1
@@ -5835,7 +5839,7 @@ packages:
       git-repo-info: 2.1.1
       parse-github-url: 1.0.2
       remote-origin-url: 2.0.0
-      vite: 4.4.7(@types/node@18.17.0)
+      vite: 4.4.7(@types/node@18.17.1)
     dev: true
 
   /vite-plugin-tsconfig-paths@1.3.1(typescript@5.1.6)(vite@4.4.7):
@@ -5844,7 +5848,7 @@ packages:
       vite: '*'
     dependencies:
       typescript-paths: 1.5.1(typescript@5.1.6)
-      vite: 4.4.7(@types/node@18.17.0)
+      vite: 4.4.7(@types/node@18.17.1)
     transitivePeerDependencies:
       - typescript
     dev: true
@@ -5883,6 +5887,43 @@ packages:
       rollup: 3.26.3
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
+
+  /vite@4.4.6(@types/node@18.17.1):
+    resolution: {integrity: sha512-EY6Mm8vJ++S3D4tNAckaZfw3JwG3wa794Vt70M6cNJ6NxT87yhq7EC8Rcap3ahyHdo8AhCmV9PTk+vG1HiYn1A==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      lightningcss: ^1.21.0
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 18.17.1
+      esbuild: 0.18.16
+      postcss: 8.4.27
+      rollup: 3.26.3
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: false
 
   /vite@4.4.7(@types/node@18.17.0):
     resolution: {integrity: sha512-6pYf9QJ1mHylfVh39HpuSfMPojPSKVxZvnclX1K1FyZ1PXDOcLBibdq5t1qxJSnL63ca8Wf4zts6mD8u8oc9Fw==}
@@ -5920,6 +5961,42 @@ packages:
       fsevents: 2.3.2
     dev: true
 
+  /vite@4.4.7(@types/node@18.17.1):
+    resolution: {integrity: sha512-6pYf9QJ1mHylfVh39HpuSfMPojPSKVxZvnclX1K1FyZ1PXDOcLBibdq5t1qxJSnL63ca8Wf4zts6mD8u8oc9Fw==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      lightningcss: ^1.21.0
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 18.17.1
+      esbuild: 0.18.16
+      postcss: 8.4.27
+      rollup: 3.26.3
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
+
   /vitefu@0.2.4(vite@4.4.6):
     resolution: {integrity: sha512-fanAXjSaf9xXtOOeno8wZXIhgia+CZury481LsDaV++lSvcU2R9Ch2bPh3PYFyoHW+w9LqAeYRISVQjUIew14g==}
     peerDependencies:
@@ -5928,7 +6005,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 4.4.6(@types/node@18.17.0)
+      vite: 4.4.6(@types/node@18.17.1)
     dev: false
 
   /vitest@0.33.0:
