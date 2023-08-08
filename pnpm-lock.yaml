@@ -89,13 +89,13 @@ importers:
     dependencies:
       '@astrojs/cloudflare':
         specifier: ^6.6.2
-        version: 6.6.2(astro@2.10.1)
+        version: 6.6.2(astro@2.10.3)
       '@astrojs/react':
         specifier: ^2.2.1
         version: 2.2.1(@types/react-dom@18.2.7)(@types/react@18.2.18)(react-dom@18.2.0)(react@18.2.0)
       '@astrojs/rss':
-        specifier: ^2.4.3
-        version: 2.4.3
+        specifier: ^2.4.4
+        version: 2.4.4
       '@astrojs/sitemap':
         specifier: ^2.0.1
         version: 2.0.1
@@ -106,8 +106,8 @@ importers:
         specifier: ^0.7.1
         version: 0.7.1(nanostores@0.9.3)(react@18.2.0)
       astro:
-        specifier: ^2.10.1
-        version: 2.10.1(@types/node@18.17.3)
+        specifier: ^2.10.3
+        version: 2.10.3(@types/node@18.17.3)
       astro-robots-txt:
         specifier: ^0.5.0
         version: 0.5.0
@@ -224,14 +224,14 @@ packages:
     resolution: {integrity: sha512-dlR6LdS+0SzOAPx/TPRhnoi7hE251OVeT2Snw0RguNbBSbjUHdWr0l3vcUUDg26rEysT89kCbtw1lVorBXLLCg==}
     dev: true
 
-  /@astrojs/cloudflare@6.6.2(astro@2.10.1):
+  /@astrojs/cloudflare@6.6.2(astro@2.10.3):
     resolution: {integrity: sha512-2lYQIzTBVnzUNJa1swwrklAb7t1B7C2b5snyzFSlDiA8XcbSmUaKUusPkIzjqUInZ9wJPuk6lG3SwYVw+wlGhQ==}
     peerDependencies:
       astro: ^2.8.4
     dependencies:
       '@astrojs/underscore-redirects': 0.2.0
       '@cloudflare/workers-types': 4.20230801.0
-      astro: 2.10.1(@types/node@18.17.3)
+      astro: 2.10.3(@types/node@18.17.3)
       esbuild: 0.17.19
       tiny-glob: 0.2.9
     dev: false
@@ -262,13 +262,13 @@ packages:
       vscode-uri: 3.0.7
     dev: false
 
-  /@astrojs/markdown-remark@2.2.1(astro@2.10.1):
+  /@astrojs/markdown-remark@2.2.1(astro@2.10.3):
     resolution: {integrity: sha512-VF0HRv4GpC1XEMLnsKf6jth7JSmlt9qpqP0josQgA2eSpCIAC/Et+y94mgdBIZVBYH/yFnMoIxgKVe93xfO2GA==}
     peerDependencies:
       astro: ^2.5.0
     dependencies:
       '@astrojs/prism': 2.1.2
-      astro: 2.10.1(@types/node@18.17.3)
+      astro: 2.10.3(@types/node@18.17.3)
       github-slugger: 1.5.0
       import-meta-resolve: 2.2.2
       rehype-raw: 6.1.1
@@ -311,8 +311,8 @@ packages:
       - supports-color
     dev: false
 
-  /@astrojs/rss@2.4.3:
-    resolution: {integrity: sha512-Dc8lxsXiDlnxONVIUuc3ohO1+vV1Hp9fRFdUianOola0S9/xv/6FzIHhkQ62MkaFSlcZm5uIOllRWNKVvuFuoA==}
+  /@astrojs/rss@2.4.4:
+    resolution: {integrity: sha512-HQFoHyHVoODyeyAFoVPej8OOZowiuXvB5AFIzY4AiPCdwlBz5JGpzW5vPARG/FCqAI9AS3Wi0sU/RZh3Cu8SWQ==}
     dependencies:
       fast-xml-parser: 4.2.7
       kleur: 4.1.5
@@ -2182,8 +2182,8 @@ packages:
       zod: 3.21.4
     dev: false
 
-  /astro@2.10.1(@types/node@18.17.3):
-    resolution: {integrity: sha512-t3y9laRaOZTAu6omVpI5x/wE80t2yTCWO/UTCPJYAYy2Aoi+snupwk8ZFBLgVd0lwO7KhjRKA0pUScfkn3bnXw==}
+  /astro@2.10.3(@types/node@18.17.3):
+    resolution: {integrity: sha512-Hp8HhamDsRw31QYftKNmPktbr9+YJ5CQMSAlg0ED667hhH0KkgfVV77bqRojsLlj6f/6qBYGMgooGQdtfdie1Q==}
     engines: {node: '>=16.12.0', npm: '>=6.14.0'}
     hasBin: true
     peerDependencies:
@@ -2195,7 +2195,7 @@ packages:
       '@astrojs/compiler': 1.8.1
       '@astrojs/internal-helpers': 0.1.2
       '@astrojs/language-server': 1.0.8
-      '@astrojs/markdown-remark': 2.2.1(astro@2.10.1)
+      '@astrojs/markdown-remark': 2.2.1(astro@2.10.3)
       '@astrojs/telemetry': 2.1.1
       '@astrojs/webapi': 2.2.0
       '@babel/core': 7.22.9
@@ -2245,8 +2245,8 @@ packages:
       typescript: 5.1.6
       unist-util-visit: 4.1.2
       vfile: 5.3.7
-      vite: 4.4.8(@types/node@18.17.3)
-      vitefu: 0.2.4(vite@4.4.8)
+      vite: 4.4.9(@types/node@18.17.3)
+      vitefu: 0.2.4(vite@4.4.9)
       which-pm: 2.0.0
       yargs-parser: 21.1.1
       zod: 3.21.4
@@ -5889,6 +5889,7 @@ packages:
       rollup: 3.27.2
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
 
   /vite@4.4.9(@types/node@18.17.3):
     resolution: {integrity: sha512-2mbUn2LlUmNASWwSCNSJ/EG2HuSRTnVNaydp6vMCm5VIqJsjMfbIWtbH2kDuwUVW5mMUKKZvGPX/rqeqVvv1XA==}
@@ -5924,9 +5925,8 @@ packages:
       rollup: 3.27.2
     optionalDependencies:
       fsevents: 2.3.2
-    dev: true
 
-  /vitefu@0.2.4(vite@4.4.8):
+  /vitefu@0.2.4(vite@4.4.9):
     resolution: {integrity: sha512-fanAXjSaf9xXtOOeno8wZXIhgia+CZury481LsDaV++lSvcU2R9Ch2bPh3PYFyoHW+w9LqAeYRISVQjUIew14g==}
     peerDependencies:
       vite: ^3.0.0 || ^4.0.0
@@ -5934,7 +5934,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 4.4.8(@types/node@18.17.3)
+      vite: 4.4.9(@types/node@18.17.3)
     dev: false
 
   /vitest@0.34.1:
