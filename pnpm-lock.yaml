@@ -88,8 +88,8 @@ importers:
   packages/app:
     dependencies:
       '@astrojs/cloudflare':
-        specifier: ^6.6.2
-        version: 6.6.2(astro@2.10.4)
+        specifier: ^6.7.0
+        version: 6.7.0(astro@2.10.4)
       '@astrojs/react':
         specifier: ^2.2.1
         version: 2.2.1(@types/react-dom@18.2.7)(@types/react@18.2.20)(react-dom@18.2.0)(react@18.2.0)
@@ -224,13 +224,13 @@ packages:
     resolution: {integrity: sha512-dlR6LdS+0SzOAPx/TPRhnoi7hE251OVeT2Snw0RguNbBSbjUHdWr0l3vcUUDg26rEysT89kCbtw1lVorBXLLCg==}
     dev: true
 
-  /@astrojs/cloudflare@6.6.2(astro@2.10.4):
-    resolution: {integrity: sha512-2lYQIzTBVnzUNJa1swwrklAb7t1B7C2b5snyzFSlDiA8XcbSmUaKUusPkIzjqUInZ9wJPuk6lG3SwYVw+wlGhQ==}
+  /@astrojs/cloudflare@6.7.0(astro@2.10.4):
+    resolution: {integrity: sha512-JFOff6De4/plCWaSBNmS2itRLmxbL9LKJvm9STRxps31W3toyeEyAaj82GW40qp8Fs7xvShqzUc5ectD/cTq7w==}
     peerDependencies:
-      astro: ^2.8.4
+      astro: ^2.10.5
     dependencies:
       '@astrojs/underscore-redirects': 0.2.0
-      '@cloudflare/workers-types': 4.20230801.0
+      '@cloudflare/workers-types': 4.20230807.0
       astro: 2.10.4(@types/node@18.17.4)
       esbuild: 0.17.19
       tiny-glob: 0.2.9
@@ -625,13 +625,8 @@ packages:
     dev: true
     optional: true
 
-  /@cloudflare/workers-types@4.20230801.0:
-    resolution: {integrity: sha512-RzRUR+J/T3h58qbTZHYntYsnZXu3JnrlZIhqP2hhdyfoZAZ/+ko4wX0foAqlYHi+kXWaWtySHBuMcx6ec6TXlQ==}
-    dev: false
-
   /@cloudflare/workers-types@4.20230807.0:
     resolution: {integrity: sha512-gQczWuGE2rxmpzOCNn0zLbx8Xz0gqspdE9S7tu4Xax39q1csgO/E9flcS+KG3GHB522ugOh84inmABDhpeJnvQ==}
-    dev: true
 
   /@emmetio/abbreviation@2.3.3:
     resolution: {integrity: sha512-mgv58UrU3rh4YgbE/TzgLQwJ3pFsHHhCLqY20aJq+9comytTXUDNGG/SMtSeMJdkpxgXSXunBGLD8Boka3JyVA==}
