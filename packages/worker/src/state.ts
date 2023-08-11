@@ -1,5 +1,5 @@
-import type { Resource, Team, User } from '@prisma/client/edge';
 import type { ResourceDetail } from 'animegarden';
+import type { Resource, Team, User } from '@prisma/client/edge';
 
 import type { Env } from './types';
 
@@ -18,12 +18,13 @@ export function getDetailStore(env: Env) {
 }
 
 export function getResourcesStore(env: Env) {
-  return new KVStore<
-    (Resource & {
+  return new KVStore<{
+    timestamp: Date;
+    resources: (Resource & {
       fansub: Team | null;
       publisher: User;
-    })[]
-  >(env.animegarden, 'resources');
+    })[];
+  }>(env.animegarden, 'resources');
 }
 
 export class KVStore<V> {
@@ -34,7 +35,10 @@ export class KVStore<V> {
    */
   private readonly ttl: number = 60 * 60;
 
-  constructor(private readonly store: KVNamespace, prefix = '') {
+  constructor(
+    private readonly store: KVNamespace,
+    prefix = ''
+  ) {
     this.prefix = prefix + ':';
   }
 

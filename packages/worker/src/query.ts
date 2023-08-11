@@ -45,10 +45,11 @@ export const PrefetchFilter = [
 
 export const findResourcesFromDB = memoAsync(
   async (env: Env, options: ResolvedFilterOptions) => {
-    const prisma = makePrisma(env);
-
     const timer = createTimer(`Search Resources`);
     timer.start();
+
+    const prisma = makePrisma(env);
+    const timestampPromise = getRefreshTimestamp(env);
 
     const {
       page,
@@ -119,8 +120,13 @@ export const findResourcesFromDB = memoAsync(
       }
     });
 
+    const timestamp = await timestampPromise;
     timer.end();
-    return result;
+
+    return {
+      timestamp,
+      resources: result
+    };
   },
   {
     external: {
@@ -147,9 +153,7 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
     return ctx.json({ message: 'Request is not valid' }, 400);
   }
 
-  const timestampPromise = getRefreshTimestamp(ctx.env);
-
-  const result = !isNoCache(ctx)
+  const { timestamp, resources: result } = !isNoCache(ctx)
     ? await findResourcesFromDB(ctx.env, filter)
     : await findResourcesFromDB.raw(ctx.env, filter);
 
@@ -157,10 +161,10 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
   const resources = resolveQueryResult(result.slice(0, filter.pageSize));
 
   return ctx.json({
-    resources,
-    complete,
     filter,
-    timestamp: await timestampPromise
+    complete,
+    timestamp,
+    resources
   });
 }
 
