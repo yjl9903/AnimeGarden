@@ -306,10 +306,13 @@ function matchPartialEpisodePattern(context: ParserContext, word: string, token:
 function matchJapaneseCounterPattern(context: ParserContext, word: string, token: Token) {
   const hua = ['話', '话', '集'];
   if (word.length > 0 && hua.includes(word.at(-1)!)) {
-    const RE = /^第?(\d{1,4})(?:話|话|集)$/;
+    const RE = /^第?(\d{1,4})(?:[vV](\d))?(?:話|话|集)$/;
     const match = RE.exec(word);
     if (!match) return false;
     setEpisodeNumber(context, match[1], token, false);
+    if (match[2]) {
+      setResult(context, ElementCategory.ReleaseVersion, match[2]);
+    }
     return true;
   }
   return false;

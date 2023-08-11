@@ -14087,3 +14087,149 @@ exports[`tokenize > should work 70`] = `
   ],
 }
 `;
+
+exports[`tokenize > should work 71`] = `
+{
+  "ok": true,
+  "result": {
+    "video.resolution": "1080P",
+  },
+  "tokens": [
+    {
+      "category": "Bracket",
+      "content": "【",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "极影字幕社",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "】",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "★7月新番",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "白圣女与黑牧师",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Shiro",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Seijo",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "to",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Kuro",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Bokushi",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "第01v2话",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "GB",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Identifier",
+      "content": "1080P",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "MP4",
+      "enclosed": false,
+    },
+    {
+      "category": "Bracket",
+      "content": "（",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "字幕社招人内详",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "）",
+      "enclosed": true,
+    },
+  ],
+}
+`;
