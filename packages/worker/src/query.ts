@@ -134,7 +134,9 @@ export const findResourcesFromDB = memoAsync(
         return getResourcesStore(env).get(hash(params));
       },
       async set([env, params], value) {
-        return getResourcesStore(env).put(hash(params), value, {
+        const key = hash(params);
+        console.log(`Put ${key}: ${JSON.stringify(params)}`);
+        return getResourcesStore(env).put(key, value, {
           expirationTtl: 300
         });
       },
