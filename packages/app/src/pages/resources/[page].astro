@@ -60,7 +60,7 @@ const keywords = {
     {
       ok ? (
         <>
-          {(search || include || before || after || fansub) && (
+          {(type || search || include || before || after || fansub) && (
             <>
               <div class="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
                 {type && (
@@ -185,7 +185,6 @@ const keywords = {
     .keyword {
       display: inline-flex;
       justify-content: end;
-      width: 80px;
     }
   </style>
 </Layout>
