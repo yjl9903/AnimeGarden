@@ -4,11 +4,13 @@ import { useStore } from '@nanostores/react';
 import { findFansub, stringifySearchURL } from 'animegarden';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import '../styles/cmdk.css';
-
 import { fetchResources } from '../fetch';
 import { fansubs, types } from '../constant';
 import { histories, loading } from '../state';
+
+import { useActiveElement, useSessionStorage } from './hooks';
+
+const SearchInputKey = 'search:input';
 
 {
   document.addEventListener('keypress', (ev) => {
@@ -20,38 +22,11 @@ import { histories, loading } from '../state';
       ev.stopPropagation();
     }
   });
+
+  document.addEventListener('astro:beforeload', () => {});
 }
 
 const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
-
-const useActiveElement = () => {
-  const [listenersReady, setListenersReady] = useState(false);
-  const [activeElement, setActiveElement] = useState(document.activeElement);
-
-  useEffect(() => {
-    const onFocus = (event: FocusEvent) => setActiveElement(event.target as any);
-    const onBlur = (event: FocusEvent) => setActiveElement(null);
-
-    window.addEventListener('focus', onFocus, true);
-    window.addEventListener('blur', onBlur, true);
-
-    setListenersReady(true);
-
-    return () => {
-      window.removeEventListener('focus', onFocus);
-      window.removeEventListener('blur', onBlur);
-    };
-  }, []);
-
-  return {
-    active: activeElement,
-    ready: listenersReady
-  };
-};
-
-const initialized = {
-  url: location as Location | undefined
-};
 
 export default function Search() {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -59,19 +34,31 @@ export default function Search() {
   const { active } = useActiveElement();
 
   const history = useStore(histories);
-  const [input, setInput] = useState('');
+  const [input, setInput] = useSessionStorage(SearchInputKey, '');
   const [search, setSearch] = useState('');
 
-  // Init search input
-  if (initialized.url !== undefined) {
-    const searchParams = new URLSearchParams(initialized.url.search);
-    const cmd = searchParams.get('cmd');
-    if (cmd !== undefined && typeof cmd === 'string') {
-      setInput(cmd);
-      setSearch(cmd);
-    }
-    initialized.url = undefined;
-  }
+  useEffect(() => {
+    const fn = () => {
+      try {
+        const input = window.sessionStorage.getItem(SearchInputKey);
+        if (input) {
+          const target = JSON.parse(input);
+          if (typeof target === 'string' && target) {
+            const current = window.location.pathname + window.location.search;
+            console.log(current, target, resolveSearchURL(target));
+            if (current !== resolveSearchURL(target)) {
+              setInput('');
+            }
+          }
+        }
+      } catch {}
+    };
+
+    document.addEventListener('astro:load', fn);
+    return () => {
+      document.removeEventListener('astro:load', fn);
+    };
+  });
 
   const setDebounceSearch = debounce((value: string) => {
     if (value !== search) {
@@ -128,12 +115,16 @@ export default function Search() {
     (text?: string) => {
       const target = text ?? input;
       if (target) {
-        // Filter old history item which is the substring of the current input
-        const oldHistories = histories.get().filter((o) => !target.includes(o));
-        // Remove duplicate items
-        const newHistories = [...new Set([target, ...oldHistories])].slice(0, 10);
-        // Set histories
-        histories.set(newHistories);
+        setInput(target);
+
+        {
+          // Filter old history item which is the substring of the current input
+          const oldHistories = histories.get().filter((o) => !target.includes(o));
+          // Remove duplicate items
+          const newHistories = [...new Set([target, ...oldHistories])].slice(0, 10);
+          // Set histories
+          histories.set(newHistories);
+        }
 
         stopFetch();
         goToSearch(target);
@@ -358,26 +349,30 @@ function parseSearch(search: string) {
   };
 }
 
-function goToSearch(search: string) {
+function resolveSearchURL(search: string) {
   if (search.startsWith(location.origin)) {
-    goTo(search.slice(location.origin.length));
+    return search.slice(location.origin.length);
   } else if (search.startsWith(location.host)) {
-    goTo(search.slice(location.host.length));
+    return search.slice(location.host.length);
   } else {
     const match = DMHY_RE.exec(search);
     if (match) {
-      goTo(`/resource/${match[1]}`);
+      return `/resource/${match[1]}`;
     } else {
       const url = stringifySearchURL(location.origin, parseSearch(search));
-      url.searchParams.set('cmd', search);
-      goTo(`${url.pathname}${url.search}`);
+      return `${url.pathname}${url.search}`;
     }
   }
 }
 
+function goToSearch(search: string) {
+  return goTo(resolveSearchURL(search));
+}
+
 function goTo(href: string) {
   loading.set(true);
-  window.location.href = href;
+  // window.location.href = href;
+  window.open(href, '_self');
 }
 
 function debounce<T extends (...args: any[]) => void>(fn: T, time = 1000): T {

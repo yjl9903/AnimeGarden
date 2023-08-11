@@ -1,4 +1,6 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
+
 import { parseSearchURL } from 'animegarden';
 import { getRuntime } from '@astrojs/cloudflare/runtime';
 
@@ -6,7 +8,7 @@ import type { Env } from '../env';
 
 import Search from '../components/Search';
 import Dropdown from '../components/Dropdown.astro';
-import { removeQuote } from '../utils'
+import { removeQuote } from '../utils';
 import { types, fansubs } from '../constant';
 
 export interface Props {
@@ -32,7 +34,7 @@ function generateFeed(params: URLSearchParams) {
   if (filter.search) {
     filter.search = removeQuote(filter.search);
   }
-  return JSON.stringify([{...filter, page: undefined, pageSize: undefined}]);
+  return JSON.stringify([{ ...filter, page: undefined, pageSize: undefined }]);
 }
 
 function followSearch(params: Record<string, string>) {
@@ -49,11 +51,12 @@ function followSearch(params: Record<string, string>) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <meta name="description" content="動漫花園 3-rd party mirror site and API endpoint">
+    <meta name="description" content="動漫花園 3-rd party mirror site and API endpoint" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="sitemap" href="/sitemap-index.xml">
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <ViewTransitions />
   </head>
   <body>
     <header class="w-full pt-8vh bg-[#fef8f7] border-b">
@@ -62,7 +65,7 @@ function followSearch(params: Record<string, string>) {
       </h1>
       <div class="relative z-100">
         <div class="vercel absolute top-[-7rem] w-full flex justify-center">
-          <Search client:only />
+          <Search client:only="react" transition:persist />
         </div>
       </div>
       <div class="main flex gap6 hide-scrollbar justify-between select-none text-base-500">
@@ -131,32 +134,42 @@ function followSearch(params: Record<string, string>) {
         <div>
           {
             enableFeed && (
-              <a href={feed} target="_blank" class="header-item lt-sm:hidden block text-[#ee802f] hover:(!text-[#ff7800] !border-b-[#ff7800])">
-                <span class="i-carbon-rss mr1"></span><span>RSS</span>
-              </a>)
+              <a
+                href={feed}
+                target="_blank"
+                class="header-item lt-sm:hidden block text-[#ee802f] hover:(!text-[#ff7800] !border-b-[#ff7800])"
+              >
+                <>
+                  <span class="i-carbon-rss mr1" />
+                  <span>RSS</span>
+                </>
+              </a>
+            )
           }
         </div>
       </div>
     </header>
-    <main class="main pb-8vh">
+    <main class="main pb-8vh" transition:animate="slide">
       <slot />
     </main>
-    <footer class="main pb-8vh select-none [&>div]:(flex items-center)">
+    <footer class="main pb-8vh select-none [&>div]:(flex items-center)" transition:persist>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-devicon-github op-80"></span>
-        <a href="https://github.com/yjl9903/AnimeGarden" target="_blank" class="text-link-active">yjl9903/AnimeGarden</a>
+        <a href="https://github.com/yjl9903/AnimeGarden" target="_blank" class="text-link-active"
+          >yjl9903/AnimeGarden</a
+        >
       </div>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-carbon-update-now op-80"></span>
-        Refreshed at {timestamp.toLocaleString('zh-CN', { timeZone: 'Asia/ShangHai' })}
+         Refreshed at {timestamp.toLocaleString('zh-CN', { timeZone: 'Asia/ShangHai' })}
       </div>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-devicon-astro op-80"></span>
-        Powered by Astro
+         Powered by Astro
       </div>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-devicon-cloudflare op-80"></span>
-        Hosted on Cloudflare Pages
+         Hosted on Cloudflare Pages
       </div>
     </footer>
 
@@ -199,107 +212,112 @@ function followSearch(params: Record<string, string>) {
         }
       });
     </script>
+
+    <style is:global>
+      @import '@onekuma/preset.css';
+      @import '@onekuma/reset/tailwind.css';
+
+      @import '../styles/cmdk.css';
+
+      :root {
+        /* --accent: 124, 58, 237; */
+        --accent: 0, 204, 170;
+        --accent-gradient: linear-gradient(
+          45deg,
+          rgb(var(--accent)),
+          /* #da62c4 30%, */ #08c,
+          white 60%
+        );
+
+        --color-bg-primary: #fcfcfc;
+        --color-bg-secondary: #fafafa;
+      }
+
+      html {
+        background-color: var(--color-bg-primary);
+
+        --at-apply: font-sans;
+      }
+
+      code {
+        --at-apply: font-mono;
+      }
+
+      .main {
+        /* prettier-ignore */
+        --at-apply: mx-auto mx-w-[90vw] lg:w-[80vw] md:w-[46rem] lt-md:mx-w-[95vw] lt-md:w-[95vw];
+      }
+
+      .text-gradient {
+        background-image: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-size: 400%;
+        background-position: 0%;
+      }
+
+      .text-link {
+        /* prettier-ignore */
+        --at-apply: text-sky-700 hover:text-sky-500;
+      }
+
+      .text-link-active {
+        /* prettier-ignore */
+        --at-apply: hover:text-sky-600;
+      }
+
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none; /* Safari and Chrome */
+      }
+
+      /* Header style */
+      .header-item {
+        --at-apply: py2 border-b border-b-3 border-transparent w-max;
+        /* prettier-ignore */
+        --at-apply: hover:text-base-800 hover:border-dark-700;
+      }
+
+      .header-item[x-active] {
+        --at-apply: border-orange-500;
+      }
+
+      #progress div {
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        width: 20%;
+        height: 3px;
+
+        border-radius: 1px;
+        background: linear-gradient(90deg, #fb923c, #fdba74);
+
+        animation: loading-loop 1s;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+      }
+
+      #progress div:first-child {
+        left: 0%;
+      }
+
+      #progress div:last-child {
+        left: -20%;
+        animation-delay: 0.8s;
+      }
+
+      @keyframes loading-loop {
+        0% {
+          transform: translateX(0%);
+        }
+        100% {
+          transform: translateX(500%);
+        }
+      }
+    </style>
   </body>
 </html>
-
-<style is:global>
-  @import '@onekuma/preset.css';
-  @import '@onekuma/reset/tailwind.css';
-
-  :root {
-    /* --accent: 124, 58, 237; */
-    --accent: 0, 204, 170;
-    --accent-gradient: linear-gradient(
-      45deg,
-      rgb(var(--accent)),
-      /* #da62c4 30%, */ #08c,
-      white 60%
-    );
-
-    --color-bg-primary: #fcfcfc;
-    --color-bg-secondary: #fafafa;
-  }
-
-  html {
-    background-color: var(--color-bg-primary);
-
-    --at-apply: font-sans;
-  }
-
-  code {
-    --at-apply: font-mono;
-  }
-
-  .main {
-    --at-apply: mx-w-[90vw] lg:w-[80vw] md:w-[46rem] lt-md:mx-w-[95vw] lt-md:w-[95vw];
-    --at-apply: mx-auto;
-  }
-
-  .text-gradient {
-    background-image: var(--accent-gradient);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 400%;
-    background-position: 0%;
-  }
-
-  .text-link {
-    --at-apply: text-sky-700 hover:text-sky-500;
-  }
-
-  .text-link-active {
-    --at-apply: hover:text-sky-600;
-  }
-
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;  /* Safari and Chrome */
-  }
-
-  /* Header style */
-  .header-item {
-    --at-apply: py2 border-b border-b-3 border-transparent w-max;
-    --at-apply: hover:text-base-800 hover:border-dark-700;
-  }
-
-  .header-item[x-active] {
-    --at-apply: border-orange-500;
-  }
-
-  #progress div {
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    width: 20%;
-    height: 3px;
-
-    border-radius: 1px;
-    background: linear-gradient(90deg, #fb923c, #fdba74);
-
-    animation: loading-loop 1s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-  }
-
-  #progress div:first-child {
-    left: 0%;
-  }
-
-  #progress div:last-child {
-    left: -20%;
-    animation-delay: 0.8s;
-  }
-
-  @keyframes loading-loop {
-    0% {
-      transform: translateX(0%);
-    }
-    100% {
-      transform: translateX(500%);
-    }
-  }
-</style>

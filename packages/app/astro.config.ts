@@ -32,5 +32,8 @@ export default defineConfig({
   }),
   vite: {
     plugins: [Info(), TsconfigPaths()]
+  },
+  experimental: {
+    viewTransitions: true
   }
 });

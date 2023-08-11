@@ -1,3 +1,5 @@
+import { ResourceType } from 'animegarden';
+
 export const WORKER_BASE = `animegarden.yjl9903.workers.dev`;
 
 export const types = [
@@ -42,6 +44,50 @@ export const QueryType: Record<string, string> = {
   '网络游戏 ': '網絡遊戲',
   游戏周边: '遊戲周邊',
   特摄: '特攝'
+};
+
+export const DisplayType: Record<ResourceType, string> = {
+  動畫: '动画',
+  季度全集: '季度全集',
+  音樂: '音乐',
+  動漫音樂: '动漫音乐',
+  同人音樂: '同人音乐',
+  流行音樂: '流行音乐',
+  日劇: '日剧',
+  ＲＡＷ: 'RAW',
+  其他: '其他',
+  漫畫: '漫画',
+  港台原版: '港台原版',
+  日文原版: '日文原版',
+  遊戲: '游戏',
+  電腦遊戲: '电脑游戏',
+  電視遊戲: '主机游戏',
+  掌機遊戲: '掌机游戏',
+  網絡遊戲: '网络游戏 ',
+  遊戲周邊: '游戏周边',
+  特攝: '特摄'
+};
+
+export const DisplayTypeColor: Record<ResourceType, string> = {
+  動畫: 'text-red-600',
+  季度全集: 'text-red-700',
+  漫畫: 'text-green-600',
+  港台原版: 'text-green-600',
+  日文原版: 'text-green-600',
+  音樂: 'text-purple-600',
+  動漫音樂: 'text-purple-600',
+  同人音樂: 'text-purple-600',
+  流行音樂: 'text-purple-600',
+  日劇: 'text-blue-600',
+  ＲＡＷ: '',
+  遊戲: '',
+  電腦遊戲: '',
+  電視遊戲: '',
+  掌機遊戲: '',
+  網絡遊戲: '',
+  遊戲周邊: '',
+  特攝: 'text-rose-600',
+  其他: 'text-base-800'
 };
 
 export const fansubs = [
