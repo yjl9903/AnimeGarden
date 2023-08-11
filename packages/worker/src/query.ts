@@ -124,6 +124,7 @@ export const findResourcesFromDB = memoAsync(
     timer.end();
 
     return {
+      filter: options,
       timestamp,
       resources: result
     };

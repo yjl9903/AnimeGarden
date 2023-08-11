@@ -1,5 +1,5 @@
-import type { ResourceDetail } from 'animegarden';
 import type { Resource, Team, User } from '@prisma/client/edge';
+import type { ResolvedFilterOptions, ResourceDetail } from 'animegarden';
 
 import type { Env } from './types';
 
@@ -19,6 +19,7 @@ export function getDetailStore(env: Env) {
 
 export function getResourcesStore(env: Env) {
   return new KVStore<{
+    filter: ResolvedFilterOptions;
     timestamp: Date;
     resources: (Resource & {
       fansub: Team | null;
