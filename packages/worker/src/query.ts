@@ -138,7 +138,7 @@ export const findResourcesFromDB = memoAsync(
         const key = hash(params);
         console.log(`Put ${key}: ${JSON.stringify(params)}`);
         return getResourcesStore(env).put(key, value, {
-          expirationTtl: 300
+          expirationTtl: 360
         });
       },
       async remove([env, params]) {
