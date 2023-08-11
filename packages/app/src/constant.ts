@@ -68,6 +68,7 @@ export const DisplayType: Record<ResourceType, string> = {
   特攝: '特摄'
 };
 
+// @unocss-include
 export const DisplayTypeColor: Record<ResourceType, string> = {
   動畫: 'text-red-600',
   季度全集: 'text-red-700',
