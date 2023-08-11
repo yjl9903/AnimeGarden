@@ -7,6 +7,7 @@ import type { Env } from './types';
 
 import { makePrisma } from './prisma';
 import { updateRefreshTimestamp } from './state';
+import { findResourcesFromDB, PrefetchFilter } from './query';
 
 const teams = new Set<number>();
 const users = new Set<number>();
@@ -73,6 +74,12 @@ export async function handleScheduled(env: Env) {
 
   if (sum > 0) {
     await updateRefreshTimestamp(env);
+    await Promise.all(
+      PrefetchFilter.map(async (filter) => {
+        await findResourcesFromDB.clear(env, filter);
+        await findResourcesFromDB(env, filter);
+      })
+    );
   }
 
   return { count: sum };

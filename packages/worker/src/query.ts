@@ -1,6 +1,7 @@
 import type { Context } from 'hono';
 import type { Resource, Team, User } from '@prisma/client/edge';
 
+import { hash } from 'ohash';
 import { memoAsync } from 'memofunc';
 import {
   parseSearchURL,
@@ -36,7 +37,13 @@ export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
   return ctx.json({ detail });
 }
 
-export const getSearchResources = memoAsync(
+export const PrefetchFilter = [
+  parseSearchURL(new URLSearchParams('?page=1')),
+  parseSearchURL(new URLSearchParams('?page=2')),
+  parseSearchURL(new URLSearchParams('?page=3'))
+];
+
+export const findResourcesFromDB = memoAsync(
   async (env: Env, options: ResolvedFilterOptions) => {
     const prisma = makePrisma(env);
 
@@ -118,25 +125,20 @@ export const getSearchResources = memoAsync(
   {
     external: {
       async get([env, params]) {
-        return getResourcesStore(env).get(JSON.stringify({ params }));
+        return getResourcesStore(env).get(hash(params));
       },
       async set([env, params], value) {
-        return getResourcesStore(env).put(JSON.stringify({ params }), value, {
+        return getResourcesStore(env).put(hash(params), value, {
           expirationTtl: 300
         });
       },
       async remove([env, params]) {
-        return getResourcesStore(env).remove(JSON.stringify({ params }));
+        return getResourcesStore(env).remove(hash(params));
       },
       async clear() {}
     }
   }
 );
-
-async function getTimestamp(ctx: Context<{ Bindings: Env }>) {
-  const timestamp = await getRefreshTimestamp(ctx.env);
-  return timestamp;
-}
 
 export async function searchResources(ctx: Context<{ Bindings: Env }>) {
   const url = new URL(ctx.req.url);
@@ -145,11 +147,11 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
     return ctx.json({ message: 'Request is not valid' }, 400);
   }
 
-  const timestampPromise = getTimestamp(ctx);
+  const timestampPromise = getRefreshTimestamp(ctx.env);
 
   const result = !isNoCache(ctx)
-    ? await getSearchResources(ctx.env, filter)
-    : await getSearchResources.raw(ctx.env, filter);
+    ? await findResourcesFromDB(ctx.env, filter)
+    : await findResourcesFromDB.raw(ctx.env, filter);
 
   const complete = result.length > filter.pageSize;
   const resources = resolveQueryResult(result.slice(0, filter.pageSize));
