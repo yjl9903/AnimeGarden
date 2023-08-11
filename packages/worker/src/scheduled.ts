@@ -74,13 +74,14 @@ export async function handleScheduled(env: Env) {
 
   if (sum > 0) {
     await updateRefreshTimestamp(env);
-    await Promise.all(
-      PrefetchFilter.map(async (filter) => {
-        await findResourcesFromDB.clear(env, filter);
-        await findResourcesFromDB(env, filter);
-      })
-    );
   }
+
+  await Promise.all(
+    PrefetchFilter.map(async (filter) => {
+      await findResourcesFromDB.clear(env, filter);
+      await findResourcesFromDB(env, filter);
+    })
+  );
 
   return { count: sum };
 }
