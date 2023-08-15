@@ -72,8 +72,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       zod:
-        specifier: ^3.21.4
-        version: 3.21.4
+        specifier: ^3.22.0
+        version: 3.22.0
     devDependencies:
       vitest:
         specifier: ^0.34.1
@@ -130,8 +130,8 @@ importers:
         specifier: ^2.2.1
         version: 2.2.1(react@18.2.0)
       zod:
-        specifier: ^3.21.4
-        version: 3.21.4
+        specifier: ^3.22.0
+        version: 3.22.0
     devDependencies:
       '@iconify-json/carbon':
         specifier: ^1.1.19
@@ -325,7 +325,7 @@ packages:
     resolution: {integrity: sha512-unoaSEyHuR8IApsPN467SD5FMm4PBnaQSHbtvt4dVS3PMDObZV5/lKIbjlfSad7ENzuvpBSLCGyLDOykXUNu6w==}
     dependencies:
       sitemap: 7.1.1
-      zod: 3.21.4
+      zod: 3.22.0
     dev: false
 
   /@astrojs/telemetry@2.1.1:
@@ -2182,7 +2182,7 @@ packages:
     resolution: {integrity: sha512-MJDcxBDjEKSp7Uvw32cnmkPHlmjQ/pW5JwzMhKEegFRoGaiSh2i1kkh1QEhk1UpGnAsSondWCoIt2xpG8qjSgA==}
     dependencies:
       valid-filename: 4.0.0
-      zod: 3.21.4
+      zod: 3.22.0
     dev: false
 
   /astro@2.10.7(@types/node@18.17.5):
@@ -2252,7 +2252,7 @@ packages:
       vitefu: 0.2.4(vite@4.4.9)
       which-pm: 2.0.0
       yargs-parser: 21.1.1
-      zod: 3.21.4
+      zod: 3.22.0
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -4230,7 +4230,7 @@ packages:
       workerd: 1.20230807.0
       ws: 8.13.0
       youch: 3.2.3
-      zod: 3.21.4
+      zod: 3.22.0
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -6178,8 +6178,8 @@ packages:
       stacktracey: 2.1.8
     dev: true
 
-  /zod@3.21.4:
-    resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+  /zod@3.22.0:
+    resolution: {integrity: sha512-y5KZY/ssf5n7hCGDGGtcJO/EBJEm5Pa+QQvFBeyMOtnFYOSflalxIFFvdaYevPhePcmcKC4aTbFkCcXN7D0O8Q==}
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
