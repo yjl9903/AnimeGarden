@@ -1,7 +1,7 @@
 import type { Context } from 'hono';
 import type { Resource, Team, User } from '@prisma/client/edge';
 
-import { hash } from 'ohash';
+import { hash, objectHash, sha256 } from 'ohash';
 import { memoAsync } from 'memofunc';
 import {
   parseSearchURL,
@@ -137,6 +137,8 @@ export const findResourcesFromDB = memoAsync(
       async set([env, params], value) {
         const key = hash(params);
         console.log(`Put ${key}: ${JSON.stringify(params)}`);
+        console.log(`Put ${key}: ${objectHash(params)}`);
+        console.log(`Put ${key}: ${sha256(objectHash(params))}`);
         return getResourcesStore(env).put(key, value, {
           expirationTtl: 360
         });
