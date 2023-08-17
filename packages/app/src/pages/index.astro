@@ -10,14 +10,14 @@ import { wfetch, fetchResources } from '../fetch';
 
 const runtime = getRuntime<Env>(Astro.request);
 
-const { ok, resources } = await fetchResources(
+const { ok, resources, timestamp } = await fetchResources(
   1,
   { pageSize: 80 },
   { fetch: wfetch(runtime?.env?.worker) }
 );
 ---
 
-<Layout title="Anime Garden">
+<Layout title="Anime Garden" timestamp={timestamp}>
   <div class="mt-4vh w-full">
     {
       ok ? (

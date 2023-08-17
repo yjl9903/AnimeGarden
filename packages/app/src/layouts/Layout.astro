@@ -13,6 +13,8 @@ import { types, fansubs } from '../constant';
 
 export interface Props {
   title: string;
+
+  timestamp?: Date;
 }
 
 const { title } = Astro.props;
@@ -25,7 +27,9 @@ const page = Astro.params.page ?? Astro.url.searchParams.get('page') ?? '1';
 const enableFeed = page === '1' && !Astro.url.pathname.startsWith('/resource/');
 
 const runtime = getRuntime<Env>(Astro.request);
-const timestamp = new Date((await runtime?.env.animegarden.get('state/refresh-timestamp')) ?? 0);
+const timestamp =
+  Astro.props.timestamp ??
+  new Date((await runtime?.env.animegarden.get('state/refresh-timestamp')) ?? 0);
 
 const hasFansubSearch = search.has('fansubId');
 

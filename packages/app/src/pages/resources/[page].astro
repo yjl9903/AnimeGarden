@@ -39,7 +39,8 @@ const {
   ok,
   complete,
   resources,
-  filter: searchParams
+  filter: searchParams,
+  timestamp
 } = await fetchResources(
   page,
   { ...params },
@@ -55,7 +56,7 @@ const keywords = {
 };
 ---
 
-<Layout title="所有资源 | Anime Garden">
+<Layout title="所有资源 | Anime Garden" timestamp={timestamp}>
   <div class="mt-4vh w-full">
     {
       ok ? (
@@ -65,9 +66,7 @@ const keywords = {
               <div class="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
                 {type && (
                   <div class="space-x-2 select-none text-0">
-                    <span class="text-4 text-base-800 font-bold mr2 keyword">
-                      类型
-                    </span>
+                    <span class="text-4 text-base-800 font-bold mr2 keyword">类型</span>
                     <span class={`text-4 select-text text-base-600 ${DisplayTypeColor[type]}`}>
                       {type in DisplayType ? DisplayType[type] : type}
                     </span>
@@ -75,9 +74,7 @@ const keywords = {
                 )}
                 {fansub && (
                   <div class="space-x-2 select-none text-0">
-                    <span class="text-4 text-base-800 font-bold mr2 keyword">
-                      字幕组
-                    </span>
+                    <span class="text-4 text-base-800 font-bold mr2 keyword">字幕组</span>
                     {fansub.map((fansub) => (
                       <a
                         href={`/resources/1?fansubId=${fansub.id}`}
@@ -90,9 +87,7 @@ const keywords = {
                 )}
                 {after && (
                   <div class="space-x-2 select-none text-0">
-                    <span class="text-4 text-base-800 font-bold mr2 keyword">
-                      搜索开始于
-                    </span>
+                    <span class="text-4 text-base-800 font-bold mr2 keyword">搜索开始于</span>
                     <span class="text-4 select-text">
                       {format(after, 'yyyy 年 M 月 d 日 hh:mm')}
                     </span>
@@ -100,9 +95,7 @@ const keywords = {
                 )}
                 {before && (
                   <div class="space-x-2 select-none text-0">
-                    <span class="text-4 text-base-800 font-bold mr2 keyword">
-                      搜索结束于
-                    </span>
+                    <span class="text-4 text-base-800 font-bold mr2 keyword">搜索结束于</span>
                     <span class="text-4 select-text">
                       {format(before, 'yyyy 年 M 月 d 日 hh:mm')}
                     </span>
@@ -121,9 +114,7 @@ const keywords = {
                 )}
                 {keywords.include.length > 0 && (
                   <div class="space-x-2 select-none text-0">
-                    <span class="text-4 text-base-800 font-bold mr2 keyword">
-                      包含关键词
-                    </span>
+                    <span class="text-4 text-base-800 font-bold mr2 keyword">包含关键词</span>
                     {keywords.include.map((i, idx) => (
                       <>
                         {idx > 0 && isComplicated && <span class="text-4 text-base-500">+</span>}
