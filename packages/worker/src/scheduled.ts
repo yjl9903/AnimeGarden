@@ -78,7 +78,7 @@ export async function handleScheduled(env: Env) {
 
   await Promise.all(
     PrefetchFilter.map(async (filter) => {
-      await findResourcesFromDB.clear(env, filter);
+      await findResourcesFromDB.remove(env, filter);
       await findResourcesFromDB(env, filter);
     })
   );
