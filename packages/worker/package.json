@@ -11,7 +11,8 @@
     "dev": "wrangler dev",
     "postinstall": "prisma generate --data-proxy",
     "prisma": "prisma",
-    "test": "vitest"
+    "test": "vitest",
+    "test:ci": "vitest --run"
   },
   "dependencies": {
     "animegarden": "workspace:*",
