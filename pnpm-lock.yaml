@@ -188,8 +188,8 @@ importers:
         specifier: workspace:*
         version: link:../anitomy
       hono:
-        specifier: ^3.5.0
-        version: 3.5.0
+        specifier: ^3.5.1
+        version: 3.5.1
       memofunc:
         specifier: ^0.0.6
         version: 0.0.6
@@ -3661,8 +3661,8 @@ packages:
       space-separated-tokens: 2.0.2
     dev: false
 
-  /hono@3.5.0:
-    resolution: {integrity: sha512-0eJT6F+TRovENdANDubzri3c1oVEjbTgrQvXrcUKjFV6ZElNWNSrrHZIQE5CPwRTddsUdPjkgguuLYw90npC+w==}
+  /hono@3.5.1:
+    resolution: {integrity: sha512-L31KJg1Qu1ZHYKlpHYymqyDPR9U5SOy+X6c6+HQxBOGMGrJFawd5BvfcP+0rrGcw1bN5xk61+k3oKW4jFWyUkw==}
     engines: {node: '>=16.0.0'}
     dev: false
 
