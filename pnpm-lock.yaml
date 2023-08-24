@@ -30,8 +30,8 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1
       ofetch:
-        specifier: ^1.2.1
-        version: 1.2.1
+        specifier: ^1.3.2
+        version: 1.3.2
       prettier:
         specifier: ^3.0.2
         version: 3.0.2
@@ -2110,7 +2110,7 @@ packages:
     dependencies:
       '@iconify/utils': 2.1.9
       '@unocss/core': 0.55.2
-      ofetch: 1.2.1
+      ofetch: 1.3.2
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2147,7 +2147,7 @@ packages:
     resolution: {integrity: sha512-kRnrfZPDkU2r9tp507rsh4kwhUzZ76XBTZLmElYm8tlP6HZzIHcFF8fdW15J4nh81b/IGw8ZOS7aQmqtHu3A8A==}
     dependencies:
       '@unocss/core': 0.55.2
-      ofetch: 1.2.1
+      ofetch: 1.3.2
     dev: true
 
   /@unocss/preset-wind@0.55.2:
@@ -4632,8 +4632,8 @@ packages:
       boolbase: 1.0.0
     dev: false
 
-  /ofetch@1.2.1:
-    resolution: {integrity: sha512-WEX1TEfGuAFJhzRW6Qv9RcxCyek+YogEeXlCWl1XoqBSW2fc6jU4LTk3VotwC1YfXv8Uz06LSofU6uW/ZIT+6g==}
+  /ofetch@1.3.2:
+    resolution: {integrity: sha512-XphiqMCUugscBfS7EjEfe8s3Hb5kfrTqdk9QAYl9z/wvhI3g97EpQdldqd0zAWqQXInHEqkRBQ08reMFHQwjDA==}
     dependencies:
       destr: 2.0.1
       node-fetch-native: 1.4.0
