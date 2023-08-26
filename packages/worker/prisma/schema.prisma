@@ -5,8 +5,10 @@ datasource db {
   relationMode = "prisma"
 }
 
-generator client {
-  provider        = "prisma-client-js"
+generator kysely {
+  provider        = "prisma-kysely"
+  output          = "../src/database/"
+  fileName        = "types.ts"
   previewFeatures = ["fullTextIndex", "fullTextSearch"]
 }
 

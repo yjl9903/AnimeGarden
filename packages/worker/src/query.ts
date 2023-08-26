@@ -1,6 +1,7 @@
 import type { Context } from 'hono';
-import type { Resource, Team, User } from '@prisma/client/edge';
+// import type { Resource, Team, User } from '@prisma/client/edge';
 
+import { sql } from 'kysely';
 import { hash, objectHash, sha256 } from 'ohash';
 import { memoAsync } from 'memofunc';
 import {
@@ -12,7 +13,7 @@ import {
 
 import type { Env } from './types';
 
-import { makePrisma } from './prisma';
+import { connect } from './database';
 import { createTimer, isNoCache } from './util';
 import { getDetailStore, getRefreshTimestamp, getResourcesStore } from './state';
 
@@ -48,7 +49,7 @@ export const findResourcesFromDB = memoAsync(
     const timer = createTimer(`Search Resources`);
     timer.start();
 
-    const prisma = makePrisma(env);
+    const db = connect(env);
     const timestampPromise = getRefreshTimestamp(env);
 
     const {
@@ -65,60 +66,60 @@ export const findResourcesFromDB = memoAsync(
       exclude
     } = options;
 
-    const result = await prisma.resource.findMany({
-      where: {
-        AND: [
-          {
-            type,
-            createdAt: {
-              gte: after,
-              lte: before
-            },
-            titleAlt: {
-              search: search && search.length > 0 ? search.join(' ') : undefined
-            }
-          },
-          {
-            OR: [
-              {
-                fansubId: {
-                  in: fansubId
-                }
-              },
-              fansubName
-                ? {
-                    fansub: {
-                      name: {
-                        in: fansubName
-                      }
-                    }
-                  }
-                : {}
-            ]
-          },
-          {
-            publisherId: {
-              in: publisherId
-            }
-          },
-          {
-            AND: include?.map((arr) => ({
-              OR: arr.map((t) => ({ titleAlt: { contains: normalizeTitle(t) } }))
-            }))
-          }
-        ],
-        NOT: exclude?.map((t) => ({ titleAlt: { contains: normalizeTitle(t) } }))
-      },
-      skip: (page - 1) * pageSize,
-      take: pageSize + 1, // Used for determining whether there are rest resources
-      orderBy: {
-        createdAt: 'desc'
-      },
-      include: {
-        fansub: true,
-        publisher: true
-      }
-    });
+    const query = db
+      .selectFrom('Resource')
+      .selectAll()
+      .leftJoin('User', 'Resource.publisherId', 'User.id')
+      .leftJoin('Team', 'Resource.fansubId', 'Team.id')
+      .select('User.name as publisherName')
+      .select('Team.name as fansubName')
+      .where(({ and, or, not, eb }) =>
+        and(
+          [
+            type ? eb('Resource.type', '=', type) : undefined,
+            after ? eb('Resource.createdAt', '>=', after) : undefined,
+            before ? eb('Resource.createdAt', '<=', before) : undefined,
+            // fansub
+            (fansubId && fansubId.length > 0) || (fansubName && fansubName.length > 0)
+              ? or(
+                  [
+                    fansubId && fansubId.length > 0 ? eb('Team.id', 'in', fansubId) : undefined,
+                    fansubName && fansubName.length > 0
+                      ? eb('Team.name', 'in', fansubName)
+                      : undefined
+                  ].filter(Boolean)
+                )
+              : undefined,
+            // publisher
+            publisherId && publisherId.length > 0
+              ? or(
+                  [
+                    publisherId && publisherId.length > 0
+                      ? eb('User.id', 'in', publisherId)
+                      : undefined
+                  ].filter(Boolean)
+                )
+              : undefined,
+            // Include
+            ...(include?.map((include) =>
+              or(include.map((t) => eb('Resource.titleAlt', 'like', `%${normalizeTitle(t)}%`)))
+            ) ?? []),
+            // Exclude
+            ...(exclude?.map((t) =>
+              eb('Resource.titleAlt', 'not like', `%${normalizeTitle(t)}%`)
+            ) ?? [])
+          ].filter(Boolean)
+        )
+      )
+      // Search
+      .$if(!!search && search.length > 0, (qb) =>
+        qb.where(sql`MATCH(Resource.titleAlt) AGAINST (${search!.join(' ')} IN BOOLEAN MODE)`)
+      )
+      .orderBy('Resource.createdAt desc')
+      .offset((page - 1) * pageSize)
+      .limit(pageSize + 1); // Used for determining whether there are rest resources
+
+    const result = await query.execute();
 
     const timestamp = await timestampPromise;
     timer.end();
@@ -173,7 +174,7 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
   });
 }
 
-function resolveQueryResult(result: (Resource & { fansub: Team | null; publisher: User })[]) {
+function resolveQueryResult(result: Awaited<ReturnType<typeof findResourcesFromDB>>['resources']) {
   return result.map((r) => ({
     title: r.title,
     href: `https://share.dmhy.org/topics/view/${r.href}`,
@@ -185,17 +186,17 @@ function resolveQueryResult(result: (Resource & { fansub: Team | null; publisher
       typeof r.createdAt === 'string' && /^\d+$/.test(r.createdAt)
         ? new Date(Number(r.createdAt))
         : new Date(r.createdAt),
-    fansub: r.fansub
+    fansub: r.fansubName
       ? {
-          id: r.fansub.id,
-          name: r.fansub.name,
-          href: `https://share.dmhy.org/topics/list/team_id/${r.fansub.id}`
+          id: r.fansubId,
+          name: r.fansubName,
+          href: `https://share.dmhy.org/topics/list/team_id/${r.fansubId}`
         }
       : undefined,
     publisher: {
-      id: r.publisher.id,
-      name: r.publisher.name,
-      href: `https://share.dmhy.org/topics/list/user_id/${r.publisher.id}`
+      id: r.publisherId,
+      name: r.publisherName!,
+      href: `https://share.dmhy.org/topics/list/user_id/${r.publisherId}`
     }
   }));
 }

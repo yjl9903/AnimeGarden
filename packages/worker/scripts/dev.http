@@ -1,0 +1,103 @@
+### List the first page of resources
+GET http://127.0.0.1:8787/resources
+Content-Type: application/json
+
+### Update resources
+PUT http://127.0.0.1:8787/resources
+Content-Type: application/json
+
+### Get the resource detail
+GET http://127.0.0.1:8787/resource/638270_Nemuri_THE_iDOLM_STER_CINDERELLA_GIRLS_2012-2023_Discography_Collection_268_CDs_FLAC.html
+Content-Type: application/json
+
+### List the second page of resources
+GET http://127.0.0.1:8787/resources?page=2
+Content-Type: application/json
+
+### List resources from the 21st to 40th
+GET http://127.0.0.1:8787/resources?page=2&pageSize=20
+Content-Type: application/json
+
+### List resources with more filter
+GET http://127.0.0.1:8787/resources?type=動畫&fansubId=803&publisherId=727168&after=2023-04-16T13:00:00.000Z&before=1681653600000
+Content-Type: application/json
+
+### List resources from specific fansubs
+GET http://127.0.0.1:8787/resources?fansubId=[833,619]&fansubName="爱恋字幕社"
+Content-Type: application/json
+
+### Full text search
+POST http://127.0.0.1:8787/resources
+Content-Type: application/json
+
+{
+  "search": ["白圣女与黑牧师"]
+}
+
+### Search resources
+POST http://127.0.0.1:8787/resources
+Content-Type: application/json
+
+{
+  "search": ["機動戰士鋼彈", "水星的魔女"]
+}
+
+### Search resources
+POST http://127.0.0.1:8787/resources
+Content-Type: application/json
+
+{
+  "include": ["機動戰士鋼彈 水星的魔女"]
+}
+
+### Only search 動畫
+POST http://127.0.0.1:8787/resources?type=動畫
+Content-Type: application/json
+
+{
+  "include": ["间谍过家家"]
+}
+
+### Search resources with exclude
+POST http://127.0.0.1:8787/resources
+Content-Type: application/json
+
+{
+  "include": ["复仇者"],
+  "exclude": ["东京复仇者"]
+}
+
+### Search resources with complicated search
+### Resource must has type "動畫"
+### Resource title must contains ("機動戰士鋼彈" or "机动战士高达") and "水星的魔女" and ("第二季" or "Season 2" or "S2")
+POST http://127.0.0.1:8787/resources?type=動畫
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "include": [
+    ["機動戰士鋼彈", "机动战士高达"],
+    "水星的魔女",
+    ["第二季", "Season 2", "S2"]
+  ]
+}
+
+### Search resources with full text index
+POST http://127.0.0.1:8787/resources?type=動畫
+Cache-Control: no-cache
+Content-Type: application/json
+
+{
+  "search": [
+    "我推的孩子",
+    "简体"
+  ]
+}
+
+### List all the users
+GET http://127.0.0.1:8787/users
+Content-Type: application/json
+
+### List all the teams
+GET http://127.0.0.1:8787/teams
+Content-Type: application/json

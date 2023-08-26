@@ -7,6 +7,7 @@
     "build:app": "pnpm -C packages/app build",
     "dev": "turbo run dev --parallel",
     "dev:app": "pnpm -C packages/app dev",
+    "dev:worker": "pnpm -C packages/worker dev",
     "format": "turbo run format --parallel",
     "release": "bumpp package.json packages/*/package.json --commit --push --tag && pnpm -r publish --access public",
     "test:ci": "turbo run test:ci",

@@ -6,7 +6,7 @@ import { prettyJSON } from 'hono/pretty-json';
 
 import type { Env } from './types';
 
-import { makePrisma } from './prisma';
+import { connect } from './database';
 import { handleScheduled } from './scheduled';
 import { getRefreshTimestamp } from './state';
 import { queryResourceDetail, searchResources } from './query';
@@ -18,7 +18,11 @@ app.use('*', logger());
 app.use('*', prettyJSON());
 
 app.get('/', async (c) => {
-  return c.json({ message: 'This is AnimeGarden', timestamp: await getRefreshTimestamp(c.env) });
+  console.log('Req', c.env);
+  return c.json({
+    message: 'AnimeGarden - 動漫花園 3-rd party mirror site',
+    timestamp: await getRefreshTimestamp(c.env)
+  });
 });
 
 app.get(
@@ -43,14 +47,14 @@ app.post('/resources', async (c) => {
 // });
 
 app.get('/users', cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }), async (c) => {
-  const prisma = makePrisma(c.env);
-  const users = await prisma.user.findMany();
+  const db = connect(c.env);
+  const users = await db.selectFrom('User').selectAll().execute();
   return c.json({ users });
 });
 
 app.get('/teams', cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }), async (c) => {
-  const prisma = makePrisma(c.env);
-  const teams = await prisma.team.findMany();
+  const db = connect(c.env);
+  const teams = await db.selectFrom('Team').selectAll().execute();
   return c.json({ teams });
 });
 
@@ -68,6 +72,7 @@ app.onError((err, c) => {
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
+    console.log('app');
     return app.fetch(request, env, ctx);
   },
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {

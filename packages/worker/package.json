@@ -5,26 +5,31 @@
   "scripts": {
     "build": "wrangler deploy --dry-run",
     "db:exec": "prisma db execute --file",
-    "db:gen": "prisma generate --data-proxy",
+    "db:gen": "prisma generate",
     "db:migrate": "pnpm prisma migrate dev --name",
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
-    "postinstall": "prisma generate --data-proxy",
+    "postinstall": "prisma generate",
     "prisma": "prisma",
     "test": "vitest",
     "test:ci": "vitest --run"
   },
   "dependencies": {
+    "@planetscale/database": "^1.11.0",
     "animegarden": "workspace:*",
     "anitomy": "workspace:*",
     "hono": "^3.5.4",
+    "kysely-planetscale": "^1.4.0",
     "memofunc": "^0.0.6",
     "ohash": "^1.1.3",
     "simptrad": "^0.1.0"
   },
   "devDependencies": {
     "@prisma/client": "5.2.0",
-    "prisma": "5.2.0"
+    "@total-typescript/ts-reset": "^0.5.1",
+    "kysely": "^0.26.2",
+    "prisma": "5.2.0",
+    "prisma-kysely": "^1.6.0"
   },
   "packageManager": "pnpm@8.6.12"
 }

@@ -1,11 +1,9 @@
-import type { Prisma } from '@prisma/client/edge';
-
 import { parse } from 'anitomy';
 import { Resource, fetchDmhyPage, normalizeTitle } from 'animegarden';
 
 import type { Env } from './types';
 
-import { makePrisma } from './prisma';
+import { connect } from './database';
 import { updateRefreshTimestamp } from './state';
 import { findResourcesFromDB, PrefetchFilter } from './query';
 
@@ -13,7 +11,7 @@ const teams = new Set<number>();
 const users = new Set<number>();
 
 export async function handleScheduled(env: Env) {
-  const prisma = makePrisma(env);
+  const db = connect(env);
 
   let sum = 0;
   for (let page = 1; ; page++) {
@@ -27,14 +25,21 @@ export async function handleScheduled(env: Env) {
           .filter(([id, _value]) => !users.has(id))
       );
       if (curUsers.size > 0) {
-        const list = await prisma.user.findMany({ where: { id: { in: [...curUsers.keys()] } } });
+        const list = await db
+          .selectFrom('User')
+          .select('User.id')
+          .where('id', 'in', [...curUsers.keys()])
+          .execute();
         for (const u of list) {
           users.add(u.id);
           curUsers.delete(u.id);
         }
-        await prisma.user.createMany({
-          data: [...curUsers.values()].map((u) => ({ id: +u.id, name: u.name }))
-        });
+
+        await db
+          .insertInto('User')
+          .values([...curUsers.values()].map((u) => ({ id: +u.id, name: u.name })))
+          .execute();
+
         for (const uid of curUsers.keys()) {
           users.add(uid);
         }
@@ -48,24 +53,37 @@ export async function handleScheduled(env: Env) {
           .filter(([id, _value]) => !teams.has(id))
       );
       if (curTeams.size > 0) {
-        const list = await prisma.team.findMany({ where: { id: { in: [...curTeams.keys()] } } });
+        const list = await db
+          .selectFrom('Team')
+          .select('Team.id')
+          .where('id', 'in', [...curTeams.keys()])
+          .execute();
         for (const u of list) {
           teams.add(u.id);
           curTeams.delete(u.id);
         }
-        await prisma.team.createMany({
-          data: [...curTeams.values()].map((u) => ({ id: +u.id, name: u.name }))
-        });
+
+        await db
+          .insertInto('Team')
+          .values([...curTeams.values()].map((u) => ({ id: +u.id, name: u.name })))
+          .execute();
+
         for (const tid of curTeams.keys()) {
           teams.add(tid);
         }
       }
     }
 
-    const { count } = await prisma.resource.createMany({
-      data: res.map(transformResource),
-      skipDuplicates: true
-    });
+    const result = await db
+      .insertInto('Resource')
+      .onConflict((oc) => oc.column('id').doNothing())
+      .values(res.map(transformResource))
+      .execute();
+    // const { count } = await prisma.resource.createMany({
+    //   data: res.map(transformResource),
+    //   skipDuplicates: true
+    // });
+    const count = result.reduce((acc, cur) => acc + Number(cur.numInsertedOrUpdatedRows ?? 0), 0);
 
     if (count === 0) break;
     sum += count;
@@ -107,10 +125,7 @@ export function transformResource(resource: Resource) {
     magnet: resource.magnet,
     // Convert to UTC+8
     createdAt: toShanghai(new Date(resource.createdAt)),
-    anitomy:
-      resource.type === '動畫'
-        ? (parse(resource.title) as Prisma.JsonObject | undefined)
-        : undefined,
+    anitomy: resource.type === '動畫' ? (parse(resource.title) as any) : undefined,
     fansubId: resource.fansub?.id ? +resource.fansub?.id : undefined,
     publisherId: +resource.publisher.id
   };
