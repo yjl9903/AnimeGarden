@@ -28,20 +28,23 @@ export async function handleScheduled(env: Env) {
         const list = await db
           .selectFrom('User')
           .select('User.id')
-          .where('id', 'in', [...curUsers.keys()])
+          .where('User.id', 'in', [...curUsers.keys()])
           .execute();
         for (const u of list) {
           users.add(u.id);
           curUsers.delete(u.id);
         }
 
-        await db
-          .insertInto('User')
-          .values([...curUsers.values()].map((u) => ({ id: +u.id, name: u.name })))
-          .execute();
+        if (curUsers.size > 0) {
+          await db
+            .insertInto('User')
+            .ignore()
+            .values([...curUsers.values()].map((u) => ({ id: +u.id, name: u.name })))
+            .execute();
 
-        for (const uid of curUsers.keys()) {
-          users.add(uid);
+          for (const uid of curUsers.keys()) {
+            users.add(uid);
+          }
         }
       }
     }
@@ -56,33 +59,29 @@ export async function handleScheduled(env: Env) {
         const list = await db
           .selectFrom('Team')
           .select('Team.id')
-          .where('id', 'in', [...curTeams.keys()])
+          .where('Team.id', 'in', [...curTeams.keys()])
           .execute();
         for (const u of list) {
           teams.add(u.id);
           curTeams.delete(u.id);
         }
 
-        await db
-          .insertInto('Team')
-          .values([...curTeams.values()].map((u) => ({ id: +u.id, name: u.name })))
-          .execute();
+        if (curTeams.size > 0) {
+          await db
+            .insertInto('Team')
+            .ignore()
+            .values([...curTeams.values()].map((u) => ({ id: +u.id, name: u.name })))
+            .execute();
 
-        for (const tid of curTeams.keys()) {
-          teams.add(tid);
+          for (const tid of curTeams.keys()) {
+            teams.add(tid);
+          }
         }
       }
     }
 
-    const result = await db
-      .insertInto('Resource')
-      .onConflict((oc) => oc.column('id').doNothing())
-      .values(res.map(transformResource))
-      .execute();
-    // const { count } = await prisma.resource.createMany({
-    //   data: res.map(transformResource),
-    //   skipDuplicates: true
-    // });
+    const query = db.insertInto('Resource').ignore().values(res.map(transformResource));
+    const result = await query.execute();
     const count = result.reduce((acc, cur) => acc + Number(cur.numInsertedOrUpdatedRows ?? 0), 0);
 
     if (count === 0) break;
@@ -92,6 +91,8 @@ export async function handleScheduled(env: Env) {
 
   if (sum > 0) {
     await updateRefreshTimestamp(env);
+  } else {
+    console.log(`The resource list is latest`);
   }
 
   await Promise.all(
@@ -125,7 +126,7 @@ export function transformResource(resource: Resource) {
     magnet: resource.magnet,
     // Convert to UTC+8
     createdAt: toShanghai(new Date(resource.createdAt)),
-    anitomy: resource.type === '動畫' ? (parse(resource.title) as any) : undefined,
+    anitomy: resource.type === '動畫' ? JSON.stringify(parse(resource.title)) : undefined,
     fansubId: resource.fansub?.id ? +resource.fansub?.id : undefined,
     publisherId: +resource.publisher.id
   };

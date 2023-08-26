@@ -1,5 +1,4 @@
 import type { Context } from 'hono';
-// import type { Resource, Team, User } from '@prisma/client/edge';
 
 import { sql } from 'kysely';
 import { hash, objectHash, sha256 } from 'ohash';

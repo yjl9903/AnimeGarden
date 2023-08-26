@@ -1,12 +1,14 @@
-import type { Resource, Team, User } from '@prisma/client/edge';
 import type { ResolvedFilterOptions, ResourceDetail } from 'animegarden';
 
 import type { Env } from './types';
 
 export async function updateRefreshTimestamp(env: Env) {
+  const now = new Date();
   try {
-    await env.animegarden.put('state/refresh-timestamp', new Date().toISOString());
-  } catch {}
+    await env.animegarden.put('state/refresh-timestamp', now.toISOString());
+  } finally {
+    return now;
+  }
 }
 
 export async function getRefreshTimestamp(env: Env) {
@@ -21,10 +23,21 @@ export function getResourcesStore(env: Env) {
   return new KVStore<{
     filter: ResolvedFilterOptions;
     timestamp: Date;
-    resources: (Resource & {
-      fansub: Team | null;
-      publisher: User;
-    })[];
+    resources: {
+      id: number;
+      href: string;
+      title: string;
+      titleAlt: string;
+      type: string;
+      size: string;
+      magnet: string;
+      createdAt: Date;
+      anitomy: unknown;
+      fansubId: number | null;
+      publisherId: number;
+      publisherName: string | null;
+      fansubName: string | null;
+    }[];
   }>(env.animegarden, 'resources');
 }
 
@@ -47,7 +60,7 @@ export class KVStore<V> {
     try {
       const text = await this.store.get(this.prefix + key);
       if (!!text) {
-        const result = JSON.parse(text);
+        const result = JSON.parse(text) as { value: V };
         return result.value;
       } else {
         return undefined;
