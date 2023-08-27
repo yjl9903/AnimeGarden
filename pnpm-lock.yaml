@@ -22,7 +22,7 @@ importers:
         version: 0.9.6
       bumpp:
         specifier: latest
-        version: 9.1.1
+        version: 9.2.0
       fs-extra:
         specifier: ^11.1.1
         version: 11.1.1
@@ -127,8 +127,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       swr:
-        specifier: ^2.2.1
-        version: 2.2.1(react@18.2.0)
+        specifier: ^2.2.2
+        version: 2.2.2(react@18.2.0)
       zod:
         specifier: ^3.22.2
         version: 3.22.2
@@ -2921,8 +2921,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /bumpp@9.1.1:
-    resolution: {integrity: sha512-T7/2QmRNhHRkH2+HgDs/xk4keom3nlCjwQn6kHdz0I0dQMVrs+YMOH5HyuhV0R3tha/tTYP030RG9uQKpQ9CRg==}
+  /bumpp@9.2.0:
+    resolution: {integrity: sha512-pgp7y3jp33QTaXFVDrE0IKuZF5Y8EsIz+ywZXFALW2nD+ZD+4crxJe/GypBQBoJuZrr5dc6TGrR3wl7fk3+C6w==}
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
@@ -6476,8 +6476,8 @@ packages:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
 
-  /swr@2.2.1(react@18.2.0):
-    resolution: {integrity: sha512-KJVA7dGtOBeZ+2sycEuzUfVIP5lZ/cd0xjevv85n2YG0x1uHJQicjAtahVZL6xG3+TjqhbBqimwYzVo3saeVXQ==}
+  /swr@2.2.2(react@18.2.0):
+    resolution: {integrity: sha512-CbR41AoMD4TQBQw9ic3GTXspgfM9Y8Mdhb5Ob4uIKXhWqnRLItwA5fpGvB7SmSw3+zEjb0PdhiEumtUvYoQ+bQ==}
     peerDependencies:
       react: ^16.11.0 || ^17.0.0 || ^18.0.0
     dependencies:
