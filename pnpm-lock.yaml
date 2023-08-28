@@ -191,8 +191,8 @@ importers:
         specifier: workspace:*
         version: link:../anitomy
       hono:
-        specifier: ^3.5.4
-        version: 3.5.4
+        specifier: ^3.5.5
+        version: 3.5.5
       kysely-planetscale:
         specifier: ^1.4.0
         version: 1.4.0(@planetscale/database@1.11.0)(kysely@0.26.3)
@@ -4157,8 +4157,8 @@ packages:
       space-separated-tokens: 2.0.2
     dev: false
 
-  /hono@3.5.4:
-    resolution: {integrity: sha512-GrRBIJhZ+tG+8RtoyPQjvqPGwppERmayyTiPKano4egmpkJf1XiptESUYK5vKHICNaJksAKB9jzy1CmOdQENPA==}
+  /hono@3.5.5:
+    resolution: {integrity: sha512-XDRLCLNWOWTtDhM86dTHSbhqgY4fbTscG2BiWwMcZ87yz8TneAXKMfQi22LPa7t7x8Eo459wMcibHd1aZtJkAA==}
     engines: {node: '>=16.0.0'}
     dev: false
 
