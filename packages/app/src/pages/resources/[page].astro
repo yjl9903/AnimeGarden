@@ -155,7 +155,7 @@ const keywords = {
             </>
           )}
           <ResourceTable resources={resources} />
-          {complete && (
+          {(complete && page === 1) || (
             <Pagination page={page} href={(page) => `/resources/${page}${url.search}`} />
           )}
         </>

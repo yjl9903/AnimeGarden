@@ -162,7 +162,7 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
     ? await findResourcesFromDB(ctx.env, filter)
     : await findResourcesFromDB.raw(ctx.env, filter);
 
-  const complete = result.length > filter.pageSize;
+  const complete = result.length <= filter.pageSize;
   const resources = resolveQueryResult(result.slice(0, filter.pageSize));
 
   return ctx.json({
