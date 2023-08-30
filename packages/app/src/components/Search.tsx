@@ -16,10 +16,12 @@ const SearchInputKey = 'search:input';
   document.addEventListener('keypress', (ev) => {
     if (ev.key === 's' || ev.key === '/') {
       const input = document.querySelector('#animegarden-search input');
-      // @ts-ignore
-      input?.focus();
-      ev.preventDefault();
-      ev.stopPropagation();
+      if (document.activeElement !== input) {
+        // @ts-ignore
+        input?.focus();
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
     }
   });
 
