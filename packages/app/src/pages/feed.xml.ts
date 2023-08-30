@@ -16,7 +16,7 @@ import { removeQuote, getRuntimeEnv } from '../utils';
 
 const ManyFilterSchema = z.union([z.array(FilterSchema), FilterSchema.transform((f) => [f])]);
 
-export const get: APIRoute = async (context) => {
+export const GET: APIRoute = async (context) => {
   try {
     const filterString = context.url.searchParams.get('filter');
     const rawFilter = filterString ? JSON.parse(filterString) : { page: 1, pageSize: 1000 };
@@ -59,6 +59,8 @@ export const get: APIRoute = async (context) => {
 
   return new Response(JSON.stringify({ status: 400 }), { status: 400 });
 };
+
+export const POST = GET;
 
 function inferTitle(params: URLSearchParams, options: ResolvedFilterOptions) {
   if (params.get('title')) {

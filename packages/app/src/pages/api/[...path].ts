@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 import { WORKER_BASE } from '../../constant';
 import { getRuntimeEnv } from '../../utils';
 
-export const all: APIRoute = async ({ request, locals }) => {
+export const ALL: APIRoute = async ({ request, locals }) => {
   const env = getRuntimeEnv(locals);
 
   const url = new URL(request.url);
