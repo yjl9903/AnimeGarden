@@ -25,5 +25,10 @@
     "types": [
       "@cloudflare/workers-types"
     ]
-  }
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./src/**/*.d.ts",
+    "./src/**/*.astro"
+  ]
 }

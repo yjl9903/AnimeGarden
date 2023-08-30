@@ -2,14 +2,11 @@
 import { ViewTransitions } from 'astro:transitions';
 
 import { parseSearchURL } from 'animegarden';
-import { getRuntime } from '@astrojs/cloudflare/runtime';
-
-import type { Env } from '../env';
 
 import Search from '../components/Search';
 import Dropdown from '../components/Dropdown.astro';
-import { removeQuote } from '../utils';
 import { types, fansubs } from '../constant';
+import { removeQuote, getRuntimeEnv } from '../utils';
 
 export interface Props {
   title: string;
@@ -26,10 +23,9 @@ const feed = `/feed.xml?filter=${generateFeed(Astro.url.searchParams)}`;
 const page = Astro.params.page ?? Astro.url.searchParams.get('page') ?? '1';
 const enableFeed = page === '1' && !Astro.url.pathname.startsWith('/resource/');
 
-const runtime = getRuntime<Env>(Astro.request);
+const env = getRuntimeEnv(Astro.locals);
 const timestamp =
-  Astro.props.timestamp ??
-  new Date((await runtime?.env.animegarden.get('state/refresh-timestamp')) ?? 0);
+  Astro.props.timestamp ?? new Date((await env.animegarden.get('state/refresh-timestamp')) ?? 0);
 
 const hasFansubSearch = search.has('fansubId');
 
@@ -50,7 +46,7 @@ function followSearch(params: Record<string, string>) {
 }
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
@@ -325,7 +321,10 @@ function followSearch(params: Record<string, string>) {
     </style>
 
     <!-- Cloudflare Web Analytics -->
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "e852b1db3a694a5a9b4af6b2cb3d682c"}'></script>
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "e852b1db3a694a5a9b4af6b2cb3d682c"}'></script>
     <!-- End Cloudflare Web Analytics -->
   </body>
 </html>

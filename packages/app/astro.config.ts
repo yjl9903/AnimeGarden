@@ -30,6 +30,11 @@ export default defineConfig({
   adapter: cloudflare({
     mode: 'directory'
   }),
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/noop'
+    }
+  },
   vite: {
     plugins: [Info(), TsconfigPaths()]
   }

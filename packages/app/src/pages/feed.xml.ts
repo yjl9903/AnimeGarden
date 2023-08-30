@@ -3,7 +3,6 @@ import type { APIRoute } from 'astro';
 import rss from '@astrojs/rss';
 import { z } from 'zod';
 import { toDate } from 'date-fns-tz';
-import { getRuntime } from '@astrojs/cloudflare/runtime';
 import {
   FilterSchema,
   ResolvedFilterOptions,
@@ -11,25 +10,23 @@ import {
   stringifySearchURL
 } from 'animegarden';
 
-import { Env } from '../env';
 import { wfetch } from '../fetch';
-import { removeQuote } from '../utils';
 import { WORKER_BASE } from '../constant';
+import { removeQuote, getRuntimeEnv } from '../utils';
 
 const ManyFilterSchema = z.union([z.array(FilterSchema), FilterSchema.transform((f) => [f])]);
 
 export const get: APIRoute = async (context) => {
   try {
     const filterString = context.url.searchParams.get('filter');
-    console.log(filterString)
     const rawFilter = filterString ? JSON.parse(filterString) : { page: 1, pageSize: 1000 };
-    console.log(rawFilter)
     const filter = ManyFilterSchema.safeParse(rawFilter);
 
     if (filter.success && filter.data.length > 0) {
       const title = inferTitle(context.url.searchParams, filter.data[0]);
-      const runtime = getRuntime<Env>(context.request);
-      const { resources } = await fetchResources(wfetch(runtime?.env?.worker), {
+      const locals = getRuntimeEnv(context.locals);
+
+      const { resources } = await fetchResources(wfetch(locals?.worker), {
         ...filter.data[0],
         page: 1,
         pageSize: 1000,

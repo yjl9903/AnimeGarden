@@ -1,15 +1,13 @@
 ---
 import { format } from 'date-fns';
-import { getRuntime } from '@astrojs/cloudflare/runtime';
 import { ResourceType, findFansub, parseSearchURL } from 'animegarden';
 
 import Layout from '../../layouts/Layout.astro';
 import Pagination from '../../components/Pagination.astro';
 import ResourceTable from '../../components/ResourceTable.astro';
 
-import { Env } from '../../env';
-import { removeQuote } from '../../utils';
 import { wfetch, fetchResources } from '../../fetch';
+import { getRuntimeEnv, removeQuote } from '../../utils';
 import { DisplayType, DisplayTypeColor, QueryType } from '../../constant';
 
 const { page: _page } = Astro.params;
@@ -33,7 +31,7 @@ const include = params.include;
 const isComplicated = include?.some((i) => Array.isArray(i)) ?? false;
 const exclude = params.exclude;
 
-const runtime = getRuntime<Env>(Astro.request);
+const env = getRuntimeEnv(Astro.locals);
 
 const {
   ok,
@@ -45,7 +43,7 @@ const {
   page,
   { ...params },
   {
-    fetch: wfetch(runtime?.env?.worker)
+    fetch: wfetch(env?.worker)
   }
 );
 
