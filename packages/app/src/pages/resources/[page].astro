@@ -40,8 +40,7 @@ const {
   filter: searchParams,
   timestamp
 } = await fetchResources(
-  page,
-  { ...params },
+  { ...params, page },
   {
     fetch: wfetch(env?.worker)
   }

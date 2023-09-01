@@ -9,8 +9,7 @@ import { wfetch, fetchResources } from '../fetch';
 const env = getRuntimeEnv(Astro.locals);
 
 const { ok, resources, timestamp } = await fetchResources(
-  1,
-  { pageSize: 80 },
+  { page: 1, pageSize: 80 },
   { fetch: wfetch(env?.worker) }
 );
 ---

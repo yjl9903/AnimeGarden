@@ -46,7 +46,6 @@ export const wfetch = (fn?: Fetcher): typeof ofetch => {
 };
 
 export async function fetchResources(
-  page: number,
   filter: FilterOptions = {},
   options: {
     fetch?: typeof ofetch;
@@ -55,7 +54,6 @@ export async function fetchResources(
 ) {
   return await rawFetchResources(options.fetch ?? ofetch, {
     baseURL,
-    page,
     signal: options.signal,
     ...filter
   });
