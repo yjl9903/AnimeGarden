@@ -12,9 +12,7 @@ async function main() {
         agent: process.env.HTTPS_PROXY ? new HttpsProxyAgent(process.env.HTTPS_PROXY) : undefined
       }),
     {
-      search: {
-        include: [['機動戰士鋼彈', '机动战士高达'], '水星的魔女', ['第二季', 'Season 2', 'S2']]
-      }
+      include: [['機動戰士鋼彈', '机动战士高达'], '水星的魔女', ['第二季', 'Season 2', 'S2']]
     }
   );
   console.log(r.resources);
