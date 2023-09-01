@@ -25,7 +25,7 @@ const enableFeed = page === '1' && !Astro.url.pathname.startsWith('/resource/');
 
 const env = getRuntimeEnv(Astro.locals);
 const timestamp =
-  Astro.props.timestamp ?? new Date((await env.animegarden.get('state/refresh-timestamp')) ?? 0);
+  Astro.props.timestamp ?? new Date((await env?.animegarden.get('state/refresh-timestamp')) ?? new Date());
 
 const hasFansubSearch = search.has('fansubId');
 
