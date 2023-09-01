@@ -7,7 +7,7 @@ import cloudflare from '@astrojs/cloudflare';
 import robotsTxt from 'astro-robots-txt';
 
 import Info from 'vite-plugin-info';
-import TsconfigPaths from 'vite-plugin-tsconfig-paths';
+import TsconfigPaths from 'vite-tsconfig-paths';
 
 // https://astro.build/config
 export default defineConfig({
