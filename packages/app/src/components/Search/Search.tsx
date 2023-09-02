@@ -238,8 +238,8 @@ export default function Search() {
             heading={
               <div className="flex justify-between w-full">
                 <div>搜索历史</div>
-                <button className="text-link" onMouseDown={(ev) => onClearHistories(ev)}>
-                  清空
+                <button className="text-link pr4 inline-block" onMouseDown={(ev) => onClearHistories(ev)}>
+                  <span className="mr-[-50%]">清空</span>
                 </button>
               </div>
             }
