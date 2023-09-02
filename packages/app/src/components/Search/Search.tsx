@@ -134,13 +134,13 @@ export default function Search() {
     };
   }, []);
 
-  const onClearHistories = (ev: Event) => {
+  const onClearHistories = (ev: React.MouseEvent) => {
     clearHistories();
     ev.stopPropagation();
     ev.preventDefault();
   };
 
-  const onRemoveHistory = (ev: MouseEvent, item: string) => {
+  const onRemoveHistory = (ev: React.MouseEvent, item: string) => {
     removeHistory(item);
     ev.stopPropagation();
     ev.preventDefault();
@@ -244,13 +244,15 @@ export default function Search() {
               </div>
             }
           >
-            {history.map((h, index) => (
+            {history.map((h) => (
               <Command.Item key={h}>
                 {
                   <div className="flex justify-between items-center w-full">
                     <div
-                      onMouseDown={() => {
+                      onMouseDown={(ev) => {
                         selectGoToSearch(h);
+                        ev.stopPropagation();
+                        ev.preventDefault();
                       }}
                       onSelect={() => {
                         onInputChange(h);
