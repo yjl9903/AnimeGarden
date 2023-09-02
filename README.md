@@ -98,6 +98,10 @@ const info = parse(`[Lilith-Raws] 熊熊勇闖異世界 PUNCH！ / Kuma Kuma Kum
 }
 ```
 
+## Local Development
+
+Follow [CONTRIBUTING.md](./CONTRIBUTING.md) to setup the environment and start developing.
+
 ## Credits
 
 + [動漫花園](https://share.dmhy.org/)

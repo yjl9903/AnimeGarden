@@ -14,12 +14,9 @@
 curl https://garden.onekuma.cn/api/resources?page=1&count=1
 ```
 
-## Deploy
+## Local Development
 
-+ Astro: in `astro.config.ts`, add the deployed site URL.
-+ Cloudflare:
-  + Use the same KV namespace (named as `animegarden`) with the worker.
-  + Bind the worker service (named as `worker`).
+Follow [CONTRIBUTING.md](../../CONTRIBUTING.md#cloudflare-worker) to setup the environment and start developing.
 
 ## Credits
 

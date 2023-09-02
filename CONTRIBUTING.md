@@ -59,6 +59,7 @@ Package is located at `packages/worker`.
 This package is based on the [Cloudflare Worker](https://developers.cloudflare.com/workers/).
 
 It depends on:
+
 + [Cloudflare Worker KV Namespace](https://developers.cloudflare.com/workers/runtime-apis/kv) to cache the response data;
 + [PlanetScale](https://planetscale.com/) to store the resources list data.
 
@@ -88,4 +89,3 @@ DATABASE_HOST=...
 DATABASE_USERNAME=...
 DATABASE_PASSWORD=...
 ```
-
