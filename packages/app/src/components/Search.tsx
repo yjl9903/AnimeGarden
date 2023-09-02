@@ -88,9 +88,12 @@ export default function Search() {
       } else {
         const abort = new AbortController();
         signals.current.add(abort);
-        const res = await fetchResources(1, parseSearch(search), {
-          signal: abort.signal
-        });
+        const res = await fetchResources(
+          { ...parseSearch(search), page: 1 },
+          {
+            signal: abort.signal
+          }
+        );
         signals.current.delete(abort);
         return res.resources;
       }
