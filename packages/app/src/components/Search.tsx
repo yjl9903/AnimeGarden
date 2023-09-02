@@ -244,7 +244,7 @@ export default function Search() {
             heading={
               <div className="flex justify-between w-full">
                 <div>搜索历史</div>
-                <button className="text-link" onClick={onClearHistories}>
+                <button className="text-link" onMouseDown={onClearHistories}>
                   清空
                 </button>
               </div>
@@ -266,7 +266,7 @@ export default function Search() {
                     </div>
                     <button
                       className="i-close text-base-500 hover:text-base-900"
-                      onClick={() => onClearHistory(index)}
+                      onMouseDown={() => onClearHistory(index)}
                     />
                   </div>
                 }
