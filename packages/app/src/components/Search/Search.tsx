@@ -1,14 +1,14 @@
 import useSWR from 'swr';
 import { Command } from 'cmdk';
 import { useStore } from '@nanostores/react';
-import { findFansub, stringifySearchURL } from 'animegarden';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { fetchResources } from '../fetch';
-import { fansubs, types } from '../constant';
-import { histories, loading } from '../state';
+import { fetchResources } from '../../fetch';
+import { fansubs, types } from '../../constant';
+import { histories, clearHistories, pushHistory, removeHistory } from '../../state';
 
 import { useActiveElement, useSessionStorage } from './hooks';
+import { DMHY_RE, debounce, goTo, goToSearch, parseSearch, resolveSearchURL } from './utils';
 
 const SearchInputKey = 'search:input';
 
@@ -28,8 +28,6 @@ const SearchInputKey = 'search:input';
   document.addEventListener('astro:beforeload', () => {});
 }
 
-const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
-
 export default function Search() {
   const ref = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -47,7 +45,6 @@ export default function Search() {
           const target = JSON.parse(input);
           if (typeof target === 'string' && target) {
             const current = window.location.pathname + window.location.search;
-            console.log(current, target, resolveSearchURL(target));
             if (current !== resolveSearchURL(target)) {
               setInput('');
             }
@@ -121,15 +118,7 @@ export default function Search() {
       const target = text ?? input;
       if (target) {
         setInput(target);
-
-        {
-          // Filter old history item which is the substring of the current input
-          const oldHistories = histories.get().filter((o) => !target.includes(o));
-          // Remove duplicate items
-          const newHistories = [...new Set([target, ...oldHistories])].slice(0, 10);
-          // Set histories
-          histories.set(newHistories);
-        }
+        pushHistory(target);
 
         stopFetch();
         goToSearch(target);
@@ -145,14 +134,16 @@ export default function Search() {
     };
   }, []);
 
-  const onClearHistories = () => {
-    const emptyHistories: string[] = [];
-    histories.set(emptyHistories);
+  const onClearHistories = (ev: Event) => {
+    clearHistories();
+    ev.stopPropagation();
+    ev.preventDefault();
   };
 
-  const onClearHistory = (index: number) => {
-    const filterHistories = histories.get().filter((_, _index) => _index != index);
-    histories.set(filterHistories);
+  const onRemoveHistory = (ev: MouseEvent, item: string) => {
+    removeHistory(item);
+    ev.stopPropagation();
+    ev.preventDefault();
   };
 
   return (
@@ -247,7 +238,7 @@ export default function Search() {
             heading={
               <div className="flex justify-between w-full">
                 <div>搜索历史</div>
-                <button className="text-link" onMouseDown={onClearHistories}>
+                <button className="text-link" onMouseDown={(ev) => onClearHistories(ev)}>
                   清空
                 </button>
               </div>
@@ -256,7 +247,7 @@ export default function Search() {
             {history.map((h, index) => (
               <Command.Item key={h}>
                 {
-                  <div className="flex justify-between w-full">
+                  <div className="flex justify-between items-center w-full">
                     <div
                       onMouseDown={() => {
                         selectGoToSearch(h);
@@ -268,8 +259,8 @@ export default function Search() {
                       {h}
                     </div>
                     <button
-                      className="i-carbon-close text-base-500 hover:text-base-900"
-                      onMouseDown={() => onClearHistory(index)}
+                      className="i-carbon-close text-2xl text-base-500 hover:text-base-900"
+                      onMouseDown={(ev) => onRemoveHistory(ev, h)}
                     />
                   </div>
                 }
@@ -310,109 +301,4 @@ export default function Search() {
       </Command.List>
     </Command>
   );
-}
-
-function parseSearch(search: string) {
-  const splitted = search
-    .split(' ')
-    .map((s) => s.trim())
-    .filter(Boolean);
-
-  const keywords: string[] = [];
-  const include: string[] = [];
-  const exclude: string[] = [];
-
-  const fansub: number[] = [];
-  const after: Date[] = [];
-  const before: Date[] = [];
-
-  const handlers: Record<string, (word: string) => void> = {
-    '+,include:,包含:': (word) => {
-      include.push(word);
-    },
-    '!,！,-,exclude:排除:': (word) => {
-      exclude.push(word);
-    },
-    'fansub:,字幕:,字幕组:': (word) => {
-      if (/^\d$/.test(word)) {
-        fansub.push(+word);
-      } else {
-        const found = findFansub(word, { fuzzy: true });
-        if (found) {
-          fansub.push(found.id);
-        }
-      }
-    },
-    'after:,开始:': (word) => {
-      after.push(new Date(word));
-    },
-    'before:,结束:': (word) => {
-      before.push(new Date(word));
-    }
-  };
-
-  for (const word of splitted) {
-    let found = false;
-    for (const [keys, handler] of Object.entries(handlers)) {
-      for (const key of keys.split(',')) {
-        if (word.startsWith(key) || word.startsWith(key.replace(':', '：'))) {
-          const text = word.slice(key.length);
-          if (text.length > 0) {
-            handler(text);
-            found = true;
-            break;
-          }
-        }
-      }
-      if (found) break;
-    }
-    if (!found) {
-      keywords.push(word.replace(/\+/g, '%2b'));
-    }
-  }
-
-  return {
-    search: keywords,
-    include,
-    exclude,
-    fansubId: fansub,
-    after: after.at(-1),
-    before: before.at(-1)
-  };
-}
-
-function resolveSearchURL(search: string) {
-  if (search.startsWith(location.origin)) {
-    return search.slice(location.origin.length);
-  } else if (search.startsWith(location.host)) {
-    return search.slice(location.host.length);
-  } else {
-    const match = DMHY_RE.exec(search);
-    if (match) {
-      return `/resource/${match[1]}`;
-    } else {
-      const url = stringifySearchURL(location.origin, parseSearch(search));
-      return `${url.pathname}${url.search}`;
-    }
-  }
-}
-
-function goToSearch(search: string) {
-  return goTo(resolveSearchURL(search));
-}
-
-function goTo(href: string) {
-  loading.set(true);
-  // window.location.href = href;
-  window.open(href, '_self');
-}
-
-function debounce<T extends (...args: any[]) => void>(fn: T, time = 1000): T {
-  let timestamp: any;
-  return ((...args: any[]) => {
-    clearTimeout(timestamp);
-    timestamp = setTimeout(() => {
-      fn(...args);
-    }, time);
-  }) as T;
 }
