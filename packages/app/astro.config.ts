@@ -36,6 +36,24 @@ export default defineConfig({
     }
   },
   vite: {
-    plugins: [Info(), TsconfigPaths()]
+    plugins: [
+      TsconfigPaths(),
+      Info({
+        meta: {
+          /**
+           * The host of Cloudflare Pages
+           */
+          APP_HOST: 'garden.onekuma.cn',
+          /**
+           * The host of Cloudflare Worker
+           */
+          WORKER_HOST: 'animegarden.yjl9903.workers.dev',
+          /**
+           * Cloudflare Web Analytics configuration
+           */
+          CF_BEACON: 'e852b1db3a694a5a9b4af6b2cb3d682c'
+        }
+      })
+    ]
   }
 });

@@ -1,4 +1,5 @@
 ---
+import { CF_BEACON } from '~build/meta';
 import { ViewTransitions } from 'astro:transitions';
 
 import { parseSearchURL } from 'animegarden';
@@ -324,8 +325,10 @@ function followSearch(params: Record<string, string>) {
     <!-- Cloudflare Web Analytics -->
     <script
       defer
-      src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon='{"token": "e852b1db3a694a5a9b4af6b2cb3d682c"}'></script>
+      src={!import.meta.env.DEV && CF_BEACON
+        ? 'https://static.cloudflareinsights.com/beacon.min.js'
+        : undefined}
+      data-cf-beacon={`{"token": "${CF_BEACON}"}`}></script>
     <!-- End Cloudflare Web Analytics -->
   </body>
 </html>

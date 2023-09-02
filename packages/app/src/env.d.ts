@@ -12,3 +12,11 @@ export interface Env {
 
   worker: Fetcher;
 }
+
+declare module '~build/meta' {
+  export const APP_HOST: string;
+
+  export const WORKER_HOST: string;
+
+  export const CF_BEACON: string | undefined;
+}

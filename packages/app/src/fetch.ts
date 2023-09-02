@@ -1,12 +1,12 @@
+import { APP_HOST, WORKER_HOST } from '~build/meta';
+
 import {
   FilterOptions,
   fetchResources as rawFetchResources,
   fetchResourceDetail as rawFetchResourceDetail
 } from 'animegarden';
 
-import { WORKER_BASE } from './constant';
-
-const baseURL = 'https://' + (import.meta.env.SSR ? WORKER_BASE : 'garden.onekuma.cn/api/');
+const baseURL = 'https://' + (import.meta.env.SSR ? WORKER_HOST : APP_HOST + '/api/');
 
 export const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
   if (import.meta.env.DEV && import.meta.env.HTTPS_PROXY) {

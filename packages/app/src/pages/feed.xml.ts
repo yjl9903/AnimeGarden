@@ -1,5 +1,7 @@
 import type { APIRoute } from 'astro';
 
+import { WORKER_HOST } from '~build/meta';
+
 import rss from '@astrojs/rss';
 import { z } from 'zod';
 import { toDate } from 'date-fns-tz';
@@ -11,7 +13,6 @@ import {
 } from 'animegarden';
 
 import { wfetch } from '../fetch';
-import { WORKER_BASE } from '../constant';
 import { removeQuote, getRuntimeEnv } from '../utils';
 
 const ManyFilterSchema = z.union([z.array(FilterSchema), FilterSchema.transform((f) => [f])]);
@@ -30,7 +31,7 @@ export const GET: APIRoute = async (context) => {
         ...filter.data[0],
         page: 1,
         pageSize: 1000,
-        baseURL: 'https://' + WORKER_BASE
+        baseURL: 'https://' + WORKER_HOST
       });
 
       return rss({

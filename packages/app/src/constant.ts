@@ -1,7 +1,5 @@
 import { ResourceType } from 'animegarden';
 
-export const WORKER_BASE = `animegarden.yjl9903.workers.dev`;
-
 export const types = [
   '动画',
   '季度全集',
