@@ -8,15 +8,9 @@
 
 動漫花園 3-rd party [API endpoint](https://garden.onekuma.cn/api/resources).
 
-## Developement
+## Local Development
 
-Add a new MySQL database in the [PlanetScale](https://planetscale.com/), and create `packages/worker/.dev.vars`.
-
-```env
-DATABASE_HOST=...
-DATABASE_USERNAME=...
-DATABASE_PASSWORD=...
-```
+Follow [CONTRIBUTING.md](../../CONTRIBUTING.md#cloudflare-worker) to setup the environment and start developing.
 
 ## Credits
 
