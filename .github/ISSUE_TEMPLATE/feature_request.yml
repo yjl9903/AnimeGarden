@@ -1,0 +1,25 @@
+name: 🚀 New feature proposal
+
+description: Propose a new feature
+
+labels:
+  - enhancement
+
+body:
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Clear and concise description of the problem
+      description: 'As a developer using VueUse I want [goal / wish] so that [benefit]. If you intend to submit a PR for this issue, tell us in the description. Thanks!'
+
+  - type: textarea
+    id: suggested-solution
+    attributes:
+      label: Suggested solution
+      description: 'In module [xy] we could provide following implementation...'
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Any other context or screenshots about the feature request here.
