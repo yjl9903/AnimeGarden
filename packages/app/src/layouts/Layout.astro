@@ -25,7 +25,7 @@ const enableFeed = page === '1' && !Astro.url.pathname.startsWith('/resource/');
 
 const env = getRuntimeEnv(Astro.locals);
 const timestamp =
-  Astro.props.timestamp ?? new Date((await env.animegarden.get('state/refresh-timestamp')) ?? 0);
+  Astro.props.timestamp ?? new Date((await env?.animegarden.get('state/refresh-timestamp')) ?? new Date());
 
 const hasFansubSearch = search.has('fansubId');
 
@@ -259,6 +259,18 @@ function followSearch(params: Record<string, string>) {
       .text-link {
         /* prettier-ignore */
         --at-apply: text-sky-700 hover:text-sky-500;
+      }
+
+      .i-close {
+        --un-icon: url("data:image/svg+xml;utf8,%3Csvg viewBox='0 0 32 32' width='1.2em' height='1.2em' xmlns='http://www.w3.org/2000/svg' %3E%3Cpath fill='currentColor' d='M24 9.4L22.6 8L16 14.6L9.4 8L8 9.4l6.6 6.6L8 22.6L9.4 24l6.6-6.6l6.6 6.6l1.4-1.4l-6.6-6.6L24 9.4z'/%3E%3C/svg%3E");
+        -webkit-mask: var(--un-icon) no-repeat;
+        mask: var(--un-icon) no-repeat;
+        -webkit-mask-size: 100% 100%;
+        mask-size: 100% 100%;
+        background-color: currentColor;
+        color: inherit;
+        width: 1.2em;
+        height: 1.2em;
       }
 
       .text-link-active {

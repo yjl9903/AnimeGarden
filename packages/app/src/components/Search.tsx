@@ -142,6 +142,16 @@ export default function Search() {
     };
   }, []);
 
+  const onClearHistories = () => {
+    const emptyHistories: string[] = [];
+    histories.set(emptyHistories);
+  };
+
+  const onClearHistory = (index: number) => {
+    const filterHistories = histories.get().filter((_, _index) => _index != index);
+    histories.set(filterHistories);
+  };
+
   return (
     <Command
       id="animegarden-search"
@@ -230,19 +240,36 @@ export default function Search() {
           </>
         )}
         {enable && history.length > 0 && (
-          <Command.Group heading="搜索历史">
-            {history.map((h) => (
-              <Command.Item
-                key={h}
-                value={h}
-                onMouseDown={() => {
-                  selectGoToSearch(h);
-                }}
-                onSelect={() => {
-                  onInputChange(h);
-                }}
-              >
-                {h}
+          <Command.Group
+            heading={
+              <div className="flex justify-between w-full">
+                <div>搜索历史</div>
+                <button className="text-link" onClick={onClearHistories}>
+                  清空
+                </button>
+              </div>
+            }
+          >
+            {history.map((h, index) => (
+              <Command.Item key={h}>
+                {
+                  <div className="flex justify-between w-full">
+                    <div
+                      onMouseDown={() => {
+                        selectGoToSearch(h);
+                      }}
+                      onSelect={() => {
+                        onInputChange(h);
+                      }}
+                    >
+                      {h}
+                    </div>
+                    <button
+                      className="i-close text-base-500 hover:text-base-900"
+                      onClick={() => onClearHistory(index)}
+                    />
+                  </div>
+                }
               </Command.Item>
             ))}
           </Command.Group>
