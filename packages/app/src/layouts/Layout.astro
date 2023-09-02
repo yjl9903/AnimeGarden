@@ -25,7 +25,8 @@ const enableFeed = page === '1' && !Astro.url.pathname.startsWith('/resource/');
 
 const env = getRuntimeEnv(Astro.locals);
 const timestamp =
-  Astro.props.timestamp ?? new Date((await env?.animegarden.get('state/refresh-timestamp')) ?? new Date());
+  Astro.props.timestamp ??
+  new Date((await env?.animegarden.get('state/refresh-timestamp')) ?? new Date());
 
 const hasFansubSearch = search.has('fansubId');
 
@@ -321,10 +322,15 @@ function followSearch(params: Record<string, string>) {
     </style>
 
     <!-- Cloudflare Web Analytics -->
-    <script
-      defer
-      src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon='{"token": "e852b1db3a694a5a9b4af6b2cb3d682c"}'></script>
+    {
+      !import.meta.env.DEV && (
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token": "e852b1db3a694a5a9b4af6b2cb3d682c"}'
+        />
+      )
+    }
     <!-- End Cloudflare Web Analytics -->
   </body>
 </html>
