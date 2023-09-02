@@ -23,7 +23,7 @@ curl https://garden.onekuma.cn/api/resources?page=1&count=1
 
 ## Local Development
 
-Follow [CONTRIBUTING.md](../../CONTRIBUTING.md#cloudflare-worker) to setup the environment and start developing.
+Follow [CONTRIBUTING.md](../../CONTRIBUTING.md#web-application) to setup the environment and start developing.
 
 ## Credits
 
