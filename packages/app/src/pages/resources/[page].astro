@@ -153,9 +153,18 @@ const keywords = {
               </div>
             </>
           )}
-          <ResourceTable resources={resources} />
-          {(complete && page === 1) || (
+          {resources.length > 0 ? (
+            <ResourceTable resources={resources} />
+          ) : (
+            <div class="h-20 text-2xl text-orange-700/80 flex items-center justify-center">
+              <span class="mr2 i-carbon-query" />
+              <span>没有查找到相应的资源</span>
+            </div>
+          )}
+          {!(complete && page === 1) ? (
             <Pagination page={page} href={(page) => `/resources/${page}${url.search}`} />
+          ) : (
+            <div />
           )}
         </>
       ) : (
