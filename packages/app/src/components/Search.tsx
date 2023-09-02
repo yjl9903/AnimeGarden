@@ -265,7 +265,7 @@ export default function Search() {
                       {h}
                     </div>
                     <button
-                      className="i-close text-base-500 hover:text-base-900"
+                      className="i-carbon-close text-base-500 hover:text-base-900"
                       onMouseDown={() => onClearHistory(index)}
                     />
                   </div>
