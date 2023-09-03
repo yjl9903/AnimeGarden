@@ -1,7 +1,7 @@
-import { ElementCategory } from './element';
 import type { ParsedResult } from './types';
 
 import { TextRange } from './token';
+import { ElementCategory } from './element';
 
 export interface KeywordOptions {
   identifiable: boolean;
@@ -68,6 +68,7 @@ export class KeywordManager {
       'SPECIALS',
       'TV',
       '特别篇',
+      '特別篇',
       '特別編',
       '番外篇',
       '番外編'

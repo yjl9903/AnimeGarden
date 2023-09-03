@@ -14233,3 +14233,189 @@ exports[`tokenize > should work 71`] = `
   ],
 }
 `;
+
+exports[`tokenize > should work 72`] = `
+{
+  "ok": true,
+  "result": {
+    "video.resolution": "1080P",
+  },
+  "tokens": [
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "ANi",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "無職轉生～到了異世界就拿出真本事",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "第二季",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "-",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "特別篇",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Identifier",
+      "content": "1080P",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "Baha",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "WEB-DL",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "AAC",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "AVC",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "CHT",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "V2",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "MP4",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+  ],
+}
+`;
