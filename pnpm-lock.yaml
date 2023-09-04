@@ -89,7 +89,7 @@ importers:
     dependencies:
       '@astrojs/cloudflare':
         specifier: ^7.0.1
-        version: 7.0.1(astro@3.0.7)
+        version: 7.0.1(astro@3.0.8)
       '@astrojs/react':
         specifier: ^3.0.0
         version: 3.0.0(@types/react-dom@18.2.7)(@types/react@18.2.21)(react-dom@18.2.0)(react@18.2.0)(vite@4.4.9)
@@ -106,8 +106,8 @@ importers:
         specifier: ^0.7.1
         version: 0.7.1(nanostores@0.9.3)(react@18.2.0)
       astro:
-        specifier: ^3.0.7
-        version: 3.0.7(@types/node@18.17.14)
+        specifier: ^3.0.8
+        version: 3.0.8(@types/node@18.17.14)
       astro-robots-txt:
         specifier: ^0.5.0
         version: 0.5.0
@@ -242,14 +242,14 @@ packages:
     resolution: {integrity: sha512-pvFiLP2BeOKA/ZOS6jxx4XhKzdVLHDhGlFEaZ2flWWYf2xOqVniqpk38I04DFRyz+L0ASggl7SkItTc+ZLju4w==}
     dev: true
 
-  /@astrojs/cloudflare@7.0.1(astro@3.0.7):
+  /@astrojs/cloudflare@7.0.1(astro@3.0.8):
     resolution: {integrity: sha512-TarQYGkg1VFt0P64FGFnn+/S2CdhXRXGD5PCBWZRe0nKDAUia1PNHcSvjBw9CL+royccm/WI8zjyZb3/eyxj4A==}
     peerDependencies:
       astro: ^3.0.7
     dependencies:
       '@astrojs/underscore-redirects': 0.3.0
       '@cloudflare/workers-types': 4.20230821.0
-      astro: 3.0.7(@types/node@18.17.14)
+      astro: 3.0.8(@types/node@18.17.14)
       esbuild: 0.19.2
       tiny-glob: 0.2.9
     dev: false
@@ -266,13 +266,13 @@ packages:
     resolution: {integrity: sha512-NQ4ppp1CM0HNkKbJNM4saVSfmUYzGlRalF6wx7F6T/MYHYSWGuojY89/oFTy4t8VlOGUCUijlsVNNeziWaUo5g==}
     dev: false
 
-  /@astrojs/markdown-remark@3.0.0(astro@3.0.7):
+  /@astrojs/markdown-remark@3.0.0(astro@3.0.8):
     resolution: {integrity: sha512-s8I49Je4++ImgYAgwL32HgN8m6we2qz3RtBpN4AjObMODPwDylmzUHZksD8Toy31q/P59ED3MuwphqOGm9l03w==}
     peerDependencies:
       astro: ^3.0.0
     dependencies:
       '@astrojs/prism': 3.0.0
-      astro: 3.0.7(@types/node@18.17.14)
+      astro: 3.0.8(@types/node@18.17.14)
       github-slugger: 2.0.0
       import-meta-resolve: 3.0.0
       rehype-raw: 6.1.1
@@ -2481,14 +2481,14 @@ packages:
       zod: 3.22.2
     dev: false
 
-  /astro@3.0.7(@types/node@18.17.14):
-    resolution: {integrity: sha512-slUnDBXfxMzq5abE4svcKbaeYC/tHZsJYOrzwDNU9lLye3/4cqYP7OuHMTXiRlx7LSpHQlUhwbMe2HqCv2GKag==}
+  /astro@3.0.8(@types/node@18.17.14):
+    resolution: {integrity: sha512-behNlLMlT8yWLlVvKKB2ufbSwxiqYUKqw31LSQx+lNQ8/lBvxemyjSBDMlBbGVCWEfg67B2bqWIrCweHSWb01Q==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
       '@astrojs/compiler': 2.0.1
       '@astrojs/internal-helpers': 0.2.0
-      '@astrojs/markdown-remark': 3.0.0(astro@3.0.7)
+      '@astrojs/markdown-remark': 3.0.0(astro@3.0.8)
       '@astrojs/telemetry': 3.0.1
       '@babel/core': 7.22.11
       '@babel/generator': 7.22.10
@@ -4972,7 +4972,7 @@ packages:
     resolution: {integrity: sha512-/5CMN3T0R4XTj4DcGaexo+roZSdSFW/0AOOTROrjxzCG1wrWXEsGbRKevjlIL+ZDE4sZlJr5ED4YW0yqmkK+eA==}
     dependencies:
       hosted-git-info: 2.8.9
-      resolve: 1.22.1
+      resolve: 1.22.4
       semver: 5.7.2
       validate-npm-package-license: 3.0.4
     dev: true
