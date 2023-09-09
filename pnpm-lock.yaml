@@ -176,8 +176,8 @@ importers:
         specifier: ^0.4.1
         version: 0.4.1(vite@4.4.9)
       vite-tsconfig-paths:
-        specifier: ^4.2.0
-        version: 4.2.0(typescript@5.2.2)(vite@4.4.9)
+        specifier: ^4.2.1
+        version: 4.2.1(typescript@5.2.2)(vite@4.4.9)
 
   packages/worker:
     dependencies:
@@ -6897,8 +6897,8 @@ packages:
       vite: 4.4.9(@types/node@18.17.15)
     dev: true
 
-  /vite-tsconfig-paths@4.2.0(typescript@5.2.2)(vite@4.4.9):
-    resolution: {integrity: sha512-jGpus0eUy5qbbMVGiTxCL1iB9ZGN6Bd37VGLJU39kTDD6ZfULTTb1bcc5IeTWqWJKiWV5YihCaibeASPiGi8kw==}
+  /vite-tsconfig-paths@4.2.1(typescript@5.2.2)(vite@4.4.9):
+    resolution: {integrity: sha512-GNUI6ZgPqT3oervkvzU+qtys83+75N/OuDaQl7HmOqFTb0pjZsuARrRipsyJhJ3enqV8beI1xhGbToR4o78nSQ==}
     peerDependencies:
       vite: '*'
     peerDependenciesMeta:
