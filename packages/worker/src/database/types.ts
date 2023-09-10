@@ -16,6 +16,7 @@ export type Resource = {
   anitomy: unknown | null;
   fansubId: number | null;
   publisherId: number;
+  isDeleted: Generated<number>;
 };
 export type Team = {
   id: Generated<number>;

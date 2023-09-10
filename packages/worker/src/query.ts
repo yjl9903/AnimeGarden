@@ -75,6 +75,7 @@ export const findResourcesFromDB = memoAsync(
       .where(({ and, or, not, eb }) =>
         and(
           [
+            eb('Resource.isDeleted', '=', 0),
             type ? eb('Resource.type', '=', type) : undefined,
             after ? eb('Resource.createdAt', '>=', after) : undefined,
             before ? eb('Resource.createdAt', '<=', before) : undefined,

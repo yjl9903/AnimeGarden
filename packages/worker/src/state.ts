@@ -37,6 +37,7 @@ export function getResourcesStore(env: Env) {
       publisherId: number;
       publisherName: string | null;
       fansubName: string | null;
+      isDeleted: number;
     }[];
   }>(env.animegarden, 'resources');
 }

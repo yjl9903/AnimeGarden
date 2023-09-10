@@ -1,7 +1,6 @@
 datasource db {
   provider     = "mysql"
-  url          = env("DATABASE_URL")
-  directUrl    = env("DIRECT_URL")
+  url          = "mysql://localhost:3306/animegarden"
   relationMode = "prisma"
 }
 
@@ -38,6 +37,7 @@ model Resource {
   publisherId Int
   fansub      Team?    @relation(fields: [fansubId], references: [id])
   publisher   User     @relation(fields: [publisherId], references: [id])
+  isDeleted   Boolean  @default(false)
 
   @@index([createdAt(sort: Desc)])
   @@index([fansubId])
