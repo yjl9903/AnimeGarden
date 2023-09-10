@@ -47,8 +47,8 @@ app.put('/resources', async (c) => {
 });
 
 app.put('/resources/fix', async (c) => {
-  const from = +(c.req.header('from') ?? '1');
-  const to = +(c.req.header('to') ?? '1');
+  const from = +(c.req.query('from') ?? '1');
+  const to = +(c.req.query('to') ?? '1');
   return c.json(await fixResources(c.env, from, to));
 });
 
