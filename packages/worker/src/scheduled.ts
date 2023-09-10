@@ -10,7 +10,7 @@ import { findResourcesFromDB, PrefetchFilter } from './query';
 const teams = new Set<number>();
 const users = new Set<number>();
 
-export async function handleScheduled(env: Env) {
+export async function refreshResources(env: Env) {
   const db = connect(env);
 
   let sum = 0;
@@ -103,6 +103,82 @@ export async function handleScheduled(env: Env) {
   );
 
   return { count: sum };
+}
+
+export async function fixResources(env: Env, from: number, to: number) {
+  const db = connect(env);
+
+  const logs: Array<{ type: 'rename' | 'delete'; id: number }> = [];
+
+  let minId = -1;
+  let maxId = -1;
+  const all = new Map<number, ReturnType<typeof transformResource>>();
+  for (let page = from; page <= to; page++) {
+    try {
+      const res = await fetchDmhyPage(fetch, { page, retry: 5 });
+      const resources = res.map(transformResource);
+      for (const r of resources) {
+        minId = Math.min(minId, r.id);
+        maxId = Math.max(maxId, r.id);
+        all.set(r.id, r);
+      }
+
+      const rows = await db
+        .selectFrom('Resource')
+        .selectAll()
+        .where(
+          'id',
+          'in',
+          resources.map((r) => r.id)
+        )
+        .execute();
+      for (const row of rows) {
+        const latest = all.get(row.id);
+        if (!latest) continue;
+        if (latest.title !== row.title) {
+          await db
+            .updateTable('Resource')
+            .set(() => ({ title: latest.title, titleAlt: normalizeTitle(latest.title) }))
+            .where('Resource.id', '=', latest.id)
+            .execute();
+          logs.push({ type: 'rename', id: latest.id });
+        }
+      }
+    } catch (error) {
+      const err = error as any;
+      if (err.message) {
+        console.log(...err.message.trim().split('\n'));
+      }
+      if (err.stack) {
+        console.log(...err.stack.trim().split('\n'));
+      }
+    }
+  }
+
+  // Mark unknown resource deleted
+  if (minId !== -1 && maxId !== -1) {
+    const rows = await db
+      .selectFrom('Resource')
+      .selectAll()
+      .where('id', '>=', minId)
+      .where('id', '<=', maxId)
+      .execute();
+    const deleted = rows.filter((row) => !all.has(row.id));
+    if (deleted.length > 0) {
+      await db
+        .updateTable('Resource')
+        .set(() => ({ isDeleted: 1 }))
+        .where(
+          'id',
+          'in',
+          deleted.map((row) => row.id)
+        )
+        .execute();
+      logs.push(...deleted.map((r) => ({ type: 'delete', id: r.id }) as const));
+    }
+  }
+
+  return logs;
 }
 
 export function transformResource(resource: Resource) {

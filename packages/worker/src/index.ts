@@ -7,8 +7,8 @@ import { prettyJSON } from 'hono/pretty-json';
 import type { Env } from './types';
 
 import { connect } from './database';
-import { handleScheduled } from './scheduled';
 import { getRefreshTimestamp } from './state';
+import { fixResources, refreshResources } from './scheduled';
 import { queryResourceDetail, searchResources } from './query';
 
 const app = new Hono<{ Bindings: Env }>();
@@ -42,9 +42,15 @@ app.post('/resources', async (c) => {
 });
 
 // Only used for debug
-// app.put('/resources', async (c) => {
-//   return c.json(await handleScheduled(c.env));
-// });
+app.put('/resources', async (c) => {
+  return c.json(await refreshResources(c.env));
+});
+
+app.put('/resources/fix', async (c) => {
+  const from = +(c.req.header('from') ?? '1');
+  const to = +(c.req.header('to') ?? '1');
+  return c.json(await fixResources(c.env, from, to));
+});
 
 app.get('/users', cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }), async (c) => {
   const db = connect(c.env);
@@ -76,6 +82,13 @@ export default {
     return app.fetch(request, env, ctx);
   },
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
-    ctx.waitUntil(handleScheduled(env));
+    switch (event.cron) {
+      case '*/5 * * * *':
+        ctx.waitUntil(refreshResources(env));
+        break;
+      case '0 * * * *':
+        ctx.waitUntil(fixResources(env, 1, 10));
+        break;
+    }
   }
 };
