@@ -78,7 +78,6 @@ app.onError((err, c) => {
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
-    console.log('app');
     return app.fetch(request, env, ctx);
   },
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {

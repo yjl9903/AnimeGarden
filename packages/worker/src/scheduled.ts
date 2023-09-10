@@ -108,7 +108,10 @@ export async function refreshResources(env: Env) {
 export async function fixResources(env: Env, from: number, to: number) {
   const db = connect(env);
 
-  const logs: Array<{ type: 'rename' | 'delete'; id: number }> = [];
+  const logs: Array<
+    | { type: 'rename'; id: number; from: string; to: string }
+    | { type: 'delete'; id: number; title: string }
+  > = [];
 
   let minId = -1;
   let maxId = -1;
@@ -141,7 +144,7 @@ export async function fixResources(env: Env, from: number, to: number) {
             .set(() => ({ title: latest.title, titleAlt: normalizeTitle(latest.title) }))
             .where('Resource.id', '=', latest.id)
             .execute();
-          logs.push({ type: 'rename', id: latest.id });
+          logs.push({ type: 'rename', id: latest.id, from: row.title, to: latest.title });
         }
       }
     } catch (error) {
@@ -174,7 +177,7 @@ export async function fixResources(env: Env, from: number, to: number) {
           deleted.map((row) => row.id)
         )
         .execute();
-      logs.push(...deleted.map((r) => ({ type: 'delete', id: r.id }) as const));
+      logs.push(...deleted.map((r) => ({ type: 'delete', id: r.id, title: r.title }) as const));
     }
   }
 
