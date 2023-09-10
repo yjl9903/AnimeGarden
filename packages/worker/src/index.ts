@@ -42,15 +42,15 @@ app.post('/resources', async (c) => {
 });
 
 // Only used for debug
-app.put('/resources', async (c) => {
-  return c.json(await refreshResources(c.env));
-});
+// app.put('/resources', async (c) => {
+//   return c.json(await refreshResources(c.env));
+// });
 
-app.put('/resources/fix', async (c) => {
-  const from = +(c.req.query('from') ?? '1');
-  const to = +(c.req.query('to') ?? '1');
-  return c.json(await fixResources(c.env, from, to));
-});
+// app.put('/resources/fix', async (c) => {
+//   const from = +(c.req.query('from') ?? '1');
+//   const to = +(c.req.query('to') ?? '1');
+//   return c.json(await fixResources(c.env, from, to));
+// });
 
 app.get('/users', cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }), async (c) => {
   const db = connect(c.env);
