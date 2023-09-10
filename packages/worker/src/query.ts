@@ -20,8 +20,12 @@ export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
   const store = getDetailStore(ctx.env);
 
   const href = ctx.req.param('href');
+  const id = resolveId(href);
+  if (id === undefined) {
+    return ctx.json({ message: '404 NOT FOUND' }, 404);
+  }
 
-  const cache = await store.get(href);
+  const cache = await store.get('' + id);
   if (!!cache) {
     return ctx.json({ detail: cache });
   }
@@ -32,9 +36,14 @@ export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
   }
 
   // Ignore cache put error
-  await store.put(href, detail).catch(() => {});
+  await store.put('' + id, detail, { expirationTtl: 60 * 60 * 24 * 7 }).catch(() => {});
 
   return ctx.json({ detail });
+
+  function resolveId(href: string) {
+    const id = href.split('_')[0];
+    return id && /^\d+$/.test(id) ? +id : undefined;
+  }
 }
 
 export const PrefetchFilter = [
