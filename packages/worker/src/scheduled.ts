@@ -178,7 +178,7 @@ export async function fixResources(env: Env, from: number, to: number) {
     }
   }
 
-  return logs;
+  return { logs };
 }
 
 export function transformResource(resource: Resource) {
