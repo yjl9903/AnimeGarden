@@ -98,6 +98,10 @@ Content-Type: application/json
   ]
 }
 
+### Get resource detail by id
+GET http://127.0.0.1:8787/resource/650938
+Content-Type: application/json
+
 ### List all the users
 GET http://127.0.0.1:8787/users
 Content-Type: application/json

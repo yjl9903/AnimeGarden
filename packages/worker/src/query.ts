@@ -27,10 +27,21 @@ export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
 
   const cache = await store.get('' + id);
   if (!!cache) {
-    return ctx.json({ detail: cache });
+    return ctx.json({ id, detail: cache });
   }
 
-  const detail = await fetchDmhyDetail(fetch, href);
+  const db = connect(ctx.env);
+  const realHref = /^\d+$/.test(href)
+    ? (
+        await db
+          .selectFrom('Resource')
+          .select('Resource.href')
+          .where('Resource.id', '=', +href)
+          .execute()
+      )[0]?.href
+    : href;
+
+  const detail = await fetchDmhyDetail(fetch, realHref);
   if (!detail) {
     return ctx.json({ message: '404 NOT FOUND' }, 404);
   }
@@ -38,7 +49,7 @@ export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
   // Ignore cache put error
   await store.put('' + id, detail, { expirationTtl: 60 * 60 * 24 * 7 }).catch(() => {});
 
-  return ctx.json({ detail });
+  return ctx.json({ id, detail });
 
   function resolveId(href: string) {
     const id = href.split('_')[0];
@@ -185,6 +196,7 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
 
 function resolveQueryResult(result: Awaited<ReturnType<typeof findResourcesFromDB>>['resources']) {
   return result.map((r) => ({
+    id: r.id,
     title: r.title,
     href: `https://share.dmhy.org/topics/view/${r.href}`,
     type: r.type,
