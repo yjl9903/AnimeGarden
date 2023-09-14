@@ -596,6 +596,7 @@ export const AllFansubs = [
   { id: 819, name: '黑岩射手吧字幕组' },
   { id: 821, name: '百冬練習組' },
   { id: 822, name: '極彩字幕组' },
+  { id: 823, name: '拨雪寻春' },
   { id: 824, name: '织梦字幕组' },
   { id: 825, name: '猎户发布组' },
   { id: 826, name: '秋人字幕' },

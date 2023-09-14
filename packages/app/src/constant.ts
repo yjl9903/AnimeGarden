@@ -120,6 +120,7 @@ export const fansubs = [
   { id: 841, name: '失眠搬运组' },
   { id: 842, name: 'SRVFI-Raws' },
   { id: 843, name: 'Pharos of MyGO' },
+  { id: 823, name: '拨雪寻春' },
   // 特摄
   { id: 648, name: '魔星字幕团' },
   { id: 805, name: 'DBD制作组' },
@@ -138,7 +139,6 @@ export const fansubs = [
   { id: 665, name: 'YWCN字幕组' },
   // 日剧
   { id: 749, name: '幻月字幕组' },
-  // { id: 823, name: '拨雪寻春' },
   { id: 649, name: '云光字幕组' },
   { id: 520, name: '豌豆字幕组' },
   { id: 626, name: '驯兽师联盟' },
