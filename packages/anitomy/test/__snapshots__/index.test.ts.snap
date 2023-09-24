@@ -443,3 +443,40 @@ exports[`Other filenames > should parse 12`] = `
   "year": undefined,
 }
 `;
+
+exports[`Other filenames > should parse 13`] = `
+{
+  "audio": {
+    "term": "AAC",
+  },
+  "episode": {
+    "number": 1,
+    "numberAlt": 12,
+    "title": undefined,
+  },
+  "file": {
+    "checksum": undefined,
+    "extension": undefined,
+    "name": "[LoliHouse] 满怀美梦的少年是现实主义者 / Yumemiru Danshi wa Genjitsushugisha [01-12合集][WebRip 1080p HEVC-10bit AAC][简繁内封字幕][Fin]",
+  },
+  "language": undefined,
+  "month": undefined,
+  "release": {
+    "group": "LoliHouse",
+    "version": undefined,
+  },
+  "season": undefined,
+  "source": "WebRip",
+  "subtitles": undefined,
+  "title": "满怀美梦的少年是现实主义者 / Yumemiru Danshi wa Genjitsushugisha",
+  "type": undefined,
+  "video": {
+    "resolution": "1080p",
+    "term": "HEVC-10bit",
+  },
+  "volume": {
+    "number": undefined,
+  },
+  "year": undefined,
+}
+`;

@@ -14419,3 +14419,184 @@ exports[`tokenize > should work 72`] = `
   ],
 }
 `;
+
+exports[`tokenize > should work 73`] = `
+{
+  "ok": true,
+  "result": {
+    "video.resolution": "1080p",
+  },
+  "tokens": [
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "LoliHouse",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "满怀美梦的少年是现实主义者",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "/",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Yumemiru",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Danshi",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "wa",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Unknown",
+      "content": "Genjitsushugisha",
+      "enclosed": false,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": false,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "01-12合集",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "WebRip",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Identifier",
+      "content": "1080p",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "HEVC-10bit",
+      "enclosed": true,
+    },
+    {
+      "category": "Delimiter",
+      "content": " ",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "AAC",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "简繁内封字幕",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "[",
+      "enclosed": true,
+    },
+    {
+      "category": "Unknown",
+      "content": "Fin",
+      "enclosed": true,
+    },
+    {
+      "category": "Bracket",
+      "content": "]",
+      "enclosed": true,
+    },
+  ],
+}
+`;

@@ -176,7 +176,7 @@ function matchSingleEpisodePattern(context: ParserContext, word: string, token: 
  * Match a multi episode pattern. e.g. "01-02", "03-05v2".
  */
 function matchMultiEpisodePattern(context: ParserContext, word: string, token: Token) {
-  const RE = /^(\d{1,3})(?:[vV](\d))?[-~&+](\d{1,3})(?:[vV](\d)|[Ff][Ii][Nn]|[Ee][Nn][Dd])?$/;
+  const RE = /^(\d{1,3})(?:[vV](\d))?[-~&+](\d{1,3})(?:[vV](\d)|[Ff][Ii][Nn]|[Ee][Nn][Dd]|合集)?$/;
   const match = RE.exec(word);
 
   if (!match) return false;
