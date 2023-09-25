@@ -172,9 +172,9 @@ importers:
       unocss:
         specifier: ^0.56.2
         version: 0.56.2(postcss@8.4.30)(rollup@3.29.3)(vite@4.4.9)
-      vite-plugin-info:
-        specifier: ^0.4.1
-        version: 0.4.1(vite@4.4.9)
+      unplugin-info:
+        specifier: ^0.5.0
+        version: 0.5.0(esbuild@0.17.19)(rollup@3.29.3)(vite@4.4.9)
       vite-tsconfig-paths:
         specifier: ^4.2.1
         version: 4.2.1(typescript@5.2.2)(vite@4.4.9)
@@ -6826,6 +6826,48 @@ packages:
       - supports-color
     dev: true
 
+  /unplugin-info@0.5.0(esbuild@0.17.19)(rollup@3.29.3)(vite@4.4.9):
+    resolution: {integrity: sha512-kCqm2UmCZXaz/OfFhXtxSnoxRCJ4p6lgBqHKdxg4pNE11fvKPnki4SMVj2yC0Zxq0y1zQi8Uf8uNhMUPBFo2XQ==}
+    peerDependencies:
+      '@nuxt/kit': ^3.7.3
+      '@nuxt/schema': ^3.7.3
+      esbuild: '*'
+      rollup: ^3 || ^4
+      vite: '>=3.2.7'
+      webpack: ^4 || ^5
+    peerDependenciesMeta:
+      '@nuxt/kit':
+        optional: true
+      '@nuxt/schema':
+        optional: true
+      esbuild:
+        optional: true
+      rollup:
+        optional: true
+      vite:
+        optional: true
+      webpack:
+        optional: true
+    dependencies:
+      ci-info: 3.8.0
+      esbuild: 0.17.19
+      git-repo-info: 2.1.1
+      parse-github-url: 1.0.2
+      remote-origin-url: 2.0.0
+      rollup: 3.29.3
+      unplugin: 1.5.0
+      vite: 4.4.9(@types/node@18.17.19)
+    dev: true
+
+  /unplugin@1.5.0:
+    resolution: {integrity: sha512-9ZdRwbh/4gcm1JTOkp9lAkIDrtOyOxgHmY7cjuwI8L/2RTikMcVG25GsZwNAgRuap3iDw2jeq7eoqtAsz5rW3A==}
+    dependencies:
+      acorn: 8.10.0
+      chokidar: 3.5.3
+      webpack-sources: 3.2.3
+      webpack-virtual-modules: 0.5.0
+    dev: true
+
   /untyped@1.4.0:
     resolution: {integrity: sha512-Egkr/s4zcMTEuulcIb7dgURS6QpN7DyqQYdf+jBtiaJvQ+eRsrtWUoX84SbvQWuLkXsOjM+8sJC9u6KoMK/U7Q==}
     hasBin: true
@@ -6979,18 +7021,6 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-info@0.4.1(vite@4.4.9):
-    resolution: {integrity: sha512-CP+B3N1+tdEM/o2Cu3kQpU7H/qABvNb5GqDVsbuH3ICJfdUyHn8xCZPEVQ5dB8/gr/vzFnzRoPbX2YcZQzG7jQ==}
-    peerDependencies:
-      vite: ^2.9.13 || ^3.0.0 || ^4.0.0
-    dependencies:
-      ci-info: 3.8.0
-      git-repo-info: 2.1.1
-      parse-github-url: 1.0.2
-      remote-origin-url: 2.0.0
-      vite: 4.4.9(@types/node@18.17.19)
-    dev: true
-
   /vite-tsconfig-paths@4.2.1(typescript@5.2.2)(vite@4.4.9):
     resolution: {integrity: sha512-GNUI6ZgPqT3oervkvzU+qtys83+75N/OuDaQl7HmOqFTb0pjZsuARrRipsyJhJ3enqV8beI1xhGbToR4o78nSQ==}
     peerDependencies:
@@ -7133,6 +7163,15 @@ packages:
 
   /webidl-conversions@3.0.1:
     resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
+    dev: true
+
+  /webpack-sources@3.2.3:
+    resolution: {integrity: sha512-/DyMEOrDgLKKIG0fmvtz+4dUX/3Ghozwgm6iPp8KRhvn+eQf9+Q7GWxVNMk3+uCPWfdXYC4ExGBckIXdFEfH1w==}
+    engines: {node: '>=10.13.0'}
+    dev: true
+
+  /webpack-virtual-modules@0.5.0:
+    resolution: {integrity: sha512-kyDivFZ7ZM0BVOUteVbDFhlRt7Ah/CSPwJdi8hBpkK7QLumUqdLtVfm/PX/hkcnrvr0i77fO5+TjZ94Pe+C9iw==}
     dev: true
 
   /whatwg-url@5.0.0:

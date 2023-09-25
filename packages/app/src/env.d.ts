@@ -1,5 +1,5 @@
 /// <reference types="astro/client" />
-/// <reference types="vite-plugin-info/client" />
+/// <reference types="unplugin-info/client" />
 
 import type { DirectoryRuntime } from '@astrojs/cloudflare';
 
