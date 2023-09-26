@@ -80,7 +80,8 @@ export const other = [
   `[DMG&RoxyLib] 無職転生 [BDRip][1080P][CHS][MP4]/[DMG&RoxyLib] 無職転生 番外編「エリスのゴブリン討伐」[BDRip][AVC_AAC][1080P][CHS](08FF8DBF).mp4`,
   `【极影字幕社】★7月新番 白圣女与黑牧师 Shiro Seijo to Kuro Bokushi 第01v2话 GB 1080P MP4（字幕社招人内详）`,
   `[ANi] 無職轉生～到了異世界就拿出真本事 第二季 - 特別篇 [1080P][Baha][WEB-DL][AAC AVC][CHT][V2][MP4]`,
-  `[LoliHouse] 满怀美梦的少年是现实主义者 / Yumemiru Danshi wa Genjitsushugisha [01-12合集][WebRip 1080p HEVC-10bit AAC][简繁内封字幕][Fin]`
+  `[LoliHouse] 满怀美梦的少年是现实主义者 / Yumemiru Danshi wa Genjitsushugisha [01-12合集][WebRip 1080p HEVC-10bit AAC][简繁内封字幕][Fin]`,
+  `[轻之国度字幕组][女友成双/女朋友 and 女朋友][第01-12话][720P][MP4]`
 ];
 
 export const filesnames = [...LoliHouse, ...LilithRaws, ...KitaujiSub, ...other];
