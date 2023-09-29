@@ -88,8 +88,8 @@ importers:
   packages/app:
     dependencies:
       '@astrojs/cloudflare':
-        specifier: ^7.3.0
-        version: 7.3.0(@types/node@18.18.0)(astro@3.1.4)
+        specifier: ^7.3.1
+        version: 7.3.1(@types/node@18.18.0)(astro@3.2.0)
       '@astrojs/react':
         specifier: ^3.0.2
         version: 3.0.2(@types/react-dom@18.2.8)(@types/react@18.2.23)(react-dom@18.2.0)(react@18.2.0)(vite@4.4.9)
@@ -106,8 +106,8 @@ importers:
         specifier: ^0.7.1
         version: 0.7.1(nanostores@0.9.3)(react@18.2.0)
       astro:
-        specifier: ^3.1.4
-        version: 3.1.4(@types/node@18.18.0)
+        specifier: ^3.2.0
+        version: 3.2.0(@types/node@18.18.0)
       astro-robots-txt:
         specifier: ^1.0.0
         version: 1.0.0
@@ -247,18 +247,18 @@ packages:
     resolution: {integrity: sha512-pvFiLP2BeOKA/ZOS6jxx4XhKzdVLHDhGlFEaZ2flWWYf2xOqVniqpk38I04DFRyz+L0ASggl7SkItTc+ZLju4w==}
     dev: true
 
-  /@astrojs/cloudflare@7.3.0(@types/node@18.18.0)(astro@3.1.4):
-    resolution: {integrity: sha512-QjxU6fWXKmPgYTf8YGKYi3QW7hEvoOn3jOERS22VVwpXCLhSvrY3dPJD0xDdQsrL1z/zPC9UEX6SfV3UUvNuQg==}
+  /@astrojs/cloudflare@7.3.1(@types/node@18.18.0)(astro@3.2.0):
+    resolution: {integrity: sha512-TG/XSIstRWkNtZ+ps3ojTAy26a9tLG/b+9T4q7kzfYmcWYzPuyqQdIXNTnjogrSJY4piByj8YXO++qxsHtwavQ==}
     peerDependencies:
-      astro: ^3.1.3
+      astro: ^3.2.0
     dependencies:
       '@astrojs/underscore-redirects': 0.3.0
-      '@cloudflare/workers-types': 4.20230914.0
+      '@cloudflare/workers-types': 4.20230922.0
       '@iarna/toml': 2.2.5
       '@miniflare/cache': 2.14.1
       '@miniflare/shared': 2.14.1
       '@miniflare/storage-memory': 2.14.1
-      astro: 3.1.4(@types/node@18.18.0)
+      astro: 3.2.0(@types/node@18.18.0)
       dotenv: 16.3.1
       esbuild: 0.19.3
       find-up: 6.3.0
@@ -286,13 +286,13 @@ packages:
     resolution: {integrity: sha512-NQ4ppp1CM0HNkKbJNM4saVSfmUYzGlRalF6wx7F6T/MYHYSWGuojY89/oFTy4t8VlOGUCUijlsVNNeziWaUo5g==}
     dev: false
 
-  /@astrojs/markdown-remark@3.2.0(astro@3.1.4):
+  /@astrojs/markdown-remark@3.2.0(astro@3.2.0):
     resolution: {integrity: sha512-jigyLfefUZPKgVmmraCkVpdUuFH1R3SrpgQO13axsgwLDBgkggaQpNR5Ag4O9PDualeBtbdt30aYSfvnBKx9Hg==}
     peerDependencies:
       astro: ^3.1.0
     dependencies:
       '@astrojs/prism': 3.0.0
-      astro: 3.1.4(@types/node@18.18.0)
+      astro: 3.2.0(@types/node@18.18.0)
       github-slugger: 2.0.0
       import-meta-resolve: 3.0.0
       mdast-util-definitions: 6.0.0
@@ -686,13 +686,8 @@ packages:
     dev: true
     optional: true
 
-  /@cloudflare/workers-types@4.20230914.0:
-    resolution: {integrity: sha512-OVeN4lFVu1O0PJGZ2d0FwpK8lelFcr33qYOgCh77ErEYmEBO4adwnIxcIsdQbFbhF0ffN6joiVcljD4zakdaeQ==}
-    dev: false
-
   /@cloudflare/workers-types@4.20230922.0:
     resolution: {integrity: sha512-0N3fg4uv9pS7PXMVYmEmEGs1P1yzMIsqym0sO//o2IjtZhsf7RwOozJtdazDAL0fBIWsl1PRX7BmKe92RV+5qw==}
-    dev: true
 
   /@esbuild-plugins/node-globals-polyfill@0.2.3(esbuild@0.17.19):
     resolution: {integrity: sha512-r3MIryXDeXDOZh7ih1l/yE9ZLORCd5e8vWg02azWRGj5SPTuoh69A2AIyn0Z31V/kHBfZ4HgWJ+OK3GTTwLmnw==}
@@ -2506,14 +2501,14 @@ packages:
       zod: 3.22.2
     dev: false
 
-  /astro@3.1.4(@types/node@18.18.0):
-    resolution: {integrity: sha512-MKGJXHkkYK4QpqYHydPu+eeLBGU3cHx9Xdrtk6RFvu3dVkxuJsYm6L+lgIeH0hrTF9qlaDih/KbNnTKrCXdidw==}
+  /astro@3.2.0(@types/node@18.18.0):
+    resolution: {integrity: sha512-sDQnSFV46ZzNkVU6co5f8wilZFmGiWsqnIVoMhd5/XPU76iZdA40WqFyBOhGaji7hGuqbcjN8MGobMg53lsoUg==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
       '@astrojs/compiler': 2.1.0
       '@astrojs/internal-helpers': 0.2.0
-      '@astrojs/markdown-remark': 3.2.0(astro@3.1.4)
+      '@astrojs/markdown-remark': 3.2.0(astro@3.2.0)
       '@astrojs/telemetry': 3.0.2
       '@babel/core': 7.22.20
       '@babel/generator': 7.22.15
