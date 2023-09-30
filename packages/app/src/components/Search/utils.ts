@@ -1,6 +1,7 @@
+import { navigate } from 'astro:transitions/client';
 import { findFansub, stringifySearchURL } from 'animegarden';
 
-import { histories, loading } from '../../state';
+import { loading } from '../../state';
 
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
 
@@ -95,8 +96,7 @@ export function goToSearch(search: string) {
 
 export function goTo(href: string) {
   loading.set(true);
-  // window.location.href = href;
-  window.open(href, '_self');
+  navigate(href, { history: 'push' });
 }
 
 export function debounce<T extends (...args: any[]) => void>(fn: T, time = 1000): T {
