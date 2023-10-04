@@ -135,7 +135,7 @@ export const findResourcesFromDB = memoAsync(
       .$if(!!search && search.length > 0, (qb) =>
         qb.where(sql`MATCH(Resource.titleAlt) AGAINST (${search!.join(' ')} IN BOOLEAN MODE)`)
       )
-      .orderBy('Resource.createdAt desc')
+      .orderBy('Resource.id desc')
       .offset((page - 1) * pageSize)
       .limit(pageSize + 1); // Used for determining whether there are rest resources
 
