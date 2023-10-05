@@ -166,7 +166,7 @@ export const findResourcesFromDB = memoAsync(
             return resp;
           }
           // Cache miss
-          store.remove(key);
+          await store.remove(key);
         }
 
         return undefined;
