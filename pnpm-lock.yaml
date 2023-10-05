@@ -72,8 +72,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       zod:
-        specifier: ^3.22.3
-        version: 3.22.3
+        specifier: ^3.22.4
+        version: 3.22.4
     devDependencies:
       vitest:
         specifier: ^0.34.6
@@ -130,8 +130,8 @@ importers:
         specifier: ^2.2.4
         version: 2.2.4(react@18.2.0)
       zod:
-        specifier: ^3.22.3
-        version: 3.22.3
+        specifier: ^3.22.4
+        version: 3.22.4
     devDependencies:
       '@iconify-json/carbon':
         specifier: ^1.1.21
@@ -2500,7 +2500,7 @@ packages:
     resolution: {integrity: sha512-6JQSLid4gMhoWjOm85UHLkgrw0+hHIjnJVIUqxjU2D6feKlVyYukMNYjH44ZDZBK1P8hNxd33PgWlHzCASvedA==}
     dependencies:
       valid-filename: 4.0.0
-      zod: 3.22.3
+      zod: 3.22.4
     dev: false
 
   /astro@3.2.2(@types/node@18.18.3):
@@ -4877,7 +4877,7 @@ packages:
       workerd: 1.20230922.0
       ws: 8.14.2
       youch: 3.3.2
-      zod: 3.22.3
+      zod: 3.22.4
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -5469,7 +5469,7 @@ packages:
       '@prisma/generator-helper': 5.3.1
       '@prisma/internals': 5.3.1
       typescript: 5.2.2
-      zod: 3.22.3
+      zod: 3.22.4
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -7463,8 +7463,8 @@ packages:
     resolution: {integrity: sha512-+dTu2m6gmCbO9Ahm4ZBDapx2O6ZY9QSPXst2WXjcznPMwf2YNpn3RevLx4KkZp1OPW/ouFcoBtBzFz/LeY69oA==}
     dev: false
 
-  /zod@3.22.3:
-    resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
 
   /zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
