@@ -91,16 +91,26 @@ export async function refreshResources(env: Env) {
 
   if (sum > 0) {
     await updateRefreshTimestamp(env);
+
+    await Promise.all(
+      PrefetchFilter.map(async (filter) => {
+        await findResourcesFromDB.remove(env, filter);
+        await findResourcesFromDB(env, filter);
+      })
+    );
   } else {
     console.log(`The resource list is latest`);
-  }
 
-  await Promise.all(
-    PrefetchFilter.map(async (filter) => {
-      await findResourcesFromDB.remove(env, filter);
-      await findResourcesFromDB(env, filter);
-    })
-  );
+    await Promise.all(
+      PrefetchFilter.map(async (filter) => {
+        const external = findResourcesFromDB.external!;
+        const cached = await external.get([env, filter]);
+        if (cached) {
+          await external.set([env, filter], cached);
+        }
+      })
+    );
+  }
 
   return { count: sum };
 }
