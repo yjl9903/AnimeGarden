@@ -2,26 +2,38 @@
 export interface Props {
   page: number;
 
-  href: (page: number) => string;
+  hasPrev?: boolean;
+
+  hasNext?: boolean;
+
+  go: (page: number) => string;
 }
 
-const { page, href } = Astro.props;
+const { page, go, hasPrev = true, hasNext = true } = Astro.props;
 ---
 
 <div class="flex justify-around mt4 text-base-500 text-lg">
   <div>
     <a
-      href={page > 1 ? href(page - 1) : '#'}
-      class="underline underline-dotted text-link-active"
-      aria-label="Go to previous page">上一页</a
+      href={hasPrev ? go(page - 1) : '#'}
+      class={"underline underline-dotted text-link-active" + (!hasPrev ? ' pagination-disable' : '')}
+      aria-label="Go to the previous page">上一页</a
     >
   </div>
   <div>第 {page} 页</div>
   <div>
     <a
-      href={href(page + 1)}
-      class="underline underline-dotted text-link-active"
-      aria-label="Go to next page">下一页</a
+      href={hasNext ? go(page + 1) : '#'}
+      class={"underline underline-dotted text-link-active" + (!hasNext ? ' pagination-disable' : '')}
+      aria-label="Go to the next page">下一页</a
     >
   </div>
 </div>
+
+<style>
+  .pagination-disable {
+    color: transparent;
+    user-select: none;
+    pointer-events: none;
+  }
+</style>

@@ -20,7 +20,7 @@ const { ok, resources, timestamp } = await fetchResources(
       ok ? (
         <>
           <ResourceTable resources={resources} />
-          <Pagination page={1} href={(page) => `/resources/${page}`} />
+          <Pagination page={1} go={(page) => `/resources/${page}`} hasPrev={false} />
         </>
       ) : (
         <>
