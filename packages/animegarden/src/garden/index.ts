@@ -5,17 +5,19 @@ import type {
   FetchResourcesOptions,
   FetchResourceDetailOptions
 } from './types';
-import { stringifySearchURL } from './url';
 
 import { retryFn } from './utils';
+import { stringifySearchURL } from './url';
 
 export * from './url';
 
 export * from './types';
 
-export { AllFansubs, findFansub } from './constant';
-
 export { normalizeTitle } from './utils';
+
+export { makeResourcesFilter } from './filter';
+
+export { AllFansubs, findFansub } from './constant';
 
 export const DefaultBaseURL = 'https://garden.onekuma.cn/api/';
 
