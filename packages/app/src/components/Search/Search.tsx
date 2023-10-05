@@ -290,8 +290,8 @@ export default function Search() {
                 {filteredFansub.map((fansub) => (
                   <Command.Item
                     key={fansub.id}
-                    onMouseDown={selectStatic(`/resources/1?fansub=${fansub.id}`)}
-                    onSelect={selectStatic(`/resources/1?fansub=${fansub.id}`)}
+                    onMouseDown={selectStatic(`/resources/1?fansubId=${fansub.id}`)}
+                    onSelect={selectStatic(`/resources/1?fansubId=${fansub.id}`)}
                   >
                     {fansub.name}
                   </Command.Item>
