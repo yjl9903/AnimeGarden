@@ -153,15 +153,28 @@ export const findResourcesFromDB = memoAsync(
   {
     external: {
       async get([env, params]) {
-        return getResourcesStore(env).get(hash(params));
+        const store = getResourcesStore(env);
+        const key = hash(params);
+
+        const [resp, timestamp] = await Promise.all([
+          store.get(key),
+          getRefreshTimestamp(env)
+        ] as const);
+
+        if (resp) {
+          if (resp.timestamp.getTime() === timestamp.getTime()) {
+            return resp;
+          }
+          // Cache miss
+          store.remove(key);
+        }
+
+        return undefined;
       },
       async set([env, params], value) {
         const key = hash(params);
-        console.log(`Put ${key}: ${JSON.stringify(params)}`);
-        console.log(`Put ${key}: ${objectHash(params)}`);
-        console.log(`Put ${key}: ${sha256(objectHash(params))}`);
         return getResourcesStore(env).put(key, value, {
-          expirationTtl: 360
+          expirationTtl: 60 * 10
         });
       },
       async remove([env, params]) {
@@ -179,7 +192,8 @@ export async function searchResources(ctx: Context<{ Bindings: Env }>) {
     return ctx.json({ message: 'Request is not valid' }, 400);
   }
 
-  const { timestamp, resources: result } = !isNoCache(ctx)
+  const noCache = isNoCache(ctx);
+  const { timestamp, resources: result } = !noCache
     ? await findResourcesFromDB(ctx.env, filter)
     : await findResourcesFromDB.raw(ctx.env, filter);
 
