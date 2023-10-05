@@ -1,0 +1,82 @@
+---
+
+---
+
+<div id="animegarden-progress" class="hidden">
+  <div></div>
+  <div></div>
+</div>
+
+<style is:global>
+  #animegarden-progress div {
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    width: 20%;
+    height: 3px;
+
+    border-radius: 1px;
+    background: linear-gradient(90deg, #fb923c, #fdba74);
+
+    animation: loading-loop 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  #animegarden-progress div:first-child {
+    left: 0%;
+  }
+
+  #animegarden-progress div:last-child {
+    left: -20%;
+    animation-delay: 0.8s;
+  }
+
+  @keyframes loading-loop {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(500%);
+    }
+  }
+</style>
+
+<script>
+  import { onSet } from 'nanostores';
+
+  import { loading } from '../state';
+
+  console.log('This is execute');
+
+  document.addEventListener('click', (ev) => {
+    const find = (node: HTMLElement | null) => {
+      if (node && node.nodeName.toLowerCase() === 'a') {
+        return node;
+      }
+      node = node?.parentNode as HTMLElement | null;
+      if (node && node.nodeName.toLowerCase() === 'a') {
+        return node;
+      }
+    };
+
+    const target = find(ev.target as HTMLElement | null);
+    if (target) {
+      const href = target.getAttribute('href');
+      if (target.getAttribute('target') !== '_blank') {
+        if (href && (href.startsWith('/') || href.startsWith(window.location.origin))) {
+          loading.set(true);
+        }
+      }
+    }
+  });
+
+  onSet(loading, ({ newValue }) => {
+    const progress = document.querySelector('#animegarden-progress')!;
+    if (newValue) {
+      progress.classList.remove('hidden');
+    } else {
+      progress.classList.add('hidden');
+    }
+  });
+</script>
