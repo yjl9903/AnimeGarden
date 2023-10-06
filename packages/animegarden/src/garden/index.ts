@@ -54,6 +54,11 @@ export async function fetchResources(
 
     for (let page = 1; map.size < count; page++) {
       try {
+        if (options.signal?.aborted) {
+          aborted = true;
+          break;
+        }
+
         const resp = await fetchPage(page);
         if (!resp) {
           aborted = true;
@@ -104,8 +109,8 @@ export async function fetchResources(
     };
   } else {
     // Fetch one page
-
     const resp = await fetchPage(options.page ?? 1);
+
     if (!resp) {
       return {
         ok: false,
