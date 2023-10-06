@@ -6,10 +6,59 @@ import { loading } from '../../state';
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
 
 export function parseSearch(search: string) {
-  const splitted = search
-    .split(' ')
-    .map((s) => s.trim())
-    .filter(Boolean);
+  function splitWords(search: string) {
+    const matchQuotes = {
+      '"': ['"'],
+      "'": ["'"],
+      '“': ['”'],
+      '”': ['“']
+    };
+
+    const words: string[] = [];
+    let i = 0;
+    while (i < search.length) {
+      // Skip whitespaces
+      while (i < search.length && /\s/.test(search[i])) i++;
+      if (i >= search.length) break;
+
+      let j = i;
+      let word = '';
+      while (j < search.length) {
+        if (Object.keys(matchQuotes).includes(search[j])) {
+          // Split by quote "..." or '...'
+          const quote = matchQuotes[search[j] as keyof typeof matchQuotes];
+          j++;
+          let k = j;
+          while (k < search.length) {
+            if (quote.includes(search[k])) {
+              break;
+            } else if (search[k] === '\\' && k + 1 < search.length) {
+              word += search[++k];
+            } else {
+              word += search[k];
+            }
+            k++;
+          }
+          // j -> quote
+          j = k;
+        } else if (search[j] === '\\' && j + 1 < search.length) {
+          // \"
+          j++;
+          word += search[j];
+        } else {
+          // otherwise
+          word += search[j];
+        }
+        j++;
+      }
+
+      words.push(word);
+      i = j;
+    }
+    return words;
+  }
+
+  const splitted = splitWords(search);
 
   const keywords: string[] = [];
   const include: string[] = [];
