@@ -62,8 +62,13 @@
     if (target) {
       const href = target.getAttribute('href');
       if (target.getAttribute('target') !== '_blank') {
-        if (href && (href.startsWith('/') || href.startsWith(window.location.origin))) {
-          loading.set(true);
+        if (href) {
+          if (
+            (href.startsWith('/') && window.location.origin + href !== window.location.href) ||
+            (href.startsWith(window.location.origin) && href !== window.location.href)
+          ) {
+            loading.set(true);
+          }
         }
       }
     }
