@@ -87,12 +87,25 @@ export const findResourcesFromDB = memoAsync(
 
     const query = db
       .selectFrom('Resource')
-      .selectAll()
+      .select([
+        'Resource.id',
+        'Resource.href',
+        'Resource.title',
+        'Resource.titleAlt',
+        'Resource.type',
+        'Resource.size',
+        'Resource.magnet',
+        'Resource.createdAt',
+        'Resource.anitomy',
+        'Resource.fansubId',
+        'Resource.publisherId',
+        'Resource.isDeleted'
+      ])
       .leftJoin('User', 'Resource.publisherId', 'User.id')
       .leftJoin('Team', 'Resource.fansubId', 'Team.id')
       .select('User.name as publisherName')
       .select('Team.name as fansubName')
-      .where(({ and, or, not, eb }) =>
+      .where(({ and, or, eb }) =>
         and(
           [
             eb('Resource.isDeleted', '=', 0),

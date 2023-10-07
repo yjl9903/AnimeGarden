@@ -14,6 +14,10 @@ Content-Type: application/json
 GET http://127.0.0.1:8787/resource/638270_Nemuri_THE_iDOLM_STER_CINDERELLA_GIRLS_2012-2023_Discography_Collection_268_CDs_FLAC.html
 Content-Type: application/json
 
+### Get the resource detail by id
+GET http://127.0.0.1:8787/resource/652885
+Content-Type: application/json
+
 ### List the second page of resources
 GET http://127.0.0.1:8787/resources?page=2
 Content-Type: application/json
