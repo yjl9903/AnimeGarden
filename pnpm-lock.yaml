@@ -92,7 +92,7 @@ importers:
         version: 7.5.1(@types/node@18.18.3)(astro@3.2.3)
       '@astrojs/react':
         specifier: ^3.0.3
-        version: 3.0.3(@types/react-dom@18.2.10)(@types/react@18.2.25)(react-dom@18.2.0)(react@18.2.0)(vite@4.4.11)
+        version: 3.0.3(@types/react-dom@18.2.11)(@types/react@18.2.25)(react-dom@18.2.0)(react@18.2.0)(vite@4.4.11)
       '@astrojs/rss':
         specifier: ^3.0.0
         version: 3.0.0
@@ -152,8 +152,8 @@ importers:
         specifier: 18.2.25
         version: 18.2.25
       '@types/react-dom':
-        specifier: 18.2.10
-        version: 18.2.10
+        specifier: 18.2.11
+        version: 18.2.11
       '@unocss/reset':
         specifier: ^0.56.5
         version: 0.56.5
@@ -321,7 +321,7 @@ packages:
       prismjs: 1.29.0
     dev: false
 
-  /@astrojs/react@3.0.3(@types/react-dom@18.2.10)(@types/react@18.2.25)(react-dom@18.2.0)(react@18.2.0)(vite@4.4.11):
+  /@astrojs/react@3.0.3(@types/react-dom@18.2.11)(@types/react@18.2.25)(react-dom@18.2.0)(react@18.2.0)(vite@4.4.11):
     resolution: {integrity: sha512-foliIy1whJobo+ZpsvOMS4WCiR0z4/2Seyxth5xMlweVVM+gA1Lqk0GdzE6F0ISUW9CuXrCRS7ZyTNW8SM6vog==}
     engines: {node: '>=18.14.1'}
     peerDependencies:
@@ -331,7 +331,7 @@ packages:
       react-dom: ^17.0.2 || ^18.0.0
     dependencies:
       '@types/react': 18.2.25
-      '@types/react-dom': 18.2.10
+      '@types/react-dom': 18.2.11
       '@vitejs/plugin-react': 4.1.0(vite@4.4.11)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -2073,8 +2073,8 @@ packages:
   /@types/prop-types@15.7.7:
     resolution: {integrity: sha512-FbtmBWCcSa2J4zL781Zf1p5YUBXQomPEcep9QZCfRfQgTxz3pJWiDFLebohZ9fFntX5ibzOkSsrJ0TEew8cAog==}
 
-  /@types/react-dom@18.2.10:
-    resolution: {integrity: sha512-5VEC5RgXIk1HHdyN1pHlg0cOqnxHzvPGpMMyGAP5qSaDRmyZNDaQ0kkVAkK6NYlDhP6YBID3llaXlmAS/mdgCA==}
+  /@types/react-dom@18.2.11:
+    resolution: {integrity: sha512-zq6Dy0EiCuF9pWFW6I6k6W2LdpUixLE4P6XjXU1QHLfak3GPACQfLwEuHzY5pOYa4hzj1d0GxX/P141aFjZsyg==}
     dependencies:
       '@types/react': 18.2.25
 
