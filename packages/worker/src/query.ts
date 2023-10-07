@@ -41,12 +41,13 @@ export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
       )[0]?.href
     : href;
 
-  const detail = await fetchDmhyDetail(fetch, realHref);
-  if (!detail) {
+  const resp = await fetchDmhyDetail(fetch, realHref);
+  if (!resp) {
     return ctx.json({ message: '404 NOT FOUND' }, 404);
   }
 
   // Ignore cache put error
+  const detail = { ...resp, id };
   await store.put('' + id, detail, { expirationTtl: 60 * 60 * 24 * 7 }).catch(() => {});
 
   return ctx.json({ id, detail });
@@ -59,8 +60,7 @@ export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
 
 export const PrefetchFilter = [
   parseSearchURL(new URLSearchParams('?page=1&pageSize=80')),
-  parseSearchURL(new URLSearchParams('?page=2&pageSize=80')),
-  parseSearchURL(new URLSearchParams('?page=3&pageSize=80'))
+  parseSearchURL(new URLSearchParams('?page=2&pageSize=80'))
 ];
 
 export const findResourcesFromDB = memoAsync(
