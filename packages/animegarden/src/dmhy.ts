@@ -62,8 +62,12 @@ export async function fetchDmhyDetail(
   options: FetchDmhyDetailOptions = {}
 ): Promise<ResourceDetail | undefined> {
   const url = new URL(href, `https://share.dmhy.org/topics/view/`);
-  const { retry = 5 } = options;
+  const lastHref = url.href.split('/').at(-1);
+  if (!lastHref) return undefined;
+  const matchId = /^(\d+)/.exec(lastHref);
+  if (!matchId) return undefined;
 
+  const { retry = 5 } = options;
   const html = await retryFn(() => ofetch(url.href).then((r) => r.text()), retry);
   const $ = load(html);
 

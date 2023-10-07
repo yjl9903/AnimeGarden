@@ -21,9 +21,11 @@ export { AllFansubs, findFansub } from './constant';
 
 export const DefaultBaseURL = 'https://garden.onekuma.cn/api/';
 
+type ResourceWithId = Resource & { id: number };
+
 interface FetchResourcesResult {
   ok: boolean;
-  resources: Resource[];
+  resources: ResourceWithId[];
   complete: boolean;
   filter?: Omit<ResolvedFilterOptions, 'page'>;
   timestamp?: Date;
@@ -46,7 +48,7 @@ export async function fetchResources(
     // Prefer the original count or -1 for inf
     const count = options.count < 0 ? Number.MAX_SAFE_INTEGER : options.count;
 
-    const map = new Map<string, Resource>();
+    const map = new Map<string, ResourceWithId>();
     let aborted = false;
     let timestamp = new Date(0);
     let complete = false;
@@ -144,7 +146,7 @@ export async function fetchResources(
       if (resp.ok) {
         const r = await resp.json();
         return {
-          resources: r.resources as Resource[],
+          resources: r.resources as ResourceWithId[],
           complete: r.complete as boolean,
           filter: r.filter as ResolvedFilterOptions | undefined,
           timestamp: new Date(r.timestamp)
@@ -155,8 +157,8 @@ export async function fetchResources(
     }, retry);
   }
 
-  function uniq(resources: Resource[]) {
-    const map = new Map<string, Resource>();
+  function uniq(resources: ResourceWithId[]) {
+    const map = new Map<string, ResourceWithId>();
     for (const r of resources) {
       if (!map.has(r.href)) {
         map.set(r.href, r);
@@ -170,7 +172,7 @@ export async function fetchResourceDetail(
   fetch: (request: RequestInfo, init?: RequestInit) => Promise<Response>,
   href: string,
   options: FetchResourceDetailOptions = {}
-): Promise<ResourceDetail> {
+): Promise<ResourceDetail & { id: number }> {
   const { baseURL = DefaultBaseURL, retry = 1 } = options;
   const url = new URL('resource/' + href, baseURL);
 
@@ -178,7 +180,7 @@ export async function fetchResourceDetail(
     () =>
       fetch(url.toString(), { signal: options.signal })
         .then((r) => r.json())
-        .then((r) => r.detail),
+        .then((r) => ({ id: r.id, ...r.detail })),
     retry
   );
 }
