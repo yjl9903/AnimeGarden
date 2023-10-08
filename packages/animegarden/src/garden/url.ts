@@ -143,6 +143,13 @@ export function parseSearchURL(
     if (newExclude.length > 0) {
       filtered.exclude = newExclude;
     }
+  } else {
+    if (filtered.include) {
+      filtered.include = filtered.include.map((arr) => arr.map((t) => normalizeTitle(t)));
+    }
+    if (filtered.exclude) {
+      filtered.exclude = filtered.exclude.map((t) => normalizeTitle(t));
+    }
   }
 
   const isNaN = (d: unknown): boolean => d === undefined || d === null || Number.isNaN(d);

@@ -41,17 +41,18 @@ export function makeResourcesFilter(
     if (resolved.search) {
       include.push(resolved.search);
     }
+    for (const arr of include) {
+      arr.splice(0, arr.length, ...arr.map((k) => normalizeTitle(k).toLowerCase()));
+    }
     chains.push((r) => {
-      // @ts-expect-error
-      const titleAlt: string = r.titleAlt || normalizeTitle(r.title);
+      const titleAlt = normalizeTitle(r.title).toLowerCase();
       return include.every((keys) => keys.some((key) => titleAlt.indexOf(key) !== -1));
     });
   }
   if (resolved.exclude) {
-    const exclude = resolved.exclude;
+    const exclude = resolved.exclude.map((k) => normalizeTitle(k).toLowerCase());
     chains.push((r) => {
-      // @ts-expect-error
-      const titleAlt: string = r.titleAlt || normalizeTitle(r.title);
+      const titleAlt = normalizeTitle(r.title).toLowerCase();
       return exclude.every((key) => titleAlt.indexOf(key) === -1);
     });
   }
