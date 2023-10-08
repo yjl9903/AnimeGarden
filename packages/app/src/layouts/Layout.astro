@@ -31,7 +31,9 @@ const timestamp =
   Astro.props.timestamp ??
   new Date((await env?.animegarden.get('state/refresh-timestamp')) ?? new Date());
 
+const hasTypeSearch = search.has('type');
 const hasFansubSearch = search.has('fansubId');
+const active = hasFansubSearch ? 'fansub' : hasTypeSearch ? 'type' : '';
 
 function generateFeed(params: URLSearchParams) {
   const filter = parseSearchURL(params);
@@ -78,10 +80,10 @@ function followSearch(params: Record<string, string>) {
           <a
             href="/resources/1"
             class="header-item block"
-            x-active={url.startsWith('/resources/') && !search.has('type') && !search.has('fansub')}
+            x-active={url.startsWith('/resources/') && active === ''}
             >所有资源</a
           >
-          <div class="header-item cursor-pointer" x-active={search.has('type')}>
+          <div class="header-item cursor-pointer" x-active={active === 'type'}>
             <Dropdown>
               <span>类型</span>
               <div slot="dropdown" class="mt4">
@@ -102,7 +104,7 @@ function followSearch(params: Record<string, string>) {
               </div>
             </Dropdown>
           </div>
-          <div class="header-item cursor-pointer" x-active={search.has('fansub')}>
+          <div class="header-item cursor-pointer" x-active={active === 'fansub'}>
             <Dropdown>
               <span>字幕组</span>
               <div slot="dropdown" class="mt4">
