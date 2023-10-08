@@ -59,8 +59,9 @@ export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
 }
 
 export const PrefetchFilter = [
-  parseSearchURL(new URLSearchParams('?page=1&pageSize=80')),
-  parseSearchURL(new URLSearchParams('?page=2&pageSize=80'))
+  parseSearchURL(new URLSearchParams('?page=1&pageSize=80&type=動畫')),
+  parseSearchURL(new URLSearchParams('?page=2&pageSize=80&type=動畫')),
+  parseSearchURL(new URLSearchParams('?page=1&pageSize=80'))
 ];
 
 export const findResourcesFromDB = memoAsync(

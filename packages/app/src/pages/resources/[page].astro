@@ -5,6 +5,7 @@ import { ResourceType, findFansub, parseSearchURL } from 'animegarden';
 import Layout from '../../layouts/Layout.astro';
 import Pagination from '../../components/Pagination.astro';
 import ResourceTable from '../../components/ResourceTable.astro';
+import ErrorNotification from '../../components/Error.astro';
 
 import { wfetch, fetchResources } from '../../fetch';
 import { getRuntimeEnv, removeQuote } from '../../utils';
@@ -173,12 +174,7 @@ const keywords = {
           )}
         </>
       ) : (
-        <>
-          <div class="h-20 text-2xl text-red-700/80 flex items-center justify-center">
-            <span class="mr2 i-carbon-error" />
-            <span>发生错误</span>
-          </div>
-        </>
+        <ErrorNotification />
       )
     }
   </div>

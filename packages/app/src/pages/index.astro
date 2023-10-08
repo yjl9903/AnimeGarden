@@ -1,7 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
 import Pagination from '../components/Pagination.astro';
 import ResourceTable from '../components/ResourceTable.astro';
+import ErrorNotification from '../components/Error.astro';
 
 import { getRuntimeEnv } from '../utils';
 import { wfetch, fetchResources } from '../fetch';
@@ -9,7 +11,7 @@ import { wfetch, fetchResources } from '../fetch';
 const env = getRuntimeEnv(Astro.locals);
 
 const { ok, resources, timestamp } = await fetchResources(
-  { page: 1, pageSize: 80 },
+  { page: 1, pageSize: 80, type: '動畫' },
   { fetch: wfetch(env?.worker) }
 );
 ---
@@ -20,15 +22,10 @@ const { ok, resources, timestamp } = await fetchResources(
       ok ? (
         <>
           <ResourceTable resources={resources} />
-          <Pagination page={1} go={(page) => `/resources/${page}`} hasPrev={false} />
+          <Pagination page={1} go={(page) => `/resources/${page}?type=動畫`} hasPrev={false} />
         </>
       ) : (
-        <>
-          <div class="h-20 text-2xl text-red-700/80 flex items-center justify-center">
-            <span class="mr2 i-carbon-error" />
-            <span>发生错误</span>
-          </div>
-        </>
+        <ErrorNotification />
       )
     }
   </div>
