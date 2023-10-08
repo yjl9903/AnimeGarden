@@ -10,8 +10,10 @@ document.addEventListener('astro:page-load', () => {
       const fansub = new Set([...filter.fansubId, ...preferFansubs.get()].filter(Boolean));
       preferFansubs.set(fansub);
       reorderFansub(fansub);
+      return;
     }
   }
+  reorderFansub(preferFansubs.get());
 });
 
 export function reorderFansub(order: Set<number>) {
