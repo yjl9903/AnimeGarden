@@ -25,3 +25,8 @@ export function removeHistory(item: string) {
 export function clearHistories() {
   histories.set([]);
 }
+
+export const preferFansubs = persistentAtom<Set<number>>('animegarden:fansubs', new Set(), {
+  encode: (t) => JSON.stringify([...t]),
+  decode: (t) => new Set(JSON.parse(t) as number[])
+});

@@ -34,18 +34,14 @@ const exclude = params.exclude;
 
 const env = getRuntimeEnv(Astro.locals);
 
-const {
-  ok,
-  complete,
-  resources,
-  filter: searchParams,
-  timestamp
-} = await fetchResources(
+const resp = await fetchResources(
   { ...params, page },
   {
     fetch: wfetch(env?.worker)
   }
 );
+
+const { ok, complete, resources, filter: searchParams, timestamp } = resp;
 
 const keywords = {
   search: searchParams?.search ? removeQuote(searchParams.search) : [...(search ?? [])],
@@ -178,6 +174,9 @@ const keywords = {
       )
     }
   </div>
+
+  <!-- Pass fetch response to the client -->
+  <div id="fetch-response" class="hidden" data-filter={JSON.stringify(searchParams)}></div>
 
   <style>
     .keyword {

@@ -107,6 +107,7 @@ function followSearch(params: Record<string, string>) {
               <span>字幕组</span>
               <div slot="dropdown" class="mt4">
                 <div
+                  id="fansub-dropdown"
                   class="w-[180px] max-h-[600px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y"
                 >
                   {
@@ -123,7 +124,9 @@ function followSearch(params: Record<string, string>) {
                     fansubs.map((t) => (
                       <a
                         href={`/resources/1?${followSearch({ fansubId: '' + t.id })}`}
-                        class="px2 py1 block text-base-600 text-link-active"
+                        class="fansub-item px2 py1 block text-base-600 text-link-active"
+                        data-fansub-id={t.id}
+                        data-fansub-name={t.name}
                       >
                         {t.name}
                       </a>
@@ -178,6 +181,8 @@ function followSearch(params: Record<string, string>) {
     </footer>
 
     <Loading />
+
+    <script src="../logic/prefer.ts"></script>
 
     <style is:global>
       @import '@onekuma/preset.css';
