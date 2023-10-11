@@ -51,8 +51,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(typescript@5.2.2)
       undici:
-        specifier: ^5.26.0
-        version: 5.26.0
+        specifier: ^5.26.3
+        version: 5.26.3
       vite:
         specifier: ^4.4.11
         version: 4.4.11(@types/node@18.18.4)
@@ -4881,7 +4881,7 @@ packages:
       glob-to-regexp: 0.4.1
       source-map-support: 0.5.21
       stoppable: 1.1.0
-      undici: 5.26.0
+      undici: 5.26.3
       workerd: 1.20231002.0
       ws: 8.14.2
       youch: 3.3.2
@@ -6708,8 +6708,8 @@ packages:
       busboy: 1.6.0
     dev: false
 
-  /undici@5.26.0:
-    resolution: {integrity: sha512-MLqGMyaJk2ubSl7FrmWuV7ZOsYWmdF7gcBHDRxm4AR8NoodQhgy3vO/D1god79HoetxR0uAeVNB65yj2lNRQnQ==}
+  /undici@5.26.3:
+    resolution: {integrity: sha512-H7n2zmKEWgOllKkIUkLvFmsJQj062lSm3uA4EYApG8gLuiOM0/go9bIoC3HVaSnfg4xunowDE2i9p8drkXuvDw==}
     engines: {node: '>=14.0'}
     dependencies:
       '@fastify/busboy': 2.0.0
