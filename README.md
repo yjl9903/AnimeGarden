@@ -20,7 +20,7 @@
 curl "https://garden.onekuma.cn/api/resources?page=1&pageSize=10"
 ```
 
-You can find more API usage example in [scripts/api.http](./scripts/api.http).
+You can find the interactive Open API document [here](https://garden.onekuma.cn/docs/api) and more API usage example in [scripts/api.http](./scripts/api.http).
 
 If you are using JavaScript / TypeScript, you can just use the API wrapper `fetchResources` and `fetchResourceDetail` in package [animegarden](https://www.npmjs.com/package/animegarden).
 
