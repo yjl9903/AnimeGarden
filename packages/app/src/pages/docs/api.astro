@@ -1,0 +1,20 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Swagger from '../../components/Swagger';
+---
+
+<Layout title="API Document | Anime Garden">
+  <Swagger client:only="react" />
+
+  <style is:inline>
+    .main .swagger-ui .wrapper {
+      padding-left: 0px;
+      padding-right: 0px;
+    }
+
+    .main .swagger-ui .scheme-container {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  </style>
+</Layout>
