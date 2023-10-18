@@ -197,8 +197,8 @@ importers:
         specifier: workspace:*
         version: link:../anitomy
       hono:
-        specifier: ^3.8.0
-        version: 3.8.0
+        specifier: ^3.8.1
+        version: 3.8.1
       kysely-planetscale:
         specifier: ^1.4.0
         version: 1.4.0(@planetscale/database@1.11.0)(kysely@0.26.3)
@@ -4514,8 +4514,8 @@ packages:
       react-is: 16.13.1
     dev: false
 
-  /hono@3.8.0:
-    resolution: {integrity: sha512-lTkcFzm9abmsYiaX82r707kG7Qo9y/nSuO75VWaI6xRK46yxylMUG10Njy6SS5CcLRAg+0mw8NvPaMPbgV17Gg==}
+  /hono@3.8.1:
+    resolution: {integrity: sha512-im5K3bEyb6iMQP5Tfei5vfoHLnIKrsAqT/GNJJ4lxS75MvNaecUbPX0Xgi0ibTIos31lA5oYevMDGNNXhHJ9wA==}
     engines: {node: '>=16.0.0'}
     dev: false
 
