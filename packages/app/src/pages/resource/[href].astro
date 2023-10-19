@@ -10,7 +10,7 @@ if (!href) {
 }
 
 const detail = await fetchResourceDetail(href);
-if (!detail) {
+if (!detail || !detail.id) {
   return Astro.redirect('/');
 }
 ---
