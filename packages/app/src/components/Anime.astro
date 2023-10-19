@@ -54,30 +54,96 @@ function getSearchURL(bgm: FullBangumi) {
 <div class="space-y-4 w-full mb-8">
   {
     calendar.map((cal) => (
-      <div class="w-full pt-4 bg-gray-100 rounded-md" id={`星期${cal.text}`}>
+      <div class="bgm-weekday w-full pt-4 bg-gray-100 rounded-md" id={`星期${cal.text}`}>
         <a
           class="block px-6 text-xl font-bold mb-4 select-none border-l-[4px] border-[#0ca]"
           href={`#星期${cal.text}`}
         >
           星期{cal.text}
         </a>
-        <div class="px-6 pb-2 flex w-full space-x-6 overflow-x-auto">
-          {cal.bangumis.map((bgm) => (
-            <a href={getSearchURL(bgm)} class="block w-max">
-              <div class="w-150px h-225px flex items-center select-none">
-                <img
-                  src={getPosterImage(bgm)}
-                  alt=""
-                  class="rounded-md max-h-225px hover:(shadow-box)"
-                />
-              </div>
-              <div class="w-150px truncate py-2">
-                <span class="font-bold text-sm text-link-active">{getDisplayName(bgm)}</span>
-              </div>
-            </a>
-          ))}
+        <div class="bgm-list-wrapper scroll-begin relative">
+          <div class="bgm-list px-6 pb-2 flex w-full space-x-6 overflow-x-auto">
+            {cal.bangumis.map((bgm) => (
+              <a href={getSearchURL(bgm)} class="block w-max">
+                <div class="w-150px h-225px flex items-center select-none">
+                  <img
+                    src={getPosterImage(bgm)}
+                    alt=""
+                    class="rounded-md max-h-225px hover:(shadow-box)"
+                  />
+                </div>
+                <div class="w-150px truncate py-2">
+                  <span class="font-bold text-sm text-link-active">{getDisplayName(bgm)}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <div class="scroll-left absolute top-[50%] translate-y-[-100%] left-7 select-none cursor-pointer">
+            <div class="h-[40px] w-[40px] rounded-full bg-gray-300 op-90 flex items-center justify-center">
+              <i class="i-carbon-arrow-left text-2xl font-bold" />
+            </div>
+          </div>
+          <div class="scroll-right absolute top-[50%] translate-y-[-100%] right-7 select-none cursor-pointer">
+            <div class="h-[40px] w-[40px] rounded-full bg-gray-300 op-90 flex items-center justify-center">
+              <i class="i-carbon-arrow-right text-2xl font-bold" />
+            </div>
+          </div>
         </div>
       </div>
     ))
   }
 </div>
+
+<style is:global>
+  .bgm-list-wrapper.scroll-begin .scroll-left {
+    display: none;
+  }
+
+  .bgm-list-wrapper.scroll-end .scroll-right {
+    display: none;
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const wrappers = Array.from(document.querySelectorAll('.bgm-weekday .bgm-list-wrapper'));
+    for (const wrapper of wrappers) {
+      const container = wrapper.querySelector('.bgm-list')!;
+      if (!container) continue;
+
+      const handler = () => {
+        if (container.scrollLeft < 1) {
+          wrapper.classList.add('scroll-begin');
+        } else {
+          wrapper.classList.remove('scroll-begin');
+        }
+
+        if (Math.abs(container.scrollWidth - container.clientWidth - container.scrollLeft) < 1) {
+          wrapper.classList.add('scroll-end');
+        } else {
+          wrapper.classList.remove('scroll-end');
+        }
+      };
+      handler();
+
+      container.addEventListener('scroll', () => {
+        handler();
+      });
+
+      const scrollLeft = () => {
+        container.scrollBy({ left: -500, behavior: 'smooth' });
+      };
+      const scrollRight = () => {
+        container.scrollBy({ left: 500, behavior: 'smooth' });
+      };
+
+      wrapper.querySelector('.scroll-left')?.addEventListener('mousedown', () => {
+        scrollLeft();
+      });
+      wrapper.querySelector('.scroll-right')?.addEventListener('mousedown', () => {
+        scrollRight();
+      });
+    }
+  });
+</script>
