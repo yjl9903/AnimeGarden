@@ -1,4 +1,5 @@
 ---
+import type { FullBangumi } from 'bgmd/dist/types';
 import { calendar as rawCalendar } from 'bgmd/calendar';
 
 import Layout from '../layouts/Layout.astro';
@@ -20,6 +21,21 @@ const calendar = rawCalendar.map((_, idx) => {
   };
 });
 
+function getPosterImage(bgm: FullBangumi) {
+  if (bgm.tmdb?.poster_path) {
+    return `https://www.themoviedb.org/t/p/w300_and_h450_bestv2${bgm.tmdb.poster_path}`;
+  } else if (bgm.bangumi?.images) {
+    return bgm.bangumi.images.large;
+  }
+}
+
+function getDisplayName(bgm: FullBangumi) {
+  if (bgm.bangumi) {
+    return bgm.bangumi.name_cn || bgm.name;
+  }
+  return bgm.name;
+}
+
 const env = getRuntimeEnv(Astro.locals);
 
 const { ok, resources, timestamp } = await fetchResources(
@@ -34,15 +50,15 @@ const { ok, resources, timestamp } = await fetchResources(
       {
         calendar.map((cal) => (
           <div class="w-full">
-            <div class="text-lg font-bold mb-2">星期{cal.text}</div>
-            <div class="flex w-full space-x-4 overflow-x-auto">
+            <div class="text-xl font-bold mb-2">星期{cal.text}</div>
+            <div class="flex w-full space-x-6 overflow-x-auto">
               {cal.bangumis.map((bgm) => (
                 <div class="block w-max">
-                  <div class="w-160px">
-                    <img src={bgm.bangumi?.images.large} alt="" class="rounded-md" />
+                  <div class="w-150px h-225px flex items-center select-none">
+                    <img src={getPosterImage(bgm)} alt="" class="rounded-md max-h-225px" />
                   </div>
-                  <div>
-                    <span>{bgm.name}</span>
+                  <div class="w-150px truncate py-2">
+                    <span class="font-bold text-sm">{getDisplayName(bgm)}</span>
                   </div>
                 </div>
               ))}
