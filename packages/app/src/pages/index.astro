@@ -1,6 +1,9 @@
 ---
 import type { FullBangumi } from 'bgmd/dist/types';
 import { calendar as rawCalendar } from 'bgmd/calendar';
+import { stringifySearchURL } from 'animegarden';
+
+import { APP_HOST } from '~build/meta';
 
 import Layout from '../layouts/Layout.astro';
 
@@ -36,6 +39,14 @@ function getDisplayName(bgm: FullBangumi) {
   return bgm.name;
 }
 
+function getSearchURL(bgm: FullBangumi) {
+  const url = stringifySearchURL('https://' + APP_HOST, {
+    include: [[bgm.name, ...bgm.alias]],
+    after: new Date(new Date(bgm.air_date).getTime() - 7 * 24 * 60 * 60 * 1000)
+  });
+  return `${url.pathname}${url.search}`;
+}
+
 const env = getRuntimeEnv(Astro.locals);
 
 const { ok, resources, timestamp } = await fetchResources(
@@ -49,18 +60,27 @@ const { ok, resources, timestamp } = await fetchResources(
     <div class="space-y-4 w-full mb-8">
       {
         calendar.map((cal) => (
-          <div class="w-full">
-            <div class="text-xl font-bold mb-2">星期{cal.text}</div>
-            <div class="flex w-full space-x-6 overflow-x-auto">
+          <div class="w-full pt-4 bg-gray-100 rounded-md" id={`星期${cal.text}`}>
+            <a
+              class="block px-6 text-xl font-bold mb-4 select-none border-l-[4px] border-[#0ca]"
+              href={`#星期${cal.text}`}
+            >
+              星期{cal.text}
+            </a>
+            <div class="px-6 pb-2 flex w-full space-x-6 overflow-x-auto">
               {cal.bangumis.map((bgm) => (
-                <div class="block w-max">
+                <a href={getSearchURL(bgm)} class="block w-max">
                   <div class="w-150px h-225px flex items-center select-none">
-                    <img src={getPosterImage(bgm)} alt="" class="rounded-md max-h-225px" />
+                    <img
+                      src={getPosterImage(bgm)}
+                      alt=""
+                      class="rounded-md max-h-225px hover:(shadow-box)"
+                    />
                   </div>
                   <div class="w-150px truncate py-2">
-                    <span class="font-bold text-sm">{getDisplayName(bgm)}</span>
+                    <span class="font-bold text-sm text-link-active">{getDisplayName(bgm)}</span>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           </div>
