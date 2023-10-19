@@ -172,15 +172,18 @@ export async function fetchResourceDetail(
   fetch: (request: RequestInfo, init?: RequestInit) => Promise<Response>,
   href: string,
   options: FetchResourceDetailOptions = {}
-): Promise<ResourceDetail & { id: number }> {
+): Promise<(ResourceDetail & { id: number }) | undefined> {
   const { baseURL = DefaultBaseURL, retry = 1 } = options;
   const url = new URL('resource/' + href, baseURL);
 
-  return await retryFn(
-    () =>
-      fetch(url.toString(), { signal: options.signal })
-        .then((r) => r.json())
-        .then((r) => ({ id: r.id, ...r.detail })),
+  const resp = await retryFn(
+    () => fetch(url.toString(), { signal: options.signal }).then((r) => r.json()),
     retry
   );
+
+  if (resp.id !== undefined && resp.detail !== undefined) {
+    return { id: resp.id, ...resp.detail };
+  } else {
+    return undefined;
+  }
 }
