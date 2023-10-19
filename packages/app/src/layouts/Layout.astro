@@ -33,7 +33,13 @@ const timestamp =
 
 const hasTypeSearch = search.has('type');
 const hasFansubSearch = search.has('fansubId');
-const active = hasFansubSearch ? 'fansub' : hasTypeSearch ? 'type' : '';
+const active = url.startsWith('/anime')
+  ? 'anime'
+  : hasFansubSearch
+  ? 'fansub'
+  : hasTypeSearch
+  ? 'type'
+  : '';
 
 function generateFeed(params: URLSearchParams) {
   const filter = parseSearchURL(params);
@@ -77,11 +83,11 @@ function followSearch(params: Record<string, string>) {
       <div class="main flex gap6 hide-scrollbar justify-between select-none text-base-500">
         <div class="flex gap6 justify-start">
           <a href="/" class="header-item block" x-active={url === '/'}>首页</a>
+          <a href="/anime" class="header-item block" x-active={active === 'anime'}>动画</a>
           <a
             href="/resources/1"
             class="header-item block"
-            x-active={url.startsWith('/resources/') && active === ''}
-            >所有资源</a
+            x-active={url.startsWith('/resources/') && active === ''}>所有资源</a
           >
           <div class="header-item cursor-pointer" x-active={active === 'type'}>
             <Dropdown>
