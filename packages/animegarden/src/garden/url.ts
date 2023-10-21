@@ -41,8 +41,8 @@ export const FilterSchema = z.object({
   fansubName: z.string().array().optional(),
   publisherId: z.number().array().optional(),
   type: z.string().optional(),
-  before: z.date().optional(),
-  after: z.date().optional(),
+  before: dateLike,
+  after: dateLike,
   search: stringArray.optional(),
   include: stringArrayArray.optional(),
   exclude: stringArray.optional()
