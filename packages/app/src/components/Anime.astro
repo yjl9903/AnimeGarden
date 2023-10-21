@@ -5,7 +5,8 @@ import { stringifySearchURL } from 'animegarden';
 
 import { APP_HOST } from '~build/meta';
 
-const first = (new Date().getDay() + 6) % 7;
+// Before 6:00
+const first = (new Date(new Date().getTime() - 6 * 60 * 60 * 1000).getDay() + 6) % 7;
 const calendar = rawCalendar.map((_, idx) => {
   const index = (idx + first) % 7;
   return {
@@ -103,6 +104,13 @@ function getSearchURL(bgm: FullBangumi) {
   .bgm-list-wrapper.scroll-end .scroll-right {
     display: none;
   }
+
+  @media (hover: none) {
+    .scroll-left,
+    .scroll-right {
+      display: none;
+    }
+  }
 </style>
 
 <script>
@@ -132,10 +140,21 @@ function getSearchURL(bgm: FullBangumi) {
       });
 
       const scrollLeft = () => {
-        container.scrollBy({ left: -500, behavior: 'smooth' });
+        if (container.scrollLeft - 500 < 51) {
+          container.scrollBy({ left: -550, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: -500, behavior: 'smooth' });
+        }
       };
       const scrollRight = () => {
-        container.scrollBy({ left: 500, behavior: 'smooth' });
+        if (
+          Math.abs(container.scrollWidth - container.clientWidth - (container.scrollLeft + 500)) <
+          50
+        ) {
+          container.scrollBy({ left: 550, behavior: 'smooth' });
+        } else {
+          container.scrollBy({ left: 500, behavior: 'smooth' });
+        }
       };
 
       wrapper.querySelector('.scroll-left')?.addEventListener('mousedown', () => {
