@@ -8,11 +8,14 @@
 
 動漫花園 3-rd party [mirror site](https://garden.onekuma.cn).
 
-+ ☁️ Provide [API endpoint](https://garden.onekuma.cn/api/resources)
++ ☁️ Provide [API endpoint](https://garden.onekuma.cn/docs/api) for developers
++ 📺 View [bangumi onair calendar](https://garden.onekuma.cn/anime) to find your favourite anime easily
 + 🔖 Support Advanced search, i.e. `【我推的孩子】 fansub:桜都字幕组 include:简日内嵌`
 + 📙 Generate RSS feed, i.e. [【我推的孩子】](https://garden.onekuma.cn/feed.xml?filter=[{%22fansubId%22:[619],%22search%22:[%22%E3%80%90%E6%88%91%E6%8E%A8%E7%9A%84%E5%AD%A9%E5%AD%90%E3%80%91%22],%22include%22:[[%22%E7%AE%80%E6%97%A5%E5%86%85%E5%B5%8C%22]],%22exclude%22:[]}])
 
 ![home](./assets/home.png)
+
+![anime](./assets/anime.jpeg)
 
 ## API Usage
 
@@ -105,6 +108,8 @@ Follow [CONTRIBUTING.md](./CONTRIBUTING.md) to setup the environment and start d
 ## Credits
 
 + [動漫花園](https://share.dmhy.org/)
++ [Bangumi 番组计划](https://bgm.tv/)
++ [bangumi-data](https://github.com/bangumi-data/bangumi-data)
 + [erengy/anitomy](https://github.com/erengy/anitomy)
 + [tabratton/AnitomySharp](https://github.com/tabratton/AnitomySharp)
 
