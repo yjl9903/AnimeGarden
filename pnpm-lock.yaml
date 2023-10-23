@@ -203,7 +203,7 @@ importers:
         specifier: ^0.0.14
         version: 0.0.14
       hono:
-        specifier: ^3.8.2
+        specifier: ^3.8.3
         version: 3.8.3
       kysely-planetscale:
         specifier: ^1.4.0
@@ -1976,6 +1976,7 @@ packages:
 
   /@swagger-api/apidom-ns-json-schema-draft-4@0.78.0:
     resolution: {integrity: sha512-19NR9lTHMOQTIEV4tJq+FlHQAYnjyH+DgI4mmRu6UMFSZjRjutYF7B8lCGogSus9Uwy8YpUk00prLFTld00wgA==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.23.2
       '@swagger-api/apidom-ast': 0.78.0
