@@ -1,5 +1,11 @@
 {
   "extends": [
     "github>yjl9903/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["bgmd"],
+      "automerge": true
+    }
   ]
 }
