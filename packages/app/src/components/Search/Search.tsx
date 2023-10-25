@@ -1,5 +1,6 @@
 import useSWR from 'swr';
 import { Command } from 'cmdk';
+import { subDays } from 'date-fns';
 import { useStore } from '@nanostores/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -7,10 +8,16 @@ import { fetchResources } from '../../fetch';
 import { fansubs, types } from '../../constant';
 import { histories, clearHistories, pushHistory, removeHistory } from '../../state';
 
-import { useActiveElement, useSessionStorage } from './hooks';
-import { DMHY_RE, debounce, goTo, goToSearch, parseSearch, resolveSearchURL } from './utils';
-
-const SearchInputKey = 'search:input';
+import { useActiveElement } from './hooks';
+import {
+  DMHY_RE,
+  SEARCH_INPUT_KEY,
+  debounce,
+  goTo,
+  goToSearch,
+  parseSearch,
+  resolveSearchURL
+} from './utils';
 
 {
   document.addEventListener('keypress', (ev) => {
@@ -34,28 +41,25 @@ export default function Search() {
   const { active } = useActiveElement();
 
   const history = useStore(histories);
-  const [input, setInput] = useSessionStorage(SearchInputKey, '');
+  const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
 
   useEffect(() => {
     const fn = () => {
       try {
-        const input = window.sessionStorage.getItem(SearchInputKey);
+        const input = window.sessionStorage.getItem(SEARCH_INPUT_KEY);
         if (input) {
-          const target = JSON.parse(input);
-          if (typeof target === 'string' && target) {
-            const current = window.location.pathname + window.location.search;
-            if (current !== resolveSearchURL(target)) {
-              setInput('');
-            }
-          }
+          setInput(input);
+          window.sessionStorage.removeItem(SEARCH_INPUT_KEY);
+        } else {
+          setInput('');
         }
       } catch {}
     };
 
-    document.addEventListener('astro:load', fn);
+    document.addEventListener('astro:page-load', fn);
     return () => {
-      document.removeEventListener('astro:load', fn);
+      document.removeEventListener('astro:page-load', fn);
     };
   });
 
@@ -85,8 +89,14 @@ export default function Search() {
       } else {
         const abort = new AbortController();
         signals.current.add(abort);
+
+        const filter = parseSearch(search);
+        if (!filter.after) {
+          filter.after = subDays(new Date(), 7);
+        }
+
         const res = await fetchResources(
-          { ...parseSearch(search), page: 1 },
+          { ...filter, page: 1 },
           {
             signal: abort.signal
           }
@@ -186,7 +196,7 @@ export default function Search() {
                   </div>
                 </Command.Loading>
               ) : (
-                <Command.Empty>没有找到任何结果.</Command.Empty>
+                <Command.Empty>没有找到任何最近一周内的结果.</Command.Empty>
               )}
               <Command.Item
                 value="go-to-search-page"
@@ -238,7 +248,10 @@ export default function Search() {
             heading={
               <div className="flex justify-between w-full">
                 <div>搜索历史</div>
-                <button className="text-link pr4 inline-block" onMouseDown={(ev) => onClearHistories(ev)}>
+                <button
+                  className="text-link pr4 inline-block"
+                  onMouseDown={(ev) => onClearHistories(ev)}
+                >
                   <span className="mr-[-50%]">清空</span>
                 </button>
               </div>
