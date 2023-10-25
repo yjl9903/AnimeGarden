@@ -1,5 +1,5 @@
 import { navigate } from 'astro:transitions/client';
-import { findFansub, stringifySearchURL } from 'animegarden';
+import { findFansub, parseSearchURL, stringifySearchURL } from 'animegarden';
 
 import { loading } from '../../state';
 
@@ -25,7 +25,7 @@ export function parseSearch(search: string) {
 
       let j = i;
       let word = '';
-      while (j < search.length) {
+      while (j < search.length && !/\s/.test(search[j])) {
         if (Object.keys(matchQuotes).includes(search[j])) {
           // Split by quote "..." or '...'
           const quote = matchQuotes[search[j] as keyof typeof matchQuotes];
@@ -51,6 +51,7 @@ export function parseSearch(search: string) {
           // otherwise
           word += search[j];
         }
+
         j++;
       }
 
@@ -78,7 +79,7 @@ export function parseSearch(search: string) {
       exclude.push(word);
     },
     'fansub:,字幕:,字幕组:': (word) => {
-      if (/^\d$/.test(word)) {
+      if (/^\d+$/.test(word)) {
         fansub.push(+word);
       } else {
         const found = findFansub(word, { fuzzy: true });
@@ -123,6 +124,41 @@ export function parseSearch(search: string) {
     after: after.at(-1),
     before: before.at(-1)
   };
+}
+
+export function stringifySearch(search: URLSearchParams) {
+  const filter = parseSearchURL(search, { pageSize: 80 });
+  console.log(filter);
+  const content: string[] = [];
+
+  if (filter.search) {
+    content.push(...filter.search.map((f) => wrap(f)));
+  }
+  if (filter.include && filter.include.length === 1) {
+    content.push(...filter.include[0].map((f) => wrap(f)));
+  }
+  if (filter.exclude) {
+    content.push(...filter.exclude.map((ex) => '排除:' + wrap(ex)));
+  }
+  if (filter.fansubId) {
+    content.push(...filter.fansubId.map((f) => '字幕组:' + (findFansub(f)?.name ?? f)));
+  }
+  if (filter.fansubName) {
+    content.push(...filter.fansubName.map((f) => '字幕组:' + f));
+  }
+  if (filter.after) {
+    content.push('开始:' + filter.after.toISOString());
+  }
+  if (filter.before) {
+    content.push('结束:' + filter.before.toISOString());
+  }
+
+  return content.map((c) => c).join(' ');
+
+  function wrap(t: string) {
+    if (t.indexOf(' ') !== -1) return `"${t.slice(1, t.length - 1).replace(/"/g, '\\"')}"`;
+    else return t.slice(1, t.length - 1);
+  }
 }
 
 export function resolveSearchURL(search: string) {

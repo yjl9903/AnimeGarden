@@ -16,7 +16,7 @@ import {
   goTo,
   goToSearch,
   parseSearch,
-  resolveSearchURL
+  stringifySearch
 } from './utils';
 
 {
@@ -48,20 +48,28 @@ export default function Search() {
     const fn = () => {
       try {
         const input = window.sessionStorage.getItem(SEARCH_INPUT_KEY);
+        window.sessionStorage.removeItem(SEARCH_INPUT_KEY);
+        console.log('Input', input);
         if (input) {
           setInput(input);
-          window.sessionStorage.removeItem(SEARCH_INPUT_KEY);
         } else {
-          setInput('');
+          console.log(location.pathname.startsWith('/resources/'));
+          if (location.pathname.startsWith('/resources/')) {
+            const content = stringifySearch(new URLSearchParams(location.search));
+            setInput(content);
+          } else {
+            setInput('');
+          }
         }
       } catch {}
     };
 
+    fn();
     document.addEventListener('astro:page-load', fn);
     return () => {
       document.removeEventListener('astro:page-load', fn);
     };
-  });
+  }, []);
 
   const setDebounceSearch = debounce((value: string) => {
     if (value !== search) {
