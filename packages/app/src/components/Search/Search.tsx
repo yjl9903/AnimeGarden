@@ -49,11 +49,9 @@ export default function Search() {
       try {
         const input = window.sessionStorage.getItem(SEARCH_INPUT_KEY);
         window.sessionStorage.removeItem(SEARCH_INPUT_KEY);
-        console.log('Input', input);
         if (input) {
           setInput(input);
         } else {
-          console.log(location.pathname.startsWith('/resources/'));
           if (location.pathname.startsWith('/resources/')) {
             const content = stringifySearch(new URLSearchParams(location.search));
             setInput(content);

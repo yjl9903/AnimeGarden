@@ -128,7 +128,6 @@ export function parseSearch(search: string) {
 
 export function stringifySearch(search: URLSearchParams) {
   const filter = parseSearchURL(search, { pageSize: 80 });
-  console.log(filter);
   const content: string[] = [];
 
   if (filter.search) {
