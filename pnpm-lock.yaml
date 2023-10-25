@@ -89,10 +89,10 @@ importers:
     dependencies:
       '@astrojs/cloudflare':
         specifier: ^7.6.1
-        version: 7.6.1(@types/node@20.8.8)(astro@3.3.3)
+        version: 7.6.1(@types/node@20.8.8)(astro@3.3.4)
       '@astrojs/react':
-        specifier: ^3.0.3
-        version: 3.0.3(@types/react-dom@18.2.14)(@types/react@18.2.31)(react-dom@18.2.0)(react@18.2.0)(vite@4.5.0)
+        specifier: ^3.0.4
+        version: 3.0.4(@types/react-dom@18.2.14)(@types/react@18.2.31)(react-dom@18.2.0)(react@18.2.0)(vite@4.5.0)
       '@astrojs/rss':
         specifier: ^3.0.0
         version: 3.0.0
@@ -106,8 +106,8 @@ importers:
         specifier: ^0.7.1
         version: 0.7.1(nanostores@0.9.4)(react@18.2.0)
       astro:
-        specifier: ^3.3.3
-        version: 3.3.3(@types/node@20.8.8)(typescript@5.2.2)
+        specifier: ^3.3.4
+        version: 3.3.4(@types/node@20.8.8)(typescript@5.2.2)
       astro-robots-txt:
         specifier: ^1.0.0
         version: 1.0.0
@@ -259,7 +259,7 @@ packages:
     resolution: {integrity: sha512-pvFiLP2BeOKA/ZOS6jxx4XhKzdVLHDhGlFEaZ2flWWYf2xOqVniqpk38I04DFRyz+L0ASggl7SkItTc+ZLju4w==}
     dev: true
 
-  /@astrojs/cloudflare@7.6.1(@types/node@20.8.8)(astro@3.3.3):
+  /@astrojs/cloudflare@7.6.1(@types/node@20.8.8)(astro@3.3.4):
     resolution: {integrity: sha512-U0eEJaFeb1sKgUFRcemxT5/jcnO4KHFpLxmzonBd/vD57tJPpZ7dIi2rFwAIJ5AQqhW6uo3Evk45EZq8ukN3pQ==}
     peerDependencies:
       astro: ^3.3.0
@@ -267,7 +267,7 @@ packages:
       '@astrojs/underscore-redirects': 0.3.1
       '@cloudflare/workers-types': 4.20231016.0
       '@iarna/toml': 2.2.5
-      astro: 3.3.3(@types/node@20.8.8)(typescript@5.2.2)
+      astro: 3.3.4(@types/node@20.8.8)(typescript@5.2.2)
       dotenv: 16.3.1
       esbuild: 0.19.5
       find-up: 6.3.0
@@ -299,13 +299,13 @@ packages:
     resolution: {integrity: sha512-06DD2ZnItMwUnH81LBLco3tWjcZ1lGU9rLCCBaeUCGYe9cI0wKyY2W3kDyoW1I6GmcWgt1fu+D1CTvz+FIKf8A==}
     dev: false
 
-  /@astrojs/markdown-remark@3.3.0(astro@3.3.3):
+  /@astrojs/markdown-remark@3.3.0(astro@3.3.4):
     resolution: {integrity: sha512-ezFzEiZygc/ASe2Eul9v1yrTbNGqSbR348UGNXQ4Dtkx8MYRwfiBfmPm6VnEdfIGkW+bi5qIUReKfc7mPVUkIg==}
     peerDependencies:
       astro: ^3.3.0
     dependencies:
       '@astrojs/prism': 3.0.0
-      astro: 3.3.3(@types/node@20.8.8)(typescript@5.2.2)
+      astro: 3.3.4(@types/node@20.8.8)(typescript@5.2.2)
       github-slugger: 2.0.0
       import-meta-resolve: 3.0.0
       mdast-util-definitions: 6.0.0
@@ -330,8 +330,8 @@ packages:
       prismjs: 1.29.0
     dev: false
 
-  /@astrojs/react@3.0.3(@types/react-dom@18.2.14)(@types/react@18.2.31)(react-dom@18.2.0)(react@18.2.0)(vite@4.5.0):
-    resolution: {integrity: sha512-foliIy1whJobo+ZpsvOMS4WCiR0z4/2Seyxth5xMlweVVM+gA1Lqk0GdzE6F0ISUW9CuXrCRS7ZyTNW8SM6vog==}
+  /@astrojs/react@3.0.4(@types/react-dom@18.2.14)(@types/react@18.2.31)(react-dom@18.2.0)(react@18.2.0)(vite@4.5.0):
+    resolution: {integrity: sha512-v+qltrm5nfqqm8C5ymYDBxrGlvNouRr+iCLcUWvNX65abVz8GzUqquhPQjmCTDXphn1Qc558Uxzc4s79l02skw==}
     engines: {node: '>=18.14.1'}
     peerDependencies:
       '@types/react': ^17.0.50 || ^18.0.21
@@ -364,8 +364,8 @@ packages:
       zod: 3.21.1
     dev: false
 
-  /@astrojs/telemetry@3.0.3:
-    resolution: {integrity: sha512-j19Cf5mfyLt9hxgJ9W/FMdAA5Lovfp7/CINNB/7V71GqvygnL7KXhRC3TzfB+PsVQcBtgWZzCXhUWRbmJ64Raw==}
+  /@astrojs/telemetry@3.0.4:
+    resolution: {integrity: sha512-A+0c7k/Xy293xx6odsYZuXiaHO0PL+bnDoXOc47sGDF5ffIKdKQGRPFl2NMlCF4L0NqN4Ynbgnaip+pPF0s7pQ==}
     engines: {node: '>=18.14.1'}
     dependencies:
       ci-info: 3.9.0
@@ -2859,15 +2859,15 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /astro@3.3.3(@types/node@20.8.8)(typescript@5.2.2):
-    resolution: {integrity: sha512-FZkv5nJfa2KADzwo8m6fytWzzhO3Uw/EOvxmBT2E1OW/dWUgIKbZd59TY3816gZl3le5Ct5amSAkaxcQghbUZA==}
+  /astro@3.3.4(@types/node@20.8.8)(typescript@5.2.2):
+    resolution: {integrity: sha512-1yy1p8/QpACpToK2bYFxbbPug7+HeUW+IGvkIss2KQDv4pwDk19UbfQrS8aMHtW3nvR7PpBYL/H/Dprcqxy40A==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
       '@astrojs/compiler': 2.2.1
       '@astrojs/internal-helpers': 0.2.1
-      '@astrojs/markdown-remark': 3.3.0(astro@3.3.3)
-      '@astrojs/telemetry': 3.0.3
+      '@astrojs/markdown-remark': 3.3.0(astro@3.3.4)
+      '@astrojs/telemetry': 3.0.4
       '@babel/core': 7.23.2
       '@babel/generator': 7.23.0
       '@babel/parser': 7.23.0
