@@ -112,8 +112,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       bgmd:
-        specifier: ^0.0.18
-        version: 0.0.18
+        specifier: ^0.0.19
+        version: 0.0.19
       cmdk:
         specifier: ^0.2.0
         version: 0.2.0(@types/react@18.2.33)(react-dom@18.2.0)(react@18.2.0)
@@ -200,8 +200,8 @@ importers:
         specifier: workspace:*
         version: link:../anitomy
       bgmd:
-        specifier: ^0.0.18
-        version: 0.0.18
+        specifier: ^0.0.19
+        version: 0.0.19
       hono:
         specifier: ^3.9.0
         version: 3.9.0
@@ -2993,14 +2993,14 @@ packages:
       breadc: 0.9.7
     dev: false
 
-  /bgmd@0.0.18:
-    resolution: {integrity: sha512-1oNiZUNlmkuUZjwyiHQj8+uphqh9Vr6PtEE7ZF+WGAagteLoCGWamUKt0pyS9VtAN2cc2kzyolnNuQ2iHZ4x/w==}
+  /bgmd@0.0.19:
+    resolution: {integrity: sha512-POYLCeFy5QJ0JnExnqwnxpsJI/C3FOPq1Rl9PILuIRRjtL9HOT5XDz4y8NfR4I1VtaAzZhrMo34i7wF6BIeIeg==}
     engines: {node: '>=v20.8.0'}
     dependencies:
       bangumi-data: 0.3.124
       bgmc: 0.0.5
       tmdbc: 0.0.1
-      type-fest: 4.5.0
+      type-fest: 4.6.0
     dev: false
 
   /binary-extensions@2.2.0:
@@ -7858,8 +7858,8 @@ packages:
     engines: {node: '>=12.20'}
     dev: false
 
-  /type-fest@4.5.0:
-    resolution: {integrity: sha512-diLQivFzddJl4ylL3jxSkEc39Tpw7o1QeEHIPxVwryDK2lpB7Nqhzhuo6v5/Ls08Z0yPSAhsyAWlv1/H0ciNmw==}
+  /type-fest@4.6.0:
+    resolution: {integrity: sha512-rLjWJzQFOq4xw7MgJrCZ6T1jIOvvYElXT12r+y0CC6u67hegDHaxcPqb2fZHOGlqxugGQPNB1EnTezjBetkwkw==}
     engines: {node: '>=16'}
     dev: false
 
