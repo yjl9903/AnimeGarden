@@ -112,8 +112,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       bgmd:
-        specifier: ^0.0.23
-        version: 0.0.23
+        specifier: ^0.0.24
+        version: 0.0.24
       cmdk:
         specifier: ^0.2.0
         version: 0.2.0(@types/react@18.2.34)(react-dom@18.2.0)(react@18.2.0)
@@ -200,8 +200,8 @@ importers:
         specifier: workspace:*
         version: link:../anitomy
       bgmd:
-        specifier: ^0.0.23
-        version: 0.0.23
+        specifier: ^0.0.24
+        version: 0.0.24
       hono:
         specifier: ^3.9.1
         version: 3.9.1
@@ -3001,8 +3001,8 @@ packages:
       breadc: 0.9.7
     dev: false
 
-  /bgmd@0.0.23:
-    resolution: {integrity: sha512-lSktX6lOPvsuAEKGarYA5NxVPo4GR0fbb742SqptJzEa9Tgjatt3GUnMhO/pfyvgfgedwIB/wmy7yFPWfCvnfQ==}
+  /bgmd@0.0.24:
+    resolution: {integrity: sha512-RN2UEPkSOS7YphMhyVJRG8Q3HufBKrtXUu9waw0/J8+FYr5W94w6EK3JII/HXHlpr6dXppCmR18eiZ1xRPuxIQ==}
     engines: {node: '>=v20.8.0'}
     dependencies:
       bangumi-data: 0.3.125
