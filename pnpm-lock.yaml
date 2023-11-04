@@ -88,8 +88,8 @@ importers:
   packages/app:
     dependencies:
       '@astrojs/cloudflare':
-        specifier: ^7.6.3
-        version: 7.6.3(@types/node@20.8.10)(astro@3.4.3)
+        specifier: ^7.6.4
+        version: 7.6.4(@types/node@20.8.10)(astro@3.4.3)
       '@astrojs/react':
         specifier: ^3.0.4
         version: 3.0.4(@types/react-dom@18.2.14)(@types/react@18.2.34)(react-dom@18.2.0)(react@18.2.0)(vite@4.5.0)
@@ -259,12 +259,12 @@ packages:
     resolution: {integrity: sha512-pvFiLP2BeOKA/ZOS6jxx4XhKzdVLHDhGlFEaZ2flWWYf2xOqVniqpk38I04DFRyz+L0ASggl7SkItTc+ZLju4w==}
     dev: true
 
-  /@astrojs/cloudflare@7.6.3(@types/node@20.8.10)(astro@3.4.3):
-    resolution: {integrity: sha512-X3Va4AIuQhoaVDaI5YxV1JMTPoNHVw6bGVpXqnT8byh0RTLfpjJPg8UdkdK57YW5Ow/73QqwvbJNZUVQlO6n+Q==}
+  /@astrojs/cloudflare@7.6.4(@types/node@20.8.10)(astro@3.4.3):
+    resolution: {integrity: sha512-fConXiIxgnNPc7TL3l2JO9S8ULFiBImzILf6POm/+tTVOOXlx9OnxyXTwC4lxKMDhBI9CeuMLlostF7VVwHWUQ==}
     peerDependencies:
       astro: ^3.3.0
     dependencies:
-      '@astrojs/underscore-redirects': 0.3.1
+      '@astrojs/underscore-redirects': 0.3.3
       '@cloudflare/workers-types': 4.20231025.0
       '@iarna/toml': 2.2.5
       astro: 3.4.3(@types/node@20.8.10)(typescript@5.2.2)
@@ -379,8 +379,8 @@ packages:
       - supports-color
     dev: false
 
-  /@astrojs/underscore-redirects@0.3.1:
-    resolution: {integrity: sha512-StqPiY1icuaNsiDUCCZVN7Uppnd0vkGFDq7yRG0vfu8lNK2XqZT1XUrFDPZDC03oQt7Zwv1vMSqidCYUokxvQA==}
+  /@astrojs/underscore-redirects@0.3.3:
+    resolution: {integrity: sha512-qDAKhFO4M1KzP7mxoJfiehf8oyf3EB158MxAa6z10NeD2pR3o4K3LlOQI8CfJgXE+BDBQcnaLvVCg/Mz/Gkg4Q==}
     dev: false
 
   /@babel/code-frame@7.22.13:
