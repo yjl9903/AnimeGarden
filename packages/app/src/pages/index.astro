@@ -7,6 +7,7 @@ import ErrorNotification from '../components/Error.astro';
 
 import { getRuntimeEnv } from '../utils';
 import { wfetch, fetchResources } from '../fetch';
+import { Weekday, calendar, getDisplayName, getSearchURL } from '../logic/anime';
 
 const env = getRuntimeEnv(Astro.locals);
 
@@ -18,6 +19,53 @@ const { ok, resources, timestamp } = await fetchResources(
 
 <Layout title="Anime Garden" timestamp={timestamp}>
   <div class="mt-4vh w-full">
+    <div class="border-b pb-2 mb-2">
+      <input type="radio" name="weekday" id="weekday-1" class="hidden" checked={Weekday === 0} />
+      <input type="radio" name="weekday" id="weekday-2" class="hidden" checked={Weekday === 1} />
+      <input type="radio" name="weekday" id="weekday-3" class="hidden" checked={Weekday === 2} />
+      <input type="radio" name="weekday" id="weekday-4" class="hidden" checked={Weekday === 3} />
+      <input type="radio" name="weekday" id="weekday-5" class="hidden" checked={Weekday === 4} />
+      <input type="radio" name="weekday" id="weekday-6" class="hidden" checked={Weekday === 5} />
+      <input type="radio" name="weekday" id="weekday-7" class="hidden" checked={Weekday === 6} />
+
+      <div
+        class="weekday-select
+          w-max max-w-full flex items-center gap-2 rounded-md p-2 bg-gray-200/50 select-none text-base-700
+          lt-sm:text-sm
+          lt-sm:[&>label]:(px-1)
+          [&>label]:(block px-3 py-1 rounded-md cursor-pointer font-bold outline-none)
+          [&>label:hover]:(bg-light-300)"
+      >
+        <label for="weekday-1">周一</label>
+        <label for="weekday-2">周二</label>
+        <label for="weekday-3">周三</label>
+        <label for="weekday-4">周四</label>
+        <label for="weekday-5">周五</label>
+        <label for="weekday-6">周六</label>
+        <label for="weekday-7">周日</label>
+      </div>
+
+      <div class="weekday-content mt-4 [&>div]:hidden">
+        {
+          calendar.map((cal) => (
+            <div id={`weekday-content-${cal.index}`} class="text-xs [&>a]:(mr-2 mb-2)">
+              {cal.bangumis.map((bgm) => (
+                <a
+                  href={getSearchURL(bgm)}
+                  class={`
+                    inline-flex items-center gap1
+                    rounded-md px-2 py-1 lt-sm:px-2 font-mono
+                    transition transition-colors
+                    text-base-800 bg-gray-200 hover:(bg-gray-300/80)`}
+                >
+                  {getDisplayName(bgm)}
+                </a>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+    </div>
     {
       ok ? (
         <>
@@ -30,3 +78,43 @@ const { ok, resources, timestamp } = await fetchResources(
     }
   </div>
 </Layout>
+
+<style is:global>
+  #weekday-1:checked ~ .weekday-select > label:nth-child(1),
+  #weekday-2:checked ~ .weekday-select > label:nth-child(2),
+  #weekday-3:checked ~ .weekday-select > label:nth-child(3),
+  #weekday-4:checked ~ .weekday-select > label:nth-child(4),
+  #weekday-5:checked ~ .weekday-select > label:nth-child(5),
+  #weekday-6:checked ~ .weekday-select > label:nth-child(6),
+  #weekday-7:checked ~ .weekday-select > label:nth-child(7) {
+    --at-apply: rounded-md bg-light-200;
+  }
+
+  #weekday-1:checked ~ .weekday-content > #weekday-content-1 {
+    display: block;
+  }
+
+  #weekday-2:checked ~ .weekday-content > #weekday-content-2 {
+    display: block;
+  }
+
+  #weekday-3:checked ~ .weekday-content > #weekday-content-3 {
+    display: block;
+  }
+
+  #weekday-4:checked ~ .weekday-content > #weekday-content-4 {
+    display: block;
+  }
+
+  #weekday-5:checked ~ .weekday-content > #weekday-content-5 {
+    display: block;
+  }
+
+  #weekday-6:checked ~ .weekday-content > #weekday-content-6 {
+    display: block;
+  }
+
+  #weekday-7:checked ~ .weekday-content > #weekday-content-7 {
+    display: block;
+  }
+</style>
