@@ -112,8 +112,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       bgmd:
-        specifier: ^0.0.26
-        version: 0.0.26
+        specifier: ^0.0.27
+        version: 0.0.27
       cmdk:
         specifier: ^0.2.0
         version: 0.2.0(@types/react@18.2.36)(react-dom@18.2.0)(react@18.2.0)
@@ -200,8 +200,8 @@ importers:
         specifier: workspace:*
         version: link:../anitomy
       bgmd:
-        specifier: ^0.0.26
-        version: 0.0.26
+        specifier: ^0.0.27
+        version: 0.0.27
       hono:
         specifier: ^3.9.2
         version: 3.9.2
@@ -3038,8 +3038,8 @@ packages:
       breadc: 0.9.7
     dev: false
 
-  /bgmd@0.0.26:
-    resolution: {integrity: sha512-/P/WMI/5bnxTmrhjkGkpJqrIdHi8raq0E0SnGFhXjhgDOhc/7liFZvF7ZdEeV0kUSrEyp/4aeCtSBr5aYBD1FA==}
+  /bgmd@0.0.27:
+    resolution: {integrity: sha512-lBrmPX8dWBdxS8UgRdCbeWXjHdtTUgxqqD+fZ9LdOasTB0eU/Nz9qSPUUFhtkIiMbVT6sNSb/OH0yyvxwCVU7A==}
     engines: {node: '>=v20.8.0'}
     dependencies:
       bangumi-data: 0.3.125
@@ -3130,6 +3130,7 @@ packages:
 
   /buffer@5.7.1:
     resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
+    requiresBuild: true
     dependencies:
       base64-js: 1.5.1
       ieee754: 1.2.1
