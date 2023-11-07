@@ -68,6 +68,7 @@ export function parseSearch(search: string) {
   const exclude: string[] = [];
 
   const fansub: number[] = [];
+  const type: string[] = [];
   const after: Date[] = [];
   const before: Date[] = [];
 
@@ -93,6 +94,9 @@ export function parseSearch(search: string) {
     },
     'before:,结束:': (word) => {
       before.push(new Date(word));
+    },
+    '类型:,type:': (word) => {
+      type.push(word);
     }
   };
 
@@ -122,7 +126,8 @@ export function parseSearch(search: string) {
     exclude,
     fansubId: fansub,
     after: after.at(-1),
-    before: before.at(-1)
+    before: before.at(-1),
+    type: type.at(-1)
   };
 }
 
@@ -146,17 +151,34 @@ export function stringifySearch(search: URLSearchParams) {
     content.push(...filter.fansubName.map((f) => '字幕组:' + f));
   }
   if (filter.after) {
-    content.push('开始:' + filter.after.toISOString());
+    content.push('开始:' + formatDate(filter.after));
   }
   if (filter.before) {
-    content.push('结束:' + filter.before.toISOString());
+    content.push('结束:' + formatDate(filter.before));
+  }
+  if (filter.type) {
+    content.push('类型:' + filter.type);
   }
 
   return content.map((c) => c).join(' ');
 
+  function formatDate(d: Date) {
+    const t = d.toISOString();
+    if (t.endsWith('T00:00:00.000Z')) return t.replace('T00:00:00.000Z', '');
+    return t;
+  }
+
   function wrap(t: string) {
-    if (t.indexOf(' ') !== -1) return `"${t.slice(1, t.length - 1).replace(/"/g, '\\"')}"`;
-    else return t.slice(1, t.length - 1);
+    if (t.indexOf(' ') !== -1) return `"${dewrap(t).replace(/"/g, '\\"')}"`;
+    else return dewrap(t);
+  }
+
+  function dewrap(t: string) {
+    if (t.at(0) === '"' && t.at(-1) === '"') {
+      return t.slice(1, t.length - 1);
+    } else {
+      return t;
+    }
   }
 }
 
