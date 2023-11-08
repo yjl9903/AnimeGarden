@@ -15,8 +15,8 @@ importers:
         specifier: ^11.0.4
         version: 11.0.4
       '@types/node':
-        specifier: ^20.8.10
-        version: 20.8.10
+        specifier: ^20.9.0
+        version: 20.9.0
       breadc:
         specifier: ^0.9.7
         version: 0.9.7
@@ -55,7 +55,7 @@ importers:
         version: 5.27.2
       vite:
         specifier: ^4.5.0
-        version: 4.5.0(@types/node@20.8.10)
+        version: 4.5.0(@types/node@20.9.0)
       vitest:
         specifier: ^0.34.6
         version: 0.34.6
@@ -89,7 +89,7 @@ importers:
     dependencies:
       '@astrojs/cloudflare':
         specifier: ^7.6.4
-        version: 7.6.4(@types/node@20.8.10)(astro@3.4.3)
+        version: 7.6.4(@types/node@20.9.0)(astro@3.4.3)
       '@astrojs/react':
         specifier: ^3.0.4
         version: 3.0.4(@types/react-dom@18.2.15)(@types/react@18.2.37)(react-dom@18.2.0)(react@18.2.0)(vite@4.5.0)
@@ -107,7 +107,7 @@ importers:
         version: 0.7.1(nanostores@0.9.4)(react@18.2.0)
       astro:
         specifier: ^3.4.3
-        version: 3.4.3(@types/node@20.8.10)(typescript@5.2.2)
+        version: 3.4.3(@types/node@20.9.0)(typescript@5.2.2)
       astro-robots-txt:
         specifier: ^1.0.0
         version: 1.0.0
@@ -259,7 +259,7 @@ packages:
     resolution: {integrity: sha512-pvFiLP2BeOKA/ZOS6jxx4XhKzdVLHDhGlFEaZ2flWWYf2xOqVniqpk38I04DFRyz+L0ASggl7SkItTc+ZLju4w==}
     dev: true
 
-  /@astrojs/cloudflare@7.6.4(@types/node@20.8.10)(astro@3.4.3):
+  /@astrojs/cloudflare@7.6.4(@types/node@20.9.0)(astro@3.4.3):
     resolution: {integrity: sha512-fConXiIxgnNPc7TL3l2JO9S8ULFiBImzILf6POm/+tTVOOXlx9OnxyXTwC4lxKMDhBI9CeuMLlostF7VVwHWUQ==}
     peerDependencies:
       astro: ^3.3.0
@@ -267,13 +267,13 @@ packages:
       '@astrojs/underscore-redirects': 0.3.3
       '@cloudflare/workers-types': 4.20231025.0
       '@iarna/toml': 2.2.5
-      astro: 3.4.3(@types/node@20.8.10)(typescript@5.2.2)
+      astro: 3.4.3(@types/node@20.9.0)(typescript@5.2.2)
       dotenv: 16.3.1
       esbuild: 0.19.5
       find-up: 6.3.0
       miniflare: 3.20231010.0
       tiny-glob: 0.2.9
-      vite: 4.5.0(@types/node@20.8.10)
+      vite: 4.5.0(@types/node@20.9.0)
     transitivePeerDependencies:
       - '@types/node'
       - bufferutil
@@ -305,7 +305,7 @@ packages:
       astro: ^3.3.0
     dependencies:
       '@astrojs/prism': 3.0.0
-      astro: 3.4.3(@types/node@20.8.10)(typescript@5.2.2)
+      astro: 3.4.3(@types/node@20.9.0)(typescript@5.2.2)
       github-slugger: 2.0.0
       import-meta-resolve: 3.1.1
       mdast-util-definitions: 6.0.0
@@ -2312,7 +2312,7 @@ packages:
   /@types/cross-spawn@6.0.2:
     resolution: {integrity: sha512-KuwNhp3eza+Rhu8IFI5HUXRP0LIhqH5cAjubUvGXXthh4YYBuP2ntwEX+Cz8GJoZUHlKo247wPWOfA9LYEq4cw==}
     dependencies:
-      '@types/node': 20.8.10
+      '@types/node': 20.9.0
     dev: true
 
   /@types/debug@4.1.10:
@@ -2334,7 +2334,7 @@ packages:
     resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
     dependencies:
       '@types/jsonfile': 6.1.3
-      '@types/node': 20.8.10
+      '@types/node': 20.9.0
     dev: true
 
   /@types/hast@2.3.7:
@@ -2359,7 +2359,7 @@ packages:
   /@types/jsonfile@6.1.3:
     resolution: {integrity: sha512-/yqTk2SZ1wIezK0hiRZD7RuSf4B3whFxFamB1kGStv+8zlWScTMcHanzfc0XKWs5vA1TkHeckBlOyM8jxU8nHA==}
     dependencies:
-      '@types/node': 20.8.10
+      '@types/node': 20.9.0
     dev: true
 
   /@types/mdast@3.0.14:
@@ -2386,7 +2386,7 @@ packages:
   /@types/node-forge@1.3.8:
     resolution: {integrity: sha512-vGXshY9vim9CJjrpcS5raqSjEfKlJcWy2HNdgUasR66fAnVEYarrf1ULV4nfvpC1nZq/moA9qyqBcu83x+Jlrg==}
     dependencies:
-      '@types/node': 20.8.10
+      '@types/node': 20.9.0
     dev: true
 
   /@types/node@17.0.45:
@@ -2395,6 +2395,12 @@ packages:
 
   /@types/node@20.8.10:
     resolution: {integrity: sha512-TlgT8JntpcbmKUFzjhsyhGfP2fsiz1Mv56im6enJ905xG1DAYesxJaeSbGqQmAw8OWPdhyJGhGSQGKRNJ45u9w==}
+    dependencies:
+      undici-types: 5.26.5
+    dev: true
+
+  /@types/node@20.9.0:
+    resolution: {integrity: sha512-nekiGu2NDb1BcVofVcEKMIwzlx4NjHlcjhoxxKBNLtz15Y1z7MYf549DFvkHSId02Ax6kGwWntIBPC3l/JZcmw==}
     dependencies:
       undici-types: 5.26.5
 
@@ -2438,7 +2444,7 @@ packages:
   /@types/sax@1.2.6:
     resolution: {integrity: sha512-A1mpYCYu1aHFayy8XKN57ebXeAbh9oQIZ1wXcno6b1ESUAfMBDMx7mf/QGlYwcMRaFryh9YBuH03i/3FlPGDkQ==}
     dependencies:
-      '@types/node': 20.8.10
+      '@types/node': 20.9.0
     dev: false
 
   /@types/scheduler@0.16.5:
@@ -2477,7 +2483,7 @@ packages:
       '@unocss/core': 0.57.2
       '@unocss/reset': 0.57.2
       '@unocss/vite': 0.57.2(rollup@3.29.4)(vite@4.5.0)
-      vite: 4.5.0(@types/node@20.8.10)
+      vite: 4.5.0(@types/node@20.9.0)
     transitivePeerDependencies:
       - rollup
     dev: true
@@ -2669,7 +2675,7 @@ packages:
       chokidar: 3.5.3
       fast-glob: 3.3.1
       magic-string: 0.30.5
-      vite: 4.5.0(@types/node@20.8.10)
+      vite: 4.5.0(@types/node@20.9.0)
     transitivePeerDependencies:
       - rollup
     dev: true
@@ -2685,7 +2691,7 @@ packages:
       '@babel/plugin-transform-react-jsx-source': 7.22.5(@babel/core@7.23.2)
       '@types/babel__core': 7.20.3
       react-refresh: 0.14.0
-      vite: 4.5.0(@types/node@20.8.10)
+      vite: 4.5.0(@types/node@20.9.0)
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -2904,7 +2910,7 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /astro@3.4.3(@types/node@20.8.10)(typescript@5.2.2):
+  /astro@3.4.3(@types/node@20.9.0)(typescript@5.2.2):
     resolution: {integrity: sha512-6zcONz2FjX6GaAy6Mysie4gT8rH5QCBXyPjkuYZKiPdV+sXmDpLm44J2MpQwA3mHb8YQ35L5O4nNg09d4luQ7g==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
@@ -2962,7 +2968,7 @@ packages:
       tsconfck: 3.0.0(typescript@5.2.2)
       unist-util-visit: 4.1.2
       vfile: 5.3.7
-      vite: 4.5.0(@types/node@20.8.10)
+      vite: 4.5.0(@types/node@20.9.0)
       vitefu: 0.2.5(vite@4.5.0)
       which-pm: 2.1.1
       yargs-parser: 21.1.1
@@ -8118,7 +8124,7 @@ packages:
       '@unocss/transformer-directives': 0.57.2
       '@unocss/transformer-variant-group': 0.57.2
       '@unocss/vite': 0.57.2(rollup@3.29.4)(vite@4.5.0)
-      vite: 4.5.0(@types/node@20.8.10)
+      vite: 4.5.0(@types/node@20.9.0)
     transitivePeerDependencies:
       - postcss
       - rollup
@@ -8155,7 +8161,7 @@ packages:
       remote-origin-url: 2.0.0
       rollup: 3.29.4
       unplugin: 1.5.0
-      vite: 4.5.0(@types/node@20.8.10)
+      vite: 4.5.0(@types/node@20.9.0)
     dev: true
 
   /unplugin@1.5.0:
@@ -8353,7 +8359,7 @@ packages:
       debug: 4.3.4
       globrex: 0.1.2
       tsconfck: 2.1.2(typescript@5.2.2)
-      vite: 4.5.0(@types/node@20.8.10)
+      vite: 4.5.0(@types/node@20.9.0)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -8393,6 +8399,42 @@ packages:
       rollup: 3.29.4
     optionalDependencies:
       fsevents: 2.3.3
+    dev: true
+
+  /vite@4.5.0(@types/node@20.9.0):
+    resolution: {integrity: sha512-ulr8rNLA6rkyFAlVWw2q5YJ91v098AFQ2R0PRFwPzREXOUJQPtFUG0t+/ZikhaOCDqFoDhN6/v8Sq0o4araFAw==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      lightningcss: ^1.21.0
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 20.9.0
+      esbuild: 0.18.20
+      postcss: 8.4.31
+      rollup: 3.29.4
+    optionalDependencies:
+      fsevents: 2.3.3
 
   /vitefu@0.2.5(vite@4.5.0):
     resolution: {integrity: sha512-SgHtMLoqaeeGnd2evZ849ZbACbnwQCIwRH57t18FxcXoZop0uQu0uzlIhJBlF/eWVzuce0sHeqPcDo+evVcg8Q==}
@@ -8402,7 +8444,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 4.5.0(@types/node@20.8.10)
+      vite: 4.5.0(@types/node@20.9.0)
     dev: false
 
   /vitest@0.34.6:
