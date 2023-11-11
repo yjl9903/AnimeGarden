@@ -14,7 +14,6 @@ export async function refreshResources(env: Env) {
   const db = connect(env);
 
   let sum = 0;
-  let status: 'running' | 'down' = 'running';
   for (let page = 1; ; page++) {
     const res: Resource[] = [];
 
@@ -24,10 +23,9 @@ export async function refreshResources(env: Env) {
     } catch (error) {
       const message = (error as any)?.message;
       if (message === 'dmhy server is down') {
-        status = 'down';
         console.log('dmhy server is down');
-        break;
       }
+      throw error;
     }
 
     // Check teams and users
