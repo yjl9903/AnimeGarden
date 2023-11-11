@@ -40,11 +40,13 @@ async function main(start: number, dist: string) {
       retry: Number.MAX_SAFE_INTEGER
     });
 
-    await fs.promises.writeFile(
-      path.join(dist, `${page}.json`),
-      JSON.stringify(r, null, 2),
-      'utf-8'
-    );
+    break;
+
+    // await fs.promises.writeFile(
+    //   path.join(dist, `${page}.json`),
+    //   JSON.stringify(r, null, 2),
+    //   'utf-8'
+    // );
   }
 }
 

@@ -26,6 +26,11 @@ export async function fetchDmhyPage(
   );
   const $ = load(html);
 
+  const errorNode = $('.ui-state-error');
+  if (errorNode.length !== 0) {
+    throw new Error('dmhy server is down');
+  }
+
   const res: Resource[] = [];
   $('#topic_list tbody tr').each((_idx, row) => {
     const tds = $(row).find('td');
@@ -70,6 +75,11 @@ export async function fetchDmhyDetail(
   const { retry = 5 } = options;
   const html = await retryFn(() => ofetch(url.href).then((r) => r.text()), retry);
   const $ = load(html);
+
+  const errorNode = $('.ui-state-error');
+  if (errorNode.length !== 0) {
+    throw new Error('dmhy server is down');
+  }
 
   const title = $('.topic-main>.topic-title>h3').text().trim();
 
