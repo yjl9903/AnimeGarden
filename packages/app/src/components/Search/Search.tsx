@@ -98,7 +98,9 @@ export default function Search() {
 
         const filter = parseSearch(search);
         if (!filter.after) {
-          filter.after = subDays(new Date(), 7);
+          const lastWeek = subDays(new Date(), 7);
+          lastWeek.setHours(0, 0, 0, 0);
+          filter.after = lastWeek;
         }
 
         const res = await fetchResources(
