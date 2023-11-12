@@ -5,7 +5,7 @@ import Layout from '../../layouts/Layout.astro';
 import { fetchResourceDetail } from '../../fetch';
 
 const { href } = Astro.params;
-if (!href) {
+if (!href || !/^\d+/.test(href)) {
   return Astro.redirect('/');
 }
 
