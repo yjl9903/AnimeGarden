@@ -176,13 +176,7 @@ export async function fixResources(env: Env, from: number, to: number) {
         }
       }
     } catch (error) {
-      const err = error as any;
-      if (err.message) {
-        console.log(...err.message.trim().split('\n'));
-      }
-      if (err.stack) {
-        console.log(...err.stack.trim().split('\n'));
-      }
+      throw error;
     }
   }
 
