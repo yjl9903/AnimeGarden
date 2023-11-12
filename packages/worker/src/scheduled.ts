@@ -118,9 +118,9 @@ export async function refreshResources(env: Env) {
     await Promise.all(
       PrefetchFilter.map(async (filter) => {
         const external = findResourcesFromDB.external!;
-        const cached = await external.get([env, filter]);
+        const cached = await external.get.bind(findResourcesFromDB)([env, filter]);
         if (cached) {
-          await external.set([env, filter], cached);
+          await external.set.bind(findResourcesFromDB)([env, filter], cached);
         }
       })
     );
@@ -144,6 +144,10 @@ export async function fixResources(env: Env, from: number, to: number) {
     try {
       const res = await fetchDmhyPage(fetch, { page, retry: 5 });
       const resources = res.map(transformResource);
+      if (resources.length === 0) {
+        throw new Error('Failed fetching dmhy resources list');
+      }
+
       for (const r of resources) {
         minId = Math.min(minId, r.id);
         maxId = Math.max(maxId, r.id);

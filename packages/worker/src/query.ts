@@ -1,8 +1,8 @@
 import type { Context } from 'hono';
 
 import { sql } from 'kysely';
+import { hash } from 'ohash';
 import { memoAsync } from 'memofunc';
-import { hash, objectHash, sha256 } from 'ohash';
 import {
   parseSearchURL,
   normalizeTitle,
