@@ -176,19 +176,35 @@ export const findResourcesFromDB = memoAsync(
         ] as const);
 
         if (resp) {
+          // Hack: due to the serialization issue, manually transform data
+          resp.timestamp = new Date(resp.timestamp);
+
           if (resp.timestamp.getTime() === timestamp.getTime()) {
+            console.log(`Resources list cache ${key} hit (now is ${resp.timestamp})`);
             return resp;
           }
-          // Cache miss
+
+          // Cache stale
+          console.log(
+            `Resources list cache ${key} stale (fetched at ${resp.timestamp}, now is ${timestamp})`
+          );
           await store.remove(key);
         }
+
+        // Cache miss
+        console.log(`Resources list cache ${key} miss (now is ${timestamp})`);
 
         return undefined;
       },
       async set([env, params], value) {
+        // Cache set
         const key = hash(params);
+
+        console.log(`Resources list cache ${key} has been set at ${value.timestamp}`);
+
         return getResourcesStore(env).put(key, value, {
-          expirationTtl: 60 * 10
+          // Cached 1 hour
+          expirationTtl: 60 * 60
         });
       },
       async remove([env, params]) {
