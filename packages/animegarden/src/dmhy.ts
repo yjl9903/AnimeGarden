@@ -20,10 +20,15 @@ export async function fetchDmhyPage(
 ): Promise<Resource[]> {
   const { page = 1, retry = 5 } = options;
 
-  const html = await retryFn(
-    () => ofetch(`https://share.dmhy.org/topics/list/page/${page}`).then((r) => r.text()),
+  const resp = await retryFn(
+    () => ofetch(`https://share.dmhy.org/topics/list/page/${page}`),
     retry
   );
+  if (!resp.ok) {
+    throw new Error('Failed connecting https://share.dmhy.org');
+  }
+
+  const html = await resp.text();
   const $ = load(html);
 
   const errorNode = $('.ui-state-error');
@@ -73,7 +78,12 @@ export async function fetchDmhyDetail(
   if (!matchId) return undefined;
 
   const { retry = 5 } = options;
-  const html = await retryFn(() => ofetch(url.href).then((r) => r.text()), retry);
+  const resp = await retryFn(() => ofetch(url.href), retry);
+  if (!resp.ok) {
+    throw new Error('Failed connecting https://share.dmhy.org');
+  }
+
+  const html = await resp.text();
   const $ = load(html);
 
   const errorNode = $('.ui-state-error');
