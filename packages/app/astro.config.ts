@@ -39,7 +39,7 @@ export default defineConfig({
         /**
          * Cloudflare Web Analytics configuration
          */
-        CF_BEACON: 'e852b1db3a694a5a9b4af6b2cb3d682c'
+        CF_BEACON: 'aa68fa3bf166467082bc79ba029b057f'
       }
     })
   ],
