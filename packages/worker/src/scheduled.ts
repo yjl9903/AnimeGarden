@@ -27,6 +27,9 @@ export async function refreshResources(env: Env) {
       }
       throw error;
     }
+    if (res.length === 0) {
+      throw new Error('Failed fetching dmhy resources list');
+    }
 
     // Check teams and users
     {
