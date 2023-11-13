@@ -191,7 +191,7 @@ export async function fixResources(env: Env, from: number, to: number) {
       .where('id', '>=', minId)
       .where('id', '<=', maxId)
       .execute();
-    const deleted = rows.filter((row) => !all.has(row.id));
+    const deleted = rows.filter((row) => !all.has(row.id) && !row.isDeleted);
     if (deleted.length > 0) {
       await db
         .updateTable('Resource')
