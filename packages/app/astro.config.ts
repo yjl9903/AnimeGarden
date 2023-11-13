@@ -21,8 +21,8 @@ export default defineConfig({
       policy: [
         {
           userAgent: '*',
-          allow: '/resources/',
-          disallow: ['/api/', '/rss/']
+          allow: '/resource/',
+          disallow: ['/resources/', '/api/', '/rss/']
         }
       ]
     }),
@@ -52,8 +52,6 @@ export default defineConfig({
     }
   },
   vite: {
-    plugins: [
-      TsconfigPaths()
-    ]
+    plugins: [TsconfigPaths()]
   }
 });
