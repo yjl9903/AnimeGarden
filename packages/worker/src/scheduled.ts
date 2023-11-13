@@ -16,20 +16,9 @@ export async function refreshResources(env: Env) {
 
   let sum = 0;
   for (let page = 1; ; page++) {
-    const res: Awaited<ReturnType<typeof fetchDmhyPage>> = [];
-
-    try {
-      const res = await fetchDmhyPage(fetch, { page, retry: 5 });
-      res.push(...res);
-    } catch (error) {
-      const message = (error as any)?.message;
-      if (message === 'dmhy server is down') {
-        console.log('dmhy server is down');
-      }
-      throw error;
-    }
+    const res = await fetchDmhyPage(fetch, { page, retry: 5 });
     if (res.length === 0) {
-      throw new Error('Failed fetching dmhy resources list');
+      throw new Error('Unknown error: fetch 0 resources');
     }
 
     // Check teams and users
