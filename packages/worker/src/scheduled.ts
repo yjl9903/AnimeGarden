@@ -140,48 +140,44 @@ export async function fixResources(env: Env, from: number, to: number) {
   let maxId = -1;
   const all = new Map<number, ReturnType<typeof transformResource>>();
   for (let page = from; page <= to; page++) {
-    try {
-      const res = await fetchDmhyPage(fetch, { page, retry: 5 });
-      const resources = res.map((r) => transformResource({ ...r, fetchedAt: now.toISOString() }));
-      if (resources.length === 0) {
-        throw new Error('Failed fetching dmhy resources list');
-      }
+    const res = await fetchDmhyPage(fetch, { page, retry: 5 });
+    const resources = res.map((r) => transformResource({ ...r, fetchedAt: now.toISOString() }));
+    if (resources.length === 0) {
+      throw new Error('Failed fetching dmhy resources list');
+    }
 
-      for (const r of resources) {
-        minId = minId !== -1 ? Math.min(minId, r.id) : r.id;
-        maxId = maxId !== -1 ? Math.max(maxId, r.id) : r.id;
-        all.set(r.id, r);
-      }
+    for (const r of resources) {
+      minId = minId !== -1 ? Math.min(minId, r.id) : r.id;
+      maxId = maxId !== -1 ? Math.max(maxId, r.id) : r.id;
+      all.set(r.id, r);
+    }
 
-      const rows = await db
-        .selectFrom('Resource')
-        .selectAll()
-        .where(
-          'id',
-          'in',
-          resources.map((r) => r.id)
-        )
-        .execute();
-      for (const row of rows) {
-        const latest = all.get(row.id);
-        if (!latest) continue;
-        if (latest.title !== row.title || latest.magnet !== row.magnet) {
-          const query = db
-            .updateTable('Resource')
-            .set(() => ({
-              title: latest.title,
-              titleAlt: normalizeTitle(latest.title),
-              magnet: latest.magnet,
-              size: latest.size,
-              fetchedAt: now
-            }))
-            .where('Resource.id', '=', latest.id);
-          await query.execute();
-          logs.push({ type: 'rename', id: latest.id, from: row.title, to: latest.title });
-        }
+    const rows = await db
+      .selectFrom('Resource')
+      .select(['id', 'magnet', 'title'])
+      .where(
+        'id',
+        'in',
+        resources.map((r) => r.id)
+      )
+      .execute();
+    for (const row of rows) {
+      const latest = all.get(row.id);
+      if (!latest) continue;
+      if (latest.title !== row.title || latest.magnet !== row.magnet) {
+        const query = db
+          .updateTable('Resource')
+          .set(() => ({
+            title: latest.title,
+            titleAlt: normalizeTitle(latest.title),
+            magnet: latest.magnet,
+            size: latest.size,
+            fetchedAt: now
+          }))
+          .where('Resource.id', '=', latest.id);
+        await query.execute();
+        logs.push({ type: 'rename', id: latest.id, from: row.title, to: latest.title });
       }
-    } catch (error) {
-      throw error;
     }
   }
 
@@ -189,7 +185,7 @@ export async function fixResources(env: Env, from: number, to: number) {
   if (minId !== -1 && maxId !== -1) {
     const rows = await db
       .selectFrom('Resource')
-      .selectAll()
+      .select(['id', 'title'])
       .where('isDeleted', '=', 0)
       .where('id', '>=', minId)
       .where('id', '<=', maxId)

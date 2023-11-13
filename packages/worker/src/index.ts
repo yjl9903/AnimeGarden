@@ -86,7 +86,7 @@ export default {
         ctx.waitUntil(refreshResources(env));
         break;
       case '0 * * * *':
-        ctx.waitUntil(fixResources(env, 1, 5));
+        ctx.waitUntil(fixResources(env, 1, 10));
         break;
     }
   }
