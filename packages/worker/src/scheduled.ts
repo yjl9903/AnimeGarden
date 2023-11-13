@@ -148,8 +148,8 @@ export async function fixResources(env: Env, from: number, to: number) {
       }
 
       for (const r of resources) {
-        minId = Math.min(minId, r.id);
-        maxId = Math.max(maxId, r.id);
+        minId = minId !== -1 ? Math.min(minId, r.id) : r.id;
+        maxId = maxId !== -1 ? Math.max(maxId, r.id) : r.id;
         all.set(r.id, r);
       }
 
