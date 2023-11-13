@@ -56,7 +56,7 @@ if (!detail) {
       </h4>
       <div class="flex gap8">
         <div>
-          <a href={`/resources/1?publisher=${detail.publisher.id}`} class="block text-left">
+          <a href={`/resources/1?publisherId=${detail.publisher.id}`} class="block text-left">
             <img
               src={detail.publisher.avatar}
               alt="Publisher Avatar"
@@ -68,7 +68,7 @@ if (!detail) {
         {
           detail.fansub && (
             <div>
-              <a href={`/resources/1?fansub=${detail.fansub.id}`} class="block w-auto text-left">
+              <a href={`/resources/1?fansubId=${detail.fansub.id}`} class="block w-auto text-left">
                 <img
                   src={detail.fansub.avatar}
                   alt="Fansub Avatar"
