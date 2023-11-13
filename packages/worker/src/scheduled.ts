@@ -128,7 +128,7 @@ export async function refreshResources(env: Env) {
 }
 
 export async function fixResources(env: Env, from: number, to: number) {
-  const now = new Date().toISOString();
+  const now = new Date();
   const db = connect(env);
 
   const logs: Array<
@@ -142,7 +142,7 @@ export async function fixResources(env: Env, from: number, to: number) {
   for (let page = from; page <= to; page++) {
     try {
       const res = await fetchDmhyPage(fetch, { page, retry: 5 });
-      const resources = res.map((r) => transformResource({ ...r, fetchedAt: now }));
+      const resources = res.map((r) => transformResource({ ...r, fetchedAt: now.toISOString() }));
       if (resources.length === 0) {
         throw new Error('Failed fetching dmhy resources list');
       }
@@ -165,16 +165,18 @@ export async function fixResources(env: Env, from: number, to: number) {
       for (const row of rows) {
         const latest = all.get(row.id);
         if (!latest) continue;
-        if (latest.title !== row.title) {
-          await db
+        if (latest.title !== row.title || latest.magnet !== row.magnet) {
+          const query = db
             .updateTable('Resource')
             .set(() => ({
               title: latest.title,
               titleAlt: normalizeTitle(latest.title),
+              magnet: latest.magnet,
+              size: latest.size,
               fetchedAt: now
             }))
-            .where('Resource.id', '=', latest.id)
-            .execute();
+            .where('Resource.id', '=', latest.id);
+          await query.execute();
           logs.push({ type: 'rename', id: latest.id, from: row.title, to: latest.title });
         }
       }
@@ -188,7 +190,7 @@ export async function fixResources(env: Env, from: number, to: number) {
     const rows = await db
       .selectFrom('Resource')
       .selectAll()
-      .where('isDeleted', '==', 0)
+      .where('isDeleted', '=', 0)
       .where('id', '>=', minId)
       .where('id', '<=', maxId)
       .execute();
