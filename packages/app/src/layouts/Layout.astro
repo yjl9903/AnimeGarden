@@ -67,6 +67,11 @@ function followSearch(params: Record<string, string>) {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content="動漫花園 3-rd party mirror site and API endpoint" />
+    <meta property="og:image" content="http://garden.onekuma.cn/twitter.jpg" />
+
     <title>{title}</title>
     <ViewTransitions />
   </head>
