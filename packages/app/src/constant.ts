@@ -69,7 +69,7 @@ export const DisplayType: Record<ResourceType, string> = {
 // @unocss-include
 export const DisplayTypeColor: Record<ResourceType, string> = {
   動畫: 'text-red-600',
-  季度全集: 'text-red-700',
+  季度全集: 'text-[#ff0000]',
   漫畫: 'text-green-600',
   港台原版: 'text-green-600',
   日文原版: 'text-green-600',
@@ -78,14 +78,14 @@ export const DisplayTypeColor: Record<ResourceType, string> = {
   同人音樂: 'text-purple-600',
   流行音樂: 'text-purple-600',
   日劇: 'text-blue-600',
-  ＲＡＷ: '',
-  遊戲: '',
-  電腦遊戲: '',
-  電視遊戲: '',
-  掌機遊戲: '',
-  網絡遊戲: '',
-  遊戲周邊: '',
-  特攝: 'text-rose-600',
+  ＲＡＷ: 'text-[#ffa500]',
+  遊戲: 'text-[#0eb9e7]',
+  電腦遊戲: 'text-[#0eb9e7]',
+  電視遊戲: 'text-[#0eb9e7]',
+  掌機遊戲: 'text-[#0eb9e7]',
+  網絡遊戲: 'text-[#0eb9e7]',
+  遊戲周邊: 'text-[#0eb9e7]',
+  特攝: 'text-[#a52a2a]',
   其他: 'text-base-800'
 };
 
