@@ -11,6 +11,7 @@
     "dev": "wrangler dev",
     "postinstall": "prisma generate",
     "prisma": "prisma",
+    "pscale:connect": "pscale connect animegarden",
     "test": "vitest",
     "test:ci": "vitest --run"
   },
