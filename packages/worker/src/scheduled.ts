@@ -11,15 +11,16 @@ const teams = new Set<number>();
 const users = new Set<number>();
 
 export async function refreshResources(env: Env) {
+  const now = new Date().toISOString();
   const db = connect(env);
 
   let sum = 0;
   for (let page = 1; ; page++) {
-    const res: Resource[] = [];
+    const res: Awaited<ReturnType<typeof fetchDmhyPage>> = [];
 
     try {
-      const r = await fetchDmhyPage(fetch, { page, retry: 5 });
-      res.push(...r);
+      const res = await fetchDmhyPage(fetch, { page, retry: 5 });
+      res.push(...res);
     } catch (error) {
       const message = (error as any)?.message;
       if (message === 'dmhy server is down') {
@@ -53,7 +54,9 @@ export async function refreshResources(env: Env) {
           await db
             .insertInto('User')
             .ignore()
-            .values([...curUsers.values()].map((u) => ({ id: +u.id, name: u.name })))
+            .values(
+              [...curUsers.values()].map((u) => ({ id: +u.id, name: u.name, provider: 'dmhy' }))
+            )
             .execute();
 
           for (const uid of curUsers.keys()) {
@@ -84,7 +87,9 @@ export async function refreshResources(env: Env) {
           await db
             .insertInto('Team')
             .ignore()
-            .values([...curTeams.values()].map((u) => ({ id: +u.id, name: u.name })))
+            .values(
+              [...curTeams.values()].map((u) => ({ id: +u.id, name: u.name, provider: 'dmhy' }))
+            )
             .execute();
 
           for (const tid of curTeams.keys()) {
@@ -94,7 +99,11 @@ export async function refreshResources(env: Env) {
       }
     }
 
-    const query = db.insertInto('Resource').ignore().values(res.map(transformResource));
+    const query = db
+      .insertInto('Resource')
+      .ignore()
+      .values(res.map((r) => transformResource({ ...r, fetchedAt: now })));
+
     const result = await query.execute();
     const count = result.reduce((acc, cur) => acc + Number(cur.numInsertedOrUpdatedRows ?? 0), 0);
 
@@ -130,6 +139,7 @@ export async function refreshResources(env: Env) {
 }
 
 export async function fixResources(env: Env, from: number, to: number) {
+  const now = new Date().toISOString();
   const db = connect(env);
 
   const logs: Array<
@@ -143,7 +153,7 @@ export async function fixResources(env: Env, from: number, to: number) {
   for (let page = from; page <= to; page++) {
     try {
       const res = await fetchDmhyPage(fetch, { page, retry: 5 });
-      const resources = res.map(transformResource);
+      const resources = res.map((r) => transformResource({ ...r, fetchedAt: now }));
       if (resources.length === 0) {
         throw new Error('Failed fetching dmhy resources list');
       }
@@ -169,7 +179,11 @@ export async function fixResources(env: Env, from: number, to: number) {
         if (latest.title !== row.title) {
           await db
             .updateTable('Resource')
-            .set(() => ({ title: latest.title, titleAlt: normalizeTitle(latest.title) }))
+            .set(() => ({
+              title: latest.title,
+              titleAlt: normalizeTitle(latest.title),
+              fetchedAt: now
+            }))
             .where('Resource.id', '=', latest.id)
             .execute();
           logs.push({ type: 'rename', id: latest.id, from: row.title, to: latest.title });
@@ -206,7 +220,7 @@ export async function fixResources(env: Env, from: number, to: number) {
   return { logs };
 }
 
-export function transformResource(resource: Resource) {
+function transformResource(resource: Resource) {
   const lastHref = resource.href.split('/').at(-1);
   if (!lastHref) throw new Error(`Parse error: ${resource.title} (${resource.href})`);
 
@@ -227,9 +241,11 @@ export function transformResource(resource: Resource) {
     magnet: resource.magnet,
     // Convert to UTC+8
     createdAt: toShanghai(new Date(resource.createdAt)),
+    fetchedAt: toShanghai(new Date(resource.fetchedAt)),
     anitomy: resource.type === '動畫' ? JSON.stringify(parse(resource.title)) : undefined,
     fansubId: resource.fansub?.id ? +resource.fansub?.id : undefined,
-    publisherId: +resource.publisher.id
+    publisherId: +resource.publisher.id,
+    provider: resource.provider
   };
 }
 

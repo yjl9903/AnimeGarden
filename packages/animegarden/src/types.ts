@@ -43,6 +43,10 @@ export interface Resource {
   };
 
   createdAt: string;
+
+  fetchedAt: string;
+
+  provider: string;
 }
 
 export interface ResourceDetail {

@@ -14,10 +14,12 @@ export interface FetchDmhyDetailOptions {
   retry?: number;
 }
 
+type FetchedResource = Omit<Resource, 'fetchedAt'>;
+
 export async function fetchDmhyPage(
   ofetch: (request: string) => Promise<Response>,
   options: FetchDmhyPageOptions = {}
-): Promise<Resource[]> {
+): Promise<FetchedResource[]> {
   const { page = 1, retry = 5 } = options;
 
   const resp = await retryFn(
@@ -36,7 +38,7 @@ export async function fetchDmhyPage(
     throw new Error('dmhy server is down');
   }
 
-  const res: Resource[] = [];
+  const res: FetchedResource[] = [];
   $('#topic_list tbody tr').each((_idx, row) => {
     const tds = $(row).find('td');
     const createdAt = tds.eq(0).find('span').text().trim();
@@ -53,6 +55,7 @@ export async function fetchDmhyPage(
     const publisherId = publisher.attr('href')!.split('/').at(-1)!;
 
     res.push({
+      provider: 'dmhy',
       title,
       href,
       type,

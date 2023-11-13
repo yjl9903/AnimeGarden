@@ -13,18 +13,22 @@ export type Resource = {
   size: string;
   magnet: string;
   createdAt: Timestamp;
+  fetchedAt: Timestamp;
   anitomy: unknown | null;
   fansubId: number | null;
   publisherId: number;
+  provider: string;
   isDeleted: Generated<number>;
 };
 export type Team = {
   id: Generated<number>;
   name: string;
+  provider: string;
 };
 export type User = {
   id: Generated<number>;
   name: string;
+  provider: string;
 };
 export type DB = {
   Resource: Resource;

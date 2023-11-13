@@ -14,12 +14,14 @@ generator kysely {
 model Team {
   id       Int        @id @default(autoincrement())
   name     String
+  provider String     @db.TinyText
   Resource Resource[]
 }
 
 model User {
   id       Int        @id @default(autoincrement())
   name     String
+  provider String     @db.TinyText
   Resource Resource[]
 }
 
@@ -32,11 +34,13 @@ model Resource {
   size        String   @db.TinyText
   magnet      String   @db.MediumText
   createdAt   DateTime
+  fetchedAt   DateTime
   anitomy     Json?
   fansubId    Int?
   publisherId Int
   fansub      Team?    @relation(fields: [fansubId], references: [id])
   publisher   User     @relation(fields: [publisherId], references: [id])
+  provider    String   @db.TinyText
   isDeleted   Boolean  @default(false)
 
   @@index([createdAt(sort: Desc)])

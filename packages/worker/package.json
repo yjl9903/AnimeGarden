@@ -6,7 +6,7 @@
     "build": "wrangler deploy --dry-run",
     "db:exec": "prisma db execute --file",
     "db:gen": "prisma generate",
-    "db:migrate": "pnpm prisma migrate dev --name",
+    "db:push": "prisma db push",
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
     "postinstall": "prisma generate",
