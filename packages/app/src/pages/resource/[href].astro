@@ -60,6 +60,7 @@ if (!detail) {
             <img
               src={detail.publisher.avatar}
               alt="Publisher Avatar"
+              onerror="this.src = `https://share.dmhy.org/images/defaultUser.png`;"
               class="inline-block w-[100px] h-[100px] rounded"
             />
             <span class="text-link block mt2">{detail.publisher.name}</span>
@@ -72,6 +73,7 @@ if (!detail) {
                 <img
                   src={detail.fansub.avatar}
                   alt="Fansub Avatar"
+                  onerror="this.src = `https://share.dmhy.org/images/defaultUser.png`;"
                   class="inline-block w-[100px] h-[100px] rounded"
                 />
                 <span class="text-link block mt2">{detail.fansub.name}</span>
