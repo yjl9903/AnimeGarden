@@ -28,8 +28,6 @@ export default defineConfig({
       ]
     }),
     PWA({
-      base: '/',
-      scope: '/',
       includeAssets: [
         'favicon.ico',
         'favicon.svg',
@@ -68,10 +66,10 @@ export default defineConfig({
           }
         ]
       },
-      workbox: {
-        navigateFallback: '/',
-        globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}']
-      },
+      // workbox: {
+      //   navigateFallback: '/',
+      //   globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}']
+      // },
       devOptions: {
         enabled: true
       },
