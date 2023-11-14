@@ -177,14 +177,14 @@ function followSearch(params: Record<string, string>) {
     </main>
     <footer class="main pb-8vh select-none [&>div]:(flex items-center)" transition:persist>
       <div font-sm text-base-400>
+        <span class="mr1 text-sm i-carbon-update-now op-80"></span>
+         Refreshed at {timestamp.toLocaleString('zh-CN', { timeZone: 'Asia/ShangHai' })}
+      </div>
+      <div font-sm text-base-400>
         <span class="mr1 text-sm i-devicon-github op-80"></span>
         <a href="https://github.com/yjl9903/AnimeGarden" target="_blank" class="text-link-active"
           >yjl9903/AnimeGarden</a
         >
-      </div>
-      <div font-sm text-base-400>
-        <span class="mr1 text-sm i-carbon-update-now op-80"></span>
-         Refreshed at {timestamp.toLocaleString('zh-CN', { timeZone: 'Asia/ShangHai' })}
       </div>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-devicon-astro op-80"></span>
