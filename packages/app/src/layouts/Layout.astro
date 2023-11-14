@@ -14,10 +14,12 @@ import { removeQuote, getRuntimeEnv } from '../utils';
 export interface Props {
   title: string;
 
+  description?: string;
+
   timestamp?: Date;
 }
 
-const { title } = Astro.props;
+const { title, description = '動漫花園 3-rd party mirror site and API endpoint' } = Astro.props;
 
 const url = Astro.url.pathname;
 const search = Astro.url.searchParams;
@@ -36,10 +38,10 @@ const hasFansubSearch = search.has('fansubId');
 const active = url.startsWith('/anime')
   ? 'anime'
   : hasFansubSearch
-  ? 'fansub'
-  : hasTypeSearch
-  ? 'type'
-  : '';
+    ? 'fansub'
+    : hasTypeSearch
+      ? 'type'
+      : '';
 
 function generateFeed(params: URLSearchParams) {
   const filter = parseSearchURL(params);
@@ -63,17 +65,18 @@ function followSearch(params: Record<string, string>) {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <meta name="description" content="動漫花園 3-rd party mirror site and API endpoint" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <ViewTransitions />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="generator" content={Astro.generator} />
 
     <meta property="og:title" content={title} />
-    <meta property="og:description" content="動漫花園 3-rd party mirror site and API endpoint" />
+    <meta property="og:description" content={description} />
     <meta property="og:image" content="http://garden.onekuma.cn/twitter.jpg" />
 
     <title>{title}</title>
-    <ViewTransitions />
   </head>
   <body>
     <header class="w-full pt-8vh bg-[#fef8f7] border-b">

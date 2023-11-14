@@ -21,7 +21,7 @@ export default defineConfig({
       policy: [
         {
           userAgent: '*',
-          allow: '/resource/',
+          allow: ['/resource/', '/anime/', '/docs/'],
           disallow: ['/resources/', '/api/', '/rss/']
         }
       ]

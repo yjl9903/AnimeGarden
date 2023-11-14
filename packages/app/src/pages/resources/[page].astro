@@ -59,16 +59,16 @@ const keywords = {
             <>
               <div class="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
                 {type && (
-                  <div class="space-x-2 select-none text-0">
-                    <span class="text-4 text-base-800 font-bold mr2 keyword">类型</span>
+                  <div class="space-x-2 text-0">
+                    <span class="text-4 text-base-800 font-bold mr2 select-none keyword">类型</span>
                     <span class={`text-4 select-text text-base-600 ${DisplayTypeColor[type]}`}>
                       {type in DisplayType ? DisplayType[type] : type}
                     </span>
                   </div>
                 )}
                 {fansub && (
-                  <div class="space-x-2 select-none text-0">
-                    <span class="text-4 text-base-800 font-bold mr2 keyword">字幕组</span>
+                  <div class="space-x-2 text-0">
+                    <span class="text-4 text-base-800 font-bold mr2 select-none keyword">字幕组</span>
                     {fansub.map((fansub) => (
                       <a
                         href={`/resources/1?fansubId=${fansub.id}`}
