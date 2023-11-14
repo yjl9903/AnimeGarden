@@ -15,8 +15,10 @@ const { resources } = Astro.props;
 
 const search = Astro.url.searchParams;
 
-function getMirrorHref(href: string) {
-  return `/resource/${href.split('/').at(-1)}`;
+function getMirrorHref(r: Resource) {
+  // @ts-ignore
+  if (r.id) return `/resource/${r.id}`;
+  return `/resource/${r.href.split('/').at(-1)}`;
 }
 
 function followSearch(params: Record<string, string>) {
@@ -53,7 +55,7 @@ function followSearch(params: Record<string, string>) {
               <div class="flex items-center justify-start">
                 <div class="flex-1">
                   <a
-                    href={getMirrorHref(r.href)}
+                    href={getMirrorHref(r)}
                     class="text-link"
                     aria-label={`Go to resources detail of ${r.title}`}
                   >

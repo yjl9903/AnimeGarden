@@ -73,8 +73,7 @@ export default defineConfig({
         globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}']
       },
       devOptions: {
-        enabled: true,
-        navigateFallbackAllowlist: [/^\//]
+        enabled: true
       },
       experimental: {
         directoryAndTrailingSlashHandler: true
