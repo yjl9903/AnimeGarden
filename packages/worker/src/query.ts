@@ -27,8 +27,11 @@ export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
 
   const cache = await store.get('' + id);
   if (!!cache) {
+    console.log(`Resouce detail ${id} hit cache`);
     return ctx.json({ id, detail: cache });
   }
+
+  console.log(`Resouce detail ${id} cache miss`);
 
   const db = connect(ctx.env);
   const realHref = /^\d+$/.test(href)
@@ -41,10 +44,14 @@ export async function queryResourceDetail(ctx: Context<{ Bindings: Env }>) {
       )[0]?.href
     : href;
 
+  console.log(`Try fetching dmhy detail of ${realHref}`);
+
   const resp = await fetchDmhyDetail(fetch, realHref);
   if (!resp) {
     return ctx.json({ message: '404 NOT FOUND' }, 404);
   }
+
+  console.log(`Set resouce detail ${id} cache`);
 
   // Ignore cache put error
   const detail = { ...resp, id };
