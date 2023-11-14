@@ -145,6 +145,7 @@ export async function fetchDmhyDetail(
       return { size, name };
     })
     .toArray()
+    .filter((f) => f.size !== '種子可能不存在' && f.size !== 'Bytes')
     .filter((f) => {
       if (/More Than \d+ Files/.test(f.name)) {
         hasMoreFiles = true;

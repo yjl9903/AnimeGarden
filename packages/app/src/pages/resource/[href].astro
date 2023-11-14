@@ -13,6 +13,8 @@ const detail = await fetchResourceDetail(href);
 if (!detail) {
   return Astro.redirect('/');
 }
+
+const files = detail.magnet.files.filter((f) => f.size !== '種子可能不存在' && f.size !== 'Bytes');
 ---
 
 <Layout title={`${detail.title} | Anime Garden`}>
@@ -49,7 +51,7 @@ if (!detail) {
         </div> -->
       </div>
     </div>
-    <div class="description" set:html={detail.description.replace('簡介', '简介')} />
+    <div class="description" set:html={detail.description.replace('簡介:', '简介')} />
     <div class="publisher">
       <h4 class="text-lg font-bold pb4">
         {detail.fansub ? '发布者 / 字幕组' : '发布者'}
@@ -92,12 +94,17 @@ if (!detail) {
       <h4 class="text-lg font-bold border-b px4 py2">文件列表</h4>
       <div class="mb4 max-h-[80vh] overflow-auto px4">
         {
-          detail.magnet.files.map((f) => (
+          files.map((f) => (
             <div class="py2 flex justify-between gap4">
               <div class="text-sm text-base-600">{f.name}</div>
               <div class="text-xs text-base-400 select-none">{f.size}</div>
             </div>
           ))
+        }
+        {
+          files.length === 0 ? (
+            <div class="py2 select-none text-center text-red-400">种子信息解析失败</div>
+          ) : undefined
         }
         {detail.magnet.hasMoreFiles ? <div class="text-base-400">...</div> : undefined}
       </div>
