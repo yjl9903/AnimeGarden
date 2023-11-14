@@ -1,5 +1,6 @@
 ---
 import { CF_BEACON } from '~build/meta';
+import { pwaInfo } from 'virtual:pwa-info';
 import { ViewTransitions } from 'astro:transitions';
 
 import { parseSearchURL } from 'animegarden';
@@ -69,8 +70,14 @@ function followSearch(params: Record<string, string>) {
     <meta name="generator" content={Astro.generator} />
     <ViewTransitions />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" sizes="180x180" />
+    <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF" />
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="theme-color" content="#ffffff" />
+    <script src="/src/pwa.ts"></script>
+    {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

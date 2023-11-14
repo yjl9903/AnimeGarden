@@ -7,6 +7,7 @@
     "astro": "astro",
     "build": "astro build && node scripts/postbuild.mjs",
     "dev": "astro dev",
+    "generate-pwa-assets": "pwa-assets-generator --preset minimal public/favicon.svg",
     "preview": "astro preview",
     "start": "astro dev"
   },
@@ -39,6 +40,8 @@
     "@types/react-dom": "18.2.15",
     "@types/swagger-ui-react": "^4.18.3",
     "@unocss/reset": "^0.57.3",
+    "@vite-pwa/assets-generator": "^0.0.10",
+    "@vite-pwa/astro": "^0.1.5",
     "animegarden": "workspace:*",
     "anitomy": "workspace:*",
     "date-fns": "^2.30.0",
