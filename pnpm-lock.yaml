@@ -188,8 +188,8 @@ importers:
         specifier: ^0.57.4
         version: 0.57.4(postcss@8.4.31)(rollup@2.79.1)(vite@4.5.0)
       unplugin-info:
-        specifier: ^0.6.0
-        version: 0.6.0(esbuild@0.17.19)(rollup@2.79.1)(vite@4.5.0)
+        specifier: ^0.7.0
+        version: 0.7.0(esbuild@0.17.19)(rollup@2.79.1)(vite@4.5.0)
       vite-tsconfig-paths:
         specifier: ^4.2.1
         version: 4.2.1(typescript@5.2.2)(vite@4.5.0)
@@ -4532,6 +4532,11 @@ packages:
   /ci-info@3.9.0:
     resolution: {integrity: sha512-NIxF55hv4nSqQswkAeiOi1r83xy8JldOFDTWiug55KBu9Jnblncd2U6ViHmYgHf01TPZS77NJBhBMKdWj9HQMQ==}
     engines: {node: '>=8'}
+
+  /ci-info@4.0.0:
+    resolution: {integrity: sha512-TdHqgGf9odd8SXNuxtUBVx8Nv+qZOejE6qyqiy5NtbYYQOeFa6zmHkxlPzmaLxWWHsU6nJmB7AETdVPi+2NBUg==}
+    engines: {node: '>=8'}
+    dev: true
 
   /citty@0.1.4:
     resolution: {integrity: sha512-Q3bK1huLxzQrvj7hImJ7Z1vKYJRPQCDnd0EjXfHMidcjecGOMuLrmuQmtWmFkuKLcMThlGh1yCKG8IEc6VeNXQ==}
@@ -9714,8 +9719,8 @@ packages:
       - supports-color
     dev: true
 
-  /unplugin-info@0.6.0(esbuild@0.17.19)(rollup@2.79.1)(vite@4.5.0):
-    resolution: {integrity: sha512-94Zhtx9lFUaoRh/Bo3+5fPMUo4teW3jWztwEZUFnIvf4Lpk0vxMAuXUpEaa76oWISeA59p7ogammYfCceqqDHw==}
+  /unplugin-info@0.7.0(esbuild@0.17.19)(rollup@2.79.1)(vite@4.5.0):
+    resolution: {integrity: sha512-bK7iWu2Cya5XL4yNkNAwkXVSvOrFSUMkCd8y0ZH3/MuqJiRAS10PQm5/KcrSkSFDhIFGWrSwQiq6fPHstD9mmQ==}
     peerDependencies:
       '@nuxt/kit': ^3.7.3
       '@nuxt/schema': ^3.7.3
@@ -9737,7 +9742,7 @@ packages:
       webpack:
         optional: true
     dependencies:
-      ci-info: 3.9.0
+      ci-info: 4.0.0
       esbuild: 0.17.19
       git-repo-info: 2.1.1
       parse-github-url: 1.0.2
