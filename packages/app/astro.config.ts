@@ -4,11 +4,14 @@ import uno from 'unocss/astro';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import robotsTxt from 'astro-robots-txt';
+import node from '@astrojs/node';
 import cloudflare from '@astrojs/cloudflare';
 import PWA from '@vite-pwa/astro';
 
 import Info from 'unplugin-info/astro';
 import TsconfigPaths from 'vite-tsconfig-paths';
+
+const SSR_ADAPTER = process.env.SSR_ADAPTER === 'node' ? 'node' : 'cloudflare';
 
 // https://astro.build/config
 export default defineConfig({
@@ -94,9 +97,12 @@ export default defineConfig({
       }
     })
   ],
-  adapter: cloudflare({
-    mode: 'directory'
-  }),
+  adapter:
+    SSR_ADAPTER === 'cloudflare'
+      ? cloudflare({
+          mode: 'directory'
+        })
+      : node({ mode: 'standalone' }),
   image: {
     service: {
       entrypoint: 'astro/assets/services/noop'
