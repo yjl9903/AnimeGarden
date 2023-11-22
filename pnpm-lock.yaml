@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: ^4.20231025.0
-        version: 4.20231025.0
+        specifier: ^4.20231121.0
+        version: 4.20231121.0
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -1776,6 +1776,11 @@ packages:
 
   /@cloudflare/workers-types@4.20231025.0:
     resolution: {integrity: sha512-TkcZkntUTOcvJ4vgmwpNfLTclpMbmbClZCe62B25/VTukmyv91joRa4eKzSjzCZUXTbFHNmVdOpmGaaJU2U3+A==}
+    dev: false
+
+  /@cloudflare/workers-types@4.20231121.0:
+    resolution: {integrity: sha512-+kWfpCkqiepwAKXyHoE0gnkPgkLhz0/9HOBIGhHRsUvUKvhUtm3mbqqoGRWgF1qcjzrDUBbrrOq4MYHfFtc2RA==}
+    dev: true
 
   /@esbuild-plugins/node-globals-polyfill@0.2.3(esbuild@0.17.19):
     resolution: {integrity: sha512-r3MIryXDeXDOZh7ih1l/yE9ZLORCd5e8vWg02azWRGj5SPTuoh69A2AIyn0Z31V/kHBfZ4HgWJ+OK3GTTwLmnw==}
