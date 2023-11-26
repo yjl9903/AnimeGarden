@@ -112,8 +112,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       bgmd:
-        specifier: ^0.0.28
-        version: 0.0.28
+        specifier: ^0.0.29
+        version: 0.0.29
       cmdk:
         specifier: ^0.2.0
         version: 0.2.0(@types/react@18.2.38)(react-dom@18.2.0)(react@18.2.0)
@@ -209,8 +209,8 @@ importers:
         specifier: workspace:*
         version: link:../anitomy
       bgmd:
-        specifier: ^0.0.28
-        version: 0.0.28
+        specifier: ^0.0.29
+        version: 0.0.29
       hono:
         specifier: ^3.10.2
         version: 3.10.2
@@ -4311,8 +4311,8 @@ packages:
   /balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
-  /bangumi-data@0.3.125:
-    resolution: {integrity: sha512-bWtpeSqpG2FQ7Gd3AlAS68Oe3OnXB3gsrZY58/T9wPANQbRXhjnf8uP7KoM2d9cq1krzTlFN1TrKTnsmhgI+Fg==}
+  /bangumi-data@0.3.126:
+    resolution: {integrity: sha512-PdZc+tbAS9xACAf/UlVhVmh8gcXaAPqXvNKNGEab6nEkj9pVy0+dm7cJrNFim9UpqUXbuelbuVryTkB1ojO+uA==}
     dev: false
 
   /base64-js@1.5.1:
@@ -4326,14 +4326,14 @@ packages:
       breadc: 0.9.7
     dev: false
 
-  /bgmd@0.0.28:
-    resolution: {integrity: sha512-2wgCZqxGVtVqSChPjfCQggFxscqGfeI3Yi0XIp8EDjC4zIJ53eUHESF+AROHDB3Myo7ZP9goNlzWzBwci7Jrmg==}
+  /bgmd@0.0.29:
+    resolution: {integrity: sha512-uqMtKRT/GVtwUv3+iAVhOkaWpzw4oRNSvtmPSKDDezoYBGEIhColUfWtIyG6sDvmSadkAuceRsmmHnUdLQYn4w==}
     engines: {node: '>=v20.8.0'}
     dependencies:
-      bangumi-data: 0.3.125
+      bangumi-data: 0.3.126
       bgmc: 0.0.5
       tmdbc: 0.0.1
-      type-fest: 4.8.1
+      type-fest: 4.8.2
     dev: false
 
   /binary-extensions@2.2.0:
@@ -9638,8 +9638,8 @@ packages:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
     engines: {node: '>=12.20'}
 
-  /type-fest@4.8.1:
-    resolution: {integrity: sha512-ShaaYnjf+0etG8W/FumARKMjjIToy/haCaTjN2dvcewOSoNqCQzdgG7m2JVOlM5qndGTHjkvsrWZs+k/2Z7E0Q==}
+  /type-fest@4.8.2:
+    resolution: {integrity: sha512-mcvrCjixA5166hSrUoJgGb9gBQN4loMYyj9zxuMs/66ibHNEFd5JXMw37YVDx58L4/QID9jIzdTBB4mDwDJ6KQ==}
     engines: {node: '>=16'}
     dev: false
 
