@@ -173,8 +173,8 @@ importers:
         specifier: ^0.0.11
         version: 0.0.11
       '@vite-pwa/astro':
-        specifier: ^0.1.5
-        version: 0.1.5(astro@3.6.3)(vite-plugin-pwa@0.17.2)
+        specifier: ^0.1.6
+        version: 0.1.6(astro@3.6.3)(vite-plugin-pwa@0.17.2)
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -3887,10 +3887,10 @@ packages:
       unconfig: 0.3.11
     dev: true
 
-  /@vite-pwa/astro@0.1.5(astro@3.6.3)(vite-plugin-pwa@0.17.2):
-    resolution: {integrity: sha512-OjG32P67eGGTKlXwTqhJkdOmQOL+GBNaqi9sm2JSawkY+SgZ9V6whPMRjJZXtTjpPXrQs4XorJiLG9g3kRPRTA==}
+  /@vite-pwa/astro@0.1.6(astro@3.6.3)(vite-plugin-pwa@0.17.2):
+    resolution: {integrity: sha512-NVtVusXG17nCfIQI3nSenz1d2jO89ZNCsFDk6/S+z3ulxerqHkPOXBtZTba89glhgSmJZsKibA7NWF/SxEU0iA==}
     peerDependencies:
-      astro: ^1.6.0 || ^2.0.0 || ^3.0.0
+      astro: ^1.6.0 || ^2.0.0 || ^3.0.0 || ^4.0.0-0
       vite-plugin-pwa: '>=0.16.5 <1'
     dependencies:
       astro: 3.6.3(@types/node@20.10.0)(typescript@5.3.2)
