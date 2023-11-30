@@ -51,8 +51,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(typescript@5.3.2)
       undici:
-        specifier: ^5.28.1
-        version: 5.28.1
+        specifier: ^5.28.2
+        version: 5.28.2
       vite:
         specifier: ^5.0.4
         version: 5.0.4(@types/node@20.10.1)
@@ -7334,7 +7334,7 @@ packages:
       glob-to-regexp: 0.4.1
       source-map-support: 0.5.21
       stoppable: 1.1.0
-      undici: 5.28.1
+      undici: 5.28.2
       workerd: 1.20231025.0
       ws: 8.14.2
       youch: 3.3.3
@@ -7357,7 +7357,7 @@ packages:
       glob-to-regexp: 0.4.1
       source-map-support: 0.5.21
       stoppable: 1.1.0
-      undici: 5.28.1
+      undici: 5.28.2
       workerd: 1.20231030.0
       ws: 8.14.2
       youch: 3.3.3
@@ -9697,7 +9697,7 @@ packages:
       node-fetch-commonjs: 3.3.2
       qs: 6.11.2
       traverse: 0.6.7
-      undici: 5.28.1
+      undici: 5.28.2
     transitivePeerDependencies:
       - debug
     dev: false
@@ -10238,8 +10238,8 @@ packages:
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
-  /undici@5.28.1:
-    resolution: {integrity: sha512-xcIIvj1LOQH9zAL54iWFkuDEaIVEjLrru7qRpa3GrEEHk6OBhb/LycuUY2m7VCcTuDeLziXCxobQVyKExyGeIA==}
+  /undici@5.28.2:
+    resolution: {integrity: sha512-wh1pHJHnUeQV5Xa8/kyQhO7WFa8M34l026L5P/+2TYiakvGy5Rdc8jWZVyG7ieht/0WgJLEd3kcU5gKx+6GC8w==}
     engines: {node: '>=14.0'}
     dependencies:
       '@fastify/busboy': 2.1.0
