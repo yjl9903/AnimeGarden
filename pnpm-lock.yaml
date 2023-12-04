@@ -212,8 +212,8 @@ importers:
         specifier: ^0.0.29
         version: 0.0.29
       hono:
-        specifier: ^3.10.5
-        version: 3.10.5
+        specifier: ^3.11.0
+        version: 3.11.0
       kysely-planetscale:
         specifier: ^1.4.0
         version: 1.4.0(@planetscale/database@1.11.0)(kysely@0.26.3)
@@ -3162,6 +3162,7 @@ packages:
 
   /@swagger-api/apidom-ns-json-schema-draft-4@0.85.0:
     resolution: {integrity: sha512-huh4fPuTCVQ+UpidkacwUMQcOfQDonV0sCd0M34p2ATQltOYagAYHo0TLzOFlW6OYKb0LFgFHkujGoRgRMFJFg==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.23.5
       '@swagger-api/apidom-ast': 0.85.0
@@ -6157,8 +6158,8 @@ packages:
       react-is: 16.13.1
     dev: false
 
-  /hono@3.10.5:
-    resolution: {integrity: sha512-qNKibuEs+xzFVcKD9HHzAs2nUXQniQgXU6q9FRIwd7TFpkI9dGtkSHddWxdNoxX/7MGd7unaIisVOGMqiER4pw==}
+  /hono@3.11.0:
+    resolution: {integrity: sha512-B9E29kt1Zw1m6uA9oGjK8T0NPVBsqG+rKZakb+LwnUvVD0EfHW6UimenSGDh85RlgVk23GDMhikMc9c9pD8HDA==}
     engines: {node: '>=16.0.0'}
     dev: false
 
