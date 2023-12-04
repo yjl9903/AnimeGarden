@@ -146,8 +146,8 @@ importers:
         specifier: ^1.1.24
         version: 1.1.24
       '@iconify-json/devicon':
-        specifier: ^1.1.27
-        version: 1.1.27
+        specifier: ^1.1.28
+        version: 1.1.28
       '@onekuma/preset.css':
         specifier: ^0.1.11
         version: 0.1.11
@@ -2359,8 +2359,8 @@ packages:
       '@iconify/types': 2.0.0
     dev: true
 
-  /@iconify-json/devicon@1.1.27:
-    resolution: {integrity: sha512-6IP1CGe1fw95nrftVnj3Jy7hwMZKnulQuxEE5xj8i4GGz4WTzOsYN+sig93/HFqcRGTwTs8wdMH8UGff+AJLcw==}
+  /@iconify-json/devicon@1.1.28:
+    resolution: {integrity: sha512-zQ/j4tsspCh7iIzEiA/RnuvyfNE3BKQuPbaxAxrWmZ3U5BHwxJ0u/ZV0lcABBZtGswEPweooE0GNiFqi1GlW2Q==}
     dependencies:
       '@iconify/types': 2.0.0
     dev: true
@@ -4734,6 +4734,7 @@ packages:
 
   /color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
+    requiresBuild: true
 
   /color-string@1.9.1:
     resolution: {integrity: sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==}
