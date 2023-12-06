@@ -180,8 +180,8 @@ describe('parse url', () => {
           456,
         ],
         "search": [
-          "\\"hello\\"",
-          "\\"world\\"",
+          ""hello"",
+          ""world"",
         ],
         "type": "动画",
       }
