@@ -122,8 +122,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       swagger-ui-react:
-        specifier: ^5.10.4
-        version: 5.10.4(@types/react-dom@18.2.17)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^5.10.5
+        version: 5.10.5(@types/react-dom@18.2.17)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)
       swr:
         specifier: ^2.2.4
         version: 2.2.4(react@18.2.0)
@@ -9652,8 +9652,8 @@ packages:
       picocolors: 1.0.0
     dev: true
 
-  /swagger-client@3.24.5:
-    resolution: {integrity: sha512-qb4Rr9LpWs7o2AO4KdiIK+dz0GbrRLyD+UyN24h6AcNcDUnwfkb6LgFE4e6bXwVXWJzMp27w1QvSQ4hQNMPnoQ==}
+  /swagger-client@3.24.6:
+    resolution: {integrity: sha512-vgolnwLjsLCLe3mA9yOuXqmslVzxRpjz0fTBWwPtDGvYSU8FMVra0FGevw+N2OQ80UE1rOqgv4Te0AfvzMyR8g==}
     dependencies:
       '@babel/runtime-corejs3': 7.23.5
       '@swagger-api/apidom-core': 0.86.0
@@ -9661,7 +9661,7 @@ packages:
       '@swagger-api/apidom-json-pointer': 0.86.0
       '@swagger-api/apidom-ns-openapi-3-1': 0.86.0
       '@swagger-api/apidom-reference': 0.86.0
-      cookie: 0.5.0
+      cookie: 0.6.0
       deepmerge: 4.3.1
       fast-json-patch: 3.1.1
       is-plain-object: 5.0.0
@@ -9675,8 +9675,8 @@ packages:
       - debug
     dev: false
 
-  /swagger-ui-react@5.10.4(@types/react-dom@18.2.17)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-6t3QSDkGAjgGHxK+PZdbjjZrToBWB4tbUlz/7Y/xN+KRrIwHUUs8mhz0ujFtSO2sfEKWVYobELrMUL5B+cBKKQ==}
+  /swagger-ui-react@5.10.5(@types/react-dom@18.2.17)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-uBQLku4j3L1NC4/xE3HTgz1EcFisBphh8AnGqbj9LMxeGGcpKOlx/ZDigRAeVXWr9jOnZZbeGBzMe4NVHxPZrQ==}
     peerDependencies:
       react: '>=17.0.0'
       react-dom: '>=17.0.0'
@@ -9712,7 +9712,7 @@ packages:
       reselect: 4.1.8
       serialize-error: 8.1.0
       sha.js: 2.4.11
-      swagger-client: 3.24.5
+      swagger-client: 3.24.6
       url-parse: 1.5.10
       xml: 1.0.1
       xml-but-prettier: 1.0.1
