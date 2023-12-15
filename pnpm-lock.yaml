@@ -81,7 +81,7 @@ importers:
     dependencies:
       '@astrojs/cloudflare':
         specifier: ^8.0.0
-        version: 8.0.0(astro@4.0.4)
+        version: 8.0.0(astro@4.0.5)
       '@astrojs/react':
         specifier: ^3.0.7
         version: 3.0.7(@types/react-dom@18.2.17)(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)(vite@5.0.9)
@@ -98,8 +98,8 @@ importers:
         specifier: ^0.7.1
         version: 0.7.1(nanostores@0.9.5)(react@18.2.0)
       astro:
-        specifier: ^4.0.4
-        version: 4.0.4(@types/node@20.10.4)(typescript@5.3.3)
+        specifier: ^4.0.5
+        version: 4.0.5(@types/node@20.10.4)(typescript@5.3.3)
       astro-robots-txt:
         specifier: ^1.0.0
         version: 1.0.0
@@ -133,7 +133,7 @@ importers:
     devDependencies:
       '@astrojs/node':
         specifier: ^7.0.1
-        version: 7.0.1(astro@4.0.4)
+        version: 7.0.1(astro@4.0.5)
       '@iconify-json/carbon':
         specifier: ^1.1.26
         version: 1.1.26
@@ -166,7 +166,7 @@ importers:
         version: 0.2.1
       '@vite-pwa/astro':
         specifier: ^0.2.0
-        version: 0.2.0(astro@4.0.4)(vite-plugin-pwa@0.17.4)
+        version: 0.2.0(astro@4.0.5)(vite-plugin-pwa@0.17.4)
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -272,7 +272,7 @@ packages:
       leven: 3.1.0
     dev: true
 
-  /@astrojs/cloudflare@8.0.0(astro@4.0.4):
+  /@astrojs/cloudflare@8.0.0(astro@4.0.5):
     resolution: {integrity: sha512-JmbxfVjqJXJnzBe69fZEsX3u00DwsEEsCqDlh+pnaFoNjAGMubI+2yME7i0NBdH6TJ/YYWe889xQePZ0I7gu2g==}
     peerDependencies:
       astro: ^3.0.0 || ^4.0.0
@@ -280,7 +280,7 @@ packages:
       '@astrojs/underscore-redirects': 0.3.3
       '@cloudflare/workers-types': 4.20231121.0
       '@iarna/toml': 2.2.5
-      astro: 4.0.4(@types/node@20.10.4)(typescript@5.3.3)
+      astro: 4.0.5(@types/node@20.10.4)(typescript@5.3.3)
       dotenv: 16.3.1
       esbuild: 0.19.9
       find-up: 6.3.0
@@ -322,12 +322,12 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@astrojs/node@7.0.1(astro@4.0.4):
+  /@astrojs/node@7.0.1(astro@4.0.5):
     resolution: {integrity: sha512-jzO5q1t/cwDZQHcPG0CakjPY0SC44kbGgDDoh4UurvzZcCDYQKLz6zzJVqzUiOtDhfSwVrgHoiKo2tNbXASlRQ==}
     peerDependencies:
       astro: ^4.0.0
     dependencies:
-      astro: 4.0.4(@types/node@20.10.4)(typescript@5.3.3)
+      astro: 4.0.5(@types/node@20.10.4)(typescript@5.3.3)
       send: 0.18.0
       server-destroy: 1.0.1
     transitivePeerDependencies:
@@ -3902,13 +3902,13 @@ packages:
       unconfig: 0.3.11
     dev: true
 
-  /@vite-pwa/astro@0.2.0(astro@4.0.4)(vite-plugin-pwa@0.17.4):
+  /@vite-pwa/astro@0.2.0(astro@4.0.5)(vite-plugin-pwa@0.17.4):
     resolution: {integrity: sha512-1MBNbRo9I9fp9sUSoaQfI/xHVDRKRoUsWETDJMVoKoctZYfm4fZgb7EN76WJdejW/vup+3+uoFlDMCnca+vZzA==}
     peerDependencies:
       astro: ^1.6.0 || ^2.0.0 || ^3.0.0 || ^4.0.0
       vite-plugin-pwa: '>=0.17.3 <1'
     dependencies:
-      astro: 4.0.4(@types/node@20.10.4)(typescript@5.3.3)
+      astro: 4.0.5(@types/node@20.10.4)(typescript@5.3.3)
       vite-plugin-pwa: 0.17.4(vite@5.0.9)(workbox-build@7.0.0)(workbox-window@7.0.0)
     dev: true
 
@@ -4166,8 +4166,8 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /astro@4.0.4(@types/node@20.10.4)(typescript@5.3.3):
-    resolution: {integrity: sha512-KhwoF5//kFusczKN46ZG185uk9BQt1OH5949wsrFKs0z7Oo/o31XyxKyqIW8ZSL0fWU4XYKSdYlAo1RaPF9TtA==}
+  /astro@4.0.5(@types/node@20.10.4)(typescript@5.3.3):
+    resolution: {integrity: sha512-OTiTEiXYdXTkVJXNNKIWdYG1z2wpTST+92Qcldm36x91Pe4fKpLxeuRloy5cW175oHi8lvXytgG3Gl3VBP18RQ==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
@@ -4227,8 +4227,8 @@ packages:
       tsconfck: 3.0.0(typescript@5.3.3)
       unist-util-visit: 5.0.0
       vfile: 6.0.1
-      vite: 5.0.7(@types/node@20.10.4)
-      vitefu: 0.2.5(vite@5.0.7)
+      vite: 5.0.9(@types/node@20.10.4)
+      vitefu: 0.2.5(vite@5.0.9)
       which-pm: 2.1.1
       yargs-parser: 21.1.1
       zod: 3.22.4
@@ -10623,41 +10623,6 @@ packages:
       - typescript
     dev: true
 
-  /vite@5.0.7(@types/node@20.10.4):
-    resolution: {integrity: sha512-B4T4rJCDPihrQo2B+h1MbeGL/k/GMAHzhQ8S0LjQ142s6/+l3hHTT095ORvsshj4QCkoWu3Xtmob5mazvakaOw==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^18.0.0 || >=20.0.0
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-    dependencies:
-      '@types/node': 20.10.4
-      esbuild: 0.19.9
-      postcss: 8.4.32
-      rollup: 4.7.0
-    optionalDependencies:
-      fsevents: 2.3.3
-
   /vite@5.0.9(@types/node@20.10.4):
     resolution: {integrity: sha512-wVqMd5kp28QWGgfYPDfrj771VyHTJ4UDlCteLH7bJDGDEamaz5hV8IX6h1brSGgnnyf9lI2RnzXq/JmD0c2wwg==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -10693,7 +10658,7 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
-  /vitefu@0.2.5(vite@5.0.7):
+  /vitefu@0.2.5(vite@5.0.9):
     resolution: {integrity: sha512-SgHtMLoqaeeGnd2evZ849ZbACbnwQCIwRH57t18FxcXoZop0uQu0uzlIhJBlF/eWVzuce0sHeqPcDo+evVcg8Q==}
     peerDependencies:
       vite: ^3.0.0 || ^4.0.0 || ^5.0.0
@@ -10701,7 +10666,7 @@ packages:
       vite:
         optional: true
     dependencies:
-      vite: 5.0.7(@types/node@20.10.4)
+      vite: 5.0.9(@types/node@20.10.4)
 
   /vitest@1.0.4(@types/node@20.10.4):
     resolution: {integrity: sha512-s1GQHp/UOeWEo4+aXDOeFBJwFzL6mjycbQwwKWX2QcYfh/7tIerS59hWQ20mxzupTJluA2SdwiBuWwQHH67ckg==}
