@@ -74,6 +74,11 @@ function followSearch(params: Record<string, string>) {
     <ViewTransitions />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
+    {
+      !url.startsWith('/resource/') && (
+        <link rel="alternate" type="application/rss+xml" title="RSS Feeds" href={feed} />
+      )
+    }
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" sizes="64x64" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
