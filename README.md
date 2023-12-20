@@ -15,8 +15,6 @@
 
 ![home](./assets/home.png)
 
-![anime](./assets/anime.jpeg)
-
 ## API Usage
 
 ```bash
