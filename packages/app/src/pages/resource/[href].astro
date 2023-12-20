@@ -1,4 +1,7 @@
 ---
+import { APP_HOST } from '~build/meta';
+
+import { parse } from 'anitomy';
 import { formatInTimeZone } from 'date-fns-tz';
 
 import Layout from '../../layouts/Layout.astro';
@@ -15,6 +18,25 @@ if (!detail) {
 }
 
 const files = detail.magnet.files.filter((f) => f.size !== '種子可能不存在' && f.size !== 'Bytes');
+
+const info = parse(detail.title);
+const schema = info
+  ? JSON.stringify({
+      '@context': 'http://schema.org',
+      '@type': 'TVEpisode',
+      partOfTVSeries: {
+        '@type': 'TVSeries',
+        name: info.title
+      },
+      partOfSeason: {
+        '@type': 'TVSeason',
+        seasonNumber: `${info.season ?? 1}`
+      },
+      episodeNumber: info.episode.number !== undefined ? `${info.episode.number}` : undefined,
+      datePublished: detail.createdAt,
+      url: Astro.url.toString()
+    })
+  : undefined;
 ---
 
 <Layout title={`${detail.title}`}>
@@ -119,6 +141,8 @@ const files = detail.magnet.files.filter((f) => f.size !== '種子可能不存�
     </div>
   </div>
 </Layout>
+
+{info && <script type="application/ld+json" set:html={schema} />}
 
 <style is:global>
   .detail .description hr {
