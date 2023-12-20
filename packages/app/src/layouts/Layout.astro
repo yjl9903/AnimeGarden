@@ -20,7 +20,10 @@ export interface Props {
   timestamp?: Date;
 }
 
-const { title, description = '動漫花園 3-rd party mirror site and API endpoint' } = Astro.props;
+const {
+  title,
+  description = 'Anime Garden 是動漫花園的第三方镜像站。用户可以按照字幕组、发布时间、类型、标题、发布者等条件筛选和搜索自己感兴趣的动画。'
+} = Astro.props;
 
 const url = Astro.url.pathname;
 const search = Astro.url.searchParams;
@@ -71,9 +74,10 @@ function followSearch(params: Record<string, string>) {
     <ViewTransitions />
 
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" sizes="180x180" />
-    <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate icon" sizes="64x64" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
+    <link rel="mask-icon" color="#FFFFFF" href="/favicon.svg" />
     <meta name="msapplication-TileColor" content="#FFFFFF" />
     <meta name="theme-color" content="#ffffff" />
     <script src="/src/pwa.ts"></script>
@@ -83,7 +87,7 @@ function followSearch(params: Record<string, string>) {
     <meta property="og:description" content={description} />
     <meta property="og:image" content="http://garden.onekuma.cn/twitter.jpg" />
 
-    <title>{title}</title>
+    <title>{`${title ? `${title} | ` : ''}Anime Garden 動漫花園第三方镜像站`}</title>
   </head>
   <body>
     <header class="w-full pt-8vh bg-[#fef8f7] border-b">
