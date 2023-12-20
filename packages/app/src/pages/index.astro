@@ -1,15 +1,23 @@
 ---
+import { stringifySearchURL } from 'animegarden';
+
 import Layout from '../layouts/Layout.astro';
 
 import Pagination from '../components/Pagination.astro';
 import ResourceTable from '../components/ResourceTable.astro';
 import ErrorNotification from '../components/Error.astro';
+import { parseSearch } from '../components/Search/utils';
 
 import { getRuntimeEnv } from '../utils';
 import { wfetch, fetchResources } from '../fetch';
 import { Weekday, calendar, getDisplayName, getSearchURL } from '../logic/anime';
 
 const env = getRuntimeEnv(Astro.locals);
+
+if (Astro.url.searchParams.get('q')) {
+  const url = stringifySearchURL(Astro.url.origin, parseSearch(Astro.url.searchParams.get('q')!));
+  return Astro.redirect(`/resources/1${url.search}`);
+}
 
 const { ok, resources, timestamp } = await fetchResources(
   { page: 1, pageSize: 80, type: '動畫' },
@@ -78,6 +86,19 @@ const { ok, resources, timestamp } = await fetchResources(
     }
   </div>
 </Layout>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "url": "https://garden.onekuma.cn/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://garden.onekuma.cn/?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+</script>
 
 <style is:global>
   #weekday-1:checked ~ .weekday-select > label:nth-child(1),
