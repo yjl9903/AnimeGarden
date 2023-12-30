@@ -208,7 +208,7 @@ importers:
         version: 3.11.11
       kysely-planetscale:
         specifier: ^1.4.0
-        version: 1.4.0(@planetscale/database@1.13.0)(kysely@0.26.3)
+        version: 1.4.0(@planetscale/database@1.13.0)(kysely@0.27.0)
       memofunc:
         specifier: ^0.0.8
         version: 0.0.8
@@ -226,8 +226,8 @@ importers:
         specifier: ^0.5.1
         version: 0.5.1
       kysely:
-        specifier: ^0.26.3
-        version: 0.26.3
+        specifier: ^0.27.0
+        version: 0.27.0
       prisma:
         specifier: 5.7.1
         version: 5.7.1
@@ -6631,7 +6631,7 @@ packages:
     resolution: {integrity: sha512-Y+60/zizpJ3HRH8DCss+q95yr6145JXZo46OTpFvDZWLfRCE4qChOyk1b26nMaNpfHHgxagk9dXT5OP0Tfe+dQ==}
     dev: true
 
-  /kysely-planetscale@1.4.0(@planetscale/database@1.13.0)(kysely@0.26.3):
+  /kysely-planetscale@1.4.0(@planetscale/database@1.13.0)(kysely@0.27.0):
     resolution: {integrity: sha512-dM2xgOM50+IiOIrSCEn/6lgXcE7J752oNpV6NcIYNgG/AfYGMtWm2ZK7PyeIPy5JG1jZvQvqwTFbGK4HGH/hJw==}
     peerDependencies:
       '@planetscale/database': '*'
@@ -6639,11 +6639,11 @@ packages:
     dependencies:
       '@planetscale/database': 1.13.0
       date-fns: 2.30.0
-      kysely: 0.26.3
+      kysely: 0.27.0
     dev: false
 
-  /kysely@0.26.3:
-    resolution: {integrity: sha512-yWSgGi9bY13b/W06DD2OCDDHQmq1kwTGYlQ4wpZkMOJqMGCstVCFIvxCCVG4KfY1/3G0MhDAcZsip/Lw8/vJWw==}
+  /kysely@0.27.0:
+    resolution: {integrity: sha512-wxOVru+SYTzofm59GlN0Tyo0v23qfX9pyU0n6Fc0GZZ5YldcyswenWsCoETqiJdtx7ThnxZpicqA2aqPMZV7DQ==}
     engines: {node: '>=14.0.0'}
 
   /lazystream@1.0.1:
