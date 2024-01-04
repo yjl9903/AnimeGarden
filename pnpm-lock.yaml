@@ -81,7 +81,7 @@ importers:
     dependencies:
       '@astrojs/cloudflare':
         specifier: ^8.0.1
-        version: 8.0.1(astro@4.0.9)
+        version: 8.0.1(astro@4.1.0)
       '@astrojs/react':
         specifier: ^3.0.9
         version: 3.0.9(@types/react-dom@18.2.18)(@types/react@18.2.46)(react-dom@18.2.0)(react@18.2.0)(vite@5.0.10)
@@ -98,8 +98,8 @@ importers:
         specifier: ^0.7.1
         version: 0.7.1(nanostores@0.9.5)(react@18.2.0)
       astro:
-        specifier: ^4.0.9
-        version: 4.0.9(@types/node@20.10.6)(typescript@5.3.3)
+        specifier: ^4.1.0
+        version: 4.1.0(@types/node@20.10.6)(typescript@5.3.3)
       astro-robots-txt:
         specifier: ^1.0.0
         version: 1.0.0
@@ -133,7 +133,7 @@ importers:
     devDependencies:
       '@astrojs/node':
         specifier: ^7.0.4
-        version: 7.0.4(astro@4.0.9)
+        version: 7.0.4(astro@4.1.0)
       '@iconify-json/carbon':
         specifier: ^1.1.27
         version: 1.1.27
@@ -166,7 +166,7 @@ importers:
         version: 0.2.2
       '@vite-pwa/astro':
         specifier: ^0.2.0
-        version: 0.2.0(astro@4.0.9)(vite-plugin-pwa@0.17.4)
+        version: 0.2.0(astro@4.1.0)(vite-plugin-pwa@0.17.4)
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -272,7 +272,7 @@ packages:
       leven: 3.1.0
     dev: true
 
-  /@astrojs/cloudflare@8.0.1(astro@4.0.9):
+  /@astrojs/cloudflare@8.0.1(astro@4.1.0):
     resolution: {integrity: sha512-Cb7Ym7kj2sfGTbkEAdVfNY2qqvbXoui6m8CO3dYow/8P6nNn3nnaDeV7aqcDjcytpB5S3i8B7czhI2u7Tf5JhQ==}
     peerDependencies:
       astro: ^3.0.0 || ^4.0.0
@@ -280,7 +280,7 @@ packages:
       '@astrojs/underscore-redirects': 0.3.3
       '@cloudflare/workers-types': 4.20231218.0
       '@iarna/toml': 2.2.5
-      astro: 4.0.9(@types/node@20.10.6)(typescript@5.3.3)
+      astro: 4.1.0(@types/node@20.10.6)(typescript@5.3.3)
       dotenv: 16.3.1
       esbuild: 0.19.11
       find-up: 6.3.0
@@ -322,12 +322,12 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@astrojs/node@7.0.4(astro@4.0.9):
+  /@astrojs/node@7.0.4(astro@4.1.0):
     resolution: {integrity: sha512-og36WkHZ+v32filXWx2Iu9iwj6v9QUQaBl5GcTHVGmw1lrGdztl0MtbqbY56az4ew/HkWq3GPSSQ70aZd0u86Q==}
     peerDependencies:
       astro: ^4.0.0
     dependencies:
-      astro: 4.0.9(@types/node@20.10.6)(typescript@5.3.3)
+      astro: 4.1.0(@types/node@20.10.6)(typescript@5.3.3)
       send: 0.18.0
       server-destroy: 1.0.1
     transitivePeerDependencies:
@@ -3903,13 +3903,13 @@ packages:
       unconfig: 0.3.11
     dev: true
 
-  /@vite-pwa/astro@0.2.0(astro@4.0.9)(vite-plugin-pwa@0.17.4):
+  /@vite-pwa/astro@0.2.0(astro@4.1.0)(vite-plugin-pwa@0.17.4):
     resolution: {integrity: sha512-1MBNbRo9I9fp9sUSoaQfI/xHVDRKRoUsWETDJMVoKoctZYfm4fZgb7EN76WJdejW/vup+3+uoFlDMCnca+vZzA==}
     peerDependencies:
       astro: ^1.6.0 || ^2.0.0 || ^3.0.0 || ^4.0.0
       vite-plugin-pwa: '>=0.17.3 <1'
     dependencies:
-      astro: 4.0.9(@types/node@20.10.6)(typescript@5.3.3)
+      astro: 4.1.0(@types/node@20.10.6)(typescript@5.3.3)
       vite-plugin-pwa: 0.17.4(vite@5.0.10)(workbox-build@7.0.0)(workbox-window@7.0.0)
     dev: true
 
@@ -4118,6 +4118,11 @@ packages:
       tslib: 2.6.2
     dev: false
 
+  /aria-query@5.3.0:
+    resolution: {integrity: sha512-b0P0sZPKtyu8HkeRAfCq0IfURZK+SuwMjY1UXGBU27wpAiTwQAIlq56IbIO+ytk/JjS1fMR14ee5WBBfKi5J6A==}
+    dependencies:
+      dequal: 2.0.3
+
   /array-buffer-byte-length@1.0.0:
     resolution: {integrity: sha512-LPuwb2P+NrQw3XhxGc36+XSvuBPopovXYTR9Ew++Du9Yb/bx5AzBfrIsBoj0EZUifjQU+sHL21sseZ3jerWO/A==}
     dependencies:
@@ -4167,8 +4172,8 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /astro@4.0.9(@types/node@20.10.6)(typescript@5.3.3):
-    resolution: {integrity: sha512-xQHapUGqdHQuaBDCYZxyVh5rvpgIUuulsEITl7bOQ6rRXwbQtoGc5gQ95dGV830PEpvyAGVhQ9pA8PIwfCMpeg==}
+  /astro@4.1.0(@types/node@20.10.6)(typescript@5.3.3):
+    resolution: {integrity: sha512-xbLWqvMn2JFyv7FpzHiXFn17bRS0P/b4cdEPXMMZOpBI9V8ZC33o6Xs+c59/pYSZpYiNd1HTg778XT5MhcpyKw==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
@@ -4184,6 +4189,8 @@ packages:
       '@babel/types': 7.23.6
       '@types/babel__core': 7.20.5
       acorn: 8.11.3
+      aria-query: 5.3.0
+      axobject-query: 4.0.0
       boxen: 7.1.1
       chokidar: 3.5.3
       ci-info: 4.0.0
@@ -4294,6 +4301,11 @@ packages:
     transitivePeerDependencies:
       - debug
     dev: false
+
+  /axobject-query@4.0.0:
+    resolution: {integrity: sha512-+60uv1hiVFhHZeO+Lz0RYzsVHy5Wr1ayX0mwda9KPDVLNJgZ1T9Ny7VmFbLDzxsH0D87I86vgj3gFrjTJUYznw==}
+    dependencies:
+      dequal: 2.0.3
 
   /b4a@1.6.4:
     resolution: {integrity: sha512-fpWrvyVHEKyeEvbKZTVOeZF3VSKKWtJxFIxX/jaVPf+cLbGUSitjb49pHLqPV2BUNNZ0LcoeEGfE/YCpyDYHIw==}
