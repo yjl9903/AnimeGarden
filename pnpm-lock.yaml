@@ -174,11 +174,11 @@ importers:
         specifier: workspace:*
         version: link:../anitomy
       date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
+        specifier: ^3.1.0
+        version: 3.1.0
       date-fns-tz:
         specifier: ^2.0.0
-        version: 2.0.0(date-fns@2.30.0)
+        version: 2.0.0(date-fns@3.1.0)
       unocss:
         specifier: ^0.58.3
         version: 0.58.3(postcss@8.4.32)(rollup@2.79.1)(vite@5.0.11)
@@ -5021,12 +5021,12 @@ packages:
   /data-uri-to-buffer@2.0.2:
     resolution: {integrity: sha512-ND9qDTLc6diwj+Xe5cdAgVTbLVdXbtxTJRXRhli8Mowuaan+0EJOtdqJ0QCHNSSPyoXGx9HX2/VMnKeC34AChA==}
 
-  /date-fns-tz@2.0.0(date-fns@2.30.0):
+  /date-fns-tz@2.0.0(date-fns@3.1.0):
     resolution: {integrity: sha512-OAtcLdB9vxSXTWHdT8b398ARImVwQMyjfYGkKD2zaGpHseG2UPHbHjXELReErZFxWdSLph3c2zOaaTyHfOhERQ==}
     peerDependencies:
       date-fns: '>=2.0.0'
     dependencies:
-      date-fns: 2.30.0
+      date-fns: 3.1.0
     dev: true
 
   /date-fns@2.30.0:
@@ -5034,6 +5034,11 @@ packages:
     engines: {node: '>=0.11'}
     dependencies:
       '@babel/runtime': 7.23.7
+    dev: false
+
+  /date-fns@3.1.0:
+    resolution: {integrity: sha512-ZO7yefXV/wCWzd3I9haCHmfzlfA3i1a2HHO7ZXjtJrRjXt8FULKJ2Vl8wji3XYF4dQ0ZJ/tokXDZeYlFvgms9Q==}
+    dev: true
 
   /debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
