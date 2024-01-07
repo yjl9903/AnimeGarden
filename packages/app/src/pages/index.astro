@@ -85,20 +85,20 @@ const { ok, resources, timestamp } = await fetchResources(
       )
     }
   </div>
-</Layout>
 
-<script type="application/ld+json">
-  {
-    "@context": "http://schema.org",
-    "@type": "WebSite",
-    "url": "https://garden.onekuma.cn/",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://garden.onekuma.cn/?q={search_term_string}",
-      "query-input": "required name=search_term_string"
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "url": "https://garden.onekuma.cn/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://garden.onekuma.cn/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
     }
-  }
-</script>
+  </script>
+</Layout>
 
 <style is:global>
   #weekday-1:checked ~ .weekday-select > label:nth-child(1),
