@@ -103,6 +103,11 @@ const info = parse(`[Lilith-Raws] 熊熊勇闖異世界 PUNCH！ / Kuma Kuma Kum
 
 Follow [CONTRIBUTING.md](./CONTRIBUTING.md) to setup the environment and start developing.
 
+## Related Projects
+
++ [AnimeSpace](https://github.com/yjl9903/AnimeSpace): Keep following your favourite anime
++ [bgmc](https://github.com/yjl9903/bgmc): Bangumi Data / API Clients
+
 ## Credits
 
 + [動漫花園](https://share.dmhy.org/)
