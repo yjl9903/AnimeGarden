@@ -104,8 +104,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       bgmd:
-        specifier: ^0.0.33
-        version: 0.0.33
+        specifier: ^0.0.34
+        version: 0.0.34
       cmdk:
         specifier: ^0.2.0
         version: 0.2.0(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0)
@@ -201,8 +201,8 @@ importers:
         specifier: workspace:*
         version: link:../anitomy
       bgmd:
-        specifier: ^0.0.33
-        version: 0.0.33
+        specifier: ^0.0.34
+        version: 0.0.34
       hono:
         specifier: ^3.12.0
         version: 3.12.0
@@ -4407,21 +4407,21 @@ packages:
   /base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
-  /bgmc@0.0.5:
-    resolution: {integrity: sha512-pniFKDQ15H1owm8UNzUrBGss3Nukk2AO+riONkI4/7am2X0ldrxjHEJXsqrsDZ4HG2tdKR6XwZWY8VCm8R5VfA==}
+  /bgmc@0.0.8:
+    resolution: {integrity: sha512-H7JEde7q/Ah1EobHwlj/Lyfvs+1pqy9mIXfkt4T315wYmUiPa6PhG3CtdFGQp4TAZ9aGw+Zhxv/La7PtL+F87A==}
     engines: {node: '>=v20.8.0'}
     hasBin: true
     dependencies:
       breadc: 0.9.7
     dev: false
 
-  /bgmd@0.0.33:
-    resolution: {integrity: sha512-HovkQXcjg6r6wmFxYomr4nunFMUZXqIC0Pjk+7U6yoRsTNtL7dd9zhiFApDIAl8sXA745oHZQJbKh5DgNLQrOQ==}
+  /bgmd@0.0.34:
+    resolution: {integrity: sha512-yGXhFoqZa/Tvh8FAIPfPtCdJiFosEQ0tN5B6nTJVlKVG2Hfr1+uSWoFjvWwfUPwuyvqQpoK8JVq6z8K0HD3Jqw==}
     engines: {node: '>=v20.8.0'}
     dependencies:
       bangumi-data: 0.3.129
-      bgmc: 0.0.5
-      tmdbc: 0.0.1
+      bgmc: 0.0.8
+      tmdbc: 0.0.2
       type-fest: 4.9.0
     dev: false
 
@@ -9890,8 +9890,8 @@ packages:
     engines: {node: '>=14.0.0'}
     dev: true
 
-  /tmdbc@0.0.1:
-    resolution: {integrity: sha512-ZOAQ40+98oMA+waZEPvk6erj3tvOVr0SIoUZbwr48TFP+PCmC3Va8DPUbpxLYJ3O/LX4iHyjg3bU/s3/odxKkg==}
+  /tmdbc@0.0.2:
+    resolution: {integrity: sha512-dKVpUVyRtVuFZFmmEQvF9XQjiqCar2MFct3al2UZLZH8ylT/lQNHhx1cdB3sl7n1589OttkAXVg6Sfk6vC+ZvA==}
     engines: {node: '>=v20.8.0'}
     hasBin: true
     dependencies:
