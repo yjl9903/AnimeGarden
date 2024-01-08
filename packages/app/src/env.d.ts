@@ -21,4 +21,8 @@ declare module '~build/meta' {
   export const WORKER_HOST: string;
 
   export const CF_BEACON: string | undefined;
+
+  export const UMAMI_HOST: string | undefined;
+
+  export const UMAMI_ID: string | undefined;
 }

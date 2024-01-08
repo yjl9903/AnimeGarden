@@ -1,5 +1,5 @@
 ---
-import { CF_BEACON } from '~build/meta';
+import { CF_BEACON, UMAMI_HOST, UMAMI_ID } from '~build/meta';
 import { pwaInfo } from 'virtual:pwa-info';
 import { ViewTransitions } from 'astro:transitions';
 
@@ -298,5 +298,13 @@ function followSearch(params: Record<string, string>) {
         : undefined}
       data-cf-beacon={`{"token": "${CF_BEACON}"}`}></script>
     <!-- End Cloudflare Web Analytics -->
+
+    <!-- Umami Cloud -->
+    {
+      !import.meta.env.DEV && UMAMI_HOST && UMAMI_ID ? (
+        <script defer src={`https://${UMAMI_HOST}/script.js`} data-website-id={UMAMI_ID} />
+      ) : null
+    }
+    <!-- End Umami Cloud -->
   </body>
 </html>

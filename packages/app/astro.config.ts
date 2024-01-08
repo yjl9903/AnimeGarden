@@ -93,7 +93,12 @@ export default defineConfig({
         /**
          * Cloudflare Web Analytics configuration
          */
-        CF_BEACON: 'aa68fa3bf166467082bc79ba029b057f'
+        CF_BEACON: 'aa68fa3bf166467082bc79ba029b057f',
+        /**
+         * Umami Cloud
+         */
+        UMAMI_HOST: 'us.umami.is',
+        UMAMI_ID: '7e93a10d-26a9-4a3a-aa36-99294a5296f3'
       }
     })
   ],
