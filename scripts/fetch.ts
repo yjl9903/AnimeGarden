@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+import fs from 'fs-extra';
 import path from 'node:path';
 import { fetch } from 'undici';
 
@@ -22,6 +22,7 @@ const ufetch = async (url: RequestInfo, init?: RequestInit): Promise<Response> =
     const env = process?.env ?? {};
     const list = ['HTTPS_PROXY', 'https_proxy', 'HTTP_PROXY', 'http_proxy'];
     for (const l of list) {
+      // @ts-ignore
       const t = env[l];
       if (!!t) {
         return t;
@@ -32,6 +33,9 @@ const ufetch = async (url: RequestInfo, init?: RequestInit): Promise<Response> =
 };
 
 async function main(start: number, dist: string) {
+  await fs.mkdir(dist, { recursive: true });
+
+  let empty = 0;
   for (let page = start; ; page++) {
     console.log(`Fetch page ${page}`);
 
@@ -45,6 +49,15 @@ async function main(start: number, dist: string) {
       JSON.stringify(r, null, 2),
       'utf-8'
     );
+
+    if (r.length === 0) {
+      empty++;
+      if (empty >= 10) {
+        break;
+      }
+    } else {
+      empty = 0;
+    }
   }
 }
 
