@@ -50,55 +50,6 @@ Assume your environment has built-in [Fetch](https://developer.mozilla.org/en-US
 
 You can check more filter conditions [FilterOptions](https://github.com/yjl9903/AnimeGarden/blob/main/packages/animegarden/src/garden/types.ts) and usage examples in [./scripts/](https://github.com/yjl9903/AnimeGarden/blob/main/scripts/) directory.
 
-### anitomy
-
-[![version](https://img.shields.io/npm/v/anitomy?label=anitomy)](https://www.npmjs.com/package/anitomy)
-
-A TypeScript port of [Anitomy](https://github.com/erengy/anitomy) inspired by [AnitomySharp](https://github.com/tabratton/AnitomySharp) with more optimization for [動漫花園](https://share.dmhy.org/).
-
-```ts
-import { parse } from 'anitomy'
-
-const info = parse(`[Lilith-Raws] 熊熊勇闖異世界 PUNCH！ / Kuma Kuma Kuma Bear S02 - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]`)
-```
-
-```js
-{
-  "audio": {
-    "term": "AAC",
-  },
-  "episode": {
-    "number": 2,
-    "numberAlt": undefined,
-    "title": undefined,
-  },
-  "file": {
-    "checksum": undefined,
-    "extension": "MP4",
-    "name": "[Lilith-Raws] 熊熊勇闖異世界 PUNCH！ / Kuma Kuma Kuma Bear S02 - 02 [Baha][WEB-DL][1080p][AVC AAC][CHT][MP4]",
-  },
-  "language": "CHT",
-  "month": undefined,
-  "release": {
-    "group": "Lilith-Raws",
-    "version": undefined,
-  },
-  "season": "2",
-  "source": "WEB-DL",
-  "subtitles": undefined,
-  "title": "熊熊勇闖異世界 PUNCH！ / Kuma Kuma Kuma Bear S02",
-  "type": undefined,
-  "video": {
-    "resolution": "1080p",
-    "term": "AVC",
-  },
-  "volume": {
-    "number": undefined,
-  },
-  "year": undefined,
-}
-```
-
 ## Local Development
 
 Follow [CONTRIBUTING.md](./CONTRIBUTING.md) to setup the environment and start developing.
@@ -106,6 +57,7 @@ Follow [CONTRIBUTING.md](./CONTRIBUTING.md) to setup the environment and start d
 ## Related Projects
 
 + [AnimeSpace](https://github.com/yjl9903/AnimeSpace): Keep following your favourite anime
++ [Anitomy](https://github.com/yjl9903/anitomy): A TypeScript port of Anitomy inspired by AnitomySharp.
 + [bgmc](https://github.com/yjl9903/bgmc): Bangumi Data / API Clients
 
 ## Credits
