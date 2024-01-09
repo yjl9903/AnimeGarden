@@ -25,13 +25,13 @@ You can find the interactive Open API document [here](https://garden.onekuma.cn/
 
 If you are using JavaScript / TypeScript, you can just use the API wrapper `fetchResources` and `fetchResourceDetail` in package [animegarden](https://www.npmjs.com/package/animegarden).
 
-## Packages
-
-### animegarden
-
-[![version](https://img.shields.io/npm/v/animegarden?label=animegarden)](https://www.npmjs.com/package/animegarden)
+## Package Usage
 
 A scraper for [動漫花園](https://share.dmhy.org/).
+
+```bash
+npm i animegarden
+```
 
 ```ts
 import { fetchDmhyPage, fetchResources } from 'animegarden'
