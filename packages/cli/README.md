@@ -12,6 +12,18 @@ CLI manager for [AnimeGarden](https://garden.onekuma.cn/).
 npm i -g @animegarden/cli
 ```
 
+## Usage
+
+### Fetch resouces list
+
+```bash
+animegarden fetch dmhy --from=1 --to=10 --out-dir=output
+```
+
+```bash
+animegarden fetch moe --from=1 --to=10 --out-dir=output
+```
+
 ## Credits
 
 + [動漫花園](https://share.dmhy.org/)

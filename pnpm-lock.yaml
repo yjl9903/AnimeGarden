@@ -198,9 +198,15 @@ importers:
       breadc:
         specifier: ^0.9.7
         version: 0.9.7
+      fs-extra:
+        specifier: ^11.2.0
+        version: 11.2.0
       simptrad:
         specifier: ^0.1.0
         version: 0.1.0
+      undici:
+        specifier: ^6.3.0
+        version: 6.3.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -5807,7 +5813,6 @@ packages:
       graceful-fs: 4.2.11
       jsonfile: 6.1.0
       universalify: 2.0.1
-    dev: true
 
   /fs-extra@9.1.0:
     resolution: {integrity: sha512-hcg3ZmepS30/7BSFqRvoo3DOMQu7IjqxO5nCDt+zM9XWjb33Wg7ziNT+Qvqbuc3+gWpzO02JubVyk2G4Zvo1OQ==}
@@ -10298,7 +10303,6 @@ packages:
     engines: {node: '>=18.0'}
     dependencies:
       '@fastify/busboy': 2.1.0
-    dev: true
 
   /unherit@3.0.1:
     resolution: {integrity: sha512-akOOQ/Yln8a2sgcLj4U0Jmx0R5jpIg2IUyRrWOzmEbjBtGzBdHtSeFKgoEcoH4KYIG/Pb8GQ/BwtYm0GCq1Sqg==}
