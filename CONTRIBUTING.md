@@ -2,14 +2,14 @@
 
 ## Setup
 
-We use [`pnpm`](https://pnpm.io/) for most of the projects to manage monorepo.
+We use [`pnpm`](https://pnpm.io/) to manage this monorepo.
 
 To set the repository up:
 
-| Step | Command |
+| Steps | Command |
 |-------|--------|
 | 1. Install [Node.js](https://nodejs.org/), using the [latest LTS](https://nodejs.org/en/about/releases/) | - |
-| 2. Install [pnpm](https://pnpm.io/installation) | - |
+| 2. Install [pnpm](https://pnpm.io/installation) | `npm i -g pnpm` |
 | 3. Install dependencies under the project root | `pnpm i` |
 
 ## Packages
@@ -24,18 +24,6 @@ pnpm -C packages/animegarden build
 
 # Run test
 pnpm -C packages/animegarden test
-```
-
-### anitomy
-
-Package is located at `packages/anitomy`.
-
-```bash
-# Build project
-pnpm -C packages/anitomy build
-
-# Run test
-pnpm -C packages/anitomy test
 ```
 
 ### Web Application
