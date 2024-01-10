@@ -189,6 +189,12 @@ importers:
 
   packages/cli:
     dependencies:
+      '@breadc/color':
+        specifier: ^0.9.7
+        version: 0.9.7
+      breadc:
+        specifier: ^0.9.7
+        version: 0.9.7
       simptrad:
         specifier: ^0.1.0
         version: 0.1.0

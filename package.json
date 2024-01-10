@@ -3,6 +3,7 @@
   "version": "0.0.33",
   "private": true,
   "scripts": {
+    "animegarden": "tsx packages/cli/src/cli.ts",
     "build": "turbo run build",
     "build:app": "pnpm -C packages/app build",
     "dev": "turbo run dev --parallel",
