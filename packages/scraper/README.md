@@ -12,6 +12,15 @@ Scraper for [AnimeGarden](https://garden.onekuma.cn/).
 npm i @animegarden/scraper
 ```
 
+## Usage
+
+```ts
+import { fetchDmhyPage } from 'animegarden'
+
+// Fetch the first page of 動漫花園
+const dmhy = await fetchDmhyPage(fetch)
+```
+
 ## Credits
 
 + [動漫花園](https://share.dmhy.org/)
