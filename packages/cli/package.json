@@ -1,12 +1,14 @@
 {
   "name": "@animegarden/cli",
   "version": "0.0.33",
-  "description": "A scraper for 動漫花園.",
+  "description": "CLI manager for AnimeGarden.",
   "keywords": [
     "dmhy",
     "scraper",
     "animegarden",
-    "animespace"
+    "animespace",
+    "CLI",
+    "breadc"
   ],
   "homepage": "https://github.com/yjl9903/AnimeGarden#readme",
   "bugs": {
@@ -30,13 +32,13 @@
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "bin": {
+    "animegarden": "./cli.mjs"
+  },
   "files": [
     "*.mjs",
     "dist"
   ],
-  "bin": {
-    "animegarden": "./cli.mjs"
-  },
   "scripts": {
     "build": "unbuild",
     "format": "prettier --write src/**/*.ts test/**/*.ts",
