@@ -78,8 +78,8 @@ importers:
   packages/app:
     dependencies:
       '@astrojs/cloudflare':
-        specifier: ^8.0.2
-        version: 8.0.2(astro@4.1.1)
+        specifier: ^8.1.0
+        version: 8.1.0(astro@4.1.1)
       '@astrojs/react':
         specifier: ^3.0.9
         version: 3.0.9(@types/react-dom@18.2.18)(@types/react@18.2.47)(react-dom@18.2.0)(react@18.2.0)(vite@5.0.11)
@@ -270,8 +270,8 @@ packages:
       leven: 3.1.0
     dev: true
 
-  /@astrojs/cloudflare@8.0.2(astro@4.1.1):
-    resolution: {integrity: sha512-BN3s7HKt0kzO2epBgNgQuda1+MQK9mRNNyA3Cnlrnvb2oFmduDnoaxqDBZEH7I6U+TcMP0kJVb/E4MF/UiTKUQ==}
+  /@astrojs/cloudflare@8.1.0(astro@4.1.1):
+    resolution: {integrity: sha512-RSkthOcw1/ZAA9PhSX9LEWRvbyLJ/vTJCv8nJ4LxBqMlR5j7Lt6LnQP0hI/LAlDHgnG1Hc4Hd7tB2SF85OivJw==}
     peerDependencies:
       astro: ^3.0.0 || ^4.0.0
     dependencies:
