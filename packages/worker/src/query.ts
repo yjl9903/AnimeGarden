@@ -3,12 +3,8 @@ import type { Context } from 'hono';
 import { sql } from 'kysely';
 import { hash } from 'ohash';
 import { memoAsync } from 'memofunc';
-import {
-  parseSearchURL,
-  normalizeTitle,
-  fetchDmhyDetail,
-  ResolvedFilterOptions
-} from 'animegarden';
+import { fetchDmhyDetail } from '@animegarden/scraper';
+import { parseSearchURL, normalizeTitle, ResolvedFilterOptions } from 'animegarden';
 
 import type { Env } from './types';
 

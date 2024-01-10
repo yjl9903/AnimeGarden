@@ -16,6 +16,7 @@
     "test:ci": "vitest --run"
   },
   "dependencies": {
+    "@animegarden/scraper": "workspace:*",
     "@planetscale/database": "^1.13.0",
     "animegarden": "workspace:*",
     "anitomy": "0.0.33",

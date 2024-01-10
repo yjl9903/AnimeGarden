@@ -47,7 +47,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@animegarden/scraper": "workspace:*",
     "@breadc/color": "^0.9.7",
+    "animegarden": "workspace:*",
     "breadc": "^0.9.7",
     "simptrad": "^0.1.0",
     "zod": "^3.22.4"

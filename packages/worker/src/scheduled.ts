@@ -1,5 +1,6 @@
 import { parse } from 'anitomy';
-import { Resource, fetchDmhyPage, normalizeTitle } from 'animegarden';
+import { fetchDmhyPage } from '@animegarden/scraper';
+import { Resource, normalizeTitle } from 'animegarden';
 
 import type { Env } from './types';
 

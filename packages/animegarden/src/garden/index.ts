@@ -13,7 +13,7 @@ export * from './url';
 
 export * from './types';
 
-export { normalizeTitle } from './utils';
+export { normalizeTitle, retryFn } from './utils';
 
 export { makeResourcesFilter } from './filter';
 

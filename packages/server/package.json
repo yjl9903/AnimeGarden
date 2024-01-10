@@ -42,7 +42,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "cheerio": "1.0.0-rc.12",
+    "@animegarden/scraper": "workspace:*",
+    "animegarden": "workspace:*",
     "simptrad": "^0.1.0",
     "zod": "^3.22.4"
   },

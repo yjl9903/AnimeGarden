@@ -65,9 +65,6 @@ importers:
 
   packages/animegarden:
     dependencies:
-      cheerio:
-        specifier: 1.0.0-rc.12
-        version: 1.0.0-rc.12
       simptrad:
         specifier: ^0.1.0
         version: 0.1.0
@@ -189,9 +186,15 @@ importers:
 
   packages/cli:
     dependencies:
+      '@animegarden/scraper':
+        specifier: workspace:*
+        version: link:../scraper
       '@breadc/color':
         specifier: ^0.9.7
         version: 0.9.7
+      animegarden:
+        specifier: workspace:*
+        version: link:../animegarden
       breadc:
         specifier: ^0.9.7
         version: 0.9.7
@@ -204,6 +207,9 @@ importers:
 
   packages/scraper:
     dependencies:
+      animegarden:
+        specifier: workspace:*
+        version: link:../animegarden
       cheerio:
         specifier: 1.0.0-rc.12
         version: 1.0.0-rc.12
@@ -216,9 +222,12 @@ importers:
 
   packages/server:
     dependencies:
-      cheerio:
-        specifier: 1.0.0-rc.12
-        version: 1.0.0-rc.12
+      '@animegarden/scraper':
+        specifier: workspace:*
+        version: link:../scraper
+      animegarden:
+        specifier: workspace:*
+        version: link:../animegarden
       simptrad:
         specifier: ^0.1.0
         version: 0.1.0
@@ -228,6 +237,9 @@ importers:
 
   packages/worker:
     dependencies:
+      '@animegarden/scraper':
+        specifier: workspace:*
+        version: link:../scraper
       '@planetscale/database':
         specifier: ^1.13.0
         version: 1.13.0

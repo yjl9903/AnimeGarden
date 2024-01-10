@@ -1,8 +1,8 @@
 import { load } from 'cheerio';
 
-import type { Resource, ResourceDetail, ResourceType } from './types';
+import type { Resource, ResourceDetail, ResourceType } from 'animegarden';
 
-import { retryFn } from './garden/utils';
+import { retryFn } from 'animegarden';
 
 export interface FetchDmhyPageOptions {
   page?: number;
