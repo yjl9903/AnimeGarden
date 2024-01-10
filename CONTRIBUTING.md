@@ -77,3 +77,25 @@ DATABASE_HOST=...
 DATABASE_USERNAME=...
 DATABASE_PASSWORD=...
 ```
+
+## Deploy your own AnimeGarden
+
+Make sure you have setup the environment.
+
+### Fetch initial data
+
+```bash
+pnpm animegarden fetch dmhy --output output/dmhy
+pnpm animegarden fetch moe  --output output/moe
+```
+
+These two commands will fetch data from the remote and write to files in the dir `output/dmhy` and `output/moe`.
+
+Fetching all the data usually **takes several hours**. You can use the `--from <page>` and `--to <page>` arguments to specify the fetching range.
+
+### Setup the database
+
+```bash
+pnpm animegarden migrate
+pnpm animegarden insert output/dmhy output/moe
+```
