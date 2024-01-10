@@ -187,6 +187,39 @@ importers:
         specifier: ^4.2.3
         version: 4.2.3(typescript@5.3.3)(vite@5.0.11)
 
+  packages/cli:
+    dependencies:
+      simptrad:
+        specifier: ^0.1.0
+        version: 0.1.0
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+
+  packages/scraper:
+    dependencies:
+      cheerio:
+        specifier: 1.0.0-rc.12
+        version: 1.0.0-rc.12
+      simptrad:
+        specifier: ^0.1.0
+        version: 0.1.0
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+
+  packages/server:
+    dependencies:
+      cheerio:
+        specifier: 1.0.0-rc.12
+        version: 1.0.0-rc.12
+      simptrad:
+        specifier: ^0.1.0
+        version: 0.1.0
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
+
   packages/worker:
     dependencies:
       '@planetscale/database':

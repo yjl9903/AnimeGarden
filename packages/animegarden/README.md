@@ -5,7 +5,7 @@
 [![Deploy Worker](https://github.com/yjl9903/AnimeGarden/actions/workflows/deploy.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/deploy.yml)
 [![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://garden.onekuma.cn)
 
-A scraper for [動漫花園](https://share.dmhy.org/).
+API client and utils for [AnimeGarden](https://garden.onekuma.cn/).
 
 ## Installation
 

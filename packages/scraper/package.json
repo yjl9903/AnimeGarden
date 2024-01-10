@@ -1,7 +1,7 @@
 {
-  "name": "animegarden",
+  "name": "@animegarden/scraper",
   "version": "0.0.33",
-  "description": "A scraper for 動漫花園.",
+  "description": "A scraper for AnimeGarden.",
   "keywords": [
     "dmhy",
     "scraper",
@@ -19,6 +19,7 @@
   "license": "MIT",
   "author": "XLor",
   "sideEffects": false,
+  "type": "module",
   "exports": {
     ".": {
       "require": "./dist/index.cjs",

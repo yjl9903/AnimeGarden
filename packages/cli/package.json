@@ -1,5 +1,5 @@
 {
-  "name": "animegarden",
+  "name": "@animegarden/cli",
   "version": "0.0.33",
   "description": "A scraper for 動漫花園.",
   "keywords": [
@@ -19,6 +19,7 @@
   "license": "MIT",
   "author": "XLor",
   "sideEffects": false,
+  "type": "module",
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
@@ -30,8 +31,12 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
+    "*.mjs",
     "dist"
   ],
+  "bin": {
+    "animegarden": "./cli.mjs"
+  },
   "scripts": {
     "build": "unbuild",
     "format": "prettier --write src/**/*.ts test/**/*.ts",
@@ -40,7 +45,6 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "cheerio": "1.0.0-rc.12",
     "simptrad": "^0.1.0",
     "zod": "^3.22.4"
   },
