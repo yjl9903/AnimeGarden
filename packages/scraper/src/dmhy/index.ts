@@ -22,10 +22,13 @@ export async function fetchDmhyPage(
 ): Promise<FetchedResource[]> {
   const { page = 1, retry = 5 } = options;
 
-  const resp = await retryFn(
-    () => ofetch(`https://share.dmhy.org/topics/list/page/${page}`),
-    retry
-  );
+  const resp = await retryFn(async () => {
+    const resp = await ofetch(`https://share.dmhy.org/topics/list/page/${page}`);
+    if (!resp.ok) {
+      throw new Error(resp.statusText, { cause: resp });
+    }
+    return resp;
+  }, retry);
   if (!resp.ok) {
     throw new Error('Failed connecting https://share.dmhy.org');
   }
