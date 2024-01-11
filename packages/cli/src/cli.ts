@@ -18,4 +18,16 @@ cli
     }
   });
 
+cli
+  .command('database migrate', 'Migrate database')
+  .alias('db migrate')
+  .action(async () => {
+    // TODO: pass options
+    await import('dotenv/config');
+    const { connectDatabase, migrateDatabase } = await import('@animegarden/database');
+    const { connection, db } = connectDatabase(`postgres://root:example@0.0.0.0:5432/animegarden`);
+    await migrateDatabase(db);
+    await connection.end();
+  });
+
 cli.run(process.argv.slice(2)).catch((err) => console.error(err));

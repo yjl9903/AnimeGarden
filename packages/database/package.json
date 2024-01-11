@@ -32,7 +32,8 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "drizzle"
   ],
   "scripts": {
     "build": "unbuild",
@@ -44,9 +45,11 @@
   },
   "dependencies": {
     "animegarden": "workspace:*",
-    "dotenv": "^16.3.1",
     "drizzle-orm": "^0.29.3",
     "postgres": "^3.4.3"
+  },
+  "devDependencies": {
+    "dotenv": "^16.3.1"
   },
   "engines": {
     "node": ">=v18.16.0"

@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  postgresql:
+    image: postgres
+    container_name: animegarden_postgres
+    restart: always
+    ports:
+      - '5432:5432'
+    # volumes:
+    #   - ./.animegarden/database:/var/lib/postgresql/data
+    environment:
+      TZ: Asia/Shanghai
+      PGTZ: Asia/Shanghai
+      POSTGRES_DB: animegarden
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: example
+      # postgres://root:example@0.0.0.0:5432/animegarden
+
+  redis:
+    image: redis
+    container_name: animegarden_redis
+    restart: always
+    ports:
+      - '6379:6379'
+    # volumes:
+    #   - ./.animegarden/redis:/data
+    environment:
+      TZ: Asia/Shanghai

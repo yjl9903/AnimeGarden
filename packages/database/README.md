@@ -5,6 +5,14 @@
 
 The database for [AnimeGarden](https://garden.onekuma.cn/).
 
+## Local Development
+
+Start dev postgres and redis with `docker-compose.yml`
+
+```bash
+docker compose up --file packages/database/docker-compose.yml
+```
+
 ## Credits
 
 + [動漫花園](https://share.dmhy.org/)
