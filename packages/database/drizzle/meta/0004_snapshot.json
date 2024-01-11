@@ -1,0 +1,282 @@
+{
+  "id": "dc302e13-862c-4a76-bc03-d549a21ec112",
+  "prevId": "90defc1f-8a72-41f5-8a73-4d8b35373de3",
+  "version": "5",
+  "dialect": "pg",
+  "tables": {
+    "resources": {
+      "name": "resources",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "provider_type": {
+          "name": "provider_type",
+          "type": "resources_provider",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider_id": {
+          "name": "provider_id",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "href": {
+          "name": "href",
+          "type": "varchar(1024)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(1024)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title_alt": {
+          "name": "title_alt",
+          "type": "varchar(1024)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "size": {
+          "name": "size",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "magnet": {
+          "name": "magnet",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "fetched_at": {
+          "name": "fetched_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "anitomy": {
+          "name": "anitomy",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fansub_id": {
+          "name": "fansub_id",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "publisher_id": {
+          "name": "publisher_id",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_deleted": {
+          "name": "is_deleted",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "is_duplicated": {
+          "name": "is_duplicated",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        }
+      },
+      "indexes": {
+        "unique_resource_provider": {
+          "name": "unique_resource_provider",
+          "columns": [
+            "provider_type",
+            "provider_id"
+          ],
+          "isUnique": true
+        },
+        "sort_by_created_at": {
+          "name": "sort_by_created_at",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "fansub_index": {
+          "name": "fansub_index",
+          "columns": [
+            "fansub_id"
+          ],
+          "isUnique": false
+        },
+        "publisher_index": {
+          "name": "publisher_index",
+          "columns": [
+            "publisher_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "resource_publisher_fk": {
+          "name": "resource_publisher_fk",
+          "tableFrom": "resources",
+          "tableTo": "users",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "provider_type",
+            "publisher_id"
+          ],
+          "columnsTo": [
+            "provider_type",
+            "provider_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "resource_fansub_fk": {
+          "name": "resource_fansub_fk",
+          "tableFrom": "resources",
+          "tableTo": "teams",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "provider_type",
+            "fansub_id"
+          ],
+          "columnsTo": [
+            "provider_type",
+            "provider_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "teams": {
+      "name": "teams",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "provider_type": {
+          "name": "provider_type",
+          "type": "resources_provider",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider_id": {
+          "name": "provider_id",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "unique_team_provider": {
+          "name": "unique_team_provider",
+          "columns": [
+            "provider_type",
+            "provider_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "provider_type": {
+          "name": "provider_type",
+          "type": "resources_provider",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider_id": {
+          "name": "provider_id",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "unique_user_provider": {
+          "name": "unique_user_provider",
+          "columns": [
+            "provider_type",
+            "provider_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {
+    "resources_provider": {
+      "name": "resources_provider",
+      "values": {
+        "dmhy": "dmhy",
+        "moe": "moe"
+      }
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

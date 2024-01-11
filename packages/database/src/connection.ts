@@ -16,6 +16,6 @@ export function connectDatabase(
   const queryClient = typeof uri === 'string' ? postgres(uri, options) : postgres(uri);
   return {
     connection: queryClient,
-    database: drizzle(queryClient, { schema: { resources, users, teams } })
+    database: drizzle(queryClient, { logger: false, schema: { resources, users, teams } })
   };
 }

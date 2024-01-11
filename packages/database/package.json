@@ -38,6 +38,7 @@
   "scripts": {
     "build": "unbuild",
     "drizzle": "drizzle-kit",
+    "drizzle:generate": "drizzle-kit generate:pg",
     "format": "prettier --write src/**/*.ts test/**/*.ts",
     "test": "vitest",
     "test:ci": "vitest --run",
@@ -45,6 +46,7 @@
   },
   "dependencies": {
     "animegarden": "workspace:*",
+    "anitomy": "0.0.33",
     "drizzle-orm": "^0.29.3",
     "postgres": "^3.4.3"
   },

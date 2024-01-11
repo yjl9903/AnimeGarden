@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar } from 'drizzle-orm/pg-core';
+import { pgTable, serial, uniqueIndex, varchar } from 'drizzle-orm/pg-core';
 
 import { providerEnum } from './provider';
 
@@ -7,10 +7,12 @@ export const users = pgTable(
   {
     id: serial('id').primaryKey(),
     provider: providerEnum('provider_type').notNull(),
-    providerId: varchar('provider_id', { length: 256 }).notNull(),
-    name: varchar('name', { length: 256 }).notNull()
+    providerId: varchar('provider_id', { length: 128 }).notNull(),
+    name: varchar('name', { length: 128 }).notNull()
   },
-  (users) => {
-    return {};
+  (t) => {
+    return {
+      uniqueProviderIndex: uniqueIndex('unique_user_provider').on(t.provider, t.providerId)
+    };
   }
 );
