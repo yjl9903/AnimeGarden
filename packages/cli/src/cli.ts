@@ -21,12 +21,40 @@ cli
 cli
   .command('database migrate', 'Migrate database')
   .alias('db migrate')
-  .action(async () => {
-    // TODO: pass options
+  .option('--uri <string>', 'Postgres database connection URI')
+  .option('--host <string>', 'Postgres database host')
+  .option('--port <string>', 'Postgres database port')
+  .option('--username <string>', 'Postgres database username')
+  .option('--password <string>', 'Postgres database password')
+  .option('--database <string>', 'Postgres database name')
+  .action(async (options) => {
     await import('dotenv/config');
+
+    const uri = options.uri ?? process.env.POSTGRES_URI ?? process.env.POSTGRES_CONNECTION_STRING;
+    const host = options.host ?? process.env.POSTGRES_HOST;
+    const port = options.port ?? process.env.POSTGRES_PORT;
+    const username = options.username ?? process.env.POSTGRES_USERNAME;
+    const password = options.password ?? process.env.POSTGRES_PASSWORD;
+    const databaseName = options.database ?? process.env.POSTGRES_DATABASE ?? 'animegarden';
+
+    if (!uri && !host) {
+      return;
+    }
+
     const { connectDatabase, migrateDatabase } = await import('@animegarden/database');
-    const { connection, db } = connectDatabase(`postgres://root:example@0.0.0.0:5432/animegarden`);
-    await migrateDatabase(db);
+
+    const { connection, database } = uri
+      ? connectDatabase(uri, { max: 1 })
+      : connectDatabase({
+          host,
+          port: port ? +port : undefined,
+          username,
+          password,
+          database: databaseName,
+          max: 1
+        });
+
+    await migrateDatabase(database);
     await connection.end();
   });
 

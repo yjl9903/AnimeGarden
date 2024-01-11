@@ -7,10 +7,13 @@ import { resources } from './schema/resource';
 
 export interface DatabaseConnectionConfig extends postgres.Options<{}> {}
 
-export const connectDatabase = (...args: Parameters<typeof postgres>) => {
-  const queryClient = postgres(...args);
+export function connectDatabase(
+  uri: string | postgres.Options<{}>,
+  options?: postgres.Options<{}>
+) {
+  const queryClient = typeof uri === 'string' ? postgres(uri, options) : postgres(uri);
   return {
     connection: queryClient,
-    db: drizzle(queryClient, { schema: { resources, users, teams } })
+    database: drizzle(queryClient, { schema: { resources, users, teams } })
   };
-};
+}
