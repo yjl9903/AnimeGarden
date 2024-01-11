@@ -1,8 +1,8 @@
 {
-  "name": "@animegarden/server",
+  "name": "@animegarden/database",
   "version": "0.0.33",
   "private": true,
-  "description": "Server implementation for AnimeGarden.",
+  "description": "Database implementation for AnimeGarden.",
   "keywords": [
     "dmhy",
     "scraper",
@@ -36,17 +36,16 @@
   ],
   "scripts": {
     "build": "unbuild",
+    "drizzle": "drizzle-kit",
     "format": "prettier --write src/**/*.ts test/**/*.ts",
     "test": "vitest",
     "test:ci": "vitest --run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@animegarden/database": "workspace:*",
-    "@animegarden/scraper": "workspace:*",
     "animegarden": "workspace:*",
-    "simptrad": "^0.1.0",
-    "zod": "^3.22.4"
+    "drizzle-orm": "^0.29.3",
+    "postgres": "^3.4.3"
   },
   "engines": {
     "node": ">=v18.16.0"
