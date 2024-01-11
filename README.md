@@ -51,18 +51,6 @@ You can check more filter conditions [FilterOptions](https://github.com/yjl9903/
 
 Follow [CONTRIBUTING.md](./CONTRIBUTING.md) to setup the environment and start developing.
 
-Start dev postgres and redis with `docker-compose.yml`
-
-```bash
-docker compose --file=docker-compose.dev.yml up
-```
-
-Then migrate the dev postgres database.
-
-```bash
-pnpm animegarden db migrate --uri "postgres://root:example@0.0.0.0:5432/animegarden"
-```
-
 ## Related Projects
 
 + [AnimeSpace](https://github.com/yjl9903/AnimeSpace): Keep following your favourite anime

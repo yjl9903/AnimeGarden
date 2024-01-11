@@ -1,6 +1,6 @@
 import { load } from 'cheerio';
 
-import type { Resource, ResourceDetail, ResourceType } from 'animegarden';
+import type { FetchedResource, ResourceDetail, ResourceType } from 'animegarden';
 
 import { retryFn } from 'animegarden';
 
@@ -13,8 +13,6 @@ export interface FetchDmhyPageOptions {
 export interface FetchDmhyDetailOptions {
   retry?: number;
 }
-
-type FetchedResource = Omit<Resource, 'fetchedAt'>;
 
 export async function fetchDmhyPage(
   ofetch: (request: string) => Promise<Response>,

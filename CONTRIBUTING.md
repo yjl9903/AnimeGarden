@@ -95,7 +95,20 @@ Fetching all the data usually **takes several hours**. You can use the `--from <
 
 ### Setup the database
 
+Start dev postgres and redis with `docker-compose.yml`
+
 ```bash
-pnpm animegarden migrate
-pnpm animegarden insert output/dmhy output/moe
+docker compose --file=docker-compose.dev.yml up
+```
+
+Then migrate the dev postgres database.
+
+```bash
+pnpm animegarden db migrate --uri "postgres://root:example@0.0.0.0:5432/animegarden"
+```
+
+Then insert the data to the database.
+
+```bash
+pnpm animegarden db insert dmhy output/dmhy --uri "postgres://root:example@0.0.0.0:5432/animegarden"
 ```

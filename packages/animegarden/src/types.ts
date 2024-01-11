@@ -49,6 +49,8 @@ export interface Resource {
   provider: string;
 }
 
+export type FetchedResource = Omit<Resource, 'fetchedAt'>;
+
 export interface ResourceDetail {
   title: string;
 

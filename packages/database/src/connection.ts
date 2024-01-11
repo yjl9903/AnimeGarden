@@ -7,6 +7,8 @@ import { resources } from './schema/resource';
 
 export interface DatabaseConnectionConfig extends postgres.Options<{}> {}
 
+export type Database = ReturnType<typeof connectDatabase>['database'];
+
 export function connectDatabase(
   uri: string | postgres.Options<{}>,
   options?: postgres.Options<{}>
