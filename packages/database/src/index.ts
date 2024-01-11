@@ -1,1 +1,1 @@
-export const hello = 1;
+export * from './schema';
