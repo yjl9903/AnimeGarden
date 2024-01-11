@@ -103,7 +103,7 @@ export async function insertDmhy(database: Database, dir: string) {
   const teamsResp = await insertTeams(database, [...teams.values()]);
   console.log(`Insert ${teamsResp.length} teams`);
 
-  const chunks = splitChunks(all, 1000);
+  const chunks = splitChunks(all, 100);
   for (const resources of chunks) {
     const resp = await insertDmhyResources(database, resources);
     console.log(`Insert ${resp.length} dmhy resources`);
