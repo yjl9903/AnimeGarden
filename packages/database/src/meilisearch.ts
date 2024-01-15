@@ -3,7 +3,7 @@ import { MeiliSearch } from 'meilisearch';
 
 export { MeiliSearch };
 
-export function connectMeiliSearch(host: string, key: string) {
+export function connectMeiliSearch(host: string, key: string): MeiliSearch {
   return new MeiliSearch({
     host,
     apiKey: key

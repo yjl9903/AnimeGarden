@@ -92,4 +92,42 @@ async function connect(options: {
       });
 }
 
+cli
+  .command('meili migrate')
+  .option('--url <url>', 'MeiliSearch URL')
+  .option('--key <key>', 'MeiliSearch Key')
+  .action(async (options) => {
+    const meili = await connectMeili(options);
+    const index = 'resources';
+
+    // Create index
+    try {
+      await meili.index(index).getRawInfo();
+    } catch {
+      await meili.createIndex(index);
+    }
+
+    // Only title_alt can be searched
+    {
+      const searchable = await meili.index(index).getSearchableAttributes();
+      if (searchable.length === 1 && searchable[0] === '*') {
+        await meili.index(index).updateSearchableAttributes(['title_alt']);
+      }
+    }
+  });
+
+async function connectMeili(options: { url?: string; key?: string }) {
+  await import('dotenv/config');
+
+  const host = options.url ?? process.env.MEILI_URL;
+  const key = options.key ?? process.env.MEILI_KEY;
+
+  if (!host || !key) {
+    throw new Error('Please specify meilisearch connection config');
+  }
+
+  const { connectMeiliSearch } = await import('@animegarden/database');
+  return connectMeiliSearch(host, key);
+}
+
 cli.run(process.argv.slice(2)).catch((err) => console.error(err));
