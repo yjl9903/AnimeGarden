@@ -95,20 +95,23 @@ Fetching all the data usually **takes several hours**. You can use the `--from <
 
 ### Setup the database
 
-Start dev postgres and redis with `docker-compose.yml`
+Start dev postgres, meilisearch and redis with `docker-compose.yml`
 
 ```bash
 docker compose --file=docker-compose.dev.yml up
 ```
 
-Then migrate the dev postgres database.
+Then migrate the dev postgres database and meilisearch.
 
 ```bash
 pnpm animegarden db migrate --uri "postgres://root:example@0.0.0.0:5432/animegarden"
+pnpm animegarden meili migrate --meili-url "http://0.0.0.0:7700" --meili-key "example"
 ```
 
 Then insert the data to the database.
 
 ```bash
-pnpm animegarden db insert dmhy output/dmhy --uri "postgres://root:example@0.0.0.0:5432/animegarden"
+pnpm animegarden db insert dmhy output/dmhy \
+  --uri "postgres://root:example@0.0.0.0:5432/animegarden" \
+  --meili-url "http://0.0.0.0:7700" --meili-key "example"
 ```

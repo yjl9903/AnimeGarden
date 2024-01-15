@@ -17,6 +17,16 @@ services:
       POSTGRES_PASSWORD: example
       # postgres://root:example@0.0.0.0:5432/animegarden
 
+  meilisearch:
+    image: getmeili/meilisearch
+    container_name: animegarden_meilisearch
+    restart: always
+    ports:
+      - '7700:7700'
+    environment:
+      TZ: Asia/Shanghai
+      MEILI_MASTER_KEY: example
+
   redis:
     image: redis
     container_name: animegarden_redis
