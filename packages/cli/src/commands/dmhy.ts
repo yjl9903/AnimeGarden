@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import path from 'node:path';
 
 import type { FetchedResource } from 'animegarden';
-import type { Database, NewUser, NewTeam } from '@animegarden/database';
+import type { Database, NewUser, NewTeam, MeiliSearch } from '@animegarden/database';
 
 import { fetchDmhyPage } from '@animegarden/scraper';
 import { insertDmhyResources, insertTeams, insertUsers } from '@animegarden/database';
@@ -75,7 +75,7 @@ function splitChunks<T>(arr: T[], chunkSize = 1000): T[][] {
   return chunkedArray;
 }
 
-export async function insertDmhy(database: Database, dir: string) {
+export async function insertDmhy(database: Database, meili: MeiliSearch, dir: string) {
   const all = await readDmhyResources(dir);
   console.log(`Read ${all.length} dmhy resources`);
 
@@ -105,7 +105,7 @@ export async function insertDmhy(database: Database, dir: string) {
 
   const chunks = splitChunks(all, 1000);
   for (const resources of chunks) {
-    const resp = await insertDmhyResources(database, resources);
+    const resp = await insertDmhyResources(database, meili, resources);
     console.log(`Insert ${resp.length} dmhy resources`);
   }
 }

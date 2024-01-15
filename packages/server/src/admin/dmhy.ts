@@ -12,6 +12,7 @@ import {
 
 import { storage } from '../storage';
 import { database } from '../database';
+import { meiliSearch } from '../meilisearch';
 import { logger as rootLogger } from '../logger';
 
 const logger = rootLogger.forkIntegrationLogger('dmhy');
@@ -96,7 +97,7 @@ export async function refreshDmhyResources() {
       }
     }
 
-    const result = await insertDmhyResources(database, res);
+    const result = await insertDmhyResources(database, meiliSearch, res);
     const count = result.length;
 
     if (count === 0) break;

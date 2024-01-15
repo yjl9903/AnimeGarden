@@ -8,6 +8,7 @@ import type { NewUser, NewTeam, NewResource, Resource } from '../schema';
 import { users } from '../schema/user';
 import { teams } from '../schema/team';
 import { resources } from '../schema/resource';
+import { insertResourceDocuments } from '../meilisearch';
 
 export async function insertUsers(database: Database, newUsers: NewUser[]) {
   return await database
@@ -49,7 +50,7 @@ export async function insertDmhyResources(
       }
     })
     .filter(Boolean) as Resource[];
-  await meili.index('resources').addDocuments(docs);
+  await insertResourceDocuments(meili, docs);
 
   return data;
 }

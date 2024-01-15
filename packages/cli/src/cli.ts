@@ -44,12 +44,15 @@ cli
   .option('--username <string>', 'Postgres database username')
   .option('--password <string>', 'Postgres database password')
   .option('--database <string>', 'Postgres database name')
+  .option('--meili-url <url>', 'MeiliSearch URL')
+  .option('--meili-key <key>', 'MeiliSearch Key')
   .action(async (platform, dir, options) => {
     const { connection, database } = await connect(options);
+    const meili = await connectMeili({ url: options.meiliUrl, key: options.meiliKey });
 
     if (platform === 'dmhy') {
       const { insertDmhy } = await import('./commands/dmhy');
-      await insertDmhy(database, dir);
+      await insertDmhy(database, meili, dir);
     } else if (platform === 'moe') {
       throw new Error('unimplemented');
     }
@@ -94,10 +97,10 @@ async function connect(options: {
 
 cli
   .command('meili migrate')
-  .option('--url <url>', 'MeiliSearch URL')
-  .option('--key <key>', 'MeiliSearch Key')
+  .option('--meili-url <url>', 'MeiliSearch URL')
+  .option('--meili-key <key>', 'MeiliSearch Key')
   .action(async (options) => {
-    const meili = await connectMeili(options);
+    const meili = await connectMeili({ url: options.meiliUrl, key: options.meiliKey });
     const index = 'resources';
 
     // Create index

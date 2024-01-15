@@ -1,4 +1,5 @@
-import { Resource } from 'animegarden';
+import type { Resource } from './schema';
+
 import { MeiliSearch } from 'meilisearch';
 
 export { MeiliSearch };
@@ -10,7 +11,7 @@ export function connectMeiliSearch(host: string, key: string): MeiliSearch {
   });
 }
 
-export async function insertResource(client: MeiliSearch, resources: Resource[]) {
+export async function insertResourceDocuments(client: MeiliSearch, resources: Resource[]) {
   const resp = await client.index('resources').addDocuments(resources);
   return resp;
 }
