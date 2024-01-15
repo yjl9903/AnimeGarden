@@ -11,7 +11,7 @@ import PWA from '@vite-pwa/astro';
 import Info from 'unplugin-info/astro';
 import TsconfigPaths from 'vite-tsconfig-paths';
 
-const SSR_ADAPTER = process.env.SSR_ADAPTER === 'node' ? 'node' : 'cloudflare';
+const SSR_ADAPTER = process.env.SSR_ADAPTER === 'cloudflare' ? 'cloudflare' : 'node';
 
 // https://astro.build/config
 export default defineConfig({
