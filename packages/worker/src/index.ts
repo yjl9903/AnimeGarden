@@ -18,7 +18,6 @@ app.use('*', logger());
 app.use('*', prettyJSON());
 
 app.get('/', async (c) => {
-  console.log('Req', c.env);
   return c.json({
     message: 'AnimeGarden - 動漫花園 3-rd party mirror site',
     timestamp: await getRefreshTimestamp(c.env)

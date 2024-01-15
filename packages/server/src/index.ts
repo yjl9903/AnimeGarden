@@ -2,6 +2,7 @@ import { serve } from '@hono/node-server';
 
 import { app } from './app';
 import { logger } from './logger';
+import { storage } from './storage';
 import { database } from './database';
 
 serve(
@@ -14,5 +15,8 @@ serve(
 
     await database.query.resources.findFirst();
     logger.info(null, `Connect to postgres`);
+
+    await storage.getItem(`state/refresh-timestamp`);
+    logger.info(null, `Connect to redis`);
   }
 );
