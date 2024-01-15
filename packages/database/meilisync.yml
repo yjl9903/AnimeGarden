@@ -1,5 +1,8 @@
 debug: true
 
+progress:
+  type: file
+
 source:
   type: postgres
   host: ${POSTGRES_HOST}
@@ -16,5 +19,6 @@ meilisearch:
 
 sync:
   - table: resources
+    index: resources
     pk: id
     full: true
