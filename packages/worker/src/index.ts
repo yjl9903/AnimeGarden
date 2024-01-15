@@ -82,6 +82,9 @@ export default {
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext) {
     switch (event.cron) {
       case '*/5 * * * *':
+        // Trigger zeabur
+        fetch(`https://animegarden-api.zeabur.app/admin/dmhy/resources`, { method: 'POST' });
+
         ctx.waitUntil(refreshResources(env));
         break;
       case '0 * * * *':
