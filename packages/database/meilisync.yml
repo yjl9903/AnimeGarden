@@ -1,0 +1,18 @@
+source:
+  type: postgres
+  host: ${POSTGRES_HOST}
+  port: ${POSTGRES_PORT}
+  user: ${POSTGRES_USERNAME}
+  password: ${POSTGRES_PASSWORD}
+  database: ${POSTGRES_DATABASE}
+
+meilisearch:
+  api_url: ${MEILI_URL}
+  api_key: ${MEILI_KEY}
+  insert_size: 10000
+  insert_interval: 10
+
+sync:
+  - table: resources
+    pk: id
+    full: true
