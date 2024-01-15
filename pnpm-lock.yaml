@@ -175,8 +175,8 @@ importers:
         specifier: ^0.58.3
         version: 0.58.3(postcss@8.4.33)(rollup@2.79.1)(vite@5.0.11)
       unplugin-info:
-        specifier: ^0.7.0
-        version: 0.7.0(esbuild@0.17.19)(rollup@2.79.1)(vite@5.0.11)
+        specifier: ^0.7.1
+        version: 0.7.1(esbuild@0.17.19)(rollup@2.79.1)(vite@5.0.11)
       vite-tsconfig-paths:
         specifier: ^4.2.3
         version: 4.2.3(typescript@5.3.3)(vite@5.0.11)
@@ -3472,6 +3472,7 @@ packages:
 
   /@swagger-api/apidom-ns-json-schema-draft-4@0.92.0:
     resolution: {integrity: sha512-7s2EKjCQwRXbK4Y4AGpVkyn1AANCxOUFSHebo1h2katyVeAopV0LJmbXH5yQedTltV0k3BIjnd7hS+7dI846Pw==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.23.8
       '@swagger-api/apidom-ast': 0.92.0
@@ -11123,13 +11124,13 @@ packages:
       - supports-color
     dev: true
 
-  /unplugin-info@0.7.0(esbuild@0.17.19)(rollup@2.79.1)(vite@5.0.11):
-    resolution: {integrity: sha512-bK7iWu2Cya5XL4yNkNAwkXVSvOrFSUMkCd8y0ZH3/MuqJiRAS10PQm5/KcrSkSFDhIFGWrSwQiq6fPHstD9mmQ==}
+  /unplugin-info@0.7.1(esbuild@0.17.19)(rollup@2.79.1)(vite@5.0.11):
+    resolution: {integrity: sha512-4fqcvp0RnKxdqd1PUo+y2bwFDZhpWZnXgN0ANXBJz1uzx4Uonx0ufrkJ6lBR6Uv/4qvq/Pw/TzUe+a1B+Awp2Q==}
     peerDependencies:
       '@nuxt/kit': ^3.7.3
       '@nuxt/schema': ^3.7.3
       esbuild: '*'
-      rollup: ^3 || ^4
+      rollup: ^2 || ^3 || ^4
       vite: '>=3.2.7'
       webpack: ^4 || ^5
     peerDependenciesMeta:
