@@ -23,12 +23,10 @@
   "type": "module",
   "exports": {
     ".": {
-      "require": "./dist/index.cjs",
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts"
     }
   },
-  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
@@ -44,9 +42,11 @@
   "dependencies": {
     "@animegarden/database": "workspace:*",
     "@animegarden/scraper": "workspace:*",
+    "@hono/node-server": "^1.4.0",
     "animegarden": "workspace:*",
     "dotenv": "^16.3.1",
-    "simptrad": "^0.1.0",
+    "hono": "^3.12.3",
+    "unstorage": "^1.10.1",
     "zod": "^3.22.4"
   },
   "engines": {
