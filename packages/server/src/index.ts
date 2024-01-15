@@ -5,6 +5,10 @@ import { logger } from './logger';
 import { storage } from './storage';
 import { database } from './database';
 
+import { registerAdmin } from './admin';
+
+registerAdmin();
+
 serve(
   {
     fetch: app.fetch,
