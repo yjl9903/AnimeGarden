@@ -1,4 +1,4 @@
-import { connectDatabase } from '@animegarden/database';
+import { type Database, connectDatabase } from '@animegarden/database';
 
 const DATABASE_URI = process.env.POSTGRES_URI ?? process.env.DATABASE_URI;
 if (!DATABASE_URI) {
@@ -6,6 +6,6 @@ if (!DATABASE_URI) {
   process.exit(1);
 }
 
-const { database, connection } = connectDatabase(DATABASE_URI);
+const conn = connectDatabase(DATABASE_URI);
 
-export { database, connection };
+export const database: Database = conn.database;

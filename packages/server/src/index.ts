@@ -3,7 +3,7 @@ import { app } from './app';
 import { serve } from '@hono/node-server';
 
 import { logger } from './logger';
-import { connection } from './database';
+import { database } from './database';
 
 serve(
   {
