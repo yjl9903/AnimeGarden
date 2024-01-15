@@ -1,6 +1,8 @@
 import { Resource } from 'animegarden';
 import { MeiliSearch } from 'meilisearch';
 
+export { MeiliSearch };
+
 export function connectMeiliSearch(host: string, key: string) {
   return new MeiliSearch({
     host,
