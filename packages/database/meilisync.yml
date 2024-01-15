@@ -2,6 +2,7 @@ debug: true
 
 progress:
   type: file
+  path: progress.json
 
 source:
   type: postgres
