@@ -2,14 +2,14 @@ FROM long2ice/meilisync
 
 WORKDIR /meilisync
 
-ADD packages/database/meilisync.yml ./config.yml
+ADD packages/database/meilisync.yml /meilisync/config.yml
 
 RUN sed -i "s/\${POSTGRES_HOST}/${POSTGRES_HOST}/g" config.yml \
-  sed -i "s/\${POSTGRES_PORT}/${POSTGRES_PORT}/g" config.yml \
-  sed -i "s/\${POSTGRES_USERNAME}/${POSTGRES_USERNAME}/g" config.yml \
-  sed -i "s/\${POSTGRES_PASSWORD}/${POSTGRES_PASSWORD}/g" config.yml \
-  sed -i "s/\${POSTGRES_DATABASE}/${POSTGRES_DATABASE}/g" config.yml \
-  sed -i "s/\${MEILI_URL}/${MEILI_URL}/g" config.yml \
-  sed -i "s/\${MEILI_KEY}/${MEILI_KEY}/g" config.yml
+  && sed -i "s/\${POSTGRES_PORT}/${POSTGRES_PORT}/g" config.yml \
+  && sed -i "s/\${POSTGRES_USERNAME}/${POSTGRES_USERNAME}/g" config.yml \
+  && sed -i "s/\${POSTGRES_PASSWORD}/${POSTGRES_PASSWORD}/g" config.yml \
+  && sed -i "s/\${POSTGRES_DATABASE}/${POSTGRES_DATABASE}/g" config.yml \
+  && sed -i "s/\${MEILI_URL}/${MEILI_URL}/g" config.yml \
+  && sed -i "s/\${MEILI_KEY}/${MEILI_KEY}/g" config.yml
 
 CMD meilisync start
