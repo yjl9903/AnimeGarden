@@ -88,6 +88,9 @@ export default {
         ctx.waitUntil(refreshResources(env));
         break;
       case '0 * * * *':
+        // Trigger zeabur
+        fetch(`https://animegarden-api.zeabur.app/admin/resources/sync`, { method: 'POST' });
+
         ctx.waitUntil(fixResources(env, 1, 10));
         break;
     }
