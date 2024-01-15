@@ -11,5 +11,8 @@ serve(
   },
   async (info) => {
     logger.info(null, `Listening http://${info.address}:${info.port}`);
+
+    await database.query.resources.findFirst();
+    logger.info(null, `Connect to postgres`);
   }
 );
