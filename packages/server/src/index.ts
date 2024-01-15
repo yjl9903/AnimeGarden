@@ -1,22 +1,8 @@
-import { format } from 'node:util';
+import { app } from './app';
 
-import { Hono } from 'hono';
 import { serve } from '@hono/node-server';
-import { logger as honoLogger } from 'hono/logger';
 
 import { logger } from './logger';
-
-const app = new Hono({});
-
-app.all(
-  '*',
-  honoLogger((message: string, ...rest: string[]) => {
-    const content = format(message, ...rest);
-    logger.info('request', content);
-  })
-);
-
-app.get('/', (c) => c.text('Hello AnimeGarden!'));
 
 serve(
   {
