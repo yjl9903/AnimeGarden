@@ -15,7 +15,7 @@ source:
 meilisearch:
   api_url: ${MEILI_URL}
   api_key: ${MEILI_KEY}
-  insert_size: 10000
+  insert_size: 1000
   insert_interval: 10
 
 sync:
