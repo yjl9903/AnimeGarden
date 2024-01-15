@@ -117,6 +117,16 @@ cli
         await meili.index(index).updateSearchableAttributes(['title_alt']);
       }
     }
+    // Add sortable attributes and update ranking rules
+    {
+      const sortable = await meili.index(index).getSortableAttributes();
+      if (sortable.length === 0) {
+        await meili.index(index).updateSortableAttributes(['created_at', 'fetched_at', 'id']);
+        await meili
+          .index(index)
+          .updateRankingRules(['words', 'sort', 'typo', 'proximity', 'attribute', 'exactness']);
+      }
+    }
   });
 
 async function connectMeili(options: { url?: string; key?: string }) {
