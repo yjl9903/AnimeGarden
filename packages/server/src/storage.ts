@@ -1,4 +1,4 @@
-import { connectRedis } from '@animegarden/database';
+import { type RedisStorage, connectRedis } from '@animegarden/database';
 
 export const REDIS_URI = process.env.REDIS_URI;
 
@@ -7,4 +7,4 @@ if (!REDIS_URI) {
   process.exit(1);
 }
 
-export const storage = connectRedis(REDIS_URI);
+export const storage: RedisStorage = connectRedis(REDIS_URI);
