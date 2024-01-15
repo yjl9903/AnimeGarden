@@ -6,8 +6,10 @@ import { storage } from './storage';
 import { database } from './database';
 
 import { registerAdmin } from './admin';
+import { registerQuery } from './query';
 
 registerAdmin();
+registerQuery();
 
 serve(
   {
