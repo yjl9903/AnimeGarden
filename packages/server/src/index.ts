@@ -1,7 +1,6 @@
-import { app } from './app';
-
 import { serve } from '@hono/node-server';
 
+import { app } from './app';
 import { logger } from './logger';
 import { database } from './database';
 
