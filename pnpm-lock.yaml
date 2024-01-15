@@ -250,6 +250,9 @@ importers:
       '@animegarden/scraper':
         specifier: workspace:*
         version: link:../scraper
+      '@breadc/color':
+        specifier: ^0.9.7
+        version: 0.9.7
       '@hono/node-server':
         specifier: ^1.4.0
         version: 1.4.0
@@ -262,6 +265,9 @@ importers:
       hono:
         specifier: ^3.12.3
         version: 3.12.3
+      string-width:
+        specifier: ^7.0.0
+        version: 7.0.0
       unstorage:
         specifier: ^1.10.1
         version: 1.10.1
