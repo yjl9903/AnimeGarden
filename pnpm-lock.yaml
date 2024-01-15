@@ -263,8 +263,8 @@ importers:
         specifier: ^16.3.1
         version: 16.3.1
       hono:
-        specifier: ^3.12.3
-        version: 3.12.3
+        specifier: ^3.12.4
+        version: 3.12.4
       string-width:
         specifier: ^7.0.0
         version: 7.0.0
@@ -293,8 +293,8 @@ importers:
         specifier: ^0.0.36
         version: 0.0.36
       hono:
-        specifier: ^3.12.3
-        version: 3.12.3
+        specifier: ^3.12.4
+        version: 3.12.4
       kysely-planetscale:
         specifier: ^1.4.0
         version: 1.4.0(@planetscale/database@1.13.0)(kysely@0.27.2)
@@ -3472,6 +3472,7 @@ packages:
 
   /@swagger-api/apidom-ns-json-schema-draft-4@0.92.0:
     resolution: {integrity: sha512-7s2EKjCQwRXbK4Y4AGpVkyn1AANCxOUFSHebo1h2katyVeAopV0LJmbXH5yQedTltV0k3BIjnd7hS+7dI846Pw==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.23.8
       '@swagger-api/apidom-ast': 0.92.0
@@ -6711,8 +6712,8 @@ packages:
     resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
     dev: false
 
-  /hono@3.12.3:
-    resolution: {integrity: sha512-eymmA0t4YzoBlaZhfcJiR6wC9tIdIgx68fdHYCpbKf0RMYXux+uJjwuZSAa2pKPNXZd6K6oGgizqaiLDvQ5jzg==}
+  /hono@3.12.4:
+    resolution: {integrity: sha512-tEkoBCmhMoQdnBJ3hNUZm9UVA6XkSm6YaPxN8xMaKvz062KhYnd52s/GbmxFywO0vsb+T+wjaJ0708NY7Tr1VA==}
     engines: {node: '>=16.0.0'}
     dev: false
 
