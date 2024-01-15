@@ -5,26 +5,8 @@ import { normalizeTitle, type FetchedResource } from 'animegarden';
 import type { Database } from '../connection';
 import type { NewUser, NewTeam, NewResource, Resource } from '../schema';
 
-import { users } from '../schema/user';
-import { teams } from '../schema/team';
 import { resources } from '../schema/resource';
 import { insertResourceDocuments } from '../meilisearch';
-
-export async function insertUsers(database: Database, newUsers: NewUser[]) {
-  return await database
-    .insert(users)
-    .values(newUsers)
-    .onConflictDoNothing()
-    .returning({ id: users.id });
-}
-
-export async function insertTeams(database: Database, newTeams: NewTeam[]) {
-  return await database
-    .insert(teams)
-    .values(newTeams)
-    .onConflictDoNothing()
-    .returning({ id: teams.id });
-}
 
 export async function insertDmhyResources(
   database: Database,

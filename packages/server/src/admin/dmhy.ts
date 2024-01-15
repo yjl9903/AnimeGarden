@@ -1,9 +1,6 @@
-import { inArray, and, eq } from 'drizzle-orm';
 import { fetchDmhyPage } from '@animegarden/scraper';
 
 import {
-  users,
-  teams,
   insertUsers,
   insertTeams,
   insertDmhyResources,
@@ -17,9 +14,6 @@ import { logger as rootLogger } from '../logger';
 
 const logger = rootLogger.forkIntegrationLogger('dmhy');
 
-const allTeams = new Set<string>();
-const allUsers = new Set<string>();
-
 export async function refreshDmhyResources() {
   let sum = 0;
   for (let page = 1; ; page++) {
@@ -28,73 +22,30 @@ export async function refreshDmhyResources() {
       throw new Error('Unknown error: fetch 0 resources');
     }
 
-    // Check teams and users
+    // Insert users and teams
     {
-      const curUsers = new Map(
-        res
-          .map((r) => [r.publisher.id, r.publisher] as const)
-          .filter(([id, _value]) => !allUsers.has(id))
+      const curUsers = new Map(res.map((r) => [r.publisher.id, r.publisher] as const));
+      await insertUsers(
+        database,
+        [...curUsers.values()].map((u) => ({
+          name: u.name,
+          provider: 'dmhy',
+          providerId: u.id
+        }))
       );
-      if (curUsers.size > 0) {
-        const list = await database
-          .select({ id: users.providerId })
-          .from(users)
-          .where(and(eq(users.provider, 'dmhy'), inArray(users.providerId, [...curUsers.keys()])));
-
-        for (const u of list) {
-          allUsers.add(u.id);
-          curUsers.delete(u.id);
-        }
-
-        if (curUsers.size > 0) {
-          await insertUsers(
-            database,
-            [...curUsers.values()].map((u) => ({
-              name: u.name,
-              provider: 'dmhy',
-              providerId: u.id
-            }))
-          );
-
-          for (const uid of curUsers.keys()) {
-            allUsers.add(uid);
-          }
-        }
-      }
     }
     {
       const curTeams = new Map(
-        res
-          .filter((r) => r.fansub)
-          .map((r) => [r.fansub!.id, r.fansub!] as const)
-          .filter(([id, _value]) => !allTeams.has(id))
+        res.filter((r) => r.fansub).map((r) => [r.fansub!.id, r.fansub!] as const)
       );
-      if (curTeams.size > 0) {
-        const list = await database
-          .select({ id: teams.providerId })
-          .from(teams)
-          .where(and(eq(teams.provider, 'dmhy'), inArray(teams.providerId, [...curTeams.keys()])));
-
-        for (const u of list) {
-          allTeams.add(u.id);
-          curTeams.delete(u.id);
-        }
-
-        if (curTeams.size > 0) {
-          await insertTeams(
-            database,
-            [...curTeams.values()].map((u) => ({
-              name: u.name,
-              provider: 'dmhy',
-              providerId: u.id
-            }))
-          );
-
-          for (const tid of curTeams.keys()) {
-            allTeams.add(tid);
-          }
-        }
-      }
+      await insertTeams(
+        database,
+        [...curTeams.values()].map((u) => ({
+          name: u.name,
+          provider: 'dmhy',
+          providerId: u.id
+        }))
+      );
     }
 
     const result = await insertDmhyResources(database, meiliSearch, res);
