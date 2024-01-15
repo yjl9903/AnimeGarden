@@ -13,6 +13,9 @@ import TsconfigPaths from 'vite-tsconfig-paths';
 
 const SSR_ADAPTER = process.env.SSR_ADAPTER === 'cloudflare' ? 'cloudflare' : 'node';
 
+const APP_HOST = `garden.onekuma.cn`;
+const WORKER_HOST = `animegarden.yjl9903.workers.dev`;
+
 // https://astro.build/config
 export default defineConfig({
   output: 'server',
@@ -85,11 +88,11 @@ export default defineConfig({
         /**
          * The host of Cloudflare Pages
          */
-        APP_HOST: 'garden.onekuma.cn',
+        APP_HOST,
         /**
          * The host of Cloudflare Worker
          */
-        WORKER_HOST: 'animegarden.yjl9903.workers.dev',
+        WORKER_HOST,
         /**
          * Cloudflare Web Analytics configuration
          */
