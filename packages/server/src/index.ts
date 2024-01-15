@@ -4,6 +4,7 @@ import { app } from './app';
 import { logger } from './logger';
 import { storage } from './storage';
 import { database } from './database';
+import { meiliSearch } from './meilisearch';
 
 import { registerAdmin } from './admin';
 import { registerQuery } from './query';
@@ -24,5 +25,8 @@ serve(
 
     await storage.getItem(`state/refresh-timestamp`);
     logger.info(null, `Connect to redis`);
+
+    await meiliSearch.index('resources').getStats();
+    logger.info(null, `Connect to meilisearch`);
   }
 );
