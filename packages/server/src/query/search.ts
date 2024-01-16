@@ -1,17 +1,20 @@
 import type { ResolvedFilterOptions, ResourceType } from 'animegarden';
-import {
-  type ResourceDocument,
-  getTeam,
-  getUser,
-  getTeamByProviderId,
-  getTeamByName,
-  getUserByProviderId
-} from '@animegarden/database';
+import type { ResourceDocument } from '@animegarden/database';
 
 import { hash } from 'ohash';
 import { Resource } from 'animegarden';
 import { memoAsync } from 'memofunc';
 
+import {
+  getTeam,
+  getUser,
+  getTeamByProviderId,
+  getTeamByName,
+  getUserByProviderId,
+  getRefreshTimestamp
+} from '@animegarden/database';
+
+import { storage } from '../storage';
 import { database } from '../database';
 import { meiliSearch, meiliLogger } from '../meilisearch';
 
@@ -57,6 +60,7 @@ export async function searchResources(search: string, filter: ResolvedFilterOpti
     }
   }
 
+  const timestamp = getRefreshTimestamp(storage);
   const resp = await meiliSearch.index('resources').search<ResourceDocument>(search, {
     filter: filters,
     limit: filter.pageSize,
@@ -69,8 +73,9 @@ export async function searchResources(search: string, filter: ResolvedFilterOpti
   );
 
   return {
+    timestamp: await timestamp,
     resources: await transformFromMeili(resp.hits),
-    complete: resp.hits.length < resp.estimatedTotalHits
+    complete: (filter.page - 1) * filter.pageSize + resp.hits.length >= resp.estimatedTotalHits
   };
 }
 
