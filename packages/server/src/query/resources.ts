@@ -4,10 +4,17 @@ import type { Resource as DbResource } from '@animegarden/database';
 import { hash } from 'ohash';
 import { memoAsync } from 'memofunc';
 import { prefixStorage } from 'unstorage';
-import { and, eq, gte, ilike, lte, notIlike, or, desc } from 'drizzle-orm';
+import { and, eq, gte, ilike, lte, notIlike, or, desc, inArray } from 'drizzle-orm';
 
 import { normalizeTitle, Resource, type ResolvedFilterOptions, ResourceType } from 'animegarden';
-import { getRefreshTimestamp, getTeam, getUser, resources } from '@animegarden/database';
+import {
+  getRefreshTimestamp,
+  getTeam,
+  getUser,
+  resources,
+  teams,
+  users
+} from '@animegarden/database';
 
 import { storage } from '../storage';
 import { database } from '../database';
@@ -54,8 +61,32 @@ const listResourcesFromDB = memoAsync(
     } = options;
 
     const result = await database
-      .select()
+      .select({
+        id: resources.id,
+        provider: resources.provider,
+        providerId: resources.providerId,
+        title: resources.title,
+        href: resources.href,
+        type: resources.type,
+        magnet: resources.magnet,
+        size: resources.size,
+        anitomy: resources.anitomy,
+        createdAt: resources.createdAt,
+        fetchedAt: resources.fetchedAt,
+        publisherId: resources.publisherId,
+        fansubId: resources.fansubId,
+        publisherName: users.name,
+        fansubName: teams.name
+      })
       .from(resources)
+      .leftJoin(
+        users,
+        and(eq(resources.provider, users.provider), eq(resources.publisherId, users.providerId))
+      )
+      .leftJoin(
+        teams,
+        and(eq(resources.provider, teams.provider), eq(resources.publisherId, teams.providerId))
+      )
       .where(
         and(
           eq(resources.isDeleted, false),
@@ -63,8 +94,17 @@ const listResourcesFromDB = memoAsync(
           type ? eq(resources.type, type) : undefined,
           after ? gte(resources.createdAt, after) : undefined,
           before ? lte(resources.createdAt, before) : undefined,
-          // TODO: fansub
-          // TODO: publisher
+          // Filter fansub
+          (fansubId && fansubId.length > 0) || (fansubName && fansubName.length > 0)
+            ? or(
+                fansubId ? inArray(teams.providerId, fansubId) : undefined,
+                fansubName ? inArray(teams.name, fansubName) : undefined
+              )
+            : undefined,
+          // Filter publisher
+          publisherId && publisherId.length > 0
+            ? inArray(users.providerId, publisherId)
+            : undefined,
           // Include
           include && include?.length > 0
             ? or(...include.map((t) => ilike(resources.titleAlt, `%${normalizeTitle(t)}%`)))
@@ -129,11 +169,24 @@ const listResourcesFromDB = memoAsync(
   }
 );
 
-async function transformFromDb(resources: DbResource[]) {
+async function transformFromDb(
+  resources: Array<
+    Omit<DbResource, 'titleAlt' | 'isDeleted' | 'isDuplicated'> & {
+      publisherName: string | null;
+      fansubName: string | null;
+    }
+  >
+) {
   const result: Resource[] = [];
   for (const r of resources) {
-    const fansub = r.fansubId ? await getTeam(database, r.provider, r.fansubId) : undefined;
-    const publisher = (await getUser(database, r.provider, r.publisherId))!;
+    const fansubName = r.fansubName
+      ? r.fansubName
+      : r.fansubId
+        ? (await getTeam(database, r.provider, r.fansubId))?.name
+        : undefined;
+    const publisherName = r.publisherName
+      ? r.publisherName
+      : (await getUser(database, r.provider, r.publisherId))!.name;
 
     const href = r.provider === 'dmhy' ? `https://share.dmhy.org/topics/view/${r.href}` : r.href;
     const fansubHref =
@@ -157,17 +210,17 @@ async function transformFromDb(resources: DbResource[]) {
       // When reading this field from cache, it will be transfromed to string
       createdAt: new Date(r.createdAt!).toISOString(),
       fetchedAt: new Date(r.fetchedAt!).toISOString(),
-      fansub: fansub
+      fansub: fansubName
         ? {
-            id: fansub.providerId,
-            name: fansub.name,
+            id: r.fansubId,
+            name: fansubName,
             // @ts-ignore
             href: fansubHref
           }
         : undefined,
       publisher: {
-        id: publisher.providerId,
-        name: publisher.name,
+        id: r.publisherId,
+        name: publisherName,
         // @ts-ignore
         href: publisherHref
       }
