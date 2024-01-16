@@ -110,6 +110,27 @@ describe('parse url', () => {
       `);
   });
 
+  it('parse search', () => {
+    expect(parseSearchURL(new URLSearchParams(`search=你好世界`))).toMatchInlineSnapshot(`
+      {
+        "after": undefined,
+        "before": undefined,
+        "exclude": undefined,
+        "fansubId": undefined,
+        "fansubName": undefined,
+        "include": undefined,
+        "page": 1,
+        "pageSize": 100,
+        "provider": undefined,
+        "publisherId": undefined,
+        "search": [
+          "你好世界",
+        ],
+        "type": undefined,
+      }
+    `);
+  });
+
   it('complex include', () => {
     const wrap = (o: string | string[]) => new URLSearchParams('include=' + JSON.stringify(o));
 

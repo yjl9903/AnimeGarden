@@ -11,10 +11,16 @@ const dateLike = z
 const stringArray = z.union([z.string().transform((s) => [s]), z.array(z.string())]);
 const stringArrayLike = z.coerce
   .string()
-  .transform((t) => JSON.parse(t))
-  .catch(undefined)
+  .transform((t) => {
+    try {
+      return JSON.parse(t);
+    } catch {
+      return [t];
+    }
+  })
   .pipe(stringArray)
   .optional();
+
 // const stringArrayArray = z.union([
 //   z.string().transform((s) => [[s]]),
 //   z.array(stringArray).default([])
