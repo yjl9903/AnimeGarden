@@ -1,4 +1,4 @@
-import { APP_HOST, WORKER_HOST, SERVER_HOST, SERVER_PORT } from '~build/meta';
+import { APP_HOST, WORKER_HOST, SERVER_HOST, SERVER_PORT, SERVER_PROTOCOL } from '~build/meta';
 
 import {
   FilterOptions,
@@ -8,7 +8,7 @@ import {
 
 const baseURL = import.meta.env.SSR
   ? SERVER_HOST
-    ? `http://${SERVER_HOST}${SERVER_PORT ? ':' + SERVER_PORT : ''}`
+    ? `${SERVER_PROTOCOL}://${SERVER_HOST}${SERVER_PORT ? ':' + SERVER_PORT : ''}`
     : `https://${WORKER_HOST}`
   : `https://${APP_HOST}/api/`;
 
