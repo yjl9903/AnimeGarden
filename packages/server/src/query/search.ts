@@ -61,7 +61,7 @@ export async function searchResources(search: string, filter: ResolvedFilterOpti
     filter: filters,
     limit: filter.pageSize,
     offset: (filter.page - 1) * filter.pageSize,
-    sort: ['createdAt:desc']
+    sort: ['createdAt:desc', 'id:desc']
   });
 
   meiliLogger.info(
