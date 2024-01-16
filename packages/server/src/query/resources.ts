@@ -27,7 +27,25 @@ export async function queryResources(ctx: Context, filter: ResolvedFilterOptions
 }
 
 async function searchResources(search: string, filter: ResolvedFilterOptions) {
+  const filters: string[] = ['is_deleted = false', 'is_duplicated = false'];
+  if (filter.type) {
+    filters.push(`type = '${filter.type}'`);
+  }
+  if (filter.after) {
+    filters.push(`created_at >= ${(filter.after.getTime() / 1000).toFixed(0)}`);
+  }
+  if (filter.before) {
+    filters.push(`created_at <= ${(filter.before.getTime() / 1000).toFixed(0)}`);
+  }
+  if (filter.fansubId || filter.fansubName) {
+    // TODO: how to model?
+    // const fansubs = [];
+    // for (const f of filter.fansubId ?? []) {
+    // }
+  }
+
   const resp = await meiliSearch.index('resources').search<ResourceDocument>(search, {
+    filter: filters,
     limit: filter.pageSize,
     offset: (filter.page - 1) * filter.pageSize,
     sort: ['created_at:desc']
@@ -58,14 +76,8 @@ async function transformFromMeili(resources: ResourceDocument[]) {
       magnet: r.magnet,
       size: r.size,
       // When reading this field from cache, it will be transfromed to string
-      createdAt: (typeof r.created_at === 'string' && /^\d+$/.test(r.created_at)
-        ? new Date(Number(r.created_at))
-        : new Date(r.created_at!)
-      ).toISOString(),
-      fetchedAt: (typeof r.fetched_at === 'string' && /^\d+$/.test(r.fetched_at)
-        ? new Date(Number(r.fetched_at))
-        : new Date(r.fetched_at!)
-      ).toISOString(),
+      createdAt: new Date(r.created_at! * 1000).toISOString(),
+      fetchedAt: new Date(r.fetched_at! * 1000).toISOString(),
       fansub: fansub
         ? {
             id: fansub.providerId,
