@@ -1,4 +1,4 @@
-import { ResourceType } from 'animegarden';
+import type { ResourceType } from 'animegarden';
 
 export const types = [
   '动画',

@@ -6,8 +6,8 @@ import rss from '@astrojs/rss';
 import { z } from 'zod';
 import { toDate } from 'date-fns-tz';
 import {
+  type ResolvedFilterOptions,
   FilterSchema,
-  ResolvedFilterOptions,
   fetchResources,
   stringifySearchURL
 } from 'animegarden';
@@ -24,6 +24,8 @@ export const GET: APIRoute = async (context) => {
     const filter = ManyFilterSchema.safeParse(rawFilter);
 
     if (filter.success && filter.data.length > 0) {
+      // TODO: fix this
+      // @ts-ignore
       const title = inferTitle(context.url.searchParams, filter.data[0]);
       const locals = getRuntimeEnv(context.locals);
 

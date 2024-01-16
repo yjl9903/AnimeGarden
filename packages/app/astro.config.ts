@@ -130,8 +130,5 @@ export default defineConfig({
     service: {
       entrypoint: 'astro/assets/services/noop'
     }
-  },
-  vite: {
-    plugins: [TsconfigPaths()]
   }
 });
