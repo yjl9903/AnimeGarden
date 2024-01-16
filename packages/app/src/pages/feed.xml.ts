@@ -72,10 +72,7 @@ function inferTitle(params: URLSearchParams, options: ResolvedFilterOptions) {
     return removeQuote(options.search).join(' ');
   }
   if (options.include && options.include.length > 0) {
-    return options.include
-      .map((i) => i[0])
-      .filter(Boolean)
-      .join(' ');
+    return options.include[0];
   }
   return 'Anime Garden - 動漫花園資源網 第三方镜像站';
 }
