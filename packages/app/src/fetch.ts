@@ -7,7 +7,7 @@ import {
   fetchResourceDetail as rawFetchResourceDetail
 } from 'animegarden';
 
-const baseURL = import.meta.env.SSR
+export const baseURL = import.meta.env.SSR
   ? SERVER_HOST
     ? `${SERVER_PROTOCOL}://${SERVER_HOST}${SERVER_PORT ? ':' + SERVER_PORT : ''}`
     : `https://${WORKER_HOST}`
