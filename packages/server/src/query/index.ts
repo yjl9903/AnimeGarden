@@ -28,8 +28,6 @@ export function registerQuery() {
     app.post(`/resources`, async (ctx) => {
       return listResourcesHandler(ctx);
     });
-    app.get(`/detail/:href`, async (ctx) => {});
-    app.get(`/resource/:href`, async (ctx) => {});
 
     app.get(`/dmhy/resources`, async (ctx) => {
       return listResourcesHandler(ctx, 'dmhy');
@@ -43,6 +41,12 @@ export function registerQuery() {
     app.get(`/dmhy/resource/:href`, async (ctx) => {
       return getDmhyResourceDetail(ctx);
     });
+    app.get(`/detail/dmhy/:href`, async (ctx) => {
+      return getDmhyResourceDetail(ctx);
+    });
+    app.get(`/resource/dmhy/:href`, async (ctx) => {
+      return getDmhyResourceDetail(ctx);
+    });
 
     app.get(`/moe/resources`, async (ctx) => {
       return listResourcesHandler(ctx, 'moe');
@@ -52,5 +56,7 @@ export function registerQuery() {
     });
     app.get(`/moe/detail/:href`, async (ctx) => {});
     app.get(`/moe/resource/:href`, async (ctx) => {});
+    app.get(`/detail/moe/:href`, async (ctx) => {});
+    app.get(`/resource/moe/:href`, async (ctx) => {});
   });
 }
