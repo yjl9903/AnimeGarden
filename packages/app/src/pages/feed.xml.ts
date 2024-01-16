@@ -32,7 +32,7 @@ export const GET: APIRoute = async (context) => {
         ...filter.data[0],
         baseURL,
         page: 1,
-        pageSize: 1000
+        pageSize: 100
       });
 
       return rss({
