@@ -2,7 +2,15 @@ import { breadc } from 'breadc';
 
 import { version } from '../package.json';
 
-const cli = breadc('animegarden', { version });
+const cli = breadc('animegarden', { version })
+  .option('--uri <string>', 'Postgres database connection URI')
+  .option('--host <string>', 'Postgres database host')
+  .option('--port <string>', 'Postgres database port')
+  .option('--username <string>', 'Postgres database username')
+  .option('--password <string>', 'Postgres database password')
+  .option('--database <string>', 'Postgres database name')
+  .option('--meili-url <url>', 'MeiliSearch URL')
+  .option('--meili-key <key>', 'MeiliSearch Key');
 
 cli
   .command('fetch <dmhy|moe>', 'Fetch resources list')
@@ -21,12 +29,6 @@ cli
 cli
   .command('database migrate', 'Migrate database')
   .alias('db migrate')
-  .option('--uri <string>', 'Postgres database connection URI')
-  .option('--host <string>', 'Postgres database host')
-  .option('--port <string>', 'Postgres database port')
-  .option('--username <string>', 'Postgres database username')
-  .option('--password <string>', 'Postgres database password')
-  .option('--database <string>', 'Postgres database name')
   .action(async (options) => {
     const { connection, database } = await connect(options);
     const { migrateDatabase } = await import('@animegarden/database');
@@ -38,14 +40,6 @@ cli
 cli
   .command('database insert <dmhy|moe> <data_dir>', 'Insert data to database')
   .alias('db insert')
-  .option('--uri <string>', 'Postgres database connection URI')
-  .option('--host <string>', 'Postgres database host')
-  .option('--port <string>', 'Postgres database port')
-  .option('--username <string>', 'Postgres database username')
-  .option('--password <string>', 'Postgres database password')
-  .option('--database <string>', 'Postgres database name')
-  .option('--meili-url <url>', 'MeiliSearch URL')
-  .option('--meili-key <key>', 'MeiliSearch Key')
   .action(async (platform, dir, options) => {
     const { connection, database } = await connect(options);
     const meili = await connectMeili({ url: options.meiliUrl, key: options.meiliKey });
@@ -59,6 +53,82 @@ cli
 
     await connection.end();
   });
+
+cli
+  .command('meili migrate')
+  .option('--meili-url <url>', 'MeiliSearch URL')
+  .option('--meili-key <key>', 'MeiliSearch Key')
+  .action(async (options) => {
+    const meili = await connectMeili({ url: options.meiliUrl, key: options.meiliKey });
+    const index = 'resources';
+
+    // Create index
+    try {
+      await meili.index(index).getRawInfo();
+    } catch {
+      await meili.createIndex(index, { primaryKey: 'id' });
+    }
+
+    // Set primaryKey id
+    {
+      const info = await meili.getIndex(index);
+      if (info.primaryKey !== 'id') {
+        await meili.updateIndex(index, { primaryKey: 'id' });
+      }
+    }
+    // Only titleAlt can be searched
+    {
+      const searchable = await meili.index(index).getSearchableAttributes();
+      const expected = ['titleAlt'];
+      if (searchable.join(',') !== expected.join(',')) {
+        await meili.index(index).updateSearchableAttributes(expected);
+      }
+    }
+    // Add sortable attributes and update ranking rules
+    {
+      const sortable = await meili.index(index).getSortableAttributes();
+      const expected = ['createdAt', 'fetchedAt', 'id'];
+      if (sortable.join(',') !== expected.join(',')) {
+        await meili.index(index).updateSortableAttributes(expected);
+        await meili
+          .index(index)
+          .updateRankingRules(['words', 'sort', 'typo', 'proximity', 'attribute', 'exactness']);
+      }
+    }
+    {
+      const filterable = await meili.index(index).getFilterableAttributes();
+      const expected = [
+        'provider',
+        'fansubId',
+        'publisherId',
+        'type',
+        'createdAt',
+        'isDeleted',
+        'isDuplicated'
+      ];
+      if (filterable.join(',') !== expected.join(',')) {
+        await meili.index(index).updateFilterableAttributes(expected);
+      }
+    }
+  });
+
+cli.command('meili sync').action(async (options) => {
+  const { connection, database } = await connect(options);
+  const meili = await connectMeili({ url: options.meiliUrl, key: options.meiliKey });
+
+  const { syncResourcesToMeili } = await import('@animegarden/database');
+
+  const pageSize = 10000;
+  for (let i = 0; ; i += pageSize) {
+    const resp = await syncResourcesToMeili(database, meili, i, pageSize);
+    if (resp.count === 0) {
+      break;
+    }
+    console.log(`Syncing ${resp.count} documents to meilisearch`);
+  }
+
+  await connection.end();
+});
 
 async function connect(options: {
   uri?: string;
@@ -94,83 +164,6 @@ async function connect(options: {
         max: 1
       });
 }
-
-cli
-  .command('meili migrate')
-  .option('--meili-url <url>', 'MeiliSearch URL')
-  .option('--meili-key <key>', 'MeiliSearch Key')
-  .action(async (options) => {
-    const meili = await connectMeili({ url: options.meiliUrl, key: options.meiliKey });
-    const index = 'resources';
-
-    // Create index
-    try {
-      await meili.index(index).getRawInfo();
-    } catch {
-      await meili.createIndex(index);
-    }
-
-    // Only title_alt can be searched
-    {
-      const searchable = await meili.index(index).getSearchableAttributes();
-      if (searchable.length === 1 && searchable[0] === '*') {
-        await meili.index(index).updateSearchableAttributes(['title_alt']);
-      }
-    }
-    // Add sortable attributes and update ranking rules
-    {
-      const sortable = await meili.index(index).getSortableAttributes();
-      if (sortable.length === 0) {
-        await meili.index(index).updateSortableAttributes(['created_at', 'fetched_at', 'id']);
-        await meili
-          .index(index)
-          .updateRankingRules(['words', 'sort', 'typo', 'proximity', 'attribute', 'exactness']);
-      }
-    }
-    {
-      const filterable = await meili.index(index).getFilterableAttributes();
-      const expected = [
-        'provider',
-        'fansub_id',
-        'publisher_id',
-        'type',
-        'created_at',
-        'is_deleted',
-        'is_duplicated'
-      ];
-      if (filterable.length !== expected.length) {
-        await meili.index(index).updateFilterableAttributes(expected);
-      }
-    }
-  });
-
-cli
-  .command('meili sync')
-  .option('--uri <string>', 'Postgres database connection URI')
-  .option('--host <string>', 'Postgres database host')
-  .option('--port <string>', 'Postgres database port')
-  .option('--username <string>', 'Postgres database username')
-  .option('--password <string>', 'Postgres database password')
-  .option('--database <string>', 'Postgres database name')
-  .option('--meili-url <url>', 'MeiliSearch URL')
-  .option('--meili-key <key>', 'MeiliSearch Key')
-  .action(async (options) => {
-    const { connection, database } = await connect(options);
-    const meili = await connectMeili({ url: options.meiliUrl, key: options.meiliKey });
-
-    const { syncResourcesToMeili } = await import('@animegarden/database');
-
-    const pageSize = 10000;
-    for (let i = 0; ; i += pageSize) {
-      const resp = await syncResourcesToMeili(database, meili, i, pageSize);
-      if (resp.count === 0) {
-        break;
-      }
-      console.log(`Syncing ${resp.count} documents to meilisearch`);
-    }
-
-    await connection.end();
-  });
 
 async function connectMeili(options: { url?: string; key?: string }) {
   await import('dotenv/config');

@@ -17,15 +17,15 @@ export type NewResource = typeof resources.$inferInsert;
 export interface ResourceDocument {
   id: number;
 
-  provider_type: Resource['provider'];
+  provider: Resource['provider'];
 
-  provider_id: Resource['providerId'];
+  providerId: Resource['providerId'];
 
   href: Resource['href'];
 
   title: Resource['title'];
 
-  title_alt: Resource['titleAlt'];
+  titleAlt: Resource['titleAlt'];
 
   type: Resource['type'];
 
@@ -33,17 +33,17 @@ export interface ResourceDocument {
 
   magnet: Resource['magnet'];
 
-  created_at: number;
+  createdAt: number;
 
-  fetched_at: number;
+  fetchedAt: number;
 
   anitomy: Record<string, any>;
 
-  fansub_id: string | null;
+  fansubId: string | null;
 
-  publisher_id: string;
+  publisherId: string;
 
-  is_deleted: Resource['isDeleted'];
+  isDeleted: Resource['isDeleted'];
 
-  is_duplicated: Resource['isDuplicated'];
+  isDuplicated: Resource['isDuplicated'];
 }

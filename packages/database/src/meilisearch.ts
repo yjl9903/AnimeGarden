@@ -12,6 +12,13 @@ export function connectMeiliSearch(host: string, key: string): MeiliSearch {
 }
 
 export async function insertResourceDocuments(client: MeiliSearch, resources: Resource[]) {
-  const resp = await client.index('resources').addDocuments(resources);
+  const resp = await client.index('resources').addDocuments(
+    resources.map((d) => ({
+      ...d,
+      // Map to number, used for lt or gt
+      createdAt: d.createdAt!.getTime(),
+      fetchedAt: d.fetchedAt!.getTime()
+    }))
+  );
   return resp;
 }
