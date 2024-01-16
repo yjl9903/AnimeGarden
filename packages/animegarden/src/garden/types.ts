@@ -70,7 +70,7 @@ export interface ResolvedFilterOptions {
   /**
    * Filter by the group id of fansub
    */
-  fansubId?: number[];
+  fansubId?: string[];
 
   /**
    * Filter by the group name of fansub
@@ -80,7 +80,7 @@ export interface ResolvedFilterOptions {
   /**
    * Filter by the user id of publisher
    */
-  publisherId?: number[];
+  publisherId?: string[];
 
   /**
    * Filter by the resource type

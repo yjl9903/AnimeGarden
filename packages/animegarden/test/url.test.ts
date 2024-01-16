@@ -14,6 +14,7 @@ describe('parse url', () => {
         "include": undefined,
         "page": 1,
         "pageSize": 10,
+        "provider": undefined,
         "publisherId": undefined,
         "search": undefined,
         "type": undefined,
@@ -30,6 +31,7 @@ describe('parse url', () => {
         "include": undefined,
         "page": 2,
         "pageSize": 1000,
+        "provider": undefined,
         "publisherId": undefined,
         "search": undefined,
         "type": undefined,
@@ -46,6 +48,7 @@ describe('parse url', () => {
         "include": undefined,
         "page": 2,
         "pageSize": 5,
+        "provider": undefined,
         "publisherId": undefined,
         "search": undefined,
         "type": undefined,
@@ -62,6 +65,7 @@ describe('parse url', () => {
         "include": undefined,
         "page": 1,
         "pageSize": 1000,
+        "provider": undefined,
         "publisherId": undefined,
         "search": undefined,
         "type": undefined,
@@ -80,6 +84,7 @@ describe('parse url', () => {
         "include": undefined,
         "page": 1,
         "pageSize": 100,
+        "provider": undefined,
         "publisherId": undefined,
         "search": undefined,
         "type": undefined,
@@ -97,6 +102,7 @@ describe('parse url', () => {
           "include": undefined,
           "page": 1,
           "pageSize": 100,
+          "provider": undefined,
           "publisherId": undefined,
           "search": undefined,
           "type": undefined,
@@ -105,34 +111,24 @@ describe('parse url', () => {
   });
 
   it('complex include', () => {
-    const wrap = (o: string | (string | string[])[]) =>
-      new URLSearchParams('include=' + JSON.stringify(o));
+    const wrap = (o: string | string[]) => new URLSearchParams('include=' + JSON.stringify(o));
+
     expect(parseSearchURL(wrap(['hello', 'world'])).include).toMatchInlineSnapshot(`
       [
-        [
-          "hello",
-        ],
-        [
-          "world",
-        ],
+        "hello",
+        "world",
       ]
     `);
-    expect(parseSearchURL(wrap(['hello', ['world1', 'world2']])).include).toMatchInlineSnapshot(`
+    expect(parseSearchURL(wrap(['hello', 'world1', 'world2'])).include).toMatchInlineSnapshot(`
       [
-        [
-          "hello",
-        ],
-        [
-          "world1",
-          "world2",
-        ],
+        "hello",
+        "world1",
+        "world2",
       ]
     `);
     expect(parseSearchURL(wrap('world')).include).toMatchInlineSnapshot(`
       [
-        [
-          "world",
-        ],
+        "world",
       ]
     `);
   });
@@ -147,7 +143,7 @@ describe('parse url', () => {
       'page=2',
       'pageSize=100',
       'search=' + JSON.stringify(['hello', 'world']),
-      'include=' + JSON.stringify(['hello', ['world1', 'world3']]),
+      'include=' + JSON.stringify(['hello', 'world1', 'world3']),
       'exclude=' + JSON.stringify(['hi']),
       'type=动画'
     ];
@@ -159,29 +155,22 @@ describe('parse url', () => {
         "exclude": [
           "hi",
         ],
-        "fansubId": [
-          123,
-        ],
+        "fansubId": undefined,
         "fansubName": [
           "字幕组",
         ],
         "include": [
-          [
-            "hello",
-          ],
-          [
-            "world1",
-            "world3",
-          ],
+          "hello",
+          "world1",
+          "world3",
         ],
         "page": 2,
         "pageSize": 100,
-        "publisherId": [
-          456,
-        ],
+        "provider": undefined,
+        "publisherId": undefined,
         "search": [
-          ""hello"",
-          ""world"",
+          "hello",
+          "world",
         ],
         "type": "动画",
       }
@@ -193,7 +182,7 @@ describe('parse url', () => {
         parseSearchURL(new URLSearchParams(params.join('&')))
       )
     ).toMatchInlineSnapshot(
-      '"https://garden.onekuma.cn/api/resources?page=2&pageSize=100&fansubId=123&fansubName=%5B%22%E5%AD%97%E5%B9%95%E7%BB%84%22%5D&publisherId=456&type=%E5%8B%95%E7%95%AB&before=1686614400000&after=1686355200000&search=%5B%22%5C%22hello%5C%22%22%2C%22%5C%22world%5C%22%22%5D&include=%5B%5B%22hello%22%5D%2C%5B%22world1%22%2C%22world3%22%5D%5D&exclude=%5B%22hi%22%5D"'
+      `"https://garden.onekuma.cn/api/resources?page=2&pageSize=100&fansubName=%5B%22%E5%AD%97%E5%B9%95%E7%BB%84%22%5D&type=%E5%8B%95%E7%95%AB&before=1686614400000&after=1686355200000&search=%5B%22hello%22%2C%22world%22%5D&include=%5B%22hello%22%2C%22world1%22%2C%22world3%22%5D&exclude=%5B%22hi%22%5D"`
     );
   });
 });

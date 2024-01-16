@@ -16,7 +16,7 @@ export function makeResourcesFilter(
     chains.push((r) => providers.includes(r.provider));
   }
   if (resolved.fansubId) {
-    const fansubId = resolved.fansubId.map((id) => '' + id);
+    const fansubId = resolved.fansubId;
     chains.push((r) => (r.fansub ? fansubId.includes(r.fansub.id) : false));
   }
   if (resolved.fansubName) {
@@ -24,7 +24,7 @@ export function makeResourcesFilter(
     chains.push((r) => (r.fansub ? fansubName.includes(r.fansub.name) : false));
   }
   if (resolved.publisherId) {
-    const publisherId = resolved.publisherId.map((id) => '' + id);
+    const publisherId = resolved.publisherId;
     chains.push((r) => publisherId.includes(r.publisher.id));
   }
   if (resolved.type) {

@@ -20,13 +20,13 @@ const stringArrayLike = z.coerce
 //   z.array(stringArray).default([])
 // ]);
 
-const numberArray = z.union([z.array(z.coerce.number()), z.coerce.number().transform((n) => [n])]);
-const numberArrayLike = z.coerce
-  .string()
-  .transform((t) => JSON.parse(t))
-  .catch(undefined)
-  .pipe(numberArray)
-  .optional();
+// const numberArray = z.union([z.array(z.coerce.number()), z.coerce.number().transform((n) => [n])]);
+// const numberArrayLike = z.coerce
+//   .string()
+//   .transform((t) => JSON.parse(t))
+//   .catch(undefined)
+//   .pipe(numberArray)
+//   .optional();
 
 const providerEnum = z.array(z.enum(['dmhy', 'moe'])).default(['dmhy', 'moe']);
 
@@ -40,9 +40,9 @@ export const FilterSchema = z.object({
     .number()
     .default(100)
     .refine((ps) => 1 <= ps && ps <= 1000),
-  fansubId: z.number().array().optional(),
+  fansubId: z.string().array().optional(),
   fansubName: z.string().array().optional(),
-  publisherId: z.number().array().optional(),
+  publisherId: z.string().array().optional(),
   type: z.string().optional(),
   before: dateLike,
   after: dateLike,
@@ -61,9 +61,9 @@ const parser = {
     .number()
     .default(100)
     .transform((ps) => Math.round(Math.max(1, Math.min(1000, ps)))),
-  fansubId: numberArrayLike,
+  fansubId: stringArrayLike,
   fansubName: stringArrayLike,
-  publisherId: numberArrayLike,
+  publisherId: stringArrayLike,
   type: z.coerce.string().optional(),
   before: dateLike,
   after: dateLike,
@@ -131,7 +131,7 @@ export function stringifySearchURL(baseURL: string, options: FilterOptions): URL
 
   if (options.fansubId) {
     const fansubId = options.fansubId;
-    const parsed = numberArray.safeParse(fansubId);
+    const parsed = stringArray.safeParse(fansubId);
     if (parsed.success) {
       const data = parsed.data;
       if (data.length > 0) {
@@ -148,7 +148,7 @@ export function stringifySearchURL(baseURL: string, options: FilterOptions): URL
   }
   if (options.publisherId) {
     const publisherId = options.publisherId;
-    const parsed = numberArray.safeParse(publisherId);
+    const parsed = stringArray.safeParse(publisherId);
     if (parsed.success) {
       const data = parsed.data;
       if (data.length > 0) {

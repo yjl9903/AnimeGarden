@@ -1,5 +1,12 @@
 import type { ResolvedFilterOptions, ResourceType } from 'animegarden';
-import { type ResourceDocument, getTeam, getUser } from '@animegarden/database';
+import {
+  type ResourceDocument,
+  getTeam,
+  getUser,
+  getTeamByProviderId,
+  getTeamByName,
+  getUserByProviderId
+} from '@animegarden/database';
 
 import { hash } from 'ohash';
 import { Resource } from 'animegarden';
@@ -23,11 +30,31 @@ export async function searchResources(search: string, filter: ResolvedFilterOpti
   if (filter.before) {
     filters.push(`createdAt <= ${filter.before.getTime()}`);
   }
+  if (filter.publisherId) {
+    const publishers: string[] = [];
+    for (const id of filter.fansubId ?? []) {
+      const users = await getUserByProviderId(database, id);
+      publishers.push(...users.map((t) => t.providerId));
+    }
+    if (publishers.length > 0) {
+      const array = publishers.map((t) => `'${t}'`).join(',');
+      filters.push(`publisherId in [${array}]`);
+    }
+  }
   if (filter.fansubId || filter.fansubName) {
-    // TODO: how to model?
-    // const fansubs = [];
-    // for (const f of filter.fansubId ?? []) {
-    // }
+    const fansubs: string[] = [];
+    for (const id of filter.fansubId ?? []) {
+      const teams = await getTeamByProviderId(database, id);
+      fansubs.push(...teams.map((t) => t.providerId));
+    }
+    for (const name of filter.fansubName ?? []) {
+      const teams = await getTeamByName(database, name);
+      fansubs.push(...teams.map((t) => t.providerId));
+    }
+    if (fansubs.length > 0) {
+      const array = fansubs.map((t) => `'${t}'`).join(',');
+      filters.push(`fansubId in [${array}]`);
+    }
   }
 
   const resp = await meiliSearch.index('resources').search<ResourceDocument>(search, {
