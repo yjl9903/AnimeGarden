@@ -5,6 +5,7 @@ import { parseSearchURL } from 'animegarden';
 import { registerApp } from '../app';
 
 import { queryResources } from './resources';
+import { getDmhyResourceDetail } from './detail';
 
 export function registerQuery() {
   registerApp((app) => {
@@ -27,8 +28,8 @@ export function registerQuery() {
     app.post(`/resources`, async (ctx) => {
       return listResourcesHandler(ctx);
     });
-    app.get(`/detail`, async (req) => {});
-    app.get(`/resource`, async (req) => {});
+    app.get(`/detail/:href`, async (ctx) => {});
+    app.get(`/resource/:href`, async (ctx) => {});
 
     app.get(`/dmhy/resources`, async (ctx) => {
       return listResourcesHandler(ctx, 'dmhy');
@@ -36,8 +37,12 @@ export function registerQuery() {
     app.post(`/dmhy/resources`, async (ctx) => {
       return listResourcesHandler(ctx, 'dmhy');
     });
-    app.get(`/dmhy/detail`, async (req) => {});
-    app.get(`/dmhy/resource`, async (req) => {});
+    app.get(`/dmhy/detail/:href`, async (ctx) => {
+      return getDmhyResourceDetail(ctx);
+    });
+    app.get(`/dmhy/resource/:href`, async (ctx) => {
+      return getDmhyResourceDetail(ctx);
+    });
 
     app.get(`/moe/resources`, async (ctx) => {
       return listResourcesHandler(ctx, 'moe');
@@ -45,7 +50,7 @@ export function registerQuery() {
     app.post(`/moe/resources`, async (ctx) => {
       return listResourcesHandler(ctx, 'moe');
     });
-    app.get(`/moe/detail`, async (req) => {});
-    app.get(`/moe/resource`, async (req) => {});
+    app.get(`/moe/detail/:href`, async (ctx) => {});
+    app.get(`/moe/resource/:href`, async (ctx) => {});
   });
 }
