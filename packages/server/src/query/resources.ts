@@ -153,9 +153,8 @@ const listResourcesFromDB = memoAsync(
       },
       async set([params], value) {
         // Cache set
-        const key = hash(params);
-        logger.info(`Resources list cache ${key} has been set at ${value.timestamp}`);
-
+        // const key = hash(params);
+        // logger.info(`Resources list cache ${key} has been set at ${value.timestamp}`);
         // return resourcesStorage.setItem(key, value, {
         //   // Cached 1 hour
         //   ttl: 60 * 60
