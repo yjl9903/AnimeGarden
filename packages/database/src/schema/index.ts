@@ -43,7 +43,7 @@ export interface ResourceDocument {
 
   publisher_id: string;
 
-  isDeleted: Resource['isDeleted'];
+  is_deleted: Resource['isDeleted'];
 
-  isDuplicated: Resource['isDuplicated'];
+  is_duplicated: Resource['isDuplicated'];
 }

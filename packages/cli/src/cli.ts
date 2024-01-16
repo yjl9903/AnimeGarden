@@ -127,6 +127,21 @@ cli
           .updateRankingRules(['words', 'sort', 'typo', 'proximity', 'attribute', 'exactness']);
       }
     }
+    {
+      const filterable = await meili.index(index).getFilterableAttributes();
+      const expected = [
+        'provider',
+        'fansub_id',
+        'publisher_id',
+        'type',
+        'created_at',
+        'is_deleted',
+        'is_duplicated'
+      ];
+      if (filterable.length !== expected.length) {
+        await meili.index(index).updateFilterableAttributes(expected);
+      }
+    }
   });
 
 async function connectMeili(options: { url?: string; key?: string }) {
