@@ -7,6 +7,11 @@ export interface FilterOptions {
   provider?: string | string[];
 
   /**
+   * Whether display duplicate result
+   */
+  duplicate?: boolean;
+
+  /**
    * Filter by the group id of fansub
    */
   fansubId?: number | string | (number | string)[];
@@ -65,7 +70,9 @@ export interface FilterOptions {
 }
 
 export interface ResolvedFilterOptions {
-  provider: string[];
+  provider?: string[];
+
+  duplicate: boolean;
 
   /**
    * Filter by the group id of fansub

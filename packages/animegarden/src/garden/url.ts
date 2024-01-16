@@ -34,10 +34,27 @@ const stringArrayLike = z.coerce
 //   .pipe(numberArray)
 //   .optional();
 
-const providerEnum = z.array(z.enum(['dmhy', 'moe'])).default(['dmhy', 'moe']);
+const providerEnum = z.enum(['dmhy', 'moe']);
+const providerLike = z
+  .union([
+    providerEnum.transform((t) => [t]),
+    z.coerce
+      .string()
+      .transform((t) => {
+        try {
+          return JSON.parse(t);
+        } catch {
+          return [t];
+        }
+      })
+      .pipe(z.array(providerEnum)),
+    z.array(providerEnum)
+  ])
+  .transform((t) => [...new Set(t)]);
 
 export const FilterSchema = z.object({
-  provider: providerEnum,
+  provider: providerLike.optional(),
+  duplicate: z.coerce.boolean().optional(),
   page: z
     .number()
     .default(1)
@@ -58,7 +75,8 @@ export const FilterSchema = z.object({
 });
 
 const parser = {
-  provider: providerEnum,
+  provider: providerLike.default(['dmhy', 'moe']),
+  duplicate: z.coerce.boolean().default(false),
   page: z.coerce
     .number()
     .default(1)
@@ -103,6 +121,7 @@ export function parseSearchURL(
         const parsed = parser.safeParse(content);
         if (parsed.success) {
           return [key, parsed.data];
+        } else {
         }
       }
     }
@@ -117,6 +136,13 @@ export function parseSearchURL(
   }
   if (isNaN(filtered.pageSize)) {
     filtered.pageSize = 100;
+  }
+  if (filtered.duplicate === undefined || filtered.duplicate === null) {
+    if (filtered.provider && filtered.provider.length === 1) {
+      filtered.duplicate = true;
+    } else {
+      filtered.duplicate = false;
+    }
   }
 
   return filtered;

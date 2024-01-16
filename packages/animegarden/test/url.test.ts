@@ -8,6 +8,7 @@ describe('parse url', () => {
       {
         "after": undefined,
         "before": undefined,
+        "duplicate": false,
         "exclude": undefined,
         "fansubId": undefined,
         "fansubName": undefined,
@@ -25,6 +26,7 @@ describe('parse url', () => {
       {
         "after": undefined,
         "before": undefined,
+        "duplicate": false,
         "exclude": undefined,
         "fansubId": undefined,
         "fansubName": undefined,
@@ -42,6 +44,7 @@ describe('parse url', () => {
       {
         "after": undefined,
         "before": undefined,
+        "duplicate": false,
         "exclude": undefined,
         "fansubId": undefined,
         "fansubName": undefined,
@@ -59,6 +62,7 @@ describe('parse url', () => {
       {
         "after": undefined,
         "before": undefined,
+        "duplicate": false,
         "exclude": undefined,
         "fansubId": undefined,
         "fansubName": undefined,
@@ -78,6 +82,7 @@ describe('parse url', () => {
       {
         "after": 2023-06-14T00:00:00.000Z,
         "before": undefined,
+        "duplicate": false,
         "exclude": undefined,
         "fansubId": undefined,
         "fansubName": undefined,
@@ -96,6 +101,7 @@ describe('parse url', () => {
         {
           "after": undefined,
           "before": 2023-06-13T00:00:00.000Z,
+          "duplicate": false,
           "exclude": undefined,
           "fansubId": undefined,
           "fansubName": undefined,
@@ -115,6 +121,7 @@ describe('parse url', () => {
       {
         "after": undefined,
         "before": undefined,
+        "duplicate": false,
         "exclude": undefined,
         "fansubId": undefined,
         "fansubName": undefined,
@@ -126,6 +133,49 @@ describe('parse url', () => {
         "search": [
           "你好世界",
         ],
+        "type": undefined,
+      }
+    `);
+  });
+
+  it('should infer duplicate', () => {
+    expect(parseSearchURL(new URLSearchParams(`provider=dmhy`))).toMatchInlineSnapshot(`
+      {
+        "after": undefined,
+        "before": undefined,
+        "duplicate": true,
+        "exclude": undefined,
+        "fansubId": undefined,
+        "fansubName": undefined,
+        "include": undefined,
+        "page": 1,
+        "pageSize": 100,
+        "provider": [
+          "dmhy",
+        ],
+        "publisherId": undefined,
+        "search": undefined,
+        "type": undefined,
+      }
+    `);
+
+    expect(parseSearchURL(new URLSearchParams(`provider=["dmhy","moe"]`))).toMatchInlineSnapshot(`
+      {
+        "after": undefined,
+        "before": undefined,
+        "duplicate": false,
+        "exclude": undefined,
+        "fansubId": undefined,
+        "fansubName": undefined,
+        "include": undefined,
+        "page": 1,
+        "pageSize": 100,
+        "provider": [
+          "dmhy",
+          "moe",
+        ],
+        "publisherId": undefined,
+        "search": undefined,
         "type": undefined,
       }
     `);
@@ -173,6 +223,7 @@ describe('parse url', () => {
       {
         "after": 2023-06-10T00:00:00.000Z,
         "before": 2023-06-13T00:00:00.000Z,
+        "duplicate": false,
         "exclude": [
           "hi",
         ],

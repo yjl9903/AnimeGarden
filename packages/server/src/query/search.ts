@@ -19,7 +19,10 @@ import { database } from '../database';
 import { meiliSearch, meiliLogger } from '../meilisearch';
 
 export async function searchResources(search: string, filter: ResolvedFilterOptions) {
-  const filters: string[] = ['isDeleted = false', 'isDuplicated = false'];
+  const filters: string[] = [
+    'isDeleted = false',
+    `isDuplicate = ${filter.duplicate ? 'true' : 'false'}`
+  ];
   if (filter.provider) {
     const providers = filter.provider.map((p) => `'${p}'`).join(',');
     filters.push(`provider in [${providers}]`);
