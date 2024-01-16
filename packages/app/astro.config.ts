@@ -22,7 +22,7 @@ const WORKER_HOST = process.env.WORKER_HOST ?? `animegarden.yjl9903.workers.dev`
 // https://astro.build/config
 export default defineConfig({
   output: 'server',
-  site: 'https://garden.onekuma.cn',
+  site: 'https://' + APP_HOST,
   integrations: [
     uno(),
     react(),

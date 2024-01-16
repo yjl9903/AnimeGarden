@@ -4,6 +4,7 @@ import rss from '@astrojs/rss';
 import { z } from 'zod';
 import { toDate } from 'date-fns-tz';
 import {
+  type Resource,
   type ResolvedFilterOptions,
   FilterSchema,
   fetchResources,
@@ -44,7 +45,7 @@ export const GET: APIRoute = async (context) => {
           return {
             title: r.title,
             pubDate: toDate(r.createdAt, { timeZone: 'Asia/Shanghai' }),
-            link: toGardenURL(context.site!.origin, r.href),
+            link: toGardenURL(context.site!.origin, r),
             enclosure: {
               url: r.magnet,
               length: r.size ? formatSize(r.size) : 1,
@@ -79,9 +80,8 @@ function inferTitle(params: URLSearchParams, options: ResolvedFilterOptions) {
   return 'Anime Garden - 動漫花園資源網 第三方镜像站';
 }
 
-function toGardenURL(origin: string, href: string) {
-  const id = href.split('/').at(-1)!;
-  return origin + '/resource/' + id;
+function toGardenURL(origin: string, r: Resource) {
+  return origin + `/detail/${r.provider}/${r.providerId}`;
 }
 
 function formatSize(size: string) {
