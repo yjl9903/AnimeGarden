@@ -204,6 +204,43 @@ describe('parse url', () => {
     `);
   });
 
+  it('complex fansubId', () => {
+    expect(parseSearchURL(new URLSearchParams(`fansubId=123`)).fansubId).toMatchInlineSnapshot(`
+      [
+        "123",
+      ]
+    `);
+
+    expect(parseSearchURL(new URLSearchParams(`fansubId=[123]`)).fansubId).toMatchInlineSnapshot(`
+      [
+        "123",
+      ]
+    `);
+
+    expect(parseSearchURL(new URLSearchParams(`fansubId=[123, 456]`)).fansubId)
+      .toMatchInlineSnapshot(`
+        [
+          "123",
+          "456",
+        ]
+      `);
+
+    expect(parseSearchURL(new URLSearchParams(`fansubId=[123, 456, "789"]`)).fansubId)
+      .toMatchInlineSnapshot(`
+        [
+          "123",
+          "456",
+          "789",
+        ]
+      `);
+
+    expect(parseSearchURL(new URLSearchParams(`fansubId="789"`)).fansubId).toMatchInlineSnapshot(`
+      [
+        "789",
+      ]
+    `);
+  });
+
   it('complex filter options', () => {
     const params = [
       'after=2023-06-10',
@@ -227,7 +264,9 @@ describe('parse url', () => {
         "exclude": [
           "hi",
         ],
-        "fansubId": undefined,
+        "fansubId": [
+          "123",
+        ],
         "fansubName": [
           "字幕组",
         ],
@@ -254,7 +293,7 @@ describe('parse url', () => {
         parseSearchURL(new URLSearchParams(params.join('&')))
       )
     ).toMatchInlineSnapshot(
-      `"https://garden.onekuma.cn/api/resources?page=2&pageSize=100&fansubName=%5B%22%E5%AD%97%E5%B9%95%E7%BB%84%22%5D&type=%E5%8B%95%E7%95%AB&before=1686614400000&after=1686355200000&search=%5B%22hello%22%2C%22world%22%5D&include=%5B%22hello%22%2C%22world1%22%2C%22world3%22%5D&exclude=%5B%22hi%22%5D"`
+      `"https://garden.onekuma.cn/api/resources?page=2&pageSize=100&fansubId=123&fansubName=%5B%22%E5%AD%97%E5%B9%95%E7%BB%84%22%5D&type=%E5%8B%95%E7%95%AB&before=1686614400000&after=1686355200000&search=%5B%22hello%22%2C%22world%22%5D&include=%5B%22hello%22%2C%22world1%22%2C%22world3%22%5D&exclude=%5B%22hi%22%5D"`
     );
   });
 });

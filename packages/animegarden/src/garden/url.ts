@@ -26,13 +26,13 @@ const stringArrayLike = z.coerce
 //   z.array(stringArray).default([])
 // ]);
 
-// const numberArray = z.union([z.array(z.coerce.number()), z.coerce.number().transform((n) => [n])]);
-// const numberArrayLike = z.coerce
-//   .string()
-//   .transform((t) => JSON.parse(t))
-//   .catch(undefined)
-//   .pipe(numberArray)
-//   .optional();
+const numberArray = z.union([z.array(z.coerce.number()), z.coerce.number().transform((n) => [n])]);
+const numberArrayLike = z.coerce
+  .string()
+  .transform((t) => JSON.parse(t))
+  .catch(undefined)
+  .pipe(z.union([numberArray, stringArray]))
+  .optional();
 
 const providerEnum = z.enum(['dmhy', 'moe']);
 const providerLike = z
@@ -63,7 +63,7 @@ export const FilterSchema = z.object({
     .number()
     .default(100)
     .refine((ps) => 1 <= ps && ps <= 1000),
-  fansubId: z.string().array().optional(),
+  fansubId: z.array(z.union([z.coerce.number().transform((n) => '' + n), z.string()])).optional(),
   fansubName: z.string().array().optional(),
   publisherId: z.string().array().optional(),
   type: z.string().optional(),
@@ -85,7 +85,7 @@ const parser = {
     .number()
     .default(100)
     .transform((ps) => Math.round(Math.max(1, Math.min(1000, ps)))),
-  fansubId: stringArrayLike,
+  fansubId: numberArrayLike.transform((t) => t?.map((n) => '' + n)),
   fansubName: stringArrayLike,
   publisherId: stringArrayLike,
   type: z.coerce.string().optional(),
