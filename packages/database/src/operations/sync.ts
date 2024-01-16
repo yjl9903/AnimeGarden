@@ -4,10 +4,15 @@ import type { Database } from '../connection';
 
 import { insertResourceDocuments } from '../meilisearch';
 
-export async function syncResourcesToMeili(database: Database, meili: MeiliSearch) {
+export async function syncResourcesToMeili(
+  database: Database,
+  meili: MeiliSearch,
+  offset: number,
+  limit: number
+) {
   const res = await database.query.resources.findMany({
-    offset: 0,
-    limit: 1000,
+    offset,
+    limit,
     orderBy: (t, { desc }) => [desc(t.createdAt)]
   });
   await insertResourceDocuments(meili, res);

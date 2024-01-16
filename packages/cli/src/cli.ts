@@ -144,6 +144,34 @@ cli
     }
   });
 
+cli
+  .command('meili sync')
+  .option('--uri <string>', 'Postgres database connection URI')
+  .option('--host <string>', 'Postgres database host')
+  .option('--port <string>', 'Postgres database port')
+  .option('--username <string>', 'Postgres database username')
+  .option('--password <string>', 'Postgres database password')
+  .option('--database <string>', 'Postgres database name')
+  .option('--meili-url <url>', 'MeiliSearch URL')
+  .option('--meili-key <key>', 'MeiliSearch Key')
+  .action(async (options) => {
+    const { connection, database } = await connect(options);
+    const meili = await connectMeili({ url: options.meiliUrl, key: options.meiliKey });
+
+    const { syncResourcesToMeili } = await import('@animegarden/database');
+
+    const pageSize = 10000;
+    for (let i = 0; ; i += pageSize) {
+      const resp = await syncResourcesToMeili(database, meili, i, pageSize);
+      if (resp.count === 0) {
+        break;
+      }
+      console.log(`Syncing ${resp.count} documents to meilisearch`);
+    }
+
+    await connection.end();
+  });
+
 async function connectMeili(options: { url?: string; key?: string }) {
   await import('dotenv/config');
 
