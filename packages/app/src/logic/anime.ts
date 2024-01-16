@@ -1,4 +1,5 @@
-import type { FullBangumi } from 'bgmd/dist/types';
+import type { FullBangumi } from 'bgmd/types';
+
 import { calendar as rawCalendar } from 'bgmd/calendar';
 import { stringifySearchURL } from 'animegarden';
 
@@ -45,7 +46,7 @@ export function getDisplayName(bgm: FullBangumi) {
 
 export function getSearchURL(bgm: FullBangumi) {
   const url = stringifySearchURL('https://' + APP_HOST, {
-    include: [[bgm.name, ...bgm.alias]],
+    include: [bgm.name, ...bgm.alias],
     after: new Date(new Date(bgm.air_date).getTime() - 7 * 24 * 60 * 60 * 1000)
   });
   return `${url.pathname}${url.search}`;
