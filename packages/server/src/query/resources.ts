@@ -85,7 +85,7 @@ const listResourcesFromDB = memoAsync(
       )
       .leftJoin(
         teams,
-        and(eq(resources.provider, teams.provider), eq(resources.publisherId, teams.providerId))
+        and(eq(resources.provider, teams.provider), eq(resources.fansubId, teams.providerId))
       )
       .where(
         and(
@@ -153,12 +153,12 @@ const listResourcesFromDB = memoAsync(
       },
       async set([params], value) {
         // Cache set
-        // const key = hash(params);
-        // logger.info(`Resources list cache ${key} has been set at ${value.timestamp}`);
-        // return resourcesStorage.setItem(key, value, {
-        //   // Cached 1 hour
-        //   ttl: 60 * 60
-        // });
+        const key = hash(params);
+        logger.info(`Resources list cache ${key} has been set at ${value.timestamp}`);
+        return resourcesStorage.setItem(key, value, {
+          // Cached 1 hour
+          ttl: 60 * 60
+        });
       },
       async remove([params]) {
         return resourcesStorage.removeItem(hash(params));
