@@ -49,6 +49,10 @@ const active = url.startsWith('/anime')
 
 function generateFeed(params: URLSearchParams) {
   const filter = parseSearchURL(params);
+  // Hack: manually remove duplicate
+  if (!filter.provider && filter.duplicate === false) {
+    delete filter['duplicate'];
+  }
   if (filter.search) {
     filter.search = removeQuote(filter.search);
   }
@@ -194,7 +198,7 @@ function followSearch(params: Record<string, string>) {
     <footer class="main pb-8vh select-none [&>div]:(flex items-center)" transition:persist>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-carbon-update-now op-80"></span>
-         Refreshed at {timestamp.toLocaleString('zh-CN', { timeZone: 'Asia/ShangHai' })}
+        Refreshed at {timestamp.toLocaleString('zh-CN', { timeZone: 'Asia/ShangHai' })}
       </div>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-devicon-github op-80"></span>
@@ -204,11 +208,11 @@ function followSearch(params: Record<string, string>) {
       </div>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-devicon-astro op-80"></span>
-         Powered by Astro
+        Powered by Astro
       </div>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-devicon-cloudflare op-80"></span>
-         Hosted on Cloudflare Pages
+        Hosted on Cloudflare Pages
       </div>
     </footer>
 
