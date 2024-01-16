@@ -138,8 +138,8 @@ export function stringifySearch(search: URLSearchParams) {
   if (filter.search) {
     content.push(...filter.search.map((f) => wrap(f)));
   }
-  if (filter.include && filter.include.length === 1) {
-    content.push(...filter.include[0].map((f) => wrap(f)));
+  if (filter.include && filter.include.length > 0) {
+    content.push(...filter.include.map((f) => wrap(f)));
   }
   if (filter.exclude) {
     content.push(...filter.exclude.map((ex) => '排除:' + wrap(ex)));
