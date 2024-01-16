@@ -18,6 +18,12 @@ export interface Env {
 declare module '~build/meta' {
   export const APP_HOST: string;
 
+  export const SERVER_HOST: string | undefined;
+
+  export const SERVER_PORT: string | undefined;
+
+  export const SERVER_PROTOCOL: string | undefined;
+
   export const WORKER_HOST: string;
 
   export const CF_BEACON: string | undefined;
