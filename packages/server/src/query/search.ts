@@ -25,7 +25,7 @@ export async function searchResources(search: string, filter: ResolvedFilterOpti
   ];
   if (filter.provider) {
     const providers = filter.provider.map((p) => `'${p}'`).join(',');
-    filters.push(`provider in [${providers}]`);
+    filters.push(`provider IN [${providers}]`);
   }
   if (filter.type) {
     filters.push(`type = '${filter.type}'`);
@@ -44,7 +44,7 @@ export async function searchResources(search: string, filter: ResolvedFilterOpti
     }
     if (publishers.length > 0) {
       const array = publishers.map((t) => `'${t}'`).join(',');
-      filters.push(`publisherId in [${array}]`);
+      filters.push(`publisherId IN [${array}]`);
     }
   }
   if (filter.fansubId || filter.fansubName) {
@@ -59,7 +59,7 @@ export async function searchResources(search: string, filter: ResolvedFilterOpti
     }
     if (fansubs.length > 0) {
       const array = fansubs.map((t) => `'${t}'`).join(',');
-      filters.push(`fansubId in [${array}]`);
+      filters.push(`fansubId IN [${array}]`);
     }
   }
 
