@@ -178,10 +178,14 @@ export async function fetchResourceDetail(
   const { baseURL = DefaultBaseURL, retry = 1 } = options;
   const url = new URL(`detail/${provider}/${href}`, baseURL);
 
-  const resp = await retryFn(
-    () => fetch(url.toString(), { signal: options.signal }).then((r) => r.json()),
-    retry
-  );
+  const resp = await retryFn(async () => {
+    const resp = await fetch(url.toString(), { signal: options.signal });
+    if (resp.ok) {
+      return await resp.json();
+    } else {
+      throw new Error(`Fetch failed`, { cause: resp });
+    }
+  }, retry);
 
   if (resp.id !== undefined && resp.detail !== undefined) {
     return { id: resp.id, ...resp.detail };
