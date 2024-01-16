@@ -20,6 +20,10 @@ export type ResourceType =
   | '其他';
 
 export interface Resource {
+  provider: string;
+
+  providerId: string;
+
   title: string;
 
   href: string;
@@ -45,13 +49,15 @@ export interface Resource {
   createdAt: string;
 
   fetchedAt: string;
-
-  provider: string;
 }
 
 export type FetchedResource = Omit<Resource, 'fetchedAt'>;
 
 export interface ResourceDetail {
+  provider: string;
+
+  providerId: string;
+
   title: string;
 
   href: string;

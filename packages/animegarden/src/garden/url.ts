@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { QueryType } from './constant';
-import { normalizeTitle } from './utils';
+// import { normalizeTitle } from './utils';
 import { FilterOptions, ResolvedFilterOptions } from './types';
 
 const dateLike = z
@@ -15,10 +15,10 @@ const stringArrayLike = z.coerce
   .catch(undefined)
   .pipe(stringArray)
   .optional();
-const stringArrayArray = z.union([
-  z.string().transform((s) => [[s]]),
-  z.array(stringArray).default([])
-]);
+// const stringArrayArray = z.union([
+//   z.string().transform((s) => [[s]]),
+//   z.array(stringArray).default([])
+// ]);
 
 const numberArray = z.union([z.array(z.coerce.number()), z.coerce.number().transform((n) => [n])]);
 const numberArrayLike = z.coerce
@@ -28,7 +28,10 @@ const numberArrayLike = z.coerce
   .pipe(numberArray)
   .optional();
 
+const providerEnum = z.array(z.enum(['dmhy', 'moe'])).default(['dmhy', 'moe']);
+
 export const FilterSchema = z.object({
+  provider: providerEnum,
   page: z
     .number()
     .default(1)
@@ -44,11 +47,12 @@ export const FilterSchema = z.object({
   before: dateLike,
   after: dateLike,
   search: stringArray.optional(),
-  include: stringArrayArray.optional(),
+  include: stringArray.optional(),
   exclude: stringArray.optional()
 });
 
 const parser = {
+  provider: providerEnum,
   page: z.coerce
     .number()
     .default(1)
@@ -64,12 +68,7 @@ const parser = {
   before: dateLike,
   after: dateLike,
   search: stringArrayLike,
-  include: z.coerce
-    .string()
-    .transform((t) => JSON.parse(t))
-    .catch(undefined)
-    .pipe(stringArrayArray)
-    .optional(),
+  include: stringArrayLike,
   exclude: stringArrayLike
 };
 
@@ -80,6 +79,7 @@ export function parseSearchURL(
   body?: FilterOptions
 ): ResolvedFilterOptions {
   const entries = [...Object.entries(parser)].map(([key, parser]) => {
+    // Try parsing body
     if (body && typeof body === 'object') {
       const content = body[key as ParserKey];
       if (content !== null && content !== undefined) {
@@ -90,6 +90,7 @@ export function parseSearchURL(
         }
       }
     }
+    // Try parsing params
     {
       const content = params.get(key);
       if (content !== null && content !== '') {
@@ -103,54 +104,6 @@ export function parseSearchURL(
   });
 
   const filtered = Object.fromEntries(entries) as ResolvedFilterOptions;
-
-  if (filtered.search) {
-    const MIN_LEN = 4;
-
-    const newSearch: string[] = [];
-    const newInclude: string[][] = filtered.include ?? [];
-    const newExclude: string[] = filtered.exclude ?? [];
-
-    for (const text of filtered.search) {
-      const word = normalizeTitle(text)
-        .replace(/^(\+|-)?"([^"]*)"$/, '$1$2')
-        .replace(/%2b/g, '+');
-      if (word[0] === '+') {
-        if (word.length - 1 <= MIN_LEN) {
-          newInclude.push([word.slice(1)]);
-        } else {
-          newExclude.push(`+"${word.slice(1)}"`);
-        }
-      } else if (word[0] === '-') {
-        if (word.length - 1 <= MIN_LEN) {
-          newExclude.push(word.slice(1));
-        } else {
-          newSearch.push(`-"${word.slice(1)}"`);
-        }
-      } else {
-        if (word.length <= MIN_LEN) {
-          newInclude.push([word]);
-        } else {
-          newSearch.push(`"${word}"`);
-        }
-      }
-    }
-
-    filtered.search = newSearch;
-    if (newInclude.length > 0) {
-      filtered.include = newInclude;
-    }
-    if (newExclude.length > 0) {
-      filtered.exclude = newExclude;
-    }
-  } else {
-    if (filtered.include) {
-      filtered.include = filtered.include.map((arr) => arr.map((t) => normalizeTitle(t)));
-    }
-    if (filtered.exclude) {
-      filtered.exclude = filtered.exclude.map((t) => normalizeTitle(t));
-    }
-  }
 
   const isNaN = (d: unknown): boolean => d === undefined || d === null || Number.isNaN(d);
   if (isNaN(filtered.page)) {
@@ -166,6 +119,9 @@ export function parseSearchURL(
 export function stringifySearchURL(baseURL: string, options: FilterOptions): URL {
   const url = new URL('resources', baseURL);
 
+  if (options.provider && options.provider.length > 0) {
+    url.searchParams.set('provider', JSON.stringify(options.provider));
+  }
   if (options.page) {
     url.searchParams.set('page', '' + options.page);
   }

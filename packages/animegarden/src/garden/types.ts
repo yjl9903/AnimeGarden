@@ -2,6 +2,11 @@ import type { Resource } from '../types';
 
 export interface FilterOptions {
   /**
+   * Only filter resources in the specific provider
+   */
+  provider?: string | string[];
+
+  /**
    * Filter by the group id of fansub
    */
   fansubId?: number | string | (number | string)[];
@@ -41,7 +46,7 @@ export interface FilterOptions {
   /**
    * Include keywords
    */
-  include?: (string | string[])[];
+  include?: string | string[];
 
   /**
    * Exclude keywords
@@ -60,6 +65,8 @@ export interface FilterOptions {
 }
 
 export interface ResolvedFilterOptions {
+  provider: string[];
+
   /**
    * Filter by the group id of fansub
    */
@@ -100,7 +107,7 @@ export interface ResolvedFilterOptions {
   /**
    * Include keywords
    */
-  include?: string[][];
+  include?: string[];
 
   /**
    * Exclude keywords
