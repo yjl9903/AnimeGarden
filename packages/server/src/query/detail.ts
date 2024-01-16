@@ -6,9 +6,9 @@ import { prefixStorage } from 'unstorage';
 import { resources } from '@animegarden/database';
 import { fetchDmhyDetail } from '@animegarden/scraper';
 
-import { logger as rootLogger } from '../logger';
 import { storage } from '../storage';
 import { database } from '../database';
+import { logger as rootLogger } from '../logger';
 
 const logger = rootLogger.forkIntegrationLogger('detail');
 
