@@ -142,7 +142,6 @@ export async function fetchResources(
   async function fetchPage(page: number) {
     url.searchParams.set('page', '' + page);
     return await retryFn(async () => {
-      console.log('Fetch url', url.toString());
       const resp = await fetch(url.toString(), { signal: options.signal });
       if (resp.ok) {
         const r = await resp.json();

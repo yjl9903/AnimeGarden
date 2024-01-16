@@ -56,7 +56,6 @@ export async function fetchResources(
     signal?: AbortSignal;
   } = {}
 ) {
-  console.log('Fetch', baseURL, filter);
   return await rawFetchResources(options.fetch ?? ofetch, {
     baseURL,
     signal: options.signal,
@@ -65,7 +64,6 @@ export async function fetchResources(
 }
 
 export async function fetchResourceDetail(href: string) {
-  console.log('Fetch', baseURL, href);
   try {
     return await rawFetchResourceDetail(ofetch, href, {
       baseURL
