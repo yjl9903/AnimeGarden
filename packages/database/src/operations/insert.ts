@@ -3,7 +3,7 @@ import { parse } from 'anitomy';
 import { normalizeTitle, type FetchedResource } from 'animegarden';
 
 import type { Database } from '../connection';
-import type { NewUser, NewTeam, NewResource, Resource } from '../schema';
+import type { NewResource, Resource } from '../schema';
 
 import { resources } from '../schema/resource';
 import { insertResourceDocuments } from '../meilisearch';
@@ -32,7 +32,9 @@ export async function insertDmhyResources(
       }
     })
     .filter(Boolean) as Resource[];
-  await insertResourceDocuments(meili, docs);
+  if (docs.length > 0) {
+    await insertResourceDocuments(meili, docs);
+  }
 
   return data;
 }
