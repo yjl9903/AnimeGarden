@@ -1,5 +1,7 @@
 import type { Resource } from '../types';
 
+export type ProviderType = 'dmhy' | 'moe';
+
 export interface FilterOptions {
   /**
    * Only filter resources in the specific provider

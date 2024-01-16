@@ -190,7 +190,7 @@ export function resolveSearchURL(search: string) {
   } else {
     const match = DMHY_RE.exec(search);
     if (match) {
-      return `/resource/${match[1]}`;
+      return `/detail/dmhy/${match[1]}`;
     } else {
       const url = stringifySearchURL(location.origin, parseSearch(search));
       return `${url.pathname}${url.search}`;

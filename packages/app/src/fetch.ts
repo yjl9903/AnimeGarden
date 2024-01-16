@@ -1,7 +1,8 @@
 import { APP_HOST, WORKER_HOST, SERVER_HOST, SERVER_PORT, SERVER_PROTOCOL } from '~build/meta';
 
 import {
-  FilterOptions,
+  type ProviderType,
+  type FilterOptions,
   fetchResources as rawFetchResources,
   fetchResourceDetail as rawFetchResourceDetail
 } from 'animegarden';
@@ -63,9 +64,9 @@ export async function fetchResources(
   });
 }
 
-export async function fetchResourceDetail(href: string) {
+export async function fetchResourceDetail(provider: string, href: string) {
   try {
-    return await rawFetchResourceDetail(ofetch, href, {
+    return await rawFetchResourceDetail(ofetch, provider as ProviderType, href, {
       baseURL
     });
   } catch (error) {

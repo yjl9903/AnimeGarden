@@ -24,7 +24,18 @@
     "jsxImportSource": "react",
     "types": [
       "@cloudflare/workers-types"
-    ]
+    ],
+    "paths": {
+      "@": [
+        "./src"
+      ],
+      "@/*": [
+        "./src/*"
+      ],
+      "animegarden": [
+        "../animegarden/src/index.ts"
+      ]
+    }
   },
   "include": [
     "./src/**/*.ts",

@@ -76,7 +76,7 @@
         }
       }
     },
-    "/resource/{href}": {
+    "/detail/{provider}/{href}": {
       "get": {
         "tags": [
           "Resource"
@@ -84,6 +84,16 @@
         "summary": "",
         "description": "",
         "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "description": "ID of Resource to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
           {
             "name": "href",
             "in": "path",

@@ -17,8 +17,8 @@ const search = Astro.url.searchParams;
 
 function getMirrorHref(r: Resource) {
   // @ts-ignore
-  if (r.id) return `/resource/${r.id}`;
-  return `/resource/${r.href.split('/').at(-1)}`;
+  if (r.id) return `/detail/${r.provider}/${r.id}`;
+  return `/detail/${r.provider}/${r.href.split('/').at(-1)}`;
 }
 
 function followSearch(params: Record<string, string>) {

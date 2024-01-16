@@ -1,0 +1,167 @@
+---
+import { APP_HOST } from '~build/meta';
+
+import { parse } from 'anitomy';
+import { formatInTimeZone } from 'date-fns-tz';
+
+import Layout from '@/layouts/Layout.astro';
+import { fetchResourceDetail } from '@/fetch';
+
+const { href, provider } = Astro.params;
+if (!href || !/^\d+/.test(href) || !provider || !['dmhy', 'moe'].includes(provider)) {
+  return Astro.redirect('/');
+}
+
+const detail = await fetchResourceDetail(provider, href);
+if (!detail) {
+  return Astro.redirect('/');
+}
+
+const files = detail.magnet.files.filter((f) => f.size !== '種子可能不存在' && f.size !== 'Bytes');
+
+const info = parse(detail.title);
+const schema = info
+  ? JSON.stringify({
+      '@context': 'http://schema.org',
+      '@type': 'TVEpisode',
+      partOfTVSeries: {
+        '@type': 'TVSeries',
+        name: info.title
+      },
+      partOfSeason: {
+        '@type': 'TVSeason',
+        seasonNumber: `${info.season ?? 1}`
+      },
+      episodeNumber: info.episode.number !== undefined ? `${info.episode.number}` : undefined,
+      datePublished: detail.createdAt,
+      url: Astro.url.toString()
+    })
+  : undefined;
+---
+
+<Layout title={`${detail.title}`}>
+  <div class="detail mt-4vh w-full space-y-4">
+    <h3 class="text-xl font-bold">
+      <span>{detail.title}</span>
+    </h3>
+    <div class="download-link rounded-md shadow-box">
+      <h4 class="text-lg font-bold border-b px4 py2">
+        <a href={detail.magnet.href} class="text-link-active">下载链接</a>
+      </h4>
+      <div
+        class="p4 space-y-1 overflow-auto whitespace-nowrap [&>div>span]:(text-base-600 select-none inline-block w-[160px] min-w-[160px]) [&>div]:(flex) [&>div>a]:(inline-block flex-1)"
+      >
+        <div>
+          <span>原链接</span>
+          <a href={detail.href} target="_blank" class="text-link">{detail.href}</a>
+        </div>
+        <div>
+          <span>会员链接</span>
+          <a href={detail.magnet.user} class="text-link">{detail.magnet.user}</a>
+        </div>
+        <div>
+          <span>Magnet 链接</span>
+          <a href={detail.magnet.href} class="text-link">{detail.magnet.href.split('&')[0]}</a>
+        </div>
+        <div>
+          <span>Magnet 链接 type II</span>
+          <a href={detail.magnet.href2} class="text-link">{detail.magnet.href2}</a>
+        </div>
+        <!-- <div>
+          <span>弹幕播放链接</span>
+          <a href={detail.magnet.ddplay} class="text-link">{detail.magnet.ddplay}</a>
+        </div> -->
+      </div>
+    </div>
+
+    <div
+      class="description"
+      set:html={detail.description.replace(
+        /簡介:(&nbsp;)?/,
+        '<h4 class="text-lg font-bold">简介</h4>'
+      )}
+    />
+
+    <div class="publisher">
+      <h4 class="text-lg font-bold pb4">
+        {detail.fansub ? '发布者 / 字幕组' : '发布者'}
+      </h4>
+      <div class="flex gap8">
+        <div>
+          <a href={`/resources/1?publisherId=${detail.publisher.id}`} class="block text-left">
+            <img
+              src={detail.publisher.avatar}
+              alt="Publisher Avatar"
+              onerror="this.src = `https://share.dmhy.org/images/defaultUser.png`;"
+              class="inline-block w-[100px] h-[100px] rounded"
+            />
+            <span class="text-link block mt2">{detail.publisher.name}</span>
+          </a>
+        </div>
+        {
+          detail.fansub && (
+            <div>
+              <a href={`/resources/1?fansubId=${detail.fansub.id}`} class="block w-auto text-left">
+                <img
+                  src={detail.fansub.avatar}
+                  alt="Fansub Avatar"
+                  onerror="this.src = `https://share.dmhy.org/images/defaultUser.png`;"
+                  class="inline-block w-[100px] h-[100px] rounded"
+                />
+                <span class="text-link block mt2">{detail.fansub.name}</span>
+              </a>
+            </div>
+          )
+        }
+      </div>
+    </div>
+    <div>
+      <span class="font-bold">发布于&nbsp;</span><span
+        >{formatInTimeZone(new Date(detail.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}</span
+      >
+    </div>
+    <div class="file-list rounded-md shadow-box">
+      <h4 class="text-lg font-bold border-b px4 py2">文件列表</h4>
+      <div class="mb4 max-h-[80vh] overflow-auto px4">
+        {
+          files.map((f) => (
+            <div class="py2 flex justify-between items-center gap4">
+              <div class="text-sm text-base-600">{f.name}</div>
+              <div class="text-xs text-base-400 select-none">{f.size}</div>
+            </div>
+          ))
+        }
+        {
+          files.length === 0 ? (
+            <div class="py2 select-none text-center text-red-400">种子信息解析失败</div>
+          ) : undefined
+        }
+        {detail.magnet.hasMoreFiles ? <div class="text-base-400">...</div> : undefined}
+      </div>
+    </div>
+  </div>
+</Layout>
+
+{info && <script type="application/ld+json" set:html={schema} />}
+
+<style is:global>
+  .detail .description hr {
+    margin-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .detail .description img {
+    margin-bottom: 0.5rem;
+    max-width: 60%;
+    max-height: 60vh;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+
+  @media (max-width: 767.9px) {
+    .detail .description img {
+      max-width: 90%;
+      max-height: 80vh;
+    }
+  }
+</style>

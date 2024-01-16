@@ -241,8 +241,8 @@ export default function Search() {
                   <Command.Item
                     key={r.href}
                     value={r.href}
-                    onMouseDown={selectStatic(`/resource/${r.href.split('/').at(-1)}`)}
-                    onSelect={selectStatic(`/resource/${r.href.split('/').at(-1)}`)}
+                    onMouseDown={selectStatic(`/detail/${r.provider}/${r.providerId}`)}
+                    onSelect={selectStatic(`/detail/${r.provider}/${r.providerId}`)}
                   >
                     {r.title}
                   </Command.Item>

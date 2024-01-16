@@ -3,7 +3,8 @@ import type { Resource, ResourceDetail } from '../types';
 import type {
   ResolvedFilterOptions,
   FetchResourcesOptions,
-  FetchResourceDetailOptions
+  FetchResourceDetailOptions,
+  ProviderType
 } from './types';
 
 import { retryFn } from './utils';
@@ -170,11 +171,12 @@ export async function fetchResources(
 
 export async function fetchResourceDetail(
   fetch: (request: RequestInfo, init?: RequestInit) => Promise<Response>,
+  provider: ProviderType,
   href: string,
   options: FetchResourceDetailOptions = {}
 ): Promise<(ResourceDetail & { id: number }) | undefined> {
   const { baseURL = DefaultBaseURL, retry = 1 } = options;
-  const url = new URL('resource/' + href, baseURL);
+  const url = new URL(`detail/${provider}/${href}`, baseURL);
 
   const resp = await retryFn(
     () => fetch(url.toString(), { signal: options.signal }).then((r) => r.json()),

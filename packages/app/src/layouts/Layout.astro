@@ -30,7 +30,7 @@ const search = Astro.url.searchParams;
 
 const feed = `/feed.xml?filter=${generateFeed(Astro.url.searchParams)}`;
 const page = Astro.params.page ?? Astro.url.searchParams.get('page') ?? '1';
-const enableFeed = page === '1' && !Astro.url.pathname.startsWith('/resource/');
+const enableFeed = page === '1' && !Astro.url.pathname.startsWith('/detail/');
 
 const env = getRuntimeEnv(Astro.locals);
 const timestamp =
@@ -75,7 +75,7 @@ function followSearch(params: Record<string, string>) {
 
     <link rel="sitemap" href="/sitemap-index.xml" />
     {
-      !url.startsWith('/resource/') && (
+      !url.startsWith('/detail/') && (
         <link rel="alternate" type="application/rss+xml" title="RSS Feeds" href={feed} />
       )
     }
