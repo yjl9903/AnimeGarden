@@ -37,6 +37,7 @@
   ],
   "scripts": {
     "build": "unbuild",
+    "dev": "unbuild --stub",
     "drizzle": "drizzle-kit",
     "drizzle:generate": "drizzle-kit generate:pg",
     "format": "prettier --write src/**/*.ts test/**/*.ts",

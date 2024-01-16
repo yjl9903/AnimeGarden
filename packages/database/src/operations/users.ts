@@ -82,3 +82,17 @@ export async function getAllTeams(database: Database) {
   }
   return AllTeams;
 }
+
+export async function getUser(database: Database, provider: string, providerId: string) {
+  if (AllUsers.size === 0) {
+    await getAllUsers(database);
+  }
+  return AllUsers.get(provider)?.get(providerId);
+}
+
+export async function getTeam(database: Database, provider: string, providerId: string) {
+  if (AllTeams.size === 0) {
+    await getAllTeams(database);
+  }
+  return AllTeams.get(provider)?.get(providerId);
+}

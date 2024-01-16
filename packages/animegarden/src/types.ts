@@ -20,6 +20,8 @@ export type ResourceType =
   | '其他';
 
 export interface Resource {
+  id?: number;
+
   provider: string;
 
   providerId: string;

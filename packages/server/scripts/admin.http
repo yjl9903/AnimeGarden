@@ -1,0 +1,10 @@
+POST http://0.0.0.0:8080/resources
+Content-Type: application/json
+
+{
+  "search": ["不死不运"]
+}
+
+###
+GET http://0.0.0.0:8080/resources
+Content-Type: application/json
