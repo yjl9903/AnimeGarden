@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: ^4.20231218.0
-        version: 4.20231218.0
+        specifier: ^4.20240117.0
+        version: 4.20240117.0
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -221,7 +221,7 @@ importers:
         version: 0.0.34
       drizzle-orm:
         specifier: ^0.29.3
-        version: 0.29.3(@cloudflare/workers-types@4.20231218.0)(postgres@3.4.3)
+        version: 0.29.3(@cloudflare/workers-types@4.20240117.0)(postgres@3.4.3)
       meilisearch:
         specifier: ^0.37.0
         version: 0.37.0
@@ -273,7 +273,7 @@ importers:
         version: 16.3.1
       drizzle-orm:
         specifier: ^0.29.3
-        version: 0.29.3(@cloudflare/workers-types@4.20231218.0)(postgres@3.4.3)
+        version: 0.29.3(@cloudflare/workers-types@4.20240117.0)(postgres@3.4.3)
       hono:
         specifier: ^3.12.4
         version: 3.12.4
@@ -1855,6 +1855,10 @@ packages:
 
   /@cloudflare/workers-types@4.20231218.0:
     resolution: {integrity: sha512-Vs1FKjfUjXYGbCsXzkl+ITp0Iyb6QiW6+vTERTNThC+v96T0IvPVAioH4tT20rXwoxAfxh380mAaxYtTrJUNVg==}
+    dev: false
+
+  /@cloudflare/workers-types@4.20240117.0:
+    resolution: {integrity: sha512-HQU8lJhaJVh8gQXFtVA7lZwd0hK1ckIFjRuxOXkVN2Z9t7DtzNbA2YTwBry5thKNgF5EwjN4THjHg5NUZzj05A==}
 
   /@cspotcode/source-map-support@0.8.1:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -5697,7 +5701,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.29.3(@cloudflare/workers-types@4.20231218.0)(postgres@3.4.3):
+  /drizzle-orm@0.29.3(@cloudflare/workers-types@4.20240117.0)(postgres@3.4.3):
     resolution: {integrity: sha512-uSE027csliGSGYD0pqtM+SAQATMREb3eSM/U8s6r+Y0RFwTKwftnwwSkqx3oS65UBgqDOM0gMTl5UGNpt6lW0A==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -5768,7 +5772,7 @@ packages:
       sqlite3:
         optional: true
     dependencies:
-      '@cloudflare/workers-types': 4.20231218.0
+      '@cloudflare/workers-types': 4.20240117.0
       postgres: 3.4.3
     dev: false
 
