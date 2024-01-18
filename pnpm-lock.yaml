@@ -124,8 +124,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@astrojs/node':
-        specifier: ^7.0.4
-        version: 7.0.4(astro@4.1.2)
+        specifier: ^8.0.0
+        version: 8.0.0(astro@4.1.2)
       '@iconify-json/carbon':
         specifier: ^1.1.27
         version: 1.1.27
@@ -420,10 +420,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@astrojs/node@7.0.4(astro@4.1.2):
-    resolution: {integrity: sha512-og36WkHZ+v32filXWx2Iu9iwj6v9QUQaBl5GcTHVGmw1lrGdztl0MtbqbY56az4ew/HkWq3GPSSQ70aZd0u86Q==}
+  /@astrojs/node@8.0.0(astro@4.1.2):
+    resolution: {integrity: sha512-qgLN2k0/GPHRNRYyXNMxx7bGR2DBNsVMWBv/S4w/q5LtsHNc+y2lhGsuk0Cz4xxvuORqXkJARjloDvtlpYwYzQ==}
     peerDependencies:
-      astro: ^4.0.0
+      astro: ^4.2.0
     dependencies:
       astro: 4.1.2(@types/node@20.11.5)(typescript@5.3.3)
       send: 0.18.0
