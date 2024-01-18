@@ -38,6 +38,8 @@ const schema = info
 ---
 
 <Layout title={`${detail.title}`}>
+  {info && <script type="application/ld+json" set:html={schema} />}
+
   <div class="detail mt-4vh w-full space-y-4">
     <h3 class="text-xl font-bold">
       <span>{detail.title}</span>
@@ -139,8 +141,6 @@ const schema = info
     </div>
   </div>
 </Layout>
-
-{info && <script type="application/ld+json" set:html={schema} />}
 
 <style is:global>
   .detail .description hr {
