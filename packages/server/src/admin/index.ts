@@ -15,10 +15,12 @@ export function registerAdmin() {
       return req.json({});
     });
 
-    app.post(`/admin/resources/sync`, async (req) => {
+    app.post(`/admin/resources/sync`, async (ctx) => {
       // Sync the database to the meilisearch documents
-      const r = await syncDocuments();
-      return req.json(r);
+      const offset = ctx.req.query('offset') ?? '0';
+      const limit = ctx.req.query('limit') ?? '1000';
+      const r = await syncDocuments(+offset, +limit);
+      return ctx.json(r);
     });
   });
 }
