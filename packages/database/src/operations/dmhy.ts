@@ -53,31 +53,46 @@ export async function updateDmhyResources(database: Database, fetchedResources: 
     title: string;
   }> = [];
   for (const latest of res) {
-    const updated = await database
-      .update(resources)
-      .set({
-        title: latest.title,
-        titleAlt: normalizeTitle(latest.title),
-        magnet: latest.magnet,
-        size: latest.size,
-        fetchedAt: now
-      })
-      .where(
-        and(eq(resources.provider, latest.provider), eq(resources.providerId, latest.providerId))
+    const found = await database.query.resources.findFirst({
+      where: and(
+        eq(resources.provider, latest.provider),
+        eq(resources.providerId, latest.providerId)
       )
-      .returning({
-        id: resources.id,
-        title: resources.title,
-        provider: resources.provider,
-        providerId: resources.providerId
-      });
-    if (updated.length === 1) {
-      logs.push({
-        operation: 'rename',
-        provider: updated[0].provider,
-        providerId: updated[0].providerId,
-        title: updated[0].title
-      });
+    });
+    if (!found) {
+      continue;
+    }
+    if (
+      found.title !== latest.title ||
+      found.magnet !== latest.magnet ||
+      found.size !== latest.size
+    ) {
+      const updated = await database
+        .update(resources)
+        .set({
+          title: latest.title,
+          titleAlt: normalizeTitle(latest.title),
+          magnet: latest.magnet,
+          size: latest.size,
+          fetchedAt: now
+        })
+        .where(
+          and(eq(resources.provider, latest.provider), eq(resources.providerId, latest.providerId))
+        )
+        .returning({
+          id: resources.id,
+          title: resources.title,
+          provider: resources.provider,
+          providerId: resources.providerId
+        });
+      if (updated.length === 1) {
+        logs.push({
+          operation: 'rename',
+          provider: updated[0].provider,
+          providerId: updated[0].providerId,
+          title: updated[0].title
+        });
+      }
     }
   }
 
