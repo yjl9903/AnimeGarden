@@ -10,22 +10,23 @@ export function registerAdmin() {
       return req.json(r);
     });
 
-    app.post(`/admin/moe/resources`, async (req) => {
-      // const r = await refreshDmhyResources();
-      return req.json({});
-    });
-
-    app.post(`/admin/resources/sync`, async (ctx) => {
+    app.post(`/admin/dmhy/resources/sync`, async (ctx) => {
       const pageSize = 80;
-      const offset = +(ctx.req.query('offset') ?? '0');
+      // Page index is 1-based
+      const offset = +(ctx.req.query('offset') ?? '1');
       const limit = +(ctx.req.query('limit') ?? '10');
 
       // Fix dmhy resources
       const logs = await fixDmhyResources(offset, offset + limit - 1);
       // Sync the database to the meilisearch documents
-      const docs = await syncDocuments(offset * pageSize, limit * pageSize);
+      const docs = await syncDocuments((offset - 1) * pageSize, limit * pageSize);
 
       return ctx.json({ logs, docs });
+    });
+
+    app.post(`/admin/moe/resources`, async (req) => {
+      // const r = await refreshDmhyResources();
+      return req.json({});
     });
   });
 }
