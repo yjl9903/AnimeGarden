@@ -51,6 +51,7 @@ export async function updateDmhyResources(database: Database, fetchedResources: 
     provider: string;
     providerId: string;
     title: string;
+    oldTitle?: string;
   }> = [];
   for (const latest of res) {
     const found = await database.query.resources.findFirst({
@@ -90,7 +91,8 @@ export async function updateDmhyResources(database: Database, fetchedResources: 
           operation: 'rename',
           provider: updated[0].provider,
           providerId: updated[0].providerId,
-          title: updated[0].title
+          title: updated[0].title,
+          oldTitle: found.title
         });
       }
     }
