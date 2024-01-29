@@ -114,7 +114,7 @@ export async function fetchResources(
     // Fetch one page
     const resp = await fetchPage(options.page ?? 1);
 
-    if (!resp) {
+    if (!resp || !resp.resources) {
       return {
         ok: false,
         resources: [],
@@ -146,15 +146,17 @@ export async function fetchResources(
       const resp = await fetch(url.toString(), { signal: options.signal });
       if (resp.ok) {
         const r = await resp.json();
-        return {
-          resources: r.resources as ResourceWithId[],
-          complete: r.complete as boolean,
-          filter: r.filter as ResolvedFilterOptions | undefined,
-          timestamp: new Date(r.timestamp)
-        };
-      } else {
-        return undefined;
+        const timestamp = new Date(r.timestamp);
+        if (!isNaN(timestamp.getTime())) {
+          return {
+            resources: r.resources as ResourceWithId[],
+            complete: r.complete as boolean,
+            filter: r.filter as ResolvedFilterOptions | undefined,
+            timestamp
+          };
+        }
       }
+      return undefined;
     }, retry);
   }
 
