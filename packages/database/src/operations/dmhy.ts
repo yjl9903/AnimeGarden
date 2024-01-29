@@ -115,6 +115,7 @@ export async function updateDmhyResources(database: Database, fetchedResources: 
     .where(
       and(
         eq(resources.provider, 'dmhy'),
+        eq(resources.isDeleted, false),
         gt(resources.createdAt, new Date(minCreatedAt)),
         lt(resources.createdAt, new Date(maxCreatedAt))
       )
