@@ -83,13 +83,13 @@ export default {
     switch (event.cron) {
       case '*/5 * * * *':
         // Trigger zeabur
-        fetch(`https://animegarden-api.zeabur.app/admin/dmhy/resources`, { method: 'POST' });
+        fetch(`https://garden.onekuma.cn/api/admin/dmhy/resources`, { method: 'POST' });
 
         ctx.waitUntil(refreshResources(env));
         break;
       case '0 * * * *':
         // Trigger zeabur
-        fetch(`https://animegarden-api.zeabur.app/admin/dmhy/resources/sync`, { method: 'POST' });
+        fetch(`https://garden.onekuma.cn/api/admin/dmhy/resources/sync`, { method: 'POST' });
 
         ctx.waitUntil(fixResources(env, 1, 10));
         break;
