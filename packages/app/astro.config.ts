@@ -36,56 +36,56 @@ export default defineConfig({
         }
       ]
     }),
-    PWA({
-      includeAssets: [
-        'favicon.ico',
-        'favicon.svg',
-        'apple-touch-icon-180x180.png',
-        'maskable-icon-512x512.png',
-        'pwa-64x64.png',
-        'pwa-192x192.png',
-        'pwa-512x512.png'
-      ],
-      registerType: 'autoUpdate',
-      manifest: {
-        name: 'Anime Garden',
-        short_name: 'animegarden',
-        theme_color: '#ffffff',
-        icons: [
-          {
-            src: 'pwa-64x64.png',
-            sizes: '64x64',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png'
-          },
-          {
-            src: 'pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png'
-          },
-          {
-            src: 'maskable-icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-            purpose: 'any maskable'
-          }
-        ]
-      },
-      // workbox: {
-      //   navigateFallback: '/',
-      //   globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}']
-      // },
-      devOptions: {
-        enabled: true
-      },
-      experimental: {
-        directoryAndTrailingSlashHandler: true
-      }
-    }),
+    // PWA({
+    //   includeAssets: [
+    //     'favicon.ico',
+    //     'favicon.svg',
+    //     'apple-touch-icon-180x180.png',
+    //     'maskable-icon-512x512.png',
+    //     'pwa-64x64.png',
+    //     'pwa-192x192.png',
+    //     'pwa-512x512.png'
+    //   ],
+    //   registerType: 'autoUpdate',
+    //   manifest: {
+    //     name: 'Anime Garden',
+    //     short_name: 'animegarden',
+    //     theme_color: '#ffffff',
+    //     icons: [
+    //       {
+    //         src: 'pwa-64x64.png',
+    //         sizes: '64x64',
+    //         type: 'image/png'
+    //       },
+    //       {
+    //         src: 'pwa-192x192.png',
+    //         sizes: '192x192',
+    //         type: 'image/png'
+    //       },
+    //       {
+    //         src: 'pwa-512x512.png',
+    //         sizes: '512x512',
+    //         type: 'image/png'
+    //       },
+    //       {
+    //         src: 'maskable-icon-512x512.png',
+    //         sizes: '512x512',
+    //         type: 'image/png',
+    //         purpose: 'any maskable'
+    //       }
+    //     ]
+    //   },
+    //   // workbox: {
+    //   //   navigateFallback: '/',
+    //   //   globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}']
+    //   // },
+    //   devOptions: {
+    //     enabled: true
+    //   },
+    //   experimental: {
+    //     directoryAndTrailingSlashHandler: true
+    //   }
+    // }),
     Info({
       meta: {
         /**
