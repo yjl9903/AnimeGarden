@@ -115,8 +115,8 @@ export default defineConfig({
         /**
          * Umami Cloud
          */
-        UMAMI_HOST: 'us.umami.is',
-        UMAMI_ID: '7e93a10d-26a9-4a3a-aa36-99294a5296f3'
+        UMAMI_HOST: undefined, // 'us.umami.is',
+        UMAMI_ID: undefined // '7e93a10d-26a9-4a3a-aa36-99294a5296f3'
       }
     })
   ],
