@@ -7,7 +7,9 @@ document.addEventListener('astro:page-load', () => {
   if (resp) {
     const filter = JSON.parse(resp.dataset.filter ?? '') as ResolvedFilterOptions;
     if (filter.fansubId) {
-      const fansub = new Set([...filter.fansubId, ...preferFansubs.get()].filter(Boolean));
+      const fansub = new Set(
+        [...filter.fansubId, ...preferFansubs.get()].filter(Boolean).map((t) => '' + t)
+      );
       preferFansubs.set(fansub);
       reorderFansub(fansub);
       return;
@@ -16,17 +18,17 @@ document.addEventListener('astro:page-load', () => {
   reorderFansub(preferFansubs.get());
 });
 
-export function reorderFansub(order: Set<number>) {
+export function reorderFansub(order: Set<string>) {
   const dropdown = document.querySelector('#fansub-dropdown') as HTMLElement | null;
   if (dropdown) {
     const children = Array.from(dropdown.children).filter((n) =>
       n.classList.contains('fansub-item')
     ) as HTMLElement[];
-    const map = new Map<number, HTMLElement>();
+    const map = new Map<string, HTMLElement>();
     const otherItem: HTMLElement[] = [];
     for (const c of children) {
       if (c.dataset.fansubId) {
-        const id = +c.dataset.fansubId;
+        const id = c.dataset.fansubId;
         map.set(id, c);
         if (!order.has(id)) {
           otherItem.push(c);

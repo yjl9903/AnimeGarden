@@ -26,7 +26,25 @@ export function clearHistories() {
   histories.set([]);
 }
 
-export const preferFansubs = persistentAtom<Set<number>>('animegarden:fansubs', new Set(), {
+export const preferFansubs = persistentAtom<Set<string>>('animegarden:fansubs', new Set(), {
   encode: (t) => JSON.stringify([...t]),
-  decode: (t) => new Set(JSON.parse(t) as number[])
+  decode: (t) => new Set(JSON.parse(t) as string[])
 });
+
+export const committerDate = persistentAtom<Date | undefined>(
+  'animegarden:commiter_date',
+  undefined,
+  {
+    encode: (t) => JSON.stringify(t),
+    decode: (t) => {
+      const r = JSON.parse(t);
+      if (r) {
+        const d = new Date(r as any);
+        if (!isNaN(d.getTime())) {
+          return d;
+        }
+      }
+      return undefined;
+    }
+  }
+);
