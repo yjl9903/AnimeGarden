@@ -1,6 +1,18 @@
 import type { Resource } from '../types';
 
+export type ProviderType = 'dmhy' | 'moe';
+
 export interface FilterOptions {
+  /**
+   * Only filter resources in the specific provider
+   */
+  provider?: string | string[];
+
+  /**
+   * Whether display duplicate result
+   */
+  duplicate?: boolean;
+
   /**
    * Filter by the group id of fansub
    */
@@ -41,7 +53,7 @@ export interface FilterOptions {
   /**
    * Include keywords
    */
-  include?: (string | string[])[];
+  include?: string | string[];
 
   /**
    * Exclude keywords
@@ -60,10 +72,14 @@ export interface FilterOptions {
 }
 
 export interface ResolvedFilterOptions {
+  provider?: string[];
+
+  duplicate: boolean;
+
   /**
    * Filter by the group id of fansub
    */
-  fansubId?: number[];
+  fansubId?: string[];
 
   /**
    * Filter by the group name of fansub
@@ -73,7 +89,7 @@ export interface ResolvedFilterOptions {
   /**
    * Filter by the user id of publisher
    */
-  publisherId?: number[];
+  publisherId?: string[];
 
   /**
    * Filter by the resource type
@@ -100,7 +116,7 @@ export interface ResolvedFilterOptions {
   /**
    * Include keywords
    */
-  include?: string[][];
+  include?: string[];
 
   /**
    * Exclude keywords

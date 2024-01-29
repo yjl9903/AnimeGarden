@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { QueryType } from './constant';
-import { normalizeTitle } from './utils';
+// import { normalizeTitle } from './utils';
 import { FilterOptions, ResolvedFilterOptions } from './types';
 
 const dateLike = z
@@ -11,24 +11,50 @@ const dateLike = z
 const stringArray = z.union([z.string().transform((s) => [s]), z.array(z.string())]);
 const stringArrayLike = z.coerce
   .string()
-  .transform((t) => JSON.parse(t))
-  .catch(undefined)
+  .transform((t) => {
+    try {
+      return JSON.parse(t);
+    } catch {
+      return [t];
+    }
+  })
   .pipe(stringArray)
   .optional();
-const stringArrayArray = z.union([
-  z.string().transform((s) => [[s]]),
-  z.array(stringArray).default([])
-]);
+
+// const stringArrayArray = z.union([
+//   z.string().transform((s) => [[s]]),
+//   z.array(stringArray).default([])
+// ]);
 
 const numberArray = z.union([z.array(z.coerce.number()), z.coerce.number().transform((n) => [n])]);
 const numberArrayLike = z.coerce
   .string()
   .transform((t) => JSON.parse(t))
   .catch(undefined)
-  .pipe(numberArray)
+  .pipe(z.union([numberArray, stringArray]))
   .optional();
 
+const providerEnum = z.enum(['dmhy', 'moe']);
+const providerLike = z
+  .union([
+    providerEnum.transform((t) => [t]),
+    z.coerce
+      .string()
+      .transform((t) => {
+        try {
+          return JSON.parse(t);
+        } catch {
+          return [t];
+        }
+      })
+      .pipe(z.array(providerEnum)),
+    z.array(providerEnum)
+  ])
+  .transform((t) => [...new Set(t)]);
+
 export const FilterSchema = z.object({
+  provider: providerLike.optional(),
+  duplicate: z.coerce.boolean().optional(),
   page: z
     .number()
     .default(1)
@@ -37,18 +63,20 @@ export const FilterSchema = z.object({
     .number()
     .default(100)
     .refine((ps) => 1 <= ps && ps <= 1000),
-  fansubId: z.number().array().optional(),
+  fansubId: z.array(z.union([z.coerce.number().transform((n) => '' + n), z.string()])).optional(),
   fansubName: z.string().array().optional(),
-  publisherId: z.number().array().optional(),
+  publisherId: z.string().array().optional(),
   type: z.string().optional(),
   before: dateLike,
   after: dateLike,
   search: stringArray.optional(),
-  include: stringArrayArray.optional(),
+  include: stringArray.optional(),
   exclude: stringArray.optional()
 });
 
 const parser = {
+  provider: providerLike.default(['dmhy', 'moe']),
+  duplicate: z.coerce.boolean().default(false),
   page: z.coerce
     .number()
     .default(1)
@@ -57,19 +85,14 @@ const parser = {
     .number()
     .default(100)
     .transform((ps) => Math.round(Math.max(1, Math.min(1000, ps)))),
-  fansubId: numberArrayLike,
+  fansubId: numberArrayLike.transform((t) => t?.map((n) => '' + n)),
   fansubName: stringArrayLike,
-  publisherId: numberArrayLike,
+  publisherId: stringArrayLike,
   type: z.coerce.string().optional(),
   before: dateLike,
   after: dateLike,
   search: stringArrayLike,
-  include: z.coerce
-    .string()
-    .transform((t) => JSON.parse(t))
-    .catch(undefined)
-    .pipe(stringArrayArray)
-    .optional(),
+  include: stringArrayLike,
   exclude: stringArrayLike
 };
 
@@ -80,6 +103,7 @@ export function parseSearchURL(
   body?: FilterOptions
 ): ResolvedFilterOptions {
   const entries = [...Object.entries(parser)].map(([key, parser]) => {
+    // Try parsing body
     if (body && typeof body === 'object') {
       const content = body[key as ParserKey];
       if (content !== null && content !== undefined) {
@@ -90,12 +114,14 @@ export function parseSearchURL(
         }
       }
     }
+    // Try parsing params
     {
       const content = params.get(key);
       if (content !== null && content !== '') {
         const parsed = parser.safeParse(content);
         if (parsed.success) {
           return [key, parsed.data];
+        } else {
         }
       }
     }
@@ -104,60 +130,19 @@ export function parseSearchURL(
 
   const filtered = Object.fromEntries(entries) as ResolvedFilterOptions;
 
-  if (filtered.search) {
-    const MIN_LEN = 4;
-
-    const newSearch: string[] = [];
-    const newInclude: string[][] = filtered.include ?? [];
-    const newExclude: string[] = filtered.exclude ?? [];
-
-    for (const text of filtered.search) {
-      const word = normalizeTitle(text)
-        .replace(/^(\+|-)?"([^"]*)"$/, '$1$2')
-        .replace(/%2b/g, '+');
-      if (word[0] === '+') {
-        if (word.length - 1 <= MIN_LEN) {
-          newInclude.push([word.slice(1)]);
-        } else {
-          newExclude.push(`+"${word.slice(1)}"`);
-        }
-      } else if (word[0] === '-') {
-        if (word.length - 1 <= MIN_LEN) {
-          newExclude.push(word.slice(1));
-        } else {
-          newSearch.push(`-"${word.slice(1)}"`);
-        }
-      } else {
-        if (word.length <= MIN_LEN) {
-          newInclude.push([word]);
-        } else {
-          newSearch.push(`"${word}"`);
-        }
-      }
-    }
-
-    filtered.search = newSearch;
-    if (newInclude.length > 0) {
-      filtered.include = newInclude;
-    }
-    if (newExclude.length > 0) {
-      filtered.exclude = newExclude;
-    }
-  } else {
-    if (filtered.include) {
-      filtered.include = filtered.include.map((arr) => arr.map((t) => normalizeTitle(t)));
-    }
-    if (filtered.exclude) {
-      filtered.exclude = filtered.exclude.map((t) => normalizeTitle(t));
-    }
-  }
-
   const isNaN = (d: unknown): boolean => d === undefined || d === null || Number.isNaN(d);
   if (isNaN(filtered.page)) {
     filtered.page = 1;
   }
   if (isNaN(filtered.pageSize)) {
     filtered.pageSize = 100;
+  }
+  if (filtered.duplicate === undefined || filtered.duplicate === null) {
+    if (filtered.provider && filtered.provider.length === 1) {
+      filtered.duplicate = true;
+    } else {
+      filtered.duplicate = false;
+    }
   }
 
   return filtered;
@@ -166,6 +151,9 @@ export function parseSearchURL(
 export function stringifySearchURL(baseURL: string, options: FilterOptions): URL {
   const url = new URL('resources', baseURL);
 
+  if (options.provider && options.provider.length > 0) {
+    url.searchParams.set('provider', JSON.stringify(options.provider));
+  }
   if (options.page) {
     url.searchParams.set('page', '' + options.page);
   }
@@ -175,7 +163,7 @@ export function stringifySearchURL(baseURL: string, options: FilterOptions): URL
 
   if (options.fansubId) {
     const fansubId = options.fansubId;
-    const parsed = numberArray.safeParse(fansubId);
+    const parsed = stringArray.safeParse(fansubId);
     if (parsed.success) {
       const data = parsed.data;
       if (data.length > 0) {
@@ -192,7 +180,7 @@ export function stringifySearchURL(baseURL: string, options: FilterOptions): URL
   }
   if (options.publisherId) {
     const publisherId = options.publisherId;
-    const parsed = numberArray.safeParse(publisherId);
+    const parsed = stringArray.safeParse(publisherId);
     if (parsed.success) {
       const data = parsed.data;
       if (data.length > 0) {

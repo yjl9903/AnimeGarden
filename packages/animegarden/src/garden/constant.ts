@@ -624,11 +624,11 @@ const fansubNameCache = new Map<string, Fansub>();
 export function findFansub(text: number): Fansub | undefined;
 export function findFansub(text: string, options?: { fuzzy: boolean }): Fansub | undefined;
 export function findFansub(text: number | string, options: { fuzzy: boolean } = { fuzzy: false }) {
-  if (typeof text === 'number') {
+  if (typeof text === 'number' || /^\d+$/.test(text)) {
     if (fansubIdCache.size === 0) {
       AllFansubs.forEach((f) => fansubIdCache.set(f.id, f));
     }
-    return fansubIdCache.get(text);
+    return fansubIdCache.get(+text);
   } else if (typeof text === 'string') {
     if (options.fuzzy) {
       const word = tradToSimple(text);

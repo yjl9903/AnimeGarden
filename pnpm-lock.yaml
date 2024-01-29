@@ -39,8 +39,8 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4
       prettier-plugin-astro:
-        specifier: ^0.12.3
-        version: 0.12.3
+        specifier: ^0.13.0
+        version: 0.13.0
       tsx:
         specifier: ^4.7.0
         version: 4.7.0
@@ -54,14 +54,14 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(typescript@5.3.3)
       undici:
-        specifier: ^6.3.0
-        version: 6.3.0
+        specifier: ^6.5.0
+        version: 6.5.0
       vitest:
         specifier: ^1.2.2
         version: 1.2.2(@types/node@20.11.10)
       wrangler:
-        specifier: ^3.23.0
-        version: 3.23.0
+        specifier: ^3.25.0
+        version: 3.25.0
 
   packages/animegarden:
     dependencies:
@@ -75,17 +75,17 @@ importers:
   packages/app:
     dependencies:
       '@astrojs/cloudflare':
-        specifier: ^8.1.0
-        version: 8.1.0(astro@4.2.6)
+        specifier: ^9.0.0
+        version: 9.0.0(astro@4.2.6)
       '@astrojs/react':
         specifier: ^3.0.9
         version: 3.0.9(@types/react-dom@18.2.18)(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)(vite@5.0.12)
       '@astrojs/rss':
-        specifier: ^4.0.2
-        version: 4.0.2
+        specifier: ^4.0.4
+        version: 4.0.4
       '@astrojs/sitemap':
-        specifier: ^3.0.4
-        version: 3.0.4
+        specifier: ^3.0.5
+        version: 3.0.5
       '@nanostores/persistent':
         specifier: ^0.9.1
         version: 0.9.1(nanostores@0.9.5)
@@ -99,8 +99,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       bgmd:
-        specifier: ^0.0.37
-        version: 0.0.37
+        specifier: ^0.0.38
+        version: 0.0.38
       cmdk:
         specifier: ^0.2.0
         version: 0.2.0(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
@@ -114,8 +114,8 @@ importers:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
       swagger-ui-react:
-        specifier: ^5.11.0
-        version: 5.11.0(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^5.11.2
+        version: 5.11.2(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0)
       swr:
         specifier: ^2.2.4
         version: 2.2.4(react@18.2.0)
@@ -124,8 +124,8 @@ importers:
         version: 3.22.4
     devDependencies:
       '@astrojs/node':
-        specifier: ^8.0.0
-        version: 8.0.0(astro@4.2.6)
+        specifier: ^8.1.0
+        version: 8.1.0(astro@4.2.6)
       '@iconify-json/carbon':
         specifier: ^1.1.28
         version: 1.1.28
@@ -199,14 +199,14 @@ importers:
         specifier: ^0.9.7
         version: 0.9.7
       dotenv:
-        specifier: ^16.3.1
-        version: 16.3.1
+        specifier: ^16.4.1
+        version: 16.4.1
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
       undici:
-        specifier: ^6.3.0
-        version: 6.3.0
+        specifier: ^6.5.0
+        version: 6.5.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -233,8 +233,8 @@ importers:
         version: 1.10.1
     devDependencies:
       dotenv:
-        specifier: ^16.3.1
-        version: 16.3.1
+        specifier: ^16.4.1
+        version: 16.4.1
 
   packages/scraper:
     dependencies:
@@ -269,17 +269,23 @@ importers:
         specifier: workspace:*
         version: link:../animegarden
       dotenv:
-        specifier: ^16.3.1
-        version: 16.3.1
+        specifier: ^16.4.1
+        version: 16.4.1
       drizzle-orm:
         specifier: ^0.29.3
         version: 0.29.3(@cloudflare/workers-types@4.20240117.0)(postgres@3.4.3)
       hono:
         specifier: ^3.12.8
         version: 3.12.8
+      memofunc:
+        specifier: ^0.0.8
+        version: 0.0.8
+      ohash:
+        specifier: ^1.1.3
+        version: 1.1.3
       string-width:
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^7.1.0
+        version: 7.1.0
       unstorage:
         specifier: ^1.10.1
         version: 1.10.1
@@ -293,8 +299,8 @@ importers:
         specifier: workspace:*
         version: link:../scraper
       '@planetscale/database':
-        specifier: ^1.13.0
-        version: 1.13.0
+        specifier: ^1.14.0
+        version: 1.14.0
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -302,14 +308,14 @@ importers:
         specifier: 0.0.34
         version: 0.0.34
       bgmd:
-        specifier: ^0.0.37
-        version: 0.0.37
+        specifier: ^0.0.38
+        version: 0.0.38
       hono:
         specifier: ^3.12.8
         version: 3.12.8
       kysely-planetscale:
         specifier: ^1.4.0
-        version: 1.4.0(@planetscale/database@1.13.0)(kysely@0.27.2)
+        version: 1.4.0(@planetscale/database@1.14.0)(kysely@0.27.2)
       memofunc:
         specifier: ^0.0.8
         version: 0.0.8
@@ -370,16 +376,16 @@ packages:
       leven: 3.1.0
     dev: true
 
-  /@astrojs/cloudflare@8.1.0(astro@4.2.6):
-    resolution: {integrity: sha512-RSkthOcw1/ZAA9PhSX9LEWRvbyLJ/vTJCv8nJ4LxBqMlR5j7Lt6LnQP0hI/LAlDHgnG1Hc4Hd7tB2SF85OivJw==}
+  /@astrojs/cloudflare@9.0.0(astro@4.2.6):
+    resolution: {integrity: sha512-EkUUCCGp35O0pPgRIBuahbz/eQlnOPoCM4aszFMqIWcjfOJMXMlXLma5MEHFDdNOdLdPb53LmuWBVIjDOvsUfQ==}
     peerDependencies:
-      astro: ^3.0.0 || ^4.0.0
+      astro: ^4.2.0
     dependencies:
       '@astrojs/underscore-redirects': 0.3.3
-      '@cloudflare/workers-types': 4.20231218.0
+      '@cloudflare/workers-types': 4.20240117.0
       '@iarna/toml': 2.2.5
       astro: 4.2.6(@types/node@20.11.10)(typescript@5.3.3)
-      dotenv: 16.3.1
+      dotenv: 16.4.1
       esbuild: 0.19.11
       find-up: 6.3.0
       miniflare: 3.20231030.2
@@ -420,8 +426,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@astrojs/node@8.0.0(astro@4.2.6):
-    resolution: {integrity: sha512-qgLN2k0/GPHRNRYyXNMxx7bGR2DBNsVMWBv/S4w/q5LtsHNc+y2lhGsuk0Cz4xxvuORqXkJARjloDvtlpYwYzQ==}
+  /@astrojs/node@8.1.0(astro@4.2.6):
+    resolution: {integrity: sha512-u0MyRX5ViEqMtH0vNvq+cDSbQYsPYbI/N3pfZ8vHXiOsZpWwl8BfBfuNjWOoIF8bRB1i42uzyQ7jU8/V9/TS9Q==}
     peerDependencies:
       astro: ^4.2.0
     dependencies:
@@ -458,15 +464,15 @@ packages:
       - vite
     dev: false
 
-  /@astrojs/rss@4.0.2:
-    resolution: {integrity: sha512-Hb9GKAyvsn5EUjZtB6SniesBScMQe7SQinEHLY5EFa74QEvgcWaXTmA0Mb0P3vqDSN3d/NTYbGivprrSAawfnA==}
+  /@astrojs/rss@4.0.4:
+    resolution: {integrity: sha512-VmHmRoC62j9iR0ez2Qumpn4LTQ9/4txOmGwGBmCSI+PzSFJI5M/qdao656oT9Logjh7CDwcPrCGQEEEi3HF75A==}
     dependencies:
       fast-xml-parser: 4.3.3
       kleur: 4.1.5
     dev: false
 
-  /@astrojs/sitemap@3.0.4:
-    resolution: {integrity: sha512-RSqiqs0oD8zTGaClHM0YB8n7e5En+Ihi+6qKthWf47pRkzHpENwlPGvKuEL0kUFXq+GzYot9e2JYH58gtr2q0w==}
+  /@astrojs/sitemap@3.0.5:
+    resolution: {integrity: sha512-60eLzNjMza3ABypiQPUC6ElOSZNZeY5CwSwgJ03hfeonl+Db9x12CCzBFdTw7A5Mq+O54xEZVUrR0tB+yWgX8w==}
     dependencies:
       sitemap: 7.1.1
       zod: 3.22.4
@@ -1853,10 +1859,6 @@ packages:
     dev: true
     optional: true
 
-  /@cloudflare/workers-types@4.20231218.0:
-    resolution: {integrity: sha512-Vs1FKjfUjXYGbCsXzkl+ITp0Iyb6QiW6+vTERTNThC+v96T0IvPVAioH4tT20rXwoxAfxh380mAaxYtTrJUNVg==}
-    dev: false
-
   /@cloudflare/workers-types@4.20240117.0:
     resolution: {integrity: sha512-HQU8lJhaJVh8gQXFtVA7lZwd0hK1ckIFjRuxOXkVN2Z9t7DtzNbA2YTwBry5thKNgF5EwjN4THjHg5NUZzj05A==}
 
@@ -2811,8 +2813,8 @@ packages:
       '@parcel/watcher-win32-x64': 2.3.0
     dev: false
 
-  /@planetscale/database@1.13.0:
-    resolution: {integrity: sha512-sb9tUoF+Po55o+3PRHZVeH8XzUIABKBKcnq6oBUa+p/2uau/E2EXhnUPXmkC/x7oB6ILBqmqTL6dPP5Dn6d6iA==}
+  /@planetscale/database@1.14.0:
+    resolution: {integrity: sha512-7BB+iH6EH4YJuDeVeEbxpo60BFz3wIXJNXCmBGl40eC4HStRMGZ1COxKfiuPcINWwwrJhAhI9AEI97AOZYT7JQ==}
     engines: {node: '>=16'}
     dev: false
 
@@ -4385,7 +4387,6 @@ packages:
   /ansi-styles@3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}
     engines: {node: '>=4'}
-    requiresBuild: true
     dependencies:
       color-convert: 1.9.3
 
@@ -4587,7 +4588,7 @@ packages:
       semver: 7.5.4
       server-destroy: 1.0.1
       shikiji: 0.9.19
-      string-width: 7.0.0
+      string-width: 7.1.0
       strip-ansi: 7.1.0
       tsconfck: 3.0.1(typescript@5.3.3)
       unist-util-visit: 5.0.0
@@ -4728,14 +4729,14 @@ packages:
       breadc: 0.9.7
     dev: false
 
-  /bgmd@0.0.37:
-    resolution: {integrity: sha512-LpztCuBtH6Acz38ik9tpkJ7dtMdADNw/r0m/teg+wMMHLUVSP7ErMZs/19QBQvfYWiUiGpSifnhLx+RwKJ9EXQ==}
+  /bgmd@0.0.38:
+    resolution: {integrity: sha512-JZQ+MSfhYxhvV3yoCZsZGeTfPSv72TQ7cT5YDu+XJ4LPHOzlcpn29xcA4x+Wdn9CSHBPlKysCg1juxTD58tukQ==}
     engines: {node: '>=v20.8.0'}
     dependencies:
       bangumi-data: 0.3.130
       bgmc: 0.0.8
       tmdbc: 0.0.2
-      type-fest: 4.9.0
+      type-fest: 4.10.1
     dev: false
 
   /binary-extensions@2.2.0:
@@ -4852,7 +4853,7 @@ packages:
     dependencies:
       chokidar: 3.5.3
       defu: 6.1.4
-      dotenv: 16.3.1
+      dotenv: 16.4.1
       giget: 1.2.1
       jiti: 1.21.0
       mlly: 1.5.0
@@ -5134,7 +5135,6 @@ packages:
 
   /color-convert@1.9.3:
     resolution: {integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==}
-    requiresBuild: true
     dependencies:
       color-name: 1.1.3
 
@@ -5146,7 +5146,6 @@ packages:
 
   /color-name@1.1.3:
     resolution: {integrity: sha512-72fSenhMw2HZMTVHeCA9KCmpEIbzWiQsjN+BHcBbS9vr1mtt+vJjPdksIBNUmKAW8TFUDPJK5SUU3QhE9NEXDw==}
-    requiresBuild: true
 
   /color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
@@ -5659,8 +5658,8 @@ packages:
     dependencies:
       domelementtype: 2.3.0
 
-  /dompurify@3.0.6:
-    resolution: {integrity: sha512-ilkD8YEnnGh1zJ240uJsW7AzE+2qpbOUYjacomn3AvJ6J4JhKGSZ2nh4wUIXPZrEPppaCLx5jFe8T89Rk8tQ7w==}
+  /dompurify@3.0.8:
+    resolution: {integrity: sha512-b7uwreMYL2eZhrSCRC4ahLTeZcPZxSmYfmcQGXGkXiZSNW1X85v+SDM5KsWcpivIiUBH47Ji7NtyUdpLeF5JZQ==}
     dev: false
 
   /domutils@3.1.0:
@@ -5675,8 +5674,8 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
-  /dotenv@16.3.1:
-    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
+  /dotenv@16.4.1:
+    resolution: {integrity: sha512-CjA3y+Dr3FyFDOAMnxZEGtnW9KBR2M0JvvUtXNW+dYJL5ROWxP9DUHCwgFqpMk0OXCc0ljhaNTr2w/kutYIcHQ==}
     engines: {node: '>=12'}
 
   /drange@1.1.1:
@@ -5800,7 +5799,7 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
   /ee-first@1.1.1:
-    resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
+    resolution: {integrity: sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=}
     dev: true
 
   /ejs@3.1.9:
@@ -6066,7 +6065,6 @@ packages:
   /escape-string-regexp@1.0.5:
     resolution: {integrity: sha512-vbRorB5FUQWvla16U8R/qgaFIya2qGzwDrNmCZuYKrbdSUMG6I1ZCGQRefkRVhuOkIGVne7BQ35DSfo1qvJqFg==}
     engines: {node: '>=0.8.0'}
-    requiresBuild: true
 
   /escape-string-regexp@4.0.0:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
@@ -6623,7 +6621,6 @@ packages:
   /has-flag@3.0.0:
     resolution: {integrity: sha512-sKJf1+ceQBr4SMkvQnBDNDtf4TXpVhVGateu0t918bl30FnbE2m4vNLX+VWe/dpjlb+HugGYzW7uQXH98HPEYw==}
     engines: {node: '>=4'}
-    requiresBuild: true
 
   /has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
@@ -6899,7 +6896,6 @@ packages:
 
   /ini@1.3.8:
     resolution: {integrity: sha512-JV/yugV2uzW5iMRSiZAyDtQd+nxtUnjeLt0acNdw98kKLrvuRVyB80tsREOE7yvGVgalhZ6RNXCmEHkUKBKxew==}
-    requiresBuild: true
 
   /ini@2.0.0:
     resolution: {integrity: sha512-7PnF4oN3CvZF23ADhA5wRaYEQpJ8qygSkbtTXWBeXWXmEVRXK+1ITciHWwHhsjv1TmW0MgacIv6hEi5pX5NQdA==}
@@ -7353,13 +7349,13 @@ packages:
     resolution: {integrity: sha512-Y+60/zizpJ3HRH8DCss+q95yr6145JXZo46OTpFvDZWLfRCE4qChOyk1b26nMaNpfHHgxagk9dXT5OP0Tfe+dQ==}
     dev: true
 
-  /kysely-planetscale@1.4.0(@planetscale/database@1.13.0)(kysely@0.27.2):
+  /kysely-planetscale@1.4.0(@planetscale/database@1.14.0)(kysely@0.27.2):
     resolution: {integrity: sha512-dM2xgOM50+IiOIrSCEn/6lgXcE7J752oNpV6NcIYNgG/AfYGMtWm2ZK7PyeIPy5JG1jZvQvqwTFbGK4HGH/hJw==}
     peerDependencies:
       '@planetscale/database': '*'
       kysely: '*'
     dependencies:
-      '@planetscale/database': 1.13.0
+      '@planetscale/database': 1.14.0
       date-fns: 2.30.0
       kysely: 0.27.2
     dev: false
@@ -8043,8 +8039,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /miniflare@3.20231218.2:
-    resolution: {integrity: sha512-rCUI2OjqCf3fZVdmSX4DOZQRzSDvHp/oL2vjER/cvJEdWSYiqRxDp2oO7A7JcEo1/Y+kPa5VQ1pFfdZpjBcpFg==}
+  /miniflare@3.20231218.4:
+    resolution: {integrity: sha512-2mpxvDiRBxGGGVnTKC0SZy0FtTXxFs3tM1ol67EoIJABGzvWFf33GThwh+/dRmaHSjKKId/FI8rEl5JxXXXZgQ==}
     engines: {node: '>=16.13'}
     hasBin: true
     dependencies:
@@ -9016,8 +9012,8 @@ packages:
       path-exists: 4.0.0
       which-pm: 2.0.0
 
-  /prettier-plugin-astro@0.12.3:
-    resolution: {integrity: sha512-GthUSu3zCvmtVyqlArosez0xE08vSJ0R1sWurxIWpABaCkNGYFANoUdFkqmIo54EV2uPLGcVJzOucWvCjPBWvg==}
+  /prettier-plugin-astro@0.13.0:
+    resolution: {integrity: sha512-5HrJNnPmZqTUNoA97zn4gNQv9BgVhv+et03314WpQ9H9N8m2L9OSV798olwmG2YLXPl1iSstlJCR1zB3x5xG4g==}
     engines: {node: ^14.15.0 || >=16.0.0}
     dependencies:
       '@astrojs/compiler': 1.8.2
@@ -10244,8 +10240,8 @@ packages:
       emoji-regex: 10.3.0
       strip-ansi: 7.1.0
 
-  /string-width@7.0.0:
-    resolution: {integrity: sha512-GPQHj7row82Hjo9hKZieKcHIhaAIKOJvFSIZXuCU9OASVZrMNUaZuz++SPVrBjnLsnk4k+z9f2EIypgxf2vNFw==}
+  /string-width@7.1.0:
+    resolution: {integrity: sha512-SEIJCWiX7Kg4c129n48aDRwLbFb2LJmXXFrWBG4NGaRtMQ3myKPKbwrD1BKqQn74oCoNMBVrfDEr5M9YxCsrkw==}
     engines: {node: '>=18'}
     dependencies:
       emoji-regex: 10.3.0
@@ -10401,7 +10397,6 @@ packages:
   /supports-color@5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}
     engines: {node: '>=4'}
-    requiresBuild: true
     dependencies:
       has-flag: 3.0.0
 
@@ -10460,8 +10455,8 @@ packages:
       - debug
     dev: false
 
-  /swagger-ui-react@5.11.0(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-iqc5/Z8nvqOdjU2LuWYbREnDmKj5gndZSESTH9dXfymlzLc2NoPQmXZAw02U8kFgHyciX0yDMp3oaCw1zBdPSA==}
+  /swagger-ui-react@5.11.2(@types/react@18.2.48)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-J7QevDccLZYXV1OkplfWPdgW17MVbFozcwmfWX6Ob+XwukXGjPC5XY9EqhZiwRQd02MfZX9uQLKp4kPrlibAGA==}
     peerDependencies:
       react: '>=16.8.0 <19'
       react-dom: '>=16.8.0 <19'
@@ -10472,7 +10467,7 @@ packages:
       classnames: 2.5.1
       css.escape: 1.5.1
       deep-extend: 0.6.0
-      dompurify: 3.0.6
+      dompurify: 3.0.8
       ieee754: 1.2.1
       immutable: 3.8.2
       js-file-download: 0.4.12
@@ -10872,8 +10867,8 @@ packages:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
     engines: {node: '>=12.20'}
 
-  /type-fest@4.9.0:
-    resolution: {integrity: sha512-KS/6lh/ynPGiHD/LnAobrEFq3Ad4pBzOlJ1wAnJx9N4EYoqFhMfLIBjUT2UEx4wg5ZE+cC1ob6DCSpppVo+rtg==}
+  /type-fest@4.10.1:
+    resolution: {integrity: sha512-7ZnJYTp6uc04uYRISWtiX3DSKB/fxNQT0B5o1OUeCqiQiwF+JC9+rJiZIDrPrNCLLuTqyQmh4VdQqh/ZOkv9MQ==}
     engines: {node: '>=16'}
     dev: false
 
@@ -11011,8 +11006,8 @@ packages:
     dependencies:
       '@fastify/busboy': 2.1.0
 
-  /undici@6.3.0:
-    resolution: {integrity: sha512-zkSMOXs2topAR1LF0PxAaNNvhdX4LYEcmRMJLMh3mjgfZpBtc/souXOp4aYiR5Q46HrBPA2/8DkEZhD3eNFE1Q==}
+  /undici@6.5.0:
+    resolution: {integrity: sha512-/MUmPb2ptTvp1j7lPvdMSofMdqPxcOhAaKZi4k55sqm6XMeKI3n1dZJ5cnD4gLjpt2l7CIlthR1IXM59xKhpxw==}
     engines: {node: '>=18.0'}
     dependencies:
       '@fastify/busboy': 2.1.0
@@ -11449,7 +11444,7 @@ packages:
       debug: 4.3.4
       pathe: 1.1.2
       picocolors: 1.0.0
-      vite: 5.0.12(@types/node@20.11.10)
+      vite: 5.0.11(@types/node@20.11.10)
     transitivePeerDependencies:
       - '@types/node'
       - less
@@ -11494,6 +11489,42 @@ packages:
     transitivePeerDependencies:
       - supports-color
       - typescript
+    dev: true
+
+  /vite@5.0.11(@types/node@20.11.10):
+    resolution: {integrity: sha512-XBMnDjZcNAw/G1gEiskiM1v6yzM4GE5aMGvhWTlHAYYhxb7S3/V1s3m2LDHa8Vh6yIWYYB0iJwsEaS523c4oYA==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': ^18.0.0 || >=20.0.0
+      less: '*'
+      lightningcss: ^1.21.0
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 20.11.10
+      esbuild: 0.19.11
+      postcss: 8.4.33
+      rollup: 4.9.5
+    optionalDependencies:
+      fsevents: 2.3.3
     dev: true
 
   /vite@5.0.12(@types/node@20.11.10):
@@ -11585,7 +11616,7 @@ packages:
       strip-literal: 1.3.0
       tinybench: 2.5.1
       tinypool: 0.8.2
-      vite: 5.0.12(@types/node@20.11.10)
+      vite: 5.0.11(@types/node@20.11.10)
       vite-node: 1.2.2(@types/node@20.11.10)
       why-is-node-running: 2.2.2
     transitivePeerDependencies:
@@ -11879,8 +11910,8 @@ packages:
       '@cloudflare/workerd-windows-64': 1.20231218.0
     dev: true
 
-  /wrangler@3.23.0:
-    resolution: {integrity: sha512-mOWPL02/popoF6jjb4TT8au4yvo8VFu6O6/IwcRN74rlgwaGS0XvlkFtbofBGAdDUHAh5DXkuoPNS871mXNuJg==}
+  /wrangler@3.25.0:
+    resolution: {integrity: sha512-eU47Ez1QLu1B/wutm5ow+VwZnY4OqA+D/iy6BORAu5tABujoDr9p1yBxY/1DS/DxxDWqqY3sBBS6TzcC4NSLUQ==}
     engines: {node: '>=16.17.0'}
     hasBin: true
     dependencies:
@@ -11890,7 +11921,7 @@ packages:
       blake3-wasm: 2.1.5
       chokidar: 3.5.3
       esbuild: 0.17.19
-      miniflare: 3.20231218.2
+      miniflare: 3.20231218.4
       nanoid: 3.3.7
       path-to-regexp: 6.2.1
       resolve: 1.22.8

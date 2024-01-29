@@ -30,7 +30,7 @@ const search = Astro.url.searchParams;
 
 const feed = `/feed.xml?filter=${generateFeed(Astro.url.searchParams)}`;
 const page = Astro.params.page ?? Astro.url.searchParams.get('page') ?? '1';
-const enableFeed = page === '1' && !Astro.url.pathname.startsWith('/resource/');
+const enableFeed = page === '1' && !Astro.url.pathname.startsWith('/detail/');
 
 const env = getRuntimeEnv(Astro.locals);
 const timestamp =
@@ -49,6 +49,10 @@ const active = url.startsWith('/anime')
 
 function generateFeed(params: URLSearchParams) {
   const filter = parseSearchURL(params);
+  // Hack: manually remove duplicate
+  if (!filter.provider && filter.duplicate === false) {
+    delete filter['duplicate'];
+  }
   if (filter.search) {
     filter.search = removeQuote(filter.search);
   }
@@ -75,7 +79,7 @@ function followSearch(params: Record<string, string>) {
 
     <link rel="sitemap" href="/sitemap-index.xml" />
     {
-      !url.startsWith('/resource/') && (
+      !url.startsWith('/detail/') && (
         <link rel="alternate" type="application/rss+xml" title="RSS Feeds" href={feed} />
       )
     }
@@ -194,7 +198,7 @@ function followSearch(params: Record<string, string>) {
     <footer class="main pb-8vh select-none [&>div]:(flex items-center)" transition:persist>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-carbon-update-now op-80"></span>
-         Refreshed at {timestamp.toLocaleString('zh-CN', { timeZone: 'Asia/ShangHai' })}
+        Refreshed at {timestamp.toLocaleString('zh-CN', { timeZone: 'Asia/ShangHai' })}
       </div>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-devicon-github op-80"></span>
@@ -204,11 +208,11 @@ function followSearch(params: Record<string, string>) {
       </div>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-devicon-astro op-80"></span>
-         Powered by Astro
+        Powered by Astro
       </div>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-devicon-cloudflare op-80"></span>
-         Hosted on Cloudflare Pages
+        Hosted on Cloudflare Pages
       </div>
     </footer>
 

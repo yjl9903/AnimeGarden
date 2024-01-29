@@ -1,10 +1,13 @@
+import type { FetchedResource } from 'animegarden';
+
 import { fetchDmhyPage } from '@animegarden/scraper';
 
 import {
   insertUsers,
   insertTeams,
   insertDmhyResources,
-  updateRefreshTimestamp
+  updateRefreshTimestamp,
+  updateDmhyResources
 } from '@animegarden/database';
 
 import { storage } from '../storage';
@@ -82,83 +85,17 @@ export async function refreshDmhyResources() {
   return { count: sum };
 }
 
-// export async function fixResources(env: Env, from: number, to: number) {
-//   const now = new Date();
-//   const db = connect(env);
-
-//   const logs: Array<
-//     | { type: 'rename'; id: number; from: string; to: string }
-//     | { type: 'delete'; id: number; title: string }
-//   > = [];
-
-//   let minId = -1;
-//   let maxId = -1;
-//   const all = new Map<number, ReturnType<typeof transformResource>>();
-//   for (let page = from; page <= to; page++) {
-//     const res = await fetchDmhyPage(fetch, { page, retry: 5 });
-//     const resources = res.map((r) => transformResource({ ...r, fetchedAt: now.toISOString() }));
-//     if (resources.length === 0) {
-//       throw new Error('Failed fetching dmhy resources list');
-//     }
-
-//     for (const r of resources) {
-//       minId = minId !== -1 ? Math.min(minId, r.id) : r.id;
-//       maxId = maxId !== -1 ? Math.max(maxId, r.id) : r.id;
-//       all.set(r.id, r);
-//     }
-
-//     const rows = await db
-//       .selectFrom('Resource')
-//       .select(['id', 'magnet', 'title'])
-//       .where(
-//         'id',
-//         'in',
-//         resources.map((r) => r.id)
-//       )
-//       .execute();
-//     for (const row of rows) {
-//       const latest = all.get(row.id);
-//       if (!latest) continue;
-//       if (latest.title !== row.title || latest.magnet !== row.magnet) {
-//         const query = db
-//           .updateTable('Resource')
-//           .set(() => ({
-//             title: latest.title,
-//             titleAlt: normalizeTitle(latest.title),
-//             magnet: latest.magnet,
-//             size: latest.size,
-//             fetchedAt: now
-//           }))
-//           .where('Resource.id', '=', latest.id);
-//         await query.execute();
-//         logs.push({ type: 'rename', id: latest.id, from: row.title, to: latest.title });
-//       }
-//     }
-//   }
-
-//   // Mark unknown resource deleted
-//   if (minId !== -1 && maxId !== -1) {
-//     const rows = await db
-//       .selectFrom('Resource')
-//       .select(['id', 'title'])
-//       .where('isDeleted', '=', 0)
-//       .where('id', '>=', minId)
-//       .where('id', '<=', maxId)
-//       .execute();
-//     const deleted = rows.filter((row) => !all.has(row.id));
-//     if (deleted.length > 0) {
-//       await db
-//         .updateTable('Resource')
-//         .set(() => ({ isDeleted: 1 }))
-//         .where(
-//           'id',
-//           'in',
-//           deleted.map((row) => row.id)
-//         )
-//         .execute();
-//       logs.push(...deleted.map((r) => ({ type: 'delete', id: r.id, title: r.title }) as const));
-//     }
-//   }
-
-//   return { logs };
-// }
+export async function fixDmhyResources(from: number, to: number) {
+  const map = new Map<string, FetchedResource>();
+  for (let page = from; page <= to; page++) {
+    const res = await fetchDmhyPage(fetch, { page, retry: 5 });
+    if (res.length === 0) {
+      throw new Error('Failed fetching dmhy resources list');
+    }
+    for (const r of res) {
+      map.set(r.providerId, r);
+    }
+  }
+  const fetched = [...map.values()];
+  return await updateDmhyResources(database, fetched);
+}

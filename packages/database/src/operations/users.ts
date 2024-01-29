@@ -82,3 +82,41 @@ export async function getAllTeams(database: Database) {
   }
   return AllTeams;
 }
+
+export async function getUser(database: Database, provider: string, providerId: string) {
+  if (AllUsers.size === 0) {
+    await getAllUsers(database);
+  }
+  return AllUsers.get(provider)?.get(providerId);
+}
+
+export async function getUserByProviderId(database: Database, id: string) {
+  if (AllUsers.size === 0) {
+    await getAllUsers(database);
+  }
+  const all = [...AllUsers.values()].flatMap((t) => [...t.values()]);
+  return all.filter((t) => t.providerId === id);
+}
+
+export async function getTeam(database: Database, provider: string, providerId: string) {
+  if (AllTeams.size === 0) {
+    await getAllTeams(database);
+  }
+  return AllTeams.get(provider)?.get(providerId);
+}
+
+export async function getTeamByProviderId(database: Database, id: string) {
+  if (AllTeams.size === 0) {
+    await getAllTeams(database);
+  }
+  const all = [...AllTeams.values()].flatMap((t) => [...t.values()]);
+  return all.filter((t) => t.providerId === id);
+}
+
+export async function getTeamByName(database: Database, name: string) {
+  if (AllTeams.size === 0) {
+    await getAllTeams(database);
+  }
+  const all = [...AllTeams.values()].flatMap((t) => [...t.values()]);
+  return all.filter((t) => t.name === name);
+}

@@ -39,6 +39,7 @@ export async function fetchDmhyPage(
     throw new Error('dmhy server is down');
   }
 
+  const now = new Date();
   const res: FetchedResource[] = [];
   $('#topic_list tbody tr').each((_idx, row) => {
     const tds = $(row).find('td');
@@ -55,8 +56,14 @@ export async function fetchDmhyPage(
     const publisherName = publisher.text();
     const publisherId = publisher.attr('href')!.split('/').at(-1)!;
 
+    const lastHref = href.split('/').at(-1);
+    if (!lastHref) return;
+    const matchId = /^(\d+)/.exec(lastHref);
+    if (!matchId) return;
+
     res.push({
       provider: 'dmhy',
+      providerId: matchId[1],
       title,
       href,
       type,
@@ -155,6 +162,8 @@ export async function fetchDmhyDetail(
     });
 
   return {
+    provider: 'dmhy',
+    providerId: matchId[1],
     title,
     href: url.href,
     type,

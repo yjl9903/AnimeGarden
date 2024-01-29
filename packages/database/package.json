@@ -37,6 +37,7 @@
   ],
   "scripts": {
     "build": "unbuild",
+    "dev": "unbuild --stub",
     "drizzle": "drizzle-kit",
     "drizzle:generate": "drizzle-kit generate:pg",
     "format": "prettier --write src/**/*.ts test/**/*.ts",
@@ -53,7 +54,7 @@
     "unstorage": "^1.10.1"
   },
   "devDependencies": {
-    "dotenv": "^16.3.1"
+    "dotenv": "^16.4.1"
   },
   "engines": {
     "node": ">=v18.16.0"

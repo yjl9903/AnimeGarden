@@ -1,6 +1,6 @@
 ---
 import { format } from 'date-fns';
-import { ResourceType, findFansub, parseSearchURL } from 'animegarden';
+import { type ResourceType, findFansub, parseSearchURL } from 'animegarden';
 
 import Layout from '../../layouts/Layout.astro';
 import Pagination from '../../components/Pagination.astro';
@@ -68,7 +68,9 @@ const keywords = {
                 )}
                 {fansub && (
                   <div class="space-x-2 text-0">
-                    <span class="text-4 text-base-800 font-bold mr2 select-none keyword">字幕组</span>
+                    <span class="text-4 text-base-800 font-bold mr2 select-none keyword">
+                      字幕组
+                    </span>
                     {fansub.map((fansub) => (
                       <a
                         href={`/resources/1?fansubId=${fansub.id}`}

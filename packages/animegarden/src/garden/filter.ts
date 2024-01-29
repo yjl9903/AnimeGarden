@@ -11,8 +11,12 @@ export function makeResourcesFilter(
   const resolved = parseSearchURL(new URLSearchParams(), options);
   const chains: Array<(resource: Resource) => boolean> = [];
 
+  if (resolved.provider) {
+    const providers = resolved.provider;
+    chains.push((r) => providers.includes(r.provider));
+  }
   if (resolved.fansubId) {
-    const fansubId = resolved.fansubId.map((id) => '' + id);
+    const fansubId = resolved.fansubId;
     chains.push((r) => (r.fansub ? fansubId.includes(r.fansub.id) : false));
   }
   if (resolved.fansubName) {
@@ -20,7 +24,7 @@ export function makeResourcesFilter(
     chains.push((r) => (r.fansub ? fansubName.includes(r.fansub.name) : false));
   }
   if (resolved.publisherId) {
-    const publisherId = resolved.publisherId.map((id) => '' + id);
+    const publisherId = resolved.publisherId;
     chains.push((r) => publisherId.includes(r.publisher.id));
   }
   if (resolved.type) {
@@ -36,24 +40,25 @@ export function makeResourcesFilter(
     chains.push((r) => new Date(r.createdAt).getTime() >= after);
   }
 
-  if (resolved.include || resolved.search) {
-    const include = resolved.include ?? [];
-    if (resolved.search) {
-      include.push(resolved.search);
-    }
-    for (const arr of include) {
-      arr.splice(0, arr.length, ...arr.map((k) => normalizeTitle(k).toLowerCase()));
-    }
+  if (resolved.search) {
+    // Match at least one search keyword
+    const search = resolved.search.map((k) => normalizeTitle(k).toLowerCase());
     chains.push((r) => {
       const titleAlt = normalizeTitle(r.title).toLowerCase();
-      return include.every((keys) => keys.some((key) => titleAlt.indexOf(key) !== -1));
+      return search.some((key) => titleAlt.indexOf(key) !== -1);
     });
-  }
-  if (resolved.exclude) {
-    const exclude = resolved.exclude.map((k) => normalizeTitle(k).toLowerCase());
+  } else if (resolved.include) {
+    // Match exact at least one of the keywords, and no excluded keywords
+    const include = resolved.include.map((k) => normalizeTitle(k).toLowerCase());
+    const exclude = (resolved.exclude ?? []).map((k) => normalizeTitle(k).toLowerCase());
     chains.push((r) => {
       const titleAlt = normalizeTitle(r.title).toLowerCase();
-      return exclude.every((key) => titleAlt.indexOf(key) === -1);
+      const matched = include.some((key) => titleAlt.indexOf(key) !== -1);
+      if (matched) {
+        return exclude.every((key) => titleAlt.indexOf(key) === -1);
+      } else {
+        return false;
+      }
     });
   }
 

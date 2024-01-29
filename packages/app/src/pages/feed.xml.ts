@@ -1,18 +1,17 @@
 import type { APIRoute } from 'astro';
 
-import { WORKER_HOST } from '~build/meta';
-
 import rss from '@astrojs/rss';
 import { z } from 'zod';
 import { toDate } from 'date-fns-tz';
 import {
+  type Resource,
+  type ResolvedFilterOptions,
   FilterSchema,
-  ResolvedFilterOptions,
   fetchResources,
   stringifySearchURL
 } from 'animegarden';
 
-import { wfetch } from '../fetch';
+import { wfetch, baseURL } from '../fetch';
 import { removeQuote, getRuntimeEnv } from '../utils';
 
 const ManyFilterSchema = z.union([z.array(FilterSchema), FilterSchema.transform((f) => [f])]);
@@ -24,14 +23,16 @@ export const GET: APIRoute = async (context) => {
     const filter = ManyFilterSchema.safeParse(rawFilter);
 
     if (filter.success && filter.data.length > 0) {
+      // TODO: fix this
+      // @ts-ignore
       const title = inferTitle(context.url.searchParams, filter.data[0]);
       const locals = getRuntimeEnv(context.locals);
 
       const { resources } = await fetchResources(wfetch(locals?.worker), {
         ...filter.data[0],
+        baseURL,
         page: 1,
-        pageSize: 1000,
-        baseURL: 'https://' + WORKER_HOST
+        pageSize: 100
       });
 
       return rss({
@@ -44,7 +45,7 @@ export const GET: APIRoute = async (context) => {
           return {
             title: r.title,
             pubDate: toDate(r.createdAt, { timeZone: 'Asia/Shanghai' }),
-            link: toGardenURL(context.site!.origin, r.href),
+            link: toGardenURL(context.site!.origin, r),
             enclosure: {
               url: r.magnet,
               length: r.size ? formatSize(r.size) : 1,
@@ -71,17 +72,13 @@ function inferTitle(params: URLSearchParams, options: ResolvedFilterOptions) {
     return removeQuote(options.search).join(' ');
   }
   if (options.include && options.include.length > 0) {
-    return options.include
-      .map((i) => i[0])
-      .filter(Boolean)
-      .join(' ');
+    return options.include[0];
   }
   return 'Anime Garden - 動漫花園資源網 第三方镜像站';
 }
 
-function toGardenURL(origin: string, href: string) {
-  const id = href.split('/').at(-1)!;
-  return origin + '/resource/' + id;
+function toGardenURL(origin: string, r: Resource) {
+  return origin + `/detail/${r.provider}/${r.providerId}`;
 }
 
 function formatSize(size: string) {

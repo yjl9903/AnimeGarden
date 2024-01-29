@@ -1,17 +1,62 @@
+import type { Context } from 'hono';
+
+import { parseSearchURL } from 'animegarden';
+
 import { registerApp } from '../app';
+
+import { queryResources } from './resources';
+import { getDmhyResourceDetail } from './detail';
 
 export function registerQuery() {
   registerApp((app) => {
-    app.post(`/resources`, async (req) => {});
-    app.post(`/detail`, async (req) => {});
-    app.post(`/resource`, async (req) => {});
+    async function listResourcesHandler(ctx: Context, provider?: string) {
+      const url = new URL(ctx.req.url);
+      const filter = parseSearchURL(url.searchParams, await ctx.req.json().catch(() => undefined));
+      if (!filter) {
+        return ctx.json({ message: 'Request is not valid' }, 400);
+      }
+      if (provider) {
+        filter.provider = [provider];
+      }
+      const resp = await queryResources(ctx, filter);
+      return ctx.json({ filter, ...resp });
+    }
 
-    app.post(`/dmhy/resources`, async (req) => {});
-    app.post(`/dmhy/detail`, async (req) => {});
-    app.post(`/dmhy/resource`, async (req) => {});
+    app.get(`/resources`, async (ctx) => {
+      return listResourcesHandler(ctx);
+    });
+    app.post(`/resources`, async (ctx) => {
+      return listResourcesHandler(ctx);
+    });
 
-    app.post(`/moe/resources`, async (req) => {});
-    app.post(`/moe/detail`, async (req) => {});
-    app.post(`/moe/resource`, async (req) => {});
+    app.get(`/dmhy/resources`, async (ctx) => {
+      return listResourcesHandler(ctx, 'dmhy');
+    });
+    app.post(`/dmhy/resources`, async (ctx) => {
+      return listResourcesHandler(ctx, 'dmhy');
+    });
+    app.get(`/dmhy/detail/:href`, async (ctx) => {
+      return getDmhyResourceDetail(ctx);
+    });
+    app.get(`/dmhy/resource/:href`, async (ctx) => {
+      return getDmhyResourceDetail(ctx);
+    });
+    app.get(`/detail/dmhy/:href`, async (ctx) => {
+      return getDmhyResourceDetail(ctx);
+    });
+    app.get(`/resource/dmhy/:href`, async (ctx) => {
+      return getDmhyResourceDetail(ctx);
+    });
+
+    app.get(`/moe/resources`, async (ctx) => {
+      return listResourcesHandler(ctx, 'moe');
+    });
+    app.post(`/moe/resources`, async (ctx) => {
+      return listResourcesHandler(ctx, 'moe');
+    });
+    app.get(`/moe/detail/:href`, async (ctx) => {});
+    app.get(`/moe/resource/:href`, async (ctx) => {});
+    app.get(`/detail/moe/:href`, async (ctx) => {});
+    app.get(`/resource/moe/:href`, async (ctx) => {});
   });
 }

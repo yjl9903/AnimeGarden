@@ -1,12 +1,17 @@
-import { APP_HOST, WORKER_HOST } from '~build/meta';
+import { APP_HOST, WORKER_HOST, SERVER_HOST, SERVER_PORT, SERVER_PROTOCOL } from '~build/meta';
 
 import {
-  FilterOptions,
+  type ProviderType,
+  type FilterOptions,
   fetchResources as rawFetchResources,
   fetchResourceDetail as rawFetchResourceDetail
 } from 'animegarden';
 
-const baseURL = 'https://' + (import.meta.env.SSR ? WORKER_HOST : APP_HOST + '/api/');
+export const baseURL = import.meta.env.SSR
+  ? SERVER_HOST
+    ? `${SERVER_PROTOCOL}://${SERVER_HOST}${SERVER_PORT ? ':' + SERVER_PORT : ''}`
+    : `https://${WORKER_HOST}`
+  : `https://${APP_HOST}/api/`;
 
 export const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
   if (import.meta.env.DEV && import.meta.env.HTTPS_PROXY) {
@@ -59,9 +64,9 @@ export async function fetchResources(
   });
 }
 
-export async function fetchResourceDetail(href: string) {
+export async function fetchResourceDetail(provider: string, href: string) {
   try {
-    return await rawFetchResourceDetail(ofetch, href, {
+    return await rawFetchResourceDetail(ofetch, provider as ProviderType, href, {
       baseURL
     });
   } catch (error) {

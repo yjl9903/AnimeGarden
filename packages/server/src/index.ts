@@ -13,10 +13,12 @@ import { registerQuery } from './query';
 registerAdmin();
 registerQuery();
 
+const port = process.env.port ? +process.env.port : process.env.PORT ? +process.env.PORT : 3000;
+
 serve(
   {
     fetch: app.fetch,
-    port: process.env.port ? +process.env.port : 3000
+    port
   },
   async (info) => {
     logger.info(null, `Listening http://${info.address}:${info.port}`);
