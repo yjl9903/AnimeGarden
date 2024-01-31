@@ -1,6 +1,7 @@
 ---
 import { CF_BEACON, UMAMI_HOST, UMAMI_ID } from '~build/meta';
-// import { pwaInfo } from 'virtual:pwa-info';
+
+import { pwaInfo } from 'virtual:pwa-info';
 import { ViewTransitions } from 'astro:transitions';
 
 import { Toaster } from 'sonner';
@@ -91,7 +92,7 @@ function followSearch(params: Record<string, string>) {
     <meta name="msapplication-TileColor" content="#FFFFFF" />
     <meta name="theme-color" content="#ffffff" />
     <script src="/src/pwa.ts"></script>
-    <!-- {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />} -->
+    {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
 
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -100,7 +101,9 @@ function followSearch(params: Record<string, string>) {
     <title>{`${title ? `${title} | ` : ''}Anime Garden 動漫花園資源網第三方镜像站`}</title>
   </head>
   <body>
-    <Toaster client:only="react" />
+    <div class="animegarden-toaster">
+      <Toaster client:only="react" />
+    </div>
     <header class="w-full pt-8vh bg-[#fef8f7] border-b">
       <h1 class="text-4xl pb-10rem font-quicksand font-bold text-center select-none outline-none">
         <a href="/">🌸 Anime Garden</a>
@@ -220,7 +223,7 @@ function followSearch(params: Record<string, string>) {
 
     <Loading />
 
-    <script src="../logic/notification.ts"></script>
+    <script src="../logic/notification.tsx"></script>
     <script src="../logic/prefer.ts"></script>
 
     <style is:global>
@@ -294,6 +297,25 @@ function followSearch(params: Record<string, string>) {
 
       .header-item[x-active] {
         --at-apply: border-orange-500;
+      }
+
+      .animegarden-toaster [data-sonner-toast] [data-title] {
+        font-weight: bold;
+      }
+
+      .animegarden-toaster [data-sonner-toast] [data-description] {
+        --at-apply: mt-1 mb-1;
+      }
+
+      .animegarden-toaster [data-sonner-toast][data-styled='true'] {
+        flex-direction: column;
+        align-items: start;
+
+        --toast-button-margin-start: 0;
+      }
+
+      .animegarden-toaster [data-sonner-toast] [data-button] {
+        display: inline-flex;
       }
     </style>
 
