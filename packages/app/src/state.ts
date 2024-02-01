@@ -8,24 +8,6 @@ export const histories = persistentAtom<string[]>('animegarden:histories', [], {
   decode: JSON.parse
 });
 
-export function pushHistory(text: string) {
-  // Filter old history item which is the substring of the current input
-  const oldHistories = histories.get().filter((o) => !text.includes(o));
-  // Remove duplicate items
-  const newHistories = [...new Set([text, ...oldHistories])].slice(0, 10);
-  // Set histories
-  histories.set(newHistories);
-}
-
-export function removeHistory(item: string) {
-  const filterHistories = histories.get().filter((content) => content !== item);
-  histories.set(filterHistories);
-}
-
-export function clearHistories() {
-  histories.set([]);
-}
-
 export const preferFansubs = persistentAtom<Set<string>>('animegarden:fansubs', new Set(), {
   encode: (t) => JSON.stringify([...t]),
   decode: (t) => new Set(JSON.parse(t) as string[])

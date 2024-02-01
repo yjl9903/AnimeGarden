@@ -89,10 +89,10 @@ export function parseSearch(search: string) {
         }
       }
     },
-    'after:,开始:': (word) => {
+    'after:,开始:,晚于:': (word) => {
       after.push(new Date(word));
     },
-    'before:,结束:': (word) => {
+    'before:,结束:,早于:': (word) => {
       before.push(new Date(word));
     },
     '类型:,type:': (word) => {
