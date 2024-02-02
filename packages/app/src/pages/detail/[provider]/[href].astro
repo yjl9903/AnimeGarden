@@ -41,13 +41,13 @@ const schema = info
   {info && <script type="application/ld+json" set:html={schema} />}
 
   <div class="detail mt-4vh w-full space-y-4">
-    <h3 class="text-xl font-bold">
+    <h1 class="text-xl font-bold">
       <span>{detail.title}</span>
-    </h3>
+    </h1>
     <div class="download-link rounded-md shadow-box">
-      <h4 class="text-lg font-bold border-b px4 py2">
+      <h2 class="text-lg font-bold border-b px4 py2">
         <a href={detail.magnet.href} class="text-link-active">下载链接</a>
-      </h4>
+      </h2>
       <div
         class="p4 space-y-1 overflow-auto whitespace-nowrap [&>div>span]:(text-base-600 select-none inline-block w-[160px] min-w-[160px]) [&>div]:(flex) [&>div>a]:(inline-block flex-1)"
       >
@@ -78,14 +78,14 @@ const schema = info
       class="description"
       set:html={detail.description.replace(
         /簡介:(&nbsp;)?/,
-        '<h4 class="text-lg font-bold">简介</h4>'
+        '<h2 class="text-lg font-bold">简介</h2>'
       )}
     />
 
     <div class="publisher">
-      <h4 class="text-lg font-bold pb4">
+      <h2 class="text-lg font-bold pb4">
         {detail.fansub ? '发布者 / 字幕组' : '发布者'}
-      </h4>
+      </h2>
       <div class="flex gap8">
         <div>
           <a href={`/resources/1?publisherId=${detail.publisher.id}`} class="block text-left">
@@ -121,7 +121,7 @@ const schema = info
       >
     </div>
     <div class="file-list rounded-md shadow-box">
-      <h4 class="text-lg font-bold border-b px4 py2">文件列表</h4>
+      <h2 class="text-lg font-bold border-b px4 py2">文件列表</h2>
       <div class="mb4 max-h-[80vh] overflow-auto px4">
         {
           files.map((f) => (
