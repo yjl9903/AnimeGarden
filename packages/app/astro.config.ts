@@ -32,7 +32,7 @@ export default defineConfig({
         {
           userAgent: '*',
           allow: ['/detail/', '/resource/', '/resources/', '/anime/', '/docs/'],
-          disallow: ['/api/']
+          disallow: ['/feed.xml', '/api/']
         }
       ]
     }),
