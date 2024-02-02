@@ -24,6 +24,13 @@ export default defineConfig({
         height: '1em',
         'flex-shrink': '0',
         display: 'inline-block'
+      },
+      collections: {
+        custom: async (name) => {
+          if (name === 'zeabur') {
+            return await fetch(`https://zeabur.com/favicon.svg`).then((res) => res.text());
+          }
+        }
       }
     }),
     presetWebFonts({
