@@ -76,7 +76,7 @@ importers:
     dependencies:
       '@astrojs/cloudflare':
         specifier: ^9.0.0
-        version: 9.0.0(astro@4.3.1)
+        version: 9.0.0(astro@4.3.2)
       '@astrojs/react':
         specifier: ^3.0.9
         version: 3.0.9(@types/react-dom@18.2.18)(@types/react@18.2.51)(react-dom@18.2.0)(react@18.2.0)(vite@5.0.12)
@@ -93,8 +93,8 @@ importers:
         specifier: ^0.7.1
         version: 0.7.1(nanostores@0.9.5)(react@18.2.0)
       astro:
-        specifier: ^4.3.1
-        version: 4.3.1(@types/node@20.11.16)(typescript@5.3.3)
+        specifier: ^4.3.2
+        version: 4.3.2(@types/node@20.11.16)(typescript@5.3.3)
       astro-robots-txt:
         specifier: ^1.0.0
         version: 1.0.0
@@ -128,7 +128,7 @@ importers:
     devDependencies:
       '@astrojs/node':
         specifier: ^8.2.0
-        version: 8.2.0(astro@4.3.1)
+        version: 8.2.0(astro@4.3.2)
       '@iconify-json/carbon':
         specifier: ^1.1.28
         version: 1.1.28
@@ -161,7 +161,7 @@ importers:
         version: 0.2.3
       '@vite-pwa/astro':
         specifier: ^0.2.0
-        version: 0.2.0(astro@4.3.1)(vite-plugin-pwa@0.17.4)
+        version: 0.2.0(astro@4.3.2)(vite-plugin-pwa@0.17.4)
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -379,7 +379,7 @@ packages:
       leven: 3.1.0
     dev: true
 
-  /@astrojs/cloudflare@9.0.0(astro@4.3.1):
+  /@astrojs/cloudflare@9.0.0(astro@4.3.2):
     resolution: {integrity: sha512-EkUUCCGp35O0pPgRIBuahbz/eQlnOPoCM4aszFMqIWcjfOJMXMlXLma5MEHFDdNOdLdPb53LmuWBVIjDOvsUfQ==}
     peerDependencies:
       astro: ^4.2.0
@@ -387,7 +387,7 @@ packages:
       '@astrojs/underscore-redirects': 0.3.3
       '@cloudflare/workers-types': 4.20240117.0
       '@iarna/toml': 2.2.5
-      astro: 4.3.1(@types/node@20.11.16)(typescript@5.3.3)
+      astro: 4.3.2(@types/node@20.11.16)(typescript@5.3.3)
       dotenv: 16.4.1
       esbuild: 0.19.11
       find-up: 6.3.0
@@ -429,12 +429,12 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@astrojs/node@8.2.0(astro@4.3.1):
+  /@astrojs/node@8.2.0(astro@4.3.2):
     resolution: {integrity: sha512-keQIPvdx8hquG+KnWoJp7io/GoczBEJer9X8WzPHK2fnVRXYDKGzXWZw3Dbg0ZhXJreVV3xzniN7nr6e7hgDXg==}
     peerDependencies:
       astro: ^4.2.0
     dependencies:
-      astro: 4.3.1(@types/node@20.11.16)(typescript@5.3.3)
+      astro: 4.3.2(@types/node@20.11.16)(typescript@5.3.3)
       send: 0.18.0
       server-destroy: 1.0.1
     transitivePeerDependencies:
@@ -4263,13 +4263,13 @@ packages:
       unconfig: 0.3.11
     dev: true
 
-  /@vite-pwa/astro@0.2.0(astro@4.3.1)(vite-plugin-pwa@0.17.4):
+  /@vite-pwa/astro@0.2.0(astro@4.3.2)(vite-plugin-pwa@0.17.4):
     resolution: {integrity: sha512-1MBNbRo9I9fp9sUSoaQfI/xHVDRKRoUsWETDJMVoKoctZYfm4fZgb7EN76WJdejW/vup+3+uoFlDMCnca+vZzA==}
     peerDependencies:
       astro: ^1.6.0 || ^2.0.0 || ^3.0.0 || ^4.0.0
       vite-plugin-pwa: '>=0.17.3 <1'
     dependencies:
-      astro: 4.3.1(@types/node@20.11.16)(typescript@5.3.3)
+      astro: 4.3.2(@types/node@20.11.16)(typescript@5.3.3)
       vite-plugin-pwa: 0.17.4(vite@5.0.12)(workbox-build@7.0.0)(workbox-window@7.0.0)
     dev: true
 
@@ -4536,8 +4536,8 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /astro@4.3.1(@types/node@20.11.16)(typescript@5.3.3):
-    resolution: {integrity: sha512-LAY2zQHOuOXEhpguyw5X0AIz6Xq+TAkBNEqrgIxwj72R87mmRQqQWmjChMPPkK95nFHkYR/71M2BrKunpbsfyw==}
+  /astro@4.3.2(@types/node@20.11.16)(typescript@5.3.3):
+    resolution: {integrity: sha512-SJotHzKG/I32ruYWItMRJjtmNQh14mVS7kahu3XfYyxvo6nx08PGJBTSPbqPrW1sjeQPHwcpVDFx3yMMK2kaxQ==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
