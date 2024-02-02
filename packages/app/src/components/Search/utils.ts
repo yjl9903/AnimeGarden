@@ -2,6 +2,7 @@ import { navigate } from 'astro:transitions/client';
 import { findFansub, parseSearchURL, stringifySearchURL } from 'animegarden';
 
 import { loading } from '../../state';
+import { DisplayType } from '../../constant';
 
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
 
@@ -157,7 +158,8 @@ export function stringifySearch(search: URLSearchParams) {
     content.push('结束:' + formatDate(filter.before));
   }
   if (filter.type) {
-    content.push('类型:' + filter.type);
+    const type = filter.type in DisplayType ? DisplayType[filter.type] : filter.type;
+    content.push('类型:' + type);
   }
 
   return content.map((c) => c).join(' ');

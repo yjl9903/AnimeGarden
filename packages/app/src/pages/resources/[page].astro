@@ -21,9 +21,10 @@ const publisherId = params.publisherId;
 const fansubId = params.fansubId;
 const fansub = fansubId ? fansubId.map((id) => findFansub(id)).filter(Boolean) : undefined;
 
-const type = (params.type && params.type in QueryType ? QueryType[params.type] : params.type) as
+const rawType = (params.type && params.type in QueryType ? QueryType[params.type] : params.type) as
   | ResourceType
   | undefined;
+const type = rawType in DisplayType ? DisplayType[rawType] : rawType;
 const after = params.after;
 const before = params.before;
 
@@ -48,9 +49,35 @@ const keywords = {
   include: searchParams?.include ? searchParams.include : [...(include ?? [])],
   exclude: searchParams?.exclude ? searchParams.exclude : [...(exclude ?? [])]
 };
+
+const title = inferTitle();
+
+function inferTitle() {
+  if (keywords.search.length > 0) {
+    return `搜索 ${keywords.search.join(' ')}`;
+  }
+  if (keywords.include.length > 0) {
+    return `搜索 ${keywords.include.join(' ')}`;
+  }
+  if (type) {
+    if (fansub && fansub.length === 1) {
+      return `所有${fansub[0].name}的${type}资源`;
+    } else {
+      return `所有${type}`;
+    }
+  }
+  if (fansub && fansub.length === 1) {
+    return `所有${fansub[0].name}的资源`;
+  }
+  return '所有资源';
+}
 ---
 
-<Layout title="所有资源" timestamp={timestamp}>
+<Layout
+  title={title}
+  timestamp={timestamp}
+  canonicalURL={`/resources/${page}?${url.searchParams.toString()}`}
+>
   <div class="mt-4vh w-full">
     {
       ok ? (
@@ -61,8 +88,10 @@ const keywords = {
                 {type && (
                   <div class="space-x-2 text-0">
                     <span class="text-4 text-base-800 font-bold mr2 select-none keyword">类型</span>
-                    <span class={`text-4 select-text text-base-600 ${DisplayTypeColor[type]}`}>
-                      {type in DisplayType ? DisplayType[type] : type}
+                    <span
+                      class={`text-4 select-text text-base-600 ${DisplayTypeColor[type] ?? DisplayTypeColor[rawType]}`}
+                    >
+                      {type}
                     </span>
                   </div>
                 )}
