@@ -1,5 +1,5 @@
 ---
-import { CF_BEACON, UMAMI_HOST, UMAMI_ID } from '~build/meta';
+import { APP_HOST, CF_BEACON, UMAMI_HOST, UMAMI_ID } from '~build/meta';
 
 import { pwaInfo } from 'virtual:pwa-info';
 import { ViewTransitions } from 'astro:transitions';
@@ -20,18 +20,21 @@ export interface Props {
   description?: string;
 
   timestamp?: Date;
+
+  canonicalURL?: string;
 }
 
 const {
   title,
-  description = 'Anime Garden 是動漫花園的第三方镜像站，動漫愛好者的自由交流平台。用户可以搜索最新的动画，也可以按照字幕组、发布时间、类型、标题、发布者等条件筛选和搜索自己感兴趣的动画。'
+  canonicalURL,
+  description = 'Anime Garden 是動漫花園的第三方镜像站，動漫愛好者的自由交流平台。用户可以搜索最新的动画，也可以按照标题、字幕组等条件筛选和搜索自己感兴趣的动画资源。'
 } = Astro.props;
 
 const url = Astro.url.pathname;
 const search = Astro.url.searchParams;
 
-const feed = `/feed.xml?filter=${generateFeed(Astro.url.searchParams)}`;
 const page = Astro.params.page ?? Astro.url.searchParams.get('page') ?? '1';
+const feed = `/feed.xml?filter=${generateFeed(Astro.url.searchParams)}`;
 const enableFeed = page === '1' && !Astro.url.pathname.startsWith('/detail/');
 
 const env = getRuntimeEnv(Astro.locals);
@@ -89,6 +92,7 @@ function followSearch(params: Record<string, string>) {
     <link rel="alternate icon" sizes="64x64" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
     <link rel="mask-icon" color="#FFFFFF" href="/favicon.svg" />
+    {canonicalURL && <link rel="canonical" href={`https://${APP_HOST}${canonicalURL}`} />}
     <meta name="msapplication-TileColor" content="#FFFFFF" />
     <meta name="theme-color" content="#ffffff" />
     <script src="/src/pwa.ts"></script>
