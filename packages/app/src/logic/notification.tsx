@@ -27,9 +27,13 @@ const event = {
   }
 };
 
-document.addEventListener('astro:page-load', () => {
-  const date = committerDate.get() ? committerDate.get() : new Date(0);
-  if (date.getTime() < event.date.getTime()) {
-    event.toast();
-  }
-});
+document.addEventListener(
+  'astro:page-load',
+  () => {
+    const date = committerDate.get() ? committerDate.get() : new Date(0);
+    if (date.getTime() < event.date.getTime()) {
+      event.toast();
+    }
+  },
+  { once: true }
+);
