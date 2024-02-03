@@ -31,4 +31,6 @@ declare module '~build/meta' {
   export const UMAMI_HOST: string | undefined;
 
   export const UMAMI_ID: string | undefined;
+
+  export const PLAUSIBLE_HOST: string | undefined;
 }

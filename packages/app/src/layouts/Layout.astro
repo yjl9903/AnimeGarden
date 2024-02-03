@@ -1,5 +1,5 @@
 ---
-import { APP_HOST, CF_BEACON, UMAMI_HOST, UMAMI_ID } from '~build/meta';
+import { APP_HOST, CF_BEACON, UMAMI_HOST, UMAMI_ID, PLAUSIBLE_HOST } from '~build/meta';
 
 import { pwaInfo } from 'virtual:pwa-info';
 import { ViewTransitions } from 'astro:transitions';
@@ -101,6 +101,31 @@ function followSearch(params: Record<string, string>) {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content="http://garden.onekuma.cn/twitter.jpg" />
+
+    <!-- Cloudflare Web Analytics -->
+    <script
+      defer
+      src={!import.meta.env.DEV && CF_BEACON
+        ? 'https://static.cloudflareinsights.com/beacon.min.js'
+        : undefined}
+      data-cf-beacon={`{"token": "${CF_BEACON}"}`}></script>
+    <!-- End Cloudflare Web Analytics -->
+
+    <!-- Umami Cloud -->
+    {
+      !import.meta.env.DEV && UMAMI_HOST && UMAMI_ID ? (
+        <script defer src={`https://${UMAMI_HOST}/script.js`} data-website-id={UMAMI_ID} />
+      ) : null
+    }
+    <!-- End Umami Cloud -->
+
+    <!-- Plausible -->
+    {
+      !import.meta.env.DEV && PLAUSIBLE_HOST ? (
+        <script defer data-domain={PLAUSIBLE_HOST} src="https://plausible.io/js/script.js" />
+      ) : null
+    }
+    <!-- End Plausible -->
 
     <title>{`${title ? `${title} | ` : ''}Anime Garden 動漫花園資源網第三方镜像站`}</title>
   </head>
@@ -326,22 +351,5 @@ function followSearch(params: Record<string, string>) {
         display: inline-flex;
       }
     </style>
-
-    <!-- Cloudflare Web Analytics -->
-    <script
-      defer
-      src={!import.meta.env.DEV && CF_BEACON
-        ? 'https://static.cloudflareinsights.com/beacon.min.js'
-        : undefined}
-      data-cf-beacon={`{"token": "${CF_BEACON}"}`}></script>
-    <!-- End Cloudflare Web Analytics -->
-
-    <!-- Umami Cloud -->
-    {
-      !import.meta.env.DEV && UMAMI_HOST && UMAMI_ID ? (
-        <script defer src={`https://${UMAMI_HOST}/script.js`} data-website-id={UMAMI_ID} />
-      ) : null
-    }
-    <!-- End Umami Cloud -->
   </body>
 </html>
