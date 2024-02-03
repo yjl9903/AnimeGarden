@@ -34,7 +34,7 @@ export const ALL: APIRoute = async ({ request, locals }) => {
 
     return new Response(response.body, {
       headers: {
-        'cache-control': request.method === 'GET' ? `public, max-age=3600` : 'no-store',
+        'cache-control': request.method === 'GET' ? `public, max-age=300` : 'no-store',
         // @ts-ignore
         ...Object.fromEntries(response.headers.entries()),
         'access-control-allow-origin': '*',
