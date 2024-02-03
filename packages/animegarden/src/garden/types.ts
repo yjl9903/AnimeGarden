@@ -158,6 +158,11 @@ export interface FetchResourcesOptions extends FilterOptions {
   signal?: AbortSignal;
 
   /**
+   * Request headers
+   */
+  headers?: Record<string, string | ReadonlyArray<string>>;
+
+  /**
    * Progress callback when querying multiple pages
    */
   progress?: (
@@ -183,4 +188,9 @@ export interface FetchResourceDetailOptions {
    * The number of retry
    */
   retry?: number;
+
+  /**
+   * Request headers
+   */
+  headers?: Record<string, string | ReadonlyArray<string>>;
 }

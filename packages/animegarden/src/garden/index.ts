@@ -143,7 +143,11 @@ export async function fetchResources(
   async function fetchPage(page: number) {
     url.searchParams.set('page', '' + page);
     return await retryFn(async () => {
-      const resp = await fetch(url.toString(), { signal: options.signal });
+      const resp = await fetch(url.toString(), {
+        // @ts-ignore
+        headers: new Headers(options.headers),
+        signal: options.signal
+      });
       if (resp.ok) {
         const r = await resp.json();
         const timestamp = new Date(r.timestamp);
@@ -181,7 +185,11 @@ export async function fetchResourceDetail(
   const url = new URL(`${provider}/detail/${href}`, baseURL);
 
   const resp = await retryFn(async () => {
-    const resp = await fetch(url.toString(), { signal: options.signal });
+    const resp = await fetch(url.toString(), {
+      // @ts-ignore
+      headers: new Headers(options.headers),
+      signal: options.signal
+    });
     if (resp.ok) {
       return await resp.json();
     } else {
