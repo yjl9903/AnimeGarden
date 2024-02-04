@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 
-import { WORKER_HOST, SERVER_HOST, SERVER_PORT, SERVER_PROTOCOL } from '~build/meta';
+import { SERVER_HOST, SERVER_PORT, SERVER_PROTOCOL } from '~build/meta';
 
 import { getRuntimeEnv } from '../../utils';
 
@@ -13,10 +13,6 @@ export const ALL: APIRoute = async ({ request, locals }) => {
     url.protocol = SERVER_PROTOCOL + ':';
     url.host = SERVER_HOST;
     url.port = SERVER_PORT ?? '';
-  } else {
-    url.protocol = 'https:';
-    url.host = WORKER_HOST;
-    url.port = '';
   }
 
   url.pathname = url.pathname.replace(/^\/api/, '');

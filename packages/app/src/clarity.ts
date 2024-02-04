@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { CLARITY } from '~build/meta';
 
 export function triggerDownloadEvent(name: string) {

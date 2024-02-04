@@ -10,7 +10,7 @@ import {
 export const baseURL = import.meta.env.SSR
   ? SERVER_HOST
     ? `${SERVER_PROTOCOL}://${SERVER_HOST}${SERVER_PORT ? ':' + SERVER_PORT : ''}`
-    : `https://${WORKER_HOST}`
+    : `https://${APP_HOST}/api/`
   : `https://${APP_HOST}/api/`;
 
 export const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
