@@ -12,7 +12,7 @@ export const calendar = rawCalendar.map((_, idx) => {
   const index = (idx + Weekday) % 7;
 
   const isChina = (bgm: FullBangumi) => {
-    const cn = ['国创', '国产动画', '国漫', '中国'];
+    const cn = ['国创', '国产', '国产动画', '国漫', '中国'];
     return bgm.bangumi?.tags.some((t) => cn.includes(t)) ? 1 : 0;
   };
 
