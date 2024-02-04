@@ -74,10 +74,10 @@ export default defineConfig({
           }
         ]
       },
-      // workbox: {
-      //   navigateFallback: '/',
-      //   globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}']
-      // },
+      workbox: {
+        // navigateFallback: '/',
+        globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}']
+      },
       devOptions: {
         enabled: true
       },
