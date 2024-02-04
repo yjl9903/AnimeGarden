@@ -169,12 +169,13 @@ export default function Search() {
             search={search}
             signals={signals.current}
             onSelect={selectStatic}
+            selectGoToSearch={() => selectGoToSearch()}
           ></SearchResult>
         )}
         {enable && !input.trim() && histories.length > 0 && (
           <SearchHistory
             histories={histories}
-            selectGoToSearch={selectGoToSearch}
+            selectGoToSearch={() => selectGoToSearch()}
             onInputChange={onInputChange}
           ></SearchHistory>
         )}
@@ -259,8 +260,9 @@ function SearchResult(props: {
   search: string;
   signals: Set<AbortController>;
   onSelect: (text: string) => void;
+  selectGoToSearch: () => void;
 }) {
-  const { search, signals, onSelect } = props;
+  const { search, signals, onSelect, selectGoToSearch } = props;
 
   const { data: searchResult, isLoading } = useSWR(
     () => {
@@ -313,6 +315,15 @@ function SearchResult(props: {
               {r.title}
             </Command.Item>
           ))}
+        {searchResult && (
+          <Command.Item
+            value="go-to-search-page"
+            onMouseDown={() => selectGoToSearch()}
+            onSelect={() => selectGoToSearch()}
+          >
+            {`展示更多 ${search} 的搜索结果...`}
+          </Command.Item>
+        )}
       </Command.Group>
     );
   }
