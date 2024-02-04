@@ -79,7 +79,7 @@ export default defineConfig({
         globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}']
       },
       devOptions: {
-        enabled: true
+        enabled: false
       },
       experimental: {
         directoryAndTrailingSlashHandler: true

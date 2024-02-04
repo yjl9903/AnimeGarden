@@ -39,18 +39,17 @@ const { ok, resources, timestamp } = await fetchResources(
       <div
         class="weekday-select
           w-max max-w-full flex items-center gap-2 rounded-md p-2 bg-gray-200/50 select-none text-base-700
-          lt-sm:text-sm
-          lt-sm:[&>label]:(text-xs px-1)
-          [&>label]:(block px-3 py-1 rounded-md cursor-pointer font-bold outline-none)
+          lt-md:(text-sm gap-1)
+          [&>label]:(block py-1 rounded-md cursor-pointer font-bold outline-none)
           [&>label:hover]:(bg-light-300)"
       >
-        <label for="weekday-1">周一</label>
-        <label for="weekday-2">周二</label>
-        <label for="weekday-3">周三</label>
-        <label for="weekday-4">周四</label>
-        <label for="weekday-5">周五</label>
-        <label for="weekday-6">周六</label>
-        <label for="weekday-7">周日</label>
+        <label for="weekday-1" class="px-3 lt-md:(text-xs px-2)">周一</label>
+        <label for="weekday-2" class="px-3 lt-md:(text-xs px-2)">周二</label>
+        <label for="weekday-3" class="px-3 lt-md:(text-xs px-2)">周三</label>
+        <label for="weekday-4" class="px-3 lt-md:(text-xs px-2)">周四</label>
+        <label for="weekday-5" class="px-3 lt-md:(text-xs px-2)">周五</label>
+        <label for="weekday-6" class="px-3 lt-md:(text-xs px-2)">周六</label>
+        <label for="weekday-7" class="px-3 lt-md:(text-xs px-2)">周日</label>
       </div>
 
       <div class="weekday-content mt-4 [&>div]:hidden">
