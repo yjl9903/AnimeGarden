@@ -41,7 +41,7 @@ const schema = info
   {info && <script type="application/ld+json" set:html={schema} />}
 
   <div class="detail mt-4vh w-full space-y-4">
-    <h1 class="text-xl font-bold">
+    <h1 class="text-xl font-bold resource-title">
       <span>{detail.title}</span>
     </h1>
     <div class="download-link rounded-md shadow-box">
@@ -53,15 +53,17 @@ const schema = info
       >
         <div>
           <span>Magnet 链接</span>
-          <a href={detail.magnet.href} class="text-link">{detail.magnet.href.split('&')[0]}</a>
+          <a href={detail.magnet.href} class="download text-link"
+            >{detail.magnet.href.split('&')[0]}</a
+          >
         </div>
         <div>
           <span>Magnet 链接 type II</span>
-          <a href={detail.magnet.href2} class="text-link">{detail.magnet.href2}</a>
+          <a href={detail.magnet.href2} class="download text-link">{detail.magnet.href2}</a>
         </div>
         <div>
           <span>会员链接</span>
-          <a href={detail.magnet.user} class="text-link">{detail.magnet.user}</a>
+          <a href={detail.magnet.user} class="download text-link">{detail.magnet.user}</a>
         </div>
         <div>
           <span>原链接</span>
@@ -140,6 +142,23 @@ const schema = info
       </div>
     </div>
   </div>
+
+  <script>
+    import { triggerDownloadEvent } from '../../../clarity';
+
+    const buttons = document.querySelectorAll('a.download');
+
+    // Trigger statistics event
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const titleEl = document.querySelector(`h1.resource-title`);
+        const title = titleEl?.textContent;
+        if (title) {
+          triggerDownloadEvent(title);
+        }
+      });
+    });
+  </script>
 </Layout>
 
 <style is:global>
