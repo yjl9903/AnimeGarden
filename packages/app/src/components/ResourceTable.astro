@@ -101,7 +101,8 @@ function followSearch(params: Record<string, string>) {
               <div class="flex gap1 items-center justify-start">
                 <a
                   href={r.magnet}
-                  class="i-carbon-download text-2xl text-base-500 hover:text-base-900"
+                  data-resource-title={r.title}
+                  class="download i-carbon-download text-2xl text-base-500 hover:text-base-900"
                   aria-label="Download resource"
                 />
                 <span class="text-xs text-base-400">{r.size}</span>
@@ -112,4 +113,21 @@ function followSearch(params: Record<string, string>) {
       }</tbody
     >
   </table>
+
+  <script>
+    import { triggerDownloadEvent } from '../clarity';
+
+    const buttons = document.querySelectorAll('a.download');
+
+    // Trigger statistics event
+    buttons.forEach((button) => {
+      button.addEventListener('click', (ev) => {
+        const target = ev.target as HTMLAnchorElement;
+        const title = target.getAttribute('data-resource-title');
+        if (title) {
+          triggerDownloadEvent(title);
+        }
+      });
+    });
+  </script>
 </div>
