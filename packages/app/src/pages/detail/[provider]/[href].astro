@@ -49,16 +49,8 @@ const schema = info
         <a href={detail.magnet.href} class="text-link-active">下载链接</a>
       </h2>
       <div
-        class="p4 space-y-1 overflow-auto whitespace-nowrap [&>div>span]:(text-base-600 select-none inline-block w-[160px] min-w-[160px]) [&>div]:(flex) [&>div>a]:(inline-block flex-1)"
+        class="p4 space-y-1 overflow-auto whitespace-nowrap [&>div>span]:(text-base-600 select-none inline-block w-[160px] min-w-[160px]) [&>div]:(flex) [&>div>a]:(inline-block flex-1) lt-md:text-sm"
       >
-        <div>
-          <span>原链接</span>
-          <a href={detail.href} target="_blank" class="text-link">{detail.href}</a>
-        </div>
-        <div>
-          <span>会员链接</span>
-          <a href={detail.magnet.user} class="text-link">{detail.magnet.user}</a>
-        </div>
         <div>
           <span>Magnet 链接</span>
           <a href={detail.magnet.href} class="text-link">{detail.magnet.href.split('&')[0]}</a>
@@ -66,6 +58,14 @@ const schema = info
         <div>
           <span>Magnet 链接 type II</span>
           <a href={detail.magnet.href2} class="text-link">{detail.magnet.href2}</a>
+        </div>
+        <div>
+          <span>会员链接</span>
+          <a href={detail.magnet.user} class="text-link">{detail.magnet.user}</a>
+        </div>
+        <div>
+          <span>原链接</span>
+          <a href={detail.href} target="_blank" class="text-link">{detail.href}</a>
         </div>
         <!-- <div>
           <span>弹幕播放链接</span>
