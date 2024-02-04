@@ -40,7 +40,7 @@ const { ok, resources, timestamp } = await fetchResources(
         class="weekday-select
           w-max max-w-full flex items-center gap-2 rounded-md p-2 bg-gray-200/50 select-none text-base-700
           lt-sm:text-sm
-          lt-sm:[&>label]:(px-1)
+          lt-sm:[&>label]:(text-xs px-1)
           [&>label]:(block px-3 py-1 rounded-md cursor-pointer font-bold outline-none)
           [&>label:hover]:(bg-light-300)"
       >
@@ -62,9 +62,10 @@ const { ok, resources, timestamp } = await fetchResources(
                   href={getSearchURL(bgm)}
                   class={`
                     inline-flex items-center gap1
-                    rounded-md px-2 py-1 lt-sm:px-2 font-mono
+                    rounded-md px-2 py-1 font-mono
                     transition transition-colors
-                    text-base-800 bg-gray-200 hover:(bg-gray-300/80)`}
+                    text-base-800 bg-gray-200 hover:(bg-gray-300/80)
+                    lt-sm:px-2 lt-sm:text-xs`}
                 >
                   {getDisplayName(bgm)}
                 </a>
