@@ -9,6 +9,8 @@ import {
   transformerVariantGroup
 } from 'unocss';
 
+import { presetShadcn } from './shadcn.preset';
+
 export default defineConfig({
   content: {
     pipeline: {
@@ -45,7 +47,8 @@ export default defineConfig({
         }
       }
     }),
-    presetTypography()
+    presetTypography(),
+    presetShadcn()
   ],
   transformers: [transformerDirectives(), transformerVariantGroup()],
   shortcuts: {

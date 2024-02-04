@@ -7,9 +7,7 @@ import robotsTxt from 'astro-robots-txt';
 import node from '@astrojs/node';
 import cloudflare from '@astrojs/cloudflare';
 import PWA from '@vite-pwa/astro';
-
 import Info from 'unplugin-info/astro';
-import TsconfigPaths from 'vite-tsconfig-paths';
 
 const SSR_ADAPTER = process.env.SSR_ADAPTER === 'cloudflare' ? 'cloudflare' : 'node';
 
