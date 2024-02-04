@@ -116,7 +116,8 @@ export default defineConfig({
          */
         UMAMI_HOST: undefined, // 'us.umami.is',
         UMAMI_ID: undefined, // '7e93a10d-26a9-4a3a-aa36-99294a5296f3'
-        PLAUSIBLE_HOST: 'garden.onekuma.cn'
+        PLAUSIBLE_HOST: 'garden.onekuma.cn',
+        CLARITY: 'kwj19d7z4j'
       }
     })
   ],
