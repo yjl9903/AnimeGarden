@@ -170,7 +170,7 @@ function followSearch(params: Record<string, string>) {
               <span>类型</span>
               <div slot="dropdown" class="mt4">
                 <div
-                  class="w-[120px] max-h-[600px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y"
+                  class="w-[120px] max-h-[600px] lt-sm:max-h-[360px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y"
                 >
                   {
                     types.map((t) => (
@@ -192,7 +192,7 @@ function followSearch(params: Record<string, string>) {
               <div slot="dropdown" class="mt4">
                 <div
                   id="fansub-dropdown"
-                  class="w-[180px] max-h-[600px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y"
+                  class="w-[180px] max-h-[600px] lt-sm:(max-w-[140px] max-h-[360px]) overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y"
                 >
                   {
                     hasFansubSearch && (
