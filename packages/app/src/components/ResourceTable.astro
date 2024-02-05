@@ -117,16 +117,18 @@ function followSearch(params: Record<string, string>) {
   <script>
     import { triggerDownloadEvent } from '../clarity';
 
-    const buttons = document.querySelectorAll('a.download');
+    document.addEventListener('astro:page-load', () => {
+      const buttons = document.querySelectorAll('.resources-table a.download');
 
-    // Trigger statistics event
-    buttons.forEach((button) => {
-      button.addEventListener('click', (ev) => {
-        const target = ev.target as HTMLAnchorElement;
-        const title = target.getAttribute('data-resource-title');
-        if (title) {
-          triggerDownloadEvent(title);
-        }
+      // Trigger statistics event
+      buttons.forEach((button) => {
+        button.addEventListener('click', (ev) => {
+          const target = ev.target as HTMLAnchorElement;
+          const title = target.getAttribute('data-resource-title');
+          if (title) {
+            triggerDownloadEvent(title);
+          }
+        });
       });
     });
   </script>

@@ -166,7 +166,7 @@ const schema = info
     import { triggerDownloadEvent } from '../../../clarity';
 
     document.addEventListener('astro:page-load', () => {
-      const buttons = document.querySelectorAll('a.download');
+      const buttons = document.querySelectorAll('.detail a.download');
 
       // Trigger statistics event
       buttons.forEach((button) => {
