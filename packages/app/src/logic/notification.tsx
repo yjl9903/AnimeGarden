@@ -32,7 +32,7 @@ document.addEventListener(
   () => {
     const date = committerDate.get() ? committerDate.get() : new Date(0);
     if (date.getTime() < event.date.getTime()) {
-      event.toast();
+      // event.toast();
     }
   },
   { once: true }
