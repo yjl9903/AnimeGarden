@@ -58,7 +58,10 @@ const schema = info
         <TorrentTooltip client:load />
       </h2>
       <div
-        class="p4 space-y-1 overflow-auto whitespace-nowrap [&>div>span:first-child]:(text-base-600 select-none inline-block w-[160px] min-w-[160px]) [&>div]:(flex) [&>div>a]:(inline-block flex-1 pr-4) lt-md:text-sm"
+        class="p4 space-y-1 overflow-auto whitespace-nowrap
+          [&>div>span:first-child]:(text-base-600 select-none inline-block w-[160px] min-w-[160px] lt-sm:w-[120px] lt-sm:min-w-[120px])
+          [&>div]:(flex)
+          [&>div>a]:(inline-block flex-1 pr-4) lt-md:text-sm"
       >
         <div>
           <span>磁力链接</span>

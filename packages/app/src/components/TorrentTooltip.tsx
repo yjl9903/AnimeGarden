@@ -1,10 +1,17 @@
+import { useState } from 'react';
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
 export function TorrentTooltip() {
+  const [open, setOpen] = useState(false);
+
   return (
     <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger className="ml-2 inline-flex items-center">
+      <Tooltip open={open} onOpenChange={setOpen}>
+        <TooltipTrigger
+          className="ml-2 inline-flex items-center"
+          onTouchStart={() => setOpen(true)}
+        >
           <span className="i-carbon-help text-xl"></span>
         </TooltipTrigger>
         <TooltipContent>
