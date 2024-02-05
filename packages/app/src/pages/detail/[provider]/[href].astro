@@ -3,6 +3,7 @@ import { parse } from 'anitomy';
 import { formatInTimeZone } from 'date-fns-tz';
 
 import Layout from '@/layouts/Layout.astro';
+import { Player } from '@/components/Player';
 import { fetchResourceDetail } from '@/fetch';
 
 const { href, provider } = Astro.params;
@@ -16,6 +17,9 @@ if (!detail) {
 }
 
 const files = detail.magnet.files.filter((f) => f.size !== '種子可能不存在' && f.size !== 'Bytes');
+const playTarget = detail.magnet.files.filter(
+  (f) => f.name.endsWith('.mp4') || f.name.endsWith('.mkv')
+)[0];
 
 const info = parse(detail.title);
 const schema = info
@@ -49,7 +53,7 @@ const schema = info
         <a href={detail.magnet.href} class="text-link-active">下载链接</a>
       </h2>
       <div
-        class="p4 space-y-1 overflow-auto whitespace-nowrap [&>div>span]:(text-base-600 select-none inline-block w-[160px] min-w-[160px]) [&>div]:(flex) [&>div>a]:(inline-block flex-1) lt-md:text-sm"
+        class="p4 space-y-1 overflow-auto whitespace-nowrap [&>div>span:first-child]:(text-base-600 select-none inline-block w-[160px] min-w-[160px]) [&>div]:(flex) [&>div>a]:(inline-block flex-1) lt-md:text-sm"
       >
         <div>
           <span>Magnet 链接</span>
@@ -69,6 +73,21 @@ const schema = info
           <span>原链接</span>
           <a href={detail.href} target="_blank" class="text-link">{detail.href}</a>
         </div>
+        <!-- {
+          playTarget && (
+            <div>
+              <span>在线播放</span>
+              <span
+                class="download-play text-link cursor-pointer inline-block flex-1"
+                data-magnet={detail.magnet.href}
+                data-file={playTarget.name}
+              >
+                {playTarget.name.split('/').at(-1)}
+              </span>
+            </div>
+          )
+        } -->
+
         <!-- <div>
           <span>弹幕播放链接</span>
           <a href={detail.magnet.ddplay} class="text-link">{detail.magnet.ddplay}</a>
@@ -146,16 +165,51 @@ const schema = info
   <script>
     import { triggerDownloadEvent } from '../../../clarity';
 
-    const buttons = document.querySelectorAll('a.download');
+    document.addEventListener('astro:page-load', () => {
+      const buttons = document.querySelectorAll('a.download');
 
-    // Trigger statistics event
-    buttons.forEach((button) => {
-      button.addEventListener('click', () => {
-        const titleEl = document.querySelector(`h1.resource-title`);
-        const title = titleEl?.textContent;
-        if (title) {
-          triggerDownloadEvent(title);
-        }
+      // Trigger statistics event
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const titleEl = document.querySelector(`h1.resource-title`);
+          const title = titleEl?.textContent;
+          if (title) {
+            triggerDownloadEvent(title);
+          }
+        });
+      });
+    });
+  </script>
+
+  <Player client:only="react" />
+
+  <script>
+    document.addEventListener('astro:page-load', () => {
+      const buttons = document.querySelectorAll('span.download-play');
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', async (ev) => {
+          const target = ev.target as HTMLSpanElement;
+          const magnet = target.getAttribute('data-magnet');
+          const file = target.getAttribute('data-file');
+
+          if (!magnet || !file) return;
+
+          // await import('video.js');
+
+          const { PlayerState } = await import('@/components/Player/state');
+          PlayerState.set({ open: true, file, loading: true });
+
+          const { makeWebTorrent } = await import('@/components/Player/torrent');
+          const client = await makeWebTorrent();
+          const torrent = await client.download(magnet);
+          console.log(`Downloading torrent`, torrent);
+          PlayerState.set({ open: true, file, loading: false });
+          const torrentFile = torrent.files.find((f) => f.name === file);
+          // const torrentFile = torrent.files.find((f) => f.name.endsWith('.mp4'));
+          // @ts-ignore
+          torrentFile.streamTo(document.querySelector('#video-container'));
+        });
       });
     });
   </script>

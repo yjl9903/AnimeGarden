@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+
 import { defineConfig } from 'astro/config';
 
 import uno from 'unocss/astro';
@@ -21,6 +23,15 @@ const WORKER_HOST = process.env.WORKER_HOST ?? `animegarden.yjl9903.workers.dev`
 export default defineConfig({
   output: 'server',
   site: 'https://' + APP_HOST,
+  vite: {
+    resolve: {
+      alias: {
+        webtorrent: fileURLToPath(
+          new URL('./node_modules/webtorrent/dist/webtorrent.min.js', import.meta.url)
+        )
+      }
+    }
+  },
   integrations: [
     uno(),
     react(),
