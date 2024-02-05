@@ -4,6 +4,7 @@ import { formatInTimeZone } from 'date-fns-tz';
 
 import Layout from '@/layouts/Layout.astro';
 import { Player } from '@/components/Player';
+import { TorrentTooltip } from '@/components/TorrentTooltip';
 import { fetchResourceDetail } from '@/fetch';
 
 const { href, provider } = Astro.params;
@@ -49,20 +50,24 @@ const schema = info
       <span>{detail.title}</span>
     </h1>
     <div class="download-link rounded-md shadow-box">
-      <h2 class="text-lg font-bold border-b px4 py2">
-        <a href={detail.magnet.href} class="text-link-active">下载链接</a>
+      <h2 class="text-lg font-bold border-b px4 py2 flex items-center">
+        <a
+          href={detail.magnet.href}
+          class="text-link-active underline underline-dotted underline-offset-6">下载链接</a
+        >
+        <TorrentTooltip client:load />
       </h2>
       <div
-        class="p4 space-y-1 overflow-auto whitespace-nowrap [&>div>span:first-child]:(text-base-600 select-none inline-block w-[160px] min-w-[160px]) [&>div]:(flex) [&>div>a]:(inline-block flex-1) lt-md:text-sm"
+        class="p4 space-y-1 overflow-auto whitespace-nowrap [&>div>span:first-child]:(text-base-600 select-none inline-block w-[160px] min-w-[160px]) [&>div]:(flex) [&>div>a]:(inline-block flex-1 pr-4) lt-md:text-sm"
       >
         <div>
-          <span>Magnet 链接</span>
+          <span>磁力链接</span>
           <a href={detail.magnet.href} class="download text-link"
             >{detail.magnet.href.split('&')[0]}</a
           >
         </div>
         <div>
-          <span>Magnet 链接 type II</span>
+          <span>磁力链接 type II</span>
           <a href={detail.magnet.href2} class="download text-link">{detail.magnet.href2}</a>
         </div>
         <div>
