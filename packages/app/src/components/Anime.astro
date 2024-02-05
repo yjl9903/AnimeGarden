@@ -64,55 +64,53 @@ import { calendar, getPosterImage, getDisplayName, getSearchURL } from '../logic
 </style>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
-    const wrappers = Array.from(document.querySelectorAll('.bgm-weekday .bgm-list-wrapper'));
-    for (const wrapper of wrappers) {
-      const container = wrapper.querySelector('.bgm-list')!;
-      if (!container) continue;
+  import { hydrateNodes } from '@/lib/hydrate';
 
-      const handler = () => {
-        if (container.scrollLeft < 1) {
-          wrapper.classList.add('scroll-begin');
-        } else {
-          wrapper.classList.remove('scroll-begin');
-        }
+  hydrateNodes('.bgm-weekday .bgm-list-wrapper', (wrapper) => {
+    const container = wrapper.querySelector('.bgm-list')!;
+    if (!container) return;
 
-        if (Math.abs(container.scrollWidth - container.clientWidth - container.scrollLeft) < 1) {
-          wrapper.classList.add('scroll-end');
-        } else {
-          wrapper.classList.remove('scroll-end');
-        }
-      };
+    const handler = () => {
+      if (container.scrollLeft < 1) {
+        wrapper.classList.add('scroll-begin');
+      } else {
+        wrapper.classList.remove('scroll-begin');
+      }
+
+      if (Math.abs(container.scrollWidth - container.clientWidth - container.scrollLeft) < 1) {
+        wrapper.classList.add('scroll-end');
+      } else {
+        wrapper.classList.remove('scroll-end');
+      }
+    };
+    handler();
+
+    container.addEventListener('scroll', () => {
       handler();
+    });
 
-      container.addEventListener('scroll', () => {
-        handler();
-      });
+    const scrollLeft = () => {
+      if (container.scrollLeft - 500 < 51) {
+        container.scrollBy({ left: -550, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: -500, behavior: 'smooth' });
+      }
+    };
+    const scrollRight = () => {
+      if (
+        Math.abs(container.scrollWidth - container.clientWidth - (container.scrollLeft + 500)) < 50
+      ) {
+        container.scrollBy({ left: 550, behavior: 'smooth' });
+      } else {
+        container.scrollBy({ left: 500, behavior: 'smooth' });
+      }
+    };
 
-      const scrollLeft = () => {
-        if (container.scrollLeft - 500 < 51) {
-          container.scrollBy({ left: -550, behavior: 'smooth' });
-        } else {
-          container.scrollBy({ left: -500, behavior: 'smooth' });
-        }
-      };
-      const scrollRight = () => {
-        if (
-          Math.abs(container.scrollWidth - container.clientWidth - (container.scrollLeft + 500)) <
-          50
-        ) {
-          container.scrollBy({ left: 550, behavior: 'smooth' });
-        } else {
-          container.scrollBy({ left: 500, behavior: 'smooth' });
-        }
-      };
-
-      wrapper.querySelector('.scroll-left')?.addEventListener('mousedown', () => {
-        scrollLeft();
-      });
-      wrapper.querySelector('.scroll-right')?.addEventListener('mousedown', () => {
-        scrollRight();
-      });
-    }
+    wrapper.querySelector('.scroll-left')?.addEventListener('mousedown', () => {
+      scrollLeft();
+    });
+    wrapper.querySelector('.scroll-right')?.addEventListener('mousedown', () => {
+      scrollRight();
+    });
   });
 </script>

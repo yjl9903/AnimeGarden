@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { fetchResources } from '../../fetch';
 import { histories as historiesState } from '../../state';
 
-import { useActiveElement } from './hooks';
+import { useActiveElement, usePageLoadEffect } from './hooks';
 import {
   DMHY_RE,
   SEARCH_INPUT_KEY,
@@ -42,29 +42,21 @@ export default function Search() {
   const [input, setInput] = useState('');
   const [search, setSearch] = useState('');
 
-  useEffect(() => {
-    const fn = () => {
-      try {
-        const input = window.sessionStorage.getItem(SEARCH_INPUT_KEY);
-        window.sessionStorage.removeItem(SEARCH_INPUT_KEY);
-        if (input) {
-          setInput(input);
+  usePageLoadEffect(() => {
+    try {
+      const input = window.sessionStorage.getItem(SEARCH_INPUT_KEY);
+      window.sessionStorage.removeItem(SEARCH_INPUT_KEY);
+      if (input) {
+        setInput(input);
+      } else {
+        if (location.pathname.startsWith('/resources/')) {
+          const content = stringifySearch(new URLSearchParams(location.search));
+          setInput(content);
         } else {
-          if (location.pathname.startsWith('/resources/')) {
-            const content = stringifySearch(new URLSearchParams(location.search));
-            setInput(content);
-          } else {
-            setInput('');
-          }
+          setInput('');
         }
-      } catch {}
-    };
-
-    fn();
-    document.addEventListener('astro:page-load', fn);
-    return () => {
-      document.removeEventListener('astro:page-load', fn);
-    };
+      }
+    } catch {}
   }, []);
 
   const setDebounceSearch = debounce((value: string) => {

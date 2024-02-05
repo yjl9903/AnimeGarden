@@ -1,19 +1,17 @@
 import type { ResolvedFilterOptions } from 'animegarden';
 
 import { preferFansubs } from '../state';
+import { hydrateNodes } from '../lib/hydrate';
 
-document.addEventListener('astro:page-load', () => {
-  const resp = document.querySelector('#fetch-response') as HTMLElement | null;
-  if (resp) {
-    const filter = JSON.parse(resp.dataset.filter ?? '') as ResolvedFilterOptions;
-    if (filter.fansubId) {
-      const fansub = new Set(
-        [...filter.fansubId, ...preferFansubs.get()].filter(Boolean).map((t) => '' + t)
-      );
-      preferFansubs.set(fansub);
-      reorderFansub(fansub);
-      return;
-    }
+hydrateNodes('#fetch-response', (node) => {
+  const filter = JSON.parse((node as HTMLElement).dataset.filter ?? '') as ResolvedFilterOptions;
+  if (filter.fansubId) {
+    const fansub = new Set(
+      [...filter.fansubId, ...preferFansubs.get()].filter(Boolean).map((t) => '' + t)
+    );
+    preferFansubs.set(fansub);
+    reorderFansub(fansub);
+    return;
   }
   reorderFansub(preferFansubs.get());
 });

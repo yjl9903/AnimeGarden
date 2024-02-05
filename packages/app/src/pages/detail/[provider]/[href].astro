@@ -167,55 +167,41 @@ const schema = info
     </div>
   </div>
 
-  <script>
-    import { triggerDownloadEvent } from '../../../clarity';
-
-    document.addEventListener('astro:page-load', () => {
-      const buttons = document.querySelectorAll('.detail a.download');
-
-      // Trigger statistics event
-      buttons.forEach((button) => {
-        button.addEventListener('click', () => {
-          const titleEl = document.querySelector(`h1.resource-title`);
-          const title = titleEl?.textContent;
-          if (title) {
-            triggerDownloadEvent(title);
-          }
-        });
-      });
-    });
-  </script>
-
   <Player client:only="react" />
 
   <script>
-    document.addEventListener('astro:page-load', () => {
-      const buttons = document.querySelectorAll('span.download-play');
+    import { hydrateNodesEvent } from '@/lib/hydrate';
+    import { triggerDownloadEvent } from '@/clarity';
 
-      buttons.forEach((button) => {
-        button.addEventListener('click', async (ev) => {
-          const target = ev.target as HTMLSpanElement;
-          const magnet = target.getAttribute('data-magnet');
-          const file = target.getAttribute('data-file');
+    hydrateNodesEvent('.detail a.download', 'click', () => {
+      const titleEl = document.querySelector(`h1.resource-title`);
+      const title = titleEl?.textContent;
+      if (title) {
+        triggerDownloadEvent(title);
+      }
+    });
 
-          if (!magnet || !file) return;
+    hydrateNodesEvent('.detail span.download-play', 'click', async (node, ev) => {
+      const target = ev.target as HTMLSpanElement;
+      const magnet = target.getAttribute('data-magnet');
+      const file = target.getAttribute('data-file');
 
-          // await import('video.js');
+      if (!magnet || !file) return;
 
-          const { PlayerState } = await import('@/components/Player/state');
-          PlayerState.set({ open: true, file, loading: true });
+      // await import('video.js');
 
-          const { makeWebTorrent } = await import('@/components/Player/torrent');
-          const client = await makeWebTorrent();
-          const torrent = await client.download(magnet);
-          console.log(`Downloading torrent`, torrent);
-          PlayerState.set({ open: true, file, loading: false });
-          const torrentFile = torrent.files.find((f) => f.name === file);
-          // const torrentFile = torrent.files.find((f) => f.name.endsWith('.mp4'));
-          // @ts-ignore
-          torrentFile.streamTo(document.querySelector('#video-container'));
-        });
-      });
+      const { PlayerState } = await import('@/components/Player/state');
+      PlayerState.set({ open: true, file, loading: true });
+
+      const { makeWebTorrent } = await import('@/components/Player/torrent');
+      const client = await makeWebTorrent();
+      const torrent = await client.download(magnet);
+      console.log(`Downloading torrent`, torrent);
+      PlayerState.set({ open: true, file, loading: false });
+      const torrentFile = torrent.files.find((f) => f.name === file);
+      // const torrentFile = torrent.files.find((f) => f.name.endsWith('.mp4'));
+      // @ts-ignore
+      torrentFile.streamTo(document.querySelector('#video-container'));
     });
   </script>
 </Layout>

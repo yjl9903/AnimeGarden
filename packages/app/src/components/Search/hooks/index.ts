@@ -1,4 +1,14 @@
-import { useEffect, useState } from 'react';
+import { type DependencyList, useEffect, useState } from 'react';
+
+export const usePageLoadEffect = (fn: () => void, deps?: DependencyList) => {
+  useEffect(() => {
+    fn();
+    document.addEventListener('astro:page-load', fn);
+    return () => {
+      document.removeEventListener('astro:page-load', fn);
+    };
+  }, deps);
+};
 
 export const useActiveElement = () => {
   const [listenersReady, setListenersReady] = useState(false);
