@@ -6,8 +6,8 @@ import { useCallback, useRef, useState, type FormEvent } from 'react';
 import { fetchResources } from '@/fetch';
 import { inputAtom, historiesAtom } from '@/state';
 
-import { DMHY_RE, debounce, goTo, goToSearch, parseSearch, stringifySearch } from './utils';
 import { useActiveElement, usePageLoadEffect } from './hooks';
+import { DMHY_RE, debounce, goTo, goToSearch, parseSearch, stringifySearch } from './utils';
 
 {
   document.addEventListener('keypress', (ev) => {
@@ -262,7 +262,11 @@ function SearchResult(props: {
 
       const filter = parseSearch(search);
       // Disable search without any keywords
-      if (filter.include.length === 0 && filter.search.length === 0) {
+      if (
+        filter.include.length === 0 &&
+        filter.keywords.length === 0 &&
+        filter.search.length === 0
+      ) {
         return null;
       }
 

@@ -6,7 +6,7 @@ import { store, inputAtom } from '@/state';
 
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
 
-export function parseSearch(search: string) {
+export function parseSearch(input: string) {
   function splitWords(search: string) {
     const matchQuotes = {
       '"': ['"'],
@@ -60,10 +60,11 @@ export function parseSearch(search: string) {
     return words;
   }
 
-  const splitted = splitWords(search);
+  const splitted = splitWords(input);
 
-  const keywords: string[] = [];
+  const search: string[] = [];
   const include: string[] = [];
+  const keywords: string[] = [];
   const exclude: string[] = [];
 
   const fansub: number[] = [];
@@ -72,8 +73,11 @@ export function parseSearch(search: string) {
   const before: Date[] = [];
 
   const handlers: Record<string, (word: string) => void> = {
-    '+,include:,包含:': (word) => {
+    'title:,标题:,匹配:': (word) => {
       include.push(word);
+    },
+    '+,include:,包含:': (word) => {
+      keywords.push(word);
     },
     '!,！,-,exclude:排除:': (word) => {
       exclude.push(word);
@@ -115,13 +119,19 @@ export function parseSearch(search: string) {
       if (found) break;
     }
     if (!found) {
-      keywords.push(word.replace(/\+/g, '%2b'));
+      search.push(word.replace(/\+/g, '%2b'));
     }
   }
 
+  if (include.length > 0 || keywords.length > 0 || exclude.length > 0) {
+    include.push(...search);
+    search.splice(0, search.length);
+  }
+
   return {
-    search: keywords,
+    search,
     include,
+    keywords,
     exclude,
     fansubId: fansub,
     after: after.at(-1),
@@ -136,12 +146,16 @@ export function stringifySearch(search: URLSearchParams) {
 
   if (filter.search) {
     content.push(...filter.search.map((f) => wrap(f)));
-  }
-  if (filter.include && filter.include.length > 0) {
-    content.push(...filter.include.map((f) => wrap(f)));
-  }
-  if (filter.exclude) {
-    content.push(...filter.exclude.map((ex) => '排除:' + wrap(ex)));
+  } else {
+    if (filter.include && filter.include.length > 0) {
+      content.push(...filter.include.map((f) => '标题:' + wrap(f)));
+    }
+    if (filter.keywords) {
+      content.push(...filter.keywords.map((t) => '包含:' + wrap(t)));
+    }
+    if (filter.exclude) {
+      content.push(...filter.exclude.map((t) => '排除:' + wrap(t)));
+    }
   }
   if (filter.fansubId) {
     content.push(...filter.fansubId.map((f) => '字幕组:' + (findFansub(f)?.name ?? f)));
