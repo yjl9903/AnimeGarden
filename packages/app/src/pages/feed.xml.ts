@@ -23,17 +23,20 @@ export const GET: APIRoute = async (context) => {
     const filter = ManyFilterSchema.safeParse(rawFilter);
 
     if (filter.success && filter.data.length > 0) {
-      // TODO: fix this
-      // @ts-ignore
-      const title = inferTitle(context.url.searchParams, filter.data[0]);
+      const title = inferTitle(context.url.searchParams, filter.data[0] as ResolvedFilterOptions);
       const locals = getRuntimeEnv(context.locals);
 
-      const { resources } = await fetchResources(wfetch(locals?.worker), {
-        ...filter.data[0],
-        baseURL,
-        page: 1,
-        pageSize: 100
-      });
+      const resp = await Promise.all(
+        filter.data.map((f) =>
+          fetchResources(wfetch(locals?.worker), {
+            ...f,
+            baseURL,
+            page: 1,
+            pageSize: 100
+          })
+        )
+      );
+      const resources = resp.flatMap((r) => r.resources);
 
       return rss({
         title,
