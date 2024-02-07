@@ -43,43 +43,23 @@
 </style>
 
 <script>
-  import { onSet } from 'nanostores';
+  import { store, loadingAtom } from '@/state';
 
-  import { loading } from '../state';
+  document.addEventListener('astro:page-load', () => {
+    store.set(loadingAtom, false);
 
-  document.addEventListener('click', (ev) => {
-    const find = (node: HTMLElement | null) => {
-      if (node && node.nodeName.toLowerCase() === 'a') {
-        return node;
+    store.sub(loadingAtom, () => {
+      const isLoading = store.get(loadingAtom);
+      const progress = document.querySelector('#animegarden-progress')!;
+      if (isLoading) {
+        progress.classList.remove('hidden');
+      } else {
+        progress.classList.add('hidden');
       }
-      node = node?.parentNode as HTMLElement | null;
-      if (node && node.nodeName.toLowerCase() === 'a') {
-        return node;
-      }
-    };
+    });
 
-    const target = find(ev.target as HTMLElement | null);
-    if (target) {
-      const href = target.getAttribute('href');
-      if (target.getAttribute('target') !== '_blank') {
-        if (href) {
-          if (
-            (href.startsWith('/') && window.location.origin + href !== window.location.href) ||
-            (href.startsWith(window.location.origin) && href !== window.location.href)
-          ) {
-            loading.set(true);
-          }
-        }
-      }
-    }
-  });
-
-  onSet(loading, ({ newValue }) => {
-    const progress = document.querySelector('#animegarden-progress')!;
-    if (newValue) {
-      progress.classList.remove('hidden');
-    } else {
-      progress.classList.add('hidden');
-    }
+    document.addEventListener('astro:before-preparation', () => {
+      store.set(loadingAtom, true);
+    });
   });
 </script>

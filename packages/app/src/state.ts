@@ -1,32 +1,24 @@
-import { atom } from 'nanostores';
-import { persistentAtom } from '@nanostores/persistent';
+import { atom, getDefaultStore } from 'jotai';
+import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 
-export const loading = atom<boolean>(false);
+export const store = getDefaultStore();
 
-export const histories = persistentAtom<string[]>('animegarden:histories', [], {
-  encode: JSON.stringify,
-  decode: JSON.parse
-});
+export const loadingAtom = atom(false);
 
-export const preferFansubs = persistentAtom<Set<string>>('animegarden:fansubs', new Set(), {
-  encode: (t) => JSON.stringify([...t]),
-  decode: (t) => new Set(JSON.parse(t) as string[])
-});
+export const inputAtom = atomWithStorage(
+  'animegarden:search_input',
+  '',
+  createJSONStorage<string>(() => sessionStorage)
+);
 
-export const committerDate = persistentAtom<Date | undefined>(
-  'animegarden:commiter_date',
-  undefined,
-  {
-    encode: (t) => JSON.stringify(t),
-    decode: (t) => {
-      const r = JSON.parse(t);
-      if (r) {
-        const d = new Date(r as any);
-        if (!isNaN(d.getTime())) {
-          return d;
-        }
-      }
-      return undefined;
-    }
-  }
+export const historiesAtom = atomWithStorage(
+  'animegarden:histories',
+  [],
+  createJSONStorage<string[]>(() => localStorage)
+);
+
+export const preferFansubsAtom = atomWithStorage(
+  'animegarden:fansubs',
+  [],
+  createJSONStorage<string[]>(() => localStorage)
 );

@@ -1,21 +1,13 @@
 import useSWR from 'swr';
 import { Command } from 'cmdk';
-import { useStore } from '@nanostores/react';
-import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { useAtom } from 'jotai';
+import { useCallback, useRef, useState, type FormEvent } from 'react';
 
-import { fetchResources } from '../../fetch';
-import { histories as historiesState } from '../../state';
+import { fetchResources } from '@/fetch';
+import { inputAtom, historiesAtom } from '@/state';
 
+import { DMHY_RE, debounce, goTo, goToSearch, parseSearch, stringifySearch } from './utils';
 import { useActiveElement, usePageLoadEffect } from './hooks';
-import {
-  DMHY_RE,
-  SEARCH_INPUT_KEY,
-  debounce,
-  goTo,
-  goToSearch,
-  parseSearch,
-  stringifySearch
-} from './utils';
 
 {
   document.addEventListener('keypress', (ev) => {
@@ -38,26 +30,27 @@ export default function Search() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { active } = useActiveElement();
 
-  const histories = useStore(historiesState);
-  const [input, setInput] = useState('');
-  const [search, setSearch] = useState('');
+  const [histories, setHistories] = useAtom(historiesAtom);
 
-  usePageLoadEffect(() => {
-    try {
-      const input = window.sessionStorage.getItem(SEARCH_INPUT_KEY);
-      window.sessionStorage.removeItem(SEARCH_INPUT_KEY);
-      if (input) {
-        setInput(input);
-      } else {
-        if (location.pathname.startsWith('/resources/')) {
-          const content = stringifySearch(new URLSearchParams(location.search));
-          setInput(content);
-        } else {
-          setInput('');
-        }
-      }
-    } catch {}
-  }, []);
+  const [input, setInput] = useAtom(inputAtom);
+  const [search, setSearch] = useState(input);
+
+  // usePageLoadEffect(() => {
+  //   try {
+  //     const input = window.sessionStorage.getItem(SEARCH_INPUT_KEY);
+  //     window.sessionStorage.removeItem(SEARCH_INPUT_KEY);
+  //     if (input) {
+  //       setInput(input);
+  //     } else {
+  //       if (location.pathname.startsWith('/resources/')) {
+  //         const content = stringifySearch(new URLSearchParams(location.search));
+  //         setInput(content);
+  //       } else {
+  //         setInput('');
+  //       }
+  //     }
+  //   } catch {}
+  // }, []);
 
   const setDebounceSearch = debounce((value: string) => {
     if (value !== search) {
@@ -106,14 +99,21 @@ export default function Search() {
       const target = text ?? input;
       if (target) {
         setInput(target);
-        pushHistory(target);
+        {
+          // Filter old history item which is the substring of the current input
+          const oldHistories = histories.filter((o) => !target.includes(o));
+          // Remove duplicate items
+          const newHistories = [...new Set([target, ...oldHistories])].slice(0, 10);
+          // Set histories
+          setHistories(newHistories);
+        }
 
         stopFetch();
         goToSearch(target);
         disable();
       }
     },
-    [input]
+    [histories, input]
   );
 
   const selectStatic = useCallback((key: string) => {
@@ -166,7 +166,6 @@ export default function Search() {
         )}
         {enable && !input.trim() && histories.length > 0 && (
           <SearchHistory
-            histories={histories}
             selectGoToSearch={() => selectGoToSearch()}
             onInputChange={onInputChange}
           ></SearchHistory>
@@ -342,23 +341,31 @@ function SearchLoading(props: { search: string }) {
 }
 
 function SearchHistory(props: {
-  histories: string[];
   selectGoToSearch: (text: string) => void;
   onInputChange: (text: string) => void;
 }) {
-  const { histories, selectGoToSearch, onInputChange } = props;
+  const [histories, setHistories] = useAtom(historiesAtom);
+  const { selectGoToSearch, onInputChange } = props;
 
-  const onClearHistories = (ev: React.MouseEvent) => {
-    clearHistories();
-    ev.stopPropagation();
-    ev.preventDefault();
-  };
+  const onClearHistories = useCallback(
+    (ev: React.MouseEvent) => {
+      setHistories([]);
+      ev.stopPropagation();
+      ev.preventDefault();
+    },
+    [histories]
+  );
 
-  const onRemoveHistory = (ev: React.MouseEvent, item: string) => {
-    removeHistory(item);
-    ev.stopPropagation();
-    ev.preventDefault();
-  };
+  const onRemoveHistory = useCallback(
+    (ev: React.MouseEvent, item: string) => {
+      const filterHistories = histories.filter((content) => content !== item);
+      setHistories(filterHistories);
+
+      ev.stopPropagation();
+      ev.preventDefault();
+    },
+    [histories]
+  );
 
   return (
     <Command.Group
@@ -371,7 +378,7 @@ function SearchHistory(props: {
         </div>
       }
     >
-      {histories.map((h) => (
+      {[...new Set(histories)].map((h) => (
         <Command.Item
           key={h}
           onMouseDown={(ev) => {
@@ -396,22 +403,4 @@ function SearchHistory(props: {
       ))}
     </Command.Group>
   );
-}
-
-function pushHistory(text: string) {
-  // Filter old history item which is the substring of the current input
-  const oldHistories = historiesState.get().filter((o) => !text.includes(o));
-  // Remove duplicate items
-  const newHistories = [...new Set([text, ...oldHistories])].slice(0, 10);
-  // Set histories
-  historiesState.set(newHistories);
-}
-
-function removeHistory(item: string) {
-  const filterHistories = historiesState.get().filter((content) => content !== item);
-  historiesState.set(filterHistories);
-}
-
-function clearHistories() {
-  historiesState.set([]);
 }

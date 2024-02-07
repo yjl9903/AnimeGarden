@@ -1,12 +1,10 @@
 import { navigate } from 'astro:transitions/client';
 import { findFansub, parseSearchURL, stringifySearchURL } from 'animegarden';
 
-import { loading } from '../../state';
-import { DisplayType } from '../../constant';
+import { DisplayType } from '@/constant';
+import { store, inputAtom } from '@/state';
 
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
-
-export const SEARCH_INPUT_KEY = 'search:input';
 
 export function parseSearch(search: string) {
   function splitWords(search: string) {
@@ -201,12 +199,11 @@ export function resolveSearchURL(search: string) {
 }
 
 export function goToSearch(search: string) {
-  window.sessionStorage.setItem(SEARCH_INPUT_KEY, search);
+  store.set(inputAtom, search);
   return goTo(resolveSearchURL(search));
 }
 
 export function goTo(href: string) {
-  loading.set(true);
   navigate(href, { history: 'push' });
 }
 

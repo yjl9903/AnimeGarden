@@ -1,19 +1,20 @@
 import type { ResolvedFilterOptions } from 'animegarden';
 
-import { preferFansubs } from '../state';
-import { hydrateNodes } from '../lib/hydrate';
+import { store, preferFansubsAtom } from '@/state';
+import { hydrateNodes } from '@/lib/hydrate';
 
 hydrateNodes('#fetch-response', (node) => {
   const filter = JSON.parse((node as HTMLElement).dataset.filter ?? '') as ResolvedFilterOptions;
   if (filter.fansubId) {
     const fansub = new Set(
-      [...filter.fansubId, ...preferFansubs.get()].filter(Boolean).map((t) => '' + t)
+      [...filter.fansubId, ...store.get(preferFansubsAtom)].filter(Boolean).map((t) => '' + t)
     );
-    preferFansubs.set(fansub);
+    store.set(preferFansubsAtom, [...fansub]);
     reorderFansub(fansub);
     return;
+  } else {
+    reorderFansub(new Set(store.get(preferFansubsAtom)));
   }
-  reorderFansub(preferFansubs.get());
 });
 
 export function reorderFansub(order: Set<string>) {

@@ -1,8 +1,6 @@
 import { toast } from 'sonner';
 import { committerDate as latestDate } from '~build/git';
 
-import { committerDate } from '../state';
-
 const event = {
   date: new Date(`Mon Jan 29 2024 21:37:26 GMT+0800`),
   toast: () => {
@@ -30,10 +28,7 @@ const event = {
 document.addEventListener(
   'astro:page-load',
   () => {
-    const date = committerDate.get() ? committerDate.get() : new Date(0);
-    if (date.getTime() < event.date.getTime()) {
-      // event.toast();
-    }
+    // TODO
   },
   { once: true }
 );

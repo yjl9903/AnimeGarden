@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useStore } from '@nanostores/react';
+import { useAtom } from 'jotai';
 
 import {
   Dialog,
@@ -12,15 +11,15 @@ import {
 } from '../ui/dialog';
 import { Skeleton } from '../ui/skeleton';
 
-import { PlayerState } from './state';
+import { playerAtom } from './state';
 
 export function Player() {
-  const { open: isOpen, file, loading = false } = useStore(PlayerState);
+  const [{ open: isOpen, file, loading = false }, setPlayerState] = useAtom(playerAtom);
 
   if (!file) return;
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => PlayerState.set({ open, loading: true })}>
+    <Dialog open={isOpen} onOpenChange={(open) => setPlayerState({ open, loading: true })}>
       <DialogContent className="max-w-[95vw] w-[95vw] max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>播放 {file.split('/').at(-1)}</DialogTitle>

@@ -1,6 +1,6 @@
-import { atom } from 'nanostores';
+import { atom } from 'jotai';
 
-export const PlayerState = atom<{ open: boolean; file?: string; loading: boolean }>({
+export const playerAtom = atom<{ open: boolean; file?: string; loading: boolean }>({
   open: false,
   loading: true
 });
