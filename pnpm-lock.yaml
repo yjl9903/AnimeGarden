@@ -217,8 +217,8 @@ importers:
         specifier: ^0.58.5
         version: 0.58.5(postcss@8.4.33)(rollup@2.79.1)(vite@5.0.12)
       unplugin-info:
-        specifier: ^1.0.2
-        version: 1.0.2(esbuild@0.17.19)(rollup@2.79.1)(vite@5.0.12)
+        specifier: ^1.0.3
+        version: 1.0.3(esbuild@0.17.19)(rollup@2.79.1)(vite@5.0.12)
 
   packages/cli:
     dependencies:
@@ -12875,8 +12875,8 @@ packages:
     dev: false
     optional: true
 
-  /unplugin-info@1.0.2(esbuild@0.17.19)(rollup@2.79.1)(vite@5.0.12):
-    resolution: {integrity: sha512-62oWGn+7Ge3uhvctMyOQNInRYBnNj9vZ+bQl5EeQHtvfI8PWUJdJIxG0jDduYbOMBS63zTeEkR/kSg8U8S+FLQ==}
+  /unplugin-info@1.0.3(esbuild@0.17.19)(rollup@2.79.1)(vite@5.0.12):
+    resolution: {integrity: sha512-QV/A6DiFaskCj4gNAbFYJNQkqSwvy1G81fXqg+gj5r9ZzRCD+8Xhfd7d4ZvBy3PZTZm6+neht/paIpKnhTXjYw==}
     peerDependencies:
       '@nuxt/kit': ^3.7.3
       '@nuxt/schema': ^3.7.3
@@ -12903,14 +12903,14 @@ packages:
       git-url-parse: 14.0.0
       rollup: 2.79.1
       simple-git: 3.22.0
-      unplugin: 1.6.0
+      unplugin: 1.7.1
       vite: 5.0.12(@types/node@20.11.16)
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /unplugin@1.6.0:
-    resolution: {integrity: sha512-BfJEpWBu3aE/AyHx8VaNE/WgouoQxgH9baAiH82JjX8cqVyi3uJQstqwD5J+SZxIK326SZIhsSZlALXVBCknTQ==}
+  /unplugin@1.7.1:
+    resolution: {integrity: sha512-JqzORDAPxxs8ErLV4x+LL7bk5pk3YlcWqpSNsIkAZj972KzFZLClc/ekppahKkOczGkwIG6ElFgdOgOlK4tXZw==}
     dependencies:
       acorn: 8.11.3
       chokidar: 3.5.3
