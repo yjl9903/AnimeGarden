@@ -35,22 +35,16 @@ export default function Search() {
   const [input, setInput] = useAtom(inputAtom);
   const [search, setSearch] = useState(input);
 
-  // usePageLoadEffect(() => {
-  //   try {
-  //     const input = window.sessionStorage.getItem(SEARCH_INPUT_KEY);
-  //     window.sessionStorage.removeItem(SEARCH_INPUT_KEY);
-  //     if (input) {
-  //       setInput(input);
-  //     } else {
-  //       if (location.pathname.startsWith('/resources/')) {
-  //         const content = stringifySearch(new URLSearchParams(location.search));
-  //         setInput(content);
-  //       } else {
-  //         setInput('');
-  //       }
-  //     }
-  //   } catch {}
-  // }, []);
+  usePageLoadEffect(() => {
+    try {
+      if (location.pathname.startsWith('/resources/')) {
+        const content = stringifySearch(new URLSearchParams(location.search));
+        setInput(content);
+      } else {
+        setInput('');
+      }
+    } catch {}
+  }, []);
 
   const setDebounceSearch = debounce((value: string) => {
     if (value !== search) {
