@@ -28,6 +28,12 @@ export function registerQuery() {
     app.post(`/resources`, async (ctx) => {
       return listResourcesHandler(ctx);
     });
+    app.get(`/resources/`, async (ctx) => {
+      return listResourcesHandler(ctx);
+    });
+    app.post(`/resources/`, async (ctx) => {
+      return listResourcesHandler(ctx);
+    });
 
     app.get(`/dmhy/resources`, async (ctx) => {
       return listResourcesHandler(ctx, 'dmhy');
