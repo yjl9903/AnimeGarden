@@ -335,8 +335,8 @@ importers:
         specifier: workspace:*
         version: link:../scraper
       '@planetscale/database':
-        specifier: ^1.14.0
-        version: 1.14.0
+        specifier: ^1.15.0
+        version: 1.15.0
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -351,7 +351,7 @@ importers:
         version: 3.12.11
       kysely-planetscale:
         specifier: ^1.4.0
-        version: 1.4.0(@planetscale/database@1.14.0)(kysely@0.27.2)
+        version: 1.4.0(@planetscale/database@1.15.0)(kysely@0.27.2)
       memofunc:
         specifier: ^0.0.8
         version: 0.0.8
@@ -3006,8 +3006,8 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@planetscale/database@1.14.0:
-    resolution: {integrity: sha512-7BB+iH6EH4YJuDeVeEbxpo60BFz3wIXJNXCmBGl40eC4HStRMGZ1COxKfiuPcINWwwrJhAhI9AEI97AOZYT7JQ==}
+  /@planetscale/database@1.15.0:
+    resolution: {integrity: sha512-X4GmGGKE3o6tj/FM+ElDdyVb9BI8Y2OSSeOtyW/gCmVS0XLs4tTppg0cVLL89CS+awEhIIYXFDwqT3a7pbYROg==}
     engines: {node: '>=16'}
     dev: false
 
@@ -8613,13 +8613,13 @@ packages:
     resolution: {integrity: sha512-Y+60/zizpJ3HRH8DCss+q95yr6145JXZo46OTpFvDZWLfRCE4qChOyk1b26nMaNpfHHgxagk9dXT5OP0Tfe+dQ==}
     dev: true
 
-  /kysely-planetscale@1.4.0(@planetscale/database@1.14.0)(kysely@0.27.2):
+  /kysely-planetscale@1.4.0(@planetscale/database@1.15.0)(kysely@0.27.2):
     resolution: {integrity: sha512-dM2xgOM50+IiOIrSCEn/6lgXcE7J752oNpV6NcIYNgG/AfYGMtWm2ZK7PyeIPy5JG1jZvQvqwTFbGK4HGH/hJw==}
     peerDependencies:
       '@planetscale/database': '*'
       kysely: '*'
     dependencies:
-      '@planetscale/database': 1.14.0
+      '@planetscale/database': 1.15.0
       date-fns: 2.30.0
       kysely: 0.27.2
     dev: false
