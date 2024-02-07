@@ -5,9 +5,9 @@
 [![Deploy Worker](https://github.com/yjl9903/AnimeGarden/actions/workflows/deploy.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/deploy.yml)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
-[English](/README.md) | [简体中文](/README.cn.md)
+> 👷‍♂️ 翻译正在进行中...
 
-動漫花園 3-rd party [mirror site](https://garden.onekuma.cn).
+動漫花園 3-rd party [镜像站](https://garden.onekuma.cn).
 
 + ☁️ Provide [API endpoint](https://garden.onekuma.cn/docs/api) for developers
 + 📺 View [bangumi onair calendar](https://garden.onekuma.cn/anime) to find your favourite anime easily
