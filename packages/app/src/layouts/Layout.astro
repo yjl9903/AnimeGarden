@@ -6,6 +6,7 @@ import { ViewTransitions } from 'astro:transitions';
 
 import { Toaster } from 'sonner';
 
+import { Menu } from '../components/Menu';
 import Search from '../components/Search/Search';
 import Loading from '../components/Loading.astro';
 import Dropdown from '../components/Dropdown.astro';
@@ -235,6 +236,9 @@ function followSearch(params: Record<string, string>) {
         </div>
       </div>
     </header>
+    <div class="main-menu fixed z-10">
+      <Menu client:idle />
+    </div>
     <main class="main pb-8vh" transition:animate="slide">
       <slot />
     </main>
@@ -271,7 +275,6 @@ function followSearch(params: Record<string, string>) {
 
     <style is:global>
       @import '@onekuma/preset.css';
-      @import '@onekuma/reset/tailwind.css';
 
       @import '../styles/cmdk.css';
 
@@ -301,7 +304,11 @@ function followSearch(params: Record<string, string>) {
 
       .main {
         /* prettier-ignore */
-        --at-apply: mx-auto mx-w-[90vw] lg:w-[80vw] md:w-[46rem] lt-md:mx-w-[95vw] lt-md:w-[95vw];
+        --at-apply: mx-auto lg:w-[80vw] md:w-[46rem] lt-md:w-[95vw];
+      }
+
+      .main-menu {
+        --at-apply: bottom-16 left-[92vw] lt-md:left-[82vw];
       }
 
       .text-gradient {

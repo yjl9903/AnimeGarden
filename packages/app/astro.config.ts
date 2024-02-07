@@ -33,7 +33,7 @@ export default defineConfig({
     }
   },
   integrations: [
-    uno(),
+    uno({ injectReset: true }),
     react(),
     sitemap(),
     robotsTxt({
