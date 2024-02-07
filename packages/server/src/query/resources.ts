@@ -18,8 +18,10 @@ import {
 
 import { storage } from '../storage';
 import { database } from '../database';
-import { searchResources } from './search';
+import { isNoCache } from '../utils';
 import { logger as rootLogger } from '../logger';
+
+import { searchResources } from './search';
 
 const logger = rootLogger.forkIntegrationLogger('detail');
 
@@ -34,7 +36,9 @@ export async function queryResources(ctx: Context, filter: ResolvedFilterOptions
       complete: resp.complete
     };
   } else {
-    const resp = await listResourcesFromDB(filter);
+    const resp = !isNoCache(ctx)
+      ? await listResourcesFromDB(filter)
+      : await listResourcesFromDB.get(filter);
     return {
       timestamp: resp.timestamp,
       resources: resp.resources,
@@ -61,7 +65,7 @@ const listResourcesFromDB = memoAsync(
       exclude
     } = options;
 
-    const result = await database
+    const sql = database
       .select({
         id: resources.id,
         provider: resources.provider,
@@ -120,6 +124,7 @@ const listResourcesFromDB = memoAsync(
       .offset((page - 1) * pageSize)
       .limit(pageSize + 1); // Used for determining whether there are rest resources
 
+    const result = await sql;
     const timestamp = await timestampPromise;
 
     return {
