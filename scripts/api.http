@@ -53,15 +53,19 @@ Content-Type: application/json
 
 ### Search resources with complicated search
 ### Resource must has type "動畫"
-### Resource title must contains ("機動戰士鋼彈" or "机动战士高达") and "水星的魔女" and ("第二季" or "Season 2" or "S2")
+### Resource title must contains one of ("机动战士高达" or "水星的魔女") and all the keywords ("第二季" and "ANi")
 GET https://garden.onekuma.cn/api/resources?type=動畫
+Cache-Control: no-store
 Content-Type: application/json
 
 {
   "include": [
-    ["機動戰士鋼彈", "机动战士高达"],
+    "机动战士高达",
     "水星的魔女",
-    ["第二季", "Season 2", "S2"]
+  ],
+  "keywords": [
+    "第二季",
+    "ANi"
   ]
 }
 
