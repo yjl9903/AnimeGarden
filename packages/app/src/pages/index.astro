@@ -9,6 +9,7 @@ import ErrorNotification from '../components/Error.astro';
 import { parseSearch } from '../components/Search/utils';
 
 import { getRuntimeEnv } from '../utils';
+import { generateFeed } from '../logic/feed';
 import { wfetch, fetchResources } from '../fetch';
 import { Weekday, calendar, getDisplayName, getSearchURL } from '../logic/anime';
 
@@ -19,13 +20,15 @@ if (Astro.url.searchParams.get('q')) {
   return Astro.redirect(`/resources/1${url.search}`);
 }
 
+const feedURL = `/feed.xml?filter=${generateFeed(Astro.url.searchParams)}`;
+
 const { ok, resources, timestamp } = await fetchResources(
   { page: 1, pageSize: 80, type: '動畫' },
   { fetch: wfetch(env?.worker) }
 );
 ---
 
-<Layout title="" timestamp={timestamp} canonicalURL="/">
+<Layout active="home" title="" timestamp={timestamp} canonicalURL="/" feedURL={feedURL}>
   <div class="mt-4vh w-full">
     <div class="border-b pb-2 mb-2">
       <input type="radio" name="weekday" id="weekday-1" class="hidden" checked={Weekday === 0} />

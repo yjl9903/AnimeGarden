@@ -5,23 +5,26 @@ import { pwaInfo } from 'virtual:pwa-info';
 import { ViewTransitions } from 'astro:transitions';
 
 import { Toaster } from 'sonner';
-import { parseSearchURL } from 'animegarden';
 
 import Search from '../components/Search/Search';
 import Loading from '../components/Loading.astro';
 import Dropdown from '../components/Dropdown.astro';
 
+import { getRuntimeEnv } from '../utils';
 import { types, fansubs } from '../constant';
-import { removeQuote, getRuntimeEnv } from '../utils';
 
 export interface Props {
   title: string;
+
+  active: string;
 
   description?: string;
 
   timestamp?: Date;
 
   canonicalURL?: string;
+
+  feedURL?: string;
 }
 
 const {
@@ -33,9 +36,8 @@ const {
 const url = Astro.url.pathname;
 const search = Astro.url.searchParams;
 
-const page = Astro.params.page ?? Astro.url.searchParams.get('page') ?? '1';
-const feed = `/feed.xml?filter=${generateFeed(Astro.url.searchParams)}`;
-const enableFeed = page === '1' && !Astro.url.pathname.startsWith('/detail/');
+const feed = Astro.props.feedURL;
+const active = Astro.props.active;
 
 const env = getRuntimeEnv(Astro.locals);
 const timestamp =
@@ -44,25 +46,6 @@ const timestamp =
 
 const hasTypeSearch = search.has('type');
 const hasFansubSearch = search.has('fansubId');
-const active = url.startsWith('/anime')
-  ? 'anime'
-  : hasFansubSearch
-    ? 'fansub'
-    : hasTypeSearch
-      ? 'type'
-      : '';
-
-function generateFeed(params: URLSearchParams) {
-  const filter = parseSearchURL(params);
-  // Hack: manually remove duplicate
-  if (!filter.provider && filter.duplicate === false) {
-    delete filter['duplicate'];
-  }
-  if (filter.search) {
-    filter.search = removeQuote(filter.search);
-  }
-  return JSON.stringify([{ ...filter, page: undefined, pageSize: undefined }]);
-}
 
 function followSearch(params: Record<string, string>) {
   const s = new URLSearchParams(search);
@@ -158,12 +141,12 @@ function followSearch(params: Record<string, string>) {
       </div>
       <div class="main flex gap6 hide-scrollbar justify-between select-none text-base-500">
         <div class="flex sm:gap6 lt-sm:gap4 justify-start">
-          <a href="/" class="header-item block" x-active={url === '/'}>首页</a>
+          <a href="/" class="header-item block" x-active={active === 'home'}>首页</a>
           <a href="/anime" class="header-item block" x-active={active === 'anime'}>动画</a>
           <a
             href="/resources/1"
             class="header-item block"
-            x-active={url.startsWith('/resources/') && active === ''}>所有资源</a
+            x-active={url.startsWith('/resources/') && active === 'all'}>所有资源</a
           >
           <div class="header-item cursor-pointer" x-active={active === 'type'}>
             <Dropdown>
@@ -172,6 +155,16 @@ function followSearch(params: Record<string, string>) {
                 <div
                   class="w-[120px] max-h-[600px] lt-sm:max-h-[360px] overflow-y-auto rounded-md border shadow-box bg-light-100 divide-y"
                 >
+                  {
+                    hasTypeSearch && (
+                      <a
+                        href={`/resources/1?${followSearch({ type: '' })}`}
+                        class="px2 py1 block text-base-600 text-link-active"
+                      >
+                        所有
+                      </a>
+                    )
+                  }
                   {
                     types.map((t) => (
                       <a
@@ -220,11 +213,13 @@ function followSearch(params: Record<string, string>) {
               </div>
             </Dropdown>
           </div>
-          <a href="https://share.dmhy.org/" target="_blank" class="header-item block lt-sm:hidden">动漫花园</a>
+          <a href="https://share.dmhy.org/" target="_blank" class="header-item block lt-sm:hidden"
+            >动漫花园</a
+          >
         </div>
         <div>
           {
-            enableFeed && (
+            feed && (
               <a
                 href={feed}
                 target="_blank"
@@ -240,9 +235,10 @@ function followSearch(params: Record<string, string>) {
         </div>
       </div>
     </header>
-    <main class="main pb-8vh" transition:animate="slide">
+    <main class="main pb-4vh" transition:animate="slide">
       <slot />
     </main>
+    <div class="border-t pb-4vh"></div>
     <footer class="main pb-8vh select-none [&>div]:(flex items-center)" transition:persist>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-carbon-update-now op-80"></span>

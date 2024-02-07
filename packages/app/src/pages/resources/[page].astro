@@ -50,6 +50,7 @@ const keywords = {
   exclude: searchParams?.exclude ? searchParams.exclude : [...(exclude ?? [])]
 };
 
+const active = fansub && fansub.length === 1 ? 'fansub' : type ? 'type' : 'all';
 const title = inferTitle();
 
 function inferTitle() {
@@ -74,6 +75,7 @@ function inferTitle() {
 ---
 
 <Layout
+  active={active}
   title={title}
   timestamp={timestamp}
   canonicalURL={`/resources/${page}?${url.searchParams.toString()}`}

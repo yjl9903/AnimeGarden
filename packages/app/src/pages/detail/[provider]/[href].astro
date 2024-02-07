@@ -42,7 +42,7 @@ const schema = info
   : undefined;
 ---
 
-<Layout title={`${detail.title}`} canonicalURL={`/detail/${provider}/${href}`}>
+<Layout active="" title={`${detail.title}`} canonicalURL={`/detail/${provider}/${href}`}>
   {info && <script type="application/ld+json" set:html={schema} />}
 
   <div class="detail mt-4vh w-full space-y-4">
