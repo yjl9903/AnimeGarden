@@ -7,6 +7,7 @@ import Pagination from '../../components/Pagination.astro';
 import ResourceTable from '../../components/ResourceTable.astro';
 import ErrorNotification from '../../components/Error.astro';
 
+import { generateFeed } from '../../logic/feed';
 import { wfetch, fetchResources } from '../../fetch';
 import { getRuntimeEnv, removeQuote } from '../../utils';
 import { DisplayType, DisplayTypeColor, QueryType } from '../../constant';
@@ -42,6 +43,7 @@ const resp = await fetchResources(
   }
 );
 
+const feedURL = `/feed.xml?filter=${generateFeed(Astro.url.searchParams)}`;
 const { ok, complete, resources, filter: searchParams, timestamp } = resp;
 
 const keywords = {
@@ -79,6 +81,7 @@ function inferTitle() {
   title={title}
   timestamp={timestamp}
   canonicalURL={`/resources/${page}?${url.searchParams.toString()}`}
+  feedURL={feedURL}
 >
   <div class="mt-4vh w-full">
     {
