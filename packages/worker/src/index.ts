@@ -6,9 +6,7 @@ import { prettyJSON } from 'hono/pretty-json';
 
 import type { Env } from './types';
 
-import { connect } from './database';
 import { getRefreshTimestamp } from './state';
-import { fixResources, refreshResources } from './scheduled';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -87,15 +85,15 @@ export default {
     switch (event.cron) {
       case '*/5 * * * *':
         // Trigger zeabur
-        fetch(`https://garden.onekuma.cn/api/admin/dmhy/resources`, { method: 'POST' });
-
-        ctx.waitUntil(refreshResources(env));
+        ctx.waitUntil(
+          fetch(`https://garden.onekuma.cn/api/admin/dmhy/resources`, { method: 'POST' })
+        );
         break;
       case '0 * * * *':
         // Trigger zeabur
-        fetch(`https://garden.onekuma.cn/api/admin/dmhy/resources/sync`, { method: 'POST' });
-
-        ctx.waitUntil(fixResources(env, 1, 10));
+        ctx.waitUntil(
+          fetch(`https://garden.onekuma.cn/api/admin/dmhy/resources/sync`, { method: 'POST' })
+        );
         break;
     }
   }
