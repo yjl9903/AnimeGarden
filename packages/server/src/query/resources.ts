@@ -57,6 +57,7 @@ const listResourcesFromDB = memoAsync(
       before,
       after,
       include,
+      keywords,
       exclude
     } = options;
 
@@ -105,10 +106,13 @@ const listResourcesFromDB = memoAsync(
           publisherId && publisherId.length > 0
             ? inArray(users.providerId, publisherId)
             : undefined,
-          // Include
+          // Include at least one of included keywords
           include && include?.length > 0
             ? or(...include.map((t) => ilike(resources.titleAlt, `%${normalizeTitle(t)}%`)))
             : undefined,
+          // Include all the keywords
+          ...(keywords?.map((t) => ilike(resources.titleAlt, `%${normalizeTitle(t)}%`)) ?? []),
+          // Exclude all the keywords
           ...(exclude?.map((t) => notIlike(resources.titleAlt, `%${normalizeTitle(t)}%`)) ?? [])
         )
       )
