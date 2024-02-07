@@ -9,7 +9,6 @@ import type { Env } from './types';
 import { connect } from './database';
 import { getRefreshTimestamp } from './state';
 import { fixResources, refreshResources } from './scheduled';
-import { queryResourceDetail, searchResources } from './query';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -24,21 +23,21 @@ app.get('/', async (c) => {
   });
 });
 
-app.get(
-  '/resource/:href',
-  cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }),
-  async (c) => {
-    return queryResourceDetail(c);
-  }
-);
+// app.get(
+//   '/resource/:href',
+//   cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }),
+//   async (c) => {
+//     return queryResourceDetail(c);
+//   }
+// );
 
-app.get('/resources', async (c) => {
-  return searchResources(c);
-});
+// app.get('/resources', async (c) => {
+//   return searchResources(c);
+// });
 
-app.post('/resources', async (c) => {
-  return searchResources(c);
-});
+// app.post('/resources', async (c) => {
+//   return searchResources(c);
+// });
 
 // Only used for debug
 // app.put('/resources', async (c) => {
@@ -51,19 +50,24 @@ app.post('/resources', async (c) => {
 //   return c.json(await fixResources(c.env, from, to));
 // });
 
-app.get('/users', cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }), async (c) => {
-  const db = connect(c.env);
-  const users = await db.selectFrom('User').selectAll().execute();
-  return c.json({ users });
-});
+// app.get('/users', cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }), async (c) => {
+//   const db = connect(c.env);
+//   const users = await db.selectFrom('User').selectAll().execute();
+//   return c.json({ users });
+// });
 
-app.get('/teams', cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }), async (c) => {
-  const db = connect(c.env);
-  const teams = await db.selectFrom('Team').selectAll().execute();
-  return c.json({ teams });
-});
+// app.get('/teams', cache({ cacheName: 'animegarden', cacheControl: 'max-age=86400' }), async (c) => {
+//   const db = connect(c.env);
+//   const teams = await db.selectFrom('Team').selectAll().execute();
+//   return c.json({ teams });
+// });
 
-app.all('*', (c) => c.json({ message: '404 NOT FOUND' }, 404));
+app.all('*', (c) =>
+  c.json(
+    { message: 'This endpoint has been deprecated, please use https://garden.onekuma.cn/api' },
+    404
+  )
+);
 
 app.onError((err, c) => {
   if (err.message) {
