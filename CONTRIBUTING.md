@@ -40,44 +40,6 @@ pnpm -C packages/app build
 pnpm -C packages/app dev
 ```
 
-### Cloudflare Worker
-
-Package is located at `packages/worker`.
-
-This package is based on the [Cloudflare Worker](https://developers.cloudflare.com/workers/).
-
-It depends on:
-
-+ [Cloudflare Worker KV Namespace](https://developers.cloudflare.com/workers/runtime-apis/kv) to cache the response data;
-+ [PlanetScale](https://planetscale.com/) to store the resources list data.
-
-```bash
-# Start dev server
-pnpm -C packages/worker dev
-
-# Dry deploy
-pnpm -C packages/worker build
-
-# Deploy to the Cloudflare Worker
-pnpm -C packages/worker run deploy
-```
-
-#### Setup PlanetScale
-
-First, follow the [official quickstart guide](https://planetscale.com/docs/tutorials/planetscale-quick-start-guide) to create an empty database.
-
-Second, do the database migration using Prisma (WIP).
-
-Third (Optional), upload some initial data (WIP).
-
-Last, [Generate credentials in the PlanetScale dashboard](https://planetscale.com/docs/tutorials/connect-any-application#generate-credentials-in-the-planetscale-dashboard) and create `packages/worker/.dev.vars`.
-
-```env
-DATABASE_HOST=...
-DATABASE_USERNAME=...
-DATABASE_PASSWORD=...
-```
-
 ## Deploy your own AnimeGarden
 
 Make sure you have setup the environment.
