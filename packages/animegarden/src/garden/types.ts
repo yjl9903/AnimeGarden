@@ -51,9 +51,14 @@ export interface FilterOptions {
   search?: string[];
 
   /**
-   * Include keywords
+   * Include at least one of keywords
    */
   include?: string | string[];
+
+  /**
+   * Include all the keywords
+   */
+  keywords?: string[];
 
   /**
    * Exclude keywords
@@ -114,9 +119,14 @@ export interface ResolvedFilterOptions {
   search?: string[];
 
   /**
-   * Include keywords
+   * Include at least one of keywords
    */
   include?: string[];
+
+  /**
+   * Include all the keywords
+   */
+  keywords?: string[];
 
   /**
    * Exclude keywords

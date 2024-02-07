@@ -50,12 +50,16 @@ export function makeResourcesFilter(
   } else if (resolved.include) {
     // Match exact at least one of the keywords, and no excluded keywords
     const include = resolved.include.map((k) => normalizeTitle(k).toLowerCase());
+    const keywords = (resolved.keywords ?? []).map((k) => normalizeTitle(k).toLowerCase());
     const exclude = (resolved.exclude ?? []).map((k) => normalizeTitle(k).toLowerCase());
     chains.push((r) => {
       const titleAlt = normalizeTitle(r.title).toLowerCase();
       const matched = include.some((key) => titleAlt.indexOf(key) !== -1);
       if (matched) {
-        return exclude.every((key) => titleAlt.indexOf(key) === -1);
+        return (
+          keywords.every((key) => titleAlt.indexOf(key) !== -1) ||
+          exclude.every((key) => titleAlt.indexOf(key) === -1)
+        );
       } else {
         return false;
       }

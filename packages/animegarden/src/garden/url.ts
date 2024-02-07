@@ -71,6 +71,7 @@ export const FilterSchema = z.object({
   after: dateLike,
   search: stringArray.optional(),
   include: stringArray.optional(),
+  keywords: stringArray.optional(),
   exclude: stringArray.optional()
 });
 
@@ -93,6 +94,7 @@ const parser = {
   after: dateLike,
   search: stringArrayLike,
   include: stringArrayLike,
+  keywords: stringArrayLike,
   exclude: stringArrayLike
 };
 
@@ -208,6 +210,9 @@ export function stringifySearchURL(baseURL: string, options: FilterOptions): URL
   }
   if (options.include && options.include.length > 0) {
     url.searchParams.set('include', JSON.stringify(options.include));
+  }
+  if (options.keywords && options.keywords.length > 0) {
+    url.searchParams.set('keywords', JSON.stringify(options.keywords));
   }
   if (options.exclude && options.exclude.length > 0) {
     url.searchParams.set('exclude', JSON.stringify(options.exclude));

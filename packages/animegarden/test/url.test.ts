@@ -13,6 +13,7 @@ describe('parse url', () => {
         "fansubId": undefined,
         "fansubName": undefined,
         "include": undefined,
+        "keywords": undefined,
         "page": 1,
         "pageSize": 10,
         "provider": undefined,
@@ -31,6 +32,7 @@ describe('parse url', () => {
         "fansubId": undefined,
         "fansubName": undefined,
         "include": undefined,
+        "keywords": undefined,
         "page": 2,
         "pageSize": 1000,
         "provider": undefined,
@@ -49,6 +51,7 @@ describe('parse url', () => {
         "fansubId": undefined,
         "fansubName": undefined,
         "include": undefined,
+        "keywords": undefined,
         "page": 2,
         "pageSize": 5,
         "provider": undefined,
@@ -67,6 +70,7 @@ describe('parse url', () => {
         "fansubId": undefined,
         "fansubName": undefined,
         "include": undefined,
+        "keywords": undefined,
         "page": 1,
         "pageSize": 1000,
         "provider": undefined,
@@ -87,6 +91,7 @@ describe('parse url', () => {
         "fansubId": undefined,
         "fansubName": undefined,
         "include": undefined,
+        "keywords": undefined,
         "page": 1,
         "pageSize": 100,
         "provider": undefined,
@@ -106,6 +111,7 @@ describe('parse url', () => {
           "fansubId": undefined,
           "fansubName": undefined,
           "include": undefined,
+          "keywords": undefined,
           "page": 1,
           "pageSize": 100,
           "provider": undefined,
@@ -126,6 +132,7 @@ describe('parse url', () => {
         "fansubId": undefined,
         "fansubName": undefined,
         "include": undefined,
+        "keywords": undefined,
         "page": 1,
         "pageSize": 100,
         "provider": undefined,
@@ -148,6 +155,7 @@ describe('parse url', () => {
         "fansubId": undefined,
         "fansubName": undefined,
         "include": undefined,
+        "keywords": undefined,
         "page": 1,
         "pageSize": 100,
         "provider": [
@@ -168,6 +176,7 @@ describe('parse url', () => {
         "fansubId": undefined,
         "fansubName": undefined,
         "include": undefined,
+        "keywords": undefined,
         "page": 1,
         "pageSize": 100,
         "provider": [
@@ -252,6 +261,7 @@ describe('parse url', () => {
       'pageSize=100',
       'search=' + JSON.stringify(['hello', 'world']),
       'include=' + JSON.stringify(['hello', 'world1', 'world3']),
+      'keywords=' + JSON.stringify(['简中']),
       'exclude=' + JSON.stringify(['hi']),
       'type=动画'
     ];
@@ -275,6 +285,9 @@ describe('parse url', () => {
           "world1",
           "world3",
         ],
+        "keywords": [
+          "简中",
+        ],
         "page": 2,
         "pageSize": 100,
         "provider": undefined,
@@ -293,7 +306,7 @@ describe('parse url', () => {
         parseSearchURL(new URLSearchParams(params.join('&')))
       )
     ).toMatchInlineSnapshot(
-      `"https://garden.onekuma.cn/api/resources?page=2&pageSize=100&fansubId=123&fansubName=%5B%22%E5%AD%97%E5%B9%95%E7%BB%84%22%5D&type=%E5%8B%95%E7%95%AB&before=1686614400000&after=1686355200000&search=%5B%22hello%22%2C%22world%22%5D&include=%5B%22hello%22%2C%22world1%22%2C%22world3%22%5D&exclude=%5B%22hi%22%5D"`
+      `"https://garden.onekuma.cn/api/resources?page=2&pageSize=100&fansubId=123&fansubName=%5B%22%E5%AD%97%E5%B9%95%E7%BB%84%22%5D&type=%E5%8B%95%E7%95%AB&before=1686614400000&after=1686355200000&search=%5B%22hello%22%2C%22world%22%5D&include=%5B%22hello%22%2C%22world1%22%2C%22world3%22%5D&keywords=%5B%22%E7%AE%80%E4%B8%AD%22%5D&exclude=%5B%22hi%22%5D"`
     );
   });
 });
