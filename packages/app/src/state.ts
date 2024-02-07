@@ -1,3 +1,5 @@
+import type { ResolvedFilterOptions } from 'animegarden';
+
 import { atom, getDefaultStore } from 'jotai';
 import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 
@@ -21,4 +23,10 @@ export const preferFansubsAtom = atomWithStorage(
   'animegarden:fansubs',
   [],
   createJSONStorage<string[]>(() => localStorage)
+);
+
+export const collectionsAtom = atomWithStorage(
+  'animegarden:collections',
+  [{ name: '收藏夹', items: [] }],
+  createJSONStorage<Array<{ name: string; items: ResolvedFilterOptions[] }>>(() => localStorage)
 );

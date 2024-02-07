@@ -1,3 +1,5 @@
+import { navigate } from 'astro:transitions/client';
+
 import {
   Cloud,
   CreditCard,
@@ -16,11 +18,13 @@ import {
   PlusIcon,
   MoreVertical,
   Book,
+  Star,
   HelpCircle,
   ExternalLink
 } from 'lucide-react';
 
-import { navigate } from 'astro:transitions/client';
+import { useAtom } from 'jotai';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -31,16 +35,21 @@ import {
   DropdownMenuLabel,
   DropdownMenuPortal,
   DropdownMenuSeparator,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { useState } from 'react';
+
+import { collectionsAtom } from '@/state';
 
 export function Menu() {
   const [open, setOpen] = useState(false);
+  const [collections, setCollections] = useAtom(collectionsAtom);
+  const [curCollection, setCurCollections] = useState(collections[0].name ?? '收藏夹');
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
@@ -53,11 +62,19 @@ export function Menu() {
           <PlusIcon className="h-8 w-8" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent forceMount className="w-56">
+      <DropdownMenuContent forceMount className="w-56" collisionPadding={8}>
         <DropdownMenuLabel className="font-quicksand font-bold select-none">
           Anime Garden
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          {collections.map((collection) => (
+            <DropdownMenuItem disabled>
+              <Star className="mr-2 h-4 w-4"></Star>
+              <span>{collection.name}</span>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuGroup>
         {/* <DropdownMenuGroup>
           <DropdownMenuItem>
             <Users className="mr-2 h-4 w-4" />
