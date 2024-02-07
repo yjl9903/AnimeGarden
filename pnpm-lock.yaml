@@ -60,8 +60,8 @@ importers:
         specifier: ^1.2.2
         version: 1.2.2(@types/node@20.11.16)
       wrangler:
-        specifier: ^3.26.0
-        version: 3.26.0
+        specifier: ^3.27.0
+        version: 3.27.0
 
   packages/animegarden:
     dependencies:
@@ -3856,7 +3856,7 @@ packages:
       estree-walker: 2.0.2
       glob: 8.1.0
       is-reference: 1.2.1
-      magic-string: 0.30.5
+      magic-string: 0.30.6
       rollup: 3.29.4
     dev: true
 
@@ -3926,7 +3926,7 @@ packages:
         optional: true
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@3.29.4)
-      magic-string: 0.30.5
+      magic-string: 0.30.6
       rollup: 3.29.4
     dev: true
 
@@ -5077,7 +5077,7 @@ packages:
   /@vitest/snapshot@1.2.2:
     resolution: {integrity: sha512-SmGY4saEw1+bwE1th6S/cZmPxz/Q4JWsl7LvbQIky2tKE35US4gd0Mjzqfr84/4OD0tikGWaWdMja/nWL5NIPA==}
     dependencies:
-      magic-string: 0.30.5
+      magic-string: 0.30.6
       pathe: 1.1.2
       pretty-format: 29.7.0
     dev: true
@@ -9352,8 +9352,8 @@ packages:
       - utf-8-validate
     dev: false
 
-  /miniflare@3.20240129.0:
-    resolution: {integrity: sha512-27pDhlP2G/4gXmvnSt6LjMQ8KrkmbJElIQmn+BLjdiyIx+zXY4E8MSPJmi9flgf0dn3wtjuHO2ASenuopqqxrw==}
+  /miniflare@3.20240129.1:
+    resolution: {integrity: sha512-GfqclPxbTnam4S8GKHRkFyr+s+szELK/ORtQ3ZFUiGBO4HNJsaeA6RhBMKBH7iHqn5ng035cyPsLZvH35lwtsA==}
     engines: {node: '>=16.13'}
     hasBin: true
     dependencies:
@@ -11222,7 +11222,7 @@ packages:
       rollup: ^3.29.4 || ^4
       typescript: ^4.5 || ^5.0
     dependencies:
-      magic-string: 0.30.5
+      magic-string: 0.30.6
       rollup: 3.29.4
       typescript: 5.3.3
     optionalDependencies:
@@ -13720,8 +13720,8 @@ packages:
       '@cloudflare/workerd-windows-64': 1.20240129.0
     dev: true
 
-  /wrangler@3.26.0:
-    resolution: {integrity: sha512-2FKDyL0wV6ws+9AHkQl5/Yzn17kG9jlpgyT7wqCDkhb5q+TCL/I8N5IKVwXe8tRrTluBI1QQZRRymoA5nu0pHw==}
+  /wrangler@3.27.0:
+    resolution: {integrity: sha512-VV2QXH+4OfNwWRR2cgMw5Xh6WQXec8h1cPjgKMWuUTR1q0Ha8TiEhU1rBOraRYTZbUuM4tqqO4GYeOE0AX7oVQ==}
     engines: {node: '>=16.17.0'}
     hasBin: true
     dependencies:
@@ -13731,7 +13731,7 @@ packages:
       blake3-wasm: 2.1.5
       chokidar: 3.5.3
       esbuild: 0.17.19
-      miniflare: 3.20240129.0
+      miniflare: 3.20240129.1
       nanoid: 3.3.7
       path-to-regexp: 6.2.1
       resolve: 1.22.8
