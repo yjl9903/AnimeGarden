@@ -310,7 +310,7 @@ function SearchResult(props: {
               {r.title}
             </Command.Item>
           ))}
-        {searchResult && (
+        {searchResult && searchResult.length > 0 && (
           <Command.Item
             value="go-to-search-page"
             onMouseDown={() => selectGoToSearch()}
