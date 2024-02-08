@@ -340,6 +340,16 @@ function CollectionManager() {
             ></CollectionItem>
           ))}
         </div>
+        {currentCollection.items.length === 0 && (
+          <div className="space-y-2">
+            <div>{currentCollection.name}没有记录</div>
+            <div>
+              可以使用<span className="font-bold"> 搜索框 </span>和
+              <span className="font-bold"> 类型、字幕组 </span>
+              筛选搜索结果
+            </div>
+          </div>
+        )}
       </ScrollArea>
       <div className="px4 pt4 pb4 border-t flex items-center gap-4">
         <Button onClick={copyCollectionRSS}>复制 RSS 订阅链接</Button>
