@@ -36,6 +36,7 @@ import {
   Copy,
   Rss
 } from 'lucide-react';
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 import {
   DropdownMenu,
@@ -53,13 +54,13 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { generateFeed } from '@/logic/feed';
 import { Button } from '@/components/ui/button';
 import { resolveFilterOptions } from '@/logic/filter';
 import { collectionsAtom, currentCollectionAtom, currentCollectionNameAtom } from '@/state';
 
 import { ScrollArea } from './ui/scroll-area';
 import { useDraggable } from './hooks/draggable';
-import { generateFeed } from '@/logic/feed';
 
 const openCollectionAtom = atomWithStorage(
   'animegarden:open_collection',
@@ -323,16 +324,20 @@ function CollectionManager() {
     copyRSS(currentCollection.items);
   }, [currentCollection]);
 
+  const [parent] = useAutoAnimate();
+
   return (
     <>
       <ScrollArea className="px4 py2 h-[360px]">
-        {currentCollection.items.map((item) => (
-          <CollectionItem
-            key={item.searchParams}
-            filter={item}
-            searchParams={item.searchParams}
-          ></CollectionItem>
-        ))}
+        <div ref={parent}>
+          {currentCollection.items.map((item) => (
+            <CollectionItem
+              key={item.searchParams}
+              filter={item}
+              searchParams={item.searchParams}
+            ></CollectionItem>
+          ))}
+        </div>
       </ScrollArea>
       <div className="px4 pt4 pb4 border-t flex items-center gap-4">
         <Button onClick={copyCollectionRSS}>复制 RSS 订阅链接</Button>
