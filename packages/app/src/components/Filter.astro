@@ -115,20 +115,29 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
       </div>
     )
   }
-  <div class="flex gap4 pt-4">
-    <Button client:load variant="default" size="sm" className="copy-rss" data-rss={feedURL}
-      >复制 RSS 订阅链接</Button
-    >
-    <!-- <Button client:load size="sm" className="add-collection">添加到收藏</Button> -->
-  </div>
+  {
+    (search.length !== 0 || include.length !== 0 || keywords.length !== 0) && (
+      <div class="flex gap4 pt-4">
+        <Button client:load variant="default" size="sm" className="copy-rss" data-rss={feedURL}>
+          复制 RSS 订阅链接
+        </Button>
+        <Button client:load size="sm" className="add-collection">
+          添加到收藏夹
+        </Button>
+      </div>
+    )
+  }
 </div>
 
 <script>
   import { APP_HOST } from '~build/meta';
 
+  import type { ResolvedFilterOptions } from 'animegarden';
+
   import { toast } from 'sonner';
 
   import { hydrateNodesEvent } from '@/lib/hydrate';
+  import { store, currentCollectionAtom } from '@/state';
 
   hydrateNodesEvent('.copy-rss', 'click', async (node) => {
     try {
@@ -140,6 +149,25 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
     } catch (error) {
       console.error(error);
       toast.error('复制 RSS 订阅失败');
+    }
+  });
+
+  hydrateNodesEvent('.add-collection', 'click', async () => {
+    try {
+      const node = document.querySelector('#fetch-response');
+      if (!node) return;
+      const filter = JSON.parse(
+        (node as HTMLElement).dataset.filter ?? ''
+      ) as ResolvedFilterOptions;
+      const collection = store.get(currentCollectionAtom);
+      store.set(currentCollectionAtom, {
+        name: collection.name,
+        items: [filter, ...collection.items]
+      });
+      toast.success(`成功添加到 ${collection.name}`);
+    } catch (error) {
+      console.error(error);
+      toast.error('添加收藏夹失败');
     }
   });
 </script>

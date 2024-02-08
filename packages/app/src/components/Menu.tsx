@@ -39,7 +39,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { collectionsAtom, currentCollectionsAtom } from '@/state';
+import { collectionsAtom, currentCollectionNameAtom } from '@/state';
 
 import { useDraggable } from './hooks/draggable';
 
@@ -66,11 +66,11 @@ export function Menu() {
 function Dropdown() {
   const [open, setOpen] = useState(false);
   const [collections, setCollections] = useAtom(collectionsAtom);
-  const [curCollection, setCurCollections] = useAtom(currentCollectionsAtom);
+  const [curCollectionName, setCurCollectionName] = useAtom(currentCollectionNameAtom);
   const setOpenCollection = useSetAtom(openCollectionAtom);
 
   const openCollection = (name: string) => {
-    setCurCollections(name);
+    setCurCollectionName(name);
     setOpenCollection((value) => !value);
   };
 
@@ -167,7 +167,7 @@ function Popover(props: { children: React.ReactNode }) {
   ]);
 
   const headingId = useId();
-  const currentCollections = useAtomValue(currentCollectionsAtom);
+  const currentCollections = useAtomValue(currentCollectionNameAtom);
 
   return (
     <>
