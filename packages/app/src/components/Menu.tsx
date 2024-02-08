@@ -375,17 +375,17 @@ function generateRSS(filters: ResolvedFilterOptions[]) {
 
 async function copyRSS(filters: ResolvedFilterOptions[]) {
   if (filters.length === 0) {
-    toast.error('没有选择任何搜索条件');
+    toast.error('没有选择任何搜索条件', { closeButton: true });
     return;
   }
 
   try {
     const url = `${APP_HOST}${generateRSS(filters)}`;
     await navigator.clipboard.writeText(url);
-    toast.success('复制 RSS 订阅成功');
+    toast.success('复制 RSS 订阅成功', { dismissible: true, duration: 3000, closeButton: true });
     triggerRssEvent('copy');
   } catch (error) {
     console.error(error);
-    toast.error('复制 RSS 订阅失败');
+    toast.error('复制 RSS 订阅失败', { closeButton: true });
   }
 }
