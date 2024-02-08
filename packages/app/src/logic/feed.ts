@@ -2,14 +2,24 @@ import { parseSearchURL } from 'animegarden';
 
 import { removeQuote } from '../utils';
 
-export function generateFeed(params: URLSearchParams) {
-  const filter = parseSearchURL(params);
-  // Hack: manually remove duplicate
-  if (!filter.provider && filter.duplicate === false) {
-    delete filter['duplicate'];
+export function generateFeed(...params: URLSearchParams[]) {
+  const filters: any[] = [];
+  for (const param of params) {
+    const filter = parseSearchURL(param);
+    // Hack: manually remove duplicate
+    if (!filter.provider && filter.duplicate === false) {
+      delete filter['duplicate'];
+    }
+    if (filter.search) {
+      filter.search = removeQuote(filter.search);
+    }
+    if (filter.page) {
+      delete filter['page'];
+    }
+    if (filter.pageSize) {
+      delete filter['pageSize'];
+    }
+    filters.push({ ...filter });
   }
-  if (filter.search) {
-    filter.search = removeQuote(filter.search);
-  }
-  return JSON.stringify([{ ...filter, page: undefined, pageSize: undefined }]);
+  return JSON.stringify(filters);
 }

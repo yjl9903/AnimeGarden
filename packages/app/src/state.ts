@@ -27,7 +27,7 @@ export const preferFansubsAtom = atomWithStorage(
 
 interface Collection {
   name: string;
-  items: ResolvedFilterOptions[];
+  items: (ResolvedFilterOptions & { searchParams: string })[];
 }
 
 export const collectionsAtom = atomWithStorage(

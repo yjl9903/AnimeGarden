@@ -1,4 +1,7 @@
+import { APP_HOST } from '~build/meta';
 import { navigate } from 'astro:transitions/client';
+
+import { stringifySearchURL, type ResolvedFilterOptions } from 'animegarden';
 
 import {
   useFloating,
@@ -17,12 +20,23 @@ import {
   type Placement
 } from '@floating-ui/react';
 
-import { useState } from 'react';
+import { toast } from 'sonner';
+import { useState, memo, useCallback, useMemo } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { atomWithStorage, createJSONStorage } from 'jotai/utils';
-import { Book, Cloud, ExternalLink, HelpCircle, PlusIcon, Star, X } from 'lucide-react';
+import {
+  Book,
+  Cloud,
+  ExternalLink,
+  HelpCircle,
+  PlusIcon,
+  Star,
+  X,
+  Trash,
+  Copy,
+  Rss
+} from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,9 +53,13 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { collectionsAtom, currentCollectionNameAtom } from '@/state';
+import { Button } from '@/components/ui/button';
+import { resolveFilterOptions } from '@/logic/filter';
+import { collectionsAtom, currentCollectionAtom, currentCollectionNameAtom } from '@/state';
 
+import { ScrollArea } from './ui/scroll-area';
 import { useDraggable } from './hooks/draggable';
+import { generateFeed } from '@/logic/feed';
 
 const openCollectionAtom = atomWithStorage(
   'animegarden:open_collection',
@@ -80,7 +98,7 @@ function Dropdown() {
         <Button
           variant="outline"
           size="icon"
-          className="rounded-full bg-light-100 hover:bg-light-400 hover:bg-op-100 h-12 w-12"
+          className="rounded-full bg-light-100 hover:bg-light-400 hover:bg-op-100 h-12! w-12!"
         >
           <PlusIcon className="h-8 w-8" />
         </Button>
@@ -95,7 +113,6 @@ function Dropdown() {
             <DropdownMenuItem
               key={collection.name}
               onSelect={() => openCollection(collection.name)}
-              disabled
             >
               <Star className="mr-2 h-4 w-4"></Star>
               <span>{collection.name}</span>
@@ -157,7 +174,9 @@ function Popover(props: { children: React.ReactNode }) {
   // const click = useClick(context);
   // const dismiss = useDismiss(context);
   // const role = useRole(context);
-  const draggable = useDraggable(context, initialPlacement);
+  const draggable = useDraggable(context, initialPlacement, (target) => {
+    return !target.classList.contains('draggable');
+  });
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
     // click,
@@ -177,30 +196,169 @@ function Popover(props: { children: React.ReactNode }) {
       {isOpen && (
         <FloatingFocusManager context={context} modal={false} closeOnFocusOut={false}>
           <div
-            className="popover border rounded-md bg-white"
+            className="popover border shadow-lg rounded-md bg-white"
             ref={refs.setFloating}
             style={floatingStyles}
             aria-labelledby={headingId}
             {...getFloatingProps()}
           >
-            <div id={headingId} className="px4 py2 border-b flex">
-              <span className="font-bold select-none cursor-move">{currentCollections}</span>
-              <span className="flex-auto"></span>
+            <div
+              id={headingId}
+              className="draggable px4 py2 border-b flex items-center cursor-move"
+            >
+              <span className="draggable text-base font-bold select-none">
+                {currentCollections}
+              </span>
+              <span className="draggable flex-auto"></span>
               <Button
                 variant="link"
                 size="icon"
-                className="bg-light-100 hover:bg-light-400 hover:bg-op-100 h-6 w-6"
+                className="draggable bg-light-100 hover:bg-light-400 hover:bg-op-100 h-6 w-6"
                 onClick={closePopover}
               >
                 <X className="h-4 w-4 text-red" />
               </Button>
             </div>
-            <div className="px4 py2">
-              <textarea placeholder="Write your review..." />
+            <div className="w-[40vw]">
+              <CollectionManager></CollectionManager>
             </div>
           </div>
         </FloatingFocusManager>
       )}
     </>
   );
+}
+
+const CollectionItem = memo((props: { filter: ResolvedFilterOptions; searchParams: string }) => {
+  const { filter, searchParams } = props;
+  const display = useMemo(() => resolveFilterOptions(filter), [filter]);
+
+  const rssURL = useMemo(() => generateRSS([filter]), [filter]);
+
+  const [currentCollection, setCurrentCollection] = useAtom(currentCollectionAtom);
+  const removeSelf = useCallback(() => {
+    setCurrentCollection({
+      ...currentCollection,
+      items: currentCollection.items.filter((i) => i.searchParams !== searchParams)
+    });
+  }, [searchParams, currentCollection]);
+
+  const copySelf = useCallback(() => {
+    copyRSS([filter]);
+  }, [filter]);
+
+  return (
+    <div className="w-full border-b pb4 mb4">
+      <div className="space-y-1 text-sm">
+        {display.search.length > 0 && (
+          <div>
+            <span className="font-bold mr2 select-none">标题搜索</span>
+            {display.search.map((text, idx) => (
+              <span key={text}>
+                {idx > 0 && <span className="">|</span>}
+                <span className="font-bold">{text}</span>
+              </span>
+            ))}
+          </div>
+        )}
+        {display.include.length > 0 && (
+          <div>
+            <span className="font-bold mr2 select-none">标题匹配</span>
+            {display.include.map((text, idx) => (
+              <span key={text}>
+                {idx > 0 && <span className="ml2 mr2 text-base-400 select-none">|</span>}
+                <span className="">{text}</span>
+              </span>
+            ))}
+          </div>
+        )}
+        {display.keywords.length > 0 && (
+          <div>
+            <span className="font-bold mr2 select-none">包含关键词</span>
+            {display.keywords.map((text, idx) => (
+              <span key={text}>
+                {idx > 0 && <span className="ml2 mr2 text-base-400 select-none">&</span>}
+                <span className="">{text}</span>
+              </span>
+            ))}
+          </div>
+        )}
+        {display.exclude.length > 0 && (
+          <div>
+            <span className="font-bold mr2 select-none">排除关键词</span>
+            {display.exclude.map((text) => (
+              <span key={text}>{text}</span>
+            ))}
+          </div>
+        )}
+        <div></div>
+      </div>
+      <div className="mt-2 flex gap-2">
+        <Button variant="outline" size="icon" className="hover:bg-gray-100" asChild>
+          <a href={`/resources/1${searchParams}`}>
+            <ExternalLink className="h-4 w-4"></ExternalLink>
+          </a>
+        </Button>
+        <Button variant="outline" size="icon" className="hover:bg-gray-100" asChild>
+          <a href={rssURL} target="_blank">
+            <Rss className="h-4 w-4"></Rss>
+          </a>
+        </Button>
+        <Button variant="outline" size="icon" className="hover:bg-gray-100" onClick={copySelf}>
+          <Copy className="h-4 w-4"></Copy>
+        </Button>
+        <Button variant="destructive" size="icon" onClick={removeSelf}>
+          <Trash className="h-4 w-4"></Trash>
+        </Button>
+      </div>
+    </div>
+  );
+});
+
+function CollectionManager() {
+  const [currentCollection, setCurrentCollection] = useAtom(currentCollectionAtom);
+
+  const collectionRSS = useMemo(() => generateRSS(currentCollection.items), [currentCollection]);
+  const copyCollectionRSS = useCallback(() => {
+    copyRSS(currentCollection.items);
+  }, [currentCollection]);
+
+  return (
+    <>
+      <ScrollArea className="px4 py2 h-[360px]">
+        {currentCollection.items.map((item) => (
+          <CollectionItem
+            key={item.searchParams}
+            filter={item}
+            searchParams={item.searchParams}
+          ></CollectionItem>
+        ))}
+      </ScrollArea>
+      <div className="px4 pt4 pb4 border-t flex items-center gap-4">
+        <Button onClick={copyCollectionRSS}>复制 RSS 订阅链接</Button>
+        <Button variant="outline" className="hover:bg-gray-100" asChild>
+          <a href={collectionRSS} target="_blank">
+            <Rss className="h-4 w-4"></Rss>
+          </a>
+        </Button>
+      </div>
+    </>
+  );
+}
+
+function generateRSS(filters: ResolvedFilterOptions[]) {
+  const searchs = filters.map((filter) => stringifySearchURL(location.origin, filter).searchParams);
+  const filter = generateFeed(...searchs);
+  return `/feed.xml?filter=${encodeURI(filter)}`;
+}
+
+async function copyRSS(filters: ResolvedFilterOptions[]) {
+  try {
+    const url = `${APP_HOST}${generateRSS(filters)}`;
+    await navigator.clipboard.writeText(url);
+    toast.success('复制 RSS 订阅成功');
+  } catch (error) {
+    console.error(error);
+    toast.error('复制 RSS 订阅失败');
+  }
 }

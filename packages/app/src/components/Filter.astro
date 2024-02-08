@@ -132,7 +132,7 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
 <script>
   import { APP_HOST } from '~build/meta';
 
-  import type { ResolvedFilterOptions } from 'animegarden';
+  import { type ResolvedFilterOptions, stringifySearchURL } from 'animegarden';
 
   import { toast } from 'sonner';
 
@@ -156,15 +156,20 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
     try {
       const node = document.querySelector('#fetch-response');
       if (!node) return;
+
       const filter = JSON.parse(
         (node as HTMLElement).dataset.filter ?? ''
       ) as ResolvedFilterOptions;
+
+      const search = stringifySearchURL(location.origin, filter);
       const collection = store.get(currentCollectionAtom);
-      store.set(currentCollectionAtom, {
-        name: collection.name,
-        items: [filter, ...collection.items]
-      });
-      toast.success(`成功添加到 ${collection.name}`);
+      if (!collection.items.find((i) => i.searchParams === search.search)) {
+        store.set(currentCollectionAtom, {
+          name: collection.name,
+          items: [{ ...filter, searchParams: search.search }, ...collection.items]
+        });
+        toast.success(`成功添加到 ${collection.name}`);
+      }
     } catch (error) {
       console.error(error);
       toast.error('添加收藏夹失败');

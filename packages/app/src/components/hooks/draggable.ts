@@ -23,7 +23,8 @@ const INTERACTIVE_ELEMENTS = ['INPUT', 'TEXTAREA'];
 
 export function useDraggable<RT extends ReferenceType = ReferenceType>(
   context: FloatingContext<RT>,
-  initialPlacement: Placement
+  initialPlacement: Placement,
+  isInteractive: (node: HTMLElement) => boolean = () => true
 ): ElementProps {
   const {
     open,
@@ -78,7 +79,7 @@ export function useDraggable<RT extends ReferenceType = ReferenceType>(
       floating: {
         onPointerDown(event) {
           const target = event.target as HTMLElement;
-          if (INTERACTIVE_ELEMENTS.includes(target.tagName)) return;
+          if (INTERACTIVE_ELEMENTS.includes(target.tagName) || isInteractive(target)) return;
           if (floating) {
             const rect = floating.getBoundingClientRect();
             const { top, left, width, height } = rect;
