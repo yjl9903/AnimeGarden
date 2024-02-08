@@ -10,6 +10,8 @@ import { useActiveElement, usePageLoadEffect } from '../hooks';
 
 import { DMHY_RE, debounce, goTo, goToSearch, parseSearch, stringifySearch } from './utils';
 
+const SEARCH_HELP_URL = `https://animespace.onekuma.cn/animegarden/search.html`;
+
 {
   document.addEventListener('keypress', (ev) => {
     if (ev.key === 's' || ev.key === '/' || (ev.key === 'k' && (ev.metaKey || ev.ctrlKey))) {
@@ -195,6 +197,16 @@ function SearchCompletion(props: { input: string; onInputChange: (text: string) 
     <Command.Group heading="高级搜索">
       <Command.Item
         onMouseDown={() => {
+          onInputChange(input + ' 标题:');
+        }}
+        onSelect={() => {
+          onInputChange(input + ' 标题:');
+        }}
+      >
+        匹配标题
+      </Command.Item>
+      <Command.Item
+        onMouseDown={() => {
           onInputChange(input + ' 包含:');
         }}
         onSelect={() => {
@@ -252,6 +264,12 @@ function SearchCompletion(props: { input: string; onInputChange: (text: string) 
         }}
       >
         上传时间早于
+      </Command.Item>
+      <Command.Item
+        onMouseDown={() => window.open(SEARCH_HELP_URL)}
+        onSelect={() => window.open(SEARCH_HELP_URL)}
+      >
+        高级搜索帮助
       </Command.Item>
     </Command.Group>
   );

@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import type { DisplayResolvedFilterOptions } from '@/logic/filter';
 
 import { Button } from './ui/button';
+import { SearchTooltip } from './Tooltips';
 
 export interface Props {
   filter: DisplayResolvedFilterOptions;
@@ -117,13 +118,14 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
   }
   {
     (search.length !== 0 || include.length !== 0 || keywords.length !== 0) && (
-      <div class="flex gap4 pt-4">
+      <div class="flex items-center gap4 pt-4">
         <Button client:load variant="default" size="sm" className="copy-rss" data-rss={feedURL}>
           复制 RSS 订阅链接
         </Button>
         <Button client:load size="sm" className="add-collection">
           添加到收藏夹
         </Button>
+        <SearchTooltip />
       </div>
     )
   }

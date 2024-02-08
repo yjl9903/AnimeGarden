@@ -31,3 +31,13 @@ export function TorrentTooltip() {
     </TooltipProvider>
   );
 }
+
+export function SearchTooltip() {
+  return (
+    <a
+      href="https://animespace.onekuma.cn/animegarden/search.html"
+      target="_blank"
+      className="i-carbon-help text-2xl text-link-active"
+    ></a>
+  );
+}
