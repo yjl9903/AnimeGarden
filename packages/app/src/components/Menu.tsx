@@ -1,6 +1,7 @@
 import { APP_HOST } from '~build/meta';
 import { navigate } from 'astro:transitions/client';
 
+import { format } from 'date-fns';
 import { stringifySearchURL, type ResolvedFilterOptions } from 'animegarden';
 
 import {
@@ -94,7 +95,7 @@ function Dropdown() {
         <Button
           variant="outline"
           size="icon"
-          className="rounded-full bg-light-100 hover:bg-light-400 hover:bg-op-100 h-12! w-12!"
+          className="rounded-full shadow-sm bg-light-100 hover:bg-light-400 hover:bg-op-100 h-12! w-12!"
         >
           <PlusIcon className="h-8 w-8" />
         </Button>
@@ -225,6 +226,15 @@ function Popover(props: { children: React.ReactNode }) {
   );
 }
 
+const safeFormat: typeof format = (...args) => {
+  try {
+    return format(...args);
+  } catch (error) {
+    console.log(error);
+    return '';
+  }
+};
+
 const CollectionItem = memo((props: { filter: ResolvedFilterOptions; searchParams: string }) => {
   const { filter, searchParams } = props;
   const display = useMemo(() => resolveFilterOptions(filter), [filter]);
@@ -246,6 +256,14 @@ const CollectionItem = memo((props: { filter: ResolvedFilterOptions; searchParam
   return (
     <div className="w-full border-b pb4 mb4">
       <div className="space-y-1 text-sm">
+        {display.type && (
+          <div>
+            <span className="font-bold mr2 select-none">类型</span>
+            <span className={`select-text text-base-600 ${display.type.color}`}>
+              {display.type.name}
+            </span>
+          </div>
+        )}
         {display.search.length > 0 && (
           <div>
             <span className="font-bold mr2 select-none">标题搜索</span>
@@ -287,7 +305,36 @@ const CollectionItem = memo((props: { filter: ResolvedFilterOptions; searchParam
             ))}
           </div>
         )}
-        <div></div>
+        {display.fansubs && display.fansubs.length > 0 && (
+          <div>
+            <span className="font-bold mr2 select-none">字幕组</span>
+            {display.fansubs.map((fansub) => (
+              <a
+                key={`${fansub.provider}:${fansub.providerId}`}
+                href={`/resources/1?fansubId=${fansub.providerId}`}
+                className="select-text text-link mr2"
+              >
+                {fansub.name}
+              </a>
+            ))}
+          </div>
+        )}
+        {display.after && (
+          <div>
+            <span className="font-bold mr2 select-none">搜索开始于</span>
+            <span className="select-text">
+              {safeFormat(display.after, 'yyyy 年 M 月 d 日 hh:mm')}
+            </span>
+          </div>
+        )}
+        {display.before && (
+          <div>
+            <span className="font-bold mr2 select-none">搜索结束于</span>
+            <span className="select-text">
+              {safeFormat(display.before, 'yyyy 年 M 月 d 日 hh:mm')}
+            </span>
+          </div>
+        )}
       </div>
       <div className="mt-2 flex gap-2">
         <Button variant="outline" size="icon" className="hover:bg-gray-100" asChild>
