@@ -57,6 +57,7 @@ import {
 import { generateFeed } from '@/logic/feed';
 import { Button } from '@/components/ui/button';
 import { resolveFilterOptions } from '@/logic/filter';
+import { triggerRssEvent, triggerCollectionEvent } from '@/clarity';
 import { collectionsAtom, currentCollectionAtom, currentCollectionNameAtom } from '@/state';
 
 import { ScrollArea } from './ui/scroll-area';
@@ -89,6 +90,7 @@ function Dropdown() {
   const setOpenCollection = useSetAtom(openCollectionAtom);
 
   const openCollection = (name: string) => {
+    triggerCollectionEvent('open');
     setCurCollectionName(name);
     setOpenCollection((value) => !value);
   };
@@ -362,6 +364,7 @@ async function copyRSS(filters: ResolvedFilterOptions[]) {
     const url = `${APP_HOST}${generateRSS(filters)}`;
     await navigator.clipboard.writeText(url);
     toast.success('复制 RSS 订阅成功');
+    triggerRssEvent('copy');
   } catch (error) {
     console.error(error);
     toast.error('复制 RSS 订阅失败');

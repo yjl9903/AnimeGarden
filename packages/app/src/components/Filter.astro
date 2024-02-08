@@ -138,6 +138,7 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
 
   import { hydrateNodesEvent } from '@/lib/hydrate';
   import { store, currentCollectionAtom } from '@/state';
+  import { triggerRssEvent, triggerCollectionEvent } from '@/clarity';
 
   hydrateNodesEvent('.copy-rss', 'click', async (node) => {
     try {
@@ -146,6 +147,7 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
       const query = encodeURI(url.slice(`/feed.xml?filter=`.length));
       await navigator.clipboard.writeText(`https://${APP_HOST}/feed.xml?filter=${query}`);
       toast.success('复制 RSS 订阅成功');
+      triggerRssEvent('copy');
     } catch (error) {
       console.error(error);
       toast.error('复制 RSS 订阅失败');
@@ -169,6 +171,7 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
           items: [{ ...filter, searchParams: search.search }, ...collection.items]
         });
         toast.success(`成功添加到 ${collection.name}`);
+        triggerCollectionEvent('add');
       }
     } catch (error) {
       console.error(error);
