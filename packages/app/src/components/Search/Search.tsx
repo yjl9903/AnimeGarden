@@ -80,9 +80,13 @@ export default function Search() {
     if (event.key === 'Home') {
       target.selectionStart = 0;
       target.selectionEnd = 0;
+      target.scrollLeft = 0;
+      event.stopPropagation();
     } else if (event.key === 'End') {
       target.selectionStart = target.value.length;
       target.selectionEnd = target.value.length;
+      target.scrollLeft = target.scrollWidth;
+      event.stopPropagation();
     }
   }, []);
   const onInput = useCallback((ev: FormEvent<HTMLInputElement>) => {
