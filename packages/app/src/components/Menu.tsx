@@ -352,12 +352,16 @@ function CollectionManager() {
         )}
       </ScrollArea>
       <div className="px4 pt4 pb4 border-t flex items-center gap-4">
-        <Button onClick={copyCollectionRSS}>复制 RSS 订阅链接</Button>
-        <Button variant="outline" className="hover:bg-gray-100" asChild>
-          <a href={collectionRSS} target="_blank">
-            <Rss className="h-4 w-4"></Rss>
-          </a>
+        <Button onClick={copyCollectionRSS} disabled={currentCollection.items.length === 0}>
+          复制 RSS 订阅链接
         </Button>
+        {currentCollection.items.length > 0 && (
+          <Button variant="outline" className="hover:bg-gray-100" asChild>
+            <a href={collectionRSS} target="_blank">
+              <Rss className="h-4 w-4"></Rss>
+            </a>
+          </Button>
+        )}
       </div>
     </>
   );
@@ -370,6 +374,11 @@ function generateRSS(filters: ResolvedFilterOptions[]) {
 }
 
 async function copyRSS(filters: ResolvedFilterOptions[]) {
+  if (filters.length === 0) {
+    toast.error('没有选择任何搜索条件');
+    return;
+  }
+
   try {
     const url = `${APP_HOST}${generateRSS(filters)}`;
     await navigator.clipboard.writeText(url);
