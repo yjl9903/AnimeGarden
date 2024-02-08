@@ -1,0 +1,106 @@
+---
+import { format } from 'date-fns';
+
+import type { DisplayResolvedFilterOptions } from '@/logic/filter';
+
+export interface Props {
+  filter: DisplayResolvedFilterOptions;
+}
+
+const { filter } = Astro.props;
+
+const { type, fansubs, after, before, search, include, keywords, exclude } = filter;
+---
+
+<div class="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
+  {
+    type && (
+      <div class="space-x-2 text-0">
+        <span class="text-4 text-base-800 font-bold mr2 select-none keyword">类型</span>
+        <span class={`text-4 select-text text-base-600 ${type.color}`}>{type.name}</span>
+      </div>
+    )
+  }
+  {
+    fansubs && (
+      <div class="space-x-2 text-0">
+        <span class="text-4 text-base-800 font-bold mr2 select-none keyword">字幕组</span>
+        {fansubs.map((fansub) => (
+          <a
+            href={`/resources/1?fansubId=${fansub.providerId}`}
+            class="text-4 select-text text-link"
+          >
+            {fansub.name}
+          </a>
+        ))}
+      </div>
+    )
+  }
+  {
+    after && (
+      <div class="space-x-2 select-none text-0">
+        <span class="text-4 text-base-800 font-bold mr2 keyword">搜索开始于</span>
+        <span class="text-4 select-text">{format(after, 'yyyy 年 M 月 d 日 hh:mm')}</span>
+      </div>
+    )
+  }
+  {
+    before && (
+      <div class="space-x-2 select-none text-0">
+        <span class="text-4 text-base-800 font-bold mr2 keyword">搜索结束于</span>
+        <span class="text-4 select-text">{format(before, 'yyyy 年 M 月 d 日 hh:mm')}</span>
+      </div>
+    )
+  }
+  {
+    search.length > 0 && (
+      <div class="space-x-2 text-0">
+        {/* prettier-ignore */}
+        <span class="text-4 select-none text-base-800 font-bold mr2 keyword">标题搜索</span>
+        {search.map((i) => (
+          <span class="text-4 select-text underline underline-dotted underline-gray-500">{i}</span>
+        ))}
+      </div>
+    )
+  }
+  {
+    search.length === 0 && include.length > 0 && (
+      <div class="space-x-2 text-0">
+        {/* prettier-ignore */}
+        <span class="text-4 select-none text-base-800 font-bold mr2 keyword">标题匹配</span>
+        {include.map((i, idx) => (
+          <>
+            {idx > 0 && <span class="text-base-400 text-4 select-none">|</span>}
+            {/* prettier-ignore */}
+            <span class="text-4 select-text underline underline-dotted underline-gray-500">{i}</span>
+          </>
+        ))}
+      </div>
+    )
+  }
+  {
+    search.length === 0 && keywords.length > 0 && (
+      <div class="space-x-2 select-none text-0">
+        <span class="text-4 text-base-800 font-bold mr2 keyword">包含关键词</span>
+        {keywords.map((i, idx) => (
+          <>
+            {idx > 0 && <span class="text-base-400 text-4 select-none">&</span>}
+            {/* prettier-ignore */}
+            <span class="text-4 select-text underline underline-dotted underline-gray-500">{i}</span>
+          </>
+        ))}
+      </div>
+    )
+  }
+  {
+    search.length === 0 && exclude.length > 0 && (
+      <div class="space-x-2 text-0">
+        {/* prettier-ignore */}
+        <span class="text-4 select-none text-base-800 font-bold mr2 inline-block">排除关键词</span>
+        {exclude.map((i) => (
+          <span class="text-4 select-text">{i}</span>
+        ))}
+      </div>
+    )
+  }
+</div>

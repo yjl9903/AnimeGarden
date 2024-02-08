@@ -1,39 +1,22 @@
 ---
-import { format } from 'date-fns';
 import { type ResourceType, findFansub, parseSearchURL } from 'animegarden';
 
 import Layout from '../../layouts/Layout.astro';
 import Pagination from '../../components/Pagination.astro';
 import ResourceTable from '../../components/ResourceTable.astro';
 import ErrorNotification from '../../components/Error.astro';
+import FilterCard from '../../components/Filter.astro';
 
 import { generateFeed } from '../../logic/feed';
+import { getRuntimeEnv } from '../../utils';
 import { wfetch, fetchResources } from '../../fetch';
-import { getRuntimeEnv, removeQuote } from '../../utils';
-import { DisplayType, DisplayTypeColor, QueryType } from '../../constant';
+import { resolveFilterOptions } from '@/logic/filter';
 
 const { page: _page } = Astro.params;
 const page = _page ? +_page : 1;
 
 const url = Astro.url;
 const params = parseSearchURL(url.searchParams, { pageSize: 80 });
-
-const publisherId = params.publisherId;
-const fansubId = params.fansubId;
-const fansub = fansubId ? fansubId.map((id) => findFansub('dmhy', id)).filter(Boolean) : undefined;
-
-const rawType = (params.type && params.type in QueryType ? QueryType[params.type] : params.type) as
-  | ResourceType
-  | undefined;
-const type = rawType in DisplayType ? DisplayType[rawType] : rawType;
-const after = params.after;
-const before = params.before;
-
-const search = params.search;
-const include = params.include;
-const keywords = params.keywords;
-const isComplicated = include?.some((i) => Array.isArray(i)) ?? false;
-const exclude = params.exclude;
 
 const env = getRuntimeEnv(Astro.locals);
 
@@ -47,32 +30,28 @@ const resp = await fetchResources(
 const feedURL = `/feed.xml?filter=${generateFeed(Astro.url.searchParams)}`;
 const { ok, complete, resources, filter: searchParams, timestamp } = resp;
 
-const matched = {
-  search: searchParams?.search ? removeQuote(searchParams.search) : [...(search ?? [])],
-  include: searchParams?.include ? searchParams.include : [...(include ?? [])],
-  keywords: searchParams?.keywords ? searchParams.keywords : [...(keywords ?? [])],
-  exclude: searchParams?.exclude ? searchParams.exclude : [...(exclude ?? [])]
-};
+const filter = resolveFilterOptions(searchParams);
+const { fansubs, type, before, after, search, include } = filter;
 
-const active = fansub && fansub.length === 1 ? 'fansub' : type ? 'type' : 'all';
+const active = fansubs && fansubs.length === 1 ? 'fansub' : type ? 'type' : 'all';
 const title = inferTitle();
 
 function inferTitle() {
-  if (matched.search.length > 0) {
-    return `搜索 ${matched.search.join(' ')}`;
+  if (filter.search && search.length > 0) {
+    return `搜索 ${search.join(' ')}`;
   }
-  if (matched.include.length > 0) {
-    return `搜索 ${matched.include.join(' ')}`;
+  if (filter.include && include.length > 0) {
+    return `搜索 ${include.join(' ')}`;
   }
   if (type) {
-    if (fansub && fansub.length === 1) {
-      return `所有${fansub[0].name}的${type}资源`;
+    if (fansubs && fansubs.length === 1) {
+      return `所有${fansubs[0].name}的${type}资源`;
     } else {
       return `所有${type}`;
     }
   }
-  if (fansub && fansub.length === 1) {
-    return `所有${fansub[0].name}的资源`;
+  if (fansubs && fansubs.length === 1) {
+    return `所有${fansubs[0].name}的资源`;
   }
   return '所有资源';
 }
@@ -89,115 +68,8 @@ function inferTitle() {
     {
       ok ? (
         <>
-          {(type || search || include || before || after || fansub) && (
-            <>
-              <div class="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
-                {type && (
-                  <div class="space-x-2 text-0">
-                    <span class="text-4 text-base-800 font-bold mr2 select-none keyword">类型</span>
-                    <span
-                      class={`text-4 select-text text-base-600 ${DisplayTypeColor[type] ?? DisplayTypeColor[rawType]}`}
-                    >
-                      {type}
-                    </span>
-                  </div>
-                )}
-                {fansub && (
-                  <div class="space-x-2 text-0">
-                    <span class="text-4 text-base-800 font-bold mr2 select-none keyword">
-                      字幕组
-                    </span>
-                    {fansub.map((fansub) => (
-                      <a
-                        href={`/resources/1?fansubId=${fansub.providerId}`}
-                        class="text-4 select-text text-link"
-                      >
-                        {fansub.name}
-                      </a>
-                    ))}
-                  </div>
-                )}
-                {after && (
-                  <div class="space-x-2 select-none text-0">
-                    <span class="text-4 text-base-800 font-bold mr2 keyword">搜索开始于</span>
-                    <span class="text-4 select-text">
-                      {format(after, 'yyyy 年 M 月 d 日 hh:mm')}
-                    </span>
-                  </div>
-                )}
-                {before && (
-                  <div class="space-x-2 select-none text-0">
-                    <span class="text-4 text-base-800 font-bold mr2 keyword">搜索结束于</span>
-                    <span class="text-4 select-text">
-                      {format(before, 'yyyy 年 M 月 d 日 hh:mm')}
-                    </span>
-                  </div>
-                )}
-                {matched.search.length > 0 && (
-                  <div class="space-x-2 text-0">
-                    {/* prettier-ignore */}
-                    <span class="text-4 select-none text-base-800 font-bold mr2 keyword">标题搜索</span>
-                    {matched.search.map((i) => (
-                      <span class="text-4 select-text underline underline-dotted underline-gray-500">
-                        {i}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                {matched.include.length > 0 && (
-                  <div class="space-x-2 text-0">
-                    {/* prettier-ignore */}
-                    <span class="text-4 select-none text-base-800 font-bold mr2 keyword">标题匹配</span>
-                    {matched.include.map((i) => (
-                      <span class="text-4 select-text underline underline-dotted underline-gray-500">
-                        {i}
-                      </span>
-                    ))}
-                  </div>
-                )}
-                {matched.keywords.length > 0 && (
-                  <div class="space-x-2 select-none text-0">
-                    <span class="text-4 text-base-800 font-bold mr2 keyword">包含关键词</span>
-                    {matched.keywords.map((i, idx) => (
-                      <>
-                        {idx > 0 && isComplicated && <span class="text-4 text-base-500">+</span>}
-                        {Array.isArray(i) ? (
-                          <>
-                            {matched.keywords.length > 1 && i.length > 1 && (
-                              <span class="text-4 text-base-500">&#40;</span>
-                            )}
-                            {i.map((t, idx) => (
-                              <>
-                                {idx > 0 && <span class="text-4 text-base-500 mx1">|</span>}
-                                {/* prettier-ignore */}
-                                <span class="text-4 select-text underline underline-dotted underline-gray-500">{t}</span>
-                              </>
-                            ))}
-                            {matched.keywords.length > 1 && i.length > 1 && (
-                              <span class="text-4 text-base-500">&#41;</span>
-                            )}
-                          </>
-                        ) : (
-                          <>
-                            {/* prettier-ignore */}
-                            <span class="text-4 select-text underline underline-dotted underline-gray-500">{i}</span>
-                          </>
-                        )}
-                      </>
-                    ))}
-                  </div>
-                )}
-                {matched.exclude.length > 0 && (
-                  <div class="space-x-2 text-0">
-                    {/* prettier-ignore */}
-                    <span class="text-4 select-none text-base-800 font-bold mr2 inline-block">排除关键词</span>
-                    {matched.exclude.map((i) => (
-                      <span class="text-4 select-text">{i}</span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </>
+          {(type || search.length > 0 || include.length > 0 || before || after || fansubs) && (
+            <FilterCard filter={filter} />
           )}
           {resources.length > 0 ? (
             <ResourceTable resources={resources} />
