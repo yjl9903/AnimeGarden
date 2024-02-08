@@ -1,30 +1,26 @@
 import { navigate } from 'astro:transitions/client';
 
 import {
-  Cloud,
-  CreditCard,
-  Github,
-  Keyboard,
-  LifeBuoy,
-  LogOut,
-  Mail,
-  MessageSquare,
-  Plus,
-  PlusCircle,
-  Settings,
-  User,
-  UserPlus,
-  Users,
-  PlusIcon,
-  MoreVertical,
-  Book,
-  Star,
-  HelpCircle,
-  ExternalLink
-} from 'lucide-react';
+  useFloating,
+  offset,
+  flip,
+  shift,
+  useDismiss,
+  useRole,
+  useClick,
+  useInteractions,
+  FloatingFocusManager,
+  useId,
+  type FloatingContext,
+  type ReferenceType,
+  type ElementProps,
+  type Placement
+} from '@floating-ui/react';
 
-import { useAtom } from 'jotai';
 import { useState } from 'react';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { atomWithStorage, createJSONStorage } from 'jotai/utils';
+import { Book, Cloud, ExternalLink, HelpCircle, PlusIcon, Star, X } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -34,22 +30,49 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuPortal,
-  DropdownMenuSeparator,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import { collectionsAtom, currentCollectionsAtom } from '@/state';
 
-import { collectionsAtom } from '@/state';
+import { useDraggable } from './hooks/draggable';
+
+const openCollectionAtom = atomWithStorage(
+  'animegarden:open_collection',
+  false,
+  createJSONStorage(() => sessionStorage)
+);
+
+const collectionPosAtom = atomWithStorage(
+  'animegarden:open_collection',
+  { x: 0, y: 0 },
+  createJSONStorage(() => sessionStorage)
+);
 
 export function Menu() {
+  return (
+    <Popover>
+      <Dropdown></Dropdown>
+    </Popover>
+  );
+}
+
+function Dropdown() {
   const [open, setOpen] = useState(false);
   const [collections, setCollections] = useAtom(collectionsAtom);
-  const [curCollection, setCurCollections] = useState(collections[0].name ?? '收藏夹');
+  const [curCollection, setCurCollections] = useAtom(currentCollectionsAtom);
+  const setOpenCollection = useSetAtom(openCollectionAtom);
+
+  const openCollection = (name: string) => {
+    setCurCollections(name);
+    setOpenCollection((value) => !value);
+  };
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
@@ -69,46 +92,16 @@ export function Menu() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           {collections.map((collection) => (
-            <DropdownMenuItem disabled>
+            <DropdownMenuItem
+              key={collection.name}
+              onSelect={() => openCollection(collection.name)}
+              disabled
+            >
               <Star className="mr-2 h-4 w-4"></Star>
               <span>{collection.name}</span>
             </DropdownMenuItem>
           ))}
         </DropdownMenuGroup>
-        {/* <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <Users className="mr-2 h-4 w-4" />
-            <span>Team</span>
-          </DropdownMenuItem>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>
-              <UserPlus className="mr-2 h-4 w-4" />
-              <span>Invite users</span>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem>
-                  <Mail className="mr-2 h-4 w-4" />
-                  <span>Email</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <MessageSquare className="mr-2 h-4 w-4" />
-                  <span>Message</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  <span>More...</span>
-                </DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
-          <DropdownMenuItem>
-            <Plus className="mr-2 h-4 w-4" />
-            <span>New Team</span>
-            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuGroup> */}
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={() => window.open(`https://github.com/yjl9903/AnimeGarden`)}>
           <span className="i-devicon-github mr-2 h-4 w-4" />
@@ -139,5 +132,75 @@ export function Menu() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+}
+
+function Popover(props: { children: React.ReactNode }) {
+  const { children } = props;
+
+  const [isOpen, setIsOpen] = useAtom(openCollectionAtom);
+  const initialPlacement: Placement = 'top-start';
+
+  const { refs, floatingStyles, context } = useFloating({
+    open: isOpen,
+    onOpenChange: (open) => {
+      setIsOpen(open);
+    },
+    strategy: 'fixed',
+    placement: initialPlacement,
+    middleware: [offset(10), shift({ mainAxis: true, crossAxis: true })]
+  });
+  const closePopover = () => {
+    setIsOpen(false);
+  };
+
+  // const click = useClick(context);
+  // const dismiss = useDismiss(context);
+  // const role = useRole(context);
+  const draggable = useDraggable(context, initialPlacement);
+
+  const { getReferenceProps, getFloatingProps } = useInteractions([
+    // click,
+    // dismiss,
+    // role,
+    draggable
+  ]);
+
+  const headingId = useId();
+  const currentCollections = useAtomValue(currentCollectionsAtom);
+
+  return (
+    <>
+      <div ref={refs.setReference} {...getReferenceProps()}>
+        {children}
+      </div>
+      {isOpen && (
+        <FloatingFocusManager context={context} modal={false} closeOnFocusOut={false}>
+          <div
+            className="popover border rounded-md bg-white"
+            ref={refs.setFloating}
+            style={floatingStyles}
+            aria-labelledby={headingId}
+            {...getFloatingProps()}
+          >
+            <div id={headingId} className="px4 py2 border-b flex">
+              <span className="font-bold select-none cursor-move">{currentCollections}</span>
+              <span className="flex-auto"></span>
+              <Button
+                variant="link"
+                size="icon"
+                className="bg-light-100 hover:bg-light-400 hover:bg-op-100 h-6 w-6"
+                onClick={closePopover}
+              >
+                <X className="h-4 w-4 text-red" />
+              </Button>
+            </div>
+            <div className="px4 py2">
+              <textarea placeholder="Write your review..." />
+            </div>
+          </div>
+        </FloatingFocusManager>
+      )}
+    </>
   );
 }

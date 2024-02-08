@@ -30,3 +30,9 @@ export const collectionsAtom = atomWithStorage(
   [{ name: '收藏夹', items: [] }],
   createJSONStorage<Array<{ name: string; items: ResolvedFilterOptions[] }>>(() => localStorage)
 );
+
+export const currentCollectionsAtom = atomWithStorage(
+  'animegarden:cur_collections',
+  '收藏夹',
+  createJSONStorage<string>(() => localStorage)
+);
