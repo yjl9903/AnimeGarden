@@ -20,7 +20,7 @@ const params = parseSearchURL(url.searchParams, { pageSize: 80 });
 
 const publisherId = params.publisherId;
 const fansubId = params.fansubId;
-const fansub = fansubId ? fansubId.map((id) => findFansub(id)).filter(Boolean) : undefined;
+const fansub = fansubId ? fansubId.map((id) => findFansub('dmhy', id)).filter(Boolean) : undefined;
 
 const rawType = (params.type && params.type in QueryType ? QueryType[params.type] : params.type) as
   | ResourceType
@@ -109,7 +109,7 @@ function inferTitle() {
                     </span>
                     {fansub.map((fansub) => (
                       <a
-                        href={`/resources/1?fansubId=${fansub.id}`}
+                        href={`/resources/1?fansubId=${fansub.providerId}`}
                         class="text-4 select-text text-link"
                       >
                         {fansub.name}

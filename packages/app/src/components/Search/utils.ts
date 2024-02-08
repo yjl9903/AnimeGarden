@@ -67,7 +67,7 @@ export function parseSearch(input: string) {
   const keywords: string[] = [];
   const exclude: string[] = [];
 
-  const fansub: number[] = [];
+  const fansub: string[] = [];
   const type: string[] = [];
   const after: Date[] = [];
   const before: Date[] = [];
@@ -84,11 +84,11 @@ export function parseSearch(input: string) {
     },
     'fansub:,字幕:,字幕组:': (word) => {
       if (/^\d+$/.test(word)) {
-        fansub.push(+word);
+        fansub.push(word);
       } else {
-        const found = findFansub(word, { fuzzy: true });
+        const found = findFansub('dmhy', word, { fuzzy: true });
         if (found) {
-          fansub.push(found.id);
+          fansub.push(found.providerId);
         }
       }
     },
@@ -158,7 +158,7 @@ export function stringifySearch(search: URLSearchParams) {
     }
   }
   if (filter.fansubId) {
-    content.push(...filter.fansubId.map((f) => '字幕组:' + (findFansub(f)?.name ?? f)));
+    content.push(...filter.fansubId.map((f) => '字幕组:' + (findFansub('dmhy', f)?.name ?? f)));
   }
   if (filter.fansubName) {
     content.push(...filter.fansubName.map((f) => '字幕组:' + f));
