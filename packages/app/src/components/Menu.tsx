@@ -135,7 +135,9 @@ function Dropdown() {
           <Cloud className="mr-2 h-4 w-4" />
           <span>API 文档</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => navigate(`/docs/api`)} disabled>
+        <DropdownMenuItem
+          onSelect={() => window.open(`https://animespace.onekuma.cn/animegarden/`)}
+        >
           <Book className="mr-2 h-4 w-4" />
           <span>帮助</span>
         </DropdownMenuItem>
