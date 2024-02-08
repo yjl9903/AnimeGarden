@@ -6,7 +6,8 @@ import { useCallback, useRef, useState, type FormEvent } from 'react';
 import { fetchResources } from '@/fetch';
 import { inputAtom, historiesAtom } from '@/state';
 
-import { useActiveElement, usePageLoadEffect } from './hooks';
+import { useActiveElement, usePageLoadEffect } from '../hooks';
+
 import { DMHY_RE, debounce, goTo, goToSearch, parseSearch, stringifySearch } from './utils';
 
 {
