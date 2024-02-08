@@ -54,26 +54,19 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
+import {
+  collectionsAtom,
+  currentCollectionAtom,
+  currentCollectionNameAtom,
+  openCollectionAtom
+} from '@/state';
 import { generateFeed } from '@/logic/feed';
 import { Button } from '@/components/ui/button';
 import { resolveFilterOptions } from '@/logic/filter';
 import { triggerRssEvent, triggerCollectionEvent } from '@/clarity';
-import { collectionsAtom, currentCollectionAtom, currentCollectionNameAtom } from '@/state';
 
 import { ScrollArea } from './ui/scroll-area';
 import { useDraggable } from './hooks/draggable';
-
-const openCollectionAtom = atomWithStorage(
-  'animegarden:open_collection',
-  false,
-  createJSONStorage(() => sessionStorage)
-);
-
-const collectionPosAtom = atomWithStorage(
-  'animegarden:open_collection',
-  { x: 0, y: 0 },
-  createJSONStorage(() => sessionStorage)
-);
 
 export function Menu() {
   return (

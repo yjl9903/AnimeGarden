@@ -137,7 +137,7 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
   import { toast } from 'sonner';
 
   import { hydrateNodesEvent } from '@/lib/hydrate';
-  import { store, currentCollectionAtom } from '@/state';
+  import { store, currentCollectionAtom, openCollectionAtom } from '@/state';
   import { triggerRssEvent, triggerCollectionEvent } from '@/clarity';
 
   hydrateNodesEvent('.copy-rss', 'click', async (node) => {
@@ -170,12 +170,12 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
           name: collection.name,
           items: [{ ...filter, searchParams: search.search }, ...collection.items]
         });
+
         toast.success(`成功添加到 ${collection.name}`, {
           dismissible: true,
           duration: 3000,
           closeButton: true
         });
-        triggerCollectionEvent('add');
       } else {
         toast.warning(`已添加到 ${collection.name}`, {
           dismissible: true,
@@ -183,6 +183,8 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
           closeButton: true
         });
       }
+      store.set(openCollectionAtom, true);
+      triggerCollectionEvent('add');
     } catch (error) {
       console.error(error);
       toast.error('添加收藏夹失败', { closeButton: true });

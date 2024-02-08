@@ -36,6 +36,12 @@ export const collectionsAtom = atomWithStorage(
   createJSONStorage<Collection[]>(() => localStorage)
 );
 
+export const openCollectionAtom = atomWithStorage(
+  'animegarden:open_collection',
+  false,
+  createJSONStorage(() => sessionStorage)
+);
+
 export const currentCollectionNameAtom = atomWithStorage(
   'animegarden:cur_collections',
   '收藏夹',
