@@ -45,9 +45,9 @@ function inferTitle() {
   }
   if (type) {
     if (fansubs && fansubs.length === 1) {
-      return `所有${fansubs[0].name}的${type}资源`;
+      return `所有${fansubs[0].name}的${type.name}资源`;
     } else {
-      return `所有${type}`;
+      return `所有${type.name}`;
     }
   }
   if (fansubs && fansubs.length === 1) {
