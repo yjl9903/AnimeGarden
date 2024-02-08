@@ -29,8 +29,8 @@ export function resolveFilterOptions(filter: Omit<ResolvedFilterOptions, 'page'>
           color: DisplayTypeColor[type] ?? DisplayTypeColor[rawType]
         }
       : undefined,
-    before: filter.before,
-    after: filter.after,
+    before: filter.before ? new Date(filter.before) : undefined,
+    after: filter.after ? new Date(filter.after) : undefined,
     search: filter.search ? removeQuote(filter.search) : [],
     include: filter.include ?? [],
     keywords: filter.keywords ?? [],
