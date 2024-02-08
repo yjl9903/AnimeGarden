@@ -200,10 +200,26 @@ export function stringifySearchURL(baseURL: string, options: FilterOptions): URL
     url.searchParams.set('type', type in QueryType ? QueryType[type] : type);
   }
   if (options.before) {
-    url.searchParams.set('before', '' + options.before.getTime());
+    try {
+      const date =
+        typeof options.before === 'string' || typeof options.before === 'number'
+          ? new Date(options.before)
+          : options.before;
+      url.searchParams.set('before', '' + date.getTime());
+    } catch (error) {
+      console.error(error);
+    }
   }
   if (options.after) {
-    url.searchParams.set('after', '' + options.after.getTime());
+    try {
+      const date =
+        typeof options.after === 'string' || typeof options.after === 'number'
+          ? new Date(options.after)
+          : options.after;
+      url.searchParams.set('after', '' + date.getTime());
+    } catch (error) {
+      console.error(error);
+    }
   }
   if (options.search && options.search.length > 0) {
     url.searchParams.set('search', JSON.stringify(options.search));
