@@ -115,10 +115,12 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
       </div>
     )
   }
-  <!-- <div class="flex gap4 pt-4">
-    <Button client:load size="sm" className="copy-rss" data-rss={feedURL}>复制 RSS 订阅链接</Button>
-    <Button client:load size="sm" className="add-collection">添加到收藏</Button>
-  </div> -->
+  <div class="flex gap4 pt-4">
+    <Button client:load variant="default" size="sm" className="copy-rss" data-rss={feedURL}
+      >复制 RSS 订阅链接</Button
+    >
+    <!-- <Button client:load size="sm" className="add-collection">添加到收藏</Button> -->
+  </div>
 </div>
 
 <script>
