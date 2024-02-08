@@ -420,7 +420,7 @@ async function copyRSS(filters: ResolvedFilterOptions[]) {
   }
 
   try {
-    const url = `${APP_HOST}${generateRSS(filters)}`;
+    const url = `https://${APP_HOST}${generateRSS(filters)}`;
     await navigator.clipboard.writeText(url);
     toast.success('复制 RSS 订阅成功', { dismissible: true, duration: 3000, closeButton: true });
     triggerRssEvent('copy');
