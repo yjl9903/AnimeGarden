@@ -128,9 +128,6 @@ function followSearch(params: Record<string, string>) {
     <title>{`${title ? `${title} | ` : ''}Anime Garden 動漫花園資源網第三方镜像站`}</title>
   </head>
   <body>
-    <div class="animegarden-toaster">
-      <Toaster client:only="react" />
-    </div>
     <header class="w-full pt-8vh bg-[#fef8f7] border-b">
       <div class="text-4xl pb-10rem font-quicksand font-bold text-center select-none outline-none">
         <a href="/">🌸 Anime Garden</a>
@@ -236,9 +233,6 @@ function followSearch(params: Record<string, string>) {
         </div>
       </div>
     </header>
-    <div class="main-menu fixed z-100">
-      <Menu client:idle transition:persist />
-    </div>
     <main class="main pb-8vh" transition:animate="slide">
       <slot />
     </main>
@@ -267,6 +261,13 @@ function followSearch(params: Record<string, string>) {
         >
       </div>
     </footer>
+
+    <div class="animegarden-toaster">
+      <Toaster client:only="react" position="bottom-center" />
+    </div>
+    <div class="main-menu fixed z-100">
+      <Menu client:idle transition:persist />
+    </div>
 
     <Loading />
 
