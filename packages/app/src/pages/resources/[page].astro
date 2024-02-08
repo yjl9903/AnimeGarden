@@ -69,7 +69,7 @@ function inferTitle() {
       ok ? (
         <>
           {(type || search.length > 0 || include.length > 0 || before || after || fansubs) && (
-            <FilterCard filter={filter} />
+            <FilterCard filter={filter} feedURL={feedURL} />
           )}
           {resources.length > 0 ? (
             <ResourceTable resources={resources} />

@@ -3,11 +3,14 @@ import { format } from 'date-fns';
 
 import type { DisplayResolvedFilterOptions } from '@/logic/filter';
 
+import { Button } from './ui/button';
+
 export interface Props {
   filter: DisplayResolvedFilterOptions;
+  feedURL: string;
 }
 
-const { filter } = Astro.props;
+const { filter, feedURL } = Astro.props;
 
 const { type, fansubs, after, before, search, include, keywords, exclude } = filter;
 ---
@@ -40,7 +43,7 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
     after && (
       <div class="space-x-2 select-none text-0">
         <span class="text-4 text-base-800 font-bold mr2 keyword">搜索开始于</span>
-        <span class="text-4 select-text">{format(after, 'yyyy 年 M 月 d 日 hh:mm')}</span>
+        // <span class="text-4 select-text">{format(after, 'yyyy 年 M 月 d 日 hh:mm')}</span>
       </div>
     )
   }
@@ -48,7 +51,7 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
     before && (
       <div class="space-x-2 select-none text-0">
         <span class="text-4 text-base-800 font-bold mr2 keyword">搜索结束于</span>
-        <span class="text-4 select-text">{format(before, 'yyyy 年 M 月 d 日 hh:mm')}</span>
+        // <span class="text-4 select-text">{format(before, 'yyyy 年 M 月 d 日 hh:mm')}</span>
       </div>
     )
   }
@@ -103,4 +106,29 @@ const { type, fansubs, after, before, search, include, keywords, exclude } = fil
       </div>
     )
   }
+  <!-- <div class="flex gap4 pt-4">
+    <Button client:load size="sm" className="copy-rss" data-rss={feedURL}>复制 RSS 订阅链接</Button>
+    <Button client:load size="sm" className="add-collection">添加到收藏</Button>
+  </div> -->
 </div>
+
+<script>
+  import { APP_HOST } from '~build/meta';
+
+  import { toast } from 'sonner';
+
+  import { hydrateNodesEvent } from '@/lib/hydrate';
+
+  hydrateNodesEvent('.copy-rss', 'click', async (node) => {
+    try {
+      const url = (node as HTMLElement).dataset.rss;
+      if (!url) throw new Error(`RSS URL is empty`);
+      const query = encodeURI(url.slice(`/feed.xml?filter=`.length));
+      await navigator.clipboard.writeText(`https://${APP_HOST}/feed.xml?filter=${query}`);
+      toast.success('复制 RSS 订阅成功');
+    } catch (error) {
+      console.error(error);
+      toast.error('复制 RSS 订阅失败');
+    }
+  });
+</script>
