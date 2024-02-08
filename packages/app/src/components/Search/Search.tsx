@@ -1,7 +1,7 @@
 import useSWR from 'swr';
 import { Command } from 'cmdk';
 import { useAtom } from 'jotai';
-import { useCallback, useRef, useState, type FormEvent } from 'react';
+import { useCallback, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 
 import { fetchResources } from '@/fetch';
 import { inputAtom, historiesAtom } from '@/state';
@@ -75,6 +75,16 @@ export default function Search() {
     // After 输入法 is confirmed, trigger search
     setDebounceSearch(value);
   }, []);
+  const onInputKeydown = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
+    const target = event.target as HTMLInputElement;
+    if (event.key === 'Home') {
+      target.selectionStart = 0;
+      target.selectionEnd = 0;
+    } else if (event.key === 'End') {
+      target.selectionStart = target.value.length;
+      target.selectionEnd = target.value.length;
+    }
+  }, []);
   const onInput = useCallback((ev: FormEvent<HTMLInputElement>) => {
     const e = ev.nativeEvent as InputEvent;
     const value = (e.target as HTMLInputElement).value;
@@ -137,6 +147,7 @@ export default function Search() {
         ref={inputRef}
         value={input}
         onInput={onInput}
+        onKeyDown={onInputKeydown}
         onCompositionEnd={onCompositionEnd}
         onValueChange={setInput}
         className={`${enable ? 'searched' : ''}`}
