@@ -4,7 +4,7 @@ import { APP_HOST, CF_BEACON, UMAMI_HOST, UMAMI_ID, PLAUSIBLE_HOST, CLARITY } fr
 import { pwaInfo } from 'virtual:pwa-info';
 import { ViewTransitions } from 'astro:transitions';
 
-import { Toaster } from 'sonner';
+import { Toaster } from "@/components/ui/sonner"
 
 import { Menu } from '../components/Menu';
 import Search from '../components/Search/Search';
@@ -277,6 +277,7 @@ function followSearch(params: Record<string, string>) {
       @import '@onekuma/preset.css';
 
       @import '../styles/cmdk.css';
+      @import '../styles/sonner.css';
 
       :root {
         /* --accent: 124, 58, 237; */
