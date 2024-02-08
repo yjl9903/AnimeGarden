@@ -5,15 +5,16 @@
 [![Deploy Worker](https://github.com/yjl9903/AnimeGarden/actions/workflows/deploy.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/deploy.yml)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
-> 👷‍♂️ 翻译正在进行中...
+[English](/README.en.md) | [简体中文](/README.md)
 
-動漫花園 3-rd party [镜像站](https://garden.onekuma.cn).
+[動漫花園](https://share.dmhy.org/) 3-rd party [mirror site](https://garden.onekuma.cn) and [Anime Torrent aggregation site](https://garden.onekuma.cn).
 
 + ☁️ Provide [API endpoint](https://garden.onekuma.cn/docs/api) for developers
 + 📺 View [bangumi onair calendar](https://garden.onekuma.cn/anime) to find your favourite anime easily
-+ 🔖 Support Advanced search, i.e. `【我推的孩子】 fansub:桜都字幕组 include:简日内嵌`
-+ 📙 Generate RSS feed, i.e. [【我推的孩子】](https://garden.onekuma.cn/feed.xml?filter=[{%22fansubId%22:[619],%22search%22:[%22%E3%80%90%E6%88%91%E6%8E%A8%E7%9A%84%E5%AD%A9%E5%AD%90%E3%80%91%22],%22include%22:[[%22%E7%AE%80%E6%97%A5%E5%86%85%E5%B5%8C%22]],%22exclude%22:[]}])
-+ 👷‍♂️ First-class support for [AnimeSpace](https://github.com/yjl9903/AnimeSpace) (Still work in progress)
++ 🔖 Support Advanced search, i.e. `葬送的芙莉莲 +简体内嵌 fansub:桜都字幕组 type:动画`
++ 📙 Generate RSS feed, i.e. [葬送的芙莉莲](garden.onekuma.cn/feed.xml?filter=%5B%7B%22fansubId%22:%5B%22619%22%5D,%22type%22:%22%E5%8B%95%E7%95%AB%22,%22include%22:%5B%22%E8%91%AC%E9%80%81%E7%9A%84%E8%8A%99%E8%8E%89%E8%8E%B2%22%5D,%22keywords%22:%5B%22%E7%AE%80%E4%BD%93%E5%86%85%E5%B5%8C%22%5D%7D%5D)
++ ⭐ Bookmark management and generate aggregated RSS feed
++ 👷‍♂️ Support [AutoBangumi](https://www.autobangumi.org/) and [AnimeSpace](https://github.com/yjl9903/AnimeSpace)
 
 ![home](./assets/home.png)
 
@@ -29,7 +30,7 @@ If you are using JavaScript / TypeScript, you can just use the API wrapper `fetc
 
 ## Package Usage
 
-A scraper for [動漫花園](https://share.dmhy.org/).
+[AnimeGarden](https://garden.onekuma.cn) API client and utils for JavaScript / TypeScript.
 
 ```bash
 npm i animegarden
