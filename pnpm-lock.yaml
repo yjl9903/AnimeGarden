@@ -60,8 +60,8 @@ importers:
         specifier: ^1.2.2
         version: 1.2.2(@types/node@20.11.17)
       wrangler:
-        specifier: ^3.27.0
-        version: 3.27.0
+        specifier: ^3.28.0
+        version: 3.28.0(@cloudflare/workers-types@4.20240208.0)
 
   packages/animegarden:
     dependencies:
@@ -14050,12 +14050,18 @@ packages:
       '@cloudflare/workerd-windows-64': 1.20240129.0
     dev: true
 
-  /wrangler@3.27.0:
-    resolution: {integrity: sha512-VV2QXH+4OfNwWRR2cgMw5Xh6WQXec8h1cPjgKMWuUTR1q0Ha8TiEhU1rBOraRYTZbUuM4tqqO4GYeOE0AX7oVQ==}
+  /wrangler@3.28.0(@cloudflare/workers-types@4.20240208.0):
+    resolution: {integrity: sha512-28lqaO4THoGyvnRtrC5+GvyFthn8E9brRSiz4sMJU8Wf5UT8JRq31Pp4leHuQ3sCzSI2yqzB4+NTo6YZaoXMfw==}
     engines: {node: '>=16.17.0'}
     hasBin: true
+    peerDependencies:
+      '@cloudflare/workers-types': ^4.20230914.0
+    peerDependenciesMeta:
+      '@cloudflare/workers-types':
+        optional: true
     dependencies:
       '@cloudflare/kv-asset-handler': 0.2.0
+      '@cloudflare/workers-types': 4.20240208.0
       '@esbuild-plugins/node-globals-polyfill': 0.2.3(esbuild@0.17.19)
       '@esbuild-plugins/node-modules-polyfill': 0.2.2(esbuild@0.17.19)
       blake3-wasm: 2.1.5
