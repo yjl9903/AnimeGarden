@@ -171,8 +171,8 @@ importers:
         specifier: ^8.10.0
         version: 8.10.0
       webtorrent:
-        specifier: ^2.1.35
-        version: 2.1.35
+        specifier: ^2.1.36
+        version: 2.1.36
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -6511,8 +6511,8 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
-  /create-torrent@6.0.16:
-    resolution: {integrity: sha512-oO0M9KMPwEk825G7vLLUttgxBl/zwlsNdtPc9RnjFS6gQeq8sqJqlBmHcIA8sDwaYbu0mpIcARPokUgsRxjiaw==}
+  /create-torrent@6.0.17:
+    resolution: {integrity: sha512-GGrNP1mu3WSyJHyo+x6AnJlQWW7bbyUfoEDFfo/U2kpeTVYRCgWdQC4/sq4oreltpMTEP8UUB3U3niHIgLU/gQ==}
     engines: {node: '>=12'}
     hasBin: true
     dependencies:
@@ -13750,8 +13750,8 @@ packages:
     resolution: {integrity: sha512-poXpCylU7ExuvZK8z+On3kX+S8o/2dQ/SVYueKA0D4WEMXROXgY8Ez50/bQEUmvoSMMrWcrJqCHuhAbsiwg7Dg==}
     dev: true
 
-  /webtorrent@2.1.35:
-    resolution: {integrity: sha512-JxAdPrX75zAtBumKxOM1691phN26qTx+RgxC20UUm91l/AQ5zAeGAZp1mtoAJoLQKeZPXguMV5RA4+IToLGdLA==}
+  /webtorrent@2.1.36:
+    resolution: {integrity: sha512-bjJqzF8+Kjl6Y9Lz5la6jHX1PO1ZPEDAqhq/r7KJvxhCVbourhLx4cJoaIgetvRvj4Kq6lvQzXutlF3eV/q8JQ==}
     engines: {node: '>=14'}
     dependencies:
       '@silentbot1/nat-api': 0.4.7
@@ -13764,7 +13764,7 @@ packages:
       cache-chunk-store: 3.2.2
       chunk-store-iterator: 1.0.3
       cpus: 1.0.3
-      create-torrent: 6.0.16
+      create-torrent: 6.0.17
       cross-fetch-ponyfill: 1.0.3
       debug: 4.3.4
       escape-html: 1.0.3
