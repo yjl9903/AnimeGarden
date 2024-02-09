@@ -235,8 +235,8 @@ importers:
         specifier: ^0.58.5
         version: 0.58.5(postcss@8.4.33)(rollup@2.79.1)(vite@5.0.12)
       unplugin-info:
-        specifier: ^1.0.3
-        version: 1.0.3(esbuild@0.17.19)(rollup@2.79.1)(vite@5.0.12)
+        specifier: ^1.1.0
+        version: 1.1.0(esbuild@0.17.19)(rollup@2.79.1)(vite@5.0.12)
 
   packages/cli:
     dependencies:
@@ -13205,11 +13205,11 @@ packages:
     dev: false
     optional: true
 
-  /unplugin-info@1.0.3(esbuild@0.17.19)(rollup@2.79.1)(vite@5.0.12):
-    resolution: {integrity: sha512-QV/A6DiFaskCj4gNAbFYJNQkqSwvy1G81fXqg+gj5r9ZzRCD+8Xhfd7d4ZvBy3PZTZm6+neht/paIpKnhTXjYw==}
+  /unplugin-info@1.1.0(esbuild@0.17.19)(rollup@2.79.1)(vite@5.0.12):
+    resolution: {integrity: sha512-sJfczOBdpY+6tpJswBrQej0qvyAPLODe7cimnu1PCRgWHOuMnSAwaWUps1BUlBKhnWEXe7nzLjfw9fWOUM/P9Q==}
     peerDependencies:
-      '@nuxt/kit': ^3.7.3
-      '@nuxt/schema': ^3.7.3
+      '@nuxt/kit': ^3
+      '@nuxt/schema': ^3
       esbuild: '*'
       rollup: ^2 || ^3 || ^4
       vite: '>=3.2.7'
