@@ -256,8 +256,8 @@ importers:
         specifier: ^0.9.7
         version: 0.9.7
       dotenv:
-        specifier: ^16.4.1
-        version: 16.4.1
+        specifier: ^16.4.2
+        version: 16.4.2
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
@@ -290,8 +290,8 @@ importers:
         version: 1.10.1
     devDependencies:
       dotenv:
-        specifier: ^16.4.1
-        version: 16.4.1
+        specifier: ^16.4.2
+        version: 16.4.2
 
   packages/scraper:
     dependencies:
@@ -326,8 +326,8 @@ importers:
         specifier: workspace:*
         version: link:../animegarden
       dotenv:
-        specifier: ^16.4.1
-        version: 16.4.1
+        specifier: ^16.4.2
+        version: 16.4.2
       drizzle-orm:
         specifier: ^0.29.3
         version: 0.29.3(@cloudflare/workers-types@4.20240208.0)(postgres@3.4.3)
@@ -6000,7 +6000,7 @@ packages:
     dependencies:
       chokidar: 3.5.3
       defu: 6.1.4
-      dotenv: 16.4.1
+      dotenv: 16.4.2
       giget: 1.2.1
       jiti: 1.21.0
       mlly: 1.5.0
@@ -6940,6 +6940,11 @@ packages:
 
   /dotenv@16.4.1:
     resolution: {integrity: sha512-CjA3y+Dr3FyFDOAMnxZEGtnW9KBR2M0JvvUtXNW+dYJL5ROWxP9DUHCwgFqpMk0OXCc0ljhaNTr2w/kutYIcHQ==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /dotenv@16.4.2:
+    resolution: {integrity: sha512-rZSSFxke7d9nYQ5NeMIwp5PP+f8wXgKNljpOb7KtH6SKW1cEqcXAz9VSJYVLKe7Jhup/gUYOkaeSVyK8GJ+nBg==}
     engines: {node: '>=12'}
 
   /drange@1.1.1:
