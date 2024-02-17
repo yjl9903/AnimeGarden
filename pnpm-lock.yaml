@@ -321,7 +321,7 @@ importers:
         version: 1.8.0
       '@hono/zod-validator':
         specifier: ^0.1.11
-        version: 0.1.11(hono@4.0.3)(zod@3.22.4)
+        version: 0.1.11(hono@4.0.4)(zod@3.22.4)
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -332,8 +332,8 @@ importers:
         specifier: ^0.29.3
         version: 0.29.3(@cloudflare/workers-types@4.20240208.0)(postgres@3.4.3)
       hono:
-        specifier: ^4.0.3
-        version: 4.0.3
+        specifier: ^4.0.4
+        version: 4.0.4
       memofunc:
         specifier: ^0.0.8
         version: 0.0.8
@@ -368,8 +368,8 @@ importers:
         specifier: ^0.0.44
         version: 0.0.44
       hono:
-        specifier: ^4.0.3
-        version: 4.0.3
+        specifier: ^4.0.4
+        version: 4.0.4
       kysely-planetscale:
         specifier: ^1.4.0
         version: 1.4.0(@planetscale/database@1.16.0)(kysely@0.27.2)
@@ -2621,13 +2621,13 @@ packages:
     engines: {node: '>=18.14.1'}
     dev: false
 
-  /@hono/zod-validator@0.1.11(hono@4.0.3)(zod@3.22.4):
+  /@hono/zod-validator@0.1.11(hono@4.0.4)(zod@3.22.4):
     resolution: {integrity: sha512-PQXeHUP0+36qpRt8yfeD7N2jbK3ETlGvSN6dMof/HwUC/APRokQRjpXZm4rrlG71Ft0aWE01+Bm4XejqPie5Uw==}
     peerDependencies:
       hono: '>=3.9.0'
       zod: ^3.19.1
     dependencies:
-      hono: 4.0.3
+      hono: 4.0.4
       zod: 3.22.4
     dev: false
 
@@ -8151,8 +8151,8 @@ packages:
     resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
     dev: false
 
-  /hono@4.0.3:
-    resolution: {integrity: sha512-LLZFvqiksAO6Hf080XCUbsEjRxIrqEoiIN1HUzL0xtYP+BZUxGfeWg8yB5Dvp/sI7T0Lt4XdtGTGLwpIzAsl8w==}
+  /hono@4.0.4:
+    resolution: {integrity: sha512-WIwMh3b9TrtcdGpJ9ljA74bK/njL6f9S0nH3eBIKVAudnuHDqyVi4k0P8etD9HVU3xu74a9KBg3xA6UlXGEIZg==}
     engines: {node: '>=16.0.0'}
     dev: false
 
