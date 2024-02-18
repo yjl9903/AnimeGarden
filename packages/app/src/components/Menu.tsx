@@ -35,7 +35,8 @@ import {
   X,
   Trash,
   Copy,
-  Rss
+  Rss,
+  HardDrive
 } from 'lucide-react';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 
@@ -145,6 +146,14 @@ function Dropdown() {
         <DropdownMenuItem onSelect={() => window.open(`https://share.dmhy.org/`)}>
           <ExternalLink className="mr-2 h-4 w-4" />
           <span>动漫花园</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onSelect={() =>
+            window.open(`https://mypikpak.com/drive/activity/invited?invitation-code=36743699`)
+          }
+        >
+          <HardDrive className="mr-2 h-4 w-4" />
+          <span>PikPak</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
