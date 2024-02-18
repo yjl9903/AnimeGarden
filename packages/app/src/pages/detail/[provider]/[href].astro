@@ -7,6 +7,8 @@ import { Player } from '@/components/Player';
 import { TorrentTooltip } from '@/components/Tooltips';
 import { fetchResourceDetail } from '@/fetch';
 
+const PIKPAK_REFERRAL = `https://mypikpak.com/drive/activity/invited?invitation-code=36743699`;
+
 const { href, provider } = Astro.params;
 if (!href || !/^\d+/.test(href) || !provider || !['dmhy', 'moe'].includes(provider)) {
   return Astro.redirect('/');
@@ -72,6 +74,16 @@ const schema = info
         <div>
           <span>磁力链接 type II</span>
           <a href={detail.magnet.href2} class="download text-link">{detail.magnet.href2}</a>
+        </div>
+        <div>
+          <span>
+            <a
+              href={PIKPAK_REFERRAL}
+              target="_blank"
+              class="text-link-active underline underline-dotted underline-offset-6">在线播放</a
+            >
+          </span>
+          <a href={PIKPAK_REFERRAL} target="_blank" class="download text-link">使用 PikPak</a>
         </div>
         <div>
           <span>会员链接</span>
