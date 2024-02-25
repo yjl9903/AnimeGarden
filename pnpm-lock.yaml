@@ -208,8 +208,8 @@ importers:
         specifier: ^4.18.3
         version: 4.18.3
       '@types/webtorrent':
-        specifier: ^0.109.7
-        version: 0.109.7
+        specifier: ^0.109.8
+        version: 0.109.8
       '@unocss/reset':
         specifier: ^0.58.5
         version: 0.58.5
@@ -4869,12 +4869,6 @@ packages:
     resolution: {integrity: sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==}
     dev: false
 
-  /@types/node@20.11.19:
-    resolution: {integrity: sha512-7xMnVEcZFu0DikYjWOlRq7NTPETrm7teqUT2WkQjrTIkEgUyyGdWsj/Zg8bEJt5TNklzbPD1X3fqfsHw3SpapQ==}
-    dependencies:
-      undici-types: 5.26.5
-    dev: true
-
   /@types/node@20.11.20:
     resolution: {integrity: sha512-7/rR21OS+fq8IyHTgtLkDK949uzsa6n8BkziAKtPVpugIkO6D+/ooXMvzXxDnZrmtXVfjb1bKQafYpb8s89LOg==}
     dependencies:
@@ -4968,11 +4962,11 @@ packages:
     resolution: {integrity: sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==}
     dev: false
 
-  /@types/webtorrent@0.109.7:
-    resolution: {integrity: sha512-iDcZkXUMjWOtPpxAWXivs6rpYD++8w4vYJVqGJQKxZh1YxIXm5P3CyHGX735nJ6kFOFXLxD1O0ys/msI1nhRug==}
+  /@types/webtorrent@0.109.8:
+    resolution: {integrity: sha512-Ms8xQNWioakNmWCEI7P4upO76KfbjZ8iszWWdNfq2iS02CKz9s5nzdRp9eb53aMvjgqNYqMw/jZ6yhIJwOc4HQ==}
     dependencies:
       '@types/bittorrent-protocol': 3.1.6
-      '@types/node': 20.11.19
+      '@types/node': 20.11.20
       '@types/parse-torrent': 5.8.7
       '@types/simple-peer': 9.11.8
     dev: true
