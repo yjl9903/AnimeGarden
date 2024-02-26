@@ -10,6 +10,14 @@ export function triggerDownloadEvent(name: string) {
   } catch {}
 }
 
+export function triggerPikPakEvent(name: string) {
+  if (!CLARITY || !window.clarity) return;
+  try {
+    const event = `pikpak:download`;
+    window.clarity('event', event);
+  } catch {}
+}
+
 export function triggerCollectionEvent(name: string) {
   if (!CLARITY || !window.clarity) return;
   try {

@@ -7,6 +7,8 @@ import { DisplayType, DisplayTypeColor } from '../constant';
 
 import Tag from './Tag.astro';
 
+import { getPikPakUrlChecker } from '@/utils';
+
 export interface Props {
   resources: Resource[];
 }
@@ -42,7 +44,7 @@ function followSearch(params: Record<string, string>) {
         <th class="py3 px2 text-left min-w-[600px] lg:min-w-[480px] md:min-w-[300px]">标题</th>
         <!-- <th class="py3 min-w-[80px] lt-md:min-w-[48px]">类型</th> -->
         <th class="py3">发布者</th>
-        <th class="py3 px2 text-left">下载</th>
+        <th class="py3 px2 text-left">播放 / 下载</th>
       </tr>
     </thead>
     <tbody class="resources-table-body divide-y border-b text-sm lt-lg:text-xs"
@@ -100,6 +102,13 @@ function followSearch(params: Record<string, string>) {
             <td class="py2 px2">
               <div class="flex gap1 items-center justify-start">
                 <a
+                  href={getPikPakUrlChecker(r.magnet)}
+                  data-resource-title={r.title}
+                  class="play i-carbon-play text-2xl text-base-500 hover:text-base-900"
+                  aria-label="Play resource"
+                  target="_blank"
+                />
+                <a
                   href={r.magnet}
                   data-resource-title={r.title}
                   class="download i-carbon-download text-2xl text-base-500 hover:text-base-900"
@@ -116,7 +125,15 @@ function followSearch(params: Record<string, string>) {
 
   <script>
     import { hydrateNodesEvent } from '../lib/hydrate';
-    import { triggerDownloadEvent } from '../clarity';
+    import { triggerDownloadEvent, triggerPikPakEvent } from '../clarity';
+
+    hydrateNodesEvent('.resources-table a.play', 'click', (node, ev) => {
+      const target = ev.target as HTMLAnchorElement;
+      const title = target.getAttribute('data-resource-title');
+      if (title) {
+        triggerPikPakEvent(title);
+      }
+    });
 
     hydrateNodesEvent('.resources-table a.download', 'click', (node, ev) => {
       const target = ev.target as HTMLAnchorElement;

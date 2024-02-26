@@ -56,8 +56,10 @@ const schema = info
     </h1>
     <div class="download-link rounded-md shadow-box">
       <h2 class="text-lg font-bold border-b px4 py2 flex items-center">
-        <a href={pikpakUrl} class="text-link-active underline underline-dotted underline-offset-6"
-          >下载链接</a
+        <a
+          href={pikpakUrl}
+          class="play text-link-active underline underline-dotted underline-offset-6"
+          target="_blank">下载链接</a
         >
         <!-- <TorrentTooltip client:load /> -->
       </h2>
@@ -72,10 +74,11 @@ const schema = info
             <a
               href={pikpakUrl}
               target="_blank"
-              class="text-link-active underline underline-dotted underline-offset-6">在线播放</a
+              class="play text-link-active underline underline-dotted underline-offset-6"
+              >在线播放</a
             >
           </span>
-          <a href={pikpakUrl} target="_blank" class="download text-link">使用 PikPak 播放</a>
+          <a href={pikpakUrl} target="_blank" class="play text-link">使用 PikPak 播放</a>
         </div>
         <div>
           <span>磁力链接</span>
@@ -188,13 +191,21 @@ const schema = info
 
   <script>
     import { hydrateNodesEvent } from '@/lib/hydrate';
-    import { triggerDownloadEvent } from '@/clarity';
+    import { triggerDownloadEvent, triggerPikPakEvent } from '@/clarity';
 
     hydrateNodesEvent('.detail a.download', 'click', () => {
       const titleEl = document.querySelector(`h1.resource-title`);
       const title = titleEl?.textContent;
       if (title) {
         triggerDownloadEvent(title);
+      }
+    });
+
+    hydrateNodesEvent('.detail a.play', 'click', () => {
+      const titleEl = document.querySelector(`h1.resource-title`);
+      const title = titleEl?.textContent;
+      if (title) {
+        triggerPikPakEvent(title);
       }
     });
 
