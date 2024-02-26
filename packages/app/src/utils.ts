@@ -8,3 +8,7 @@ export function getRuntimeEnv(locals: App.Locals): Env | undefined {
   // @ts-ignore
   return locals?.runtime?.env;
 }
+
+export function getPikPakUrlChecker(magnet: string) {
+  return `https://mypikpak.com/drive/url-checker?url=${magnet}`;
+}

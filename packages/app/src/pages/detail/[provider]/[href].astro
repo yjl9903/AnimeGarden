@@ -6,6 +6,7 @@ import Layout from '@/layouts/Layout.astro';
 import { Player } from '@/components/Player';
 import { TorrentTooltip } from '@/components/Tooltips';
 import { fetchResourceDetail } from '@/fetch';
+import { getPikPakUrlChecker } from '@/utils';
 
 const PIKPAK_REFERRAL = `https://mypikpak.com/drive/activity/invited?invitation-code=36743699`;
 
@@ -18,6 +19,8 @@ const detail = await fetchResourceDetail(provider, href);
 if (!detail) {
   return Astro.redirect('/');
 }
+
+const pikpakUrl = getPikPakUrlChecker(detail.magnet.href);
 
 const files = detail.magnet.files.filter((f) => f.size !== '種子可能不存在' && f.size !== 'Bytes');
 const playTarget = detail.magnet.files.filter(
@@ -53,11 +56,10 @@ const schema = info
     </h1>
     <div class="download-link rounded-md shadow-box">
       <h2 class="text-lg font-bold border-b px4 py2 flex items-center">
-        <a
-          href={detail.magnet.href}
-          class="text-link-active underline underline-dotted underline-offset-6">下载链接</a
+        <a href={pikpakUrl} class="text-link-active underline underline-dotted underline-offset-6"
+          >下载链接</a
         >
-        <TorrentTooltip client:load />
+        <!-- <TorrentTooltip client:load /> -->
       </h2>
       <div
         class="p4 space-y-1 overflow-auto whitespace-nowrap
@@ -65,6 +67,16 @@ const schema = info
           [&>div]:(flex)
           [&>div>a]:(inline-block flex-1 pr-4) lt-md:text-sm"
       >
+        <div>
+          <span>
+            <a
+              href={pikpakUrl}
+              target="_blank"
+              class="text-link-active underline underline-dotted underline-offset-6">在线播放</a
+            >
+          </span>
+          <a href={pikpakUrl} target="_blank" class="download text-link">使用 PikPak 播放</a>
+        </div>
         <div>
           <span>磁力链接</span>
           <a href={detail.magnet.href} class="download text-link"
@@ -74,16 +86,6 @@ const schema = info
         <div>
           <span>磁力链接 type II</span>
           <a href={detail.magnet.href2} class="download text-link">{detail.magnet.href2}</a>
-        </div>
-        <div>
-          <span>
-            <a
-              href={PIKPAK_REFERRAL}
-              target="_blank"
-              class="text-link-active underline underline-dotted underline-offset-6">在线播放</a
-            >
-          </span>
-          <a href={PIKPAK_REFERRAL} target="_blank" class="download text-link">使用 PikPak</a>
         </div>
         <div>
           <span>会员链接</span>
