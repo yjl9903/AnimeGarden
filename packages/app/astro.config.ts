@@ -19,6 +19,12 @@ const SERVER_PORT = process.env.SERVER_PORT;
 const SERVER_PROTOCOL = process.env.SERVER_PROTOCOL ?? 'http'; // http or https
 const WORKER_HOST = process.env.WORKER_HOST ?? `animegarden.yjl9903.workers.dev`;
 
+// Analytics Engines
+const UMAMI_HOST = `umami.onekuma.cn`;
+const UMAMI_ID = `a8602a4a-8d41-4df7-9797-5bd074785f2c`;
+const PLAUSIBLE_HOST = `garden.onekuma.cn`;
+const CLARITY = `kwj19d7z4j`;
+
 // https://astro.build/config
 export default defineConfig({
   output: 'server',
@@ -123,10 +129,10 @@ export default defineConfig({
         /**
          * Umami Cloud
          */
-        UMAMI_HOST: undefined, // 'us.umami.is',
-        UMAMI_ID: undefined, // '7e93a10d-26a9-4a3a-aa36-99294a5296f3'
-        PLAUSIBLE_HOST: 'garden.onekuma.cn',
-        CLARITY: 'kwj19d7z4j'
+        UMAMI_HOST,
+        UMAMI_ID,
+        PLAUSIBLE_HOST,
+        CLARITY
       }
     })
   ],
