@@ -9,7 +9,9 @@ import robotsTxt from 'astro-robots-txt';
 import node from '@astrojs/node';
 import cloudflare from '@astrojs/cloudflare';
 import PWA from '@vite-pwa/astro';
+
 import Info from 'unplugin-info/astro';
+import Analytics from 'unplugin-analytics/astro';
 
 const SSR_ADAPTER = process.env.SSR_ADAPTER === 'cloudflare' ? 'cloudflare' : 'node';
 
@@ -24,6 +26,7 @@ const UMAMI_HOST = `umami.onekuma.cn`;
 const UMAMI_ID = `a8602a4a-8d41-4df7-9797-5bd074785f2c`;
 const PLAUSIBLE_HOST = `garden.onekuma.cn`;
 const CLARITY = `kwj19d7z4j`;
+const CF_BEACON = `aa68fa3bf166467082bc79ba029b057f`;
 
 // https://astro.build/config
 export default defineConfig({
@@ -125,7 +128,7 @@ export default defineConfig({
         /**
          * Cloudflare Web Analytics configuration
          */
-        CF_BEACON: 'aa68fa3bf166467082bc79ba029b057f',
+        CF_BEACON,
         /**
          * Umami Cloud
          */
@@ -133,6 +136,23 @@ export default defineConfig({
         UMAMI_ID,
         PLAUSIBLE_HOST,
         CLARITY
+      }
+    }),
+    Analytics({
+      analytics: {
+        umami: {
+          src: UMAMI_HOST,
+          id: UMAMI_ID
+        },
+        plausible: {
+          domain: PLAUSIBLE_HOST
+        },
+        clarity: {
+          id: CLARITY
+        },
+        cloudflare: {
+          beacon: CF_BEACON
+        }
       }
     })
   ],

@@ -1,10 +1,11 @@
 ---
-import { APP_HOST, CF_BEACON, UMAMI_HOST, UMAMI_ID, PLAUSIBLE_HOST, CLARITY } from '~build/meta';
+import { APP_HOST } from '~build/meta';
 
+import Analytics from '~analytics/component.astro';
 import { pwaInfo } from 'virtual:pwa-info';
 import { ViewTransitions } from 'astro:transitions';
 
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from '@/components/ui/sonner';
 
 import { Menu } from '../components/Menu';
 import Search from '../components/Search/Search';
@@ -86,44 +87,7 @@ function followSearch(params: Record<string, string>) {
     <meta property="og:description" content={description} />
     <meta property="og:image" content="http://garden.onekuma.cn/twitter.jpg" />
 
-    <!-- Cloudflare Web Analytics -->
-    <script
-      defer
-      src={!import.meta.env.DEV && CF_BEACON
-        ? 'https://static.cloudflareinsights.com/beacon.min.js'
-        : undefined}
-      data-cf-beacon={`{"token": "${CF_BEACON}"}`}></script>
-    <!-- End Cloudflare Web Analytics -->
-
-    <!-- Umami Cloud -->
-    {
-      !import.meta.env.DEV && UMAMI_HOST && UMAMI_ID ? (
-        <script defer src={`https://${UMAMI_HOST}/script.js`} data-website-id={UMAMI_ID} />
-      ) : null
-    }
-    <!-- End Umami Cloud -->
-
-    <!-- Plausible -->
-    {
-      !import.meta.env.DEV && PLAUSIBLE_HOST ? (
-        <script defer data-domain={PLAUSIBLE_HOST} src="https://plausible.io/js/script.js" />
-      ) : null
-    }
-    <!-- End Plausible -->
-
-    <!-- Clarity -->
-    {
-      !import.meta.env.DEV && CLARITY ? (
-        <script type="text/javascript" is:inline data-clarity-id={CLARITY}>
-          (function (c,l,a,r,i,t,y) {
-            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-          })(window, document, "clarity", "script", document.currentScript.getAttribute('data-clarity-id'));
-        </script>
-      ) : null
-    }
-    <!-- End Clarity -->
+    <Analytics />
 
     <title>{`${title ? `${title} | ` : ''}Anime Garden 動漫花園資源網第三方镜像站`}</title>
   </head>
@@ -310,7 +274,7 @@ function followSearch(params: Record<string, string>) {
       }
 
       .main-menu {
-        --at-apply: bottom-16 left-[92vw] lt-md:left-[82vw];
+        --at-apply: bottom-16 left-[92vw] lt-md: left-[82vw];
       }
 
       .text-gradient {

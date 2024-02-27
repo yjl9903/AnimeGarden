@@ -2,6 +2,7 @@
 /// <reference types="vite-plugin-pwa/client" />
 /// <reference types="vite-plugin-pwa/info" />
 /// <reference types="unplugin-info/client" />
+/// <reference types="unplugin-analytics/client" />
 
 import type { DirectoryRuntime } from '@astrojs/cloudflare';
 
