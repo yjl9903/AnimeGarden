@@ -11,8 +11,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   const referrer = context.request.referrer;
   const clientIP =
-    context.request.headers['cf-connecting-ip'] ??
-    context.request.headers['x-real-ip'] ??
+    context.request.headers.get?.('cf-connecting-ip') ??
+    context.request.headers.get?.('x-real-ip') ??
     context.clientAddress;
   const track =
     !referrer || referrer === 'about:client' ? `${clientIP}` : `${referrer} ${clientIP}`;
