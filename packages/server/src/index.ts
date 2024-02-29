@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { serve } from '@hono/node-server';
+import { Cron } from 'croner';
 
 import { app } from './app';
 import { logger } from './logger';
@@ -33,3 +34,29 @@ serve(
     logger.info(null, `Connect to meilisearch`);
   }
 );
+
+Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
+  try {
+    const req = new Request(`https://server.zeabur.internal/admin/dmhy/resources`, {
+      method: 'POST'
+    });
+    logger.info(`cron`, `Fetch dmhy resources`);
+    const resp = await app.fetch(req);
+    logger.info(`cron`, await resp.json());
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+Cron(`0 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
+  try {
+    const req = new Request(`https://server.zeabur.internal/admin/dmhy/resources/sync`, {
+      method: 'POST'
+    });
+    logger.info(`cron`, `Sync dmhy resources`);
+    const resp = await app.fetch(req);
+    logger.info(`cron`, await resp.json());
+  } catch (error) {
+    console.error(error);
+  }
+});

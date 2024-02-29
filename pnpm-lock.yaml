@@ -331,6 +331,9 @@ importers:
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
+      croner:
+        specifier: ^8.0.1
+        version: 8.0.1
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -6566,6 +6569,11 @@ packages:
       queue-microtask: 1.2.3
       run-parallel: 1.2.0
       uint8-util: 2.2.4
+    dev: false
+
+  /croner@8.0.1:
+    resolution: {integrity: sha512-Hq1+lXVgjJjcS/U+uk6+yVmtxami0r0b+xVtlGyABgdz110l/kOnHWvlSI7nVzrTl8GCdZHwZS4pbBFT7hSL/g==}
+    engines: {node: '>=18.0'}
     dev: false
 
   /cross-fetch-ponyfill@1.0.3:

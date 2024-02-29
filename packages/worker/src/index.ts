@@ -85,15 +85,15 @@ export default {
     switch (event.cron) {
       case '*/5 * * * *':
         // Trigger zeabur
-        ctx.waitUntil(
-          fetch(`https://garden.onekuma.cn/api/admin/dmhy/resources`, { method: 'POST' })
-        );
+        // ctx.waitUntil(
+        //   fetch(`https://garden.onekuma.cn/api/admin/dmhy/resources`, { method: 'POST' })
+        // );
         break;
       case '0 * * * *':
         // Trigger zeabur
-        ctx.waitUntil(
-          fetch(`https://garden.onekuma.cn/api/admin/dmhy/resources/sync`, { method: 'POST' })
-        );
+        // ctx.waitUntil(
+        //   fetch(`https://garden.onekuma.cn/api/admin/dmhy/resources/sync`, { method: 'POST' })
+        // );
         break;
     }
   }
