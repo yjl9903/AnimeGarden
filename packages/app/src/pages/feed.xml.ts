@@ -38,7 +38,7 @@ export const GET: APIRoute = async (context) => {
       );
       const resources = resp.flatMap((r) => r.resources);
 
-      return rss({
+      const feed = await rss({
         title,
         description:
           'Anime Garden 是動漫花園資源網的第三方镜像站, 動漫花園資訊網是一個動漫愛好者交流的平台,提供最及時,最全面的動畫,漫畫,動漫音樂,動漫下載,BT,ED,動漫遊戲,資訊,分享,交流,讨论.',
@@ -57,6 +57,10 @@ export const GET: APIRoute = async (context) => {
           };
         })
       });
+      // Cache 300 seconds
+      feed.headers['cache-control'] = `public, max-age=300`;
+
+      return feed;
     }
   } catch (error) {
     console.error(error);
