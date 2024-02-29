@@ -1,5 +1,7 @@
 import type { Resource, ResourceDetail } from '../types';
 
+import { version } from '../../package.json';
+
 import type {
   ResolvedFilterOptions,
   FetchResourcesOptions,
@@ -143,9 +145,14 @@ export async function fetchResources(
   async function fetchPage(page: number) {
     url.searchParams.set('page', '' + page);
     return await retryFn(async () => {
+      // @ts-ignore
+      const headers = new Headers(options.headers);
+      if (!headers.get('user-agent')) {
+        headers.set(`user-agent`, `animegarden@${version}`);
+      }
+
       const resp = await fetch(url.toString(), {
-        // @ts-ignore
-        headers: new Headers(options.headers),
+        headers,
         signal: options.signal
       });
       if (resp.ok) {
@@ -185,9 +192,13 @@ export async function fetchResourceDetail(
   const url = new URL(`${provider}/detail/${href}`, baseURL);
 
   const resp = await retryFn(async () => {
+    // @ts-ignore
+    const headers = new Headers(options.headers);
+    if (!headers.get('user-agent')) {
+      headers.set(`user-agent`, `animegarden@${version}`);
+    }
+
     const resp = await fetch(url.toString(), {
-      // @ts-ignore
-      headers: new Headers(options.headers),
       signal: options.signal
     });
     if (resp.ok) {
