@@ -52,18 +52,44 @@ function followSearch(params: Record<string, string>) {
         resources.map((r) => (
           <tr class="">
             <td class="py2 text-center">
-              {formatInTimeZone(new Date(r.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}
+              <a
+                href={getDetailHref(r)}
+                class="text-link-active"
+                aria-label={`Go to resource detail of ${r.title}`}
+              >
+                {formatInTimeZone(new Date(r.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}
+              </a>
             </td>
             <td class="py2 pl2 lt-sm:pl1">
               <div class="flex items-center justify-start">
                 <div class="flex-1">
-                  <a
-                    href={getDetailHref(r)}
-                    class="text-link mr2"
-                    aria-label={`Go to resources detail of ${r.title}`}
-                  >
-                    {r.title}
-                  </a>
+                  <span class="mr3">
+                    {['動畫', '季度全集', '日劇', '特攝'].includes(r.type) ? (
+                      <>
+                        <a
+                          href={getPikPakUrlChecker(r.magnet)}
+                          class="text-link mr1"
+                          aria-label={`Go to download resource of ${r.title}`}
+                          target="_blank"
+                        >
+                          {r.title}
+                        </a>
+                        <a
+                          href={getDetailHref(r)}
+                          class="text-link i-carbon-launch vertical-middle"
+                          aria-label={`Go to resource detail of ${r.title}`}
+                        />
+                      </>
+                    ) : (
+                      <a
+                        href={getDetailHref(r)}
+                        class="text-link"
+                        aria-label={`Go to resource detail of ${r.title}`}
+                      >
+                        {r.title}
+                      </a>
+                    )}
+                  </span>
                   <a
                     href={`/resources/1?${followSearch({ type: r.type })}`}
                     class="inline-block select-none"

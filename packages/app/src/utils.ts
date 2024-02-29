@@ -10,5 +10,6 @@ export function getRuntimeEnv(locals: App.Locals): Env | undefined {
 }
 
 export function getPikPakUrlChecker(magnet: string) {
-  return `https://mypikpak.com/drive/url-checker?url=${magnet}`;
+  const prefix = magnet.split('&')[0];
+  return `https://mypikpak.com/drive/url-checker?url=${prefix}`;
 }
