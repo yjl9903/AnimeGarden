@@ -14,8 +14,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
     context.request.headers['CF-Connecting-IP'] ??
     context.request.headers['X-Forwarded-For'] ??
     context.clientAddress;
+  const track =
+    !referrer || referrer === 'about:client' ? `${clientIP}` : `${referrer} ${clientIP}`;
   console.log(
-    `${bold(context.request.method)} ${url.pathname} ${dim(timer.duration())}  <-- ${dim(`${referrer} ${clientIP}`)}`
+    `${bold(context.request.method)} ${url.pathname} ${dim(timer.duration())}  <-- ${dim(`${track}`)}`
   );
 
   return response;
