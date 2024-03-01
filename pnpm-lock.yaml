@@ -156,8 +156,8 @@ importers:
         specifier: ^4.4.6
         version: 4.4.6(react-dom@18.2.0)(react@18.2.0)
       sonner:
-        specifier: ^1.4.1
-        version: 1.4.1(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^1.4.3
+        version: 1.4.3(react-dom@18.2.0)(react@18.2.0)
       swagger-ui-react:
         specifier: ^5.11.7
         version: 5.11.7(@types/react@18.2.58)(react-dom@18.2.0)(react@18.2.0)
@@ -11190,8 +11190,8 @@ packages:
       smart-buffer: 4.2.0
     dev: false
 
-  /sonner@1.4.1(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-KJcFbMF+z2OMSJ9H+N6mrk/ffnEzuyLFlHoza/HQvNyiACoY958VtFdC7xD9D74ttzA+kcS1YIJOsNwbKWDsHw==}
+  /sonner@1.4.3(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-SArYlHbkjqRuLiR0iGY2ZSr09oOrxw081ZZkQPfXrs8aZQLIBOLOdzTYxGJB5yIZ7qL56UEPmrX1YqbODwG0Lw==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
@@ -11696,6 +11696,7 @@ packages:
   /tar-stream@2.2.0:
     resolution: {integrity: sha512-ujeqbceABgwMZxEJnk2HDY2DlnUZ+9oEcb1KzTVfYHio0UE6dG71n60d8D2I4qNvleWrrXpmjpt7vZeF1LnMZQ==}
     engines: {node: '>=6'}
+    requiresBuild: true
     dependencies:
       bl: 4.1.0
       end-of-stream: 1.4.4
@@ -13111,6 +13112,7 @@ packages:
 
   /workbox-google-analytics@7.0.0:
     resolution: {integrity: sha512-MEYM1JTn/qiC3DbpvP2BVhyIH+dV/5BjHk756u9VbwuAhu0QHyKscTnisQuz21lfRpOwiS9z4XdqeVAKol0bzg==}
+    deprecated: It is not compatible with newer versions of GA starting with v4, as long as you are using GAv3 it should be ok, but the package is not longer being maintained
     dependencies:
       workbox-background-sync: 7.0.0
       workbox-core: 7.0.0
