@@ -63,7 +63,7 @@ export default function Search() {
     signals.current.clear();
   }, []);
 
-  const enable = active === inputRef.current;
+  const enable = true || active === inputRef.current;
   const disable = useCallback(() => inputRef.current?.blur(), []);
 
   // Handle input change
@@ -424,7 +424,8 @@ function SearchHistory(props: {
         >
           {
             <div className="flex justify-between items-center w-full">
-              <div>{h}</div>
+              {/* TODO: fix in cmdk lib */}
+              <div>{h.replace(/"/g, '')}</div>
               <button
                 className="i-carbon-close text-2xl text-base-500 hover:text-base-900"
                 onMouseDown={(ev) => onRemoveHistory(ev, h)}
