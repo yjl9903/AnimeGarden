@@ -63,7 +63,7 @@ export default function Search() {
     signals.current.clear();
   }, []);
 
-  const enable = true || active === inputRef.current;
+  const enable = active === inputRef.current;
   const disable = useCallback(() => inputRef.current?.blur(), []);
 
   // Handle input change
