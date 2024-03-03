@@ -54,8 +54,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(typescript@5.3.3)
       undici:
-        specifier: ^6.6.2
-        version: 6.6.2
+        specifier: ^6.7.0
+        version: 6.7.0
       vitest:
         specifier: ^1.3.1
         version: 1.3.1(@types/node@20.11.24)
@@ -268,8 +268,8 @@ importers:
         specifier: ^11.2.0
         version: 11.2.0
       undici:
-        specifier: ^6.6.2
-        version: 6.6.2
+        specifier: ^6.7.0
+        version: 6.7.0
       zod:
         specifier: ^3.22.4
         version: 3.22.4
@@ -12180,8 +12180,8 @@ packages:
     dependencies:
       '@fastify/busboy': 2.1.0
 
-  /undici@6.6.2:
-    resolution: {integrity: sha512-vSqvUE5skSxQJ5sztTZ/CdeJb1Wq0Hf44hlYMciqHghvz+K88U0l7D6u1VsndoFgskDcnU+nG3gYmMzJVzd9Qg==}
+  /undici@6.7.0:
+    resolution: {integrity: sha512-IcWssIyDN1gk6Mcae44q04oRoWTKrW8OKz0effVK1xdWwAgMPnfpxhn9RXUSL5JlwSikO18R7Ibk7Nukz6kxWA==}
     engines: {node: '>=18.0'}
     dependencies:
       '@fastify/busboy': 2.1.0
