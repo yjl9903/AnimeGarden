@@ -73,6 +73,7 @@ export async function updateDmhyResources(database: Database, fetchedResources: 
         .set({
           title: latest.title,
           titleAlt: normalizeTitle(latest.title),
+          type: latest.type,
           magnet: latest.magnet,
           size: latest.size,
           fetchedAt: now
