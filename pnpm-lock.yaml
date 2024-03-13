@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: ^4.20240222.0
-        version: 4.20240222.0
+        specifier: ^4.20240312.0
+        version: 4.20240312.0
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -61,7 +61,7 @@ importers:
         version: 1.3.1(@types/node@20.11.27)
       wrangler:
         specifier: ^3.30.1
-        version: 3.30.1(@cloudflare/workers-types@4.20240222.0)
+        version: 3.30.1(@cloudflare/workers-types@4.20240312.0)
 
   packages/animegarden:
     dependencies:
@@ -284,7 +284,7 @@ importers:
         version: 0.0.34
       drizzle-orm:
         specifier: ^0.30.1
-        version: 0.30.1(@cloudflare/workers-types@4.20240222.0)(postgres@3.4.3)
+        version: 0.30.1(@cloudflare/workers-types@4.20240312.0)(postgres@3.4.3)
       meilisearch:
         specifier: ^0.38.0
         version: 0.38.0
@@ -339,7 +339,7 @@ importers:
         version: 16.4.5
       drizzle-orm:
         specifier: ^0.30.1
-        version: 0.30.1(@cloudflare/workers-types@4.20240222.0)(postgres@3.4.3)
+        version: 0.30.1(@cloudflare/workers-types@4.20240312.0)(postgres@3.4.3)
       hono:
         specifier: ^4.0.9
         version: 4.0.9
@@ -1904,6 +1904,10 @@ packages:
 
   /@cloudflare/workers-types@4.20240222.0:
     resolution: {integrity: sha512-luO0BdK3rLlCv3B240+cTrfqm+XSbHtpk+88aJtGwzyVK9QF/Xz8lBgE/oZZLN8nCTmOvxAZnszyxUuZ8GP8Cg==}
+    dev: false
+
+  /@cloudflare/workers-types@4.20240312.0:
+    resolution: {integrity: sha512-tpBNfijiXR/DSZkcUZHxP+80nIvKUWbGO2u4FBLudmJLGPhzgfoQ3tql+FeIhxYslSituMcVQNnJmWTF7FjURg==}
 
   /@cspotcode/source-map-support@0.8.1:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -6438,7 +6442,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.30.1(@cloudflare/workers-types@4.20240222.0)(postgres@3.4.3):
+  /drizzle-orm@0.30.1(@cloudflare/workers-types@4.20240312.0)(postgres@3.4.3):
     resolution: {integrity: sha512-5P6CXl4XyWtDDiYOX/jYOJp1HTUmBlXRAwaq+muUOgaSykMEy5sJesCxceMT0oCGvxeWkKfSXo5owLnfKwCIdw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -6512,7 +6516,7 @@ packages:
       sqlite3:
         optional: true
     dependencies:
-      '@cloudflare/workers-types': 4.20240222.0
+      '@cloudflare/workers-types': 4.20240312.0
       postgres: 3.4.3
     dev: false
 
@@ -13066,7 +13070,7 @@ packages:
       '@cloudflare/workerd-windows-64': 1.20240223.1
     dev: true
 
-  /wrangler@3.30.1(@cloudflare/workers-types@4.20240222.0):
+  /wrangler@3.30.1(@cloudflare/workers-types@4.20240312.0):
     resolution: {integrity: sha512-cT6Ezx8h2v5QiI0HWhnHVy32ng4omdMVdhaMQLuMnyMIHmyDoRg7pmrbhtZfj0663gExLdVtE4ucK//yncVTwg==}
     engines: {node: '>=16.17.0'}
     hasBin: true
@@ -13077,7 +13081,7 @@ packages:
         optional: true
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.1
-      '@cloudflare/workers-types': 4.20240222.0
+      '@cloudflare/workers-types': 4.20240312.0
       '@esbuild-plugins/node-globals-polyfill': 0.2.3(esbuild@0.17.19)
       '@esbuild-plugins/node-modules-polyfill': 0.2.2(esbuild@0.17.19)
       blake3-wasm: 2.1.5
