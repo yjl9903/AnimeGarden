@@ -326,8 +326,8 @@ importers:
         specifier: ^1.8.2
         version: 1.8.2
       '@hono/zod-validator':
-        specifier: ^0.1.11
-        version: 0.1.11(hono@4.0.9)(zod@3.22.4)
+        specifier: ^0.2.0
+        version: 0.2.0(hono@4.0.9)(zod@3.22.4)
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -2588,8 +2588,8 @@ packages:
     engines: {node: '>=18.14.1'}
     dev: false
 
-  /@hono/zod-validator@0.1.11(hono@4.0.9)(zod@3.22.4):
-    resolution: {integrity: sha512-PQXeHUP0+36qpRt8yfeD7N2jbK3ETlGvSN6dMof/HwUC/APRokQRjpXZm4rrlG71Ft0aWE01+Bm4XejqPie5Uw==}
+  /@hono/zod-validator@0.2.0(hono@4.0.9)(zod@3.22.4):
+    resolution: {integrity: sha512-PC7akbA/DCFY406BL3+ogjYb+7Fgfs/6XPvyURBYMczo0M7kYsTUMnF8hA9mez1RORNCWPqXuFGfKrkoUVPvrQ==}
     peerDependencies:
       hono: '>=3.9.0'
       zod: ^3.19.1
