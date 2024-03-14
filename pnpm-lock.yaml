@@ -75,8 +75,8 @@ importers:
   packages/app:
     dependencies:
       '@astrojs/cloudflare':
-        specifier: ^9.0.2
-        version: 9.0.2(astro@4.5.2)
+        specifier: ^9.1.0
+        version: 9.1.0(astro@4.5.2)
       '@astrojs/node':
         specifier: ^8.2.3
         version: 8.2.3(astro@4.5.2)
@@ -423,13 +423,13 @@ packages:
       leven: 3.1.0
     dev: true
 
-  /@astrojs/cloudflare@9.0.2(astro@4.5.2):
-    resolution: {integrity: sha512-5nJbI4+HW7SJYBkLIfhKaOA+D1rkxjcXB7Z3uIYHIK98Cqf7KYbmVM5o7f66A0OKWmcEI9EJXlle7IPFvKQUuQ==}
+  /@astrojs/cloudflare@9.1.0(astro@4.5.2):
+    resolution: {integrity: sha512-w3wtV/joQLX5CQvpVx/6zn4V0ZVg5Y9gJkJ4vfgD1svC/hOMJACuVdkEN2a6HBsOUntXS3s36wJlDeIr7poF2g==}
     peerDependencies:
       astro: ^4.2.0
     dependencies:
       '@astrojs/underscore-redirects': 0.3.3
-      '@cloudflare/workers-types': 4.20240222.0
+      '@cloudflare/workers-types': 4.20240312.0
       '@iarna/toml': 2.2.5
       astro: 4.5.2(@types/node@20.11.27)(typescript@5.4.2)
       dotenv: 16.4.5
@@ -1901,10 +1901,6 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
-
-  /@cloudflare/workers-types@4.20240222.0:
-    resolution: {integrity: sha512-luO0BdK3rLlCv3B240+cTrfqm+XSbHtpk+88aJtGwzyVK9QF/Xz8lBgE/oZZLN8nCTmOvxAZnszyxUuZ8GP8Cg==}
-    dev: false
 
   /@cloudflare/workers-types@4.20240312.0:
     resolution: {integrity: sha512-tpBNfijiXR/DSZkcUZHxP+80nIvKUWbGO2u4FBLudmJLGPhzgfoQ3tql+FeIhxYslSituMcVQNnJmWTF7FjURg==}
