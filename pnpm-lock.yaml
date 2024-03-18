@@ -165,7 +165,7 @@ importers:
         specifier: ^2.2.5
         version: 2.2.5(react@18.2.0)
       tailwind-merge:
-        specifier: ^2.2.1
+        specifier: ^2.2.2
         version: 2.2.2
       tailwindcss-animate:
         specifier: ^1.0.7
@@ -3885,6 +3885,7 @@ packages:
 
   /@swagger-api/apidom-ns-json-schema-draft-4@0.97.0:
     resolution: {integrity: sha512-eBMIPxX4huNDGle6TOfSe1kKS1/HvL6w66GWWLFxZW2doCQHMADgjo7j/kVowrXiJtEoMgjBVp3W30WkcwBVug==}
+    requiresBuild: true
     dependencies:
       '@babel/runtime-corejs3': 7.24.0
       '@swagger-api/apidom-ast': 0.97.0
