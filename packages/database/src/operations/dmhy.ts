@@ -76,6 +76,8 @@ export async function updateDmhyResources(database: Database, fetchedResources: 
           type: latest.type,
           magnet: latest.magnet,
           size: latest.size,
+          publisherId: latest.publisherId,
+          fansubId: latest.fansubId,
           fetchedAt: now
         })
         .where(
