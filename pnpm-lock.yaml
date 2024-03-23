@@ -238,8 +238,8 @@ importers:
         specifier: ^0.58.6
         version: 0.58.6(postcss@8.4.36)(rollup@2.79.1)(vite@5.1.6)
       unplugin-analytics:
-        specifier: ^0.0.8
-        version: 0.0.8(esbuild@0.17.19)(rollup@2.79.1)(vite@5.1.6)
+        specifier: ^0.0.11
+        version: 0.0.11(esbuild@0.17.19)(rollup@2.79.1)(vite@5.1.6)
       unplugin-info:
         specifier: ^1.1.0
         version: 1.1.0(esbuild@0.17.19)(rollup@2.79.1)(vite@5.1.6)
@@ -4691,8 +4691,8 @@ packages:
       - rollup
     dev: true
 
-  /@unplugin-analytics/core@0.0.8:
-    resolution: {integrity: sha512-HouEMTEVAj8K7HhTOlxXlBxFdMccZHx5+wIkeX3U1M5WIPEEuiBDElRL77+1lA+VK7fii2sajyDLcq3CguCyrw==}
+  /@unplugin-analytics/core@0.0.11:
+    resolution: {integrity: sha512-JnIUr0iEHqJBtNC6Ht2tNYxyivLu2XKM7ykELLHHjeNuLy1wEJBHiftoUHJQsSuE7kkg+tc8xZMjJolWWqt8cQ==}
     engines: {node: '>=v20.10.0'}
     dev: true
 
@@ -12153,8 +12153,8 @@ packages:
     dev: false
     optional: true
 
-  /unplugin-analytics@0.0.8(esbuild@0.17.19)(rollup@2.79.1)(vite@5.1.6):
-    resolution: {integrity: sha512-+VcfKrjfIeIEGReeo/U07XuQ3Y+LGyP7tZQpVvta4a/tgeFcw7qnjZVmwT3teAvvpP03IUoX+GCz+tCAZO131w==}
+  /unplugin-analytics@0.0.11(esbuild@0.17.19)(rollup@2.79.1)(vite@5.1.6):
+    resolution: {integrity: sha512-+9ITzEJeCaiU0SIcwx7qJeQLMboVlCf3cVwT6joTn3xQ7WUfNGo+1YxQgvdbB4LAAlEN/I9AMeaFLIkIWKXafw==}
     engines: {node: '>=v20.10.0'}
     peerDependencies:
       '@nuxt/kit': ^3
@@ -12177,7 +12177,7 @@ packages:
       webpack:
         optional: true
     dependencies:
-      '@unplugin-analytics/core': 0.0.8
+      '@unplugin-analytics/core': 0.0.11
       defu: 6.1.4
       esbuild: 0.17.19
       rollup: 2.79.1
