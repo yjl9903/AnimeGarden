@@ -217,8 +217,8 @@ importers:
         specifier: ^0.2.4
         version: 0.2.4
       '@vite-pwa/astro':
-        specifier: ^0.3.0
-        version: 0.3.0(@vite-pwa/assets-generator@0.2.4)(astro@4.5.6)(vite-plugin-pwa@0.19.4)
+        specifier: ^0.3.1
+        version: 0.3.1(@vite-pwa/assets-generator@0.2.4)(astro@4.5.6)(vite-plugin-pwa@0.19.7)
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -4744,19 +4744,19 @@ packages:
       unconfig: 0.3.11
     dev: true
 
-  /@vite-pwa/astro@0.3.0(@vite-pwa/assets-generator@0.2.4)(astro@4.5.6)(vite-plugin-pwa@0.19.4):
-    resolution: {integrity: sha512-2fH9ifzMW8dmeydJ6SuttLR5FCDvSoaTpyxblasR6icsJbR1he4igJhauw4jvmQXOb99Psl+bsBSoUwsdSnSJA==}
+  /@vite-pwa/astro@0.3.1(@vite-pwa/assets-generator@0.2.4)(astro@4.5.6)(vite-plugin-pwa@0.19.7):
+    resolution: {integrity: sha512-rSzbYnNZU4L4QBzwO7HTDy06WbWnQ/PPOd0rzVTlOxYz/PPzbXXgnOvMY/4yNRCq7Lhc68sq2fRQ2JEAynmESw==}
     peerDependencies:
       '@vite-pwa/assets-generator': ^0.2.4
       astro: ^1.6.0 || ^2.0.0 || ^3.0.0 || ^4.0.0
-      vite-plugin-pwa: '>=0.19.0 <1'
+      vite-plugin-pwa: '>=0.19.6 <1'
     peerDependenciesMeta:
       '@vite-pwa/assets-generator':
         optional: true
     dependencies:
       '@vite-pwa/assets-generator': 0.2.4
       astro: 4.5.6(@types/node@20.11.30)(typescript@5.4.2)
-      vite-plugin-pwa: 0.19.4(@vite-pwa/assets-generator@0.2.4)(vite@5.1.6)(workbox-build@7.0.0)(workbox-window@7.0.0)
+      vite-plugin-pwa: 0.19.7(@vite-pwa/assets-generator@0.2.4)(vite@5.1.6)(workbox-build@7.0.0)(workbox-window@7.0.0)
     dev: true
 
   /@vitejs/plugin-react@4.2.1(vite@5.1.6):
@@ -12460,8 +12460,8 @@ packages:
       - terser
     dev: true
 
-  /vite-plugin-pwa@0.19.4(@vite-pwa/assets-generator@0.2.4)(vite@5.1.6)(workbox-build@7.0.0)(workbox-window@7.0.0):
-    resolution: {integrity: sha512-KiEFXaYEj2Hg1it+yECy75oqNmlXimI7BaLx7Sxl7Qsd9EIVxaf3GX1mZdLpHe83pDgHBNwm9USGQxSCNp5m7A==}
+  /vite-plugin-pwa@0.19.7(@vite-pwa/assets-generator@0.2.4)(vite@5.1.6)(workbox-build@7.0.0)(workbox-window@7.0.0):
+    resolution: {integrity: sha512-18TECxoGPQE7tVZzKxbf5Icrl5688n1JGMPSgGotTsh89vLDxevY7ICfD3CFVfonZXh8ckuyJXg0NXE5+FAl2A==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@vite-pwa/assets-generator': ^0.2.4
