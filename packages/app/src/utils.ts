@@ -11,5 +11,6 @@ export function getRuntimeEnv(locals: App.Locals): Env | undefined {
 
 export function getPikPakUrlChecker(magnet: string) {
   const prefix = magnet.split('&')[0];
-  return `https://mypikpak.com/drive/url-checker?url=${prefix}`;
+  const replaced = prefix.replace(/^magnet:\?xt/, 'magnet:?xt.1');
+  return `https://mypikpak.com/drive/url-checker?url=${replaced}`;
 }
