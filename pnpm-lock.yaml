@@ -75,8 +75,8 @@ importers:
   packages/app:
     dependencies:
       '@astrojs/cloudflare':
-        specifier: ^9.1.0
-        version: 9.2.0(astro@4.5.13)
+        specifier: ^9.2.1
+        version: 9.2.1(astro@4.5.13)
       '@astrojs/node':
         specifier: ^8.2.5
         version: 8.2.5(astro@4.5.13)
@@ -426,8 +426,8 @@ packages:
       leven: 3.1.0
     dev: true
 
-  /@astrojs/cloudflare@9.2.0(astro@4.5.13):
-    resolution: {integrity: sha512-mh18aYIgC4ZPHVwRGNUWAEEYpYE1odlY4kd9sGDhZ0+2eZ6uKSJuo19zD0z52t6LEzEve4C5dSNGK2YXmz5MyQ==}
+  /@astrojs/cloudflare@9.2.1(astro@4.5.13):
+    resolution: {integrity: sha512-IPsfuqy3r0OR0CvCdQw72J0iC4dhOW4WXByi2s3vAE3py8RQQtiyJXY8a4rAT/LRUz7WVlpzkm7FxORtmIeKVw==}
     peerDependencies:
       astro: ^4.2.0
     dependencies:
