@@ -76,13 +76,13 @@ importers:
     dependencies:
       '@astrojs/cloudflare':
         specifier: ^9.2.1
-        version: 9.2.1(astro@4.5.13)
+        version: 9.2.1(astro@4.5.15)
       '@astrojs/node':
         specifier: ^8.2.5
-        version: 8.2.5(astro@4.5.13)
+        version: 8.2.5(astro@4.5.15)
       '@astrojs/react':
-        specifier: ^3.1.0
-        version: 3.1.0(@types/react-dom@18.2.23)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)(vite@5.2.6)
+        specifier: ^3.1.1
+        version: 3.1.1(@types/react-dom@18.2.23)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)(vite@5.2.6)
       '@astrojs/rss':
         specifier: ^4.0.5
         version: 4.0.5
@@ -91,7 +91,7 @@ importers:
         version: 3.1.2
       '@astrojs/tailwind':
         specifier: ^5.1.0
-        version: 5.1.0(astro@4.5.13)(tailwindcss@3.4.3)
+        version: 5.1.0(astro@4.5.15)(tailwindcss@3.4.3)
       '@breadc/color':
         specifier: ^0.9.7
         version: 0.9.7
@@ -120,8 +120,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(@types/react-dom@18.2.23)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)
       astro:
-        specifier: ^4.5.13
-        version: 4.5.13(@types/node@20.11.30)(typescript@5.4.3)
+        specifier: ^4.5.15
+        version: 4.5.15(@types/node@20.11.30)(typescript@5.4.3)
       astro-robots-txt:
         specifier: ^1.0.0
         version: 1.0.0
@@ -218,7 +218,7 @@ importers:
         version: 0.2.4
       '@vite-pwa/astro':
         specifier: ^0.3.1
-        version: 0.3.1(@vite-pwa/assets-generator@0.2.4)(astro@4.5.13)(vite-plugin-pwa@0.19.7)
+        version: 0.3.1(@vite-pwa/assets-generator@0.2.4)(astro@4.5.15)(vite-plugin-pwa@0.19.7)
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -426,7 +426,7 @@ packages:
       leven: 3.1.0
     dev: true
 
-  /@astrojs/cloudflare@9.2.1(astro@4.5.13):
+  /@astrojs/cloudflare@9.2.1(astro@4.5.15):
     resolution: {integrity: sha512-IPsfuqy3r0OR0CvCdQw72J0iC4dhOW4WXByi2s3vAE3py8RQQtiyJXY8a4rAT/LRUz7WVlpzkm7FxORtmIeKVw==}
     peerDependencies:
       astro: ^4.2.0
@@ -434,7 +434,7 @@ packages:
       '@astrojs/underscore-redirects': 0.3.3
       '@cloudflare/workers-types': 4.20240320.1
       '@iarna/toml': 2.2.5
-      astro: 4.5.13(@types/node@20.11.30)(typescript@5.4.3)
+      astro: 4.5.15(@types/node@20.11.30)(typescript@5.4.3)
       dotenv: 16.4.5
       esbuild: 0.19.12
       find-up: 6.3.0
@@ -480,12 +480,12 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@astrojs/node@8.2.5(astro@4.5.13):
+  /@astrojs/node@8.2.5(astro@4.5.15):
     resolution: {integrity: sha512-IdVD4dBNyg+ScmCATZ0FM7vNLAHq0TSdiJ3LpR4jcWIUhpN1ps5Jg+9CfzMaLmCCe/SJUZejK5EnzqUJdnGYyg==}
     peerDependencies:
       astro: ^4.2.0
     dependencies:
-      astro: 4.5.13(@types/node@20.11.30)(typescript@5.4.3)
+      astro: 4.5.15(@types/node@20.11.30)(typescript@5.4.3)
       send: 0.18.0
       server-destroy: 1.0.1
     transitivePeerDependencies:
@@ -498,8 +498,8 @@ packages:
     dependencies:
       prismjs: 1.29.0
 
-  /@astrojs/react@3.1.0(@types/react-dom@18.2.23)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)(vite@5.2.6):
-    resolution: {integrity: sha512-KZhZyV+sUDZEjlrmPWNiPGeYowG9uq6/aMbCgVaeKEBlWT4Kg32TNwBOhZk6AcE4LY1l3mIwt3orUGE2JV96/g==}
+  /@astrojs/react@3.1.1(@types/react-dom@18.2.23)(@types/react@18.2.74)(react-dom@18.2.0)(react@18.2.0)(vite@5.2.6):
+    resolution: {integrity: sha512-Uc4zY8UxkZrSKmiFGPyy+0uUKGgVETJSra5c/65Z2ZckJEHtgLYW0ZqGUoItGr0wJFMv+h1g3Z4OJGapGgcUyA==}
     engines: {node: '>=18.14.1'}
     peerDependencies:
       '@types/react': ^17.0.50 || ^18.0.21
@@ -532,13 +532,13 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /@astrojs/tailwind@5.1.0(astro@4.5.13)(tailwindcss@3.4.3):
+  /@astrojs/tailwind@5.1.0(astro@4.5.15)(tailwindcss@3.4.3):
     resolution: {integrity: sha512-BJoCDKuWhU9FT2qYg+fr6Nfb3qP4ShtyjXGHKA/4mHN94z7BGcmauQK23iy+YH5qWvTnhqkd6mQPQ1yTZTe9Ig==}
     peerDependencies:
       astro: ^3.0.0 || ^4.0.0
       tailwindcss: ^3.0.24
     dependencies:
-      astro: 4.5.13(@types/node@20.11.30)(typescript@5.4.3)
+      astro: 4.5.15(@types/node@20.11.30)(typescript@5.4.3)
       autoprefixer: 10.4.19(postcss@8.4.38)
       postcss: 8.4.38
       postcss-load-config: 4.0.2(postcss@8.4.38)
@@ -4910,7 +4910,7 @@ packages:
       unconfig: 0.3.11
     dev: true
 
-  /@vite-pwa/astro@0.3.1(@vite-pwa/assets-generator@0.2.4)(astro@4.5.13)(vite-plugin-pwa@0.19.7):
+  /@vite-pwa/astro@0.3.1(@vite-pwa/assets-generator@0.2.4)(astro@4.5.15)(vite-plugin-pwa@0.19.7):
     resolution: {integrity: sha512-rSzbYnNZU4L4QBzwO7HTDy06WbWnQ/PPOd0rzVTlOxYz/PPzbXXgnOvMY/4yNRCq7Lhc68sq2fRQ2JEAynmESw==}
     peerDependencies:
       '@vite-pwa/assets-generator': ^0.2.4
@@ -4921,7 +4921,7 @@ packages:
         optional: true
     dependencies:
       '@vite-pwa/assets-generator': 0.2.4
-      astro: 4.5.13(@types/node@20.11.30)(typescript@5.4.3)
+      astro: 4.5.15(@types/node@20.11.30)(typescript@5.4.3)
       vite-plugin-pwa: 0.19.7(@vite-pwa/assets-generator@0.2.4)(vite@5.2.6)(workbox-build@7.0.0)(workbox-window@7.0.0)
     dev: true
 
@@ -5156,8 +5156,8 @@ packages:
       zod: 3.22.4
     dev: false
 
-  /astro@4.5.13(@types/node@20.11.30)(typescript@5.4.3):
-    resolution: {integrity: sha512-vbkiPH0J8dp5OlsvQpW3PcuV36U4vGRcdcL/LxXDwmeVjzVo6DH3Fkv+DAU5UDs7ciYodadomOo4+VZKvi8ylw==}
+  /astro@4.5.15(@types/node@20.11.30)(typescript@5.4.3):
+    resolution: {integrity: sha512-d2+yMv4ZlWwWFzfbpXIULMniNmdPlbwGrQScacEni0WLeo4k7ETO51/bHN/i/fXwxL9IGfasdEFkk2baYXDRog==}
     engines: {node: '>=18.14.1', npm: '>=6.14.0'}
     hasBin: true
     dependencies:
