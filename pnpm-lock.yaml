@@ -283,8 +283,8 @@ importers:
         specifier: 0.0.34
         version: 0.0.34
       drizzle-orm:
-        specifier: ^0.30.4
-        version: 0.30.4(@cloudflare/workers-types@4.20240320.1)(postgres@3.4.4)
+        specifier: ^0.30.7
+        version: 0.30.7(@cloudflare/workers-types@4.20240320.1)(postgres@3.4.4)
       meilisearch:
         specifier: ^0.38.0
         version: 0.38.0
@@ -338,8 +338,8 @@ importers:
         specifier: ^16.4.5
         version: 16.4.5
       drizzle-orm:
-        specifier: ^0.30.4
-        version: 0.30.4(@cloudflare/workers-types@4.20240320.1)(postgres@3.4.4)
+        specifier: ^0.30.7
+        version: 0.30.7(@cloudflare/workers-types@4.20240320.1)(postgres@3.4.4)
       hono:
         specifier: ^4.1.3
         version: 4.1.3
@@ -6544,11 +6544,12 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.30.4(@cloudflare/workers-types@4.20240320.1)(postgres@3.4.4):
-    resolution: {integrity: sha512-kWoSMGbrOFkmkAweLTFtHJMpN+nwhx89q0mLELqT2aEU+1szNV8jrnBmJwZ0WGNp7J7yQn/ezEtxBI/qzTSElQ==}
+  /drizzle-orm@0.30.7(@cloudflare/workers-types@4.20240320.1)(postgres@3.4.4):
+    resolution: {integrity: sha512-9qefSZQlu2fO2qv24piHyWFWcxcOY15//0v4j8qomMqaxzipNoG+fUBrQ7Ftk7PY7APRbRdn/nkEXWxiI4a8mw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
+      '@electric-sql/pglite': '>=0.1.1'
       '@libsql/client': '*'
       '@neondatabase/serverless': '>=0.1'
       '@op-engineering/op-sqlite': '>=2'
@@ -6558,7 +6559,7 @@ packages:
       '@types/pg': '*'
       '@types/react': '>=18'
       '@types/sql.js': '*'
-      '@vercel/postgres': '*'
+      '@vercel/postgres': '>=0.8.0'
       '@xata.io/client': '*'
       better-sqlite3: '>=7'
       bun-types: '*'
@@ -6575,6 +6576,8 @@ packages:
       '@aws-sdk/client-rds-data':
         optional: true
       '@cloudflare/workers-types':
+        optional: true
+      '@electric-sql/pglite':
         optional: true
       '@libsql/client':
         optional: true
