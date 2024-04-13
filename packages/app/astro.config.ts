@@ -124,18 +124,7 @@ export default defineConfig({
         /**
          * The host of Cloudflare Worker
          */
-        WORKER_HOST,
-        /**
-         * Cloudflare Web Analytics configuration
-         */
-        CF_BEACON,
-        /**
-         * Umami Cloud
-         */
-        UMAMI_HOST,
-        UMAMI_ID,
-        PLAUSIBLE_HOST,
-        CLARITY
+        WORKER_HOST
       }
     }),
     Analytics({
@@ -144,9 +133,9 @@ export default defineConfig({
           src: UMAMI_HOST,
           id: UMAMI_ID
         },
-        plausible: {
-          domain: PLAUSIBLE_HOST
-        },
+        // plausible: {
+        //   domain: PLAUSIBLE_HOST
+        // },
         clarity: {
           id: CLARITY
         },

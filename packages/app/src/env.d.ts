@@ -26,14 +26,4 @@ declare module '~build/meta' {
   export const SERVER_PROTOCOL: string | undefined;
 
   export const WORKER_HOST: string;
-
-  export const CF_BEACON: string | undefined;
-
-  export const UMAMI_HOST: string | undefined;
-
-  export const UMAMI_ID: string | undefined;
-
-  export const PLAUSIBLE_HOST: string | undefined;
-
-  export const CLARITY: string | undefined;
 }
