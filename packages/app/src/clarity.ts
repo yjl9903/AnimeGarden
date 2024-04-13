@@ -1,9 +1,7 @@
 // @ts-nocheck
 
-import { CLARITY } from '~build/meta';
-
 export function triggerDownloadEvent(name: string) {
-  if (!CLARITY || !window.clarity) return;
+  if (!window.clarity) return;
   try {
     const event = `download:${name}`;
     window.clarity('event', event);
@@ -11,7 +9,7 @@ export function triggerDownloadEvent(name: string) {
 }
 
 export function triggerPikPakEvent(name: string) {
-  if (!CLARITY || !window.clarity) return;
+  if (!window.clarity) return;
   try {
     const event = `pikpak:download`;
     window.clarity('event', event);
@@ -19,7 +17,7 @@ export function triggerPikPakEvent(name: string) {
 }
 
 export function triggerCollectionEvent(name: string) {
-  if (!CLARITY || !window.clarity) return;
+  if (!window.clarity) return;
   try {
     const event = `collection:${name}`;
     window.clarity('event', event);
@@ -27,7 +25,7 @@ export function triggerCollectionEvent(name: string) {
 }
 
 export function triggerRssEvent(name: string) {
-  if (!CLARITY || !window.clarity) return;
+  if (!window.clarity) return;
   try {
     const event = `rss:${name}`;
     window.clarity('event', event);
