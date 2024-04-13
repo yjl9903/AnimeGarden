@@ -229,8 +229,8 @@ importers:
         specifier: ^2.30.0
         version: 2.30.0
       date-fns-tz:
-        specifier: ^3.0.1
-        version: 3.0.1(date-fns@2.30.0)
+        specifier: ^2.0.1
+        version: 2.0.1(date-fns@2.30.0)
       tailwindcss:
         specifier: ^3.4.3
         version: 3.4.3
@@ -6248,13 +6248,12 @@ packages:
       is-data-view: 1.0.1
     dev: true
 
-  /date-fns-tz@3.0.1(date-fns@2.30.0):
-    resolution: {integrity: sha512-LGKFMKEllm9tCirgYhha3rqfw5nstTULXnKKCk2qO/qju1rfxpUI9IXzmpOd5w727TtrfenAVafql0B/vs6aQQ==}
+  /date-fns-tz@2.0.1(date-fns@2.30.0):
+    resolution: {integrity: sha512-fJCG3Pwx8HUoLhkepdsP7Z5RsucUi+ZBOxyM5d0ZZ6c4SdYustq0VMmOu6Wf7bli+yS/Jwp91TOCqn9jMcVrUA==}
     peerDependencies:
-      date-fns: ^3.0.0
+      date-fns: 2.x
     dependencies:
       date-fns: 2.30.0
-      lodash.clonedeep: 4.5.0
     dev: true
 
   /date-fns@2.30.0:
@@ -8420,10 +8419,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
-
-  /lodash.clonedeep@4.5.0:
-    resolution: {integrity: sha512-H5ZhCF25riFd9uB5UCkVKo61m3S/xZk1x4wA6yp/L3RFP6Z/eHH1ymQcGLo7J3GMPfm0V/7m1tryHuGVxpqEBQ==}
-    dev: true
 
   /lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
@@ -13014,7 +13009,6 @@ packages:
 
   /workbox-google-analytics@7.0.0:
     resolution: {integrity: sha512-MEYM1JTn/qiC3DbpvP2BVhyIH+dV/5BjHk756u9VbwuAhu0QHyKscTnisQuz21lfRpOwiS9z4XdqeVAKol0bzg==}
-    deprecated: It is not compatible with newer versions of GA starting with v4, as long as you are using GAv3 it should be ok, but the package is not longer being maintained
     dependencies:
       workbox-background-sync: 7.0.0
       workbox-core: 7.0.0
