@@ -79,7 +79,7 @@ export function parseSearch(input: string) {
     '+,include:,包含:': (word) => {
       keywords.push(word);
     },
-    '!,！,-,exclude:排除:': (word) => {
+    '!,！,-,exclude:,排除:': (word) => {
       exclude.push(word);
     },
     'fansub:,字幕:,字幕组:': (word) => {
