@@ -283,8 +283,8 @@ importers:
         specifier: 0.0.34
         version: 0.0.34
       drizzle-orm:
-        specifier: ^0.30.8
-        version: 0.30.8(@cloudflare/workers-types@4.20240405.0)(@types/react@18.2.79)(postgres@3.4.4)(react@18.2.0)
+        specifier: ^0.30.9
+        version: 0.30.9(@cloudflare/workers-types@4.20240405.0)(@types/react@18.2.79)(postgres@3.4.4)(react@18.2.0)
       meilisearch:
         specifier: ^0.38.0
         version: 0.38.0
@@ -338,8 +338,8 @@ importers:
         specifier: ^16.4.5
         version: 16.4.5
       drizzle-orm:
-        specifier: ^0.30.8
-        version: 0.30.8(@cloudflare/workers-types@4.20240405.0)(@types/react@18.2.79)(postgres@3.4.4)(react@18.2.0)
+        specifier: ^0.30.9
+        version: 0.30.9(@cloudflare/workers-types@4.20240405.0)(@types/react@18.2.79)(postgres@3.4.4)(react@18.2.0)
       hono:
         specifier: ^4.2.7
         version: 4.2.7
@@ -3730,8 +3730,8 @@ packages:
     resolution: {integrity: sha512-mLVDS4nXmO09wFVlzGrdshWnAL+U9eQGC5zRs6hTN6Q9arwQGWU2XnZ17I8BM8Quau8CQRx3Ms6VPgRWJFVp7Q==}
     hasBin: true
 
-  drizzle-orm@0.30.8:
-    resolution: {integrity: sha512-9pBJA0IjnpPpzZ6s9jlS1CQAbKoBmbn2GJesPhXaVblAA/joOJ4AWWevYcqvLGj9SvThBAl7WscN8Zwgg5mnTw==}
+  drizzle-orm@0.30.9:
+    resolution: {integrity: sha512-VOiCFsexErmgqvNCOmbzmqDCZzZsHoz6SkWAjTFxsTr1AllKDbDJ2+GgedLXsXMDgpg/ljDG1zItIFeZtiO2LA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
@@ -11230,7 +11230,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.30.8(@cloudflare/workers-types@4.20240405.0)(@types/react@18.2.79)(postgres@3.4.4)(react@18.2.0):
+  drizzle-orm@0.30.9(@cloudflare/workers-types@4.20240405.0)(@types/react@18.2.79)(postgres@3.4.4)(react@18.2.0):
     optionalDependencies:
       '@cloudflare/workers-types': 4.20240405.0
       '@types/react': 18.2.79
