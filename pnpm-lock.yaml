@@ -323,8 +323,8 @@ importers:
         specifier: ^0.9.7
         version: 0.9.7
       '@hono/node-server':
-        specifier: ^1.11.0
-        version: 1.11.0
+        specifier: ^1.11.1
+        version: 1.11.1
       '@hono/zod-validator':
         specifier: ^0.2.1
         version: 0.2.1(hono@4.2.7)(zod@3.23.4)
@@ -1732,8 +1732,8 @@ packages:
   '@formkit/auto-animate@0.8.2':
     resolution: {integrity: sha512-SwPWfeRa5veb1hOIBMdzI+73te5puUBHmqqaF1Bu7FjvxlYSz/kJcZKSa9Cg60zL0uRNeJL2SbRxV6Jp6Q1nFQ==}
 
-  '@hono/node-server@1.11.0':
-    resolution: {integrity: sha512-TLIJq9TMtD1NEG1mVoqNUn1Ita0qSaB5XboZErjFBcO/GJYXwWY4dVdTi9G0lbxtu0x+hJXDItcLaFHb7rlFTw==}
+  '@hono/node-server@1.11.1':
+    resolution: {integrity: sha512-GW1Iomhmm1o4Z+X57xGby8A35Cu9UZLL7pSMdqDBkD99U5cywff8F+8hLk5aBTzNubnsFAvWQ/fZjNwPsEn9lA==}
     engines: {node: '>=18.14.1'}
 
   '@hono/zod-validator@0.2.1':
@@ -8659,7 +8659,7 @@ snapshots:
 
   '@formkit/auto-animate@0.8.2': {}
 
-  '@hono/node-server@1.11.0': {}
+  '@hono/node-server@1.11.1': {}
 
   '@hono/zod-validator@0.2.1(hono@4.2.7)(zod@3.23.4)':
     dependencies:
@@ -11172,7 +11172,7 @@ snapshots:
   drizzle-kit@0.20.17:
     dependencies:
       '@esbuild-kit/esm-loader': 2.6.5
-      '@hono/node-server': 1.11.0
+      '@hono/node-server': 1.11.1
       '@hono/zod-validator': 0.2.1(hono@4.2.7)(zod@3.23.4)
       camelcase: 7.0.1
       chalk: 5.3.0
