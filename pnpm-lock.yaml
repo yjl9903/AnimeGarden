@@ -141,8 +141,8 @@ importers:
         specifier: ^2.8.0
         version: 2.8.0(@types/react@18.3.0)(react@18.3.0)
       lucide-react:
-        specifier: ^0.374.0
-        version: 0.374.0(react@18.3.0)
+        specifier: ^0.375.0
+        version: 0.375.0(react@18.3.0)
       next-themes:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@18.3.0(react@18.3.0))(react@18.3.0)
@@ -4888,8 +4888,8 @@ packages:
     resolution: {integrity: sha512-qrNtq9faD5ycTM8Of7OUqPHPMv0H8NONf+dTAxUsAr0bAgPnD56BBhhBlskJVNL4WO+Dl/qmqWHF9eQb7+2lNA==}
     engines: {node: '>=12.20.0'}
 
-  lucide-react@0.374.0:
-    resolution: {integrity: sha512-3LAHdWe4sl2Qb1AfSxXKf08Tym7mxBoYeOo9KT7LXjM5WpnZ2fdj7GpZeYGwyNue6Gv4VYrl5pWgrF0MhkxS3A==}
+  lucide-react@0.375.0:
+    resolution: {integrity: sha512-gWEvd9d6f0XaOvQ0jOP541Q1Weec6X7mwcUU0uqoQ9PgMGAxBwolrWRLJoEOsJHWpfdCtDWTF3EHq/TCzRGyMw==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
 
@@ -12459,7 +12459,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  lucide-react@0.374.0(react@18.3.0):
+  lucide-react@0.375.0(react@18.3.0):
     dependencies:
       react: 18.3.0
 
