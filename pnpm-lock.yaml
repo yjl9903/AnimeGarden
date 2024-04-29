@@ -58,7 +58,7 @@ importers:
         version: 6.14.1
       vitest:
         specifier: ^1.5.2
-        version: 1.5.2(@types/node@20.12.7)
+        version: 1.5.2(@types/node@20.12.7)(terser@5.30.4)
       wrangler:
         specifier: ^3.52.0
         version: 3.52.0(@cloudflare/workers-types@4.20240423.0)(bufferutil@4.0.8)(utf-8-validate@5.0.10)
@@ -96,7 +96,7 @@ importers:
         specifier: ^0.9.7
         version: 0.9.7
       '@floating-ui/react':
-        specifier: ^0.26.12
+        specifier: ^0.26.13
         version: 0.26.13(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@formkit/auto-animate':
         specifier: ^0.8.2
@@ -15141,7 +15141,7 @@ snapshots:
     dependencies:
       global: 4.4.0
 
-  vite-node@1.5.2(@types/node@20.12.7):
+  vite-node@1.5.2(@types/node@20.12.7)(terser@5.30.4):
     dependencies:
       cac: 6.7.14
       debug: 4.3.4
@@ -15185,7 +15185,7 @@ snapshots:
     optionalDependencies:
       vite: 5.2.10(@types/node@20.12.7)(terser@5.30.4)
 
-  vitest@1.5.2(@types/node@20.12.7):
+  vitest@1.5.2(@types/node@20.12.7)(terser@5.30.4):
     dependencies:
       '@vitest/expect': 1.5.2
       '@vitest/runner': 1.5.2
@@ -15205,7 +15205,7 @@ snapshots:
       tinybench: 2.8.0
       tinypool: 0.8.4
       vite: 5.2.10(@types/node@20.12.7)(terser@5.30.4)
-      vite-node: 1.5.2(@types/node@20.12.7)
+      vite-node: 1.5.2(@types/node@20.12.7)(terser@5.30.4)
       why-is-node-running: 2.2.2
     optionalDependencies:
       '@types/node': 20.12.7
