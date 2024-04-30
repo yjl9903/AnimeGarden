@@ -217,8 +217,8 @@ importers:
         specifier: ^0.2.4
         version: 0.2.4
       '@vite-pwa/astro':
-        specifier: ^0.3.1
-        version: 0.3.1(@vite-pwa/assets-generator@0.2.4)(astro@4.7.0(@types/node@20.12.7)(terser@5.30.4)(typescript@5.4.5))(vite-plugin-pwa@0.19.8(@vite-pwa/assets-generator@0.2.4)(vite@5.2.10(@types/node@20.12.7)(terser@5.30.4))(workbox-build@7.1.0(@types/babel__core@7.20.5))(workbox-window@7.1.0))
+        specifier: ^0.4.0
+        version: 0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.7.0(@types/node@20.12.7)(terser@5.30.4)(typescript@5.4.5))(vite-plugin-pwa@0.19.8(@vite-pwa/assets-generator@0.2.4)(vite@5.2.10(@types/node@20.12.7)(terser@5.30.4))(workbox-build@7.1.0(@types/babel__core@7.20.5))(workbox-window@7.1.0))
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -2855,12 +2855,12 @@ packages:
     engines: {node: '>=16.14.0'}
     hasBin: true
 
-  '@vite-pwa/astro@0.3.1':
-    resolution: {integrity: sha512-rSzbYnNZU4L4QBzwO7HTDy06WbWnQ/PPOd0rzVTlOxYz/PPzbXXgnOvMY/4yNRCq7Lhc68sq2fRQ2JEAynmESw==}
+  '@vite-pwa/astro@0.4.0':
+    resolution: {integrity: sha512-Fw9XCZsS808TRQVCe5nSwiOHGbiUgyXPu8VQBPan7P52JnJpZOomHQsKGBeFGYcwE5RQC6DNXXDGXm9WgYtXuw==}
     peerDependencies:
       '@vite-pwa/assets-generator': ^0.2.4
       astro: ^1.6.0 || ^2.0.0 || ^3.0.0 || ^4.0.0
-      vite-plugin-pwa: '>=0.19.6 <1'
+      vite-plugin-pwa: '>=0.20.0 <1'
     peerDependenciesMeta:
       '@vite-pwa/assets-generator':
         optional: true
@@ -10123,7 +10123,7 @@ snapshots:
       sharp-ico: 0.1.5
       unconfig: 0.3.13
 
-  '@vite-pwa/astro@0.3.1(@vite-pwa/assets-generator@0.2.4)(astro@4.7.0(@types/node@20.12.7)(terser@5.30.4)(typescript@5.4.5))(vite-plugin-pwa@0.19.8(@vite-pwa/assets-generator@0.2.4)(vite@5.2.10(@types/node@20.12.7)(terser@5.30.4))(workbox-build@7.1.0(@types/babel__core@7.20.5))(workbox-window@7.1.0))':
+  '@vite-pwa/astro@0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.7.0(@types/node@20.12.7)(terser@5.30.4)(typescript@5.4.5))(vite-plugin-pwa@0.19.8(@vite-pwa/assets-generator@0.2.4)(vite@5.2.10(@types/node@20.12.7)(terser@5.30.4))(workbox-build@7.1.0(@types/babel__core@7.20.5))(workbox-window@7.1.0))':
     dependencies:
       astro: 4.7.0(@types/node@20.12.7)(terser@5.30.4)(typescript@5.4.5)
       vite-plugin-pwa: 0.19.8(@vite-pwa/assets-generator@0.2.4)(vite@5.2.10(@types/node@20.12.7)(terser@5.30.4))(workbox-build@7.1.0(@types/babel__core@7.20.5))(workbox-window@7.1.0)
