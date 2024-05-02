@@ -60,8 +60,8 @@ importers:
         specifier: ^1.5.3
         version: 1.5.3(@types/node@20.12.8)(terser@5.30.4)
       wrangler:
-        specifier: ^3.53.0
-        version: 3.53.0(@cloudflare/workers-types@4.20240423.0)(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+        specifier: ^3.53.1
+        version: 3.53.1(@cloudflare/workers-types@4.20240423.0)(bufferutil@4.0.8)(utf-8-validate@5.0.10)
 
   packages/animegarden:
     dependencies:
@@ -7314,8 +7314,8 @@ packages:
       '@cloudflare/workers-types':
         optional: true
 
-  wrangler@3.53.0:
-    resolution: {integrity: sha512-JxkvCQekL9j8Mu4CEKM/HEVyDnymWzKQuMUuJH0yum1AilutD5HAP9kVVYmvu7BvwlRyRUAj8TI5OUxXnLCEpQ==}
+  wrangler@3.53.1:
+    resolution: {integrity: sha512-bdMRQdHYdvowIwOhEMFkARIZUh56aDw7HLUZ/2JreBjj760osXE4Fc4L1TCkfRRBWgB6/LKF5LA4OcvORMYmHg==}
     engines: {node: '>=16.17.0'}
     hasBin: true
     peerDependencies:
@@ -15485,7 +15485,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  wrangler@3.53.0(@cloudflare/workers-types@4.20240423.0)(bufferutil@4.0.8)(utf-8-validate@5.0.10):
+  wrangler@3.53.1(@cloudflare/workers-types@4.20240423.0)(bufferutil@4.0.8)(utf-8-validate@5.0.10):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.2
       '@esbuild-plugins/node-globals-polyfill': 0.2.3(esbuild@0.17.19)
