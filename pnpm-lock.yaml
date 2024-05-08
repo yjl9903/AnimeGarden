@@ -327,7 +327,7 @@ importers:
         version: 1.11.1
       '@hono/zod-validator':
         specifier: ^0.2.1
-        version: 0.2.1(hono@4.3.2)(zod@3.23.7)
+        version: 0.2.1(hono@4.3.3)(zod@3.23.7)
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -341,8 +341,8 @@ importers:
         specifier: ^0.30.10
         version: 0.30.10(@cloudflare/workers-types@4.20240502.0)(@types/react@18.3.1)(postgres@3.4.4)(react@18.3.1)
       hono:
-        specifier: ^4.3.2
-        version: 4.3.2
+        specifier: ^4.3.3
+        version: 4.3.3
       ioredis:
         specifier: ^5.4.1
         version: 5.4.1
@@ -377,8 +377,8 @@ importers:
         specifier: ^0.0.49
         version: 0.0.49
       hono:
-        specifier: ^4.3.2
-        version: 4.3.2
+        specifier: ^4.3.3
+        version: 4.3.3
       memofunc:
         specifier: ^0.1.6
         version: 0.1.6
@@ -4356,8 +4356,8 @@ packages:
   highlight.js@10.7.3:
     resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
 
-  hono@4.3.2:
-    resolution: {integrity: sha512-wiZcF5N06tc232U11DnqW6hP8DNoypjsrxslKXfvOqOAkTdh7K1HLZJH/92Mf+urxUTGi96f1w4xx/1Qozoqiw==}
+  hono@4.3.3:
+    resolution: {integrity: sha512-LDa1n/aLYK4CsZQyjQpFiaQgxiXCZp0WfcfliinQOH1Lqt4mIOvyw4qjmHihpKXsuXhkQHfHU2Erysp6oEdnVA==}
     engines: {node: '>=16.0.0'}
 
   hookable@5.5.3:
@@ -8590,9 +8590,9 @@ snapshots:
 
   '@hono/node-server@1.11.1': {}
 
-  '@hono/zod-validator@0.2.1(hono@4.3.2)(zod@3.23.7)':
+  '@hono/zod-validator@0.2.1(hono@4.3.3)(zod@3.23.7)':
     dependencies:
-      hono: 4.3.2
+      hono: 4.3.3
       zod: 3.23.7
 
   '@iconify-json/ant-design@1.1.16':
@@ -11117,7 +11117,7 @@ snapshots:
     dependencies:
       '@esbuild-kit/esm-loader': 2.6.5
       '@hono/node-server': 1.11.1
-      '@hono/zod-validator': 0.2.1(hono@4.3.2)(zod@3.23.7)
+      '@hono/zod-validator': 0.2.1(hono@4.3.3)(zod@3.23.7)
       camelcase: 7.0.1
       chalk: 5.3.0
       commander: 9.5.0
@@ -11126,7 +11126,7 @@ snapshots:
       esbuild-register: 3.5.0(esbuild@0.19.12)
       glob: 8.1.0
       hanji: 0.0.5
-      hono: 4.3.2
+      hono: 4.3.3
       json-diff: 0.9.0
       minimatch: 7.4.6
       semver: 7.6.0
@@ -11902,7 +11902,7 @@ snapshots:
 
   highlight.js@10.7.3: {}
 
-  hono@4.3.2: {}
+  hono@4.3.3: {}
 
   hookable@5.5.3: {}
 
