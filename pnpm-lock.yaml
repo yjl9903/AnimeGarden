@@ -69,8 +69,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0
       zod:
-        specifier: ^3.23.6
-        version: 3.23.6
+        specifier: ^3.23.7
+        version: 3.23.7
 
   packages/app:
     dependencies:
@@ -177,8 +177,8 @@ importers:
         specifier: ^2.2.1
         version: 2.2.1
       zod:
-        specifier: ^3.23.6
-        version: 3.23.6
+        specifier: ^3.23.7
+        version: 3.23.7
     devDependencies:
       '@iconify-json/ant-design':
         specifier: ^1.1.16
@@ -271,8 +271,8 @@ importers:
         specifier: ^6.16.0
         version: 6.16.0
       zod:
-        specifier: ^3.23.6
-        version: 3.23.6
+        specifier: ^3.23.7
+        version: 3.23.7
 
   packages/database:
     dependencies:
@@ -308,8 +308,8 @@ importers:
         specifier: 1.0.0-rc.12
         version: 1.0.0-rc.12
       zod:
-        specifier: ^3.23.6
-        version: 3.23.6
+        specifier: ^3.23.7
+        version: 3.23.7
 
   packages/server:
     dependencies:
@@ -327,7 +327,7 @@ importers:
         version: 1.11.1
       '@hono/zod-validator':
         specifier: ^0.2.1
-        version: 0.2.1(hono@4.3.2)(zod@3.23.6)
+        version: 0.2.1(hono@4.3.2)(zod@3.23.7)
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -359,8 +359,8 @@ importers:
         specifier: ^1.10.2
         version: 1.10.2(ioredis@5.4.1)
       zod:
-        specifier: ^3.23.6
-        version: 3.23.6
+        specifier: ^3.23.7
+        version: 3.23.7
 
   packages/worker:
     dependencies:
@@ -7335,8 +7335,8 @@ packages:
     peerDependencies:
       zod: ^3.23.3
 
-  zod@3.23.6:
-    resolution: {integrity: sha512-RTHJlZhsRbuA8Hmp/iNL7jnfc4nZishjsanDAfEY1QpDQZCahUp3xDzl+zfweE9BklxMUcgBgS1b7Lvie/ZVwA==}
+  zod@3.23.7:
+    resolution: {integrity: sha512-NBeIoqbtOiUMomACV/y+V3Qfs9+Okr18vR5c/5pHClPpufWOrsx8TENboDPe265lFdfewX2yBtNTLPvnmCxwog==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -7445,7 +7445,7 @@ snapshots:
     dependencies:
       sitemap: 7.1.1
       stream-replace-string: 2.0.0
-      zod: 3.23.6
+      zod: 3.23.7
 
   '@astrojs/tailwind@5.1.0(astro@4.7.1(@types/node@20.12.10)(terser@5.31.0)(typescript@5.4.5))(tailwindcss@3.4.3)':
     dependencies:
@@ -8590,10 +8590,10 @@ snapshots:
 
   '@hono/node-server@1.11.1': {}
 
-  '@hono/zod-validator@0.2.1(hono@4.3.2)(zod@3.23.6)':
+  '@hono/zod-validator@0.2.1(hono@4.3.2)(zod@3.23.7)':
     dependencies:
       hono: 4.3.2
-      zod: 3.23.6
+      zod: 3.23.7
 
   '@iconify-json/ant-design@1.1.16':
     dependencies:
@@ -10216,7 +10216,7 @@ snapshots:
   astro-robots-txt@1.0.0:
     dependencies:
       valid-filename: 4.0.0
-      zod: 3.23.6
+      zod: 3.23.7
 
   astro@4.7.1(@types/node@20.12.10)(terser@5.31.0)(typescript@5.4.5):
     dependencies:
@@ -10281,8 +10281,8 @@ snapshots:
       vitefu: 0.2.5(vite@5.2.11(@types/node@20.12.10)(terser@5.31.0))
       which-pm: 2.1.1
       yargs-parser: 21.1.1
-      zod: 3.23.6
-      zod-to-json-schema: 3.23.0(zod@3.23.6)
+      zod: 3.23.7
+      zod-to-json-schema: 3.23.0(zod@3.23.7)
     optionalDependencies:
       sharp: 0.33.3
     transitivePeerDependencies:
@@ -11117,7 +11117,7 @@ snapshots:
     dependencies:
       '@esbuild-kit/esm-loader': 2.6.5
       '@hono/node-server': 1.11.1
-      '@hono/zod-validator': 0.2.1(hono@4.3.2)(zod@3.23.6)
+      '@hono/zod-validator': 0.2.1(hono@4.3.2)(zod@3.23.7)
       camelcase: 7.0.1
       chalk: 5.3.0
       commander: 9.5.0
@@ -11131,7 +11131,7 @@ snapshots:
       minimatch: 7.4.6
       semver: 7.6.0
       superjson: 2.2.1
-      zod: 3.23.6
+      zod: 3.23.7
     transitivePeerDependencies:
       - supports-color
 
@@ -12787,7 +12787,7 @@ snapshots:
       workerd: 1.20240419.0
       ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       youch: 3.3.3
-      zod: 3.23.6
+      zod: 3.23.7
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -15403,10 +15403,10 @@ snapshots:
 
   zenscroll@4.0.2: {}
 
-  zod-to-json-schema@3.23.0(zod@3.23.6):
+  zod-to-json-schema@3.23.0(zod@3.23.7):
     dependencies:
-      zod: 3.23.6
+      zod: 3.23.7
 
-  zod@3.23.6: {}
+  zod@3.23.7: {}
 
   zwitch@2.0.4: {}
