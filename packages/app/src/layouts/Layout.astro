@@ -220,8 +220,10 @@ function followSearch(params: Record<string, string>) {
       </div>
       <div font-sm text-base-400>
         <span class="mr1 text-sm i-custom-zeabur op-80"></span>
-        Hosted on&nbsp;<a class="text-link-active" href="https://zeabur.com?referralCode=yjl9903" target="_blank"
-          >Zeabur</a
+        Hosted on&nbsp;<a
+          class="text-link-active"
+          href="https://zeabur.com?referralCode=yjl9903"
+          target="_blank">Zeabur</a
         >
       </div>
     </footer>
@@ -261,20 +263,20 @@ function followSearch(params: Record<string, string>) {
       html {
         background-color: var(--color-bg-primary);
 
-        --at-apply: font-sans;
+        @apply: font-sans;
       }
 
       code {
-        --at-apply: font-mono;
+        @apply: font-mono;
       }
 
       .main {
         /* prettier-ignore */
-        --at-apply: mx-auto lg:w-[80vw] md:w-[46rem] lt-md:w-[95vw];
+        @apply: mx-auto lg:w-[80vw] md:w-[46rem] lt-md:w-[95vw];
       }
 
       .main-menu {
-        --at-apply: bottom-16 left-[92vw] lt-md: left-[82vw];
+        @apply: bottom-16 left-[92vw] lt-md: left-[82vw];
       }
 
       .text-gradient {
@@ -287,12 +289,12 @@ function followSearch(params: Record<string, string>) {
 
       .text-link {
         /* prettier-ignore */
-        --at-apply: text-sky-700 hover:text-sky-500;
+        @apply: text-sky-700 hover:text-sky-500;
       }
 
       .text-link-active {
         /* prettier-ignore */
-        --at-apply: hover:text-sky-600;
+        @apply: hover:text-sky-600;
       }
 
       .hide-scrollbar {
@@ -306,13 +308,13 @@ function followSearch(params: Record<string, string>) {
 
       /* Header style */
       .header-item {
-        --at-apply: py2 border-b border-b-3 border-transparent w-max;
+        @apply: py2 border-b border-b-3 border-transparent w-max;
         /* prettier-ignore */
-        --at-apply: hover:text-base-800 hover:border-dark-700;
+        @apply: hover:text-base-800 hover:border-dark-700;
       }
 
       .header-item[x-active] {
-        --at-apply: border-orange-500;
+        @apply: border-orange-500;
       }
 
       .animegarden-toaster [data-sonner-toast] [data-title] {
@@ -320,7 +322,7 @@ function followSearch(params: Record<string, string>) {
       }
 
       .animegarden-toaster [data-sonner-toast] [data-description] {
-        --at-apply: mt-1 mb-1;
+        @apply: mt-1 mb-1;
       }
 
       .animegarden-toaster [data-sonner-toast][data-styled='true'] {

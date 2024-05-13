@@ -111,7 +111,7 @@ const { ok, resources, timestamp } = await fetchResources(
   #weekday-5:checked ~ .weekday-select > label:nth-child(5),
   #weekday-6:checked ~ .weekday-select > label:nth-child(6),
   #weekday-7:checked ~ .weekday-select > label:nth-child(7) {
-    --at-apply: rounded-md bg-light-200;
+    @apply: rounded-md bg-light-200;
   }
 
   #weekday-1:checked ~ .weekday-content > #weekday-content-1 {
