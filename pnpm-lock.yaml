@@ -159,8 +159,8 @@ importers:
         specifier: ^1.4.41
         version: 1.4.41(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       swagger-ui-react:
-        specifier: ^5.17.7
-        version: 5.17.7(@types/react@18.3.2)(ramda@0.30.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.17.9
+        version: 5.17.9(@types/react@18.3.2)(ramda@0.30.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       swr:
         specifier: ^2.2.5
         version: 2.2.5(react@18.3.1)
@@ -6576,11 +6576,11 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  swagger-client@3.27.8:
-    resolution: {integrity: sha512-2wrqNHdMhgQzBM4xjxNDPvinysQ1lc9wHqMJ/HyllyzRyEKL96KyEfP8laI8G1gGbO/vmdtTDEXPFDHp1RrOHQ==}
+  swagger-client@3.27.9:
+    resolution: {integrity: sha512-7F7PnwSyIs+wBsX1rVkKDHXqwgVIX9aIl5O84eBcXEXLcrnndGS4C3n0Mk37+ZpJZN5uqv8MQKN6nQzhjsn6hQ==}
 
-  swagger-ui-react@5.17.7:
-    resolution: {integrity: sha512-9pO9Z307dAdcYrkGpllQQPRIFHSSZcmWBUYdEdGDB8o13zZijONyMR5EVfiD/zOss4sAFIBz+cgmRnPIQh+o4w==}
+  swagger-ui-react@5.17.9:
+    resolution: {integrity: sha512-mrGAr6NSaYRkDYOh8UcCvQgtKJJY/OvpbKSUkNdwGI6YG3x5nU72Y5/55qFLgvKyyT9gGwvaPzi3nTQV8ZSP+g==}
     peerDependencies:
       react: '>=16.8.0 <19'
       react-dom: '>=16.8.0 <19'
@@ -14484,7 +14484,7 @@ snapshots:
       csso: 5.0.5
       picocolors: 1.0.0
 
-  swagger-client@3.27.8(ramda@0.30.0):
+  swagger-client@3.27.9(ramda@0.30.0):
     dependencies:
       '@babel/runtime-corejs3': 7.24.5
       '@swagger-api/apidom-core': 0.99.2
@@ -14507,7 +14507,7 @@ snapshots:
       - debug
       - ramda
 
-  swagger-ui-react@5.17.7(@types/react@18.3.2)(ramda@0.30.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  swagger-ui-react@5.17.9(@types/react@18.3.2)(ramda@0.30.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime-corejs3': 7.24.5
       '@braintree/sanitize-url': 7.0.1
@@ -14539,7 +14539,7 @@ snapshots:
       reselect: 5.1.0
       serialize-error: 8.1.0
       sha.js: 2.4.11
-      swagger-client: 3.27.8(ramda@0.30.0)
+      swagger-client: 3.27.9(ramda@0.30.0)
       url-parse: 1.5.10
       xml: 1.0.1
       xml-but-prettier: 1.0.1
