@@ -58,7 +58,7 @@ importers:
         version: 6.16.1
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.12.11)
+        version: 1.6.0(@types/node@20.12.11)(terser@5.31.0)
       wrangler:
         specifier: ^3.55.0
         version: 3.55.0(@cloudflare/workers-types@4.20240502.0)(bufferutil@4.0.8)(utf-8-validate@5.0.10)
@@ -341,7 +341,7 @@ importers:
         specifier: ^0.30.10
         version: 0.30.10(@cloudflare/workers-types@4.20240502.0)(@types/react@18.3.2)(postgres@3.4.4)(react@18.3.1)
       hono:
-        specifier: ^4.3.4
+        specifier: ^4.3.6
         version: 4.3.6
       ioredis:
         specifier: ^5.4.1
@@ -377,7 +377,7 @@ importers:
         specifier: ^0.0.49
         version: 0.0.49
       hono:
-        specifier: ^4.3.4
+        specifier: ^4.3.6
         version: 4.3.6
       memofunc:
         specifier: ^0.1.6
@@ -15248,7 +15248,7 @@ snapshots:
     dependencies:
       global: 4.4.0
 
-  vite-node@1.6.0(@types/node@20.12.11):
+  vite-node@1.6.0(@types/node@20.12.11)(terser@5.31.0):
     dependencies:
       cac: 6.7.14
       debug: 4.3.4
@@ -15292,7 +15292,7 @@ snapshots:
     optionalDependencies:
       vite: 5.2.11(@types/node@20.12.11)(terser@5.31.0)
 
-  vitest@1.6.0(@types/node@20.12.11):
+  vitest@1.6.0(@types/node@20.12.11)(terser@5.31.0):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
@@ -15312,7 +15312,7 @@ snapshots:
       tinybench: 2.8.0
       tinypool: 0.8.4
       vite: 5.2.11(@types/node@20.12.11)(terser@5.31.0)
-      vite-node: 1.6.0(@types/node@20.12.11)
+      vite-node: 1.6.0(@types/node@20.12.11)(terser@5.31.0)
       why-is-node-running: 2.2.2
     optionalDependencies:
       '@types/node': 20.12.11
