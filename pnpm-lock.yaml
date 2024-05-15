@@ -159,8 +159,8 @@ importers:
         specifier: ^1.4.41
         version: 1.4.41(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       swagger-ui-react:
-        specifier: ^5.17.9
-        version: 5.17.9(@types/react@18.3.2)(ramda@0.30.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^5.17.10
+        version: 5.17.10(@types/react@18.3.2)(ramda@0.30.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       swr:
         specifier: ^2.2.5
         version: 2.2.5(react@18.3.1)
@@ -6620,8 +6620,8 @@ packages:
   swagger-client@3.27.9:
     resolution: {integrity: sha512-7F7PnwSyIs+wBsX1rVkKDHXqwgVIX9aIl5O84eBcXEXLcrnndGS4C3n0Mk37+ZpJZN5uqv8MQKN6nQzhjsn6hQ==}
 
-  swagger-ui-react@5.17.9:
-    resolution: {integrity: sha512-mrGAr6NSaYRkDYOh8UcCvQgtKJJY/OvpbKSUkNdwGI6YG3x5nU72Y5/55qFLgvKyyT9gGwvaPzi3nTQV8ZSP+g==}
+  swagger-ui-react@5.17.10:
+    resolution: {integrity: sha512-KQH0d3AB256RKCpOA7Zkc2cYIFLIt3nFGJSKIgAkI4PXxlFmru504GNDH0PgWFbitROS9TCki94yZs1a+sJ0Lg==}
     peerDependencies:
       react: '>=16.8.0 <19'
       react-dom: '>=16.8.0 <19'
@@ -14603,7 +14603,7 @@ snapshots:
       - debug
       - ramda
 
-  swagger-ui-react@5.17.9(@types/react@18.3.2)(ramda@0.30.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  swagger-ui-react@5.17.10(@types/react@18.3.2)(ramda@0.30.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime-corejs3': 7.24.5
       '@braintree/sanitize-url': 7.0.1
