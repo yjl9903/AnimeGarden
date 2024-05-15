@@ -286,8 +286,8 @@ importers:
         specifier: ^0.30.10
         version: 0.30.10(@cloudflare/workers-types@4.20240512.0)(@types/react@18.3.2)(postgres@3.4.4)(react@18.3.1)
       meilisearch:
-        specifier: ^0.39.0
-        version: 0.39.0
+        specifier: ^0.40.0
+        version: 0.40.0
       postgres:
         specifier: ^3.4.4
         version: 3.4.4
@@ -5112,8 +5112,8 @@ packages:
   mdn-data@2.0.30:
     resolution: {integrity: sha512-GaqWWShW4kv/G9IEucWScBx9G1/vsFZZJUO+tD26M8J8z3Kw5RDQjaoZe03YAClgeS/SWPOcb4nkFBTEi5DUEA==}
 
-  meilisearch@0.39.0:
-    resolution: {integrity: sha512-nNf/HOqQ/wSxaSYKyIsE8thMPciLyIpEDIp0ZbJxkOZ/tETDNfaBNbY+Eq/wbTR9O769QSiQFf5OhssfGyOzbA==}
+  meilisearch@0.40.0:
+    resolution: {integrity: sha512-BoRhQMr2mBFLEeCfsvPluksGb01IaOiWvV3Deu3iEY+yYJ4jdGTu+IQi5FCjKlNQ7/TMWSN2XUToSgvH1tj0BQ==}
 
   memofunc@0.1.6:
     resolution: {integrity: sha512-j6Xc8pP96VNd0VRdaZKYPM8ft3C6jed9HlRxWeJxW04NYFYXDV0RvC0JUdgCowbLIYJuEcNFwkJoyz/4fRQ0ig==}
@@ -12840,7 +12840,7 @@ snapshots:
 
   mdn-data@2.0.30: {}
 
-  meilisearch@0.39.0:
+  meilisearch@0.40.0:
     dependencies:
       cross-fetch: 3.1.8
     transitivePeerDependencies:
