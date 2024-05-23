@@ -138,8 +138,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(@types/react-dom@18.3.0)(@types/react@18.3.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       jotai:
-        specifier: ^2.8.0
-        version: 2.8.0(@types/react@18.3.2)(react@18.3.1)
+        specifier: ^2.8.1
+        version: 2.8.1(@types/react@18.3.2)(react@18.3.1)
       lucide-react:
         specifier: ^0.378.0
         version: 0.378.0(react@18.3.1)
@@ -4855,8 +4855,8 @@ packages:
   join-async-iterator@1.1.1:
     resolution: {integrity: sha512-ATse+nuNeKZ9K1y27LKdvPe/GCe9R/u9dw9vI248e+vILeRK3IcJP4JUPAlSmKRCDK0cKhEwfmiw4Skqx7UnGQ==}
 
-  jotai@2.8.0:
-    resolution: {integrity: sha512-yZNMC36FdLOksOr8qga0yLf14miCJlEThlp5DeFJNnqzm2+ZG7wLcJzoOyij5K6U6Xlc5ljQqPDlJRgqW0Y18g==}
+  jotai@2.8.1:
+    resolution: {integrity: sha512-Gmk5Y3yJL/vN5S0rQ6AaWpXH5Q+HBGHThMHXfylVzXGVuO8YxPRtZf8Y9XYvl+h7ZMQXoHNdFi37vNsJFsiszQ==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@types/react': '>=17.0.0'
@@ -12508,7 +12508,7 @@ snapshots:
 
   join-async-iterator@1.1.1: {}
 
-  jotai@2.8.0(@types/react@18.3.2)(react@18.3.1):
+  jotai@2.8.1(@types/react@18.3.2)(react@18.3.1):
     optionalDependencies:
       '@types/react': 18.3.2
       react: 18.3.1
