@@ -61,7 +61,7 @@ importers:
         version: 1.6.0(@types/node@20.12.12)(terser@5.31.0)
       wrangler:
         specifier: ^3.57.1
-        version: 3.57.1(@cloudflare/workers-types@4.20240512.0)(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+        version: 3.57.1(@cloudflare/workers-types@4.20240512.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
 
   packages/animegarden:
     dependencies:
@@ -76,7 +76,7 @@ importers:
     dependencies:
       '@astrojs/cloudflare':
         specifier: ^10.2.6
-        version: 10.2.6(astro@4.8.7(@types/node@20.12.12)(terser@5.31.0)(typescript@5.4.5))(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+        version: 10.2.6(astro@4.8.7(@types/node@20.12.12)(terser@5.31.0)(typescript@5.4.5))(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       '@astrojs/node':
         specifier: ^8.2.5
         version: 8.2.5(astro@4.8.7(@types/node@20.12.12)(terser@5.31.0)(typescript@5.4.5))
@@ -174,8 +174,8 @@ importers:
         specifier: ^8.12.0
         version: 8.12.0
       webtorrent:
-        specifier: ^2.2.1
-        version: 2.2.1
+        specifier: ^2.2.2
+        version: 2.2.2
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -2795,6 +2795,9 @@ packages:
   '@thaunknown/idb-chunk-store@1.0.2':
     resolution: {integrity: sha512-UdKshbKdHDP+p0XPdv55QiU/scdB9TzvovGFSgXThf+7Yd3noLeYp6KpkYyc1jzUXvI3/8+TemPeASOimrOXvw==}
 
+  '@thaunknown/simple-peer@10.0.6':
+    resolution: {integrity: sha512-AzDzCUeG9pX1/8UByQMxbpDwvEbL4jwkiYtaO914hRAwgtYpBPyBl8PrjwYXRtFvxO3+iDuxWiy2y2NJVd0XHw==}
+
   '@thaunknown/simple-peer@9.12.1':
     resolution: {integrity: sha512-IS5BXvXx7cvBAzaxqotJf4s4rJCPk5JABLK6Gbnn7oAmWVcH4hYABabBBrvvJtv/xyUqR4v/H3LalnGRJJfEog==}
 
@@ -3307,9 +3310,9 @@ packages:
     resolution: {integrity: sha512-8ehCNnnRpxB6wrqDzYdLY6Bx0k1ZcXwHmxfVsU9xljolgfd4jhUq9gKcbnnUj4yR8I5/qHJ5fYVoGIfrmUlAAQ==}
     engines: {node: '>=12.20.0'}
 
-  bittorrent-tracker@11.0.2:
-    resolution: {integrity: sha512-MUv1zqWd1OZKPkgncj9JkpumhtF2Q+xeHptz8rJz+APK5/ZIAOIiHyLqDmoDL06JMa1iHPmeOlJG8I5Hi1UIbw==}
-    engines: {node: '>=12.20.0'}
+  bittorrent-tracker@11.1.0:
+    resolution: {integrity: sha512-WKIIy1wVxFiKro5noDldW8W4C4xCjl8gHvZcG0LWM40J6VZOf7gXdrdB2/GI55+JAgrph8NGsZUeusbyzlbiQQ==}
+    engines: {node: '>=16.0.0'}
     hasBin: true
 
   bl@4.1.0:
@@ -4646,6 +4649,9 @@ packages:
   ip@1.1.9:
     resolution: {integrity: sha512-cyRxvOEpNHNtchU3Ln9KC/auJgup87llfQpQ+t5ghoC/UhL16SWzbueiCsdTnWmqAWl7LadfuwhlqmtOaqMHdQ==}
 
+  ip@2.0.1:
+    resolution: {integrity: sha512-lJUL9imLTNi1ZfXT+DU6rBBdbiKGBuay9B6xGSPVjUeQwaH1RIGqef8RZkUtHioLmSNpPR5M4HVKJGm1j8FWVQ==}
+
   ipaddr.js@2.2.0:
     resolution: {integrity: sha512-Ag3wB2o37wslZS19hZqorUnrnzSkpOVy+IiiDEiTqNubEYpYuHWIf6K4psgN2ZWKExS4xhVCrRVfb/wfW8fWJA==}
     engines: {node: '>= 10'}
@@ -5410,9 +5416,17 @@ packages:
     resolution: {integrity: sha512-mNcltoe1R8o7STTegSOHdnJNN7s5EUvhoS7ShnTHDyOSd+8H+UdWODq6qSv67PjC8Zc5JRT8+oLAMCr0SIXw7g==}
     engines: {node: ^16 || ^18 || >= 20}
 
+  node-datachannel@0.9.1:
+    resolution: {integrity: sha512-b6Uc6YN5We2/aZA6QGicxSdWUDSwlR+vcO/Dn44BY5gieF3AOwsL/zPD+Ril+1KvYDwVJkVbRIovbG76E4PpwA==}
+    engines: {node: '>=16.0.0'}
+
   node-domexception@1.0.0:
     resolution: {integrity: sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==}
     engines: {node: '>=10.5.0'}
+
+  node-domexception@2.0.1:
+    resolution: {integrity: sha512-M85rnSC7WQ7wnfQTARPT4LrK7nwCHLdDFOCcItZMhTQjyCebJH8GciKqYJNgaOFZs9nFmTmd/VMyi3OW5jA47w==}
+    engines: {node: '>=16'}
 
   node-fetch-commonjs@3.3.2:
     resolution: {integrity: sha512-VBlAiynj3VMLrotgwOS3OyECFxas5y7ltLcK4t41lMUZeaK15Ym4QRkqN0EQKAFL42q9i21EPKjzLUPfltR72A==}
@@ -6747,9 +6761,9 @@ packages:
     resolution: {integrity: sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==}
     engines: {node: '>=0.6'}
 
-  torrent-discovery@11.0.2:
-    resolution: {integrity: sha512-oDpBMfSsrIGAM4TzZFMwdyFqD2GLFSZXw/IHojB8TpVPqrwXO3hOpfLqM5MOVEtr43+pTGLjULXLFihrh06X7A==}
-    engines: {node: '>=12.20.0'}
+  torrent-discovery@11.0.4:
+    resolution: {integrity: sha512-cV8jWLkdXeYBRvy5Z7j9g85rN4+IBMejN25aV7GA9ANpTxF5BMU5CH8XZZb9n2+8RR4ihcgqDbpGoa6CDfoUsg==}
+    engines: {node: '>=16.0.0'}
 
   torrent-piece@3.0.0:
     resolution: {integrity: sha512-j0tRX7qq22nIuVFF57Tg/wAvFq79F1eM9pcMxY+b0qCCe7yXJnIrqF+Q5YEJ94tNisDnJzcqDHNrPmD9X/yAIg==}
@@ -7191,8 +7205,8 @@ packages:
     resolution: {integrity: sha512-isVTbp2TKGoMOu+4Zh/i6ijpYr0VG83xjRPgCXaUjKzgXXndjCMWg32/9kZjubD+kxEXcmXMkoS8IttS9FZE8g==}
     engines: {node: '>=12.20.0'}
 
-  utf-8-validate@5.0.10:
-    resolution: {integrity: sha512-Z6czzLq4u8fPOyx7TU6X3dvUZVvoJmxSQ+IcrlmagKhilxlhZgxPK6C5Jqbkw1IDUmFTM+cz9QDnnLTwDz/2gQ==}
+  utf-8-validate@6.0.4:
+    resolution: {integrity: sha512-xu9GQDeFp+eZ6LnCywXN/zBancWvOpUMzgjLPSjy4BRHSmTelvn2E0DG0o1sTiw5hkCKBHo8rwSKncfRfv2EEQ==}
     engines: {node: '>=6.14.2'}
 
   util-deprecate@1.0.2:
@@ -7338,8 +7352,12 @@ packages:
   webpack-virtual-modules@0.6.1:
     resolution: {integrity: sha512-poXpCylU7ExuvZK8z+On3kX+S8o/2dQ/SVYueKA0D4WEMXROXgY8Ez50/bQEUmvoSMMrWcrJqCHuhAbsiwg7Dg==}
 
-  webtorrent@2.2.1:
-    resolution: {integrity: sha512-dK9AI0kKHl6VrSCzCSdy8EUqNrjsIHfLCcMsObMZe9mEsetJYuLsA8ZI6exxwpbyiOlsa920TNYNbSqP0/v/6w==}
+  webrtc-polyfill@1.1.5:
+    resolution: {integrity: sha512-EAoH5QGCPxQjz5MOsT+/w3OENnceD4wJQZRlqC/muxX34muwD0LjlcaIPLdhLwuoSYJR4M7rlbTNdm48/s7Obg==}
+    engines: {node: '>=16.0.0'}
+
+  webtorrent@2.2.2:
+    resolution: {integrity: sha512-JlrEEjZsN91CH0bsDcEYb6u2tvFB6lt3YCdNgH5xOn0ctxqHmTTJ2Qf2iQjxjsSXMybcmv1CKMngu4iceCFKSQ==}
     engines: {node: '>=14'}
 
   whatwg-url@5.0.0:
@@ -7570,7 +7588,7 @@ snapshots:
       jsonpointer: 5.0.1
       leven: 3.1.0
 
-  '@astrojs/cloudflare@10.2.6(astro@4.8.7(@types/node@20.12.12)(terser@5.31.0)(typescript@5.4.5))(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@astrojs/cloudflare@10.2.6(astro@4.8.7(@types/node@20.12.12)(terser@5.31.0)(typescript@5.4.5))(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
     dependencies:
       '@astrojs/internal-helpers': 0.3.0
       '@astrojs/underscore-redirects': 0.3.3
@@ -7579,9 +7597,9 @@ snapshots:
       esbuild: 0.19.12
       estree-walker: 3.0.3
       magic-string: 0.30.10
-      miniflare: 3.20240419.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      miniflare: 3.20240419.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       tiny-glob: 0.2.9
-      wrangler: 3.55.0(@cloudflare/workers-types@4.20240502.0)(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      wrangler: 3.55.0(@cloudflare/workers-types@4.20240502.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -9998,6 +10016,16 @@ snapshots:
       idb: 6.1.5
       queue-microtask: 1.2.3
 
+  '@thaunknown/simple-peer@10.0.6':
+    dependencies:
+      debug: 4.3.4
+      err-code: 3.0.1
+      streamx: 2.16.1
+      uint8-util: 2.2.5
+      webrtc-polyfill: 1.1.5
+    transitivePeerDependencies:
+      - supports-color
+
   '@thaunknown/simple-peer@9.12.1':
     dependencies:
       debug: 4.3.4
@@ -10009,13 +10037,13 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@thaunknown/simple-websocket@9.1.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@thaunknown/simple-websocket@9.1.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
     dependencies:
       debug: 4.3.4
       queue-microtask: 1.2.3
       streamx: 2.16.1
       uint8-util: 2.2.5
-      ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -10750,10 +10778,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  bittorrent-tracker@11.0.2:
+  bittorrent-tracker@11.1.0:
     dependencies:
-      '@thaunknown/simple-peer': 9.12.1
-      '@thaunknown/simple-websocket': 9.1.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@thaunknown/simple-peer': 10.0.6
+      '@thaunknown/simple-websocket': 9.1.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       bencode: 4.0.0
       bittorrent-peerid: 1.3.6
       chrome-dgram: 3.0.6
@@ -10761,7 +10789,7 @@ snapshots:
       compact2string: 1.4.1
       cross-fetch-ponyfill: 1.0.3
       debug: 4.3.4
-      ip: 1.1.9
+      ip: 2.0.1
       lru: 3.1.0
       minimist: 1.2.8
       once: 1.4.0
@@ -10773,10 +10801,10 @@ snapshots:
       string2compact: 2.0.1
       uint8-util: 2.2.5
       unordered-array-remove: 1.0.2
-      ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
     optionalDependencies:
       bufferutil: 4.0.8
-      utf-8-validate: 5.0.10
+      utf-8-validate: 6.0.4
     transitivePeerDependencies:
       - supports-color
 
@@ -12339,6 +12367,8 @@ snapshots:
 
   ip@1.1.9: {}
 
+  ip@2.0.1: {}
+
   ipaddr.js@2.2.0: {}
 
   iron-webcrypto@1.2.1: {}
@@ -13096,7 +13126,7 @@ snapshots:
     dependencies:
       dom-walk: 0.1.2
 
-  miniflare@3.20240419.1(bufferutil@4.0.8)(utf-8-validate@5.0.10):
+  miniflare@3.20240419.1(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       acorn: 8.11.3
@@ -13107,7 +13137,7 @@ snapshots:
       stoppable: 1.1.0
       undici: 5.28.4
       workerd: 1.20240419.0
-      ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       youch: 3.3.3
       zod: 3.23.8
     transitivePeerDependencies:
@@ -13115,7 +13145,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  miniflare@3.20240512.0(bufferutil@4.0.8)(utf-8-validate@5.0.10):
+  miniflare@3.20240512.0(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       acorn: 8.11.3
@@ -13126,7 +13156,7 @@ snapshots:
       stoppable: 1.1.0
       undici: 5.28.4
       workerd: 1.20240512.0
-      ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ws: 8.17.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       youch: 3.3.3
       zod: 3.23.8
     transitivePeerDependencies:
@@ -13263,7 +13293,14 @@ snapshots:
 
   node-addon-api@7.1.0: {}
 
+  node-datachannel@0.9.1:
+    dependencies:
+      node-domexception: 2.0.1
+      prebuild-install: 7.1.2
+
   node-domexception@1.0.0: {}
+
+  node-domexception@2.0.1: {}
 
   node-fetch-commonjs@3.3.2:
     dependencies:
@@ -14806,11 +14843,11 @@ snapshots:
 
   toidentifier@1.0.1: {}
 
-  torrent-discovery@11.0.2:
+  torrent-discovery@11.0.4:
     dependencies:
       bittorrent-dht: 11.0.5
       bittorrent-lsd: 2.0.0
-      bittorrent-tracker: 11.0.2
+      bittorrent-tracker: 11.1.0
       debug: 4.3.4
       run-parallel: 1.2.0
     transitivePeerDependencies:
@@ -15281,7 +15318,7 @@ snapshots:
       compact2string: 1.4.1
       string2compact: 2.0.1
 
-  utf-8-validate@5.0.10:
+  utf-8-validate@6.0.4:
     dependencies:
       node-gyp-build: 4.8.1
     optional: true
@@ -15449,7 +15486,12 @@ snapshots:
 
   webpack-virtual-modules@0.6.1: {}
 
-  webtorrent@2.2.1:
+  webrtc-polyfill@1.1.5:
+    dependencies:
+      node-datachannel: 0.9.1
+      node-domexception: 1.0.0
+
+  webtorrent@2.2.2:
     dependencies:
       '@silentbot1/nat-api': 0.4.7
       '@thaunknown/simple-peer': 9.12.1
@@ -15484,7 +15526,7 @@ snapshots:
       speed-limiter: 1.0.2
       streamx: 2.16.1
       throughput: 1.0.1
-      torrent-discovery: 11.0.2
+      torrent-discovery: 11.0.4
       torrent-piece: 3.0.0
       uint8-util: 2.2.5
       unordered-array-remove: 1.0.2
@@ -15678,7 +15720,7 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20240512.0
       '@cloudflare/workerd-windows-64': 1.20240512.0
 
-  wrangler@3.55.0(@cloudflare/workers-types@4.20240502.0)(bufferutil@4.0.8)(utf-8-validate@5.0.10):
+  wrangler@3.55.0(@cloudflare/workers-types@4.20240502.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.2
       '@esbuild-plugins/node-globals-polyfill': 0.2.3(esbuild@0.17.19)
@@ -15686,7 +15728,7 @@ snapshots:
       blake3-wasm: 2.1.5
       chokidar: 3.6.0
       esbuild: 0.17.19
-      miniflare: 3.20240419.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      miniflare: 3.20240419.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       nanoid: 3.3.7
       path-to-regexp: 6.2.2
       resolve: 1.22.8
@@ -15702,7 +15744,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  wrangler@3.57.1(@cloudflare/workers-types@4.20240512.0)(bufferutil@4.0.8)(utf-8-validate@5.0.10):
+  wrangler@3.57.1(@cloudflare/workers-types@4.20240512.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.2
       '@esbuild-plugins/node-globals-polyfill': 0.2.3(esbuild@0.17.19)
@@ -15710,7 +15752,7 @@ snapshots:
       blake3-wasm: 2.1.5
       chokidar: 3.6.0
       esbuild: 0.17.19
-      miniflare: 3.20240512.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      miniflare: 3.20240512.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       nanoid: 3.3.7
       path-to-regexp: 6.2.2
       resolve: 1.22.8
@@ -15740,10 +15782,10 @@ snapshots:
 
   wrappy@1.0.2: {}
 
-  ws@8.17.0(bufferutil@4.0.8)(utf-8-validate@5.0.10):
+  ws@8.17.0(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     optionalDependencies:
       bufferutil: 4.0.8
-      utf-8-validate: 5.0.10
+      utf-8-validate: 6.0.4
 
   xml-but-prettier@1.0.1:
     dependencies:
