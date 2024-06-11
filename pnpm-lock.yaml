@@ -326,8 +326,8 @@ importers:
         specifier: ^1.11.2
         version: 1.11.2
       '@hono/zod-validator':
-        specifier: ^0.2.1
-        version: 0.2.1(hono@4.4.5)(zod@3.23.8)
+        specifier: ^0.2.2
+        version: 0.2.2(hono@4.4.5)(zod@3.23.8)
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -1913,8 +1913,8 @@ packages:
     resolution: {integrity: sha512-JhX0nUC66GeDxpIdMKWDRMEwtQBa64CY907iAF1sYqb4m2p2PdSU7zkbnNhAZLg/6IjSlTuj6CF307JlBXVvpg==}
     engines: {node: '>=18.14.1'}
 
-  '@hono/zod-validator@0.2.1':
-    resolution: {integrity: sha512-HFoxln7Q6JsE64qz2WBS28SD33UB2alp3aRKmcWnNLDzEL1BLsWfbdX6e1HIiUprHYTIXf5y7ax8eYidKUwyaA==}
+  '@hono/zod-validator@0.2.2':
+    resolution: {integrity: sha512-dSDxaPV70Py8wuIU2QNpoVEIOSzSXZ/6/B/h4xA7eOMz7+AarKTSGV8E6QwrdcCbBLkpqfJ4Q2TmBO0eP1tCBQ==}
     peerDependencies:
       hono: '>=3.9.0'
       zod: ^3.19.1
@@ -8905,7 +8905,7 @@ snapshots:
 
   '@hono/node-server@1.11.2': {}
 
-  '@hono/zod-validator@0.2.1(hono@4.4.5)(zod@3.23.8)':
+  '@hono/zod-validator@0.2.2(hono@4.4.5)(zod@3.23.8)':
     dependencies:
       hono: 4.4.5
       zod: 3.23.8
@@ -11443,7 +11443,7 @@ snapshots:
     dependencies:
       '@esbuild-kit/esm-loader': 2.6.5
       '@hono/node-server': 1.11.2
-      '@hono/zod-validator': 0.2.1(hono@4.4.5)(zod@3.23.8)
+      '@hono/zod-validator': 0.2.2(hono@4.4.5)(zod@3.23.8)
       camelcase: 7.0.1
       chalk: 5.3.0
       commander: 9.5.0
