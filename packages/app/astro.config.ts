@@ -20,6 +20,8 @@ const SERVER_HOST = process.env.SERVER_HOST;
 const SERVER_PORT = process.env.SERVER_PORT;
 const SERVER_PROTOCOL = process.env.SERVER_PROTOCOL ?? 'http'; // http or https
 
+console.log(`ENV:`, process.env);
+
 console.log(`BUILD:`, SERVER_HOST, SERVER_PORT, SERVER_PROTOCOL);
 
 // Analytics Engines
