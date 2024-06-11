@@ -1,4 +1,4 @@
-import { APP_HOST, WORKER_HOST, SERVER_HOST, SERVER_PORT, SERVER_PROTOCOL } from '~build/meta';
+import { APP_HOST, SERVER_HOST, SERVER_PORT, SERVER_PROTOCOL } from '~build/meta';
 
 import {
   type ProviderType,
@@ -57,6 +57,7 @@ export async function fetchResources(
     signal?: AbortSignal;
   } = {}
 ) {
+  console.log('BaseURL', baseURL);
   return await rawFetchResources(options.fetch ?? ofetch, {
     baseURL,
     signal: options.signal,
@@ -66,6 +67,7 @@ export async function fetchResources(
 
 export async function fetchResourceDetail(provider: string, href: string) {
   try {
+    console.log('BaseURL', baseURL);
     return await rawFetchResourceDetail(ofetch, provider as ProviderType, href, {
       baseURL
     });
