@@ -32,3 +32,10 @@ app.get('/', async (c) => {
     timestamp: (await getRefreshTimestamp(storage)).toISOString()
   });
 });
+
+app.onError((err, c) => {
+  logger.error(null, err.message);
+
+  c.status(500);
+  return c.json({ status: 'ERROR' });
+});
