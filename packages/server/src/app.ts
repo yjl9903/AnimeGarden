@@ -40,3 +40,15 @@ app.onError((err, c) => {
   c.status(500);
   return c.json({ status: 'ERROR' });
 });
+
+process.on('uncaughtException', (err) => {
+  logger.error(null, err.message);
+});
+
+process.on('unhandledRejection', (err) => {
+  if (err instanceof Error) {
+    logger.error(null, err.message);
+  } else {
+    logger.error(null, 'Unhandled Rejection');
+  }
+});
