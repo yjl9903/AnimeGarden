@@ -1,5 +1,11 @@
 {
   "$schema": "https://turborepo.org/schema.json",
+  "globalEnv": [
+    "APP_HOST",
+    "SERVER_PROTOCOL",
+    "SERVER_HOST",
+    "SERVER_PORT"
+  ],
   "tasks": {
     "build": {
       "dependsOn": [
