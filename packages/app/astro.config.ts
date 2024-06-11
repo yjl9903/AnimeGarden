@@ -16,8 +16,8 @@ import Analytics from 'unplugin-analytics/astro';
 const SSR_ADAPTER = process.env.SSR_ADAPTER === 'cloudflare' ? 'cloudflare' : 'node';
 
 const APP_HOST = process.env.APP_HOST ?? `garden.onekuma.cn`;
-const SERVER_HOST = process.env.SERVER_HOST;
-const SERVER_PORT = process.env.SERVER_PORT;
+const SERVER_HOST = process.env.SERVER_HOST ?? `api.zeabur.internal`;
+const SERVER_PORT = process.env.SERVER_PORT ?? `8080`;
 const SERVER_PROTOCOL = process.env.SERVER_PROTOCOL ?? 'http'; // http or https
 
 console.log(`ENV:`, process.env);
