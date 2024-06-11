@@ -6,9 +6,10 @@ import { cors } from 'hono/cors';
 import { prettyJSON } from 'hono/pretty-json';
 import { logger as honoLogger } from 'hono/logger';
 
+import { getRefreshTimestamp } from '@animegarden/database';
+
 import { logger } from './logger';
 import { storage } from './storage';
-import { getRefreshTimestamp } from '@animegarden/database';
 
 export const app = new Hono({});
 
