@@ -19,7 +19,6 @@ const APP_HOST = process.env.APP_HOST ?? `garden.onekuma.cn`;
 const SERVER_HOST = process.env.SERVER_HOST;
 const SERVER_PORT = process.env.SERVER_PORT;
 const SERVER_PROTOCOL = process.env.SERVER_PROTOCOL ?? 'http'; // http or https
-const WORKER_HOST = process.env.WORKER_HOST ?? `animegarden.yjl9903.workers.dev`;
 
 console.log(`BUILD:`, SERVER_HOST, SERVER_PORT, SERVER_PROTOCOL);
 
@@ -122,11 +121,7 @@ export default defineConfig({
         /**
          * The protocal of server
          */
-        SERVER_PROTOCOL,
-        /**
-         * The host of Cloudflare Worker
-         */
-        WORKER_HOST
+        SERVER_PROTOCOL
       }
     }),
     Analytics({
