@@ -9,7 +9,7 @@ import {
 
 export const baseURL = import.meta.env.SSR
   ? SERVER_HOST
-    ? `${SERVER_PROTOCOL}://${SERVER_HOST}${SERVER_PORT ? ':' + SERVER_PORT : ''}`
+    ? `${SERVER_PROTOCOL || 'http'}://${SERVER_HOST}${SERVER_PORT ? ':' + SERVER_PORT : ''}`
     : `https://${APP_HOST}/api/`
   : `https://${APP_HOST}/api/`;
 
@@ -58,6 +58,7 @@ export async function fetchResources(
   } = {}
 ) {
   console.log('BaseURL', baseURL);
+  console.log(import.meta.env.SSR, SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT, baseURL);
   return await rawFetchResources(options.fetch ?? ofetch, {
     baseURL,
     signal: options.signal,
@@ -68,6 +69,7 @@ export async function fetchResources(
 export async function fetchResourceDetail(provider: string, href: string) {
   try {
     console.log('BaseURL', baseURL);
+    console.log(import.meta.env.SSR, SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT, baseURL);
     return await rawFetchResourceDetail(ofetch, provider as ProviderType, href, {
       baseURL
     });
