@@ -145,12 +145,7 @@ export default defineConfig({
       }
     })
   ],
-  adapter:
-    SSR_ADAPTER === 'cloudflare'
-      ? cloudflare({
-          mode: 'directory'
-        })
-      : node({ mode: 'standalone' }),
+  adapter: SSR_ADAPTER === 'cloudflare' ? cloudflare() : node({ mode: 'standalone' }),
   image: {
     service: {
       entrypoint: 'astro/assets/services/noop'
