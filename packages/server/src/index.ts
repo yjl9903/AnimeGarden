@@ -37,12 +37,12 @@ serve(
 
 Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
   try {
-    const req = new Request(`https://server.zeabur.internal/admin/dmhy/resources`, {
+    const req = new Request(`https://api.zeabur.internal/admin/dmhy/resources`, {
       method: 'POST'
     });
     logger.info(`cron`, `Fetch dmhy resources`);
     const resp = await app.fetch(req);
-    logger.info(`cron`, await resp.json());
+    logger.info(`cron`, JSON.stringify(await resp.json()));
   } catch (error) {
     console.error(error);
   }
@@ -50,12 +50,12 @@ Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
 
 Cron(`0 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
   try {
-    const req = new Request(`https://server.zeabur.internal/admin/dmhy/resources/sync`, {
+    const req = new Request(`https://api.zeabur.internal/admin/dmhy/resources/sync`, {
       method: 'POST'
     });
     logger.info(`cron`, `Sync dmhy resources`);
     const resp = await app.fetch(req);
-    logger.info(`cron`, await resp.json());
+    logger.info(`cron`, JSON.stringify(await resp.json()));
   } catch (error) {
     console.error(error);
   }
