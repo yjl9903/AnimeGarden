@@ -1,10 +1,17 @@
 import { registerApp } from '../app';
 
+import { pruneResourcesCache } from '../query/resources';
+
 import { syncDocuments } from './meili';
 import { fixDmhyResources, refreshDmhyResources } from './dmhy';
 
 export function registerAdmin() {
   registerApp((app) => {
+    app.delete(`/admin/dmhy/resources/cache`, async (req) => {
+      await pruneResourcesCache();
+      return req.json({ ok: true });
+    });
+
     app.post(`/admin/dmhy/resources`, async (req) => {
       const r = await refreshDmhyResources();
       return req.json(r);

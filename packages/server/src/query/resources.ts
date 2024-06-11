@@ -27,6 +27,10 @@ const logger = rootLogger.forkIntegrationLogger('detail');
 
 const resourcesStorage = prefixStorage(storage, 'resources');
 
+export async function pruneResourcesCache() {
+  await resourcesStorage.clear();
+}
+
 export async function queryResources(ctx: Context, filter: ResolvedFilterOptions) {
   if (filter.search) {
     const resp = await searchResources(filter.search.join(' '), filter);
