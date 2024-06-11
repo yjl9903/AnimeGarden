@@ -9,6 +9,7 @@ export const ALL: APIRoute = async ({ request, locals }) => {
 
   const url = new URL(request.url);
 
+  console.log(SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT);
   if (SERVER_HOST) {
     url.protocol = SERVER_PROTOCOL + ':';
     url.host = SERVER_HOST;
