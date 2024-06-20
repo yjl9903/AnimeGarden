@@ -20,7 +20,9 @@ const SERVER_HOST = process.env.SERVER_HOST;
 const SERVER_PORT = process.env.SERVER_PORT;
 const SERVER_PROTOCOL = process.env.SERVER_PROTOCOL ?? 'http'; // http or https
 
-console.log(`Server is located at: ${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}`);
+if (SERVER_HOST) {
+  console.log(`Server is located at: ${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}`);
+}
 
 // Analytics Engines
 const UMAMI_HOST = `umami.onekuma.cn`;
