@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: ^4.20240605.0
-        version: 4.20240605.0
+        specifier: ^4.20240614.0
+        version: 4.20240614.0
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -61,7 +61,7 @@ importers:
         version: 1.6.0(@types/node@20.14.6)(terser@5.31.0)
       wrangler:
         specifier: ^3.60.2
-        version: 3.60.2(@cloudflare/workers-types@4.20240605.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+        version: 3.60.2(@cloudflare/workers-types@4.20240614.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
 
   packages/animegarden:
     dependencies:
@@ -290,7 +290,7 @@ importers:
         version: 0.0.34
       drizzle-orm:
         specifier: ^0.31.2
-        version: 0.31.2(@cloudflare/workers-types@4.20240605.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
+        version: 0.31.2(@cloudflare/workers-types@4.20240614.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
       meilisearch:
         specifier: ^0.40.0
         version: 0.40.0
@@ -345,7 +345,7 @@ importers:
         version: 16.4.5
       drizzle-orm:
         specifier: ^0.31.2
-        version: 0.31.2(@cloudflare/workers-types@4.20240605.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
+        version: 0.31.2(@cloudflare/workers-types@4.20240614.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
       hono:
         specifier: ^4.4.5
         version: 4.4.5
@@ -1154,6 +1154,9 @@ packages:
 
   '@cloudflare/workers-types@4.20240605.0':
     resolution: {integrity: sha512-zJw4Q6CnkaQ5JZmHRkNiSs5GfiRgUIUL8BIHPQkd2XUHZkIBv9M9yc0LKEwMYGpCFC+oSOltet6c9RjP9uQ99g==}
+
+  '@cloudflare/workers-types@4.20240614.0':
+    resolution: {integrity: sha512-fnV3uXD1Hpq5EWnY7XYb+smPcjzIoUFiZpTSV/Tk8qKL3H+w6IqcngZwXQBZ/2U/DwYkDilXHW3FfPhnyD7FZA==}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -8494,6 +8497,8 @@ snapshots:
 
   '@cloudflare/workers-types@4.20240605.0': {}
 
+  '@cloudflare/workers-types@4.20240614.0': {}
+
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
@@ -11405,9 +11410,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.31.2(@cloudflare/workers-types@4.20240605.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1):
+  drizzle-orm@0.31.2(@cloudflare/workers-types@4.20240614.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1):
     optionalDependencies:
-      '@cloudflare/workers-types': 4.20240605.0
+      '@cloudflare/workers-types': 4.20240614.0
       '@types/react': 18.3.3
       postgres: 3.4.4
       react: 18.3.1
@@ -15597,6 +15602,31 @@ snapshots:
       xxhash-wasm: 1.0.2
     optionalDependencies:
       '@cloudflare/workers-types': 4.20240605.0
+      fsevents: 2.3.3
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  wrangler@3.60.2(@cloudflare/workers-types@4.20240614.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4):
+    dependencies:
+      '@cloudflare/kv-asset-handler': 0.3.2
+      '@esbuild-plugins/node-globals-polyfill': 0.2.3(esbuild@0.17.19)
+      '@esbuild-plugins/node-modules-polyfill': 0.2.2(esbuild@0.17.19)
+      blake3-wasm: 2.1.5
+      chokidar: 3.6.0
+      esbuild: 0.17.19
+      miniflare: 3.20240605.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      nanoid: 3.3.7
+      path-to-regexp: 6.2.2
+      resolve: 1.22.8
+      resolve.exports: 2.0.2
+      selfsigned: 2.4.1
+      source-map: 0.6.1
+      unenv: unenv-nightly@1.10.0-1717606461.a117952
+      xxhash-wasm: 1.0.2
+    optionalDependencies:
+      '@cloudflare/workers-types': 4.20240614.0
       fsevents: 2.3.3
     transitivePeerDependencies:
       - bufferutil
