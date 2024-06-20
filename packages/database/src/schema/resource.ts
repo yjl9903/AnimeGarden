@@ -2,7 +2,6 @@ import {
   boolean,
   foreignKey,
   index,
-  integer,
   json,
   pgTable,
   serial,
@@ -39,7 +38,7 @@ export const resources = pgTable(
   (t) => {
     return {
       uniqueProviderIndex: uniqueIndex('unique_resource_provider').on(t.provider, t.providerId),
-      sortByCreatedAt: index('sort_by_created_at').on(t.createdAt).desc(),
+      sortByCreatedAt: index('sort_by_created_at').on(t.createdAt.desc()),
       fansubIndex: index('fansub_index').on(t.fansubId),
       publisherIndex: index('publisher_index').on(t.publisherId),
       publisherReference: foreignKey({
