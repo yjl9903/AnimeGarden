@@ -75,8 +75,8 @@ importers:
   packages/app:
     dependencies:
       '@astrojs/cloudflare':
-        specifier: ^10.4.2
-        version: 10.4.2(astro@4.11.0(@types/node@20.14.8)(terser@5.31.0)(typescript@5.5.2))(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+        specifier: ^11.0.0
+        version: 11.0.0(astro@4.11.0(@types/node@20.14.8)(terser@5.31.0)(typescript@5.5.2))(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       '@astrojs/node':
         specifier: ^8.3.1
         version: 8.3.1(astro@4.11.0(@types/node@20.14.8)(terser@5.31.0)(typescript@5.5.2))
@@ -418,10 +418,10 @@ packages:
     peerDependencies:
       ajv: '>=8'
 
-  '@astrojs/cloudflare@10.4.2':
-    resolution: {integrity: sha512-v6nRHlELAEAyqC9MI7a4yw0h/g5rqcIeVV9ezSuQNxdtvoG7n8sGH6QYgXIpwrEAEIuM+cM2a509Hi1CIpfzCA==}
+  '@astrojs/cloudflare@11.0.0':
+    resolution: {integrity: sha512-758bQKWUJwjLjRMIR0Sy0dcztk/l7ZnxnH7MMFvgzUO58LpdeNRyIJuEMo79YjAR5g23wUfwRqi0UqKmzD/CkQ==}
     peerDependencies:
-      astro: ^4.2.0
+      astro: ^4.10.3
 
   '@astrojs/compiler@1.8.2':
     resolution: {integrity: sha512-o/ObKgtMzl8SlpIdzaxFnt7SATKPxu4oIP/1NL+HDJRzxfJcAkOTAb/ZKMRyULbz4q+1t2/DAebs2Z1QairkZw==}
@@ -7675,7 +7675,7 @@ snapshots:
       jsonpointer: 5.0.1
       leven: 3.1.0
 
-  '@astrojs/cloudflare@10.4.2(astro@4.11.0(@types/node@20.14.8)(terser@5.31.0)(typescript@5.5.2))(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
+  '@astrojs/cloudflare@11.0.0(astro@4.11.0(@types/node@20.14.8)(terser@5.31.0)(typescript@5.5.2))(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
     dependencies:
       '@astrojs/internal-helpers': 0.3.0
       '@astrojs/underscore-redirects': 0.3.3
