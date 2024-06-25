@@ -333,7 +333,7 @@ importers:
         version: 1.11.4
       '@hono/zod-validator':
         specifier: ^0.2.2
-        version: 0.2.2(hono@4.4.7)(zod@3.23.8)
+        version: 0.2.2(hono@4.4.8)(zod@3.23.8)
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -347,8 +347,8 @@ importers:
         specifier: ^0.31.2
         version: 0.31.2(@cloudflare/workers-types@4.20240620.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
       hono:
-        specifier: ^4.4.7
-        version: 4.4.7
+        specifier: ^4.4.8
+        version: 4.4.8
       ioredis:
         specifier: ^5.4.1
         version: 5.4.1
@@ -383,8 +383,8 @@ importers:
         specifier: ^0.0.50
         version: 0.0.50
       hono:
-        specifier: ^4.4.7
-        version: 4.4.7
+        specifier: ^4.4.8
+        version: 4.4.8
       memofunc:
         specifier: ^0.1.6
         version: 0.1.6
@@ -4474,8 +4474,8 @@ packages:
   highlight.js@10.7.3:
     resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
 
-  hono@4.4.7:
-    resolution: {integrity: sha512-WoQWFQyVFEVRtIzP5sHPv7nvIw+RYL/HRnvnOCDxj6A+BtrwuC9S0vryZbV4IyFcNgOJ87r/phDiC1x2eEo4Gg==}
+  hono@4.4.8:
+    resolution: {integrity: sha512-eewnSgTzdWgFVn97kPV24h+9UVNUQ+9mj6IRxr7dBseTaTBSHtFo/T/vRNcqJkQFysVoXyecflr3Xe/fdvzEpQ==}
     engines: {node: '>=16.0.0'}
 
   hookable@5.5.3:
@@ -8755,9 +8755,9 @@ snapshots:
 
   '@hono/node-server@1.11.4': {}
 
-  '@hono/zod-validator@0.2.2(hono@4.4.7)(zod@3.23.8)':
+  '@hono/zod-validator@0.2.2(hono@4.4.8)(zod@3.23.8)':
     dependencies:
-      hono: 4.4.7
+      hono: 4.4.8
       zod: 3.23.8
 
   '@iconify-json/ant-design@1.1.16':
@@ -12096,7 +12096,7 @@ snapshots:
 
   highlight.js@10.7.3: {}
 
-  hono@4.4.7: {}
+  hono@4.4.8: {}
 
   hookable@5.5.3: {}
 
