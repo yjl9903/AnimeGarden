@@ -126,8 +126,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       bgmd:
-        specifier: ^0.0.50
-        version: 0.0.50
+        specifier: ^0.0.51
+        version: 0.0.51
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -380,8 +380,8 @@ importers:
         specifier: 0.0.34
         version: 0.0.34
       bgmd:
-        specifier: ^0.0.50
-        version: 0.0.50
+        specifier: ^0.0.51
+        version: 0.0.51
       hono:
         specifier: ^4.4.10
         version: 4.4.10
@@ -3224,8 +3224,8 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
-  bangumi-data@0.3.145:
-    resolution: {integrity: sha512-BQKLX2Ep45E/b0w7H6wlVX72oQxWOpQ5IN6Yne92K4UQ1DH/aRyyUeqsMuPo3wzTdmnLkE6eL7qWtpTmJIWLiQ==}
+  bangumi-data@0.3.146:
+    resolution: {integrity: sha512-YOHllmxn/Zgf7hBlP/+E2/ibpHMzC6PWZ88kdRdCa+gAzHYVwsHagoLNWwuJ6uFPFjhIjT11F6Lyf0YpV16SLw==}
 
   bare-events@2.4.2:
     resolution: {integrity: sha512-qMKFd2qG/36aA4GwvKq8MxnPgCQAmBWmSyLWsJcbn8v03wvIPQ/hG1Ms8bPzndZxMDoHpxez5VOS+gC9Yi24/Q==}
@@ -3268,8 +3268,8 @@ packages:
     engines: {node: '>=v20.8.0'}
     hasBin: true
 
-  bgmd@0.0.50:
-    resolution: {integrity: sha512-zmA3Lmo0tJPkBZ6kFAl5yT758jE4txAx+YzhU0TkeXL4JQlrxFg7rBXeddmJKnpIEsQgpERha/9c6km7EupRjw==}
+  bgmd@0.0.51:
+    resolution: {integrity: sha512-VRGKNEn3Od7QYfcafY1VpjSX7I76g4XeVjYnlf2fT3V0dDQ4+AEU0kmU8iCb2S6uxoeo68lSdlLIjIDyqw8IGg==}
     engines: {node: '>=v20.8.0'}
 
   binary-extensions@2.3.0:
@@ -10648,7 +10648,7 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  bangumi-data@0.3.145: {}
+  bangumi-data@0.3.146: {}
 
   bare-events@2.4.2: {}
 
@@ -10690,9 +10690,9 @@ snapshots:
     dependencies:
       breadc: 0.9.7
 
-  bgmd@0.0.50:
+  bgmd@0.0.51:
     dependencies:
-      bangumi-data: 0.3.145
+      bangumi-data: 0.3.146
       bgmc: 0.0.10
       tmdbc: 0.0.2
       type-fest: 4.20.1
