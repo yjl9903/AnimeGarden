@@ -58,7 +58,7 @@ importers:
         version: 6.19.2
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.14.9)
+        version: 1.6.0(@types/node@20.14.9)(terser@5.31.1)
       wrangler:
         specifier: ^3.62.0
         version: 3.62.0(@cloudflare/workers-types@4.20240620.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
@@ -187,8 +187,8 @@ importers:
         specifier: ^1.1.36
         version: 1.1.36
       '@iconify-json/devicon':
-        specifier: ^1.1.44
-        version: 1.1.44
+        specifier: ^1.1.45
+        version: 1.1.45
       '@onekuma/preset.css':
         specifier: ^0.1.11
         version: 0.1.11
@@ -1754,8 +1754,8 @@ packages:
   '@iconify-json/carbon@1.1.36':
     resolution: {integrity: sha512-NC3VcqLtwLZpi7+LeXj+99/byv+asrnCQxiDNCZV6hKr9WcNh6C25kJguJYfN+dV54kOkw78e+6PitQi2Bppnw==}
 
-  '@iconify-json/devicon@1.1.44':
-    resolution: {integrity: sha512-rC5sCrpYUYIllMbK1SsX3mYQ9fSWfga9Oyx0G+g4Jg2jdNJKfy5CJm0YtMAEypz0p+3HPTrl+R9uuvG0L8sSpg==}
+  '@iconify-json/devicon@1.1.45':
+    resolution: {integrity: sha512-gKgfTr435D04V48kLMkjxZvg5mn3/Os9RE0VK5JeuypOOI/SrECIWOapIVJnDkNlrxF+dilBHCxmwq7bMCxr1A==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -8771,7 +8771,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/devicon@1.1.44':
+  '@iconify-json/devicon@1.1.45':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -15181,7 +15181,7 @@ snapshots:
     dependencies:
       global: 4.4.0
 
-  vite-node@1.6.0(@types/node@20.14.9):
+  vite-node@1.6.0(@types/node@20.14.9)(terser@5.31.1):
     dependencies:
       cac: 6.7.14
       debug: 4.3.5
@@ -15225,7 +15225,7 @@ snapshots:
     optionalDependencies:
       vite: 5.3.2(@types/node@20.14.9)(terser@5.31.1)
 
-  vitest@1.6.0(@types/node@20.14.9):
+  vitest@1.6.0(@types/node@20.14.9)(terser@5.31.1):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
@@ -15245,7 +15245,7 @@ snapshots:
       tinybench: 2.8.0
       tinypool: 0.8.4
       vite: 5.3.2(@types/node@20.14.9)(terser@5.31.1)
-      vite-node: 1.6.0(@types/node@20.14.9)
+      vite-node: 1.6.0(@types/node@20.14.9)(terser@5.31.1)
       why-is-node-running: 2.2.2
     optionalDependencies:
       '@types/node': 20.14.9
