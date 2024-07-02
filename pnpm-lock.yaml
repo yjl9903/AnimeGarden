@@ -329,8 +329,8 @@ importers:
         specifier: ^0.9.7
         version: 0.9.7
       '@hono/node-server':
-        specifier: ^1.11.4
-        version: 1.11.4
+        specifier: ^1.11.5
+        version: 1.11.5
       '@hono/zod-validator':
         specifier: ^0.2.2
         version: 0.2.2(hono@4.4.10)(zod@3.23.8)
@@ -1738,8 +1738,8 @@ packages:
   '@formkit/auto-animate@0.8.2':
     resolution: {integrity: sha512-SwPWfeRa5veb1hOIBMdzI+73te5puUBHmqqaF1Bu7FjvxlYSz/kJcZKSa9Cg60zL0uRNeJL2SbRxV6Jp6Q1nFQ==}
 
-  '@hono/node-server@1.11.4':
-    resolution: {integrity: sha512-8TOiiiAqcFC6f62P7M9p6adQREAlWdVi1awehAwgWW+3R65/rKzHnLARO/Hu/466z01VNViBoogqatqXJMyItA==}
+  '@hono/node-server@1.11.5':
+    resolution: {integrity: sha512-hbPmhyShiYE70DAf/glaRvA+IWbk48yldh/5jF5SC2qLqVcXQlJR/D7l7W4XQAblgVmzv0276QkOydVX7NcjtA==}
     engines: {node: '>=18.14.1'}
 
   '@hono/zod-validator@0.2.2':
@@ -8756,7 +8756,7 @@ snapshots:
 
   '@formkit/auto-animate@0.8.2': {}
 
-  '@hono/node-server@1.11.4': {}
+  '@hono/node-server@1.11.5': {}
 
   '@hono/zod-validator@0.2.2(hono@4.4.10)(zod@3.23.8)':
     dependencies:
