@@ -241,8 +241,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2(@unocss/preset-wind@0.61.2)(unocss@0.61.2(postcss@8.4.39)(rollup@2.79.1)(vite@5.3.2(@types/node@20.14.9)(terser@5.31.1)))
       unocss-preset-shadcn:
-        specifier: ^0.3.0
-        version: 0.3.0(unocss-preset-animations@1.0.2(@unocss/preset-wind@0.61.2)(unocss@0.61.2(postcss@8.4.39)(rollup@2.79.1)(vite@5.3.2(@types/node@20.14.9)(terser@5.31.1))))(unocss@0.61.2(postcss@8.4.39)(rollup@2.79.1)(vite@5.3.2(@types/node@20.14.9)(terser@5.31.1)))
+        specifier: ^0.3.1
+        version: 0.3.1(unocss-preset-animations@1.0.2(@unocss/preset-wind@0.61.2)(unocss@0.61.2(postcss@8.4.39)(rollup@2.79.1)(vite@5.3.2(@types/node@20.14.9)(terser@5.31.1))))(unocss@0.61.2(postcss@8.4.39)(rollup@2.79.1)(vite@5.3.2(@types/node@20.14.9)(terser@5.31.1)))
       unplugin-analytics:
         specifier: ^0.0.11
         version: 0.0.11(esbuild@0.17.19)(rollup@2.79.1)(vite@5.3.2(@types/node@20.14.9)(terser@5.31.1))
@@ -6958,8 +6958,8 @@ packages:
       '@unocss/preset-wind': '>= 0.56.0 < 1'
       unocss: '>= 0.56.0 < 1'
 
-  unocss-preset-shadcn@0.3.0:
-    resolution: {integrity: sha512-GCtp2o/9LZL0xl11T9mE35UMIhow8mmkvMvGEKGD8TiienAXM9I7lf5vSOgJd9ywyuGYV3Av5DZ+sR4GX5KRvA==}
+  unocss-preset-shadcn@0.3.1:
+    resolution: {integrity: sha512-b17P8vUKYuxEYthgCVlrMLvy4FVSWxAwAf6d0kYsWYFymbb8VBacBfXrpu+anLTv7IiIgHgkRVNTnruVKIjC8Q==}
     peerDependencies:
       unocss: '>= 0.56.0 < 1'
       unocss-preset-animations: ^1.0.1
@@ -15039,7 +15039,7 @@ snapshots:
       '@unocss/preset-wind': 0.61.2
       unocss: 0.61.2(postcss@8.4.39)(rollup@2.79.1)(vite@5.3.2(@types/node@20.14.9)(terser@5.31.1))
 
-  unocss-preset-shadcn@0.3.0(unocss-preset-animations@1.0.2(@unocss/preset-wind@0.61.2)(unocss@0.61.2(postcss@8.4.39)(rollup@2.79.1)(vite@5.3.2(@types/node@20.14.9)(terser@5.31.1))))(unocss@0.61.2(postcss@8.4.39)(rollup@2.79.1)(vite@5.3.2(@types/node@20.14.9)(terser@5.31.1))):
+  unocss-preset-shadcn@0.3.1(unocss-preset-animations@1.0.2(@unocss/preset-wind@0.61.2)(unocss@0.61.2(postcss@8.4.39)(rollup@2.79.1)(vite@5.3.2(@types/node@20.14.9)(terser@5.31.1))))(unocss@0.61.2(postcss@8.4.39)(rollup@2.79.1)(vite@5.3.2(@types/node@20.14.9)(terser@5.31.1))):
     dependencies:
       unocss: 0.61.2(postcss@8.4.39)(rollup@2.79.1)(vite@5.3.2(@types/node@20.14.9)(terser@5.31.1))
       unocss-preset-animations: 1.0.2(@unocss/preset-wind@0.61.2)(unocss@0.61.2(postcss@8.4.39)(rollup@2.79.1)(vite@5.3.2(@types/node@20.14.9)(terser@5.31.1)))
