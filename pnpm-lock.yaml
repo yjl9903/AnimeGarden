@@ -9,7 +9,7 @@ importers:
   .:
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: ^4.20240620.0
+        specifier: ^4.20240718.0
         version: 4.20240718.0
       '@types/fs-extra':
         specifier: ^11.0.4
@@ -58,9 +58,9 @@ importers:
         version: 6.19.2
       vitest:
         specifier: ^1.6.0
-        version: 1.6.0(@types/node@20.14.11)
+        version: 1.6.0(@types/node@20.14.11)(terser@5.31.3)
       wrangler:
-        specifier: ^3.63.1
+        specifier: ^3.65.1
         version: 3.65.1(@cloudflare/workers-types@4.20240718.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
 
   packages/animegarden:
@@ -15331,7 +15331,7 @@ snapshots:
     dependencies:
       global: 4.4.0
 
-  vite-node@1.6.0(@types/node@20.14.11):
+  vite-node@1.6.0(@types/node@20.14.11)(terser@5.31.3):
     dependencies:
       cac: 6.7.14
       debug: 4.3.5
@@ -15375,7 +15375,7 @@ snapshots:
     optionalDependencies:
       vite: 5.3.4(@types/node@20.14.11)(terser@5.31.3)
 
-  vitest@1.6.0(@types/node@20.14.11):
+  vitest@1.6.0(@types/node@20.14.11)(terser@5.31.3):
     dependencies:
       '@vitest/expect': 1.6.0
       '@vitest/runner': 1.6.0
@@ -15395,7 +15395,7 @@ snapshots:
       tinybench: 2.8.0
       tinypool: 0.8.4
       vite: 5.3.4(@types/node@20.14.11)(terser@5.31.3)
-      vite-node: 1.6.0(@types/node@20.14.11)
+      vite-node: 1.6.0(@types/node@20.14.11)(terser@5.31.3)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.14.11
