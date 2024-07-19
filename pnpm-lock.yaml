@@ -220,8 +220,8 @@ importers:
         specifier: workspace:*
         version: link:../animegarden
       anitomy:
-        specifier: 0.0.34
-        version: 0.0.34
+        specifier: 0.0.35
+        version: 0.0.35
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
@@ -283,8 +283,8 @@ importers:
         specifier: workspace:*
         version: link:../animegarden
       anitomy:
-        specifier: 0.0.34
-        version: 0.0.34
+        specifier: 0.0.35
+        version: 0.0.35
       drizzle-orm:
         specifier: ^0.32.0
         version: 0.32.0(@cloudflare/workers-types@4.20240620.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
@@ -374,8 +374,8 @@ importers:
         specifier: workspace:*
         version: link:../animegarden
       anitomy:
-        specifier: 0.0.34
-        version: 0.0.34
+        specifier: 0.0.35
+        version: 0.0.35
       bgmd:
         specifier: ^0.0.52
         version: 0.0.52
@@ -3097,8 +3097,8 @@ packages:
   ajv@8.16.0:
     resolution: {integrity: sha512-F0twR8U1ZU67JIEtekUcLkXkoO5mMMmgGD8sK/xUFzJ805jxHQl92hImFAqqXMyMYjSPOyUPAwHYhB72g5sTXw==}
 
-  anitomy@0.0.34:
-    resolution: {integrity: sha512-K6SZ6HskNBaIqVCOu9e4M6/qsa1Omr70STMmzQ8PkLtp2MkTYkKluBYuFRC1+wqJMDl464WMScPQDgYgILNsVg==}
+  anitomy@0.0.35:
+    resolution: {integrity: sha512-lwTWQAWKrgvQhlTssPDqz+1BVYJ7EqNVo7OTsqyND0SoVehOgdIdDZKeaAXI+D8z7xAV/fABWBZsVpbURF1MBg==}
     engines: {node: '>=v18.16.0'}
 
   ansi-align@3.0.1:
@@ -10446,7 +10446,7 @@ snapshots:
       require-from-string: 2.0.2
       uri-js: 4.4.1
 
-  anitomy@0.0.34: {}
+  anitomy@0.0.35: {}
 
   ansi-align@3.0.1:
     dependencies:
