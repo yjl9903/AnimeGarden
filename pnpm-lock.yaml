@@ -126,8 +126,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       bgmd:
-        specifier: ^0.0.52
-        version: 0.0.52
+        specifier: ^0.0.53
+        version: 0.0.53
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -3387,6 +3387,10 @@ packages:
 
   bgmd@0.0.52:
     resolution: {integrity: sha512-gC7nEIBq7peVOz91GCc2UX8fkPOsSfTqU5PoOm4W6SDqUMdGwfXr5QpOxzvpbiCMp3lig/cgEpvk7Cl6buim6A==}
+    engines: {node: '>=v20.8.0'}
+
+  bgmd@0.0.53:
+    resolution: {integrity: sha512-C+QdcY14AVa35UwRv1ANfYyinK89vUGwIyamRzh+TsIHRLmNJC+kK0Jb8IpV/S04DtoR2tx5XiWZjyMHCmfaQQ==}
     engines: {node: '>=v20.8.0'}
 
   binary-extensions@2.3.0:
@@ -10835,6 +10839,13 @@ snapshots:
       breadc: 0.9.7
 
   bgmd@0.0.52:
+    dependencies:
+      bangumi-data: 0.3.146
+      bgmc: 0.0.10
+      tmdbc: 0.0.2
+      type-fest: 4.22.1
+
+  bgmd@0.0.53:
     dependencies:
       bangumi-data: 0.3.146
       bgmc: 0.0.10
