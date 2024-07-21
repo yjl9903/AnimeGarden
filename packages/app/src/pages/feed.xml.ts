@@ -16,6 +16,10 @@ import { removeQuote, getRuntimeEnv } from '../utils';
 
 const ManyFilterSchema = z.union([z.array(FilterSchema), FilterSchema.transform((f) => [f])]);
 
+const TITLE = `Anime Garden - 動漫花園資源網 第三方镜像站`;
+
+const DESCRIPTION = `Anime Garden 是動漫花園資源網的第三方镜像站, 動漫花園資訊網是一個動漫愛好者交流的平台,提供最及時,最全面的動畫,漫畫,動漫音樂,動漫下載,BT,ED,動漫遊戲,資訊,分享,交流,讨论.`;
+
 export const GET: APIRoute = async (context) => {
   try {
     const filterString = context.url.searchParams.get('filter');
@@ -40,8 +44,7 @@ export const GET: APIRoute = async (context) => {
 
       const feed = await rss({
         title,
-        description:
-          'Anime Garden 是動漫花園資源網的第三方镜像站, 動漫花園資訊網是一個動漫愛好者交流的平台,提供最及時,最全面的動畫,漫畫,動漫音樂,動漫下載,BT,ED,動漫遊戲,資訊,分享,交流,讨论.',
+        description: DESCRIPTION,
         site: stringifySearchURL(context.site!.origin, filter.data[0]).toString(),
         trailingSlash: false,
         items: resources.map((r) => {
@@ -61,12 +64,20 @@ export const GET: APIRoute = async (context) => {
       feed.headers['cache-control'] = `public, max-age=300`;
 
       return feed;
+    } else {
+      const empty = await rss({
+        title: TITLE,
+        description: DESCRIPTION,
+        site: context.site!.origin,
+        trailingSlash: false,
+        items: []
+      });
+      return empty;
     }
   } catch (error) {
     console.error(error);
+    return new Response(JSON.stringify({ status: 400 }), { status: 400 });
   }
-
-  return new Response(JSON.stringify({ status: 400 }), { status: 400 });
 };
 
 export const POST = GET;
@@ -81,7 +92,7 @@ function inferTitle(params: URLSearchParams, options: ResolvedFilterOptions) {
   if (options.include && options.include.length > 0) {
     return options.include[0];
   }
-  return 'Anime Garden - 動漫花園資源網 第三方镜像站';
+  return TITLE;
 }
 
 function toGardenURL(origin: string, r: Resource) {
