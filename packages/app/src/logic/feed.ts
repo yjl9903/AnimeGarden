@@ -21,5 +21,5 @@ export function generateFeed(...params: URLSearchParams[]) {
     }
     filters.push({ ...filter });
   }
-  return JSON.stringify(filters);
+  return encodeURIComponent(JSON.stringify(filters));
 }

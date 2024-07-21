@@ -23,7 +23,7 @@ const DESCRIPTION = `Anime Garden 是動漫花園資源網的第三方镜像站,
 export const GET: APIRoute = async (context) => {
   try {
     const getFilter = () => {
-      const filterString = context.url.searchParams.get('filter');
+      const filterString = decodeURIComponent(context.url.searchParams.get('filter'));
       try {
         const rawFilter = filterString ? JSON.parse(filterString) : { page: 1, pageSize: 1000 };
         return { ok: true, filter: rawFilter } as const;
