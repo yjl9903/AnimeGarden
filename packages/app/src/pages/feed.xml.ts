@@ -22,9 +22,35 @@ const DESCRIPTION = `Anime Garden 是動漫花園資源網的第三方镜像站,
 
 export const GET: APIRoute = async (context) => {
   try {
-    const filterString = context.url.searchParams.get('filter');
-    const rawFilter = filterString ? JSON.parse(filterString) : { page: 1, pageSize: 1000 };
-    const filter = ManyFilterSchema.safeParse(rawFilter);
+    const getFilter = () => {
+      const filterString = context.url.searchParams.get('filter');
+      try {
+        const rawFilter = filterString ? JSON.parse(filterString) : { page: 1, pageSize: 1000 };
+        return { ok: true, filter: rawFilter } as const;
+      } catch (error) {
+        console.error('Parse filter JSON', context.request.url, filterString);
+        console.error(error);
+        return { ok: false, input: filterString, error: error?.message } as const;
+      }
+    };
+
+    // Handle JSON parse error
+    const rawFilter = getFilter();
+    if (!rawFilter.ok) {
+      return new Response(
+        JSON.stringify({
+          status: 400,
+          detail: {
+            url: context.request.url,
+            filter: rawFilter.input,
+            message: rawFilter.error
+          }
+        }),
+        { status: 400 }
+      );
+    }
+
+    const filter = ManyFilterSchema.safeParse(rawFilter.filter);
 
     if (filter.success && filter.data.length > 0) {
       const title = inferTitle(context.url.searchParams, filter.data[0] as ResolvedFilterOptions);
