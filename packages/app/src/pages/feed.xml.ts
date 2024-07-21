@@ -90,7 +90,8 @@ export const GET: APIRoute = async (context) => {
       feed.headers['cache-control'] = `public, max-age=300`;
 
       return feed;
-    } else {
+    } else if (filter.success && filter.data.length === 0) {
+      // Empty response
       const empty = await rss({
         title: TITLE,
         description: DESCRIPTION,
@@ -98,11 +99,35 @@ export const GET: APIRoute = async (context) => {
         trailingSlash: false,
         items: []
       });
+
       return empty;
+    } else {
+      // Error
+      return new Response(
+        JSON.stringify({
+          status: 400,
+          detail: {
+            url: context.request.url,
+            filter: rawFilter.input,
+            message: filter.success === false ? filter.error.message : 'unknown'
+          }
+        }),
+        { status: 400 }
+      );
     }
   } catch (error) {
     console.error(error);
-    return new Response(JSON.stringify({ status: 400 }), { status: 400 });
+
+    return new Response(
+      JSON.stringify({
+        status: 400,
+        detail: {
+          url: context.request.url,
+          message: error?.message
+        }
+      }),
+      { status: 400 }
+    );
   }
 };
 
