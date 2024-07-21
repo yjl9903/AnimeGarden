@@ -377,8 +377,8 @@ importers:
         specifier: 0.0.35
         version: 0.0.35
       bgmd:
-        specifier: ^0.0.52
-        version: 0.0.52
+        specifier: ^0.0.53
+        version: 0.0.53
       hono:
         specifier: ^4.4.13
         version: 4.5.0
@@ -3384,10 +3384,6 @@ packages:
     resolution: {integrity: sha512-V5pkx/jHgNMfYs+P4xFIGm+dsRjyWuXq/lMzzCPv8vY0nATkD/11RFM3phy6zw0hNb0OmOL4l9xpN+eFDlkPXA==}
     engines: {node: '>=v20.8.0'}
     hasBin: true
-
-  bgmd@0.0.52:
-    resolution: {integrity: sha512-gC7nEIBq7peVOz91GCc2UX8fkPOsSfTqU5PoOm4W6SDqUMdGwfXr5QpOxzvpbiCMp3lig/cgEpvk7Cl6buim6A==}
-    engines: {node: '>=v20.8.0'}
 
   bgmd@0.0.53:
     resolution: {integrity: sha512-C+QdcY14AVa35UwRv1ANfYyinK89vUGwIyamRzh+TsIHRLmNJC+kK0Jb8IpV/S04DtoR2tx5XiWZjyMHCmfaQQ==}
@@ -10837,13 +10833,6 @@ snapshots:
   bgmc@0.0.10:
     dependencies:
       breadc: 0.9.7
-
-  bgmd@0.0.52:
-    dependencies:
-      bangumi-data: 0.3.146
-      bgmc: 0.0.10
-      tmdbc: 0.0.2
-      type-fest: 4.22.1
 
   bgmd@0.0.53:
     dependencies:
