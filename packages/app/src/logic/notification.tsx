@@ -7,9 +7,8 @@ const event = {
     toast(`AnimeGarden 更新通知`, {
       description: (
         <div className="mt-1 space-y-1">
-          <p>AnimeGarden 近期正在进行代码重构和服务器迁移.</p>
-          <p>优化了搜索的响应速度.</p>
-          <p>部分 RSS 订阅链接可能需要重新获取.</p>
+          <p>AnimeGarden 近期正在进行迁移.</p>
+          <p>请更新相关收藏链接和 RSS 订阅链接.</p>
           <p>
             问题反馈:{' '}
             <a href="https://github.com/yjl9903/AnimeGarden/issues" className="text-link-active">
@@ -24,6 +23,8 @@ const event = {
     });
   }
 };
+
+event.toast();
 
 document.addEventListener(
   'astro:page-load',
