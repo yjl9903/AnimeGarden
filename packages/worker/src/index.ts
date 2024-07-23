@@ -14,7 +14,7 @@ app.use('*', prettyJSON());
 
 app.get('/', async (c) => {
   return c.json({
-    message: 'AnimeGarden - 動漫花園 3-rd party mirror site',
+    message: 'AnimeGarden - 動漫花園 3-rd party mirror site'
   });
 });
 
@@ -37,8 +37,9 @@ app.onError((err, c) => {
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
-    const destinationURL = "https://garden.breadio.wiki";
+    const destinationURL = new URL(request.url);
+    destinationURL.host = 'garden.breadio.wiki';
     const statusCode = 301;
-    return Response.redirect(destinationURL, statusCode);
-  },
+    return Response.redirect(destinationURL.toString(), statusCode);
+  }
 };
