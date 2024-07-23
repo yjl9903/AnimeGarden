@@ -44,6 +44,7 @@ export async function fetchResources(
   const { baseURL = DefaultBaseURL, retry = 1 } = options;
 
   const url = stringifySearchURL(baseURL, options);
+  console.log(url.toString());
 
   if (options.count !== undefined && options.count !== null) {
     // Fetch multiple pages

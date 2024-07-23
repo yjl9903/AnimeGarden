@@ -19,7 +19,7 @@ const APP_HOST = process.env.APP_HOST ?? `garden.breadio.wiki`;
 const SERVER_HOST = process.env.SERVER_HOST;
 const SERVER_PORT = process.env.SERVER_PORT;
 const SERVER_PROTOCOL = process.env.SERVER_PROTOCOL ?? 'http'; // http or https
-const SERVER_BASE = process.env.SERVER_BASE ?? '';
+const SERVER_BASE = SERVER_HOST ? (process.env.SERVER_BASE ?? '') : '';
 
 if (SERVER_HOST) {
   console.log(
