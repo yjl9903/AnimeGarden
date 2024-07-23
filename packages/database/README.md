@@ -1,9 +1,9 @@
 # 🌸 AnimeGarden Database
 
-[![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://garden.onekuma.cn)
+[![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://garden.breadio.wiki)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
-The database for [AnimeGarden](https://garden.onekuma.cn/).
+The database for [AnimeGarden](https://garden.breadio.wiki/).
 
 ## Credits
 

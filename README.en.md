@@ -1,18 +1,18 @@
 # 🌸 AnimeGarden
 
 [![version](https://img.shields.io/npm/v/animegarden?label=animegarden)](https://www.npmjs.com/package/animegarden)
-[![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://garden.onekuma.cn)
+[![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://garden.breadio.wiki)
 [![Deploy Worker](https://github.com/yjl9903/AnimeGarden/actions/workflows/deploy.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/deploy.yml)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
 [English](/README.en.md) | [简体中文](/README.md)
 
-[動漫花園](https://share.dmhy.org/) 3-rd party [mirror site](https://garden.onekuma.cn) and [Anime Torrent aggregation site](https://garden.onekuma.cn).
+[動漫花園](https://share.dmhy.org/) 3-rd party [mirror site](https://garden.breadio.wiki) and [Anime Torrent aggregation site](https://garden.breadio.wiki).
 
-+ ☁️ Provide [API endpoint](https://garden.onekuma.cn/docs/api) for developers
-+ 📺 View [bangumi onair calendar](https://garden.onekuma.cn/anime) to find your favourite anime easily
++ ☁️ Provide [API endpoint](https://garden.breadio.wiki/docs/api) for developers
++ 📺 View [bangumi onair calendar](https://garden.breadio.wiki/anime) to find your favourite anime easily
 + 🔖 Support Advanced search, i.e. `葬送的芙莉莲 +简体内嵌 fansub:桜都字幕组 type:动画`
-+ 📙 Generate RSS feed, i.e. [葬送的芙莉莲](https://garden.onekuma.cn/feed.xml?filter=%5B%7B%22fansubId%22:%5B%22619%22%5D,%22type%22:%22%E5%8B%95%E7%95%AB%22,%22include%22:%5B%22%E8%91%AC%E9%80%81%E7%9A%84%E8%8A%99%E8%8E%89%E8%8E%B2%22%5D,%22keywords%22:%5B%22%E7%AE%80%E4%BD%93%E5%86%85%E5%B5%8C%22%5D%7D%5D)
++ 📙 Generate RSS feed, i.e. [葬送的芙莉莲](https://garden.breadio.wiki/feed.xml?filter=%5B%7B%22fansubId%22:%5B%22619%22%5D,%22type%22:%22%E5%8B%95%E7%95%AB%22,%22include%22:%5B%22%E8%91%AC%E9%80%81%E7%9A%84%E8%8A%99%E8%8E%89%E8%8E%B2%22%5D,%22keywords%22:%5B%22%E7%AE%80%E4%BD%93%E5%86%85%E5%B5%8C%22%5D%7D%5D)
 + ⭐ Bookmark management and generate aggregated RSS feed
 + 👷‍♂️ Support [AutoBangumi](https://www.autobangumi.org/) and [AnimeSpace](https://github.com/yjl9903/AnimeSpace)
 
@@ -21,16 +21,16 @@
 ## API Usage
 
 ```bash
-curl "https://garden.onekuma.cn/api/resources?page=1&pageSize=10"
+curl "https://garden.breadio.wiki/api/resources?page=1&pageSize=10"
 ```
 
-You can find the interactive Open API document [here](https://garden.onekuma.cn/docs/api) and more API usage example in [scripts/api.http](./scripts/api.http).
+You can find the interactive Open API document [here](https://garden.breadio.wiki/docs/api) and more API usage example in [scripts/api.http](./scripts/api.http).
 
 If you are using JavaScript / TypeScript, you can just use the API wrapper `fetchResources` and `fetchResourceDetail` in package [animegarden](https://www.npmjs.com/package/animegarden).
 
 ## Package Usage
 
-[AnimeGarden](https://garden.onekuma.cn) API client and utils for JavaScript / TypeScript.
+[AnimeGarden](https://garden.breadio.wiki) API client and utils for JavaScript / TypeScript.
 
 ```bash
 npm i animegarden
