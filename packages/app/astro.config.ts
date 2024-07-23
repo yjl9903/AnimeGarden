@@ -28,8 +28,8 @@ if (SERVER_HOST) {
 const UMAMI_HOST = `umami.onekuma.cn`;
 const UMAMI_ID = `ac2c4863-3409-4c64-9ac8-fd94bf937583`;
 // const PLAUSIBLE_HOST = `garden.breadio.wiki`;
-const CLARITY = `kwj19d7z4j`;
-const CF_BEACON = `aa68fa3bf166467082bc79ba029b057f`;
+const CLARITY = `nbvdca15ui`;
+const CF_BEACON = `7307ee3d2d8f4bafac906844704dab10`;
 
 // https://astro.build/config
 export default defineConfig({
