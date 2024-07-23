@@ -17,6 +17,7 @@ const event = {
           </p>
         </div>
       ),
+      position: 'top-right',
       important: true,
       closeButton: true,
       duration: 10 * 1000
