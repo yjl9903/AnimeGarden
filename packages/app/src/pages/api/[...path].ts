@@ -15,7 +15,10 @@ export const ALL: APIRoute = async ({ request, locals }) => {
     url.port = SERVER_PORT ?? '';
   }
 
-  url.pathname = SERVER_BASE + url.pathname.replace(/^\/api/, '');
+  url.pathname = SERVER_BASE
+    ? url.pathname.replace(/^\/api\/?/, SERVER_BASE)
+    : url.pathname.replace(/^\/api/, '');
+  console.log(url, url.toString());
 
   try {
     const timer = createTimer(`Forward request to ${url.pathname}`);
