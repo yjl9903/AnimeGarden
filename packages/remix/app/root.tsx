@@ -6,8 +6,9 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
-import 'virtual:uno.css'
+import 'virtual:uno.css';
 
+import './styles/main.css';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -25,7 +26,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <div className="font-sans">{children}</div>
         <ScrollRestoration />
         <Scripts />
       </body>
