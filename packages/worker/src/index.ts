@@ -62,7 +62,7 @@ app.get('/', async (c) => {
 
 app.all('*', (c) =>
   c.json(
-    { message: 'This endpoint has been deprecated, please use https://garden.onekuma.cn/api' },
+    { message: 'This endpoint has been deprecated, please use https://garden.breadio.wiki/api' },
     404
   )
 );
@@ -86,13 +86,13 @@ export default {
       case '*/5 * * * *':
         // Trigger zeabur
         // ctx.waitUntil(
-        //   fetch(`https://garden.onekuma.cn/api/admin/dmhy/resources`, { method: 'POST' })
+        //   fetch(`https://garden.breadio.wiki/api/admin/dmhy/resources`, { method: 'POST' })
         // );
         break;
       case '0 * * * *':
         // Trigger zeabur
         // ctx.waitUntil(
-        //   fetch(`https://garden.onekuma.cn/api/admin/dmhy/resources/sync`, { method: 'POST' })
+        //   fetch(`https://garden.breadio.wiki/api/admin/dmhy/resources/sync`, { method: 'POST' })
         // );
         break;
     }

@@ -22,7 +22,7 @@ export { makeResourcesFilter } from './filter';
 
 export { AllFansubs, findFansub } from './constant';
 
-export const DefaultBaseURL = 'https://garden.onekuma.cn/api/';
+export const DefaultBaseURL = 'https://garden.breadio.wiki/api/';
 
 type ResourceWithId = Resource & { id: number };
 

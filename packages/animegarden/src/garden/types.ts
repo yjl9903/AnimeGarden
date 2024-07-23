@@ -148,7 +148,7 @@ export interface FetchResourcesOptions extends FilterOptions {
   /**
    * The base URL of anime garden API
    *
-   * @default 'https://garden.onekuma.cn/api/'
+   * @default 'https://garden.breadio.wiki/api/'
    */
   baseURL?: string;
 
@@ -185,7 +185,7 @@ export interface FetchResourceDetailOptions {
   /**
    * The base URL of anime garden API
    *
-   * @default 'https://garden.onekuma.cn/api/'
+   * @default 'https://garden.breadio.wiki/api/'
    */
   baseURL?: string;
 

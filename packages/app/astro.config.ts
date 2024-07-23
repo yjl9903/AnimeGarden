@@ -15,7 +15,7 @@ import Analytics from 'unplugin-analytics/astro';
 
 const SSR_ADAPTER = process.env.SSR_ADAPTER === 'cloudflare' ? 'cloudflare' : 'node';
 
-const APP_HOST = process.env.APP_HOST ?? `garden.onekuma.cn`;
+const APP_HOST = process.env.APP_HOST ?? `garden.breadio.wiki`;
 const SERVER_HOST = process.env.SERVER_HOST;
 const SERVER_PORT = process.env.SERVER_PORT;
 const SERVER_PROTOCOL = process.env.SERVER_PROTOCOL ?? 'http'; // http or https
@@ -27,7 +27,7 @@ if (SERVER_HOST) {
 // Analytics Engines
 const UMAMI_HOST = `umami.onekuma.cn`;
 const UMAMI_ID = `a8602a4a-8d41-4df7-9797-5bd074785f2c`;
-const PLAUSIBLE_HOST = `garden.onekuma.cn`;
+// const PLAUSIBLE_HOST = `garden.breadio.wiki`;
 const CLARITY = `kwj19d7z4j`;
 const CF_BEACON = `aa68fa3bf166467082bc79ba029b057f`;
 
