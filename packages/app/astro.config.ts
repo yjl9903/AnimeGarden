@@ -26,7 +26,7 @@ if (SERVER_HOST) {
 
 // Analytics Engines
 const UMAMI_HOST = `umami.onekuma.cn`;
-const UMAMI_ID = `a8602a4a-8d41-4df7-9797-5bd074785f2c`;
+const UMAMI_ID = `ac2c4863-3409-4c64-9ac8-fd94bf937583`;
 // const PLAUSIBLE_HOST = `garden.breadio.wiki`;
 const CLARITY = `kwj19d7z4j`;
 const CF_BEACON = `aa68fa3bf166467082bc79ba029b057f`;
