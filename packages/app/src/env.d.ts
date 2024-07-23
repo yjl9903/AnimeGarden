@@ -24,4 +24,6 @@ declare module '~build/meta' {
   export const SERVER_PORT: string | undefined;
 
   export const SERVER_PROTOCOL: string | undefined;
+
+  export const SERVER_BASE: string | undefined;
 }

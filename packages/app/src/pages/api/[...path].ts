@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 
-import { SERVER_HOST, SERVER_PORT, SERVER_PROTOCOL } from '~build/meta';
+import { SERVER_HOST, SERVER_PORT, SERVER_PROTOCOL, SERVER_BASE } from '~build/meta';
 
 import { getRuntimeEnv } from '../../utils';
 
@@ -15,7 +15,7 @@ export const ALL: APIRoute = async ({ request, locals }) => {
     url.port = SERVER_PORT ?? '';
   }
 
-  url.pathname = url.pathname.replace(/^\/api/, '');
+  url.pathname = SERVER_BASE + url.pathname.replace(/^\/api/, '');
 
   try {
     const timer = createTimer(`Forward request to ${url.pathname}`);

@@ -19,9 +19,12 @@ const APP_HOST = process.env.APP_HOST ?? `garden.breadio.wiki`;
 const SERVER_HOST = process.env.SERVER_HOST;
 const SERVER_PORT = process.env.SERVER_PORT;
 const SERVER_PROTOCOL = process.env.SERVER_PROTOCOL ?? 'http'; // http or https
+const SERVER_BASE = process.env.SERVER_BASE ?? '';
 
 if (SERVER_HOST) {
-  console.log(`Server is located at: ${SERVER_PROTOCOL}://${SERVER_HOST}:${SERVER_PORT}`);
+  console.log(
+    `Server is located at: ${SERVER_PROTOCOL}://${SERVER_HOST}${SERVER_PORT ? ':' + SERVER_PORT : ''}${SERVER_BASE}`
+  );
 }
 
 // Analytics Engines
@@ -123,7 +126,11 @@ export default defineConfig({
         /**
          * The protocal of server
          */
-        SERVER_PROTOCOL
+        SERVER_PROTOCOL,
+        /**
+         * The base url of server
+         */
+        SERVER_BASE
       }
     }),
     Analytics({

@@ -1,4 +1,4 @@
-import { APP_HOST, SERVER_HOST, SERVER_PORT, SERVER_PROTOCOL } from '~build/meta';
+import { APP_HOST, SERVER_HOST, SERVER_PORT, SERVER_PROTOCOL, SERVER_BASE } from '~build/meta';
 
 import {
   type ProviderType,
@@ -9,7 +9,7 @@ import {
 
 export const baseURL = import.meta.env.SSR
   ? SERVER_HOST
-    ? `${SERVER_PROTOCOL || 'http'}://${SERVER_HOST}${SERVER_PORT ? ':' + SERVER_PORT : ''}`
+    ? `${SERVER_PROTOCOL || 'http'}://${SERVER_HOST}${SERVER_PORT ? ':' + SERVER_PORT : ''}${SERVER_BASE}`
     : `https://${APP_HOST}/api/`
   : `https://${APP_HOST}/api/`;
 
