@@ -1,33 +1,33 @@
 ### List the first page of resources
-GET https://garden.onekuma.cn/api/resources
+GET https://garden.breadio.wiki/api/resources
 Content-Type: application/json
 
 ### Get the resource detail
-GET https://garden.onekuma.cn/api/resource/638270_Nemuri_THE_iDOLM_STER_CINDERELLA_GIRLS_2012-2023_Discography_Collection_268_CDs_FLAC.html
+GET https://garden.breadio.wiki/api/resource/638270_Nemuri_THE_iDOLM_STER_CINDERELLA_GIRLS_2012-2023_Discography_Collection_268_CDs_FLAC.html
 Content-Type: application/json
 
 ### Get the resource detail by id
-GET https://garden.onekuma.cn/api/resource/652885
+GET https://garden.breadio.wiki/api/resource/652885
 Content-Type: application/json
 
 ### List the second page of resources
-GET https://garden.onekuma.cn/api/resources?page=2
+GET https://garden.breadio.wiki/api/resources?page=2
 Content-Type: application/json
 
 ### List resources from the 21st to 40th
-GET https://garden.onekuma.cn/api/resources?page=2&pageSize=20
+GET https://garden.breadio.wiki/api/resources?page=2&pageSize=20
 Content-Type: application/json
 
 ### List resources with more filter
-GET https://garden.onekuma.cn/api/resources?type=動畫&fansubId=803&publisherId=727168&after=2023-04-16T13:00:00.000Z&before=1681653600000
+GET https://garden.breadio.wiki/api/resources?type=動畫&fansubId=803&publisherId=727168&after=2023-04-16T13:00:00.000Z&before=1681653600000
 Content-Type: application/json
 
 ### List resources from specific fansubs
-GET https://garden.onekuma.cn/api/resources?fansubId=[833,619]&fansubName="爱恋字幕社"
+GET https://garden.breadio.wiki/api/resources?fansubId=[833,619]&fansubName="爱恋字幕社"
 Content-Type: application/json
 
 ### Search resources
-GET https://garden.onekuma.cn/api/resources
+GET https://garden.breadio.wiki/api/resources
 Content-Type: application/json
 
 {
@@ -35,7 +35,7 @@ Content-Type: application/json
 }
 
 ### Only search 動畫
-GET https://garden.onekuma.cn/api/resources?type=動畫
+GET https://garden.breadio.wiki/api/resources?type=動畫
 Content-Type: application/json
 
 {
@@ -43,7 +43,7 @@ Content-Type: application/json
 }
 
 ### Search resources with exclude
-GET https://garden.onekuma.cn/api/resources
+GET https://garden.breadio.wiki/api/resources
 Content-Type: application/json
 
 {
@@ -54,7 +54,7 @@ Content-Type: application/json
 ### Search resources with complicated search
 ### Resource must has type "動畫"
 ### Resource title must contains one of ("机动战士高达" or "水星的魔女") and all the keywords ("第二季" and "ANi")
-GET https://garden.onekuma.cn/api/resources?type=動畫
+GET https://garden.breadio.wiki/api/resources?type=動畫
 Cache-Control: no-store
 Content-Type: application/json
 
@@ -70,7 +70,7 @@ Content-Type: application/json
 }
 
 ### Search resources with full text index
-GET https://garden.onekuma.cn/api/resources?type=動畫
+GET https://garden.breadio.wiki/api/resources?type=動畫
 Cache-Control: no-cache
 Content-Type: application/json
 
@@ -82,9 +82,9 @@ Content-Type: application/json
 }
 
 ### List all the users
-GET https://garden.onekuma.cn/api/users
+GET https://garden.breadio.wiki/api/users
 Content-Type: application/json
 
 ### List all the teams
-GET https://garden.onekuma.cn/api/teams
+GET https://garden.breadio.wiki/api/teams
 Content-Type: application/json
