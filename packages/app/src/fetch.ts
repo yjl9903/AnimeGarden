@@ -60,6 +60,7 @@ export async function fetchResources(
   return await rawFetchResources(options.fetch ?? ofetch, {
     baseURL,
     signal: options.signal,
+    magnet: true,
     ...filter
   });
 }

@@ -19,6 +19,28 @@ export function registerQuery() {
         filter.provider = [provider];
       }
       const resp = await queryResources(ctx, filter);
+
+      const isEnable = (key: string) => {
+        const value = ctx.req.query(key);
+        return value !== undefined && ['true', 'yes', 'on'].includes(value.toLowerCase());
+      };
+      const enableMagnet = isEnable('magnet');
+      const enableMagnet2 = isEnable('magnet2');
+      const enableMagnetUser = isEnable('magnetUser');
+      if (!enableMagnet || !enableMagnet2 || !enableMagnetUser) {
+        for (const r of resp.resources) {
+          if (!enableMagnet) {
+            r.magnet = null;
+          }
+          if (!enableMagnet2) {
+            r.magnet2 = null;
+          }
+          if (!enableMagnetUser) {
+            r.magnetUser = null;
+          }
+        }
+      }
+
       return ctx.json({ filter, ...resp });
     }
 

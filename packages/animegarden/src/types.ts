@@ -32,7 +32,11 @@ export interface Resource {
 
   type: ResourceType;
 
-  magnet: string;
+  magnet: string | null | undefined;
+
+  magnet2: string | null | undefined;
+
+  magnetUser: string | null | undefined;
 
   size: string;
 

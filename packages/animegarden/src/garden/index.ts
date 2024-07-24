@@ -24,11 +24,17 @@ export { AllFansubs, findFansub } from './constant';
 
 export const DefaultBaseURL = 'https://garden.breadio.wiki/api/';
 
-type ResourceWithId = Resource & { id: number };
+type ResourceWithId<T extends FetchResourcesOptions> = Resource & {
+  id: number;
+} & {
+  magnet: T['magnet'] extends true ? string : string | null | undefined;
+  magnet2: T['magnet2'] extends true ? string : string | null | undefined;
+  magnetUser: T['magnetUser'] extends true ? string : string | null | undefined;
+};
 
-interface FetchResourcesResult {
+interface FetchResourcesResult<T extends FetchResourcesOptions> {
   ok: boolean;
-  resources: ResourceWithId[];
+  resources: ResourceWithId<T>[];
   complete: boolean;
   filter?: Omit<ResolvedFilterOptions, 'page'>;
   timestamp?: Date;
@@ -37,13 +43,23 @@ interface FetchResourcesResult {
 /**
  * Fetch resources data from dmhy mirror site
  */
-export async function fetchResources(
+export async function fetchResources<T extends FetchResourcesOptions = FetchResourcesOptions>(
   fetch: (request: RequestInfo, init?: RequestInit) => Promise<Response>,
-  options: FetchResourcesOptions = {}
-): Promise<FetchResourcesResult> {
+  options: T = {} as T
+): Promise<FetchResourcesResult<FetchResourcesOptions>> {
   const { baseURL = DefaultBaseURL, retry = 1 } = options;
 
   const url = stringifySearchURL(baseURL, options);
+
+  if (options.magnet) {
+    url.searchParams.set('magnet', 'true');
+  }
+  if (options.magnet2) {
+    url.searchParams.set('magnet2', 'true');
+  }
+  if (options.magnetUser) {
+    url.searchParams.set('magnetUser', 'true');
+  }
 
   if (options.count !== undefined && options.count !== null) {
     // Fetch multiple pages
@@ -51,7 +67,7 @@ export async function fetchResources(
     // Prefer the original count or -1 for inf
     const count = options.count < 0 ? Number.MAX_SAFE_INTEGER : options.count;
 
-    const map = new Map<string, ResourceWithId>();
+    const map = new Map<string, ResourceWithId<T>>();
     let aborted = false;
     let timestamp = new Date(0);
     let complete = false;
@@ -160,7 +176,7 @@ export async function fetchResources(
         const timestamp = new Date(r.timestamp);
         if (!isNaN(timestamp.getTime())) {
           return {
-            resources: r.resources as ResourceWithId[],
+            resources: r.resources as ResourceWithId<T>[],
             complete: r.complete as boolean,
             filter: r.filter as ResolvedFilterOptions | undefined,
             timestamp
@@ -171,8 +187,8 @@ export async function fetchResources(
     }, retry);
   }
 
-  function uniq(resources: ResourceWithId[]) {
-    const map = new Map<string, ResourceWithId>();
+  function uniq(resources: ResourceWithId<T>[]) {
+    const map = new Map<string, ResourceWithId<T>>();
     for (const r of resources) {
       if (!map.has(r.href)) {
         map.set(r.href, r);

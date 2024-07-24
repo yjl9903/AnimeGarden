@@ -68,6 +68,8 @@ export async function fetchDmhyPage(
       href,
       type,
       magnet,
+      magnet2: null,
+      magnetUser: null,
       size,
       fansub: fansubId ? { id: fansubId, name: fansubName } : undefined,
       publisher: { id: publisherId, name: publisherName },
