@@ -49,6 +49,14 @@ export async function getDmhyResourceDetail(ctx: Context) {
     return ctx.json({ message: '404 NOT FOUND' }, 404);
   }
 
+  // Set magnet href and magnet user
+  await database
+    .update(resources)
+    .set({ magnet2: resp.magnet.href2, magnetUser: resp.magnet.user })
+    .where(and(eq(resources.provider, 'dmhy'), eq(resources.providerId, resp.providerId)))
+    .execute()
+    .catch(() => {});
+
   logger.info(`Set resouce detail ${id} cache`);
 
   // Ignore cache put error

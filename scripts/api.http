@@ -2,6 +2,10 @@
 GET https://garden.breadio.wiki/api/resources
 Content-Type: application/json
 
+### List the first page of resources with its magnet url
+GET https://garden.breadio.wiki/api/resources?magnet=true
+Content-Type: application/json
+
 ### Get the resource detail
 GET https://garden.breadio.wiki/api/resource/638270_Nemuri_THE_iDOLM_STER_CINDERELLA_GIRLS_2012-2023_Discography_Collection_268_CDs_FLAC.html
 Content-Type: application/json
