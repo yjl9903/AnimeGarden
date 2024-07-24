@@ -55,7 +55,15 @@ export default defineConfig({
       policy: [
         {
           userAgent: '*',
-          allow: ['/detail/', '/resource/', '/resources/', '/anime/', '/docs/'],
+          allow: [
+            '/docs/',
+            '/anime/',
+            '/detail/',
+            '/resource/',
+            '/resources/1',
+            '/resources/2',
+            '/resources/3'
+          ],
           disallow: ['/feed.xml', '/api/']
         }
       ]
