@@ -1,10 +1,8 @@
 {
-  "id": "dc302e13-862c-4a76-bc03-d549a21ec112",
-  "prevId": "90defc1f-8a72-41f5-8a73-4d8b35373de3",
-  "version": "5",
-  "dialect": "pg",
+  "version": "7",
+  "dialect": "postgresql",
   "tables": {
-    "resources": {
+    "public.resources": {
       "name": "resources",
       "schema": "",
       "columns": {
@@ -111,73 +109,110 @@
       },
       "indexes": {
         "unique_resource_provider": {
-          "name": "unique_resource_provider",
           "columns": [
-            "provider_type",
-            "provider_id"
+            {
+              "expression": "provider_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "provider_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "with": {},
+          "name": "unique_resource_provider",
+          "isUnique": true,
+          "method": "btree",
+          "concurrently": false
         },
         "sort_by_created_at": {
-          "name": "sort_by_created_at",
           "columns": [
-            "created_at"
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "with": {},
+          "name": "sort_by_created_at",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
         },
         "fansub_index": {
-          "name": "fansub_index",
           "columns": [
-            "fansub_id"
+            {
+              "expression": "fansub_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "with": {},
+          "name": "fansub_index",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
         },
         "publisher_index": {
-          "name": "publisher_index",
           "columns": [
-            "publisher_id"
+            {
+              "expression": "publisher_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": false
+          "with": {},
+          "name": "publisher_index",
+          "isUnique": false,
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "resource_publisher_fk": {
           "name": "resource_publisher_fk",
           "tableFrom": "resources",
-          "tableTo": "users",
-          "schemaTo": "public",
           "columnsFrom": [
             "provider_type",
             "publisher_id"
           ],
+          "tableTo": "users",
+          "schemaTo": "public",
           "columnsTo": [
             "provider_type",
             "provider_id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "resource_fansub_fk": {
           "name": "resource_fansub_fk",
           "tableFrom": "resources",
-          "tableTo": "teams",
-          "schemaTo": "public",
           "columnsFrom": [
             "provider_type",
             "fansub_id"
           ],
+          "tableTo": "teams",
+          "schemaTo": "public",
           "columnsTo": [
             "provider_type",
             "provider_id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "teams": {
+    "public.teams": {
       "name": "teams",
       "schema": "",
       "columns": {
@@ -208,19 +243,32 @@
       },
       "indexes": {
         "unique_team_provider": {
-          "name": "unique_team_provider",
           "columns": [
-            "provider_type",
-            "provider_id"
+            {
+              "expression": "provider_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "provider_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "with": {},
+          "name": "unique_team_provider",
+          "isUnique": true,
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "users": {
+    "public.users": {
       "name": "users",
       "schema": "",
       "columns": {
@@ -251,12 +299,25 @@
       },
       "indexes": {
         "unique_user_provider": {
-          "name": "unique_user_provider",
           "columns": [
-            "provider_type",
-            "provider_id"
+            {
+              "expression": "provider_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "provider_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
           ],
-          "isUnique": true
+          "with": {},
+          "name": "unique_user_provider",
+          "isUnique": true,
+          "method": "btree",
+          "concurrently": false
         }
       },
       "foreignKeys": {},
@@ -265,18 +326,21 @@
     }
   },
   "enums": {
-    "resources_provider": {
+    "public.resources_provider": {
       "name": "resources_provider",
-      "values": {
-        "dmhy": "dmhy",
-        "moe": "moe"
-      }
+      "schema": "public",
+      "values": [
+        "dmhy",
+        "moe"
+      ]
     }
   },
   "schemas": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
-  }
+    "tables": {},
+    "columns": {}
+  },
+  "id": "dc302e13-862c-4a76-bc03-d549a21ec112",
+  "prevId": "90defc1f-8a72-41f5-8a73-4d8b35373de3"
 }

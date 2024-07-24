@@ -1,4 +1,6 @@
 {
+  "id": "5a7f6e36-c83a-491b-a0f8-0fa524b1af15",
+  "prevId": "dc302e13-862c-4a76-bc03-d549a21ec112",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -15,6 +17,7 @@
         "provider_type": {
           "name": "provider_type",
           "type": "resources_provider",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -60,6 +63,18 @@
           "primaryKey": false,
           "notNull": true
         },
+        "magnet2": {
+          "name": "magnet2",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "magnet_user": {
+          "name": "magnet_user",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -82,15 +97,15 @@
         },
         "fansub_id": {
           "name": "fansub_id",
-          "type": "integer",
+          "type": "varchar(128)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "publisher_id": {
           "name": "publisher_id",
-          "type": "integer",
+          "type": "varchar(128)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "is_deleted": {
           "name": "is_deleted",
@@ -109,6 +124,7 @@
       },
       "indexes": {
         "unique_resource_provider": {
+          "name": "unique_resource_provider",
           "columns": [
             {
               "expression": "provider_type",
@@ -123,28 +139,28 @@
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "unique_resource_provider",
           "isUnique": true,
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         },
         "sort_by_created_at": {
+          "name": "sort_by_created_at",
           "columns": [
             {
               "expression": "created_at",
               "isExpression": false,
-              "asc": true,
+              "asc": false,
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "sort_by_created_at",
           "isUnique": false,
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         },
         "fansub_index": {
+          "name": "fansub_index",
           "columns": [
             {
               "expression": "fansub_id",
@@ -153,13 +169,13 @@
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "fansub_index",
           "isUnique": false,
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         },
         "publisher_index": {
+          "name": "publisher_index",
           "columns": [
             {
               "expression": "publisher_id",
@@ -168,41 +184,42 @@
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "publisher_index",
           "isUnique": false,
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         }
       },
       "foreignKeys": {
-        "resources_fansub_id_teams_id_fk": {
-          "name": "resources_fansub_id_teams_id_fk",
+        "resource_publisher_fk": {
+          "name": "resource_publisher_fk",
           "tableFrom": "resources",
+          "tableTo": "users",
           "columnsFrom": [
-            "fansub_id"
-          ],
-          "tableTo": "teams",
-          "schemaTo": "public",
-          "columnsTo": [
-            "id"
-          ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
-        },
-        "resources_publisher_id_users_id_fk": {
-          "name": "resources_publisher_id_users_id_fk",
-          "tableFrom": "resources",
-          "columnsFrom": [
+            "provider_type",
             "publisher_id"
           ],
-          "tableTo": "users",
-          "schemaTo": "public",
           "columnsTo": [
-            "id"
+            "provider_type",
+            "provider_id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "resource_fansub_fk": {
+          "name": "resource_fansub_fk",
+          "tableFrom": "resources",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "provider_type",
+            "fansub_id"
+          ],
+          "columnsTo": [
+            "provider_type",
+            "provider_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -221,6 +238,7 @@
         "provider_type": {
           "name": "provider_type",
           "type": "resources_provider",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -239,6 +257,7 @@
       },
       "indexes": {
         "unique_team_provider": {
+          "name": "unique_team_provider",
           "columns": [
             {
               "expression": "provider_type",
@@ -253,11 +272,10 @@
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "unique_team_provider",
           "isUnique": true,
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -277,6 +295,7 @@
         "provider_type": {
           "name": "provider_type",
           "type": "resources_provider",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -295,6 +314,7 @@
       },
       "indexes": {
         "unique_user_provider": {
+          "name": "unique_user_provider",
           "columns": [
             {
               "expression": "provider_type",
@@ -309,11 +329,10 @@
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "unique_user_provider",
           "isUnique": true,
+          "concurrently": false,
           "method": "btree",
-          "concurrently": false
+          "with": {}
         }
       },
       "foreignKeys": {},
@@ -332,11 +351,10 @@
     }
   },
   "schemas": {},
+  "sequences": {},
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "id": "158a3877-e86b-41d5-b62e-9f688c0ba370",
-  "prevId": "a27c7314-751e-40b1-b3b9-858ae9902da4"
+    "tables": {}
+  }
 }
