@@ -20,6 +20,7 @@ export function registerQuery() {
       }
       const resp = await queryResources(ctx, filter);
 
+      // Remove magnet url related of the response body
       const isEnable = (key: string) => {
         const value = ctx.req.query(key);
         return value !== undefined && ['true', 'yes', 'on'].includes(value.toLowerCase());
@@ -27,7 +28,8 @@ export function registerQuery() {
       const enableMagnet = isEnable('magnet');
       const enableMagnet2 = isEnable('magnet2');
       const enableMagnetUser = isEnable('magnetUser');
-      if (!enableMagnet || !enableMagnet2 || !enableMagnetUser) {
+      const enableMagnetWithoutTracker = isEnable('magnetWithoutTracker');
+      if (!enableMagnet || !enableMagnet2 || !enableMagnetUser || enableMagnetWithoutTracker) {
         for (const r of resp.resources) {
           if (!enableMagnet) {
             r.magnet = null;
@@ -37,6 +39,9 @@ export function registerQuery() {
           }
           if (!enableMagnetUser) {
             r.magnetUser = null;
+          }
+          if (enableMagnetWithoutTracker) {
+            (r as any).magnetWithoutTracker = r.magnet?.split('&')[0];
           }
         }
       }
