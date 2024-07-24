@@ -3,7 +3,7 @@ GET https://garden.breadio.wiki/api/resources
 Content-Type: application/json
 
 ### List the first page of resources with its magnet url
-GET https://garden.breadio.wiki/api/resources?magnet=true
+GET https://garden.breadio.wiki/api/resources?magnet=true&magnet2=true&magnetUser=true
 Content-Type: application/json
 
 ### Get the resource detail
