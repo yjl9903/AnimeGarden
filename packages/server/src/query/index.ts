@@ -31,6 +31,9 @@ export function registerQuery() {
       const enableMagnetWithoutTracker = isEnable('magnetWithoutTracker');
       if (!enableMagnet || !enableMagnet2 || !enableMagnetUser || enableMagnetWithoutTracker) {
         for (const r of resp.resources) {
+          if (enableMagnetWithoutTracker) {
+            (r as any).magnetWithoutTracker = r.magnet?.split('&')[0];
+          }
           if (!enableMagnet) {
             r.magnet = null;
           }
@@ -39,9 +42,6 @@ export function registerQuery() {
           }
           if (!enableMagnetUser) {
             r.magnetUser = null;
-          }
-          if (enableMagnetWithoutTracker) {
-            (r as any).magnetWithoutTracker = r.magnet?.split('&')[0];
           }
         }
       }
