@@ -78,6 +78,8 @@ const listResourcesFromDB = memoAsync(
         href: resources.href,
         type: resources.type,
         magnet: resources.magnet,
+        magnet2: resources.magnet2,
+        magnetUser: resources.magnetUser,
         size: resources.size,
         anitomy: resources.anitomy,
         createdAt: resources.createdAt,
@@ -218,6 +220,8 @@ async function transformFromDb(
       href,
       type: r.type as ResourceType,
       magnet: r.magnet,
+      magnet2: r.magnet2,
+      magnetUser: r.magnetUser,
       size: r.size,
       // When reading this field from cache, it will be transfromed to string
       createdAt: new Date(r.createdAt!).toISOString(),
