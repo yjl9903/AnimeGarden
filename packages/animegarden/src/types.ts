@@ -19,7 +19,13 @@ export type ResourceType =
   | '特攝'
   | '其他';
 
-export interface Resource {
+interface MagnetOptions {
+  magnet?: string;
+  magnet2?: string;
+  magnetUser?: string;
+}
+
+export interface Resource<T extends MagnetOptions = MagnetOptions> {
   id?: number;
 
   provider: string;
@@ -32,11 +38,11 @@ export interface Resource {
 
   type: ResourceType;
 
-  magnet: string | null | undefined;
+  magnet: T['magnet'] extends string ? string : string | null | undefined;
 
-  magnet2: string | null | undefined;
+  magnet2: T['magnet2'] extends string ? string : string | null | undefined;
 
-  magnetUser: string | null | undefined;
+  magnetUser: T['magnetUser'] extends string ? string : string | null | undefined;
 
   size: string;
 
