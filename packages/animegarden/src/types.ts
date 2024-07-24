@@ -19,7 +19,7 @@ export type ResourceType =
   | '特攝'
   | '其他';
 
-interface MagnetOptions {
+export interface MagnetOptions {
   magnet?: string;
   magnet2?: string;
   magnetUser?: string;
