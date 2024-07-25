@@ -5,7 +5,8 @@ import { parseSearchURL } from 'animegarden';
 import { registerApp } from '../app';
 
 import { queryResources } from './resources';
-import { getDmhyResourceDetail } from './detail';
+import { getMoeResourceDetail } from './moe';
+import { getDmhyResourceDetail } from './dmhy';
 
 export function registerQuery() {
   registerApp((app) => {
@@ -73,9 +74,17 @@ export function registerQuery() {
     app.post(`/moe/resources`, async (ctx) => {
       return listResourcesHandler(ctx, 'moe');
     });
-    app.get(`/moe/detail/:href`, async (ctx) => {});
-    app.get(`/moe/resource/:href`, async (ctx) => {});
-    app.get(`/detail/moe/:href`, async (ctx) => {});
-    app.get(`/resource/moe/:href`, async (ctx) => {});
+    app.get(`/moe/detail/:href`, async (ctx) => {
+      return getMoeResourceDetail(ctx);
+    });
+    app.get(`/moe/resource/:href`, async (ctx) => {
+      return getMoeResourceDetail(ctx);
+    });
+    app.get(`/detail/moe/:href`, async (ctx) => {
+      return getMoeResourceDetail(ctx);
+    });
+    app.get(`/resource/moe/:href`, async (ctx) => {
+      return getMoeResourceDetail(ctx);
+    });
   });
 }

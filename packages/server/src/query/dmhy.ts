@@ -10,7 +10,7 @@ import { storage } from '../storage';
 import { database } from '../database';
 import { logger as rootLogger } from '../logger';
 
-const logger = rootLogger.forkIntegrationLogger('detail');
+const logger = rootLogger.forkIntegrationLogger('dmhy-detail');
 
 const dmhyDetailStorage = prefixStorage(storage, 'dmhy-detail');
 
