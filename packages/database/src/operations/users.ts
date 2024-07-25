@@ -19,7 +19,8 @@ export async function insertUsers(database: Database, newUsers: NewUser[]) {
     id: users.id,
     provider: users.provider,
     providerId: users.providerId,
-    name: users.name
+    name: users.name,
+    avatar: users.avatar
   });
 
   for (const r of resp) {
@@ -45,7 +46,8 @@ export async function insertTeams(database: Database, newTeams: NewTeam[]) {
     id: teams.id,
     provider: teams.provider,
     providerId: teams.providerId,
-    name: teams.name
+    name: teams.name,
+    avatar: teams.avatar
   });
 
   for (const r of resp) {

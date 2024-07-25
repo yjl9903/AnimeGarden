@@ -3,6 +3,7 @@ import { registerApp } from '../app';
 import { pruneResourcesCache } from '../query/resources';
 
 import { syncDocuments } from './meili';
+import { refreshMoeResources } from './moe';
 import { fixDmhyResources, refreshDmhyResources } from './dmhy';
 
 export function registerAdmin() {
@@ -32,8 +33,8 @@ export function registerAdmin() {
     });
 
     app.post(`/admin/moe/resources`, async (req) => {
-      // const r = await refreshDmhyResources();
-      return req.json({});
+      const r = await refreshMoeResources();
+      return req.json(r);
     });
   });
 }

@@ -20,7 +20,7 @@ export function registerQuery() {
       }
       const resp = await queryResources(ctx, filter);
 
-      // Remove magnet url related of the response body
+      // Remove tracker the response body
       const isEnable = (key: string) => {
         const value = ctx.req.query(key);
         return value !== undefined && ['true', 'yes', 'on'].includes(value.toLowerCase());

@@ -48,6 +48,19 @@ Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
   }
 });
 
+Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
+  try {
+    const req = new Request(`https://api.zeabur.internal/admin/moe/resources`, {
+      method: 'POST'
+    });
+    logger.info(`cron`, `Fetch moe resources`);
+    const resp = await app.fetch(req);
+    logger.info(`cron`, JSON.stringify(await resp.json()));
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 Cron(`0 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
   try {
     const req = new Request(`https://api.zeabur.internal/admin/dmhy/resources/sync`, {

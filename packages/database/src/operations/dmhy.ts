@@ -8,6 +8,7 @@ import type { Database } from '../connection';
 import type { NewResource, Resource } from '../schema';
 
 import { resources } from '../schema/resource';
+import { toShanghai } from '../utils';
 import { insertResourceDocuments } from '../meilisearch';
 
 export async function insertDmhyResources(
@@ -183,9 +184,4 @@ function transformResource(resource: FetchedResource, now: Date) {
     fansubId: resource.fansub?.id ? resource.fansub?.id : undefined,
     publisherId: resource.publisher.id
   };
-}
-
-function toShanghai(date: Date) {
-  const offset = -480 - new Date().getTimezoneOffset();
-  return new Date(date.getTime() + offset * 60 * 1000);
 }
