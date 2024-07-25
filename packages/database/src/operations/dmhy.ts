@@ -177,6 +177,7 @@ function transformResource(resource: FetchedResource, now: Date) {
     type: resource.type,
     size: resource.size,
     magnet: resource.magnet,
+    tracker: resource.tracker,
     // Convert to UTC+8
     createdAt: toShanghai(new Date(resource.createdAt)),
     fetchedAt: toShanghai(new Date(now)),

@@ -69,7 +69,7 @@ export type ResourceWithId<T extends FetchResourcesOptions> = Resource<T> & {
   id: number;
 };
 
-export type FetchedResource = Omit<Resource, 'fetchedAt'>;
+export type FetchedResource = Omit<Resource<{ tracker: true }>, 'fetchedAt'>;
 
 export interface ResourceDetail {
   provider: string;

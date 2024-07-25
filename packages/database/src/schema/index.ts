@@ -33,6 +33,8 @@ export interface ResourceDocument {
 
   magnet: Resource['magnet'];
 
+  tracker: Resource['tracker'];
+
   createdAt: number;
 
   fetchedAt: number;
