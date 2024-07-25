@@ -22,7 +22,8 @@ cli
       const { fetchDmhy } = await import('./commands/dmhy');
       await fetchDmhy(+options.from, options.to ? +options.to : undefined, options.outDir);
     } else if (platform === 'moe') {
-      throw new Error('unimplemented');
+      const { fetchMoe } = await import('./commands/moe');
+      await fetchMoe(+options.from, options.to ? +options.to : undefined, options.outDir);
     }
   });
 
