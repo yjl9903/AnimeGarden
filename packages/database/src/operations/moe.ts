@@ -53,7 +53,8 @@ function transformResource(resource: FetchedResource, now: Date) {
     title: resource.title,
     titleAlt,
     type: resource.type,
-    size: resource.size,
+    // TODO: check this
+    size: resource.size ?? '',
     magnet: resource.magnet,
     tracker: resource.tracker,
     // Convert to UTC+8
