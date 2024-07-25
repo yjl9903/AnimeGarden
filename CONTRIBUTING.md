@@ -76,4 +76,8 @@ Then insert the data to the database.
 pnpm animegarden db insert dmhy output/dmhy \
   --uri "postgres://root:example@0.0.0.0:5432/animegarden" \
   --meili-url "http://0.0.0.0:7700" --meili-key "example"
+
+pnpm animegarden db insert moe  output/moe \
+  --uri "postgres://root:example@0.0.0.0:5432/animegarden" \
+  --meili-url "http://0.0.0.0:7700" --meili-key "example"
 ```
