@@ -82,6 +82,6 @@ export async function insertMoe(database: Database, meili: MeiliSearch, dir: str
   const chunks = splitChunks(all, 1000);
   for (const resources of chunks) {
     const resp = await insertMoeResources(database, meili, resources);
-    console.log(`Insert ${resp.length} dmhy resources`);
+    console.log(`Insert ${resp.length} moe resources`);
   }
 }
