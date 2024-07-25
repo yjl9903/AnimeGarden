@@ -26,5 +26,5 @@ export async function readResources(root: string) {
   };
 
   await traverse(root);
-  return [...map.values()].sort((lhs, rhs) => rhs.createdAt.localeCompare(lhs.createdAt));
+  return [...map.values()].sort((lhs, rhs) => lhs.createdAt.localeCompare(rhs.createdAt));
 }
