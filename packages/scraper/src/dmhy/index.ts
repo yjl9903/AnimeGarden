@@ -4,6 +4,8 @@ import type { FetchedResource, ResourceDetail, ResourceType } from 'animegarden'
 
 import { retryFn } from 'animegarden';
 
+import { splitOnce } from '../utils';
+
 export interface FetchDmhyPageOptions {
   page?: number;
 
@@ -50,7 +52,8 @@ export async function fetchDmhyPage(
     const fansub = tds.eq(2).find('span.tag a');
     const fansubName = fansub.text().trim();
     const fansubId = fansub.attr('href')?.split('/').at(-1);
-    const magnet = tds.eq(3).find('a').attr('href')!;
+    const magnetFull = tds.eq(3).find('a').attr('href')!;
+    const [magnet, tracker] = splitOnce(magnetFull, '&');
     const size = tds.eq(4).text().trim();
     const publisher = tds.eq(8).find('a');
     const publisherName = publisher.text();
@@ -68,7 +71,7 @@ export async function fetchDmhyPage(
       href,
       type,
       magnet,
-      tracker: '',
+      tracker,
       size,
       fansub: fansubId ? { id: fansubId, name: fansubName } : undefined,
       publisher: { id: publisherId, name: publisherName },
