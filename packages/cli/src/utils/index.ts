@@ -25,3 +25,11 @@ export const ufetch = async (url: RequestInfo, init?: RequestInit): Promise<Resp
     return undefined;
   }
 };
+
+export function splitChunks<T>(arr: T[], chunkSize = 1000): T[][] {
+  const chunkedArray = [];
+  for (let i = 0; i < arr.length; i += chunkSize) {
+    chunkedArray.push(arr.slice(i, i + chunkSize));
+  }
+  return chunkedArray;
+}

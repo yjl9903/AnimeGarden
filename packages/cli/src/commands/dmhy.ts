@@ -1,13 +1,14 @@
 import fs from 'fs-extra';
 import path from 'node:path';
 
-import type { FetchedResource } from 'animegarden';
 import type { Database, NewUser, NewTeam, MeiliSearch } from '@animegarden/database';
 
 import { fetchDmhyPage } from '@animegarden/scraper';
 import { insertDmhyResources, insertTeams, insertUsers } from '@animegarden/database';
 
-import { ufetch } from '../utils';
+import { splitChunks, ufetch } from '../utils';
+
+import { readResources } from './fs';
 
 export async function fetchDmhy(from: number, to: number | undefined, outDir: string) {
   await fs.mkdir(outDir, { recursive: true });
@@ -41,42 +42,8 @@ export async function fetchDmhy(from: number, to: number | undefined, outDir: st
   }
 }
 
-async function readDmhyResources(root: string) {
-  const map = new Map<string, FetchedResource>();
-  const traverse = async (folder: string): Promise<void> => {
-    const files = await fs.readdir(folder);
-    await Promise.all(
-      files.map(async (file) => {
-        const stat = await fs.stat(path.join(folder, file));
-        if (stat.isDirectory()) {
-          await traverse(path.join(folder, file));
-        } else if (stat.isFile() && file.endsWith('.json')) {
-          const p = path.join(folder, file);
-          const content = JSON.parse(await fs.readFile(p, 'utf-8')) as FetchedResource[];
-          for (const r of content) {
-            if (!map.has(r.href)) {
-              map.set(r.href, r);
-            }
-          }
-        }
-      })
-    );
-  };
-
-  await traverse(root);
-  return [...map.values()].sort((lhs, rhs) => rhs.createdAt.localeCompare(lhs.createdAt));
-}
-
-function splitChunks<T>(arr: T[], chunkSize = 1000): T[][] {
-  const chunkedArray = [];
-  for (let i = 0; i < arr.length; i += chunkSize) {
-    chunkedArray.push(arr.slice(i, i + chunkSize));
-  }
-  return chunkedArray;
-}
-
 export async function insertDmhy(database: Database, meili: MeiliSearch, dir: string) {
-  const all = await readDmhyResources(dir);
+  const all = await readResources(dir);
   console.log(`Read ${all.length} dmhy resources`);
 
   const users = new Map<string, NewUser>();

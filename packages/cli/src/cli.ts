@@ -49,7 +49,8 @@ cli
       const { insertDmhy } = await import('./commands/dmhy');
       await insertDmhy(database, meili, dir);
     } else if (platform === 'moe') {
-      throw new Error('unimplemented');
+      const { insertMoe } = await import('./commands/moe');
+      await insertMoe(database, meili, dir);
     }
 
     await connection.end();

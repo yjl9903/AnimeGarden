@@ -16,4 +16,5 @@ export async function insertMoeResources(
   fetchedResources: FetchedResource[]
 ) {
   // TODO
+  return [];
 }
