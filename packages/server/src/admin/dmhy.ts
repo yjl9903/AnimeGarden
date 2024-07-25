@@ -32,6 +32,7 @@ export async function refreshDmhyResources() {
         database,
         [...curUsers.values()].map((u) => ({
           name: u.name,
+          avatar: u.avatar,
           provider: 'dmhy',
           providerId: u.id
         }))
@@ -43,10 +44,11 @@ export async function refreshDmhyResources() {
       );
       await insertTeams(
         database,
-        [...curTeams.values()].map((u) => ({
-          name: u.name,
+        [...curTeams.values()].map((t) => ({
+          name: t.name,
+          avatar: t.avatar,
           provider: 'dmhy',
-          providerId: u.id
+          providerId: t.id
         }))
       );
     }
@@ -56,7 +58,7 @@ export async function refreshDmhyResources() {
 
     if (count === 0) break;
     sum += count;
-    logger.info(`There are ${count} resources inserted`);
+    logger.info(`There are ${count} dmhy resources inserted`);
   }
 
   if (sum > 0) {
@@ -69,7 +71,7 @@ export async function refreshDmhyResources() {
     //   })
     // );
   } else {
-    logger.info(`The resource list is latest`);
+    logger.info(`The moe resource list is latest`);
 
     // await Promise.all(
     //   PrefetchFilter.map(async (filter) => {
