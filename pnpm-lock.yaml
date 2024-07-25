@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: ^4.20240722.0
-        version: 4.20240722.0
+        specifier: ^4.20240725.0
+        version: 4.20240725.0
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -60,8 +60,8 @@ importers:
         specifier: ^2.0.4
         version: 2.0.4(@types/node@20.14.12)(jsdom@24.1.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.3)
       wrangler:
-        specifier: ^3.66.0
-        version: 3.66.0(@cloudflare/workers-types@4.20240722.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+        specifier: ^3.67.0
+        version: 3.67.0(@cloudflare/workers-types@4.20240725.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
 
   packages/animegarden:
     dependencies:
@@ -287,7 +287,7 @@ importers:
         version: 0.0.35
       drizzle-orm:
         specifier: ^0.32.1
-        version: 0.32.1(@cloudflare/workers-types@4.20240722.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
+        version: 0.32.1(@cloudflare/workers-types@4.20240725.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
       meilisearch:
         specifier: ^0.41.0
         version: 0.41.0
@@ -342,7 +342,7 @@ importers:
         version: 16.4.5
       drizzle-orm:
         specifier: ^0.32.1
-        version: 0.32.1(@cloudflare/workers-types@4.20240722.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
+        version: 0.32.1(@cloudflare/workers-types@4.20240725.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
       hono:
         specifier: ^4.5.1
         version: 4.5.1
@@ -1141,8 +1141,8 @@ packages:
   '@cloudflare/workers-types@4.20240718.0':
     resolution: {integrity: sha512-7RqxXIM9HyhjfZ9ztXjITuc7mL0w4s+zXgypqKmMuvuObC3DgXutJ3bOYbQ+Ss5QbywrzWSNMlmGdL/ldg/yZg==}
 
-  '@cloudflare/workers-types@4.20240722.0':
-    resolution: {integrity: sha512-/N072r7w7jNCgciRtImOQnHODn8CNwl3NHGO2lmC5bCsgevTRNeNj6B2IjS+OgEfo0qFoBgLejISl6ot9QvGvA==}
+  '@cloudflare/workers-types@4.20240725.0':
+    resolution: {integrity: sha512-L6T/Bg50zm9IIACQVQ0CdVcQL+2nLkRXdPz6BsXF3SlzgjyWR5ndVctAbfr/HLV7aKYxWnnEZsIORsTWb+FssA==}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -7535,8 +7535,8 @@ packages:
       '@cloudflare/workers-types':
         optional: true
 
-  wrangler@3.66.0:
-    resolution: {integrity: sha512-5fEyXsP8qvrUeR13kCfA3OG1z/ABx+/a8hzIA55nCUM2/tjI67ZkfeN1VdOmG6cipZDvs4HfN8rp7j+e+21nKA==}
+  wrangler@3.67.0:
+    resolution: {integrity: sha512-elun6p9rAmGr/CtnCixhUXWeKT+LnFbHDsLLizgAlFJbsgCPV/O1if7uMjTGD/fUJNXrwbTVRpxvInz5X9gE2Q==}
     engines: {node: '>=16.17.0'}
     hasBin: true
     peerDependencies:
@@ -8618,7 +8618,7 @@ snapshots:
 
   '@cloudflare/workers-types@4.20240718.0': {}
 
-  '@cloudflare/workers-types@4.20240722.0': {}
+  '@cloudflare/workers-types@4.20240725.0': {}
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
@@ -11616,9 +11616,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.32.1(@cloudflare/workers-types@4.20240722.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1):
+  drizzle-orm@0.32.1(@cloudflare/workers-types@4.20240725.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1):
     optionalDependencies:
-      '@cloudflare/workers-types': 4.20240722.0
+      '@cloudflare/workers-types': 4.20240725.0
       '@types/react': 18.3.3
       postgres: 3.4.4
       react: 18.3.1
@@ -15853,7 +15853,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  wrangler@3.66.0(@cloudflare/workers-types@4.20240722.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4):
+  wrangler@3.67.0(@cloudflare/workers-types@4.20240725.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.4
       '@esbuild-plugins/node-globals-polyfill': 0.2.3(esbuild@0.17.19)
@@ -15873,7 +15873,7 @@ snapshots:
       workerd: 1.20240718.0
       xxhash-wasm: 1.0.2
     optionalDependencies:
-      '@cloudflare/workers-types': 4.20240722.0
+      '@cloudflare/workers-types': 4.20240725.0
       fsevents: 2.3.3
     transitivePeerDependencies:
       - bufferutil
