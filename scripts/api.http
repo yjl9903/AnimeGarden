@@ -2,20 +2,16 @@
 GET https://garden.breadio.wiki/api/resources
 Content-Type: application/json
 
-### List the first page of resources with its magnet url
-GET https://garden.breadio.wiki/api/resources?magnetWithoutTracker=true
-Content-Type: application/json
-
-### List the first page of resources with all its magnet url
-GET https://garden.breadio.wiki/api/resources?magnet=true&magnet2=true&magnetUser=true
+### List the first page of resources with its full magnet url with tracker
+GET https://garden.breadio.wiki/api/resources?tracker=true
 Content-Type: application/json
 
 ### Get the resource detail
-GET https://garden.breadio.wiki/api/resource/638270_Nemuri_THE_iDOLM_STER_CINDERELLA_GIRLS_2012-2023_Discography_Collection_268_CDs_FLAC.html
+GET https://garden.breadio.wiki/api/resource/dmhy/674983_LoliHouse_Oshi_no_Ko_-_15_WebRip_1080p_HEVC-10bit_AAC.html
 Content-Type: application/json
 
 ### Get the resource detail by id
-GET https://garden.breadio.wiki/api/resource/652885
+GET https://garden.breadio.wiki/api/resource/dmhy/674983
 Content-Type: application/json
 
 ### List the second page of resources
