@@ -48,12 +48,16 @@ export interface Resource<T extends FetchResourcesOptions = FetchResourcesOption
     id: string;
 
     name: string;
+
+    avatar?: string;
   };
 
   publisher: {
     id: string;
 
     name: string;
+
+    avatar?: string;
   };
 
   createdAt: string;

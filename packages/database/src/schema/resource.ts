@@ -27,7 +27,7 @@ export const resources = pgTable(
     type: varchar('type', { length: 256 }).notNull(),
     size: varchar('size', { length: 256 }).notNull(),
     magnet: text('magnet').notNull(),
-    tracker: text('tracker'),
+    tracker: text('tracker').notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
     fetchedAt: timestamp('fetched_at', { withTimezone: true }).defaultNow(),
     anitomy: json('anitomy'),
