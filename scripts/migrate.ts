@@ -22,6 +22,7 @@ async function update(page: number) {
   console.log(`Updating page ${page}`);
 
   // Update database
+  let updated = 0;
   const tasks: Promise<void>[] = data.map(async (r) => {
     if (!r.magnet || r.tracker) return;
     const [magnet, tracker] = splitOnce(r.magnet, '&');
@@ -32,13 +33,17 @@ async function update(page: number) {
       .where(eq(resources.id, r.id))
       .execute();
 
+    updated++;
     r.magnet = magnet;
     r.tracker = tracker;
   });
   await Promise.all(tasks);
 
-  // Insert meili
-  await insertResourceDocuments(meiliSearch, data);
+  if (updated > 0) {
+    console.log(`Updated ${updated} resources`);
+    // Insert meili
+    await insertResourceDocuments(meiliSearch, data);
+  }
 
   return true;
 
