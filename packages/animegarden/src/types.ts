@@ -1,3 +1,5 @@
+import type { FetchResourcesOptions } from './garden/types';
+
 export type ResourceType =
   | '動畫'
   | '季度全集'
@@ -19,13 +21,7 @@ export type ResourceType =
   | '特攝'
   | '其他';
 
-export interface MagnetOptions {
-  magnet?: string;
-  magnet2?: string;
-  magnetUser?: string;
-}
-
-export interface Resource<T extends MagnetOptions = MagnetOptions> {
+export interface Resource<T extends FetchResourcesOptions = FetchResourcesOptions> {
   id?: number;
 
   provider: string;
@@ -38,11 +34,13 @@ export interface Resource<T extends MagnetOptions = MagnetOptions> {
 
   type: ResourceType;
 
-  magnet: T['magnet'] extends string ? string : string | null | undefined;
+  magnet: string;
 
-  magnet2: T['magnet2'] extends string ? string : string | null | undefined;
-
-  magnetUser: T['magnetUser'] extends string ? string : string | null | undefined;
+  tracker: T['tracker'] extends true
+    ? string
+    : T['tracker'] extends false
+      ? null | undefined
+      : string | null | undefined;
 
   size: string;
 
@@ -62,6 +60,10 @@ export interface Resource<T extends MagnetOptions = MagnetOptions> {
 
   fetchedAt: string;
 }
+
+export type ResourceWithId<T extends FetchResourcesOptions> = Resource<T> & {
+  id: number;
+};
 
 export type FetchedResource = Omit<Resource, 'fetchedAt'>;
 

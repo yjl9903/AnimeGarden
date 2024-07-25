@@ -60,7 +60,7 @@ export const GET: APIRoute = async (context) => {
         filter.data.map((f) =>
           fetchResources(wfetch(locals?.worker), {
             ...f,
-            magnet: true,
+            tracker: true,
             baseURL,
             page: 1,
             pageSize: 100

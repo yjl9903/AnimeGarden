@@ -25,24 +25,10 @@ export function registerQuery() {
         const value = ctx.req.query(key);
         return value !== undefined && ['true', 'yes', 'on'].includes(value.toLowerCase());
       };
-      const enableMagnet = isEnable('magnet');
-      const enableMagnet2 = isEnable('magnet2');
-      const enableMagnetUser = isEnable('magnetUser');
-      const enableMagnetWithoutTracker = isEnable('magnetWithoutTracker');
-      if (!enableMagnet || !enableMagnet2 || !enableMagnetUser || enableMagnetWithoutTracker) {
+      const enableTracker = isEnable('tracker');
+      if (!enableTracker) {
         for (const r of resp.resources) {
-          if (enableMagnetWithoutTracker) {
-            (r as any).magnetWithoutTracker = r.magnet?.split('&')[0];
-          }
-          if (!enableMagnet) {
-            r.magnet = null;
-          }
-          if (!enableMagnet2) {
-            r.magnet2 = null;
-          }
-          if (!enableMagnetUser) {
-            r.magnetUser = null;
-          }
+          r.tracker = null;
         }
       }
 

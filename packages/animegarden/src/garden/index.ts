@@ -1,4 +1,4 @@
-import type { Resource, ResourceDetail } from '../types';
+import type { Resource, ResourceDetail, ResourceWithId } from '../types';
 
 import { version } from '../../package.json';
 
@@ -24,14 +24,6 @@ export { AllFansubs, findFansub } from './constant';
 
 export const DefaultBaseURL = 'https://garden.breadio.wiki/api/';
 
-type ResourceWithId<T extends FetchResourcesOptions> = Resource & {
-  id: number;
-} & {
-  magnet: T['magnet'] extends true ? string : string | null | undefined;
-  magnet2: T['magnet2'] extends true ? string : string | null | undefined;
-  magnetUser: T['magnetUser'] extends true ? string : string | null | undefined;
-};
-
 interface FetchResourcesResult<T extends FetchResourcesOptions> {
   ok: boolean;
   resources: ResourceWithId<T>[];
@@ -51,14 +43,9 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
 
   const url = stringifySearchURL(baseURL, options);
 
-  if (options.magnet) {
-    url.searchParams.set('magnet', 'true');
-  }
-  if (options.magnet2) {
-    url.searchParams.set('magnet2', 'true');
-  }
-  if (options.magnetUser) {
-    url.searchParams.set('magnetUser', 'true');
+  // Enable tracker
+  if (options.tracker) {
+    url.searchParams.set('tracker', 'true');
   }
 
   if (options.count !== undefined && options.count !== null) {

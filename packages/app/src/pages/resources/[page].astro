@@ -1,11 +1,11 @@
 ---
-import { type ResourceType, findFansub, parseSearchURL } from 'animegarden';
+import { parseSearchURL } from 'animegarden';
 
 import Layout from '../../layouts/Layout.astro';
+import FilterCard from '../../components/Filter.astro';
 import Pagination from '../../components/Pagination.astro';
 import ResourceTable from '../../components/ResourceTable.astro';
 import ErrorNotification from '../../components/Error.astro';
-import FilterCard from '../../components/Filter.astro';
 
 import { generateFeed } from '../../logic/feed';
 import { getRuntimeEnv } from '../../utils';

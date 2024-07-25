@@ -168,25 +168,11 @@ export interface FetchResourcesOptions extends FilterOptions {
   signal?: AbortSignal;
 
   /**
-   * Should return magnet href
+   * Should return tracker href
    *
    * @default false
    */
-  magnet?: boolean;
-
-  /**
-   * Should return magnet href2
-   *
-   * @default false
-   */
-  magnet2?: boolean;
-
-  /**
-   * Should return magnet user
-   *
-   * @default false
-   */
-  magnetUser?: boolean;
+  tracker?: boolean;
 
   /**
    * Request headers
