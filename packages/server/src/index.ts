@@ -53,9 +53,9 @@ Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
     const req = new Request(`https://api.zeabur.internal/admin/moe/resources`, {
       method: 'POST'
     });
-    logger.info(`cron`, `Fetch moe resources`);
-    const resp = await app.fetch(req);
-    logger.info(`cron`, JSON.stringify(await resp.json()));
+    // logger.info(`cron`, `Fetch moe resources`);
+    // const resp = await app.fetch(req);
+    // logger.info(`cron`, JSON.stringify(await resp.json()));
   } catch (error) {
     console.error(error);
   }

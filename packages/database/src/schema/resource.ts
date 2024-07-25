@@ -26,7 +26,7 @@ export const resources = pgTable(
     titleAlt: varchar('title_alt', { length: 1024 }).notNull(),
     type: varchar('type', { length: 256 }).notNull(),
     size: varchar('size', { length: 256 }).notNull(),
-    magnet: text('magnet').notNull(),
+    magnet: varchar('magnet', { length: 256 }).notNull(),
     tracker: text('tracker').notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
     fetchedAt: timestamp('fetched_at', { withTimezone: true }).defaultNow(),
@@ -40,6 +40,7 @@ export const resources = pgTable(
     return {
       uniqueProviderIndex: uniqueIndex('unique_resource_provider').on(t.provider, t.providerId),
       sortByCreatedAt: index('sort_by_created_at').on(t.createdAt.desc()),
+      magnetIndex: index('magnet_index').on(t.magnet),
       fansubIndex: index('fansub_index').on(t.fansubId),
       publisherIndex: index('publisher_index').on(t.publisherId),
       publisherReference: foreignKey({
