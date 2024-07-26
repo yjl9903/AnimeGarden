@@ -58,7 +58,7 @@ export async function refreshMoeResources() {
   }
 
   if (sum > 0) {
-    await updateRefreshTimestamp(storage);
+    //
   } else {
     logger.info(`The moe resource list is latest`);
   }
