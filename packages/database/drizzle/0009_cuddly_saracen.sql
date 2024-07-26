@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS "title_index" ON "resources" USING btree ("title");
