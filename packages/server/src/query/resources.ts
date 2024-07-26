@@ -211,6 +211,8 @@ async function transformFromDb(
         ? `https://share.dmhy.org/topics/list/user_id/${r.publisherId}`
         : undefined;
 
+    console.log(`Resource: ${r.provider} ${r.providerId} ${r.title} ${r.createdAt} ${r.fetchedAt}`);
+
     result.push({
       id: r.id,
       provider: r.provider,
