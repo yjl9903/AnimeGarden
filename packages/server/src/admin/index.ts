@@ -13,6 +13,7 @@ export function registerAdmin() {
   registerApp((app) => {
     app.delete(`/admin/resources/cache`, async (req) => {
       await pruneResourcesCache();
+      await updateRefreshTimestamp(storage);
       return req.json({ ok: true });
     });
 
