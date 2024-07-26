@@ -58,8 +58,8 @@ function transformResource(resource: FetchedResource, now: Date) {
     magnet: resource.magnet,
     tracker: resource.tracker,
     // Convert to UTC+8
-    createdAt: toShanghai(new Date(resource.createdAt)),
-    fetchedAt: toShanghai(new Date(now)),
+    createdAt: new Date(resource.createdAt),
+    fetchedAt: new Date(now),
     anitomy: resource.type === '動畫' ? JSON.stringify(parse(resource.title)) : undefined,
     fansubId: resource.fansub?.id ? resource.fansub?.id : undefined,
     publisherId: resource.publisher.id,
