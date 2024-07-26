@@ -13,8 +13,8 @@ import { storage } from './storage';
 
 export const app = new Hono({});
 
-export async function registerApp(fn: (hono: typeof app) => void | Promise<void>) {
-  await fn(app);
+export async function registerApp<T>(fn: (hono: typeof app) => T | Promise<T>): Promise<T> {
+  return await fn(app);
 }
 
 app.use('*', cors());

@@ -9,7 +9,7 @@ import { getMoeResourceDetail } from './moe';
 import { getDmhyResourceDetail } from './dmhy';
 
 export function registerQuery() {
-  registerApp((app) => {
+  return registerApp((app) => {
     async function listResourcesHandler(ctx: Context, provider?: string) {
       const url = new URL(ctx.req.url);
       const filter = parseSearchURL(url.searchParams, await ctx.req.json().catch(() => undefined));
@@ -36,55 +36,54 @@ export function registerQuery() {
       return ctx.json({ filter, ...resp });
     }
 
-    app.get(`/resources`, async (ctx) => {
-      return listResourcesHandler(ctx);
-    });
-    app.post(`/resources`, async (ctx) => {
-      return listResourcesHandler(ctx);
-    });
-    app.get(`/resources/`, async (ctx) => {
-      return listResourcesHandler(ctx);
-    });
-    app.post(`/resources/`, async (ctx) => {
-      return listResourcesHandler(ctx);
-    });
-
-    app.get(`/dmhy/resources`, async (ctx) => {
-      return listResourcesHandler(ctx, 'dmhy');
-    });
-    app.post(`/dmhy/resources`, async (ctx) => {
-      return listResourcesHandler(ctx, 'dmhy');
-    });
-    app.get(`/dmhy/detail/:href`, async (ctx) => {
-      return getDmhyResourceDetail(ctx);
-    });
-    app.get(`/dmhy/resource/:href`, async (ctx) => {
-      return getDmhyResourceDetail(ctx);
-    });
-    app.get(`/detail/dmhy/:href`, async (ctx) => {
-      return getDmhyResourceDetail(ctx);
-    });
-    app.get(`/resource/dmhy/:href`, async (ctx) => {
-      return getDmhyResourceDetail(ctx);
-    });
-
-    app.get(`/moe/resources`, async (ctx) => {
-      return listResourcesHandler(ctx, 'moe');
-    });
-    app.post(`/moe/resources`, async (ctx) => {
-      return listResourcesHandler(ctx, 'moe');
-    });
-    app.get(`/moe/detail/:href`, async (ctx) => {
-      return getMoeResourceDetail(ctx);
-    });
-    app.get(`/moe/resource/:href`, async (ctx) => {
-      return getMoeResourceDetail(ctx);
-    });
-    app.get(`/detail/moe/:href`, async (ctx) => {
-      return getMoeResourceDetail(ctx);
-    });
-    app.get(`/resource/moe/:href`, async (ctx) => {
-      return getMoeResourceDetail(ctx);
-    });
+    return app
+      .get(`/resources`, async (ctx) => {
+        return listResourcesHandler(ctx);
+      })
+      .post(`/resources`, async (ctx) => {
+        return listResourcesHandler(ctx);
+      })
+      .get(`/resources/`, async (ctx) => {
+        return listResourcesHandler(ctx);
+      })
+      .post(`/resources/`, async (ctx) => {
+        return listResourcesHandler(ctx);
+      })
+      .get(`/dmhy/resources`, async (ctx) => {
+        return listResourcesHandler(ctx, 'dmhy');
+      })
+      .post(`/dmhy/resources`, async (ctx) => {
+        return listResourcesHandler(ctx, 'dmhy');
+      })
+      .get(`/dmhy/detail/:href`, async (ctx) => {
+        return getDmhyResourceDetail(ctx);
+      })
+      .get(`/dmhy/resource/:href`, async (ctx) => {
+        return getDmhyResourceDetail(ctx);
+      })
+      .get(`/detail/dmhy/:href`, async (ctx) => {
+        return getDmhyResourceDetail(ctx);
+      })
+      .get(`/resource/dmhy/:href`, async (ctx) => {
+        return getDmhyResourceDetail(ctx);
+      })
+      .get(`/moe/resources`, async (ctx) => {
+        return listResourcesHandler(ctx, 'moe');
+      })
+      .post(`/moe/resources`, async (ctx) => {
+        return listResourcesHandler(ctx, 'moe');
+      })
+      .get(`/moe/detail/:href`, async (ctx) => {
+        return getMoeResourceDetail(ctx);
+      })
+      .get(`/moe/resource/:href`, async (ctx) => {
+        return getMoeResourceDetail(ctx);
+      })
+      .get(`/detail/moe/:href`, async (ctx) => {
+        return getMoeResourceDetail(ctx);
+      })
+      .get(`/resource/moe/:href`, async (ctx) => {
+        return getMoeResourceDetail(ctx);
+      });
   });
 }

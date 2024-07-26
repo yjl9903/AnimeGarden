@@ -14,8 +14,8 @@ import { meiliSearch } from './meilisearch';
 import { registerAdmin } from './admin';
 import { registerQuery } from './query';
 
-registerAdmin();
-registerQuery();
+const admin = registerAdmin();
+const query = registerQuery();
 
 const port = process.env.port ? +process.env.port : process.env.PORT ? +process.env.PORT : 3000;
 
@@ -43,7 +43,7 @@ Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
     (async () => {
       try {
         logger.info(`cron`, `Fetch dmhy resources`);
-        const req = new Request(`https://api.zeabur.internal/admin/dmhy/resources`, {
+        const req = new Request(`https://api.zeabur.internal/admin/resources/dmhy`, {
           method: 'POST'
         });
         const resp = await app.fetch(req);
@@ -55,7 +55,7 @@ Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
     (async () => {
       try {
         logger.info(`cron`, `Fetch moe resources`);
-        const req = new Request(`https://api.zeabur.internal/admin/moe/resources`, {
+        const req = new Request(`https://api.zeabur.internal/admin/resources/moe`, {
           method: 'POST'
         });
         const resp = await app.fetch(req);
@@ -75,7 +75,7 @@ Cron(`0 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
   await Promise.all([
     (async () => {
       try {
-        const req = new Request(`https://api.zeabur.internal/admin/dmhy/resources/sync`, {
+        const req = new Request(`https://api.zeabur.internal/admin/resources/dmhy/sync`, {
           method: 'POST'
         });
         logger.info(`cron`, `Sync dmhy resources`);
@@ -87,7 +87,7 @@ Cron(`0 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
     })(),
     (async () => {
       try {
-        const req = new Request(`https://api.zeabur.internal/admin/moe/resources/sync`, {
+        const req = new Request(`https://api.zeabur.internal/admin/resources/moe/sync`, {
           method: 'POST'
         });
         logger.info(`cron`, `Sync moe resources`);
