@@ -63,6 +63,6 @@ function transformResource(resource: FetchedResource, now: Date) {
     anitomy: resource.type === '動畫' ? JSON.stringify(parse(resource.title)) : undefined,
     fansubId: resource.fansub?.id ? resource.fansub?.id : undefined,
     publisherId: resource.publisher.id,
-    isDuplicated: sql`EXISTS (SELECT 1 FROM ${resources} WHERE ${resources.magnet} = ${resource.magnet})`
+    isDuplicated: sql`EXISTS (SELECT 1 FROM ${resources} WHERE ${resources.magnet} = ${resource.magnet} OR ${resources.title} = ${resource.title})`
   };
 }
