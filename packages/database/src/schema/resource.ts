@@ -40,6 +40,7 @@ export const resources = pgTable(
     return {
       uniqueProviderIndex: uniqueIndex('unique_resource_provider').on(t.provider, t.providerId),
       sortByCreatedAt: index('sort_by_created_at').on(t.createdAt.desc()),
+      titleIndex: index('title_index').on(t.title),
       magnetIndex: index('magnet_index').on(t.magnet),
       fansubIndex: index('fansub_index').on(t.fansubId),
       publisherIndex: index('publisher_index').on(t.publisherId),
