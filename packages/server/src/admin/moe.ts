@@ -65,3 +65,7 @@ export async function refreshMoeResources() {
 
   return { provider: 'moe', count: sum };
 }
+
+export async function fixMoeResources(from: number, to: number) {
+  return [];
+}

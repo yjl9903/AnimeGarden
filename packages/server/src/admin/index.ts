@@ -6,23 +6,28 @@ import { registerApp } from '../app';
 import { pruneResourcesCache } from '../query/resources';
 
 import { syncDocuments } from './meili';
-import { refreshMoeResources } from './moe';
+import { fixMoeResources, refreshMoeResources } from './moe';
 import { fixDmhyResources, refreshDmhyResources } from './dmhy';
 
 export function registerAdmin() {
   registerApp((app) => {
-    app.delete(`/admin/resources/cache`, async (req) => {
+    app.delete(`/admin/resources/cache`, async (ctx) => {
       await pruneResourcesCache();
       await updateRefreshTimestamp(storage);
-      return req.json({ ok: true });
+      return ctx.json({ ok: true });
     });
 
-    app.post(`/admin/resources/dmhy`, async (req) => {
-      const r = await refreshDmhyResources();
-      if (r.count > 0) {
-        await updateRefreshTimestamp(storage).catch(() => {});
+    app.post(`/admin/resources/dmhy`, async (ctx) => {
+      try {
+        const r = await refreshDmhyResources();
+        if (r.count > 0) {
+          await updateRefreshTimestamp(storage).catch(() => {});
+        }
+        return ctx.json(r);
+      } catch (error) {
+        console.error(error);
+        return ctx.json({ count: 0, error: (error as any)?.message });
       }
-      return req.json(r);
     });
 
     app.post(`/admin/resources/dmhy/sync`, async (ctx) => {
@@ -31,20 +36,49 @@ export function registerAdmin() {
       const offset = +(ctx.req.query('offset') ?? '1');
       const limit = +(ctx.req.query('limit') ?? '10');
 
-      // Fix dmhy resources
-      const logs = await fixDmhyResources(offset, offset + limit - 1);
-      // Sync the database to the meilisearch documents
-      const docs = await syncDocuments((offset - 1) * pageSize, limit * pageSize);
+      try {
+        // Fix dmhy resources
+        const logs = await fixDmhyResources(offset, offset + limit - 1);
+        // Sync the database to the meilisearch documents
+        const docs = await syncDocuments((offset - 1) * pageSize, limit * pageSize);
 
-      return ctx.json({ provider: 'dmhy', logs, docs });
+        return ctx.json({ provider: 'dmhy', logs, docs });
+      } catch (error) {
+        console.error(error);
+        return ctx.json({ count: 0, error: (error as any)?.message });
+      }
     });
 
-    app.post(`/admin/resources/moe`, async (req) => {
-      const r = await refreshMoeResources();
-      if (r.count > 0) {
-        await updateRefreshTimestamp(storage).catch(() => {});
+    app.post(`/admin/resources/moe`, async (ctx) => {
+      try {
+        const r = await refreshMoeResources();
+        if (r.count > 0) {
+          await updateRefreshTimestamp(storage).catch(() => {});
+        }
+        return ctx.json(r);
+      } catch (error) {
+        console.error(error);
+        return ctx.json({ count: 0, error: (error as any)?.message });
       }
-      return req.json(r);
+    });
+
+    app.post(`/admin/resources/moe/sync`, async (ctx) => {
+      const pageSize = 80;
+      // Page index is 1-based
+      const offset = +(ctx.req.query('offset') ?? '1');
+      const limit = +(ctx.req.query('limit') ?? '10');
+
+      try {
+        // Fix moe resources
+        const logs = await fixMoeResources(offset, offset + limit - 1);
+        // Sync the database to the meilisearch documents
+        const docs = await syncDocuments((offset - 1) * pageSize, limit * pageSize);
+
+        return ctx.json({ provider: 'moe', logs, docs });
+      } catch (error) {
+        console.error(error);
+        return ctx.json({ count: 0, error: (error as any)?.message });
+      }
     });
   });
 }
