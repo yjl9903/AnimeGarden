@@ -44,14 +44,6 @@ export async function insertMoeResources(
 function transformResource(resource: FetchedResource, now: Date) {
   const titleAlt = normalizeTitle(resource.title);
 
-  console.log(
-    'moe',
-    resource.providerId,
-    resource.title,
-    resource.createdAt,
-    new Date(resource.createdAt)
-  );
-
   return {
     provider: 'moe' as const,
     providerId: resource.providerId,
