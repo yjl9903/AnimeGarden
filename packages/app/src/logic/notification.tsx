@@ -25,7 +25,7 @@ const event = {
   }
 };
 
-// event.toast();
+event.toast();
 
 document.addEventListener(
   'astro:page-load',
