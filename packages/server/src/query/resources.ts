@@ -229,8 +229,6 @@ async function transformFromDb(
           ? `https://bangumi.moe/tag/${r.fansubId}`
           : undefined;
 
-    console.log(`Resource: ${r.provider} ${r.providerId} ${r.title} ${r.createdAt} ${r.fetchedAt}`);
-
     result.push({
       id: r.id,
       provider: r.provider,
