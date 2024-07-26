@@ -39,28 +39,33 @@ serve(
 );
 
 Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
-  try {
-    const req = new Request(`https://api.zeabur.internal/admin/dmhy/resources`, {
-      method: 'POST'
-    });
-    logger.info(`cron`, `Fetch dmhy resources`);
-    const resp = await app.fetch(req);
-    const data = await resp.json();
-    logger.info(`cron`, JSON.stringify(data));
-  } catch (error) {
-    console.error(error);
-  }
-
-  try {
-    const req = new Request(`https://api.zeabur.internal/admin/moe/resources`, {
-      method: 'POST'
-    });
-    // const resp = await app.fetch(req);
-    // const data = await resp.json();
-    // logger.info(`cron`, JSON.stringify(data));
-  } catch (error) {
-    console.error(error);
-  }
+  await Promise.all([
+    (async () => {
+      try {
+        const req = new Request(`https://api.zeabur.internal/admin/dmhy/resources`, {
+          method: 'POST'
+        });
+        logger.info(`cron`, `Fetch dmhy resources`);
+        const resp = await app.fetch(req);
+        const data = await resp.json();
+        logger.info(`cron`, JSON.stringify(data));
+      } catch (error) {
+        console.error(error);
+      }
+    })(),
+    (async () => {
+      try {
+        const req = new Request(`https://api.zeabur.internal/admin/moe/resources`, {
+          method: 'POST'
+        });
+        const resp = await app.fetch(req);
+        const data = await resp.json();
+        logger.info(`cron`, JSON.stringify(data));
+      } catch (error) {
+        console.error(error);
+      }
+    })()
+  ]);
 
   await updateRefreshTimestamp(storage).catch(() => {});
 });

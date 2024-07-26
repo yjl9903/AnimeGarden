@@ -63,5 +63,5 @@ export async function refreshMoeResources() {
     logger.info(`The moe resource list is latest`);
   }
 
-  return { count: sum };
+  return { provider: 'moe', count: sum };
 }

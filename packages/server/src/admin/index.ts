@@ -36,7 +36,7 @@ export function registerAdmin() {
       // Sync the database to the meilisearch documents
       const docs = await syncDocuments((offset - 1) * pageSize, limit * pageSize);
 
-      return ctx.json({ logs, docs });
+      return ctx.json({ provider: 'dmhy', logs, docs });
     });
 
     app.post(`/admin/resources/moe`, async (req) => {

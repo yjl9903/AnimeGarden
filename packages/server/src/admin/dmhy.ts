@@ -6,11 +6,9 @@ import {
   insertUsers,
   insertTeams,
   insertDmhyResources,
-  updateRefreshTimestamp,
   updateDmhyResources
 } from '@animegarden/database';
 
-import { storage } from '../storage';
 import { database } from '../database';
 import { meiliSearch } from '../meilisearch';
 import { logger as rootLogger } from '../logger';
@@ -82,7 +80,7 @@ export async function refreshDmhyResources() {
     // );
   }
 
-  return { count: sum };
+  return { provider: 'dmhy', count: sum };
 }
 
 export async function fixDmhyResources(from: number, to: number) {
