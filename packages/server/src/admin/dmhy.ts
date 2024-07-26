@@ -62,8 +62,7 @@ export async function refreshDmhyResources() {
   }
 
   if (sum > 0) {
-    await updateRefreshTimestamp(storage);
-
+    // await updateRefreshTimestamp(storage);
     // await Promise.all(
     //   PrefetchFilter.map(async (filter) => {
     //     await findResourcesFromDB.remove(env, filter);
@@ -71,8 +70,7 @@ export async function refreshDmhyResources() {
     //   })
     // );
   } else {
-    logger.info(`The moe resource list is latest`);
-
+    logger.info(`The dmhy resource list is latest`);
     // await Promise.all(
     //   PrefetchFilter.map(async (filter) => {
     //     const external = findResourcesFromDB.external!;

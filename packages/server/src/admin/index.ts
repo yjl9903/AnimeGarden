@@ -1,3 +1,6 @@
+import { updateRefreshTimestamp } from '@animegarden/database';
+
+import { storage } from '../storage';
 import { registerApp } from '../app';
 
 import { pruneResourcesCache } from '../query/resources';
@@ -15,6 +18,7 @@ export function registerAdmin() {
 
     app.post(`/admin/dmhy/resources`, async (req) => {
       const r = await refreshDmhyResources();
+      await updateRefreshTimestamp(storage).catch(() => {});
       return req.json(r);
     });
 
@@ -34,6 +38,7 @@ export function registerAdmin() {
 
     app.post(`/admin/moe/resources`, async (req) => {
       const r = await refreshMoeResources();
+      await updateRefreshTimestamp(storage).catch(() => {});
       return req.json(r);
     });
   });
