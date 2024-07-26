@@ -11,18 +11,20 @@ import { fixDmhyResources, refreshDmhyResources } from './dmhy';
 
 export function registerAdmin() {
   registerApp((app) => {
-    app.delete(`/admin/dmhy/resources/cache`, async (req) => {
+    app.delete(`/admin/resources/cache`, async (req) => {
       await pruneResourcesCache();
       return req.json({ ok: true });
     });
 
-    app.post(`/admin/dmhy/resources`, async (req) => {
+    app.post(`/admin/resources/dmhy`, async (req) => {
       const r = await refreshDmhyResources();
-      await updateRefreshTimestamp(storage).catch(() => {});
+      if (r.count > 0) {
+        await updateRefreshTimestamp(storage).catch(() => {});
+      }
       return req.json(r);
     });
 
-    app.post(`/admin/dmhy/resources/sync`, async (ctx) => {
+    app.post(`/admin/resources/dmhy/sync`, async (ctx) => {
       const pageSize = 80;
       // Page index is 1-based
       const offset = +(ctx.req.query('offset') ?? '1');
@@ -36,9 +38,11 @@ export function registerAdmin() {
       return ctx.json({ logs, docs });
     });
 
-    app.post(`/admin/moe/resources`, async (req) => {
+    app.post(`/admin/resources/moe`, async (req) => {
       const r = await refreshMoeResources();
-      await updateRefreshTimestamp(storage).catch(() => {});
+      if (r.count > 0) {
+        await updateRefreshTimestamp(storage).catch(() => {});
+      }
       return req.json(r);
     });
   });
