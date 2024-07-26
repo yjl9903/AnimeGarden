@@ -6,7 +6,13 @@ import { memoAsync } from 'memofunc';
 import { prefixStorage } from 'unstorage';
 import { and, eq, gte, ilike, lte, notIlike, or, desc, inArray } from 'drizzle-orm';
 
-import { normalizeTitle, Resource, type ResolvedFilterOptions, ResourceType } from 'animegarden';
+import {
+  type ResourceType,
+  type ProviderType,
+  type ResolvedFilterOptions,
+  Resource,
+  normalizeTitle
+} from 'animegarden';
 import {
   getRefreshTimestamp,
   getTeam,
@@ -58,6 +64,8 @@ const listResourcesFromDB = memoAsync(
     const {
       page,
       pageSize,
+      provider,
+      duplicate,
       fansubId,
       fansubName,
       publisherId,
@@ -99,8 +107,9 @@ const listResourcesFromDB = memoAsync(
       )
       .where(
         and(
+          provider ? inArray(resources.provider, provider as ProviderType[]) : undefined,
           eq(resources.isDeleted, false),
-          eq(resources.isDuplicated, options.duplicate),
+          eq(resources.isDuplicated, duplicate),
           type ? eq(resources.type, type) : undefined,
           after ? gte(resources.createdAt, after) : undefined,
           before ? lte(resources.createdAt, before) : undefined,
