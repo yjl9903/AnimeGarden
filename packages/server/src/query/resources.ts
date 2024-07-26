@@ -210,15 +210,24 @@ async function transformFromDb(
       ? r.publisherName
       : (await getUser(database, r.provider, r.publisherId))!.name;
 
-    const href = r.provider === 'dmhy' ? `https://share.dmhy.org/topics/view/${r.href}` : r.href;
+    const href =
+      r.provider === 'dmhy'
+        ? `https://share.dmhy.org/topics/view/${r.href}`
+        : r.provider === 'moe'
+          ? `https://bangumi.moe/torrent/${r.href}`
+          : r.href;
     const fansubHref =
       r.provider === 'dmhy' && r.fansubId
         ? `https://share.dmhy.org/topics/list/team_id/${r.fansubId}`
-        : undefined;
+        : r.provider === 'moe' && r.fansubId
+          ? `https://bangumi.moe/tag/${r.fansubId}`
+          : undefined;
     const publisherHref =
       r.provider === 'dmhy'
         ? `https://share.dmhy.org/topics/list/user_id/${r.publisherId}`
-        : undefined;
+        : r.provider === 'moe' && r.fansubId
+          ? `https://bangumi.moe/tag/${r.fansubId}`
+          : undefined;
 
     console.log(`Resource: ${r.provider} ${r.providerId} ${r.title} ${r.createdAt} ${r.fetchedAt}`);
 

@@ -88,15 +88,24 @@ async function transformFromMeili(resources: ResourceDocument[]) {
     const fansub = r.fansubId ? await getTeam(database, r.provider, r.fansubId) : undefined;
     const publisher = (await getUser(database, r.provider, r.publisherId))!;
 
-    const href = r.provider === 'dmhy' ? `https://share.dmhy.org/topics/view/${r.href}` : r.href;
+    const href =
+      r.provider === 'dmhy'
+        ? `https://share.dmhy.org/topics/view/${r.href}`
+        : r.provider === 'moe'
+          ? `https://bangumi.moe/torrent/${r.href}`
+          : r.href;
     const fansubHref =
       r.provider === 'dmhy' && r.fansubId
         ? `https://share.dmhy.org/topics/list/team_id/${r.fansubId}`
-        : undefined;
+        : r.provider === 'moe' && r.fansubId
+          ? `https://bangumi.moe/tag/${r.fansubId}`
+          : undefined;
     const publisherHref =
       r.provider === 'dmhy'
         ? `https://share.dmhy.org/topics/list/user_id/${r.publisherId}`
-        : undefined;
+        : r.provider === 'moe' && r.fansubId
+          ? `https://bangumi.moe/tag/${r.fansubId}`
+          : undefined;
 
     result.push({
       id: r.id,
