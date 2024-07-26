@@ -4,7 +4,7 @@ import type { FetchedResource, ResourceDetail, ResourceType } from 'animegarden'
 
 import { retryFn } from 'animegarden';
 
-import { splitOnce } from '../utils';
+import { splitOnce, toShanghai } from '../utils';
 
 export interface FetchDmhyPageOptions {
   page?: number;
@@ -41,11 +41,11 @@ export async function fetchDmhyPage(
     throw new Error('dmhy server is down');
   }
 
-  const now = new Date();
   const res: FetchedResource[] = [];
   $('#topic_list tbody tr').each((_idx, row) => {
     const tds = $(row).find('td');
-    const createdAt = tds.eq(0).find('span').text().trim();
+    const rawCreatedAt = tds.eq(0).find('span').text().trim();
+    const createdAt = toShanghai(new Date(rawCreatedAt)).toISOString();
     const type = tds.eq(1).text().trim() as ResourceType;
     const title = tds.eq(2).children('a').text().trim();
     const href = 'https://share.dmhy.org' + tds.eq(2).children('a').attr('href')!.trim();
@@ -116,7 +116,8 @@ export async function fetchDmhyDetail(
   const type = $('.topic-main>.topic-title li:first-child a:last-of-type').text().trim();
 
   const size = $('.topic-main>.topic-title li:nth-child(4) span').text().trim();
-  const createdAt = $('.topic-main>.topic-title li:nth-child(2) span').text().trim();
+  const rawCreatedAt = $('.topic-main>.topic-title li:nth-child(2) span').text().trim();
+  const createdAt = toShanghai(new Date(rawCreatedAt)).toISOString();
 
   const publisherAvatar =
     $('.topics_bk .avatar:first-child img').attr('src')?.trim() ??

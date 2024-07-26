@@ -8,7 +8,6 @@ import type { Database } from '../connection';
 import type { NewResource, Resource } from '../schema';
 
 import { resources } from '../schema/resource';
-import { toShanghai } from '../utils';
 import { insertResourceDocuments } from '../meilisearch';
 
 export async function insertDmhyResources(
@@ -179,7 +178,7 @@ function transformResource(resource: FetchedResource, now: Date) {
     magnet: resource.magnet,
     tracker: resource.tracker,
     // Convert to UTC+8
-    createdAt: toShanghai(new Date(resource.createdAt)),
+    createdAt: new Date(resource.createdAt),
     fetchedAt: new Date(now),
     anitomy: resource.type === '動畫' ? JSON.stringify(parse(resource.title)) : undefined,
     fansubId: resource.fansub?.id ? resource.fansub?.id : undefined,

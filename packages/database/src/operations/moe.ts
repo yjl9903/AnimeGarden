@@ -7,10 +7,8 @@ import { normalizeTitle, type FetchedResource } from 'animegarden';
 import type { Resource } from '../schema';
 import type { Database } from '../connection';
 
-import { toShanghai } from '../utils';
-import { insertResourceDocuments } from '../meilisearch';
-
 import { resources } from '../schema/resource';
+import { insertResourceDocuments } from '../meilisearch';
 
 export async function insertMoeResources(
   database: Database,
