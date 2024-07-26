@@ -60,6 +60,7 @@ export async function refreshDmhyResources() {
   }
 
   if (sum > 0) {
+    logger.info(`Fetch ${sum} dmhy resources`);
     // await updateRefreshTimestamp(storage);
     // await Promise.all(
     //   PrefetchFilter.map(async (filter) => {

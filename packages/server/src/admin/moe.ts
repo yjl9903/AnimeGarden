@@ -58,7 +58,7 @@ export async function refreshMoeResources() {
   }
 
   if (sum > 0) {
-    //
+    logger.info(`Fetch ${sum} moe resources`);
   } else {
     logger.info(`The moe resource list is latest`);
   }

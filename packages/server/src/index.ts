@@ -42,25 +42,22 @@ Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
   await Promise.all([
     (async () => {
       try {
+        logger.info(`cron`, `Fetch dmhy resources`);
         const req = new Request(`https://api.zeabur.internal/admin/dmhy/resources`, {
           method: 'POST'
         });
-        logger.info(`cron`, `Fetch dmhy resources`);
-        const resp = await app.fetch(req);
-        const data = await resp.json();
-        logger.info(`cron`, JSON.stringify(data));
+        await app.fetch(req);
       } catch (error) {
         console.error(error);
       }
     })(),
     (async () => {
       try {
+        logger.info(`cron`, `Fetch moe resources`);
         const req = new Request(`https://api.zeabur.internal/admin/moe/resources`, {
           method: 'POST'
         });
-        const resp = await app.fetch(req);
-        const data = await resp.json();
-        logger.info(`cron`, JSON.stringify(data));
+        await app.fetch(req);
       } catch (error) {
         console.error(error);
       }
