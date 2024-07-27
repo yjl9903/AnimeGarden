@@ -2,11 +2,10 @@ import {
   insertMoeResources,
   insertTeams,
   insertUsers,
-  updateRefreshTimestamp
+  updateMoeResources
 } from '@animegarden/database';
 import { fetchMoePage } from '@animegarden/scraper';
 
-import { storage } from '../storage';
 import { database } from '../database';
 import { meiliSearch } from '../meilisearch';
 import { logger as rootLogger } from '../logger';
@@ -67,5 +66,6 @@ export async function refreshMoeResources() {
 }
 
 export async function fixMoeResources(from: number, to: number) {
-  return [];
+  const resp = await updateMoeResources(database, meiliSearch, from, to);
+  return { provider: 'moe', logs: resp };
 }

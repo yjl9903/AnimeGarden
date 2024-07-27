@@ -41,6 +41,51 @@ export async function insertMoeResources(
   return data;
 }
 
+export async function updateMoeResources(
+  database: Database,
+  meili: MeiliSearch,
+  from: number,
+  to: number
+) {
+  const resp = await database
+    .select()
+    .from(resources)
+    .where(eq(resources.provider, 'moe'))
+    .orderBy(desc(resources.createdAt))
+    .limit(to - from + 1)
+    .offset(from)
+    .execute();
+
+  const logs = [];
+  for (const resource of resp) {
+    const resp = await database
+      .update(resources)
+      .set({
+        isDuplicated: sql`EXISTS (SELECT 1 FROM ${resources} WHERE (${resources.provider} != 'moe') AND (${resources.magnet} = ${resource.magnet} OR ${resources.title} = ${resource.title}))`
+      })
+      .where(eq(resources.id, resource.id))
+      .returning({
+        id: resources.id,
+        provider: resources.provider,
+        providerId: resources.providerId,
+        title: resources.title,
+        isDuplicated: resources.isDuplicated
+      })
+      .execute();
+    const result = resp[0];
+    if (result.isDuplicated != resource.isDuplicated) {
+      logs.push(result);
+      resource.isDuplicated = result.isDuplicated;
+    }
+  }
+
+  if (logs.length > 0) {
+    await insertResourceDocuments(meili, resp);
+  }
+
+  return logs;
+}
+
 function transformResource(resource: FetchedResource, now: Date) {
   const titleAlt = normalizeTitle(resource.title);
 

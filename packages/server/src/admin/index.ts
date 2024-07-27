@@ -67,11 +67,9 @@ export function registerAdmin() {
 
         try {
           // Fix moe resources
-          const logs = await fixMoeResources(offset, offset + limit - 1);
-          // Sync the database to the meilisearch documents
-          const docs = await syncDocuments((offset - 1) * pageSize, limit * pageSize);
+          const resp = await fixMoeResources(offset, offset + limit - 1);
 
-          return ctx.json({ provider: 'moe', logs, docs });
+          return ctx.json(resp);
         } catch (error) {
           console.error(error);
           return ctx.json({ count: 0, error: (error as any)?.message });
