@@ -41,6 +41,10 @@ export function registerAdmin() {
           // Sync the database to the meilisearch documents
           const docs = await syncDocuments((offset - 1) * pageSize, limit * pageSize);
 
+          if (logs.length > 0) {
+            await updateRefreshTimestamp(storage).catch(() => {});
+          }
+
           return ctx.json({ provider: 'dmhy', logs, docs });
         } catch (error) {
           console.error(error);
@@ -71,6 +75,9 @@ export function registerAdmin() {
             (offset - 1) * pageSize,
             (offset - 1) * pageSize + limit * pageSize
           );
+          if (resp.logs.length > 0) {
+            await updateRefreshTimestamp(storage).catch(() => {});
+          }
 
           return ctx.json(resp);
         } catch (error) {
