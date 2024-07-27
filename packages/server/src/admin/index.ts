@@ -67,7 +67,10 @@ export function registerAdmin() {
 
         try {
           // Fix moe resources
-          const resp = await fixMoeResources(offset, offset + limit - 1);
+          const resp = await fixMoeResources(
+            (offset - 1) * pageSize,
+            (offset - 1) * pageSize + limit * pageSize
+          );
 
           return ctx.json(resp);
         } catch (error) {
