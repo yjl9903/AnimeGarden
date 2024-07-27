@@ -73,7 +73,6 @@ export async function updateMoeResources(
       })
       .execute();
     const result = resp[0];
-    console.log(resource.providerId, resource.title, resource.isDuplicated, result.isDuplicated);
     if (result.isDuplicated != resource.isDuplicated) {
       logs.push(result);
       resource.isDuplicated = result.isDuplicated;
