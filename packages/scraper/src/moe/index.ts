@@ -4,6 +4,7 @@ import { retryFn } from 'animegarden';
 
 import { getType } from './tag';
 import { fetchTeam, fetchUser } from './user';
+import { stripSuffix } from '../utils';
 
 export interface FetchMoePageOptions {
   page?: number;
@@ -50,7 +51,7 @@ export async function fetchMoePage(
     result.push({
       provider: 'moe',
       providerId: torrent._id,
-      title: torrent.title,
+      title: stripSuffix(torrent.title, ['.mp3', '.MP3', '.mp4', '.MP4', '.mkv', '.MKV']),
       href: torrent._id,
       magnet: torrent.magnet,
       tracker: TRACKER,
@@ -104,7 +105,7 @@ export async function fetchMoeDetail(
   return {
     provider: 'moe',
     providerId: torrent._id,
-    title: torrent.title,
+    title: stripSuffix(torrent.title, ['.mp3', '.MP3', '.mp4', '.MP4', '.mkv', '.MKV']),
     href: `https://bangumi.moe/torrent/${torrent._id}`,
     description: torrent.introduction,
     magnet: {

@@ -4,7 +4,7 @@ import type { FetchedResource, ResourceDetail, ResourceType } from 'animegarden'
 
 import { retryFn } from 'animegarden';
 
-import { splitOnce, toShanghai } from '../utils';
+import { splitOnce, stripSuffix, toShanghai } from '../utils';
 
 export interface FetchDmhyPageOptions {
   page?: number;
@@ -67,7 +67,7 @@ export async function fetchDmhyPage(
     res.push({
       provider: 'dmhy',
       providerId: matchId[1],
-      title,
+      title: stripSuffix(title, ['.mp3', '.MP3', '.mp4', '.MP4', '.mkv', '.MKV']),
       href,
       type,
       magnet,
@@ -169,7 +169,7 @@ export async function fetchDmhyDetail(
   return {
     provider: 'dmhy',
     providerId: matchId[1],
-    title,
+    title: stripSuffix(title, ['.mp3', '.MP3', '.mp4', '.MP4', '.mkv', '.MKV']),
     href: url.href,
     type,
     size,
