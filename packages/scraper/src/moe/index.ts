@@ -105,7 +105,7 @@ export async function fetchMoeDetail(
     provider: 'moe',
     providerId: torrent._id,
     title: torrent.title,
-    href: torrent._id,
+    href: `https://bangumi.moe/torrent/${torrent._id}`,
     description: torrent.introduction,
     magnet: {
       user: '',
