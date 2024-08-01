@@ -22,7 +22,7 @@ importers:
         version: 0.9.7
       bumpp:
         specifier: latest
-        version: 9.4.1
+        version: 9.4.2
       drizzle-kit:
         specifier: ^0.23.1
         version: 0.23.1
@@ -141,8 +141,8 @@ importers:
         specifier: ^2.9.1
         version: 2.9.1(@types/react@18.3.3)(react@18.3.1)
       lucide-react:
-        specifier: ^0.418.0
-        version: 0.418.0(react@18.3.1)
+        specifier: ^0.419.0
+        version: 0.419.0(react@18.3.1)
       next-themes:
         specifier: ^0.3.0
         version: 0.3.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3518,8 +3518,8 @@ packages:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
     engines: {node: '>=6'}
 
-  bumpp@9.4.1:
-    resolution: {integrity: sha512-kzhp/LpNX0HkUpEyLd7sU2LTN/mbAVgcxJ1Zi2cAJTE/tul6rypSKGpH8UywDpzKWItL8LVdKsIFnwmylw0+7g==}
+  bumpp@9.4.2:
+    resolution: {integrity: sha512-D0Cb5Mgxei7PObv4FkKQ19v1qSRhA3buQqCEQW6EU4+iort7JxL06DC6bZG5E0x/euZkaBuAQqOtFd2zIJKPjA==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -5158,8 +5158,8 @@ packages:
     resolution: {integrity: sha512-rSEms3KNO7PnAbPwj+vWK6tg/ZafQE7yYJ9Gr9IyjaCJsopa6PYPspnhlmEFLlRwSd1wfZ1jLCR6Km3lThVLIg==}
     engines: {node: '>=12.20.0'}
 
-  lucide-react@0.418.0:
-    resolution: {integrity: sha512-7TSd4CLfvT/U9504MSJ+e03pgAvqZQ5WbML4Pm+axjCbYBLTWuDu68bebFr/e51Z32uHMY7MO+SpaHX8NubveA==}
+  lucide-react@0.419.0:
+    resolution: {integrity: sha512-YkOHuc1uGH2A4G0NRZyeCW6mMFGb8z3amep0fARuKIri68nveAT5C8OuXOPJXpb/iIgSfsjdMjjII7bnEtGkvw==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -11158,7 +11158,7 @@ snapshots:
 
   builtin-modules@3.3.0: {}
 
-  bumpp@9.4.1:
+  bumpp@9.4.2:
     dependencies:
       '@jsdevtools/ez-spawn': 3.0.4
       c12: 1.11.1
@@ -12921,7 +12921,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  lucide-react@0.418.0(react@18.3.1):
+  lucide-react@0.419.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 
