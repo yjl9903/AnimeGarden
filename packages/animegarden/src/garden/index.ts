@@ -192,8 +192,7 @@ export async function fetchResourceDetail(
   options: FetchResourceDetailOptions = {}
 ): Promise<(ResourceDetail & { id: number }) | undefined> {
   const { baseURL = DefaultBaseURL, retry = 1 } = options;
-  const url = new URL(`detail/${provider}/${href}`, baseURL);
-  console.log('Fetch url', url.toString());
+  const url = new URL(`${provider}/detail/${href}`, baseURL);
 
   const resp = await retryFn(async () => {
     // @ts-ignore

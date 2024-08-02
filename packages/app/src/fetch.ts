@@ -67,7 +67,6 @@ export async function fetchResources(
 
 export async function fetchResourceDetail(provider: string, href: string) {
   try {
-    console.log('Fetch detail', baseURL);
     return await rawFetchResourceDetail(ofetch, provider as ProviderType, href, {
       baseURL
     });
