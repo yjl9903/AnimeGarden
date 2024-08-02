@@ -207,6 +207,7 @@ export async function fetchResourceDetail(
     if (resp.ok) {
       return await resp.json();
     } else {
+      console.log('Fetch resp', resp.status, resp.url, await resp.text())
       throw new Error(`Fetch failed`, { cause: resp });
     }
   }, retry);
