@@ -18,6 +18,7 @@ export const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
     const { ProxyAgent } = await import('undici');
     return fetch(url, {
       ...init,
+      referrer: `https://${APP_HOST}/`,
       // @ts-ignore
       dispatcher:
         import.meta.env.DEV && import.meta.env.HTTPS_PROXY
