@@ -335,8 +335,8 @@ importers:
         specifier: workspace:*
         version: link:../animegarden
       croner:
-        specifier: ^8.1.0
-        version: 8.1.0
+        specifier: ^8.1.1
+        version: 8.1.1
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -3909,8 +3909,8 @@ packages:
     engines: {node: '>=12'}
     hasBin: true
 
-  croner@8.1.0:
-    resolution: {integrity: sha512-sz990XOUPR8dG/r5BRKMBd15MYDDUu8oeSaxFD5DqvNgHSZw8Psd1s689/IGET7ezxRMiNlCIyGeY1Gvxp/MLg==}
+  croner@8.1.1:
+    resolution: {integrity: sha512-1VdUuRnQP4drdFkS8NKvDR1NBgevm8TOuflcaZEKsxw42CxonjW/2vkj1AKlinJb4ZLwBcuWF9GiPr7FQc6AQA==}
     engines: {node: '>=18.0'}
 
   cross-fetch-ponyfill@1.0.3:
@@ -11596,7 +11596,7 @@ snapshots:
       run-parallel: 1.2.0
       uint8-util: 2.2.5
 
-  croner@8.1.0: {}
+  croner@8.1.1: {}
 
   cross-fetch-ponyfill@1.0.3:
     dependencies:
