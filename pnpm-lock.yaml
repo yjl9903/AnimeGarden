@@ -174,8 +174,8 @@ importers:
         specifier: ^8.17.1
         version: 8.17.1
       webtorrent:
-        specifier: ^2.4.14
-        version: 2.4.14
+        specifier: ^2.4.15
+        version: 2.4.15
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -7566,8 +7566,8 @@ packages:
     resolution: {integrity: sha512-ms2rE5MEg1KXQX45sjl2QaIIevhpPogqoFz7Z1MAJYxWUuxFfI3L0SoiifrTNrWJiJiuFn/Dsf5OIGUWJFdU5g==}
     engines: {node: '>=16.0.0'}
 
-  webtorrent@2.4.14:
-    resolution: {integrity: sha512-LketZzQRy02PBoxDCicZvpskFoS/WLCWyN4bJYAkemdmOrn8dkcZnUQoNlt1MuxbUzTvwAabuZluHnOd7mc0uw==}
+  webtorrent@2.4.15:
+    resolution: {integrity: sha512-Yc3j7CUDE3MWYAOqfiHNjDXBrEMavEHv3nAlGuomxXl+FRtkbfjJDngEBhx7Nzw/UON3AJgMYZd84JmGKhsZPg==}
     engines: {node: '>=16'}
 
   whatwg-url@5.0.0:
@@ -10479,7 +10479,7 @@ snapshots:
     dependencies:
       debug: 4.3.6
       err-code: 3.0.1
-      streamx: 2.17.0
+      streamx: 2.18.0
       uint8-util: 2.2.5
       webrtc-polyfill: 1.1.8
     transitivePeerDependencies:
@@ -10489,7 +10489,7 @@ snapshots:
     dependencies:
       debug: 4.3.6
       queue-microtask: 1.2.3
-      streamx: 2.17.0
+      streamx: 2.18.0
       uint8-util: 2.2.5
       ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
     transitivePeerDependencies:
@@ -11203,7 +11203,7 @@ snapshots:
       bitfield: 4.2.0
       debug: 4.3.6
       rc4: 0.1.5
-      streamx: 2.17.0
+      streamx: 2.18.0
       throughput: 1.0.1
       uint8-util: 2.2.5
       unordered-array-remove: 1.0.2
@@ -14794,7 +14794,7 @@ snapshots:
   speed-limiter@1.0.2:
     dependencies:
       limiter: 1.1.5
-      streamx: 2.17.0
+      streamx: 2.18.0
 
   split@1.0.1:
     dependencies:
@@ -15815,7 +15815,7 @@ snapshots:
       node-datachannel: 0.10.1
       node-domexception: 1.0.0
 
-  webtorrent@2.4.14:
+  webtorrent@2.4.15:
     dependencies:
       '@silentbot1/nat-api': 0.4.7
       '@thaunknown/simple-peer': 10.0.10
