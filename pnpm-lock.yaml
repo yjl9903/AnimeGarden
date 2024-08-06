@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: ^4.20240729.0
-        version: 4.20240729.0
+        specifier: ^4.20240806.0
+        version: 4.20240806.0
       '@types/fs-extra':
         specifier: ^11.0.4
         version: 11.0.4
@@ -60,8 +60,8 @@ importers:
         specifier: ^2.0.5
         version: 2.0.5(@types/node@20.14.14)(terser@5.31.3)
       wrangler:
-        specifier: ^3.68.0
-        version: 3.68.0(@cloudflare/workers-types@4.20240729.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+        specifier: ^3.69.1
+        version: 3.69.1(@cloudflare/workers-types@4.20240806.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
 
   packages/animegarden:
     dependencies:
@@ -242,10 +242,10 @@ importers:
         version: 0.3.1(unocss-preset-animations@1.1.0(@unocss/preset-wind@0.61.9)(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.3.5(@types/node@20.14.14)(terser@5.31.3))))(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.3.5(@types/node@20.14.14)(terser@5.31.3)))
       unplugin-analytics:
         specifier: ^0.0.11
-        version: 0.0.11(esbuild@0.23.0)(rollup@2.79.1)(vite@5.3.5(@types/node@20.14.14)(terser@5.31.3))
+        version: 0.0.11(esbuild@0.17.19)(rollup@2.79.1)(vite@5.3.5(@types/node@20.14.14)(terser@5.31.3))
       unplugin-info:
         specifier: ^1.1.0
-        version: 1.1.0(esbuild@0.23.0)(rollup@2.79.1)(vite@5.3.5(@types/node@20.14.14)(terser@5.31.3))
+        version: 1.1.0(esbuild@0.17.19)(rollup@2.79.1)(vite@5.3.5(@types/node@20.14.14)(terser@5.31.3))
 
   packages/cli:
     dependencies:
@@ -287,7 +287,7 @@ importers:
         version: 0.0.35
       drizzle-orm:
         specifier: ^0.32.2
-        version: 0.32.2(@cloudflare/workers-types@4.20240729.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
+        version: 0.32.2(@cloudflare/workers-types@4.20240806.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
       meilisearch:
         specifier: ^0.41.0
         version: 0.41.0
@@ -342,7 +342,7 @@ importers:
         version: 16.4.5
       drizzle-orm:
         specifier: ^0.32.2
-        version: 0.32.2(@cloudflare/workers-types@4.20240729.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
+        version: 0.32.2(@cloudflare/workers-types@4.20240806.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
       hono:
         specifier: ^4.5.3
         version: 4.5.3
@@ -1131,8 +1131,14 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@cloudflare/workers-shared@0.1.0':
+    resolution: {integrity: sha512-SyD4iw6jM4anZaG+ujgVETV4fulF2KHBOW31eavbVN7TNpk2l4aJgwY1YSPK00IKSWsoQuH2TigR446KuT5lqQ==}
+
   '@cloudflare/workers-types@4.20240729.0':
     resolution: {integrity: sha512-wfe44YQkv5T9aBr/z95P706r2/Ydg32weJYyBOhvge7FqtdY6mM7l39rybNiJrbJoyN16dd0xxyQMf23aJNC6Q==}
+
+  '@cloudflare/workers-types@4.20240806.0':
+    resolution: {integrity: sha512-8lvgrwXGTZEBsUQJ8YUnMk72Anh9omwr6fqWLw/EwVgcw1nQxs/bfdadBEbdP48l9fWXjE4E5XERLUrrFuEpsg==}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -7639,6 +7645,16 @@ packages:
       '@cloudflare/workers-types':
         optional: true
 
+  wrangler@3.69.1:
+    resolution: {integrity: sha512-lqgPsaxIP564OJE6f7RIS/iLy+WaY0EN89p2g83nkrPN6PjuC6vB3eC7jgeVZO1ntWjD0X+mEU5ggbERHr899w==}
+    engines: {node: '>=16.17.0'}
+    hasBin: true
+    peerDependencies:
+      '@cloudflare/workers-types': ^4.20240725.0
+    peerDependenciesMeta:
+      '@cloudflare/workers-types':
+        optional: true
+
   wrap-ansi@7.0.0:
     resolution: {integrity: sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==}
     engines: {node: '>=10'}
@@ -8696,7 +8712,11 @@ snapshots:
   '@cloudflare/workerd-windows-64@1.20240725.0':
     optional: true
 
+  '@cloudflare/workers-shared@0.1.0': {}
+
   '@cloudflare/workers-types@4.20240729.0': {}
+
+  '@cloudflare/workers-types@4.20240806.0': {}
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
@@ -11776,9 +11796,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.32.2(@cloudflare/workers-types@4.20240729.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1):
+  drizzle-orm@0.32.2(@cloudflare/workers-types@4.20240806.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1):
     optionalDependencies:
-      '@cloudflare/workers-types': 4.20240729.0
+      '@cloudflare/workers-types': 4.20240806.0
       '@types/react': 18.3.3
       postgres: 3.4.4
       react: 18.3.1
@@ -15450,25 +15470,25 @@ snapshots:
   unordered-set@2.0.1:
     optional: true
 
-  unplugin-analytics@0.0.11(esbuild@0.23.0)(rollup@2.79.1)(vite@5.3.5(@types/node@20.14.14)(terser@5.31.3)):
+  unplugin-analytics@0.0.11(esbuild@0.17.19)(rollup@2.79.1)(vite@5.3.5(@types/node@20.14.14)(terser@5.31.3)):
     dependencies:
       '@unplugin-analytics/core': 0.0.11
       defu: 6.1.4
       scule: 1.3.0
       unplugin: 1.12.0
     optionalDependencies:
-      esbuild: 0.23.0
+      esbuild: 0.17.19
       rollup: 2.79.1
       vite: 5.3.5(@types/node@20.14.14)(terser@5.31.3)
 
-  unplugin-info@1.1.0(esbuild@0.23.0)(rollup@2.79.1)(vite@5.3.5(@types/node@20.14.14)(terser@5.31.3)):
+  unplugin-info@1.1.0(esbuild@0.17.19)(rollup@2.79.1)(vite@5.3.5(@types/node@20.14.14)(terser@5.31.3)):
     dependencies:
       ci-info: 4.0.0
       git-url-parse: 14.1.0
       simple-git: 3.25.0
       unplugin: 1.12.0
     optionalDependencies:
-      esbuild: 0.23.0
+      esbuild: 0.17.19
       rollup: 2.79.1
       vite: 5.3.5(@types/node@20.14.14)(terser@5.31.3)
     transitivePeerDependencies:
@@ -15962,6 +15982,34 @@ snapshots:
       xxhash-wasm: 1.0.2
     optionalDependencies:
       '@cloudflare/workers-types': 4.20240729.0
+      fsevents: 2.3.3
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  wrangler@3.69.1(@cloudflare/workers-types@4.20240806.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4):
+    dependencies:
+      '@cloudflare/kv-asset-handler': 0.3.4
+      '@cloudflare/workers-shared': 0.1.0
+      '@esbuild-plugins/node-globals-polyfill': 0.2.3(esbuild@0.17.19)
+      '@esbuild-plugins/node-modules-polyfill': 0.2.2(esbuild@0.17.19)
+      blake3-wasm: 2.1.5
+      chokidar: 3.6.0
+      date-fns: 3.6.0
+      esbuild: 0.17.19
+      miniflare: 3.20240725.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      nanoid: 3.3.7
+      path-to-regexp: 6.2.2
+      resolve: 1.22.8
+      resolve.exports: 2.0.2
+      selfsigned: 2.4.1
+      source-map: 0.6.1
+      unenv: unenv-nightly@1.10.0-1717606461.a117952
+      workerd: 1.20240725.0
+      xxhash-wasm: 1.0.2
+    optionalDependencies:
+      '@cloudflare/workers-types': 4.20240806.0
       fsevents: 2.3.3
     transitivePeerDependencies:
       - bufferutil
