@@ -24,8 +24,8 @@ importers:
         specifier: latest
         version: 9.4.2
       drizzle-kit:
-        specifier: ^0.23.1
-        version: 0.23.1
+        specifier: ^0.23.2
+        version: 0.23.2
       fs-extra:
         specifier: ^11.2.0
         version: 11.2.0
@@ -286,8 +286,8 @@ importers:
         specifier: 0.0.35
         version: 0.0.35
       drizzle-orm:
-        specifier: ^0.32.1
-        version: 0.32.1(@cloudflare/workers-types@4.20240729.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
+        specifier: ^0.32.2
+        version: 0.32.2(@cloudflare/workers-types@4.20240729.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
       meilisearch:
         specifier: ^0.41.0
         version: 0.41.0
@@ -341,8 +341,8 @@ importers:
         specifier: ^16.4.5
         version: 16.4.5
       drizzle-orm:
-        specifier: ^0.32.1
-        version: 0.32.1(@cloudflare/workers-types@4.20240729.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
+        specifier: ^0.32.2
+        version: 0.32.2(@cloudflare/workers-types@4.20240729.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1)
       hono:
         specifier: ^4.5.3
         version: 4.5.3
@@ -4141,12 +4141,12 @@ packages:
     resolution: {integrity: sha512-pYxfDYpued//QpnLIm4Avk7rsNtAtQkUES2cwAYSvD/wd2pKD71gN2Ebj3e7klzXwjocvE8c5vx/1fxwpqmSxA==}
     engines: {node: '>=4'}
 
-  drizzle-kit@0.23.1:
-    resolution: {integrity: sha512-posGQhj8/K4S4CPhk7BO9+IcpNdIh96t0DvcAr/NvMKhPhe5D0MELzmpq9R2MpmSP3fd+Z3upwidtetrw7xnjg==}
+  drizzle-kit@0.23.2:
+    resolution: {integrity: sha512-NWkQ7GD2OTbQ7HzcjsaCOf3n0tlFPSEAF38fvDpwDj8jRbGWGFtN2cD8I8wp4lU+5Os/oyP2xycTKGLHdPipUw==}
     hasBin: true
 
-  drizzle-orm@0.32.1:
-    resolution: {integrity: sha512-Wq1J+lL8PzwR5K3a1FfoWsbs8powjr3pGA4+5+2ueN1VTLDNFYEolUyUWFtqy8DVRvYbL2n7sXZkgVmK9dQkng==}
+  drizzle-orm@0.32.2:
+    resolution: {integrity: sha512-3fXKzPzrgZIcnWCSLiERKN5Opf9Iagrag75snfFlKeKSYB1nlgPBshzW3Zn6dQymkyiib+xc4nIz0t8U+Xdpuw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
@@ -11767,7 +11767,7 @@ snapshots:
 
   drange@1.1.1: {}
 
-  drizzle-kit@0.23.1:
+  drizzle-kit@0.23.2:
     dependencies:
       '@drizzle-team/brocli': 0.8.2
       '@esbuild-kit/esm-loader': 2.6.5
@@ -11776,7 +11776,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.32.1(@cloudflare/workers-types@4.20240729.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1):
+  drizzle-orm@0.32.2(@cloudflare/workers-types@4.20240729.0)(@types/react@18.3.3)(postgres@3.4.4)(react@18.3.1):
     optionalDependencies:
       '@cloudflare/workers-types': 4.20240729.0
       '@types/react': 18.3.3
