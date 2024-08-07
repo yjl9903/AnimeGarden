@@ -11,6 +11,7 @@ import {
 
 import presetAnimations from 'unocss-preset-animations';
 import { presetShadcn } from 'unocss-preset-shadcn';
+import { presetFlowind } from 'unocss-preset-flowind';
 
 export default defineConfig({
   content: {
@@ -55,7 +56,8 @@ export default defineConfig({
     }),
     presetTypography(),
     presetAnimations(),
-    presetShadcn()
+    presetShadcn(),
+    presetFlowind()
   ],
   transformers: [transformerDirectives(), transformerVariantGroup()],
   shortcuts: {
