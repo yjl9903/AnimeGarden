@@ -6,6 +6,8 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+import { Provider } from "jotai";
+
 import 'virtual:uno.css';
 
 import './styles/main.css';
@@ -25,8 +27,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
-        <div className="font-sans">{children}</div>
+      <body className="font-sans">
+        <Provider>
+          {children}
+        </Provider>
         <ScrollRestoration />
         <Scripts />
       </body>
