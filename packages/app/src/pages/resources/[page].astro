@@ -30,6 +30,10 @@ const resp = await fetchResources(
 const feedURL = `/feed.xml?filter=${generateFeed(Astro.url.searchParams)}`;
 const { ok, complete, resources, filter: searchParams, timestamp } = resp;
 
+if (!ok) {
+  console.log(`Fetch failed: ${url}`);
+}
+
 const filter = searchParams ? resolveFilterOptions(searchParams) : undefined;
 const { fansubs, type, before, after, search, include } = filter ?? {};
 
