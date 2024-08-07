@@ -45,6 +45,9 @@ export default defineConfig({
           new URL('./node_modules/webtorrent/dist/webtorrent.min.js', import.meta.url)
         )
       }
+    },
+    build: {
+      sourcemap: true
     }
   },
   integrations: [
