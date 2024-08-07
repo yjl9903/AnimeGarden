@@ -23,6 +23,6 @@ COPY . .
 
 RUN pnpm build:server
 
-RUN pnpm animegarden db migrate
+RUN pnpm animegarden db migrate && pnpm animegarden meili migrate
 
 CMD node packages/server/dist/index.mjs
