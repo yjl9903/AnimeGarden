@@ -31,7 +31,7 @@ const feedURL = `/feed.xml?filter=${generateFeed(Astro.url.searchParams)}`;
 const { ok, complete, resources, filter: searchParams, timestamp } = resp;
 
 const filter = searchParams ? resolveFilterOptions(searchParams) : undefined;
-const { fansubs, type, before, after, search, include } = filter;
+const { fansubs, type, before, after, search, include } = filter ?? {};
 
 const active = fansubs && fansubs.length === 1 ? 'fansub' : type ? 'type' : 'all';
 const title = inferTitle();
@@ -97,7 +97,11 @@ function inferTitle() {
   </div>
 
   <!-- Pass fetch response to the client -->
-  <div id="fetch-response" class="hidden" data-filter={JSON.stringify(searchParams)}></div>
+  {
+    searchParams && (
+      <div id="fetch-response" class="hidden" data-filter={JSON.stringify(searchParams)} />
+    )
+  }
 
   <style>
     .keyword {
