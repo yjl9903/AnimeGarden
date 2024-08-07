@@ -29,8 +29,13 @@ const stringArrayLike = z.coerce
 const numberArray = z.union([z.array(z.coerce.number()), z.coerce.number().transform((n) => [n])]);
 const numberArrayLike = z.coerce
   .string()
-  .transform((t) => JSON.parse(t))
-  .catch(undefined)
+  .transform((t) => {
+    try {
+      return JSON.parse(t);
+    } catch {
+      return undefined;
+    }
+  })
   .pipe(z.union([numberArray, stringArray]))
   .optional();
 
