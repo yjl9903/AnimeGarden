@@ -28,7 +28,7 @@ interface FetchResourcesResult<T extends FetchResourcesOptions> {
   ok: boolean;
   resources: ResourceWithId<T>[];
   complete: boolean;
-  filter?: Omit<ResolvedFilterOptions, 'page'>;
+  filter: Omit<ResolvedFilterOptions, 'page'> | undefined;
   timestamp?: Date;
 }
 

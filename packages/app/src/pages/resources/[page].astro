@@ -30,17 +30,17 @@ const resp = await fetchResources(
 const feedURL = `/feed.xml?filter=${generateFeed(Astro.url.searchParams)}`;
 const { ok, complete, resources, filter: searchParams, timestamp } = resp;
 
-const filter = resolveFilterOptions(searchParams);
+const filter = searchParams ? resolveFilterOptions(searchParams) : undefined;
 const { fansubs, type, before, after, search, include } = filter;
 
 const active = fansubs && fansubs.length === 1 ? 'fansub' : type ? 'type' : 'all';
 const title = inferTitle();
 
 function inferTitle() {
-  if (filter.search && search.length > 0) {
+  if (search && search.length > 0) {
     return `搜索 ${search.join(' ')}`;
   }
-  if (filter.include && include.length > 0) {
+  if (include && include.length > 0) {
     return `搜索 ${include.join(' ')}`;
   }
   if (type) {
