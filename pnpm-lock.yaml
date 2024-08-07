@@ -91,7 +91,7 @@ importers:
         version: 3.1.6
       '@astrojs/tailwind':
         specifier: ^5.1.0
-        version: 5.1.0(astro@4.13.1(@types/node@20.14.14)(terser@5.31.3)(typescript@5.5.4))(tailwindcss@3.4.7)
+        version: 5.1.0(astro@4.13.1(@types/node@20.14.14)(terser@5.31.3)(typescript@5.5.4))(tailwindcss@3.4.8)
       '@breadc/color':
         specifier: ^0.9.7
         version: 0.9.7
@@ -169,7 +169,7 @@ importers:
         version: 2.4.0
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@3.4.7)
+        version: 1.0.7(tailwindcss@3.4.8)
       video.js:
         specifier: ^8.17.2
         version: 8.17.2
@@ -229,8 +229,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(date-fns@2.30.0)
       tailwindcss:
-        specifier: ^3.4.7
-        version: 3.4.7
+        specifier: ^3.4.8
+        version: 3.4.8
       unocss:
         specifier: ^0.61.9
         version: 0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.3.5(@types/node@20.14.14)(terser@5.31.3))
@@ -6858,8 +6858,8 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders'
 
-  tailwindcss@3.4.7:
-    resolution: {integrity: sha512-rxWZbe87YJb4OcSopb7up2Ba4U82BoiSGUdoDr3Ydrg9ckxFS/YWsvhN323GMcddgU65QRy7JndC7ahhInhvlQ==}
+  tailwindcss@3.4.8:
+    resolution: {integrity: sha512-GkP17r9GQkxgZ9FKHJQEnjJuKBcbFhMFzKu5slmN6NjlCuFnYJMQ8N4AZ6VrUyiRXlDtPKHkesuQ/MS913Nvdg==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -7842,13 +7842,13 @@ snapshots:
       stream-replace-string: 2.0.0
       zod: 3.23.8
 
-  '@astrojs/tailwind@5.1.0(astro@4.13.1(@types/node@20.14.14)(terser@5.31.3)(typescript@5.5.4))(tailwindcss@3.4.7)':
+  '@astrojs/tailwind@5.1.0(astro@4.13.1(@types/node@20.14.14)(terser@5.31.3)(typescript@5.5.4))(tailwindcss@3.4.8)':
     dependencies:
       astro: 4.13.1(@types/node@20.14.14)(terser@5.31.3)(typescript@5.5.4)
       autoprefixer: 10.4.20(postcss@8.4.40)
       postcss: 8.4.40
       postcss-load-config: 4.0.2(postcss@8.4.40)
-      tailwindcss: 3.4.7
+      tailwindcss: 3.4.8
     transitivePeerDependencies:
       - ts-node
 
@@ -14984,11 +14984,11 @@ snapshots:
 
   tailwind-merge@2.4.0: {}
 
-  tailwindcss-animate@1.0.7(tailwindcss@3.4.7):
+  tailwindcss-animate@1.0.7(tailwindcss@3.4.8):
     dependencies:
-      tailwindcss: 3.4.7
+      tailwindcss: 3.4.8
 
-  tailwindcss@3.4.7:
+  tailwindcss@3.4.8:
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
