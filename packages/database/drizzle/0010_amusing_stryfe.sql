@@ -1,0 +1,1 @@
+ALTER TYPE "resources_provider" ADD VALUE 'ani';
