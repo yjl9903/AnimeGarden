@@ -8,6 +8,7 @@ import { pruneResourcesCache } from '../query/resources';
 import { syncDocuments } from './meili';
 import { fixMoeResources, refreshMoeResources } from './moe';
 import { fixDmhyResources, refreshDmhyResources } from './dmhy';
+import { fixANiResources, refreshANiResources } from './ani';
 
 export function registerAdmin() {
   return registerApp((app) => {
@@ -72,6 +73,40 @@ export function registerAdmin() {
         try {
           // Fix moe resources
           const resp = await fixMoeResources(
+            (offset - 1) * pageSize,
+            (offset - 1) * pageSize + limit * pageSize
+          );
+          if (resp.logs.length > 0) {
+            await updateRefreshTimestamp(storage).catch(() => {});
+          }
+
+          return ctx.json(resp);
+        } catch (error) {
+          console.error(error);
+          return ctx.json({ count: 0, error: (error as any)?.message });
+        }
+      })
+      .post(`/admin/resources/ani`, async (ctx) => {
+        try {
+          const r = await refreshANiResources();
+          if (r.count > 0) {
+            await updateRefreshTimestamp(storage).catch(() => {});
+          }
+          return ctx.json(r);
+        } catch (error) {
+          console.error(error);
+          return ctx.json({ count: 0, error: (error as any)?.message });
+        }
+      })
+      .post(`/admin/resources/ani/sync`, async (ctx) => {
+        const pageSize = 80;
+        // Page index is 1-based
+        const offset = +(ctx.req.query('offset') ?? '1');
+        const limit = +(ctx.req.query('limit') ?? '10');
+
+        try {
+          // Fix ani resources
+          const resp = await fixANiResources(
             (offset - 1) * pageSize,
             (offset - 1) * pageSize + limit * pageSize
           );

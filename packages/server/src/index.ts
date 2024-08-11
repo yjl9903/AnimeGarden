@@ -96,6 +96,18 @@ Cron(`0 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
       } catch (error) {
         console.error(error);
       }
+    })(),
+    (async () => {
+      try {
+        const req = new Request(`https://api.zeabur.internal/admin/resources/ani/sync`, {
+          method: 'POST'
+        });
+        logger.info(`cron`, `Sync ani resources`);
+        const resp = await app.fetch(req);
+        logger.info(`cron`, JSON.stringify(await resp.json()));
+      } catch (error) {
+        console.error(error);
+      }
     })()
   ]);
 });
