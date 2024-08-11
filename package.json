@@ -46,10 +46,5 @@
   "packageManager": "pnpm@9.7.0",
   "engines": {
     "node": ">=v18.16.0"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "bencode@4.0.0": "patches/bencode@4.0.0.patch"
-    }
   }
 }
