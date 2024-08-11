@@ -6,8 +6,6 @@ export { teams } from './schema/team';
 
 export { resources } from './schema/resource';
 
-export * from './const';
-
 export * from './migrate';
 
 export * from './redis';

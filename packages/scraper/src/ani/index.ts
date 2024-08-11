@@ -4,8 +4,7 @@ import parseTorrent from 'parse-torrent';
 import { JSDOM } from 'jsdom';
 import { toMagnetURI } from 'parse-torrent';
 
-import { type FetchedResource, ResourceDetail, retryFn } from 'animegarden';
-import { ANiTeam, ANiUser } from '@animegarden/database';
+import { type FetchedResource, ResourceDetail, retryFn, ANiTeam, ANiUser } from 'animegarden';
 
 import { parseSize, splitOnce } from '../utils';
 
