@@ -1,0 +1,19 @@
+diff --git a/package.json b/package.json
+index 2d1a40c91ccbada5e217bc1e6aaa66e640c95cbd..833070486955863df456f7a6ae9e7ccfd7ef05de 100644
+--- a/package.json
++++ b/package.json
+@@ -43,8 +43,13 @@
+   "engines": {
+     "node": ">=12.20.0"
+   },
++  "main": "./index.js",
++  "module": "./index.js",
+   "exports": {
+-    "import": "./index.js"
++    ".": {
++      "require": "./index.js",
++      "import": "./index.js"
++    }
+   },
+   "repository": {
+     "type": "git",

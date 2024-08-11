@@ -2,6 +2,7 @@
   "name": "@animegarden/monorepo",
   "version": "0.3.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "animegarden": "tsx packages/cli/src/cli.ts",
     "build": "turbo run build",
@@ -25,7 +26,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240806.0",
     "@types/fs-extra": "^11.0.4",
-    "@types/node": "^20.14.14",
+    "@types/node": "^20.14.15",
     "breadc": "^0.9.7",
     "bumpp": "latest",
     "drizzle-kit": "^0.23.2",
@@ -38,12 +39,17 @@
     "turbo": "^2.0.12",
     "typescript": "^5.5.4",
     "unbuild": "^2.0.0",
-    "undici": "^6.19.5",
+    "undici": "^6.19.7",
     "vitest": "^2.0.5",
-    "wrangler": "^3.69.1"
+    "wrangler": "^3.70.0"
   },
   "packageManager": "pnpm@9.7.0",
   "engines": {
     "node": ">=v18.16.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "bencode@4.0.0": "patches/bencode@4.0.0.patch"
+    }
   }
 }
