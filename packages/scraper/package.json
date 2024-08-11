@@ -43,6 +43,7 @@
   "dependencies": {
     "animegarden": "workspace:*",
     "cheerio": "1.0.0-rc.12",
+    "jsdom": "^24.1.1",
     "parse-torrent": "^11.0.17",
     "rss-parser": "^3.13.0",
     "zod": "^3.23.8"
@@ -51,6 +52,7 @@
     "node": ">=v18.16.0"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.7",
     "@types/parse-torrent": "^5.8.7"
   }
 }
