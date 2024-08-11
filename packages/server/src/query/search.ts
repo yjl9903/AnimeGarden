@@ -99,13 +99,17 @@ async function transformFromMeili(resources: ResourceDocument[]) {
         ? `https://share.dmhy.org/topics/list/team_id/${r.fansubId}`
         : r.provider === 'moe' && r.fansubId
           ? `https://bangumi.moe/tag/${r.fansubId}`
-          : undefined;
+          : r.provider === 'ani'
+            ? 'https://aniopen.an-i.workers.dev/'
+            : undefined;
     const publisherHref =
       r.provider === 'dmhy'
         ? `https://share.dmhy.org/topics/list/user_id/${r.publisherId}`
         : r.provider === 'moe' && r.fansubId
           ? `https://bangumi.moe/tag/${r.fansubId}`
-          : undefined;
+          : r.provider === 'ani'
+            ? 'https://aniopen.an-i.workers.dev/'
+            : undefined;
 
     result.push({
       id: r.id,
