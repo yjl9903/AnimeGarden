@@ -13,7 +13,7 @@ const cli = breadc('animegarden', { version })
   .option('--meili-key <key>', 'MeiliSearch Key');
 
 cli
-  .command('fetch <dmhy|moe>', 'Fetch resources list')
+  .command('fetch <dmhy|moe|ani>', 'Fetch resources list')
   .option('-o, --out-dir <dir>', { description: 'Output dir', default: 'output' })
   .option('--from <page>', { description: 'Fetch from page', default: '1' })
   .option('--to <page>', { description: 'Fetch to page, leave empty for all the data' })
@@ -24,6 +24,9 @@ cli
     } else if (platform === 'moe') {
       const { fetchMoe } = await import('./commands/moe');
       await fetchMoe(+options.from, options.to ? +options.to : undefined, options.outDir);
+    } else if (platform === 'ani') {
+      const { fetchANi } = await import('./commands/ani');
+      await fetchANi(undefined, undefined, options.outDir);
     }
   });
 
@@ -39,7 +42,7 @@ cli
   });
 
 cli
-  .command('database insert <dmhy|moe> <data_dir>', 'Insert data to database')
+  .command('database insert <dmhy|moe|ani> <data_dir>', 'Insert data to database')
   .alias('db insert')
   .action(async (platform, dir, options) => {
     const { connection, database } = await connect(options);
@@ -51,6 +54,9 @@ cli
     } else if (platform === 'moe') {
       const { insertMoe } = await import('./commands/moe');
       await insertMoe(database, meili, dir);
+    } else if (platform === 'ani') {
+      const { insertANi } = await import('./commands/ani');
+      await insertANi(database, meili, dir);
     }
 
     await connection.end();
