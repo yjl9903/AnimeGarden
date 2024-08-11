@@ -1,9 +1,7 @@
 import type { Context } from 'hono';
 
-import { and, eq } from 'drizzle-orm';
 import { prefixStorage } from 'unstorage';
 
-import { resources } from '@animegarden/database';
 import { fetchMoeDetail } from '@animegarden/scraper';
 
 import { storage } from '../storage';

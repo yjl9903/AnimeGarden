@@ -7,6 +7,7 @@ import { registerApp } from '../app';
 import { queryResources } from './resources';
 import { getMoeResourceDetail } from './moe';
 import { getDmhyResourceDetail } from './dmhy';
+import { getANiResourceDetail } from './ani';
 
 export function registerQuery() {
   return registerApp((app) => {
@@ -49,10 +50,10 @@ export function registerQuery() {
       .post(`/resources/`, async (ctx) => {
         return listResourcesHandler(ctx);
       })
-      .get(`/dmhy/resources`, async (ctx) => {
+      .all(`/resources/dmhy`, async (ctx) => {
         return listResourcesHandler(ctx, 'dmhy');
       })
-      .post(`/dmhy/resources`, async (ctx) => {
+      .all(`/dmhy/resources`, async (ctx) => {
         return listResourcesHandler(ctx, 'dmhy');
       })
       .get(`/dmhy/detail/:href`, async (ctx) => {
@@ -67,10 +68,10 @@ export function registerQuery() {
       .get(`/resource/dmhy/:href`, async (ctx) => {
         return getDmhyResourceDetail(ctx);
       })
-      .get(`/moe/resources`, async (ctx) => {
+      .all(`/resources/moe`, async (ctx) => {
         return listResourcesHandler(ctx, 'moe');
       })
-      .post(`/moe/resources`, async (ctx) => {
+      .all(`/moe/resources`, async (ctx) => {
         return listResourcesHandler(ctx, 'moe');
       })
       .get(`/moe/detail/:href`, async (ctx) => {
@@ -84,6 +85,24 @@ export function registerQuery() {
       })
       .get(`/resource/moe/:href`, async (ctx) => {
         return getMoeResourceDetail(ctx);
+      })
+      .all(`/resources/ani`, async (ctx) => {
+        return listResourcesHandler(ctx, 'ani');
+      })
+      .all(`/ani/resources`, async (ctx) => {
+        return listResourcesHandler(ctx, 'ani');
+      })
+      .get(`/ani/detail/:href`, async (ctx) => {
+        return getANiResourceDetail(ctx);
+      })
+      .get(`/ani/resource/:href`, async (ctx) => {
+        return getANiResourceDetail(ctx);
+      })
+      .get(`/detail/ani/:href`, async (ctx) => {
+        return getANiResourceDetail(ctx);
+      })
+      .get(`/resource/ani/:href`, async (ctx) => {
+        return getANiResourceDetail(ctx);
       });
   });
 }
