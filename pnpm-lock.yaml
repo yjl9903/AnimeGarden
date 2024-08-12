@@ -126,8 +126,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       bgmd:
-        specifier: ^0.0.53
-        version: 0.0.53
+        specifier: ^0.0.54
+        version: 0.0.54
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -393,8 +393,8 @@ importers:
         specifier: 0.0.35
         version: 0.0.35
       bgmd:
-        specifier: ^0.0.53
-        version: 0.0.53
+        specifier: ^0.0.54
+        version: 0.0.54
       hono:
         specifier: ^4.5.5
         version: 4.5.5
@@ -3555,8 +3555,8 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
-  bangumi-data@0.3.147:
-    resolution: {integrity: sha512-eVv8KQLRIBNAsgq+W09+R1m25uPiBZy8kgHZ0pCvBMHmrHV0cj37bJOyAL+SQuMUn6tQGuDcTT/vVgV5jdXcFA==}
+  bangumi-data@0.3.148:
+    resolution: {integrity: sha512-v+Sq3JG6W9rMXzWXrYd4KhlyxMFPlJlaLjlXBwxdU9cxnnrBY/YC8pFYF2jEXdbcBZq/LEWxACL6pW8hUmQ5QQ==}
 
   bare-events@2.4.2:
     resolution: {integrity: sha512-qMKFd2qG/36aA4GwvKq8MxnPgCQAmBWmSyLWsJcbn8v03wvIPQ/hG1Ms8bPzndZxMDoHpxez5VOS+gC9Yi24/Q==}
@@ -3599,8 +3599,8 @@ packages:
     engines: {node: '>=v20.8.0'}
     hasBin: true
 
-  bgmd@0.0.53:
-    resolution: {integrity: sha512-C+QdcY14AVa35UwRv1ANfYyinK89vUGwIyamRzh+TsIHRLmNJC+kK0Jb8IpV/S04DtoR2tx5XiWZjyMHCmfaQQ==}
+  bgmd@0.0.54:
+    resolution: {integrity: sha512-9akYFGgseA0ErSYYGLHOVNH9j8gmdaFgIESbLxPZisHvu72IyFr7ko7Dx7b5iHiuuw4J3/bvpA9GL+XyvRCZxA==}
     engines: {node: '>=v20.8.0'}
 
   binary-extensions@2.3.0:
@@ -7236,8 +7236,8 @@ packages:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
     engines: {node: '>=12.20'}
 
-  type-fest@4.23.0:
-    resolution: {integrity: sha512-ZiBujro2ohr5+Z/hZWHESLz3g08BBdrdLMieYFULJO+tWc437sn8kQsWLJoZErY8alNhxre9K4p3GURAG11n+w==}
+  type-fest@4.24.0:
+    resolution: {integrity: sha512-spAaHzc6qre0TlZQQ2aA/nGMe+2Z/wyGk5Z+Ru2VUfdNwT6kWO6TjevOlpebsATEG1EIQ2sOiDszud3lO5mt/Q==}
     engines: {node: '>=16'}
 
   typed-array-buffer@1.0.2:
@@ -11309,7 +11309,7 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  bangumi-data@0.3.147: {}
+  bangumi-data@0.3.148: {}
 
   bare-events@2.4.2: {}
 
@@ -11351,12 +11351,12 @@ snapshots:
     dependencies:
       breadc: 0.9.7
 
-  bgmd@0.0.53:
+  bgmd@0.0.54:
     dependencies:
-      bangumi-data: 0.3.147
+      bangumi-data: 0.3.148
       bgmc: 0.0.10
       tmdbc: 0.0.2
-      type-fest: 4.23.0
+      type-fest: 4.24.0
 
   binary-extensions@2.3.0: {}
 
@@ -15610,7 +15610,7 @@ snapshots:
 
   type-fest@2.19.0: {}
 
-  type-fest@4.23.0: {}
+  type-fest@4.24.0: {}
 
   typed-array-buffer@1.0.2:
     dependencies:
