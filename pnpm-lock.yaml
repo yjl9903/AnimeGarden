@@ -76,13 +76,13 @@ importers:
     dependencies:
       '@astrojs/cloudflare':
         specifier: ^11.0.4
-        version: 11.0.4(astro@4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+        version: 11.0.4(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       '@astrojs/node':
         specifier: ^8.3.2
-        version: 8.3.2(astro@4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))
+        version: 8.3.2(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))
       '@astrojs/react':
-        specifier: ^3.6.1
-        version: 3.6.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))
+        specifier: ^3.6.2
+        version: 3.6.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))
       '@astrojs/rss':
         specifier: ^4.0.7
         version: 4.0.7
@@ -91,7 +91,7 @@ importers:
         version: 3.1.6
       '@astrojs/tailwind':
         specifier: ^5.1.0
-        version: 5.1.0(astro@4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(tailwindcss@3.4.9)
+        version: 5.1.0(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(tailwindcss@3.4.9)
       '@breadc/color':
         specifier: ^0.9.7
         version: 0.9.7
@@ -120,8 +120,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       astro:
-        specifier: ^4.13.1
-        version: 4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
+        specifier: ^4.13.3
+        version: 4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
       astro-robots-txt:
         specifier: ^1.0.0
         version: 1.0.0
@@ -215,7 +215,7 @@ importers:
         version: 0.2.4
       '@vite-pwa/astro':
         specifier: ^0.4.0
-        version: 0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(vite-plugin-pwa@0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))
+        version: 0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(vite-plugin-pwa@0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -233,19 +233,19 @@ importers:
         version: 3.4.9
       unocss:
         specifier: ^0.61.9
-        version: 0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))
+        version: 0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))
       unocss-preset-animations:
         specifier: ^1.1.0
-        version: 1.1.0(@unocss/preset-wind@0.61.9)(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5)))
+        version: 1.1.0(@unocss/preset-wind@0.61.9)(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5)))
       unocss-preset-shadcn:
         specifier: ^0.3.1
-        version: 0.3.1(unocss-preset-animations@1.1.0(@unocss/preset-wind@0.61.9)(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))))(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5)))
+        version: 0.3.1(unocss-preset-animations@1.1.0(@unocss/preset-wind@0.61.9)(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))))(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5)))
       unplugin-analytics:
         specifier: ^0.0.11
-        version: 0.0.11(esbuild@0.23.0)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))
+        version: 0.0.11(esbuild@0.23.0)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))
       unplugin-info:
         specifier: ^1.1.0
-        version: 1.1.0(esbuild@0.23.0)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))
+        version: 1.1.0(esbuild@0.23.0)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))
 
   packages/cli:
     dependencies:
@@ -436,9 +436,6 @@ packages:
     peerDependencies:
       astro: ^4.10.3
 
-  '@astrojs/compiler@2.10.1':
-    resolution: {integrity: sha512-XmM4j6BjvOVMag2xELq0JuG2yKOW8wgIu6dvb9BsjbGYmnvoStJn/pqEzVqc1EBszf2xYT7onIkftIOUz9AwrQ==}
-
   '@astrojs/compiler@2.10.2':
     resolution: {integrity: sha512-bvH+v8AirwpRWCkYJEyWYdc5Cs/BjG2ZTxIJzttHilXgfKJAdW2496KsUQKzf5j2tOHtaHXKKn9hb9WZiBGpEg==}
 
@@ -457,8 +454,8 @@ packages:
     resolution: {integrity: sha512-Z9IYjuXSArkAUx3N6xj6+Bnvx8OdUSHA8YoOgyepp3+zJmtVYJIl/I18GozdJVW1p5u/CNpl3Km7/gwTJK85cw==}
     engines: {node: ^18.17.1 || ^20.3.0 || >=21.0.0}
 
-  '@astrojs/react@3.6.1':
-    resolution: {integrity: sha512-Mpgu+GYTba1TEzLMshojeLxi7y/FqrTNtpGTCvI366bRbnCkqtvznRj/xPQOTybwXnYXSgxsELyUvqD51iFeiw==}
+  '@astrojs/react@3.6.2':
+    resolution: {integrity: sha512-fK29lYI7zK/KG4ZBy956x4dmauZcZ18osFkuyGa8r3gmmCQa2NZ9XNu9WaVYEUm0j89f4Gii4tbxLoyM8nk2MA==}
     engines: {node: ^18.17.1 || ^20.3.0 || >=21.0.0}
     peerDependencies:
       '@types/react': ^17.0.50 || ^18.0.21
@@ -3498,8 +3495,8 @@ packages:
   astro-robots-txt@1.0.0:
     resolution: {integrity: sha512-6JQSLid4gMhoWjOm85UHLkgrw0+hHIjnJVIUqxjU2D6feKlVyYukMNYjH44ZDZBK1P8hNxd33PgWlHzCASvedA==}
 
-  astro@4.13.1:
-    resolution: {integrity: sha512-VnMjAc+ykFsIVjgbu9Mt/EA1fMIcPMXbU89h3ATwGOzSIKDsQH72bDgfJkWiwk6u0OE90GeP5EPhAT28Twf9oA==}
+  astro@4.13.3:
+    resolution: {integrity: sha512-MyhmM0v5sphiVwxAm5jjKxWeuPZijWPJ8Ajdign9QzEmLWSH8vUYIJWx/dWRQ6vF1I0jXrksoj3wtw5nzXt9nw==}
     engines: {node: ^18.17.1 || ^20.3.0 || >=21.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
 
@@ -7615,34 +7612,6 @@ packages:
       '@vite-pwa/assets-generator':
         optional: true
 
-  vite@5.3.5:
-    resolution: {integrity: sha512-MdjglKR6AQXQb9JGiS7Rc2wC6uMjcm7Go/NHNO63EwiJXfuk9PgqiP/n5IDJCziMkfw9n4Ubp7lttNwz+8ZVKA==}
-    engines: {node: ^18.0.0 || >=20.0.0}
-    hasBin: true
-    peerDependencies:
-      '@types/node': ^18.0.0 || >=20.0.0
-      less: '*'
-      lightningcss: ^1.21.0
-      sass: '*'
-      stylus: '*'
-      sugarss: '*'
-      terser: ^5.4.0
-    peerDependenciesMeta:
-      '@types/node':
-        optional: true
-      less:
-        optional: true
-      lightningcss:
-        optional: true
-      sass:
-        optional: true
-      stylus:
-        optional: true
-      sugarss:
-        optional: true
-      terser:
-        optional: true
-
   vite@5.4.0:
     resolution: {integrity: sha512-5xokfMX0PIiwCMCMb9ZJcMyh5wbBun0zUzKib+L65vAZ8GY9ePZMXxFrHbr/Kyll2+LSCY7xtERPpxkBDKngwg==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -7980,13 +7949,13 @@ snapshots:
       jsonpointer: 5.0.1
       leven: 3.1.0
 
-  '@astrojs/cloudflare@11.0.4(astro@4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
+  '@astrojs/cloudflare@11.0.4(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
     dependencies:
       '@astrojs/internal-helpers': 0.4.1
       '@astrojs/underscore-redirects': 0.3.4
       '@cloudflare/workers-types': 4.20240729.0
-      '@inox-tools/astro-when': 0.2.1(astro@4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))
-      astro: 4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
+      '@inox-tools/astro-when': 0.2.1(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))
+      astro: 4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
       esbuild: 0.22.0
       estree-walker: 3.0.3
       magic-string: 0.30.11
@@ -7997,8 +7966,6 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
-
-  '@astrojs/compiler@2.10.1': {}
 
   '@astrojs/compiler@2.10.2': {}
 
@@ -8027,9 +7994,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/node@8.3.2(astro@4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))':
+  '@astrojs/node@8.3.2(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))':
     dependencies:
-      astro: 4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
+      astro: 4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
       send: 0.18.0
       server-destroy: 1.0.1
     transitivePeerDependencies:
@@ -8039,11 +8006,11 @@ snapshots:
     dependencies:
       prismjs: 1.29.0
 
-  '@astrojs/react@3.6.1(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))':
+  '@astrojs/react@3.6.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))':
     dependencies:
       '@types/react': 18.3.3
       '@types/react-dom': 18.3.0
-      '@vitejs/plugin-react': 4.3.1(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))
+      '@vitejs/plugin-react': 4.3.1(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       ultrahtml: 1.5.3
@@ -8062,9 +8029,9 @@ snapshots:
       stream-replace-string: 2.0.0
       zod: 3.23.8
 
-  '@astrojs/tailwind@5.1.0(astro@4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(tailwindcss@3.4.9)':
+  '@astrojs/tailwind@5.1.0(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(tailwindcss@3.4.9)':
     dependencies:
-      astro: 4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
+      astro: 4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
       autoprefixer: 10.4.20(postcss@8.4.40)
       postcss: 8.4.40
       postcss-load-config: 4.0.2(postcss@8.4.40)
@@ -9535,10 +9502,10 @@ snapshots:
   '@img/sharp-win32-x64@0.33.4':
     optional: true
 
-  '@inox-tools/astro-when@0.2.1(astro@4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))':
+  '@inox-tools/astro-when@0.2.1(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))':
     dependencies:
-      astro: 4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
-      astro-integration-kit: 0.16.0(astro@4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))
+      astro: 4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
+      astro-integration-kit: 0.16.0(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))
 
   '@ioredis/commands@1.2.0': {}
 
@@ -10812,13 +10779,13 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@unocss/astro@0.61.9(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))':
+  '@unocss/astro@0.61.9(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))':
     dependencies:
       '@unocss/core': 0.61.9
       '@unocss/reset': 0.61.9
-      '@unocss/vite': 0.61.9(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))
+      '@unocss/vite': 0.61.9(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))
     optionalDependencies:
-      vite: 5.3.5(@types/node@22.2.0)(terser@5.31.5)
+      vite: 5.4.0(@types/node@22.2.0)(terser@5.31.5)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -10955,7 +10922,7 @@ snapshots:
     dependencies:
       '@unocss/core': 0.61.9
 
-  '@unocss/vite@0.61.9(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))':
+  '@unocss/vite@0.61.9(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@rollup/pluginutils': 5.1.0(rollup@2.79.1)
@@ -10967,7 +10934,7 @@ snapshots:
       chokidar: 3.6.0
       fast-glob: 3.3.2
       magic-string: 0.30.11
-      vite: 5.3.5(@types/node@22.2.0)(terser@5.31.5)
+      vite: 5.4.0(@types/node@22.2.0)(terser@5.31.5)
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -11012,21 +10979,21 @@ snapshots:
       sharp-ico: 0.1.5
       unconfig: 0.3.13
 
-  '@vite-pwa/astro@0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(vite-plugin-pwa@0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))':
+  '@vite-pwa/astro@0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(vite-plugin-pwa@0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))':
     dependencies:
-      astro: 4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
-      vite-plugin-pwa: 0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0)
+      astro: 4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
+      vite-plugin-pwa: 0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0)
     optionalDependencies:
       '@vite-pwa/assets-generator': 0.2.4
 
-  '@vitejs/plugin-react@4.3.1(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))':
+  '@vitejs/plugin-react@4.3.1(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.25.2)
       '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.25.2)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.3.5(@types/node@22.2.0)(terser@5.31.5)
+      vite: 5.4.0(@types/node@22.2.0)(terser@5.31.5)
     transitivePeerDependencies:
       - supports-color
 
@@ -11175,9 +11142,9 @@ snapshots:
     dependencies:
       tslib: 2.6.3
 
-  astro-integration-kit@0.16.0(astro@4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)):
+  astro-integration-kit@0.16.0(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)):
     dependencies:
-      astro: 4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
+      astro: 4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
       pathe: 1.1.2
       recast: 0.23.9
 
@@ -11186,9 +11153,9 @@ snapshots:
       valid-filename: 4.0.0
       zod: 3.23.8
 
-  astro@4.13.1(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4):
+  astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4):
     dependencies:
-      '@astrojs/compiler': 2.10.1
+      '@astrojs/compiler': 2.10.2
       '@astrojs/internal-helpers': 0.4.1
       '@astrojs/markdown-remark': 5.2.0
       '@astrojs/telemetry': 3.1.0
@@ -11243,8 +11210,8 @@ snapshots:
       tsconfck: 3.1.1(typescript@5.5.4)
       unist-util-visit: 5.0.0
       vfile: 6.0.2
-      vite: 5.3.5(@types/node@22.2.0)(terser@5.31.5)
-      vitefu: 0.2.5(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))
+      vite: 5.4.0(@types/node@22.2.0)(terser@5.31.5)
+      vitefu: 0.2.5(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))
       which-pm: 3.0.0
       yargs-parser: 21.1.1
       zod: 3.23.8
@@ -11256,6 +11223,7 @@ snapshots:
       - less
       - lightningcss
       - sass
+      - sass-embedded
       - stylus
       - sugarss
       - supports-color
@@ -15825,19 +15793,19 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unocss-preset-animations@1.1.0(@unocss/preset-wind@0.61.9)(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))):
+  unocss-preset-animations@1.1.0(@unocss/preset-wind@0.61.9)(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))):
     dependencies:
       '@unocss/preset-wind': 0.61.9
-      unocss: 0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))
+      unocss: 0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))
 
-  unocss-preset-shadcn@0.3.1(unocss-preset-animations@1.1.0(@unocss/preset-wind@0.61.9)(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))))(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))):
+  unocss-preset-shadcn@0.3.1(unocss-preset-animations@1.1.0(@unocss/preset-wind@0.61.9)(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))))(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))):
     dependencies:
-      unocss: 0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))
-      unocss-preset-animations: 1.1.0(@unocss/preset-wind@0.61.9)(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5)))
+      unocss: 0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))
+      unocss-preset-animations: 1.1.0(@unocss/preset-wind@0.61.9)(unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5)))
 
-  unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5)):
+  unocss@0.61.9(postcss@8.4.40)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5)):
     dependencies:
-      '@unocss/astro': 0.61.9(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))
+      '@unocss/astro': 0.61.9(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))
       '@unocss/cli': 0.61.9(rollup@2.79.1)
       '@unocss/core': 0.61.9
       '@unocss/extractor-arbitrary-variants': 0.61.9
@@ -15856,9 +15824,9 @@ snapshots:
       '@unocss/transformer-compile-class': 0.61.9
       '@unocss/transformer-directives': 0.61.9
       '@unocss/transformer-variant-group': 0.61.9
-      '@unocss/vite': 0.61.9(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))
+      '@unocss/vite': 0.61.9(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))
     optionalDependencies:
-      vite: 5.3.5(@types/node@22.2.0)(terser@5.31.5)
+      vite: 5.4.0(@types/node@22.2.0)(terser@5.31.5)
     transitivePeerDependencies:
       - postcss
       - rollup
@@ -15869,7 +15837,7 @@ snapshots:
   unordered-set@2.0.1:
     optional: true
 
-  unplugin-analytics@0.0.11(esbuild@0.23.0)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5)):
+  unplugin-analytics@0.0.11(esbuild@0.23.0)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5)):
     dependencies:
       '@unplugin-analytics/core': 0.0.11
       defu: 6.1.4
@@ -15878,9 +15846,9 @@ snapshots:
     optionalDependencies:
       esbuild: 0.23.0
       rollup: 2.79.1
-      vite: 5.3.5(@types/node@22.2.0)(terser@5.31.5)
+      vite: 5.4.0(@types/node@22.2.0)(terser@5.31.5)
 
-  unplugin-info@1.1.0(esbuild@0.23.0)(rollup@2.79.1)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5)):
+  unplugin-info@1.1.0(esbuild@0.23.0)(rollup@2.79.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5)):
     dependencies:
       ci-info: 4.0.0
       git-url-parse: 14.1.0
@@ -15889,7 +15857,7 @@ snapshots:
     optionalDependencies:
       esbuild: 0.23.0
       rollup: 2.79.1
-      vite: 5.3.5(@types/node@22.2.0)(terser@5.31.5)
+      vite: 5.4.0(@types/node@22.2.0)(terser@5.31.5)
     transitivePeerDependencies:
       - supports-color
 
@@ -16069,28 +16037,18 @@ snapshots:
       - supports-color
       - terser
 
-  vite-plugin-pwa@0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0):
+  vite-plugin-pwa@0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0):
     dependencies:
       debug: 4.3.6
       pretty-bytes: 6.1.1
       tinyglobby: 0.2.2
-      vite: 5.3.5(@types/node@22.2.0)(terser@5.31.5)
+      vite: 5.4.0(@types/node@22.2.0)(terser@5.31.5)
       workbox-build: 7.1.1(@types/babel__core@7.20.5)
       workbox-window: 7.1.0
     optionalDependencies:
       '@vite-pwa/assets-generator': 0.2.4
     transitivePeerDependencies:
       - supports-color
-
-  vite@5.3.5(@types/node@22.2.0)(terser@5.31.5):
-    dependencies:
-      esbuild: 0.21.5
-      postcss: 8.4.40
-      rollup: 4.20.0
-    optionalDependencies:
-      '@types/node': 22.2.0
-      fsevents: 2.3.3
-      terser: 5.31.5
 
   vite@5.4.0(@types/node@20.14.15)(terser@5.31.5):
     dependencies:
@@ -16102,9 +16060,19 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.31.5
 
-  vitefu@0.2.5(vite@5.3.5(@types/node@22.2.0)(terser@5.31.5)):
+  vite@5.4.0(@types/node@22.2.0)(terser@5.31.5):
+    dependencies:
+      esbuild: 0.21.5
+      postcss: 8.4.41
+      rollup: 4.20.0
     optionalDependencies:
-      vite: 5.3.5(@types/node@22.2.0)(terser@5.31.5)
+      '@types/node': 22.2.0
+      fsevents: 2.3.3
+      terser: 5.31.5
+
+  vitefu@0.2.5(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5)):
+    optionalDependencies:
+      vite: 5.4.0(@types/node@22.2.0)(terser@5.31.5)
 
   vitest@2.0.5(@types/node@20.14.15)(jsdom@24.1.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.5):
     dependencies:
