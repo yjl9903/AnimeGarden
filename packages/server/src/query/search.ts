@@ -119,6 +119,7 @@ async function transformFromMeili(resources: ResourceDocument[]) {
       href,
       type: r.type as ResourceType,
       magnet: r.magnet,
+      tracker: r.tracker,
       size: r.size,
       // When reading this field from cache, it will be transfromed to string
       createdAt: new Date(r.createdAt!).toISOString(),
