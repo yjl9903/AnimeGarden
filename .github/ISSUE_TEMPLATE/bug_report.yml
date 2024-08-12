@@ -1,4 +1,4 @@
-name: 🐞 Bug report
+name: 🐞 反馈 BUG
 
 description: Report an issue
 
@@ -9,21 +9,21 @@ body:
   - type: textarea
     id: bug-description
     attributes:
-      label: Describe the bug
-      description: A clear and concise description of what the bug is. If you intend to submit a PR for this issue, tell us in the description. Thanks!
-      placeholder: Bug description
+      label: 描述
+      description: 清晰的描述 BUG 是什么，包括通过什么操作产生了这个 BUG，错误的表现具体是什么，以及期望的正确表现。
+      placeholder: Bug 描述
 
-  - type: input
+  - type: textarea
     id: reproduction
     attributes:
-      label: Reproduction
-      description: The link for the URL of bug page or [minimal reproduction](https://stackoverflow.com/help/minimal-reproducible-example)
+      label: 复现链接
+      description: 出现漏洞的 Anime Garden 网站链接或者提供如何操作 [最小复现](https://stackoverflow.com/help/minimal-reproducible-example)
       placeholder: https://garden.breadio.wiki
 
   - type: textarea
     id: browser-info
     attributes:
-      label: Browser Info
-      description: Output of `npx envinfo --browsers`
+      label: 浏览器信息
+      description: 你使用的是什么浏览器, 版本号是? （可以运行 `npx envinfo --browsers` 命令）
       render: Shell
-      placeholder: Browsers
+      placeholder: 例如, Microsoft Edge, 版本 127.0.2651.98 (正式版本) (64 位)
