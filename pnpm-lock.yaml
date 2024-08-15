@@ -76,10 +76,10 @@ importers:
     dependencies:
       '@astrojs/cloudflare':
         specifier: ^11.0.4
-        version: 11.0.4(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+        version: 11.0.4(astro@4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4))(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       '@astrojs/node':
-        specifier: ^8.3.2
-        version: 8.3.2(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))
+        specifier: ^8.3.3
+        version: 8.3.3(astro@4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4))
       '@astrojs/react':
         specifier: ^3.6.2
         version: 3.6.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))
@@ -91,7 +91,7 @@ importers:
         version: 3.1.6
       '@astrojs/tailwind':
         specifier: ^5.1.0
-        version: 5.1.0(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(tailwindcss@3.4.10)
+        version: 5.1.0(astro@4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4))(tailwindcss@3.4.10)
       '@breadc/color':
         specifier: ^0.9.7
         version: 0.9.7
@@ -120,8 +120,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       astro:
-        specifier: ^4.13.3
-        version: 4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
+        specifier: ^4.14.2
+        version: 4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4)
       astro-robots-txt:
         specifier: ^1.0.0
         version: 1.0.0
@@ -215,7 +215,7 @@ importers:
         version: 0.2.4
       '@vite-pwa/astro':
         specifier: ^0.4.0
-        version: 0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(vite-plugin-pwa@0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))
+        version: 0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4))(vite-plugin-pwa@0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -445,8 +445,8 @@ packages:
   '@astrojs/markdown-remark@5.2.0':
     resolution: {integrity: sha512-vWGM24KZXz11jR3JO+oqYU3T2qpuOi4uGivJ9SQLCAI01+vEkHC60YJMRvHPc+hwd60F7euNs1PeOEixIIiNQw==}
 
-  '@astrojs/node@8.3.2':
-    resolution: {integrity: sha512-Upv0D+9b3RXp7XViQTtrijaDqihHWbVHLdJQ2sxtPOEtw2GDrVxuC6LmXIUew5YvJ9Ylmpst6KizVwO8d/K9/Q==}
+  '@astrojs/node@8.3.3':
+    resolution: {integrity: sha512-idrKhnnPSi0ABV+PCQsRQqVNwpOvVDF/+fkwcIiE8sr9J8EMvW9g/oyAt8T4X2OBJ8FUzYPL8klfCdG7r0eB5g==}
     peerDependencies:
       astro: ^4.2.0
 
@@ -2272,6 +2272,9 @@ packages:
     resolution: {integrity: sha512-vaa5BQphXCB4hsyv6PI0N+I/LXo6y+G/xSCtqL87n+m9vR1Bvn3o42gi6Y3j1U6z0evpFqt7io6uJDgwta3GfQ==}
     engines: {node: '>=v18.16.0'}
 
+  '@oslojs/encoding@0.4.1':
+    resolution: {integrity: sha512-hkjo6MuIK/kQR5CrGNdAPZhS01ZCXuWDRJ187zh6qqF2+yMHZpD9fAYpX8q2bOO6Ryhl3XpCT6kUX76N8hhm4Q==}
+
   '@parcel/watcher-android-arm64@2.4.1':
     resolution: {integrity: sha512-LOi/WTbbh3aTn2RYddrO8pnapixAziFl6SMxHM69r3tvdSm94JtCenaKgk1GRg5FJ5wpMCpHeW+7yqPlvZv7kg==}
     engines: {node: '>= 10.0.0'}
@@ -3495,8 +3498,8 @@ packages:
   astro-robots-txt@1.0.0:
     resolution: {integrity: sha512-6JQSLid4gMhoWjOm85UHLkgrw0+hHIjnJVIUqxjU2D6feKlVyYukMNYjH44ZDZBK1P8hNxd33PgWlHzCASvedA==}
 
-  astro@4.13.3:
-    resolution: {integrity: sha512-MyhmM0v5sphiVwxAm5jjKxWeuPZijWPJ8Ajdign9QzEmLWSH8vUYIJWx/dWRQ6vF1I0jXrksoj3wtw5nzXt9nw==}
+  astro@4.14.2:
+    resolution: {integrity: sha512-x9VeYx8Ih6kYKBMVwwsfRzsZVq30+SUhiawnYQ6+46qQnEx3zH05KcH24HsJMe6dVpHD8HdH7CWR5C4o7Q/jeg==}
     engines: {node: ^18.17.1 || ^20.3.0 || >=21.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
 
@@ -5691,6 +5694,10 @@ packages:
 
   napi-macros@2.2.2:
     resolution: {integrity: sha512-hmEVtAGYzVQpCKdbQea4skABsdXW4RUh5t5mJ2zzqowJS2OyXZTU1KhDVFhx+NlWZ4ap9mqR9TcDO3LTTttd+g==}
+
+  neotraverse@0.6.18:
+    resolution: {integrity: sha512-Z4SmBUweYa09+o6pG+eASabEpP6QkQ70yHj351pQoEXIs8uHbaU2DWVmzBANKgflPa47A50PtB2+NgRpQvr7vA==}
+    engines: {node: '>= 10'}
 
   netmask@2.0.2:
     resolution: {integrity: sha512-dBpDMdxv9Irdq66304OLfEmQ9tbNRFnFTuZiLo+bD+r332bBmMJ8GBLXklIXXgxd3+v9+KUnZaUR5PJMa75Gsg==}
@@ -7935,6 +7942,12 @@ packages:
     peerDependencies:
       zod: ^3.23.3
 
+  zod-to-ts@1.2.0:
+    resolution: {integrity: sha512-x30XE43V+InwGpvTySRNz9kB7qFU8DlyEy7BsSTCHPH1R0QasMmHWZDCzYm6bVXtj/9NNJAZF3jW8rzFvH5OFA==}
+    peerDependencies:
+      typescript: ^4.9.4 || ^5.0.2
+      zod: ^3
+
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
@@ -7964,13 +7977,13 @@ snapshots:
       jsonpointer: 5.0.1
       leven: 3.1.0
 
-  '@astrojs/cloudflare@11.0.4(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
+  '@astrojs/cloudflare@11.0.4(astro@4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4))(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
     dependencies:
       '@astrojs/internal-helpers': 0.4.1
       '@astrojs/underscore-redirects': 0.3.4
       '@cloudflare/workers-types': 4.20240729.0
-      '@inox-tools/astro-when': 0.2.1(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))
-      astro: 4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
+      '@inox-tools/astro-when': 0.2.1(astro@4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4))
+      astro: 4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4)
       esbuild: 0.22.0
       estree-walker: 3.0.3
       magic-string: 0.30.11
@@ -8009,9 +8022,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/node@8.3.2(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))':
+  '@astrojs/node@8.3.3(astro@4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4))':
     dependencies:
-      astro: 4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
+      astro: 4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4)
       send: 0.18.0
       server-destroy: 1.0.1
     transitivePeerDependencies:
@@ -8044,9 +8057,9 @@ snapshots:
       stream-replace-string: 2.0.0
       zod: 3.23.8
 
-  '@astrojs/tailwind@5.1.0(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(tailwindcss@3.4.10)':
+  '@astrojs/tailwind@5.1.0(astro@4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4))(tailwindcss@3.4.10)':
     dependencies:
-      astro: 4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
+      astro: 4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4)
       autoprefixer: 10.4.20(postcss@8.4.40)
       postcss: 8.4.40
       postcss-load-config: 4.0.2(postcss@8.4.40)
@@ -9517,10 +9530,10 @@ snapshots:
   '@img/sharp-win32-x64@0.33.4':
     optional: true
 
-  '@inox-tools/astro-when@0.2.1(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))':
+  '@inox-tools/astro-when@0.2.1(astro@4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4))':
     dependencies:
-      astro: 4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
-      astro-integration-kit: 0.16.0(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))
+      astro: 4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4)
+      astro-integration-kit: 0.16.0(astro@4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4))
 
   '@ioredis/commands@1.2.0': {}
 
@@ -9590,6 +9603,8 @@ snapshots:
   '@onekuma/preset.css@0.1.11': {}
 
   '@onekuma/reset@0.1.11': {}
+
+  '@oslojs/encoding@0.4.1': {}
 
   '@parcel/watcher-android-arm64@2.4.1':
     optional: true
@@ -10994,9 +11009,9 @@ snapshots:
       sharp-ico: 0.1.5
       unconfig: 0.3.13
 
-  '@vite-pwa/astro@0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4))(vite-plugin-pwa@0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))':
+  '@vite-pwa/astro@0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4))(vite-plugin-pwa@0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))':
     dependencies:
-      astro: 4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
+      astro: 4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4)
       vite-plugin-pwa: 0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0)
     optionalDependencies:
       '@vite-pwa/assets-generator': 0.2.4
@@ -11157,9 +11172,9 @@ snapshots:
     dependencies:
       tslib: 2.6.3
 
-  astro-integration-kit@0.16.0(astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)):
+  astro-integration-kit@0.16.0(astro@4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4)):
     dependencies:
-      astro: 4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4)
+      astro: 4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4)
       pathe: 1.1.2
       recast: 0.23.9
 
@@ -11168,7 +11183,7 @@ snapshots:
       valid-filename: 4.0.0
       zod: 3.23.8
 
-  astro@4.13.3(@types/node@22.2.0)(terser@5.31.5)(typescript@5.5.4):
+  astro@4.14.2(@types/node@22.2.0)(rollup@2.79.1)(terser@5.31.5)(typescript@5.5.4):
     dependencies:
       '@astrojs/compiler': 2.10.2
       '@astrojs/internal-helpers': 0.4.1
@@ -11180,6 +11195,8 @@ snapshots:
       '@babel/plugin-transform-react-jsx': 7.25.2(@babel/core@7.25.2)
       '@babel/traverse': 7.25.3
       '@babel/types': 7.25.2
+      '@oslojs/encoding': 0.4.1
+      '@rollup/pluginutils': 5.1.0(rollup@2.79.1)
       '@types/babel__core': 7.20.5
       '@types/cookie': 0.6.0
       acorn: 8.12.1
@@ -11210,7 +11227,9 @@ snapshots:
       js-yaml: 4.1.0
       kleur: 4.1.5
       magic-string: 0.30.11
+      micromatch: 4.0.7
       mrmime: 2.0.0
+      neotraverse: 0.6.18
       ora: 8.0.1
       p-limit: 6.1.0
       p-queue: 8.0.1
@@ -11228,15 +11247,18 @@ snapshots:
       vite: 5.4.0(@types/node@22.2.0)(terser@5.31.5)
       vitefu: 0.2.5(vite@5.4.0(@types/node@22.2.0)(terser@5.31.5))
       which-pm: 3.0.0
+      xxhash-wasm: 1.0.2
       yargs-parser: 21.1.1
       zod: 3.23.8
       zod-to-json-schema: 3.23.2(zod@3.23.8)
+      zod-to-ts: 1.2.0(typescript@5.5.4)(zod@3.23.8)
     optionalDependencies:
       sharp: 0.33.4
     transitivePeerDependencies:
       - '@types/node'
       - less
       - lightningcss
+      - rollup
       - sass
       - sass-embedded
       - stylus
@@ -13875,6 +13897,8 @@ snapshots:
 
   napi-macros@2.2.2:
     optional: true
+
+  neotraverse@0.6.18: {}
 
   netmask@2.0.2: {}
 
@@ -16520,6 +16544,11 @@ snapshots:
 
   zod-to-json-schema@3.23.2(zod@3.23.8):
     dependencies:
+      zod: 3.23.8
+
+  zod-to-ts@1.2.0(typescript@5.5.4)(zod@3.23.8):
+    dependencies:
+      typescript: 5.5.4
       zod: 3.23.8
 
   zod@3.23.8: {}
