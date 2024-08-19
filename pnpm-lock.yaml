@@ -54,8 +54,8 @@ importers:
         specifier: ^2.0.0
         version: 2.0.0(typescript@5.5.4)
       undici:
-        specifier: ^6.19.7
-        version: 6.19.7
+        specifier: ^6.19.8
+        version: 6.19.8
       vitest:
         specifier: ^2.0.5
         version: 2.0.5(@types/node@20.16.1)(jsdom@24.1.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.6)
@@ -271,8 +271,8 @@ importers:
         specifier: ^11.2.0
         version: 11.2.0
       undici:
-        specifier: ^6.19.7
-        version: 6.19.7
+        specifier: ^6.19.8
+        version: 6.19.8
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -7248,8 +7248,8 @@ packages:
     resolution: {integrity: sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==}
     engines: {node: '>=14.0'}
 
-  undici@6.19.7:
-    resolution: {integrity: sha512-HR3W/bMGPSr90i8AAp2C4DM3wChFdJPLrWYpIS++LxS8K+W535qftjt+4MyjNYHeWabMj1nvtmLIi7l++iq91A==}
+  undici@6.19.8:
+    resolution: {integrity: sha512-U8uCCl2x9TK3WANvmBavymRzxbfFYG+tAu+fgx3zxQy3qdagQqBLwJVrdyO1TBfUXvfKveMKJZhpvUYoOjM+4g==}
     engines: {node: '>=18.17'}
 
   unenv-nightly@1.10.0-1717606461.a117952:
@@ -11542,7 +11542,7 @@ snapshots:
       parse5: 7.1.2
       parse5-htmlparser2-tree-adapter: 7.0.0
       parse5-parser-stream: 7.1.2
-      undici: 6.19.7
+      undici: 6.19.8
       whatwg-mimetype: 4.0.0
 
   chokidar@3.6.0:
@@ -15610,7 +15610,7 @@ snapshots:
     dependencies:
       '@fastify/busboy': 2.1.1
 
-  undici@6.19.7: {}
+  undici@6.19.8: {}
 
   unenv-nightly@1.10.0-1717606461.a117952:
     dependencies:
