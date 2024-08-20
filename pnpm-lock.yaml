@@ -60,8 +60,8 @@ importers:
         specifier: ^2.0.5
         version: 2.0.5(@types/node@20.16.1)(jsdom@24.1.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.6)
       wrangler:
-        specifier: ^3.72.0
-        version: 3.72.0(@cloudflare/workers-types@4.20240815.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+        specifier: ^3.72.1
+        version: 3.72.1(@cloudflare/workers-types@4.20240815.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
 
   packages/animegarden:
     dependencies:
@@ -242,10 +242,10 @@ importers:
         version: 0.3.1(unocss-preset-animations@1.1.0(@unocss/preset-wind@0.62.2)(unocss@0.62.2(postcss@8.4.41)(rollup@2.79.1)(vite@5.4.1(@types/node@20.16.1)(terser@5.31.6))))(unocss@0.62.2(postcss@8.4.41)(rollup@2.79.1)(vite@5.4.1(@types/node@20.16.1)(terser@5.31.6)))
       unplugin-analytics:
         specifier: ^0.0.11
-        version: 0.0.11(esbuild@0.23.1)(rollup@2.79.1)(vite@5.4.1(@types/node@20.16.1)(terser@5.31.6))
+        version: 0.0.11(esbuild@0.17.19)(rollup@2.79.1)(vite@5.4.1(@types/node@20.16.1)(terser@5.31.6))
       unplugin-info:
         specifier: ^1.1.0
-        version: 1.1.0(esbuild@0.23.1)(rollup@2.79.1)(vite@5.4.1(@types/node@20.16.1)(terser@5.31.6))
+        version: 1.1.0(esbuild@0.17.19)(rollup@2.79.1)(vite@5.4.1(@types/node@20.16.1)(terser@5.31.6))
 
   packages/cli:
     dependencies:
@@ -7767,6 +7767,16 @@ packages:
 
   wrangler@3.72.0:
     resolution: {integrity: sha512-9sryHTCtCj48vUC5y/M3Dsx02U1bT6mK9E41TXBCpSJgWh8UvWG/xgmu2dY93Mqj9aJIvK/kwwIBRlNFRwF7Hw==}
+    engines: {node: '>=16.17.0'}
+    hasBin: true
+    peerDependencies:
+      '@cloudflare/workers-types': ^4.20240806.0
+    peerDependenciesMeta:
+      '@cloudflare/workers-types':
+        optional: true
+
+  wrangler@3.72.1:
+    resolution: {integrity: sha512-0UrkDpBJb1KHP6msGF+k14+2CFoF9jFKMKGEPfr6yflCduKVas9qA2ExKiRF5un9PKDY79cszuwvVUtir2NfLg==}
     engines: {node: '>=16.17.0'}
     hasBin: true
     peerDependencies:
@@ -15744,25 +15754,25 @@ snapshots:
   unordered-set@2.0.1:
     optional: true
 
-  unplugin-analytics@0.0.11(esbuild@0.23.1)(rollup@2.79.1)(vite@5.4.1(@types/node@20.16.1)(terser@5.31.6)):
+  unplugin-analytics@0.0.11(esbuild@0.17.19)(rollup@2.79.1)(vite@5.4.1(@types/node@20.16.1)(terser@5.31.6)):
     dependencies:
       '@unplugin-analytics/core': 0.0.11
       defu: 6.1.4
       scule: 1.3.0
       unplugin: 1.12.2
     optionalDependencies:
-      esbuild: 0.23.1
+      esbuild: 0.17.19
       rollup: 2.79.1
       vite: 5.4.1(@types/node@20.16.1)(terser@5.31.6)
 
-  unplugin-info@1.1.0(esbuild@0.23.1)(rollup@2.79.1)(vite@5.4.1(@types/node@20.16.1)(terser@5.31.6)):
+  unplugin-info@1.1.0(esbuild@0.17.19)(rollup@2.79.1)(vite@5.4.1(@types/node@20.16.1)(terser@5.31.6)):
     dependencies:
       ci-info: 4.0.0
       git-url-parse: 14.1.0
       simple-git: 3.25.0
       unplugin: 1.12.2
     optionalDependencies:
-      esbuild: 0.23.1
+      esbuild: 0.17.19
       rollup: 2.79.1
       vite: 5.4.1(@types/node@20.16.1)(terser@5.31.6)
     transitivePeerDependencies:
@@ -16256,6 +16266,34 @@ snapshots:
       '@cloudflare/workerd-windows-64': 1.20240806.0
 
   wrangler@3.72.0(@cloudflare/workers-types@4.20240815.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4):
+    dependencies:
+      '@cloudflare/kv-asset-handler': 0.3.4
+      '@cloudflare/workers-shared': 0.2.0
+      '@esbuild-plugins/node-globals-polyfill': 0.2.3(esbuild@0.17.19)
+      '@esbuild-plugins/node-modules-polyfill': 0.2.2(esbuild@0.17.19)
+      blake3-wasm: 2.1.5
+      chokidar: 3.6.0
+      date-fns: 3.6.0
+      esbuild: 0.17.19
+      miniflare: 3.20240806.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      nanoid: 3.3.7
+      path-to-regexp: 6.2.2
+      resolve: 1.22.8
+      resolve.exports: 2.0.2
+      selfsigned: 2.4.1
+      source-map: 0.6.1
+      unenv: unenv-nightly@1.10.0-1717606461.a117952
+      workerd: 1.20240806.0
+      xxhash-wasm: 1.0.2
+    optionalDependencies:
+      '@cloudflare/workers-types': 4.20240815.0
+      fsevents: 2.3.3
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
+
+  wrangler@3.72.1(@cloudflare/workers-types@4.20240815.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.4
       '@cloudflare/workers-shared': 0.2.0
