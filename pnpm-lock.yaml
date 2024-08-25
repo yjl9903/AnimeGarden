@@ -58,7 +58,7 @@ importers:
         version: 6.19.8
       vitest:
         specifier: ^2.0.5
-        version: 2.0.5(@types/node@20.16.1)(jsdom@24.1.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.6)
+        version: 2.0.5(@types/node@20.16.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.6)
       wrangler:
         specifier: ^3.72.2
         version: 3.72.2(@cloudflare/workers-types@4.20240821.1)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
@@ -311,8 +311,8 @@ importers:
         specifier: 1.0.0
         version: 1.0.0
       jsdom:
-        specifier: ^24.1.1
-        version: 24.1.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+        specifier: ^25.0.0
+        version: 25.0.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       parse-torrent:
         specifier: ^11.0.17
         version: 11.0.17
@@ -5193,8 +5193,8 @@ packages:
   jsbn@1.1.0:
     resolution: {integrity: sha512-4bYVV3aAMtDTTu4+xsDYa6sy9GyJ69/amsu9sYF2zqjiEoZA5xJi3BrfX3uY+/IekIu7MwdObdbDWpoZdBv3/A==}
 
-  jsdom@24.1.1:
-    resolution: {integrity: sha512-5O1wWV99Jhq4DV7rCLIoZ/UIhyQeDR7wHVyZAHAshbrvZsLs+Xzz7gtwnlJTJDjleiTKh54F4dXrX70vJQTyJQ==}
+  jsdom@25.0.0:
+    resolution: {integrity: sha512-OhoFVT59T7aEq75TVw9xxEfkXgacpqAhQaYgP9y/fDqWQCMB/b1H66RfmPm/MaeaAIU9nDwMOVTlPN51+ao6CQ==}
     engines: {node: '>=18'}
     peerDependencies:
       canvas: ^2.11.2
@@ -13133,7 +13133,7 @@ snapshots:
 
   jsbn@1.1.0: {}
 
-  jsdom@24.1.1(bufferutil@4.0.8)(utf-8-validate@6.0.4):
+  jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     dependencies:
       cssstyle: 4.0.1
       data-urls: 5.0.0
@@ -16039,7 +16039,7 @@ snapshots:
     optionalDependencies:
       vite: 5.4.1(@types/node@20.16.1)(terser@5.31.6)
 
-  vitest@2.0.5(@types/node@20.16.1)(jsdom@24.1.1(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.6):
+  vitest@2.0.5(@types/node@20.16.1)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.6):
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@vitest/expect': 2.0.5
@@ -16062,7 +16062,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.16.1
-      jsdom: 24.1.1(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+      jsdom: 25.0.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
     transitivePeerDependencies:
       - less
       - lightningcss
