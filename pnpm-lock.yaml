@@ -22,7 +22,7 @@ importers:
         version: 0.9.7
       bumpp:
         specifier: latest
-        version: 9.5.2
+        version: 9.5.2(magicast@0.3.5)
       drizzle-kit:
         specifier: ^0.24.2
         version: 0.24.2
@@ -76,10 +76,10 @@ importers:
     dependencies:
       '@astrojs/cloudflare':
         specifier: ^11.0.4
-        version: 11.0.4(astro@4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+        version: 11.0.4(astro@4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(bufferutil@4.0.8)(utf-8-validate@6.0.4)
       '@astrojs/node':
         specifier: ^8.3.3
-        version: 8.3.3(astro@4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))
+        version: 8.3.3(astro@4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))
       '@astrojs/react':
         specifier: ^3.6.2
         version: 3.6.2(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.4.2(@types/node@20.16.2)(terser@5.31.6))
@@ -91,7 +91,7 @@ importers:
         version: 3.1.6
       '@astrojs/tailwind':
         specifier: ^5.1.0
-        version: 5.1.0(astro@4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(tailwindcss@3.4.10)
+        version: 5.1.0(astro@4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(tailwindcss@3.4.10)
       '@breadc/color':
         specifier: ^0.9.7
         version: 0.9.7
@@ -120,8 +120,8 @@ importers:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       astro:
-        specifier: ^4.14.5
-        version: 4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
+        specifier: ^4.15.1
+        version: 4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
       astro-robots-txt:
         specifier: ^1.0.0
         version: 1.0.0
@@ -215,7 +215,7 @@ importers:
         version: 0.2.4
       '@vite-pwa/astro':
         specifier: ^0.4.0
-        version: 0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(vite-plugin-pwa@0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.4.2(@types/node@20.16.2)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))
+        version: 0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(vite-plugin-pwa@0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.4.2(@types/node@20.16.2)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -3471,8 +3471,8 @@ packages:
   astro-robots-txt@1.0.0:
     resolution: {integrity: sha512-6JQSLid4gMhoWjOm85UHLkgrw0+hHIjnJVIUqxjU2D6feKlVyYukMNYjH44ZDZBK1P8hNxd33PgWlHzCASvedA==}
 
-  astro@4.14.5:
-    resolution: {integrity: sha512-sv47kPE6FnvyxxHHcCePNwTKpOMKBq0r1m6WZYg6ag9j3yF9m72ov64NFB7c+hAMDUKgsHfVdLKjOOqDC/c+fA==}
+  astro@4.15.1:
+    resolution: {integrity: sha512-XvKZ2GaDbCsMfcJess4o+4D4cCKja45GJ/9o6EJ6n96xaen8HZMRoJn3YKL9TOjIrL2NuU4mBFMG2JivPJ0foA==}
     engines: {node: ^18.17.1 || ^20.3.0 || >=21.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
 
@@ -5347,6 +5347,9 @@ packages:
   magic-string@0.30.11:
     resolution: {integrity: sha512-+Wri9p0QHMy+545hKww7YAu5NyzF8iomPL/RQazugQ9+Ez4Ic3mERMd8ZTX5rfK944j+560ZJi8iAwgak1Ac7A==}
 
+  magicast@0.3.5:
+    resolution: {integrity: sha512-L0WhttDl+2BOsybvEOLK7fW3UA0OQ0IQ2d6Zl2x/a6vVRs3bAY0ECOSHHeL5jD+SbOpOCUEi0y1DgHEn9Qn1AQ==}
+
   magnet-uri@7.0.5:
     resolution: {integrity: sha512-Ke+dDiYHK1Rq/ZyGUAgk7NIkoypivxolTj/A0qr60ypP0FjeP+NTUNEhr965HsRan0zGxKEBK73+SsjRyJWkXg==}
     engines: {node: '>=12.20.0'}
@@ -7034,6 +7037,9 @@ packages:
   tinyexec@0.2.0:
     resolution: {integrity: sha512-au8dwv4xKSDR+Fw52csDo3wcDztPdne2oM1o/7LFro4h6bdFmvyUAeAfX40pwDtzHgRFqz1XWaUqgKS2G83/ig==}
 
+  tinyexec@0.3.0:
+    resolution: {integrity: sha512-tVGE0mVJPGb0chKhqmsoosjsS+qUnJVGJpZgsHYQcGoPlG3B51R3PouqTgEGH2Dc9jjFyOqOpix6ZHNMXp1FZg==}
+
   tinyglobby@0.2.5:
     resolution: {integrity: sha512-Dlqgt6h0QkoHttG53/WGADNh9QhcjCAIZMTERAVhdpmIBEejSuLI9ZmGKWzB7tweBjlk30+s/ofi4SLmBeTYhw==}
     engines: {node: '>=12.0.0'}
@@ -7537,8 +7543,8 @@ packages:
   vfile-message@4.0.2:
     resolution: {integrity: sha512-jRDZ1IMLttGj41KcZvlrYAaI3CfqpLpfpf+Mfig13viT6NKvRzWZ+lXz0Y5D60w6uJIBAOGq9mSHf0gktF0duw==}
 
-  vfile@6.0.2:
-    resolution: {integrity: sha512-zND7NlS8rJYb/sPqkb13ZvbbUoExdbi4w3SfRrMq6R3FvnLQmmfpajJNITuuYm6AZ5uao9vy4BAos3EXBPf2rg==}
+  vfile@6.0.3:
+    resolution: {integrity: sha512-KzIbH/9tXat2u30jf+smMwFCsno4wHVdNmzFyL+T/L3UGqqk6JKfVqOFOZEpZSHADH1k40ab6NUIXZq422ov3Q==}
 
   video.js@8.17.3:
     resolution: {integrity: sha512-zhhmE0LNxJRA603/48oYzF7GYdT+rQRscvcsouYxFE71aKhalHLBP6S9/XjixnyjcrYgwIx8OQo6eSjcbbAW0Q==}
@@ -7916,13 +7922,13 @@ snapshots:
       jsonpointer: 5.0.1
       leven: 3.1.0
 
-  '@astrojs/cloudflare@11.0.4(astro@4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
+  '@astrojs/cloudflare@11.0.4(astro@4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(bufferutil@4.0.8)(utf-8-validate@6.0.4)':
     dependencies:
       '@astrojs/internal-helpers': 0.4.1
       '@astrojs/underscore-redirects': 0.3.4
       '@cloudflare/workers-types': 4.20240821.1
-      '@inox-tools/astro-when': 0.2.2(astro@4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))
-      astro: 4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
+      '@inox-tools/astro-when': 0.2.2(astro@4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))
+      astro: 4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
       esbuild: 0.22.0
       estree-walker: 3.0.3
       magic-string: 0.30.11
@@ -7957,13 +7963,13 @@ snapshots:
       unist-util-remove-position: 5.0.0
       unist-util-visit: 5.0.0
       unist-util-visit-parents: 6.0.1
-      vfile: 6.0.2
+      vfile: 6.0.3
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/node@8.3.3(astro@4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))':
+  '@astrojs/node@8.3.3(astro@4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))':
     dependencies:
-      astro: 4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
+      astro: 4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
       send: 0.18.0
       server-destroy: 1.0.1
     transitivePeerDependencies:
@@ -7996,9 +8002,9 @@ snapshots:
       stream-replace-string: 2.0.0
       zod: 3.23.8
 
-  '@astrojs/tailwind@5.1.0(astro@4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(tailwindcss@3.4.10)':
+  '@astrojs/tailwind@5.1.0(astro@4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(tailwindcss@3.4.10)':
     dependencies:
-      astro: 4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
+      astro: 4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
       autoprefixer: 10.4.20(postcss@8.4.41)
       postcss: 8.4.41
       postcss-load-config: 4.0.2(postcss@8.4.41)
@@ -9456,10 +9462,10 @@ snapshots:
   '@img/sharp-win32-x64@0.33.5':
     optional: true
 
-  '@inox-tools/astro-when@0.2.2(astro@4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))':
+  '@inox-tools/astro-when@0.2.2(astro@4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))':
     dependencies:
-      astro: 4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
-      astro-integration-kit: 0.16.1(astro@4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))
+      astro: 4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
+      astro-integration-kit: 0.16.1(astro@4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))
       debug: 4.3.6
     transitivePeerDependencies:
       - supports-color
@@ -10943,9 +10949,9 @@ snapshots:
       sharp-ico: 0.1.5
       unconfig: 0.3.13
 
-  '@vite-pwa/astro@0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(vite-plugin-pwa@0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.4.2(@types/node@20.16.2)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))':
+  '@vite-pwa/astro@0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(vite-plugin-pwa@0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.4.2(@types/node@20.16.2)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))':
     dependencies:
-      astro: 4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
+      astro: 4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
       vite-plugin-pwa: 0.20.1(@vite-pwa/assets-generator@0.2.4)(vite@5.4.2(@types/node@20.16.2)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0)
     optionalDependencies:
       '@vite-pwa/assets-generator': 0.2.4
@@ -11113,9 +11119,9 @@ snapshots:
     dependencies:
       tslib: 2.7.0
 
-  astro-integration-kit@0.16.1(astro@4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)):
+  astro-integration-kit@0.16.1(astro@4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)):
     dependencies:
-      astro: 4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
+      astro: 4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
       pathe: 1.1.2
       recast: 0.23.9
 
@@ -11124,17 +11130,14 @@ snapshots:
       valid-filename: 4.0.0
       zod: 3.23.8
 
-  astro@4.14.5(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4):
+  astro@4.15.1(@types/node@20.16.2)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4):
     dependencies:
       '@astrojs/compiler': 2.10.3
       '@astrojs/internal-helpers': 0.4.1
       '@astrojs/markdown-remark': 5.2.0
       '@astrojs/telemetry': 3.1.0
       '@babel/core': 7.25.2
-      '@babel/generator': 7.25.5
-      '@babel/parser': 7.25.4
       '@babel/plugin-transform-react-jsx': 7.25.2(@babel/core@7.25.2)
-      '@babel/traverse': 7.25.4
       '@babel/types': 7.25.4
       '@oslojs/encoding': 0.4.1
       '@rollup/pluginutils': 5.1.0(rollup@2.79.1)
@@ -11158,8 +11161,8 @@ snapshots:
       es-module-lexer: 1.5.4
       esbuild: 0.21.5
       estree-walker: 3.0.3
-      execa: 8.0.1
       fast-glob: 3.3.2
+      fastq: 1.17.1
       flattie: 1.1.1
       github-slugger: 2.0.0
       gray-matter: 4.0.3
@@ -11168,6 +11171,7 @@ snapshots:
       js-yaml: 4.1.0
       kleur: 4.1.5
       magic-string: 0.30.11
+      magicast: 0.3.5
       micromatch: 4.0.8
       mrmime: 2.0.0
       neotraverse: 0.6.18
@@ -11182,9 +11186,10 @@ snapshots:
       shiki: 1.14.1
       string-width: 7.2.0
       strip-ansi: 7.1.0
+      tinyexec: 0.3.0
       tsconfck: 3.1.1(typescript@5.5.4)
       unist-util-visit: 5.0.0
-      vfile: 6.0.2
+      vfile: 6.0.3
       vite: 5.4.2(@types/node@20.16.2)(terser@5.31.6)
       vitefu: 0.2.5(vite@5.4.2(@types/node@20.16.2)(terser@5.31.6))
       which-pm: 3.0.0
@@ -11450,10 +11455,10 @@ snapshots:
 
   builtin-modules@3.3.0: {}
 
-  bumpp@9.5.2:
+  bumpp@9.5.2(magicast@0.3.5):
     dependencies:
       '@jsdevtools/ez-spawn': 3.0.4
-      c12: 1.11.1
+      c12: 1.11.1(magicast@0.3.5)
       cac: 6.7.14
       escalade: 3.1.2
       fast-glob: 3.3.2
@@ -11469,7 +11474,7 @@ snapshots:
       esbuild: 0.23.1
       load-tsconfig: 0.2.5
 
-  c12@1.11.1:
+  c12@1.11.1(magicast@0.3.5):
     dependencies:
       chokidar: 3.6.0
       confbox: 0.1.7
@@ -11483,6 +11488,8 @@ snapshots:
       perfect-debounce: 1.0.0
       pkg-types: 1.2.0
       rc9: 2.1.2
+    optionalDependencies:
+      magicast: 0.3.5
 
   cac@6.7.14: {}
 
@@ -12696,7 +12703,7 @@ snapshots:
       devlop: 1.1.0
       hast-util-from-parse5: 8.0.1
       parse5: 7.1.2
-      vfile: 6.0.2
+      vfile: 6.0.3
       vfile-message: 4.0.2
 
   hast-util-from-parse5@8.0.1:
@@ -12706,7 +12713,7 @@ snapshots:
       devlop: 1.1.0
       hastscript: 8.0.0
       property-information: 6.5.0
-      vfile: 6.0.2
+      vfile: 6.0.3
       vfile-location: 5.0.3
       web-namespaces: 2.0.1
 
@@ -12732,7 +12739,7 @@ snapshots:
       parse5: 7.1.2
       unist-util-position: 5.0.0
       unist-util-visit: 5.0.0
-      vfile: 6.0.2
+      vfile: 6.0.3
       web-namespaces: 2.0.1
       zwitch: 2.0.4
 
@@ -13313,6 +13320,12 @@ snapshots:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.0
 
+  magicast@0.3.5:
+    dependencies:
+      '@babel/parser': 7.25.4
+      '@babel/types': 7.25.4
+      source-map-js: 1.2.0
+
   magnet-uri@7.0.5:
     dependencies:
       '@thaunknown/thirty-two': 1.0.5
@@ -13423,7 +13436,7 @@ snapshots:
       trim-lines: 3.0.1
       unist-util-position: 5.0.0
       unist-util-visit: 5.0.0
-      vfile: 6.0.2
+      vfile: 6.0.3
 
   mdast-util-to-markdown@2.1.0:
     dependencies:
@@ -13988,7 +14001,7 @@ snapshots:
       nlcst-to-string: 4.0.0
       unist-util-modify-children: 4.0.0
       unist-util-visit-children: 3.0.0
-      vfile: 6.0.2
+      vfile: 6.0.3
 
   parse-path@7.0.0:
     dependencies:
@@ -14579,7 +14592,7 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.4
       hast-util-raw: 9.0.4
-      vfile: 6.0.2
+      vfile: 6.0.3
 
   rehype-stringify@10.0.0:
     dependencies:
@@ -14620,7 +14633,7 @@ snapshots:
       '@types/mdast': 4.0.4
       mdast-util-to-hast: 13.2.0
       unified: 11.0.5
-      vfile: 6.0.2
+      vfile: 6.0.3
 
   remark-smartypants@3.0.2:
     dependencies:
@@ -15391,6 +15404,8 @@ snapshots:
 
   tinyexec@0.2.0: {}
 
+  tinyexec@0.3.0: {}
+
   tinyglobby@0.2.5:
     dependencies:
       fdir: 6.3.0(picomatch@4.0.2)
@@ -15677,7 +15692,7 @@ snapshots:
       extend: 3.0.2
       is-plain-obj: 4.1.0
       trough: 2.2.0
-      vfile: 6.0.2
+      vfile: 6.0.3
 
   unique-string@2.0.0:
     dependencies:
@@ -15915,17 +15930,16 @@ snapshots:
   vfile-location@5.0.3:
     dependencies:
       '@types/unist': 3.0.3
-      vfile: 6.0.2
+      vfile: 6.0.3
 
   vfile-message@4.0.2:
     dependencies:
       '@types/unist': 3.0.3
       unist-util-stringify-position: 4.0.0
 
-  vfile@6.0.2:
+  vfile@6.0.3:
     dependencies:
       '@types/unist': 3.0.3
-      unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
 
   video.js@8.17.3:
