@@ -211,11 +211,11 @@ importers:
         specifier: ^0.62.3
         version: 0.62.3
       '@vite-pwa/assets-generator':
-        specifier: ^0.2.4
-        version: 0.2.4
+        specifier: ^0.2.5
+        version: 0.2.5
       '@vite-pwa/astro':
         specifier: ^0.4.0
-        version: 0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.15.1(@types/node@20.16.3)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(vite-plugin-pwa@0.20.2(@vite-pwa/assets-generator@0.2.4)(vite@5.4.2(@types/node@20.16.3)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))
+        version: 0.4.0(@vite-pwa/assets-generator@0.2.5)(astro@4.15.1(@types/node@20.16.3)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(vite-plugin-pwa@0.20.2(@vite-pwa/assets-generator@0.2.5)(vite@5.4.2(@types/node@20.16.3)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -3308,8 +3308,8 @@ packages:
   '@videojs/xhr@2.7.0':
     resolution: {integrity: sha512-giab+EVRanChIupZK7gXjHy90y3nncA2phIOyG3Ne5fvpiMJzvqYwiTOnEVW2S4CoYcuKJkomat7bMXA/UoUZQ==}
 
-  '@vite-pwa/assets-generator@0.2.4':
-    resolution: {integrity: sha512-DXyPLPR/IpbZPSpo1amZEPghY/ziIwpTUKNaz0v1xG+ELzCXmrVQhVzEMqr2JLSqRxjc+UzKfGJA/YdUuaao3w==}
+  '@vite-pwa/assets-generator@0.2.5':
+    resolution: {integrity: sha512-pVSILsW1sYrv77sRIPB+f6017H58ncoeChm72wsEd2QakQ0gXlUP5mZa99lXSkWTrkSQr1Q4XM64Eicp2T++gA==}
     engines: {node: '>=16.14.0'}
     hasBin: true
 
@@ -10583,7 +10583,7 @@ snapshots:
     dependencies:
       debug: 4.3.6
       queue-microtask: 1.2.3
-      streamx: 2.17.0
+      streamx: 2.20.0
       uint8-util: 2.2.5
       ws: 8.18.0(bufferutil@4.0.8)(utf-8-validate@6.0.4)
     transitivePeerDependencies:
@@ -10920,7 +10920,7 @@ snapshots:
       global: 4.4.0
       is-function: 1.0.2
 
-  '@vite-pwa/assets-generator@0.2.4':
+  '@vite-pwa/assets-generator@0.2.5':
     dependencies:
       cac: 6.7.14
       colorette: 2.0.20
@@ -10929,12 +10929,12 @@ snapshots:
       sharp-ico: 0.1.5
       unconfig: 0.3.13
 
-  '@vite-pwa/astro@0.4.0(@vite-pwa/assets-generator@0.2.4)(astro@4.15.1(@types/node@20.16.3)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(vite-plugin-pwa@0.20.2(@vite-pwa/assets-generator@0.2.4)(vite@5.4.2(@types/node@20.16.3)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))':
+  '@vite-pwa/astro@0.4.0(@vite-pwa/assets-generator@0.2.5)(astro@4.15.1(@types/node@20.16.3)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4))(vite-plugin-pwa@0.20.2(@vite-pwa/assets-generator@0.2.5)(vite@5.4.2(@types/node@20.16.3)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))':
     dependencies:
       astro: 4.15.1(@types/node@20.16.3)(rollup@2.79.1)(terser@5.31.6)(typescript@5.5.4)
-      vite-plugin-pwa: 0.20.2(@vite-pwa/assets-generator@0.2.4)(vite@5.4.2(@types/node@20.16.3)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0)
+      vite-plugin-pwa: 0.20.2(@vite-pwa/assets-generator@0.2.5)(vite@5.4.2(@types/node@20.16.3)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0)
     optionalDependencies:
-      '@vite-pwa/assets-generator': 0.2.4
+      '@vite-pwa/assets-generator': 0.2.5
 
   '@vitejs/plugin-react@4.3.1(vite@5.4.2(@types/node@20.16.3)(terser@5.31.6))':
     dependencies:
@@ -14866,7 +14866,7 @@ snapshots:
     dependencies:
       decode-ico: 0.4.1
       ico-endec: 0.1.6
-      sharp: 0.32.6
+      sharp: 0.33.5
 
   sharp@0.32.6:
     dependencies:
@@ -14904,7 +14904,6 @@ snapshots:
       '@img/sharp-wasm32': 0.33.5
       '@img/sharp-win32-ia32': 0.33.5
       '@img/sharp-win32-x64': 0.33.5
-    optional: true
 
   shebang-command@2.0.0:
     dependencies:
@@ -15961,7 +15960,7 @@ snapshots:
       - supports-color
       - terser
 
-  vite-plugin-pwa@0.20.2(@vite-pwa/assets-generator@0.2.4)(vite@5.4.2(@types/node@20.16.3)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0):
+  vite-plugin-pwa@0.20.2(@vite-pwa/assets-generator@0.2.5)(vite@5.4.2(@types/node@20.16.3)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0):
     dependencies:
       debug: 4.3.6
       pretty-bytes: 6.1.1
@@ -15970,7 +15969,7 @@ snapshots:
       workbox-build: 7.1.1(@types/babel__core@7.20.5)
       workbox-window: 7.1.0
     optionalDependencies:
-      '@vite-pwa/assets-generator': 0.2.4
+      '@vite-pwa/assets-generator': 0.2.5
     transitivePeerDependencies:
       - supports-color
 
