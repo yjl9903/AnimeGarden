@@ -343,10 +343,10 @@ importers:
         version: 0.9.7
       '@hono/node-server':
         specifier: ^1.12.2
-        version: 1.12.2(hono@4.5.10)
+        version: 1.12.2(hono@4.5.11)
       '@hono/zod-validator':
         specifier: ^0.2.2
-        version: 0.2.2(hono@4.5.10)(zod@3.23.8)
+        version: 0.2.2(hono@4.5.11)(zod@3.23.8)
       animegarden:
         specifier: workspace:*
         version: link:../animegarden
@@ -360,8 +360,8 @@ importers:
         specifier: ^0.33.0
         version: 0.33.0(@cloudflare/workers-types@4.20240821.1)(@types/react@18.3.5)(postgres@3.4.4)(react@18.3.1)
       hono:
-        specifier: ^4.5.9
-        version: 4.5.10
+        specifier: ^4.5.11
+        version: 4.5.11
       ioredis:
         specifier: ^5.4.1
         version: 5.4.1
@@ -396,8 +396,8 @@ importers:
         specifier: ^0.0.54
         version: 0.0.54
       hono:
-        specifier: ^4.5.9
-        version: 4.5.10
+        specifier: ^4.5.11
+        version: 4.5.11
       memofunc:
         specifier: ^0.1.6
         version: 0.1.6
@@ -4818,8 +4818,8 @@ packages:
   highlight.js@10.7.3:
     resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
 
-  hono@4.5.10:
-    resolution: {integrity: sha512-az6tdU1U8o/l0v8O37FIQuc+ER/TeD9vHt/qs8JnBDgMxw6Zu5L2AixUyHeXZNcu87r7iYo8Ey85R7IogOINKA==}
+  hono@4.5.11:
+    resolution: {integrity: sha512-62FcjLPtjAFwISVBUshryl+vbHOjg8rE4uIK/dxyR8GpLztunZpwFmfEvmJCUI7xoGh/Sr3CGCDPCmYxVw7wUQ==}
     engines: {node: '>=16.0.0'}
 
   hookable@5.5.3:
@@ -9333,13 +9333,13 @@ snapshots:
 
   '@formkit/auto-animate@0.8.2': {}
 
-  '@hono/node-server@1.12.2(hono@4.5.10)':
+  '@hono/node-server@1.12.2(hono@4.5.11)':
     dependencies:
-      hono: 4.5.10
+      hono: 4.5.11
 
-  '@hono/zod-validator@0.2.2(hono@4.5.10)(zod@3.23.8)':
+  '@hono/zod-validator@0.2.2(hono@4.5.11)(zod@3.23.8)':
     dependencies:
-      hono: 4.5.10
+      hono: 4.5.11
       zod: 3.23.8
 
   '@iconify-json/ant-design@1.2.0':
@@ -12776,7 +12776,7 @@ snapshots:
 
   highlight.js@10.7.3: {}
 
-  hono@4.5.10: {}
+  hono@4.5.11: {}
 
   hookable@5.5.3: {}
 
