@@ -8,6 +8,7 @@ import type { Resource } from '../schema';
 import type { Database } from '../connection';
 
 import { resources } from '../schema/resource';
+import { prefetchKeepShare } from './keepshare';
 import { insertResourceDocuments } from '../meilisearch';
 
 export async function insertMoeResources(
@@ -20,7 +21,10 @@ export async function insertMoeResources(
 
   const data = await database.insert(resources).values(res).onConflictDoNothing().returning({
     id: resources.id,
+    provider: resources.provider,
     providerId: resources.providerId,
+    type: resources.type,
+    magnet: resources.magnet,
     isDuplicated: resources.isDuplicated
   });
 
@@ -35,6 +39,7 @@ export async function insertMoeResources(
     })
     .filter(Boolean) as Resource[];
   if (docs.length > 0) {
+    prefetchKeepShare(data.filter((d) => ['動畫', '动画'].includes(d.type) && !d.isDuplicated));
     await insertResourceDocuments(meili, docs);
   }
 
