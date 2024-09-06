@@ -8,6 +8,7 @@ import type { Database } from '../connection';
 import type { NewResource, Resource } from '../schema';
 
 import { resources } from '../schema/resource';
+import { prefetchKeepShare } from './keepshare';
 import { insertResourceDocuments } from '../meilisearch';
 
 export async function insertDmhyResources(
@@ -18,11 +19,13 @@ export async function insertDmhyResources(
   const now = new Date();
   const res = fetchedResources.map((r) => transformResource(r, now));
 
-  const data = await database
-    .insert(resources)
-    .values(res)
-    .onConflictDoNothing()
-    .returning({ id: resources.id, providerId: resources.providerId });
+  const data = await database.insert(resources).values(res).onConflictDoNothing().returning({
+    id: resources.id,
+    provider: resources.provider,
+    providerId: resources.providerId,
+    type: resources.type,
+    magnet: resources.magnet
+  });
 
   const map = new Map(res.map((r) => [r.providerId, r] as const));
   const docs = data
@@ -35,6 +38,7 @@ export async function insertDmhyResources(
     })
     .filter(Boolean) as Resource[];
   if (docs.length > 0) {
+    prefetchKeepShare(data.filter((d) => ['動畫', '动画'].includes(d.type)));
     await insertResourceDocuments(meili, docs);
   }
 
