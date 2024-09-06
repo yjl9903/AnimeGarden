@@ -60,8 +60,8 @@ importers:
         specifier: ^2.0.5
         version: 2.0.5(@types/node@20.16.5)(jsdom@25.0.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.6)
       wrangler:
-        specifier: ^3.74.0
-        version: 3.74.0(@cloudflare/workers-types@4.20240903.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
+        specifier: ^3.75.0
+        version: 3.75.0(@cloudflare/workers-types@4.20240903.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4)
 
   packages/animegarden:
     dependencies:
@@ -7796,8 +7796,8 @@ packages:
       '@cloudflare/workers-types':
         optional: true
 
-  wrangler@3.74.0:
-    resolution: {integrity: sha512-wmtb+tQrgb61yN+Wa2JM98G1Gt4tKFRYPw6xwuyzUcA74L+Dum1A13w22/manl9Gq1jA3dPn+7UzT5sYEVHRog==}
+  wrangler@3.75.0:
+    resolution: {integrity: sha512-CitNuNj0O1z6qbonUXmpUbxeWpU3nx28Kc4ZT33tMdeooQssb063Ie7+ZCdfS3kPhRHSwGdtOV22xFYytHON8w==}
     engines: {node: '>=16.17.0'}
     hasBin: true
     peerDependencies:
@@ -16345,7 +16345,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  wrangler@3.74.0(@cloudflare/workers-types@4.20240903.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4):
+  wrangler@3.75.0(@cloudflare/workers-types@4.20240903.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.3.4
       '@cloudflare/workers-shared': 0.4.1
