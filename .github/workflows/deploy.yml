@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - dev
+      - remix
     paths:
       - packages/worker/**
       - packages/anitomy/**
@@ -43,7 +43,7 @@ jobs:
   web:
     runs-on: ubuntu-latest
 
-    if: github.ref == 'refs/heads/dev'
+    if: github.ref == 'refs/heads/remix'
 
     steps:
       - uses: actions/checkout@v4
