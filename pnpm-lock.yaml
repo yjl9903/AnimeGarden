@@ -71,6 +71,9 @@ importers:
 
   apps/frontend/web:
     dependencies:
+      '@cloudflare/kv-asset-handler':
+        specifier: ^0.3.4
+        version: 0.3.4
       '@remix-run/cloudflare':
         specifier: ^2.12.0
         version: 2.12.0(@cloudflare/workers-types@4.20240909.0)(typescript@5.6.2)

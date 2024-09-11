@@ -9,3 +9,6 @@ kv_namespaces = [
   { binding = "animegarden", id = "d0bb91899b22468db08020b251d3cef4", preview_id = "0bcc680779d340dfb80a3512a89cb533" },
   { binding = "ASSETS", id = "4ab440b1ea1e42c18cdd62a454daba24", preview_id = "4ab440b1ea1e42c18cdd62a454daba24" },
 ]
+
+[site]
+bucket = "./build/client"

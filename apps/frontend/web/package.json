@@ -10,9 +10,11 @@
     "format": "prettier --write ./*.ts app/**/*.ts",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "wrangler": "wrangler"
   },
   "dependencies": {
+    "@cloudflare/kv-asset-handler": "^0.3.4",
     "@remix-run/cloudflare": "^2.12.0",
     "@remix-run/node": "^2.12.0",
     "@remix-run/react": "^2.12.0",

@@ -1,31 +1,59 @@
-import { Hono } from 'hono';
-import { remix } from 'remix-hono/handler';
-import { logDevReady } from '@remix-run/cloudflare';
-import { staticAssets } from 'remix-hono/cloudflare';
+import { getAssetFromKV } from '@cloudflare/kv-asset-handler';
+import { createRequestHandler, type ServerBuild } from '@remix-run/cloudflare';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore This file won’t exist if it hasn’t yet been built
+import * as build from './build/server'; // eslint-disable-line import/no-unresolved
+
+// eslint-disable-next-line import/no-unresolved
 // @ts-ignore
-import * as build from './build/server';
+import __STATIC_CONTENT_MANIFEST from '__STATIC_CONTENT_MANIFEST';
 
-if (process.env.NODE_ENV === 'development') logDevReady(build as any);
+const MANIFEST = JSON.parse(__STATIC_CONTENT_MANIFEST);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleRemixRequest = createRequestHandler(build as any as ServerBuild);
 
-type Bindings = {};
+export default {
+  async fetch(request, env, ctx) {
+    const waitUntil = ctx.waitUntil.bind(ctx);
+    const passThroughOnException = ctx.passThroughOnException.bind(ctx);
+    try {
+      const url = new URL(request.url);
+      const ttl = url.pathname.startsWith('/assets/')
+        ? 60 * 60 * 24 * 365 // 1 year
+        : 60 * 5; // 5 minutes
+      return await getAssetFromKV(
+        { request, waitUntil },
+        {
+          ASSET_NAMESPACE: env.__STATIC_CONTENT,
+          ASSET_MANIFEST: MANIFEST,
+          cacheControl: {
+            browserTTL: ttl,
+            edgeTTL: ttl
+          }
+        }
+      );
+    } catch (error) {
+      // No-op
+    }
 
-type Variables = {};
-
-type ContextEnv = { Bindings: Bindings; Variables: Variables };
-
-const app = new Hono<ContextEnv>();
-
-app.use('*', staticAssets(), remix({ build: build as any }));
-
-app.onError((err, c) => {
-  if (err.message) {
-    console.log(...err.message.trim().split('\n'));
+    try {
+      const loadContext = {
+        cloudflare: {
+          // This object matches the return value from Wrangler's
+          // `getPlatformProxy` used during development via Remix's
+          // `cloudflareDevProxyVitePlugin`:
+          // https://developers.cloudflare.com/workers/wrangler/api/#getplatformproxy
+          cf: request.cf,
+          ctx: { waitUntil, passThroughOnException },
+          caches,
+          env
+        }
+      };
+      return await handleRemixRequest(request, loadContext);
+    } catch (error) {
+      console.log(error);
+      return new Response('An unexpected error occurred', { status: 500 });
+    }
   }
-  if (err.stack) {
-    console.log(...err.stack.trim().split('\n'));
-  }
-  return c.json({ status: 500, messsage: err?.message ?? 'Internal Error' }, 500);
-});
-
-export default app;
+} satisfies ExportedHandler<Env & { __STATIC_CONTENT: KVNamespace<string> }>;
