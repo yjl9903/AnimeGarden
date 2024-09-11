@@ -1,6 +1,6 @@
-import { vitePlugin as remix } from "@remix-run/dev";
-import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
+import { vitePlugin as remix } from '@remix-run/dev';
+import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
 import UnoCSS from 'unocss/vite';
 import Info from 'unplugin-info/vite';
@@ -9,6 +9,17 @@ const APP_HOST = process.env.APP_HOST ?? `garden.breadio.wiki`;
 const SERVER_URL = process.env.SERVER_URL ?? `https://garden.breadio.wiki/api/`;
 
 export default defineConfig({
+  ssr: {
+    resolve: {
+      conditions: ['workerd', 'worker', 'browser']
+    }
+  },
+  resolve: {
+    mainFields: ['browser', 'module', 'main']
+  },
+  build: {
+    minify: true
+  },
   plugins: [
     Info({
       meta: {
@@ -27,9 +38,9 @@ export default defineConfig({
       future: {
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
-        v3_throwAbortReason: true,
-      },
+        v3_throwAbortReason: true
+      }
     }),
-    tsconfigPaths(),
-  ],
+    tsconfigPaths()
+  ]
 });
