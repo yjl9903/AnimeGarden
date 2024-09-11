@@ -36,9 +36,11 @@ export default async function handleRequest(
     await body.allReady;
   }
 
-  responseHeaders.set("Content-Type", "text/html");
+  const headers = new Headers(responseHeaders);
+  headers.set("Content-Type", "text/html");
+
   return new Response(body, {
-    headers: responseHeaders,
+    headers,
     status: responseStatusCode,
   });
 }
