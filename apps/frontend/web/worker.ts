@@ -16,6 +16,6 @@ type ContextEnv = { Bindings: Bindings; Variables: Variables };
 
 const app = new Hono<ContextEnv>();
 
-app.use('*', staticAssets(), remix({ build }));
+app.use('*', staticAssets(), remix({ build: build as any }));
 
 export default app;
