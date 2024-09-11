@@ -83,6 +83,9 @@ importers:
       '@remix-run/serve':
         specifier: ^2.12.0
         version: 2.12.0(typescript@5.6.2)
+      '@remix-run/server-runtime':
+        specifier: ^2.12.0
+        version: 2.12.0(typescript@5.6.2)
       hono:
         specifier: ^4.6.1
         version: 4.6.1
@@ -3154,10 +3157,6 @@ packages:
       typescript:
         optional: true
 
-  '@remix-run/router@1.18.0':
-    resolution: {integrity: sha512-L3jkqmqoSVBVKHfpGZmLrex0lxR5SucGA0sUfFzGctehw+S/ggL9L/0NnC5mw6P8HUWpFZ3nQw3cRApjjWx9Sw==}
-    engines: {node: '>=14.0.0'}
-
   '@remix-run/router@1.19.2':
     resolution: {integrity: sha512-baiMx18+IMuD1yyvOGaHM9QrVUPGGG0jC+z+IPHnRJWUAUvaKuWKyE8gjDj2rzv3sz9zOGoRSPgeBVHRhZnBlA==}
     engines: {node: '>=14.0.0'}
@@ -3166,15 +3165,6 @@ packages:
     resolution: {integrity: sha512-QRWn2prUQXrygiXPl93QCk/xxmnSPMJ/vRZtI6FDYjznyWnroNmyF9MBbg7q/6NbgPfuKBc5QoQzvm1IP1W2pw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
-
-  '@remix-run/server-runtime@2.10.3':
-    resolution: {integrity: sha512-vUl5jONUI6Lj0ICg9FSRFhoPzQdZ/7dpT1m7ID13DF5BEeF3t/9uCJS61XXWgQ/JEu7YRiwvZiwSRTrgM7zeWw==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      typescript: ^5.1.0
-    peerDependenciesMeta:
-      typescript:
-        optional: true
 
   '@remix-run/server-runtime@2.12.0':
     resolution: {integrity: sha512-o9ukOr3XKmyY8UufTrDdkgD3fiy+z+f4qEzvCQnvC0+EasCyN9hb1Vbui6Koo/5HKvahC4Ga8RcWyvhykKrG3g==}
@@ -8461,9 +8451,6 @@ packages:
     cpu: [arm64]
     os: [linux]
 
-  turbo-stream@2.2.0:
-    resolution: {integrity: sha512-FKFg7A0To1VU4CH9YmSMON5QphK0BXjSoiC7D9yMh+mEEbXLUP9qJ4hEt1qcjKtzncs1OpcnjZO8NgrlVbZH+g==}
-
   turbo-stream@2.4.0:
     resolution: {integrity: sha512-FHncC10WpBd2eOmGwpmQsWLDoK4cqsA/UT/GqNoaKOQnT8uzhtCbg3EoUDMvqpOSAI0S26mr0rkjzbOO6S3v1g==}
 
@@ -11800,8 +11787,6 @@ snapshots:
     optionalDependencies:
       typescript: 5.6.2
 
-  '@remix-run/router@1.18.0': {}
-
   '@remix-run/router@1.19.2': {}
 
   '@remix-run/serve@2.12.0(typescript@5.6.2)':
@@ -11817,18 +11802,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
       - typescript
-
-  '@remix-run/server-runtime@2.10.3(typescript@5.6.2)':
-    dependencies:
-      '@remix-run/router': 1.18.0
-      '@types/cookie': 0.6.0
-      '@web3-storage/multipart-parser': 1.0.0
-      cookie: 0.6.0
-      set-cookie-parser: 2.6.0
-      source-map: 0.7.4
-      turbo-stream: 2.2.0
-    optionalDependencies:
-      typescript: 5.6.2
 
   '@remix-run/server-runtime@2.12.0(typescript@5.6.2)':
     dependencies:
@@ -17688,7 +17661,7 @@ snapshots:
 
   remix-hono@0.0.16(@remix-run/cloudflare@2.12.0(@cloudflare/workers-types@4.20240909.0)(typescript@5.6.2))(typescript@5.6.2)(zod@3.23.8):
     dependencies:
-      '@remix-run/server-runtime': 2.10.3(typescript@5.6.2)
+      '@remix-run/server-runtime': 2.12.0(typescript@5.6.2)
       hono: 4.6.1
       pretty-cache-header: 1.0.0
     optionalDependencies:
@@ -18633,8 +18606,6 @@ snapshots:
 
   turbo-linux-arm64@2.1.2:
     optional: true
-
-  turbo-stream@2.2.0: {}
 
   turbo-stream@2.4.0: {}
 
