@@ -10,6 +10,6 @@ declare module '~build/meta' {
 
 declare module 'csstype' {
   interface Properties {
-    '--hero-height'?: string;
+    '--nav-height'?: string;
   }
 }

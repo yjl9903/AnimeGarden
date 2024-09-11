@@ -11,7 +11,7 @@
     "build:server": "turbo run build --filter @animegarden/server...",
     "build:worker": "turbo run build --filter @animegarden/worker...",
     "dev": "turbo run dev --parallel",
-    "dev:app": "pnpm -C packages/app dev",
+    "dev:web": "pnpm -C apps/frontend/web dev",
     "dev:server": "pnpm -C packages/server dev",
     "dev:worker": "pnpm -C packages/worker dev",
     "format": "turbo run format --parallel",
