@@ -7,6 +7,7 @@
     "build": "remix vite:build",
     "deploy:worker": "wrangler deploy",
     "dev": "remix vite:dev",
+    "format": "prettier --write ./*.ts app/**/*.ts",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc"

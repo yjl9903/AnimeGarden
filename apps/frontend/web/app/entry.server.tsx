@@ -4,11 +4,11 @@
  * For more information, see https://remix.run/file-conventions/entry.server
  */
 
-import type { AppLoadContext, EntryContext } from "@remix-run/cloudflare";
+import type { AppLoadContext, EntryContext } from '@remix-run/cloudflare';
 
-import { isbot } from "isbot";
-import { RemixServer } from "@remix-run/react";
-import { renderToReadableStream } from "react-dom/server";
+import { isbot } from 'isbot';
+import { RemixServer } from '@remix-run/react';
+import { renderToReadableStream } from 'react-dom/server';
 
 export default async function handleRequest(
   request: Request,
@@ -28,19 +28,19 @@ export default async function handleRequest(
         // Log streaming rendering errors from inside the shell
         console.error(error);
         responseStatusCode = 500;
-      },
+      }
     }
   );
 
-  if (isbot(request.headers.get("user-agent") || "")) {
+  if (isbot(request.headers.get('user-agent') || '')) {
     await body.allReady;
   }
 
   const headers = new Headers(responseHeaders);
-  headers.set("Content-Type", "text/html");
+  headers.set('Content-Type', 'text/html');
 
   return new Response(body, {
     headers,
-    status: responseStatusCode,
+    status: responseStatusCode
   });
 }
