@@ -8,7 +8,8 @@ import type { AppLoadContext, EntryContext } from '@remix-run/cloudflare';
 
 import { isbot } from 'isbot';
 import { RemixServer } from '@remix-run/react';
-import { renderToReadableStream } from 'react-dom/server';
+// @ts-ignore
+import { renderToReadableStream } from 'react-dom/server.browser';
 
 export default async function handleRequest(
   request: Request,

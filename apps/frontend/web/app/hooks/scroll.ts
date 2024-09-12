@@ -10,29 +10,31 @@ export const useDocumentScroll = () => {
     y: 0
   });
 
-  useLayoutEffect(() => {
-    const handler = () => {
-      if (document?.documentElement) {
-        setState({
-          x: document.documentElement.scrollLeft,
-          y: document.documentElement.scrollTop
+  if (!import.meta.env.SSR) {
+    useLayoutEffect(() => {
+      const handler = () => {
+        if (document?.documentElement) {
+          setState({
+            x: document.documentElement.scrollLeft,
+            y: document.documentElement.scrollTop
+          });
+        }
+      };
+
+      if (document) {
+        document.addEventListener('scroll', handler, {
+          capture: false,
+          passive: true
         });
       }
-    };
 
-    if (document) {
-      document.addEventListener('scroll', handler, {
-        capture: false,
-        passive: true
-      });
-    }
-
-    return () => {
-      if (document) {
-        document.removeEventListener('scroll', handler);
-      }
-    };
-  }, [document]);
+      return () => {
+        if (document) {
+          document.removeEventListener('scroll', handler);
+        }
+      };
+    }, [document]);
+  }
 
   return state;
 };
