@@ -1,11 +1,11 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from '@remix-run/cloudflare';
 
 import Layout from '~/layouts/Layout';
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Anime Garden 動漫花園資源網第三方镜像站" },
-    { name: "description", content: "}Anime Garden 動漫花園資源網第三方镜像站" },
+    { title: 'Anime Garden 動漫花園資源網第三方镜像站' },
+    { name: 'description', content: '}Anime Garden 動漫花園資源網第三方镜像站' }
   ];
 };
 

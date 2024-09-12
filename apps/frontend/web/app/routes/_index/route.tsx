@@ -1,7 +1,7 @@
 import type { Resource } from 'animegarden';
 
 import { useLoaderData } from '@remix-run/react';
-import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/node';
+import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/cloudflare';
 
 import Layout from '~/layouts/Layout';
 import { fetchResources } from '~/utils';

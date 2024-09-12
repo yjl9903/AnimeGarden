@@ -2,6 +2,6 @@
 // by running `wrangler types`
 
 interface Env {
-	animegarden: KVNamespace;
-	ASSETS: KVNamespace;
+  animegarden: KVNamespace;
+  ASSETS: KVNamespace;
 }
