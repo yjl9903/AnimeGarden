@@ -26,7 +26,7 @@ export default {
         { request, waitUntil },
         {
           ASSET_NAMESPACE: env.__STATIC_CONTENT,
-          ASSET_MANIFEST: MANIFEST,
+          ASSET_MANIFEST: MANIFEST as any,
           cacheControl: {
             browserTTL: ttl,
             edgeTTL: ttl
