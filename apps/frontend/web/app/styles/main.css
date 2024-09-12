@@ -5,3 +5,13 @@
   /* prettier-ignore */
   @apply: mx-auto lg:w-[80vw] md:w-[46rem] lt-md:w-[95vw];
 }
+
+.text-link {
+  /* prettier-ignore */
+  @apply: text-sky-700 hover:text-sky-500;
+}
+
+.text-link-active {
+  /* prettier-ignore */
+  @apply: hover:text-sky-600;
+}

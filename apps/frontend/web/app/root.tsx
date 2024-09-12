@@ -1,15 +1,10 @@
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 
-import { Provider } from "jotai";
+import { Provider } from 'jotai';
 
 import 'virtual:uno.css';
 
+import './styles/sonner.css';
 import './styles/main.css';
 
 import { Toaster } from '~/components/ui/sonner';
@@ -30,9 +25,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="font-sans">
-        <Provider>
-          {children}
-        </Provider>
+        <Provider>{children}</Provider>
         <Toaster />
         <ScrollRestoration />
         <Scripts />

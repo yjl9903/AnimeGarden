@@ -6,8 +6,20 @@ import { vitePlugin as remix } from '@remix-run/dev';
 import UnoCSS from 'unocss/vite';
 import Info from 'unplugin-info/vite';
 
+const KEEPSHARE = 'gv78k1oi';
+
 const APP_HOST = process.env.APP_HOST ?? `garden.breadio.wiki`;
-const SERVER_URL = process.env.SERVER_URL ?? `https://garden.breadio.wiki/api/`;
+
+const SERVER_HOST = process.env.SERVER_HOST;
+const SERVER_PORT = process.env.SERVER_PORT;
+const SERVER_PROTOCOL = process.env.SERVER_PROTOCOL ?? 'http'; // http or https
+const SERVER_BASE = SERVER_HOST ? (process.env.SERVER_BASE ?? '') : '';
+
+if (SERVER_HOST) {
+  console.log(
+    `Server is located at: ${SERVER_PROTOCOL}://${SERVER_HOST}${SERVER_PORT ? ':' + SERVER_PORT : ''}${SERVER_BASE}`
+  );
+}
 
 export default defineConfig({
   ssr: {
@@ -26,13 +38,29 @@ export default defineConfig({
     Info({
       meta: {
         /**
-         * The deployed host of animegarden
+         * Keepshare id
+         */
+        KEEPSHARE,
+        /**
+         * The host of app
          */
         APP_HOST,
         /**
-         * The backend server url of animegarden
+         * The host of server
          */
-        SERVER_URL
+        SERVER_HOST,
+        /**
+         * The port of server
+         */
+        SERVER_PORT,
+        /**
+         * The protocal of server
+         */
+        SERVER_PROTOCOL,
+        /**
+         * The base url of server
+         */
+        SERVER_BASE
       }
     }),
     UnoCSS(),

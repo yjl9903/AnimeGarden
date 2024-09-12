@@ -5,10 +5,7 @@ import { useDocument } from './document';
 export const useDocumentScroll = () => {
   const document = useDocument();
 
-  const [state, setState] = useState({
-    x: 0,
-    y: 0
-  });
+  const [state, setState] = useState({ x: 0, y: 0 });
 
   if (!import.meta.env.SSR) {
     useLayoutEffect(() => {
