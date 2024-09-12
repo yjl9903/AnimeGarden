@@ -1,3 +1,4 @@
+import Search from '@/components/Search';
 import { NavLink } from '@remix-run/react';
 import { atom, useAtom } from 'jotai';
 import { useEffect, useRef, useState } from 'react';
@@ -50,7 +51,9 @@ function Hero(props: { height: number, paddingTop: number; paddingBottom: number
         <NavLink to="/">🌸 Anime Garden</NavLink>
       </div>
       <div className="w-full flex justify-center absolute z-10" style={{ top: `${paddingTop}px`, paddingTop: '8px', paddingBottom: '8px' }}>
-        <div className="rounded-md h-[52px] w-[600px] border bg-white"></div>
+        <div className="h-[52px]">
+          <Search></Search>
+        </div>
       </div>
       <div className="hero-bottom w-full absolute" style={{ top: `${paddingTop + SearchHeight}px`, height: `${paddingBottom}px` }}></div>
     </div>

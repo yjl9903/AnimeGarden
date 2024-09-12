@@ -1,6 +1,7 @@
-import { vitePlugin as remix } from '@remix-run/dev';
-import { defineConfig } from 'vite';
+import path from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { defineConfig } from 'vite';
+import { vitePlugin as remix } from '@remix-run/dev';
 
 import UnoCSS from 'unocss/vite';
 import Info from 'unplugin-info/vite';
@@ -15,7 +16,8 @@ export default defineConfig({
     }
   },
   resolve: {
-    mainFields: ['browser', 'module', 'main']
+    mainFields: ['browser', 'module', 'main'],
+    alias: { '@': path.resolve(__dirname, './app') }
   },
   build: {
     minify: true
