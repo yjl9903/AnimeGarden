@@ -1,2 +1,7 @@
 @import '@onekuma/preset.css';
 @import '@onekuma/reset/tailwind.css';
+
+.main {
+  /* prettier-ignore */
+  @apply: mx-auto lg:w-[80vw] md:w-[46rem] lt-md:w-[95vw];
+}
