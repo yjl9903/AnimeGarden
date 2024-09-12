@@ -12,6 +12,8 @@ import 'virtual:uno.css';
 
 import './styles/main.css';
 
+import { Toaster } from '~/components/ui/sonner';
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="zh-CN">
@@ -31,6 +33,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Provider>
           {children}
         </Provider>
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>
