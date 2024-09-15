@@ -126,8 +126,9 @@ export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }>
             />
           </a> */}
           <span className="text-xs text-zinc-400">发布于 {formatInTimeZone(new Date(r.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}</span>
-          <span className="text-xs text-zinc-400">上传者 {r.publisher.name}</span>
-          {r.fansub && <span className="text-xs text-zinc-400">字幕组 {r.fansub?.name}</span>}
+          {/* <span className="text-xs text-zinc-400">上传者 {r.publisher.name}</span>
+          {r.fansub && <span className="text-xs text-zinc-400">字幕组 {r.fansub?.name}</span>} */}
+          <span className="text-xs text-zinc-400">大小 {r.size}</span>
           <a
             href={getDetailHref(r)}
             className="text-link-secondary text-xs"
