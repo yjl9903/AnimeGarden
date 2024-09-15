@@ -1,4 +1,6 @@
-export function Tag(props: { text: string; color?: string; className?: string }) {
+import { memo } from 'react'
+
+export const  Tag = memo((props: { text: string; color?: string; className?: string }) => {
   const { text, className = '', color = 'bg-gray-200' } = props;
 
   return (
@@ -12,4 +14,4 @@ export function Tag(props: { text: string; color?: string; className?: string })
       {text}
     </span>
   );
-}
+});
