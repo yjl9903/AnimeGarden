@@ -1,22 +1,41 @@
-import { NavLink } from '@remix-run/react';
+import { NavLink, useNavigation } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 
 import Search from '~/components/Search';
 import { Sidebar } from '~/components/Sidebar';
 import { useDocumentScroll } from '~/hooks';
 
+import { Loading } from './Loading';
+
+import './layouts.css';
+
 const NavHeight = 68;
 const MaxPaddingTop = 152;
 const MaxPaddingBottom = 36;
 const SearchHeight = NavHeight;
 
+export default function Layout(props: { children?: React.ReactNode }) {
+  const navigation = useNavigation();
+
+  return (
+    <div className="w-full" style={{ '--nav-height': `${NavHeight}px` }}>
+      <Hero></Hero>
+      <div
+        className="flex"
+        style={{ paddingTop: `${MaxPaddingTop + NavHeight + MaxPaddingBottom}px` }}
+      ></div>
+      <div className="w-full flex">
+        <Sidebar></Sidebar>
+        <div className="flex-auto flex items-center">
+          <div className="main">{props.children}</div>
+        </div>
+      </div>
+      {navigation.state === 'loading' && <Loading></Loading>}
+    </div>
+  );
+}
+
 export const useHero = () => {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
   const { y } = useDocumentScroll();
 
   const paddingTop = y <= MaxPaddingTop ? MaxPaddingTop - y : 0;
@@ -52,24 +71,6 @@ export const useHero = () => {
 });`
   };
 };
-
-export default function Layout(props: { children?: React.ReactNode }) {
-  return (
-    <div className="w-full" style={{ '--nav-height': `${NavHeight}px` }}>
-      <Hero></Hero>
-      <div
-        className="flex"
-        style={{ paddingTop: `${MaxPaddingTop + NavHeight + MaxPaddingBottom}px` }}
-      ></div>
-      <div className="w-full flex">
-        <Sidebar></Sidebar>
-        <div className="flex-auto flex items-center">
-          <div className="main">{props.children}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function Hero() {
   const { height, paddingTop, paddingBottom, injectScript } = useHero();

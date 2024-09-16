@@ -41,7 +41,7 @@ export async function fetchResources(
     baseURL,
     ...filter,
     signal: options.signal,
-    tracker: true,
+    tracker: true
   });
 }
 
