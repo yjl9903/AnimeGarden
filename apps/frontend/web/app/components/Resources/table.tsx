@@ -35,7 +35,7 @@ export default function ResourcesTable(props: ResourcesTableProps) {
       <table className="resources-table border-collapse min-y-[1080px] w-full">
         <colgroup>
           {/* <col className="py3 w-[160px] min-w-[100px] lt-lg:w-[100px] lt-sm:w-[100px]" /> */}
-          <col className="py3 px2 text-left min-w-[600px] lg:min-w-[480px] md:min-w-[300px]" />
+          <col className="text-left xl:min-w-[600px] lg:min-w-[480px]" />
           <col className="w-max whitespace-nowrap" />
           <col className="w-max whitespace-nowrap" />
         </colgroup>
@@ -44,7 +44,7 @@ export default function ResourcesTable(props: ResourcesTableProps) {
             {/* <th className="py3 w-[160px] min-w-[100px] lt-lg:w-[100px] lt-sm:w-[100px]">
               发布时间
             </th> */}
-            <th className="py3 pl3 lt-sm:pl1 text-left min-w-[600px] lg:min-w-[480px] md:min-w-[300px]">
+            <th className="py3 pl3 lt-sm:pl1 text-left xl:min-w-[600px] lg:min-w-[480px]">
               <div className="flex">
                 <div className="flex-shrink-0 mr3 flex justify-center items-center w-[32px]">
                   <span className="text-2xl i-carbon-types"></span>
@@ -79,8 +79,8 @@ export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }>
       {formatInTimeZone(new Date(r.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}
     </a>
   </td> */}
-  <td className="py2 pl3 lt-sm:pl1">
-    <div className="flex">
+  <td className="py2 pl3 lt-md:pl1">
+    <div className="flex xl:min-w-[600px] lg:min-w-[480px] lt-md:w-[calc(95vw-4px)]">
       <div className="flex-shrink-0 mr3 flex justify-center items-center">
         <div className="flex items-center justify-center h-[32px] w-[32px] rounded-full bg-gray-100 text-red-600">
           <span className="text-xl i-carbon-video"></span>
