@@ -14,7 +14,7 @@ const MaxPaddingTop = 152;
 const MaxPaddingBottom = 36;
 const SearchHeight = NavHeight;
 
-export default function Layout(props: { children?: React.ReactNode, rss?: string }) {
+export default function Layout(props: { children?: React.ReactNode; rss?: string }) {
   const { rss } = props;
   const navigation = useNavigation();
 
@@ -119,7 +119,7 @@ function Hero(props: { rss?: string }) {
 }
 
 function Header(props: { rss?: string }) {
-  const {rss} = props;
+  const { rss } = props;
 
   return (
     <nav className="z-11 fixed w-full px-8 h-$nav-height flex gap-4 [&>div]:leading-$nav-height">
@@ -138,14 +138,16 @@ function Header(props: { rss?: string }) {
       </div>
       <div className="flex-auto"></div>
       <div>
-        { rss && <a
-          href={rss}
-          target="_blank"
-          className="inline cursor-pointer rounded-md p-2 text-[#ee802f] hover:(!text-[#ff7800] !border-b-[#ff7800] bg-neutral-200)"
-        >
-          <span className="i-carbon-rss mr1" />
-          <span>RSS</span>
-        </a> }
+        {rss && (
+          <a
+            href={rss}
+            target="_blank"
+            className="inline cursor-pointer rounded-md p-2 text-[#ee802f] hover:(!text-[#ff7800] !border-b-[#ff7800] bg-neutral-200)"
+          >
+            <span className="i-carbon-rss mr1" />
+            <span>RSS</span>
+          </a>
+        )}
       </div>
     </nav>
   );

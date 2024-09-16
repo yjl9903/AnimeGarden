@@ -7,6 +7,8 @@ import Layout from '@/layouts/Layout';
 import Resources from '@/components/Resources';
 import { fetchResources } from '@/utils';
 
+import { Filter } from './Filter';
+
 export const meta: MetaFunction = () => {
   return [
     { title: 'Anime Garden 動漫花園資源網第三方镜像站' },
@@ -26,11 +28,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function ResourcesIndex() {
-  const { ok, resources, timestamp } = useLoaderData<typeof loader>();
+  const { ok, resources, filter, timestamp } = useLoaderData<typeof loader>();
 
   return (
     <Layout>
       <div className="w-full pt-12 pb-24">
+        <Filter filter={filter as any}></Filter>
         <Resources resources={resources}></Resources>
       </div>
     </Layout>
