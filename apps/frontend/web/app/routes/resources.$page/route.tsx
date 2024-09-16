@@ -1,6 +1,11 @@
-import type { MetaFunction } from '@remix-run/cloudflare';
+import { useLoaderData } from '@remix-run/react';
+import { json, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare';
 
-import Layout from '~/layouts/Layout';
+import { parseSearchURL, Resource } from 'animegarden';
+
+import Layout from '@/layouts/Layout';
+import Resources from '@/components/Resources';
+import { fetchResources } from '@/utils';
 
 export const meta: MetaFunction = () => {
   return [
@@ -9,43 +14,24 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-export default function Resources() {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+  const parsed = parseSearchURL(url.searchParams, { pageSize: 80 });
+  const { ok, resources, filter, timestamp } = await fetchResources({
+    ...parsed,
+    page: 1,
+  });
+  
+  return json({ ok, resources: resources as Resource<{ tracker: true }>[], filter, timestamp });
+};
+
+export default function ResourcesIndex() {
+  const { ok, resources, timestamp } = useLoaderData<typeof loader>();
+
   return (
     <Layout>
-      <div className="font-sans p-4">
-        <h1 className="text-3xl">Welcome to Remix</h1>
-        <ul className="list-disc mt-4 pl-6 space-y-2">
-          <li>
-            <a
-              className="text-blue-700 underline visited:text-purple-900"
-              target="_blank"
-              href="https://remix.run/start/quickstart"
-              rel="noreferrer"
-            >
-              5m Quick Start
-            </a>
-          </li>
-          <li>
-            <a
-              className="text-blue-700 underline visited:text-purple-900"
-              target="_blank"
-              href="https://remix.run/start/tutorial"
-              rel="noreferrer"
-            >
-              30m Tutorial
-            </a>
-          </li>
-          <li>
-            <a
-              className="text-blue-700 underline visited:text-purple-900"
-              target="_blank"
-              href="https://remix.run/docs"
-              rel="noreferrer"
-            >
-              Remix Docs
-            </a>
-          </li>
-        </ul>
+      <div className="w-full pt-12 pb-24">
+        <Resources resources={resources}></Resources>
       </div>
     </Layout>
   );

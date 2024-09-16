@@ -39,9 +39,9 @@ export async function fetchResources(
 ) {
   return await rawFetchResources(options.fetch ?? ofetch, {
     baseURL,
-    tracker: true,
+    ...filter,
     signal: options.signal,
-    ...filter
+    tracker: true,
   });
 }
 
