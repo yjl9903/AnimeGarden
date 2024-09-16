@@ -44,7 +44,7 @@ export default function ResourcesTable(props: ResourcesTableProps) {
             {/* <th className="py3 w-[160px] min-w-[100px] lt-lg:w-[100px] lt-sm:w-[100px]">
               发布时间
             </th> */}
-            <th className="py3 pl3 text-left min-w-[600px] lg:min-w-[480px] md:min-w-[300px]">
+            <th className="py3 pl3 lt-sm:pl1 text-left min-w-[600px] lg:min-w-[480px] md:min-w-[300px]">
               <div className="flex">
                 <div className="flex-shrink-0 mr3 flex justify-center items-center w-[32px]">
                   <span className="text-2xl i-carbon-types"></span>

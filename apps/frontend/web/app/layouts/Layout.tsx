@@ -14,12 +14,13 @@ const MaxPaddingTop = 152;
 const MaxPaddingBottom = 36;
 const SearchHeight = NavHeight;
 
-export default function Layout(props: { children?: React.ReactNode }) {
+export default function Layout(props: { children?: React.ReactNode, rss?: string }) {
+  const { rss } = props;
   const navigation = useNavigation();
 
   return (
     <div className="w-full" style={{ '--nav-height': `${NavHeight}px` }}>
-      <Hero></Hero>
+      <Hero rss={rss}></Hero>
       <div
         className="flex"
         style={{ paddingTop: `${MaxPaddingTop + NavHeight + MaxPaddingBottom}px` }}
@@ -72,7 +73,7 @@ export const useHero = () => {
   };
 };
 
-function Hero() {
+function Hero(props: { rss?: string }) {
   const { height, paddingTop, paddingBottom, injectScript } = useHero();
 
   return (
@@ -82,7 +83,7 @@ function Hero() {
         suppressHydrationWarning={true}
         style={{ height: `${height}px` }}
       ></div>
-      <Header></Header>
+      <Header rss={props.rss}></Header>
       <div
         className="hero-top z-10 fixed w-full pt-4rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none"
         suppressHydrationWarning={true}
@@ -117,7 +118,9 @@ function Hero() {
   );
 }
 
-function Header() {
+function Header(props: { rss?: string }) {
+  const {rss} = props;
+
   return (
     <nav className="z-11 fixed w-full px-8 h-$nav-height flex gap-4 [&>div]:leading-$nav-height">
       <div className="text-2xl font-quicksand font-bold">
@@ -135,14 +138,14 @@ function Header() {
       </div>
       <div className="flex-auto"></div>
       <div>
-        <a
-          href={''}
+        { rss && <a
+          href={rss}
           target="_blank"
           className="inline cursor-pointer rounded-md p-2 text-[#ee802f] hover:(!text-[#ff7800] !border-b-[#ff7800] bg-neutral-200)"
         >
           <span className="i-carbon-rss mr1" />
           <span>RSS</span>
-        </a>
+        </a> }
       </div>
     </nav>
   );
