@@ -7,6 +7,7 @@ import { getPikPakUrlChecker } from '@/utils';
 import { DisplayType, DisplayTypeColor } from '@/constant';
 
 import { Tag } from './tag';
+import { NavLink } from '@remix-run/react';
 
 export interface ResourcesTableProps {
   className?: string;
@@ -102,13 +103,13 @@ export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }>
                   </a>
                 </>
               ) : (
-                <a
-                  href={getDetailHref(r)}
+                <NavLink
+                  to={getDetailHref(r)}
                   className="text-link"
                   aria-label={`Go to resource detail of ${r.title}`}
                 >
                   {r.title}
-                </a>
+                </NavLink>
               )}
             </span>
           </div>
@@ -129,11 +130,11 @@ export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }>
           {/* <span className="text-xs text-zinc-400">上传者 {r.publisher.name}</span>
           {r.fansub && <span className="text-xs text-zinc-400">字幕组 {r.fansub?.name}</span>} */}
           <span className="text-xs text-zinc-400">大小 {r.size}</span>
-          <a
-            href={getDetailHref(r)}
+          <NavLink
+            to={getDetailHref(r)}
             className="text-link-secondary text-xs"
             aria-label={`Go to resource detail of ${r.title}`}
-          ><span className="i-carbon-launch vertical-middle relative bottom-[1px]"></span><span> </span><span className='more'>更多</span></a>
+          ><span className="i-carbon-launch vertical-middle relative bottom-[1px]"></span><span> </span><span className='more'>更多</span></NavLink>
         </div>
       </div>
     </div>
@@ -141,21 +142,21 @@ export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }>
   <td className="py2 px2 lt-sm:px0">
     <div className="flex justify-center items-center">
       {r.fansub ? (
-        <a
-          href={`/resources/1?${followSearch({ fansubId: r.fansub.id })}`}
+        <NavLink
+          to={`/resources/1?${followSearch({ fansubId: r.fansub.id })}`}
           className="block w-max"
           aria-label={`Go to resources list of fansub ${r.fansub.name}`}
         >
           <Tag text={r.fansub.name} className={`text-xs hover:bg-gray-300`} />
-        </a>
+        </NavLink>
       ) : r.publisher ? (
-        <a
-          href={`/resources/1?${followSearch({ publisherId: r.publisher.id })}`}
+        <NavLink
+          to={`/resources/1?${followSearch({ publisherId: r.publisher.id })}`}
           className="block w-max"
           aria-label={`Go to resources list of publisher ${r.publisher.name}`}
         >
           <Tag text={r.publisher.name} className={`text-xs hover:bg-gray-300`} />
-        </a>
+        </NavLink>
       ) : null}
     </div>
   </td>
