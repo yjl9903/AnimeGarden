@@ -1,5 +1,4 @@
-import { NavLink, useNavigation } from '@remix-run/react';
-import { useEffect, useState } from 'react';
+import { NavLink } from '@remix-run/react';
 
 import Search from '~/components/Search';
 import { Sidebar } from '~/components/Sidebar';
@@ -16,7 +15,6 @@ const SearchHeight = NavHeight;
 
 export default function Layout(props: { children?: React.ReactNode; rss?: string }) {
   const { rss } = props;
-  const navigation = useNavigation();
 
   return (
     <div className="w-full" style={{ '--nav-height': `${NavHeight}px` }}>
@@ -31,7 +29,7 @@ export default function Layout(props: { children?: React.ReactNode; rss?: string
           <div className="main">{props.children}</div>
         </div>
       </div>
-      {navigation.state === 'loading' && <Loading></Loading>}
+      <Loading></Loading>
     </div>
   );
 }
@@ -122,33 +120,40 @@ function Header(props: { rss?: string }) {
   const { rss } = props;
 
   return (
-    <nav className="z-11 fixed w-full px-8 h-$nav-height flex gap-4 [&>div]:leading-$nav-height">
-      <div className="text-2xl font-quicksand font-bold">
-        <NavLink to="/">🌸</NavLink>
-      </div>
-      <div>
-        <NavLink to="/" className="rounded-md p-2 hover:(bg-neutral-200)">
-          动画
-        </NavLink>
-      </div>
-      <div>
-        <NavLink to="/resources" className="rounded-md p-2 hover:(bg-neutral-200)">
-          资源
-        </NavLink>
-      </div>
-      <div className="flex-auto"></div>
-      <div>
-        {rss && (
-          <a
-            href={rss}
-            target="_blank"
-            className="inline cursor-pointer rounded-md p-2 text-[#ee802f] hover:(!text-[#ff7800] !border-b-[#ff7800] bg-neutral-200)"
-          >
-            <span className="i-carbon-rss mr1" />
-            <span>RSS</span>
-          </a>
-        )}
-      </div>
-    </nav>
+    <div className="z-11 fixed flex justify-center items-center w-full h-$nav-height">
+      <nav className="main flex gap-4 [&>div]:leading-$nav-height">
+        <div className="text-2xl font-quicksand font-bold">
+          <NavLink to="/">🌸</NavLink>
+        </div>
+        <div>
+          <NavLink to="/" className="rounded-md p-2 hover:(bg-neutral-200)">
+            动画
+          </NavLink>
+        </div>
+        <div>
+          <NavLink to="/resources" className="rounded-md p-2 hover:(bg-neutral-200)">
+            资源
+          </NavLink>
+        </div>
+        <div>
+          <NavLink to="/resources" className="rounded-md p-2 hover:(bg-neutral-200)">
+            字幕组
+          </NavLink>
+        </div>
+        <div className="flex-auto"></div>
+        <div>
+          {rss && (
+            <a
+              href={rss}
+              target="_blank"
+              className="inline cursor-pointer rounded-md p-2 text-[#ee802f] hover:(!text-[#ff7800] !border-b-[#ff7800] bg-neutral-200)"
+            >
+              <span className="i-carbon-rss mr1" />
+              <span>RSS</span>
+            </a>
+          )}
+        </div>
+      </nav>
+    </div>
   );
 }
