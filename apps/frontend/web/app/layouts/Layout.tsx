@@ -17,7 +17,7 @@ export default function Layout(props: { children?: React.ReactNode; rss?: string
   const { rss } = props;
 
   return (
-    <div className="w-full" style={{ '--nav-height': `${NavHeight}px` }}>
+    <div className="w-full" style={{ '--nav-height': `${NavHeight - 2}px` }}>
       <Hero rss={rss}></Hero>
       <div
         className="flex"
@@ -83,7 +83,7 @@ function Hero(props: { rss?: string }) {
       ></div>
       <Header rss={props.rss}></Header>
       <div
-        className="hero-top z-10 fixed w-full pt-4rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none"
+        className="hero-top z-10 fixed w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none"
         suppressHydrationWarning={true}
         style={{ top: `${paddingTop - MaxPaddingTop}px` }}
       >
@@ -92,11 +92,11 @@ function Hero(props: { rss?: string }) {
         </NavLink>
       </div>
       <div
-        className="hero-search w-full flex justify-center fixed z-10"
+        className="hero-search w-full flex justify-center fixed md:z-12 lt-md:z-10 pointer-events-none"
         suppressHydrationWarning={true}
         style={{ top: `${paddingTop}px`, paddingTop: '8px', paddingBottom: '8px' }}
       >
-        <div className="h-[52px]">
+        <div className="h-[52px] w-[600px] max-w-[95vw] pointer-events-auto">
           <Search></Search>
         </div>
       </div>
@@ -120,7 +120,7 @@ function Header(props: { rss?: string }) {
   const { rss } = props;
 
   return (
-    <div className="z-11 fixed flex justify-center items-center w-full h-$nav-height">
+    <div className="z-11 bg-[#fef8f7] fixed pt-[1px] flex justify-center items-center w-full h-$nav-height">
       <nav className="main flex gap-4 [&>div]:leading-$nav-height">
         <div className="text-2xl font-quicksand font-bold">
           <NavLink to="/">🌸</NavLink>
