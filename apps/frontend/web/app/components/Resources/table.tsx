@@ -1,10 +1,10 @@
 import type { Resource } from 'animegarden';
 
-import { memo } from 'react'
+import { memo } from 'react';
 import { formatInTimeZone } from 'date-fns-tz';
 
 import { getPikPakUrlChecker } from '@/utils';
-import { DisplayType, DisplayTypeColor } from '@/constant';
+import { DisplayType, DisplayTypeColor, DisplayTypeIcon } from '@/constant';
 
 import { Tag } from './tag';
 import { NavLink } from '@remix-run/react';
@@ -69,9 +69,10 @@ export default function ResourcesTable(props: ResourcesTableProps) {
 
 export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }> }) => {
   const { resource: r } = props;
-  
-  return <tr  className="">
-  {/* <td className="py2 text-center">
+
+  return (
+    <tr className="">
+      {/* <td className="py2 text-center">
     <a
       href={getDetailHref(r)}
       className="text-link-active"
@@ -80,42 +81,45 @@ export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }>
       {formatInTimeZone(new Date(r.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}
     </a>
   </td> */}
-  <td className="py2 pl3 lt-md:pl1">
-    <div className="flex xl:min-w-[600px] lg:min-w-[480px] lt-md:w-[calc(95vw-4px)]">
-      <div className="flex-shrink-0 mr3 flex justify-center items-center">
-        <div className="flex items-center justify-center h-[32px] w-[32px] rounded-full bg-gray-100 text-red-600">
-          <span className="text-xl i-carbon-video"></span>
-        </div>
-      </div>
-      <div>
-        <div className="flex items-center justify-start">
-          <div className="flex-1">
-            <span className="mr3">
-              {['動畫', '季度全集', '日劇', '特攝'].includes(r.type) ? (
-                <>
-                  <a
-                    href={getPikPakUrlChecker(r.magnet)}
-                    className="text-link mr1"
-                    aria-label={`Go to download resource of ${r.title}`}
-                    target="_blank"
-                  >
-                    {r.title}
-                  </a>
-                </>
-              ) : (
-                <NavLink
-                  to={getDetailHref(r)}
-                  className="text-link"
-                  aria-label={`Go to resource detail of ${r.title}`}
-                >
-                  {r.title}
-                </NavLink>
-              )}
-            </span>
+      <td className="py2 pl3 lt-md:pl1">
+        <div className="flex xl:min-w-[600px] lg:min-w-[480px] lt-md:w-[calc(95vw-4px)]">
+          <div className="flex-shrink-0 mr3 flex justify-center items-center">
+            <NavLink
+              to={`/resources/1?${followSearch({ type: r.type })}`}
+              className={`flex items-center justify-center h-[32px] w-[32px] rounded-full bg-gray-100 hover:bg-gray-200 ${DisplayTypeColor[r.type]}`}
+            >
+              <span className={`text-xl ${DisplayTypeIcon[r.type]}`}></span>
+            </NavLink>
           </div>
-        </div>
-        <div className="mt1 flex items-center gap-4">
-          {/* <a
+          <div>
+            <div className="flex items-center justify-start">
+              <div className="flex-1">
+                <span className="mr3">
+                  {['動畫', '季度全集', '日劇', '特攝'].includes(r.type) ? (
+                    <>
+                      <a
+                        href={getPikPakUrlChecker(r.magnet)}
+                        className="text-link mr1"
+                        aria-label={`Go to download resource of ${r.title}`}
+                        target="_blank"
+                      >
+                        {r.title}
+                      </a>
+                    </>
+                  ) : (
+                    <NavLink
+                      to={getDetailHref(r)}
+                      className="text-link"
+                      aria-label={`Go to resource detail of ${r.title}`}
+                    >
+                      {r.title}
+                    </NavLink>
+                  )}
+                </span>
+              </div>
+            </div>
+            <div className="mt1 flex items-center gap-4">
+              {/* <a
             href={`/resources/1?${followSearch({ type: r.type })}`}
             className="inline-block select-none"
             aria-label={`Go to resources list of type ${r.type}`}
@@ -126,57 +130,65 @@ export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }>
               className={`px2 py1 text-xs text-center text-base-600 ${DisplayTypeColor[r.type]} `}
             />
           </a> */}
-          <span className="text-xs text-zinc-400">发布于 {formatInTimeZone(new Date(r.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}</span>
-          {/* <span className="text-xs text-zinc-400">上传者 {r.publisher.name}</span>
+              <span className="text-xs text-zinc-400">
+                发布于{' '}
+                {formatInTimeZone(new Date(r.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}
+              </span>
+              {/* <span className="text-xs text-zinc-400">上传者 {r.publisher.name}</span>
           {r.fansub && <span className="text-xs text-zinc-400">字幕组 {r.fansub?.name}</span>} */}
-          <span className="text-xs text-zinc-400">大小 {r.size}</span>
-          <NavLink
-            to={getDetailHref(r)}
-            className="text-link-secondary text-xs"
-            aria-label={`Go to resource detail of ${r.title}`}
-          ><span className="i-carbon-launch vertical-middle relative bottom-[1px]"></span><span> </span><span className='more'>更多</span></NavLink>
+              <span className="text-xs text-zinc-400">大小 {r.size}</span>
+              <NavLink
+                to={getDetailHref(r)}
+                className="text-link-secondary text-xs"
+                aria-label={`Go to resource detail of ${r.title}`}
+              >
+                <span className="i-carbon-launch vertical-middle relative bottom-[1px]"></span>
+                <span> </span>
+                <span className="more">更多</span>
+              </NavLink>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </td>
-  <td className="py2 px2 lt-sm:px0">
-    <div className="flex justify-center items-center">
-      {r.fansub ? (
-        <NavLink
-          to={`/resources/1?${followSearch({ fansubId: r.fansub.id })}`}
-          className="block w-max"
-          aria-label={`Go to resources list of fansub ${r.fansub.name}`}
-        >
-          <Tag text={r.fansub.name} className={`text-xs hover:bg-gray-300`} />
-        </NavLink>
-      ) : r.publisher ? (
-        <NavLink
-          to={`/resources/1?${followSearch({ publisherId: r.publisher.id })}`}
-          className="block w-max"
-          aria-label={`Go to resources list of publisher ${r.publisher.name}`}
-        >
-          <Tag text={r.publisher.name} className={`text-xs hover:bg-gray-300`} />
-        </NavLink>
-      ) : null}
-    </div>
-  </td>
-  <td className="py2 px2">
-    <div className="flex gap1 items-center justify-start">
-      <a
-        href={getPikPakUrlChecker(r.magnet)}
-        data-resource-title={r.title}
-        className="play i-carbon-play text-2xl text-base-500 hover:text-base-900"
-        aria-label="Play resource"
-        target="_blank"
-      />
-      <a
-        href={r.magnet + r.tracker}
-        data-resource-title={r.title}
-        className="download i-carbon-download text-2xl text-base-500 hover:text-base-900"
-        aria-label="Download resource"
-      />
-      {/* <span className="text-xs text-base-400 whitespace-nowrap">{r.size}</span> */}
-    </div>
-  </td>
-</tr>
+      </td>
+      <td className="py2 px2 lt-sm:px0">
+        <div className="flex justify-center items-center">
+          {r.fansub ? (
+            <NavLink
+              to={`/resources/1?${followSearch({ fansubId: r.fansub.id })}`}
+              className="block w-max"
+              aria-label={`Go to resources list of fansub ${r.fansub.name}`}
+            >
+              <Tag text={r.fansub.name} className={`text-xs hover:bg-gray-300`} />
+            </NavLink>
+          ) : r.publisher ? (
+            <NavLink
+              to={`/resources/1?${followSearch({ publisherId: r.publisher.id })}`}
+              className="block w-max"
+              aria-label={`Go to resources list of publisher ${r.publisher.name}`}
+            >
+              <Tag text={r.publisher.name} className={`text-xs hover:bg-gray-300`} />
+            </NavLink>
+          ) : null}
+        </div>
+      </td>
+      <td className="py2 px2">
+        <div className="flex gap1 items-center justify-start">
+          <a
+            href={getPikPakUrlChecker(r.magnet)}
+            data-resource-title={r.title}
+            className="play i-carbon-play text-2xl text-base-500 hover:text-base-900"
+            aria-label="Play resource"
+            target="_blank"
+          />
+          <a
+            href={r.magnet + r.tracker}
+            data-resource-title={r.title}
+            className="download i-carbon-download text-2xl text-base-500 hover:text-base-900"
+            aria-label="Download resource"
+          />
+          {/* <span className="text-xs text-base-400 whitespace-nowrap">{r.size}</span> */}
+        </div>
+      </td>
+    </tr>
+  );
 });

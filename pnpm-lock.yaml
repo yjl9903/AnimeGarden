@@ -117,6 +117,18 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
+      '@iconify-json/ant-design':
+        specifier: ^1.2.0
+        version: 1.2.0
+      '@iconify-json/carbon':
+        specifier: ^1.2.1
+        version: 1.2.1
+      '@iconify-json/devicon':
+        specifier: ^1.2.0
+        version: 1.2.0
+      '@iconify-json/solar':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@remix-run/dev':
         specifier: ^2.12.0
         version: 2.12.0(@remix-run/react@2.12.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2))(@remix-run/serve@2.12.0(typescript@5.6.2))(@types/node@20.16.5)(bufferutil@4.0.8)(terser@5.31.6)(typescript@5.6.2)(utf-8-validate@6.0.4)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(wrangler@3.78.2(@cloudflare/workers-types@4.20240909.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4))
@@ -2330,6 +2342,9 @@ packages:
 
   '@iconify-json/devicon@1.2.1':
     resolution: {integrity: sha512-Djgx9b6zt68BRXaLw/t4I4BAuc7qQW5TWcGJnlR+gnCqBLUkZhHDHfr4eRy/7tmH1Mqbu7LQjGGMFzcYTWd1Cg==}
+
+  '@iconify-json/solar@1.2.0':
+    resolution: {integrity: sha512-xMspRoN2S2Op8mgjZHgiMJq2Xqo5oVlBp/1NICTeMByfePpkEKF67Fwh5KdBRF+SBey/cNLhjkTuHmKeSIEkog==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -10913,6 +10928,10 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/devicon@1.2.1':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/solar@1.2.0':
     dependencies:
       '@iconify/types': 2.0.0
 

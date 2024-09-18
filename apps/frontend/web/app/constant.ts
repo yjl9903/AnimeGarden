@@ -89,6 +89,28 @@ export const DisplayTypeColor: Record<ResourceType, string> = {
   其他: 'text-base-800'
 };
 
+export const DisplayTypeIcon: Record<ResourceType, string> = {
+  動畫: 'i-solar:tv-linear',
+  季度全集: 'i-solar:folder-with-files-outline',
+  漫畫: 'i-solar:notebook-minimalistic-linear',
+  港台原版: 'i-solar:notebook-minimalistic-linear',
+  日文原版: 'i-solar:notebook-minimalistic-linear',
+  音樂: 'i-solar:music-note-2-outline',
+  動漫音樂: 'i-solar:music-note-2-outline',
+  同人音樂: 'i-solar:music-note-2-outline',
+  流行音樂: 'i-solar:music-note-2-outline',
+  日劇: 'i-solar:videocamera-record-outline',
+  ＲＡＷ: 'i-solar:file-linear',
+  遊戲: 'i-solar:gamepad-broken',
+  電腦遊戲: 'i-solar:gamepad-broken',
+  電視遊戲: 'i-solar:gamepad-broken',
+  掌機遊戲: 'i-solar:gamepad-broken',
+  網絡遊戲: 'i-solar:gamepad-broken',
+  遊戲周邊: 'i-solar:gamepad-broken',
+  特攝: 'i-solar:videocamera-record-outline',
+  其他: 'i-solar:document-text-outline'
+};
+
 export const fansubs = [
   { id: 619, name: '桜都字幕组' },
   { id: 833, name: '北宇治字幕组' },
