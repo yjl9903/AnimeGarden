@@ -132,12 +132,12 @@ function Header(props: { rss?: string }) {
         </div>
         <div>
           <NavLink to="/resources" className="rounded-md p-2 hover:(bg-neutral-200)">
-            资源
+            字幕组
           </NavLink>
         </div>
         <div>
           <NavLink to="/resources" className="rounded-md p-2 hover:(bg-neutral-200)">
-            字幕组
+            资源
           </NavLink>
         </div>
         <div className="flex-auto"></div>
