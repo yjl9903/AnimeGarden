@@ -57,7 +57,7 @@ export default function ResourcesTable(props: ResourcesTableProps) {
             <th className="py3 px2 text-center w-max">播放</th>
           </tr>
         </thead>
-        <tbody className="resources-table-body divide-y border-b text-sm lt-lg:text-xs">
+        <tbody className="resources-table-body divide-y border-b text-base lt-lg:text-sm">
           {resources.map((r) => (
             <ResourceItem key={`${r.provider}/${r.providerId}`} resource={r}></ResourceItem>
           ))}
