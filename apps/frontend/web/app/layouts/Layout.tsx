@@ -10,7 +10,7 @@ import './layouts.css';
 
 const NavHeight = 68;
 const MaxPaddingTop = 152;
-const MaxPaddingBottom = 36;
+const MaxPaddingBottom = 96;
 const SearchHeight = NavHeight;
 
 export default function Layout(props: { children?: React.ReactNode; rss?: string }) {
