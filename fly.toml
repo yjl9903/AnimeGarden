@@ -20,6 +20,11 @@ primary_region = 'hkg'
   min_machines_running = 0
   processes = ['app']
 
+[[restart]]
+  policy = "on-failure"
+  retries = 10
+  processes = ["app"]
+
 [[vm]]
   memory = '1gb'
   cpu_kind = 'shared'
