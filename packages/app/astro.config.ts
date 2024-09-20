@@ -114,6 +114,7 @@ export default defineConfig({
         globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}'],
         globIgnores: [
           '**/node_modules/**/*',
+          '**/google79f036f71a58993a',
           '**/google79f036f71a58993a.html',
           '**/BingSiteAuth.xml'
         ]
