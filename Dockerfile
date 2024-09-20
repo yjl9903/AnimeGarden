@@ -45,14 +45,12 @@ COPY --link . .
 # Setup environment
 ENV SERVER_PROTOCOL=https
 
-RUN --mount=type=secret,id=SERVER_HOST \
-    export SERVER_HOST="$(cat /run/secrets/SERVER_HOST)"
-
-RUN --mount=type=secret,id=APP_HOST \
-    export APP_HOST="$(cat /run/secrets/APP_HOST)"
-
 # Build application
-RUN pnpm run build && pnpm run build:web && pnpm run build:app
+RUN --mount=type=secret,id=SERVER_HOST \
+    --mount=type=secret,id=APP_HOST \
+    export SERVER_HOST="$(cat /run/secrets/SERVER_HOST)" && \
+    export APP_HOST="$(cat /run/secrets/APP_HOST)" && \
+    pnpm run build && pnpm run build:web && pnpm run build:app
 
 # Remove development dependencies
 RUN pnpm prune --prod
