@@ -23,7 +23,8 @@ const env = getRuntimeEnv(Astro.locals);
 const resp = await fetchResources(
   { ...params, page },
   {
-    fetch: wfetch(env?.worker)
+    fetch: wfetch(env?.worker),
+    retry: 0
   }
 );
 

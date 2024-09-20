@@ -24,7 +24,7 @@ const feedURL = `/feed.xml?filter=${generateFeed(Astro.url.searchParams)}`;
 
 const { ok, resources, timestamp } = await fetchResources(
   { page: 1, pageSize: 80, type: '動畫' },
-  { fetch: wfetch(env?.worker) }
+  { fetch: wfetch(env?.worker), retry: 0 }
 );
 ---
 

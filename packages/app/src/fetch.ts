@@ -56,12 +56,14 @@ export async function fetchResources(
   options: {
     fetch?: typeof ofetch;
     signal?: AbortSignal;
+    retry?: number;
   } = {}
 ) {
   return await rawFetchResources(options.fetch ?? ofetch, {
     baseURL,
     tracker: true,
     signal: options.signal,
+    retry: options.retry,
     ...filter
   });
 }
