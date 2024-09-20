@@ -111,11 +111,8 @@ export default defineConfig({
       },
       workbox: {
         // navigateFallback: '/',
-        globPatterns: [
-          '**/*.{css,js,html,svg,png,ico,txt}',
-          '!google79f036f71a58993a.html',
-          '!BingSiteAuth.xml'
-        ]
+        globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}'],
+        globIgnores: ['google79f036f71a58993a.html', 'BingSiteAuth.xml']
       },
       devOptions: {
         enabled: false
