@@ -110,9 +110,13 @@ export default defineConfig({
         ]
       },
       workbox: {
-        // navigateFallback: '/',
+        navigateFallback: '/',
         globPatterns: ['**/*.{css,js,html,svg,png,ico,txt}'],
-        globIgnores: ['google79f036f71a58993a.html', 'BingSiteAuth.xml']
+        globIgnores: [
+          '**/node_modules/**/*',
+          '**/google79f036f71a58993a.html',
+          '**/BingSiteAuth.xml'
+        ]
       },
       devOptions: {
         enabled: false
