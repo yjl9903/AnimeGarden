@@ -42,12 +42,10 @@ RUN pnpm install --frozen-lockfile --prod=false
 # Copy application code
 COPY --link . .
 
-# Setup environment
-ENV SERVER_PROTOCOL=https
-
-# Build application
+# Setup environment and Build application
 RUN --mount=type=secret,id=SERVER_HOST \
     --mount=type=secret,id=APP_HOST \
+    export SERVER_PROTOCOL=https && \
     export SERVER_HOST="$(cat /run/secrets/SERVER_HOST)" && \
     export APP_HOST="$(cat /run/secrets/APP_HOST)" && \
     pnpm run build && pnpm run build:web && pnpm run build:app
