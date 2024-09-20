@@ -154,8 +154,6 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
         headers.set(`user-agent`, `animegarden@${version}`);
       }
 
-      console.log('Fetch resources:', url.toString());
-
       const resp = await fetch(url.toString(), {
         headers,
         signal: options.signal
