@@ -39,7 +39,7 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
   fetch: (request: RequestInfo, init?: RequestInit) => Promise<Response>,
   options: T = {} as T
 ): Promise<FetchResourcesResult<FetchResourcesOptions>> {
-  const { baseURL = DefaultBaseURL, retry = 1 } = options;
+  const { baseURL = DefaultBaseURL, retry = 0 } = options;
 
   const url = stringifySearchURL(baseURL, options);
 
@@ -191,7 +191,7 @@ export async function fetchResourceDetail(
   href: string,
   options: FetchResourceDetailOptions = {}
 ): Promise<(ResourceDetail & { id: number }) | undefined> {
-  const { baseURL = DefaultBaseURL, retry = 1 } = options;
+  const { baseURL = DefaultBaseURL, retry = 0 } = options;
   const url = new URL(`${provider}/detail/${href}`, baseURL);
 
   const resp = await retryFn(async () => {
