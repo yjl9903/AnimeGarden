@@ -6,6 +6,7 @@
   "scripts": {
     "animegarden": "tsx packages/cli/src/cli.ts",
     "build": "turbo run build",
+    "build:app": "turbo run build --filter @animegarden/app...",
     "build:cli": "turbo run build --filter @animegarden/cli...",
     "build:server": "turbo run build --filter @animegarden/server...",
     "build:web": "turbo run build --filter @animegarden/web...",
