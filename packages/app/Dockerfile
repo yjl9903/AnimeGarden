@@ -45,7 +45,7 @@ COPY --link . .
 # Setup environment and Build application
 RUN --mount=type=secret,id=SERVER_HOST \
     --mount=type=secret,id=APP_HOST \
-    export SERVER_PROTOCOL=https && \
+    export SERVER_PROTOCOL=http && \
     export SERVER_PORT=3000 && \
     export SERVER_HOST="$(cat /run/secrets/SERVER_HOST)" && \
     export APP_HOST="$(cat /run/secrets/APP_HOST)" && \
