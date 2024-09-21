@@ -36,7 +36,7 @@ COPY ./packages/database/package.json ./packages/database/
 COPY ./packages/scraper/package.json ./packages/scraper/
 COPY ./packages/server/package.json ./packages/server/
 COPY ./packages/worker/package.json ./packages/worker/
-COPY ./apps/frontend/web/package.json ./apps/frontend/web/
+# COPY ./apps/frontend/web/package.json ./apps/frontend/web/
 RUN pnpm install --frozen-lockfile --prod=false
 
 # Copy application code
@@ -48,7 +48,7 @@ RUN --mount=type=secret,id=SERVER_HOST \
     export SERVER_PROTOCOL=https && \
     export SERVER_HOST="$(cat /run/secrets/SERVER_HOST)" && \
     export APP_HOST="$(cat /run/secrets/APP_HOST)" && \
-    pnpm run build && pnpm run build:web && pnpm run build:app
+    pnpm run build && pnpm run build:app
 
 # Remove development dependencies
 RUN pnpm prune --prod

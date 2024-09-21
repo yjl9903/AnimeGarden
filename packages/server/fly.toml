@@ -1,16 +1,16 @@
-# fly.toml app configuration file generated for animegarden-production on 2024-09-20T21:22:27+08:00
+# fly.toml app configuration file generated for animegarden-server-production on 2024-09-21T23:49:42+08:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'animegarden-production'
+app = 'animegarden-server-production'
 primary_region = 'hkg'
 
 [build]
-  dockerfile = "Dockerfile"
+  dockerfile = 'Dockerfile'
 
 [processes]
-  app = "node packages/app/dist/server/entry.mjs"
+  server = 'node packages/server/dist/index.mjs'
 
 [http_service]
   internal_port = 3000
@@ -18,14 +18,14 @@ primary_region = 'hkg'
   auto_stop_machines = 'stop'
   auto_start_machines = true
   min_machines_running = 0
-  processes = ['app']
+  processes = ['server']
 
 [[restart]]
-  policy = "on-failure"
+  policy = 'on-failure'
   retries = 10
-  processes = ["app"]
+  processes = ['server']
 
 [[vm]]
-  memory = '1gb'
+  memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1

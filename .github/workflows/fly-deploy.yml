@@ -4,24 +4,37 @@ name: Deploy Fly
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
-  deploy:
+  app:
     name: Deploy app
 
     runs-on: ubuntu-latest
 
-    concurrency: deploy-group # optional: ensure only one action runs at a time
+    concurrency: deploy-fly-app-group
 
     steps:
       - uses: actions/checkout@v4
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - run: flyctl deploy --remote-only --build-secret SERVER_HOST=$SERVER_HOST --build-secret APP_HOST=garden.breadio.wiki
+      - run: flyctl deploy --config ./packages/app/fly.toml --remote-only --build-secret SERVER_HOST=$SERVER_HOST --build-secret APP_HOST=garden.breadio.wiki
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
+
+  server:
+    name: Deploy server
+
+    runs-on: ubuntu-latest
+
+    concurrency: deploy-fly-server-group
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - run: flyctl deploy --config ./packages/server/fly.toml --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
