@@ -17,11 +17,13 @@ import { registerQuery } from './query';
 const admin = registerAdmin();
 const query = registerQuery();
 
-const port = process.env.port ? +process.env.port : process.env.PORT ? +process.env.PORT : 3000;
+const hostname = process.env.HOST ?? process.env.host ?? '0.0.0.0';
+const port = process.env.PORT ? +process.env.PORT : process.env.port ? +process.env.port : 3000;
 
 serve(
   {
     fetch: app.fetch,
+    hostname,
     port
   },
   async (info) => {
