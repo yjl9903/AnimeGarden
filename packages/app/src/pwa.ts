@@ -25,6 +25,7 @@ document.addEventListener('astro:page-load', () => {
     },
     onNeedRefresh() {
       toast(`发现应用更新`, {
+        position: 'top-right',
         important: true,
         closeButton: true,
         duration: 60 * 60 * 1000,
