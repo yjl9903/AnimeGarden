@@ -59,13 +59,24 @@ export async function fetchResources(
     retry?: number;
   } = {}
 ) {
-  return await rawFetchResources(options.fetch ?? ofetch, {
-    baseURL,
-    tracker: true,
-    signal: options.signal,
-    retry: options.retry,
-    ...filter
-  });
+  try {
+    return await rawFetchResources(options.fetch ?? ofetch, {
+      baseURL,
+      tracker: true,
+      signal: options.signal,
+      retry: options.retry,
+      ...filter
+    });
+  } catch (error) {
+    console.error(error);
+    return {
+      ok: false,
+      resources: [],
+      complete: false,
+      filter: undefined,
+      timestamp: undefined
+    };
+  }
 }
 
 export async function fetchResourceDetail(provider: string, href: string) {
