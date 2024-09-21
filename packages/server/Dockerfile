@@ -56,7 +56,7 @@ FROM base
 COPY --from=build /app /app
 
 # Listen on 3000
-ENV HOST=:: PORT=3000
+ENV HOST=:: PORT=3000 CRON=true
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
