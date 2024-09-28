@@ -211,15 +211,6 @@ export function resolveSearchURL(search: string) {
   }
 }
 
-export function goToSearch(search: string) {
-  return goTo(resolveSearchURL(search));
-}
-
-export function goTo(href: string) {
-  // TODO: navigate
-  // navigate(href, { history: 'push' });
-}
-
 export function debounce<T extends (...args: any[]) => void>(fn: T, time = 1000): T {
   let timestamp: any;
   return ((...args: any[]) => {

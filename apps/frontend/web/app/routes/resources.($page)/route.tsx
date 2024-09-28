@@ -21,9 +21,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const parsed = parseSearchURL(url.searchParams, { pageSize: 80 });
   const { ok, resources, filter, timestamp } = await fetchResources({
     ...parsed,
-    page: 1,
+    page: +(params.page ?? '1')
   });
-  
+
   return json({ ok, resources: resources as Resource<{ tracker: true }>[], filter, timestamp });
 };
 

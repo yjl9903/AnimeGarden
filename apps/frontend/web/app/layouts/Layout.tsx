@@ -6,8 +6,6 @@ import { useDocumentScroll } from '~/hooks';
 
 import { Loading } from './Loading';
 
-import './layouts.css';
-
 const NavHeight = 68;
 const MaxPaddingTop = 152;
 const MaxPaddingBottom = 96;
@@ -92,11 +90,16 @@ function Hero(props: { rss?: string }) {
         </NavLink>
       </div>
       <div
-        className="hero-search w-full flex justify-center fixed md:z-12 lt-md:z-10 pointer-events-none"
+        className="hero-search w-full flex justify-center items-center fixed md:z-12 lt-md:z-10 pointer-events-none"
         suppressHydrationWarning={true}
-        style={{ top: `${paddingTop}px`, paddingTop: '8px', paddingBottom: '8px' }}
+        style={{
+          height: `${NavHeight}px`,
+          top: `${paddingTop}px`,
+          paddingTop: '8px',
+          paddingBottom: '8px'
+        }}
       >
-        <div className="h-[52px] w-[600px] max-w-[95vw] pointer-events-auto">
+        <div className="vercel relative h-[44.4px] xl:w-[800px] md:w-[600px] lt-md:w-[95vw] max-w-[95vw] pointer-events-auto">
           <Search></Search>
         </div>
       </div>

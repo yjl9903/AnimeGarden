@@ -4,8 +4,9 @@ import { Provider } from 'jotai';
 
 import 'virtual:uno.css';
 
-import './styles/sonner.css';
 import './styles/main.css';
+import './styles/layout.css';
+import './styles/sonner.css';
 
 import { Toaster } from '~/components/ui/sonner';
 
