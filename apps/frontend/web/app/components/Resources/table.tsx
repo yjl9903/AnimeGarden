@@ -7,7 +7,7 @@ import { getPikPakUrlChecker } from '@/utils';
 import { DisplayType, DisplayTypeColor, DisplayTypeIcon } from '@/constant';
 
 import { Tag } from './tag';
-import { NavLink } from '@remix-run/react';
+import { NavLink, useLocation, type Location } from '@remix-run/react';
 
 export interface ResourcesTableProps {
   className?: string;
@@ -19,9 +19,8 @@ function getDetailHref(r: Resource) {
   return `/detail/${r.provider}/${r.providerId}`;
 }
 
-function followSearch(params: Record<string, string>) {
-  // const s = new URLSearchParams(search);
-  const s = new URLSearchParams();
+function followSearch(location: Location, params: Record<string, string>) {
+  const s = new URLSearchParams(location.search);
   for (const [key, value] of Object.entries(params)) {
     s.set(key, value);
   }
@@ -68,6 +67,7 @@ export default function ResourcesTable(props: ResourcesTableProps) {
 }
 
 export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }> }) => {
+  const location = useLocation();
   const { resource: r } = props;
 
   return (
@@ -85,7 +85,7 @@ export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }>
         <div className="flex xl:min-w-[600px] lg:min-w-[480px] lt-md:w-[calc(95vw-4px)]">
           <div className="flex-shrink-0 mr3 flex justify-center items-center">
             <NavLink
-              to={`/resources/1?${followSearch({ type: r.type })}`}
+              to={`/resources/1?${followSearch(location, { type: r.type })}`}
               className={`flex items-center justify-center h-[32px] w-[32px] rounded-full bg-gray-100 hover:bg-gray-200 ${DisplayTypeColor[r.type]}`}
             >
               <span className={`text-xl ${DisplayTypeIcon[r.type]}`}></span>
@@ -154,7 +154,7 @@ export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }>
         <div className="flex justify-center items-center">
           {r.fansub ? (
             <NavLink
-              to={`/resources/1?${followSearch({ fansubId: r.fansub.id })}`}
+              to={`/resources/1?${followSearch(location, { fansubId: r.fansub.id })}`}
               className="block w-max"
               aria-label={`Go to resources list of fansub ${r.fansub.name}`}
             >
@@ -162,7 +162,7 @@ export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }>
             </NavLink>
           ) : r.publisher ? (
             <NavLink
-              to={`/resources/1?${followSearch({ publisherId: r.publisher.id })}`}
+              to={`/resources/1?${followSearch(location, { publisherId: r.publisher.id })}`}
               className="block w-max"
               aria-label={`Go to resources list of publisher ${r.publisher.name}`}
             >
