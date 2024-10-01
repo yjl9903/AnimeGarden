@@ -10,7 +10,7 @@ import {
   stringifySearchURL
 } from 'animegarden';
 
-import { removeQuote } from '../app/utils';
+import { removeQuote } from '../app/utils/string';
 
 import type { Bindings } from './types';
 
