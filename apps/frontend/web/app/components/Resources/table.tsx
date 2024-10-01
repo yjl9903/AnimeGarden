@@ -1,15 +1,17 @@
-import type { Resource } from 'animegarden';
+import { NavLink, useLocation, type Location } from '@remix-run/react';
 
 import { memo } from 'react';
-import { formatInTimeZone } from 'date-fns-tz';
+
+import type { Resource } from 'animegarden';
 
 import { getPikPakUrlChecker } from '@/utils';
 import { DisplayType, DisplayTypeColor, DisplayTypeIcon } from '@/constant';
 
 import { Tag } from './tag';
-import { NavLink, useLocation, type Location } from '@remix-run/react';
+import { formatChinaTime } from './utils';
+import { Pagination, PaginationProps } from './pagination';
 
-export interface ResourcesTableProps {
+export interface ResourcesTableProps extends PaginationProps {
   className?: string;
 
   resources: Resource<{ tracker: true }>[];
@@ -31,37 +33,46 @@ export default function ResourcesTable(props: ResourcesTableProps) {
   const { resources, className } = props;
 
   return (
-    <div className={'overflow-y-auto w-full' + (className ? ' ' + className : '')}>
-      <table className="resources-table border-collapse min-y-[1080px] w-full">
-        <colgroup>
-          {/* <col className="py3 w-[160px] min-w-[100px] lt-lg:w-[100px] lt-sm:w-[100px]" /> */}
-          <col className="text-left xl:min-w-[600px] lg:min-w-[480px]" />
-          <col className="w-max whitespace-nowrap" />
-          <col className="w-max whitespace-nowrap" />
-        </colgroup>
-        <thead className="resources-table-head border-b border-b-2 text-lg lt-lg:text-base">
-          <tr className="">
-            {/* <th className="py3 w-[160px] min-w-[100px] lt-lg:w-[100px] lt-sm:w-[100px]">
+    <div>
+      <div className={'overflow-y-auto w-full' + (className ? ' ' + className : '')}>
+        <table className="resources-table border-collapse min-y-[1080px] w-full">
+          <colgroup>
+            {/* <col className="py3 w-[160px] min-w-[100px] lt-lg:w-[100px] lt-sm:w-[100px]" /> */}
+            <col className="text-left xl:min-w-[600px] lg:min-w-[480px]" />
+            <col className="w-max whitespace-nowrap" />
+            <col className="w-max whitespace-nowrap" />
+          </colgroup>
+          <thead className="resources-table-head border-b border-b-2 text-lg lt-lg:text-base">
+            <tr className="">
+              {/* <th className="py3 w-[160px] min-w-[100px] lt-lg:w-[100px] lt-sm:w-[100px]">
               发布时间
             </th> */}
-            <th className="py3 pl3 lt-sm:pl1 text-left xl:min-w-[600px] lg:min-w-[480px]">
-              <div className="flex">
-                <div className="flex-shrink-0 mr3 flex justify-center items-center w-[32px]">
-                  <span className="text-2xl i-carbon-types"></span>
+              <th className="py3 pl3 lt-sm:pl1 text-left xl:min-w-[600px] lg:min-w-[480px]">
+                <div className="flex">
+                  <div className="flex-shrink-0 mr3 flex justify-center items-center w-[32px]">
+                    <span className="text-2xl i-carbon-types"></span>
+                  </div>
+                  <div>资源</div>
                 </div>
-                <div>资源</div>
-              </div>
-            </th>
-            <th className="py3">发布者</th>
-            <th className="py3 px2 text-center w-max">播放</th>
-          </tr>
-        </thead>
-        <tbody className="resources-table-body divide-y border-b text-base lt-lg:text-sm">
-          {resources.map((r) => (
-            <ResourceItem key={`${r.provider}/${r.providerId}`} resource={r}></ResourceItem>
-          ))}
-        </tbody>
-      </table>
+              </th>
+              <th className="py3">发布者</th>
+              <th className="py3 px2 text-center w-max">播放</th>
+            </tr>
+          </thead>
+          <tbody className="resources-table-body divide-y border-b text-base lt-lg:text-sm">
+            {resources.map((r) => (
+              <ResourceItem key={`${r.provider}/${r.providerId}`} resource={r}></ResourceItem>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <Pagination
+        timestamp={props.timestamp}
+        page={props.page}
+        link={props.link}
+        navigate={props.navigate}
+        complete={props.complete ?? false}
+      />
     </div>
   );
 }
@@ -131,8 +142,7 @@ export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }>
             />
           </a> */}
               <span className="text-xs text-zinc-400">
-                发布于{' '}
-                {formatInTimeZone(new Date(r.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}
+                发布于 {formatChinaTime(new Date(r.createdAt))}
               </span>
               {/* <span className="text-xs text-zinc-400">上传者 {r.publisher.name}</span>
           {r.fansub && <span className="text-xs text-zinc-400">字幕组 {r.fansub?.name}</span>} */}

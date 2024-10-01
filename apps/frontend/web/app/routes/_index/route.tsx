@@ -1,12 +1,13 @@
 import type { Resource } from 'animegarden';
 
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useNavigate } from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/cloudflare';
 
 import Layout from '~/layouts/Layout';
+import Resources from '~/components/Resources';
 import { fetchResources } from '~/utils';
 
-import Resources from '@/components/Resources';
+import { Error } from '../resources.($page)/Error';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { ok, resources, timestamp } = await fetchResources({
@@ -30,7 +31,17 @@ export default function Index() {
   return (
     <Layout>
       <div className="w-full pt-12 pb-24">
-        <Resources resources={resources}></Resources>
+        {ok ? (
+          <Resources
+            resources={resources}
+            page={1}
+            timestamp={new Date(timestamp!)}
+            complete={false}
+            link={(page) => `/resources/${page}?type=動畫`}
+          ></Resources>
+        ) : (
+          <Error></Error>
+        )}
       </div>
     </Layout>
   );

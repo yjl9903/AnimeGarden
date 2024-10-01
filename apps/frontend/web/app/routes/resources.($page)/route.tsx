@@ -1,4 +1,4 @@
-import { useLoaderData } from '@remix-run/react';
+import { redirect, useLoaderData, useLocation } from '@remix-run/react';
 import { json, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare';
 
 import { parseSearchURL, Resource } from 'animegarden';
@@ -7,6 +7,7 @@ import Layout from '@/layouts/Layout';
 import Resources from '@/components/Resources';
 import { fetchResources } from '@/utils';
 
+import { Error } from './Error';
 import { Filter } from './Filter';
 
 export const meta: MetaFunction = () => {
@@ -18,23 +19,55 @@ export const meta: MetaFunction = () => {
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
+
+  // Redirect to the first page
+  if (params.page === undefined) {
+    if (url.pathname.endsWith('/')) {
+      url.pathname += '1';
+    } else {
+      url.pathname += '/1';
+    }
+    return redirect(url.toString());
+  }
+
   const parsed = parseSearchURL(url.searchParams, { pageSize: 80 });
-  const { ok, resources, filter, timestamp } = await fetchResources({
+  const page = +(params.page ?? '1');
+  const { ok, resources, complete, filter, timestamp } = await fetchResources({
     ...parsed,
     page: +(params.page ?? '1')
   });
 
-  return json({ ok, resources: resources as Resource<{ tracker: true }>[], filter, timestamp });
+  return json({
+    ok,
+    resources: resources as Resource<{ tracker: true }>[],
+    complete,
+    page,
+    filter,
+    timestamp
+  });
 };
 
 export default function ResourcesIndex() {
-  const { ok, resources, filter, timestamp } = useLoaderData<typeof loader>();
+  const location = useLocation();
+  const { ok, resources, complete, filter, page, timestamp } = useLoaderData<typeof loader>();
 
   return (
     <Layout>
       <div className="w-full pt-12 pb-24">
-        <Filter filter={filter as any}></Filter>
-        <Resources resources={resources}></Resources>
+        {ok ? (
+          <>
+            <Filter filter={filter as any}></Filter>
+            <Resources
+              resources={resources}
+              page={page}
+              complete={complete}
+              timestamp={new Date(timestamp!)}
+              link={(page) => `/resources/${page}${location.search}`}
+            ></Resources>
+          </>
+        ) : (
+          <Error></Error>
+        )}
       </div>
     </Layout>
   );
