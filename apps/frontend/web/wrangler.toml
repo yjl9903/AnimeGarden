@@ -13,8 +13,8 @@ kv_namespaces = [
 [vars]
 APP_HOST = "garden.test.breadio.wiki"
 SERVER_PROTOCOL = "https"
-SERVER_HOST = "test-animegarden.zeabur.app"
-SERVER_BASE = ""
+SERVER_HOST = "garden.breadio.wiki"
+SERVER_BASE = "/api/"
 
 [site]
 bucket = "./build/client"
