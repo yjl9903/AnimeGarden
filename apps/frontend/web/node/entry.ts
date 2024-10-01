@@ -11,7 +11,7 @@ import { remix } from './remix';
 
 export const app = new Hono<{ Bindings: Bindings }>();
 
-app.all('*', remix({ build }));
+app.all('*', remix({ build: build as any }));
 
 app.all('/api/*', api());
 

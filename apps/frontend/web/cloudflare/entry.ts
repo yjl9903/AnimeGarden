@@ -16,7 +16,7 @@ import { remix } from './remix';
 
 export const app = new Hono<{ Bindings: Bindings }>();
 
-app.all('*', remix({ build, manifest: __STATIC_CONTENT_MANIFEST }));
+app.all('*', remix({ build: build as any, manifest: __STATIC_CONTENT_MANIFEST }));
 
 app.all('/api/*', api());
 
