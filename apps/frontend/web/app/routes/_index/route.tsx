@@ -1,10 +1,12 @@
-import type { Resource } from 'animegarden';
-
-import { useLoaderData, useNavigate } from '@remix-run/react';
+import { useMemo } from 'react';
+import { useLoaderData, useLocation } from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/cloudflare';
+
+import type { Resource } from 'animegarden';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
+import { generateFeed } from '~/utils/feed';
 import { fetchResources } from '~/utils';
 
 import { Error } from '../resources.($page)/Error';
@@ -26,10 +28,15 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
+  const location = useLocation();
   const { ok, resources, timestamp } = useLoaderData<typeof loader>();
+  const feedURL = useMemo(
+    () => `/feed.xml?filter=${generateFeed(new URLSearchParams(location.search))}`,
+    [location]
+  );
 
   return (
-    <Layout>
+    <Layout feedURL={feedURL}>
       <div className="w-full pt-12 pb-24">
         {ok ? (
           <Resources

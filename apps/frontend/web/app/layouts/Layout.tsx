@@ -11,12 +11,12 @@ const MaxPaddingTop = 152;
 const MaxPaddingBottom = 96;
 const SearchHeight = NavHeight;
 
-export default function Layout(props: { children?: React.ReactNode; rss?: string }) {
-  const { rss } = props;
+export default function Layout(props: { children?: React.ReactNode; feedURL?: string }) {
+  const { feedURL } = props;
 
   return (
     <div className="w-full" style={{ '--nav-height': `${NavHeight - 2}px` }}>
-      <Hero rss={rss}></Hero>
+      <Hero feedURL={feedURL}></Hero>
       <div
         className="flex"
         style={{ paddingTop: `${MaxPaddingTop + NavHeight + MaxPaddingBottom}px` }}
@@ -69,7 +69,7 @@ export const useHero = () => {
   };
 };
 
-function Hero(props: { rss?: string }) {
+function Hero(props: { feedURL?: string }) {
   const { height, paddingTop, paddingBottom, injectScript } = useHero();
 
   return (
@@ -79,7 +79,7 @@ function Hero(props: { rss?: string }) {
         suppressHydrationWarning={true}
         style={{ height: `${height}px` }}
       ></div>
-      <Header rss={props.rss}></Header>
+      <Header feedURL={props.feedURL}></Header>
       <div
         className="hero-top z-10 fixed w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none"
         suppressHydrationWarning={true}
@@ -119,8 +119,8 @@ function Hero(props: { rss?: string }) {
   );
 }
 
-function Header(props: { rss?: string }) {
-  const { rss } = props;
+function Header(props: { feedURL?: string }) {
+  const { feedURL } = props;
 
   return (
     <div className="z-11 bg-[#fef8f7] fixed pt-[1px] flex justify-center items-center w-full h-$nav-height">
@@ -129,27 +129,27 @@ function Header(props: { rss?: string }) {
           <NavLink to="/">🌸</NavLink>
         </div>
         <div>
-          <NavLink to="/" className="rounded-md p-2 hover:(bg-neutral-200)">
+          <NavLink to="/" className="rounded-md p-2 hover:(bg-zinc-100)">
             动画
           </NavLink>
         </div>
         <div>
-          <NavLink to="/resources" className="rounded-md p-2 hover:(bg-neutral-200)">
+          <NavLink to="/resources" className="rounded-md p-2 hover:(bg-zinc-100)">
             字幕组
           </NavLink>
         </div>
         <div>
-          <NavLink to="/resources" className="rounded-md p-2 hover:(bg-neutral-200)">
+          <NavLink to="/resources" className="rounded-md p-2 hover:(bg-zinc-100)">
             资源
           </NavLink>
         </div>
         <div className="flex-auto"></div>
         <div>
-          {rss && (
+          {feedURL && (
             <a
-              href={rss}
+              href={feedURL}
               target="_blank"
-              className="inline cursor-pointer rounded-md p-2 text-[#ee802f] hover:(!text-[#ff7800] !border-b-[#ff7800] bg-neutral-200)"
+              className="inline cursor-pointer rounded-md p-2 text-[#ee802f] hover:(!text-[#ff7800] !border-b-[#ff7800] bg-zinc-100)"
             >
               <span className="i-carbon-rss mr1" />
               <span>RSS</span>

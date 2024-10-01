@@ -75,6 +75,10 @@ export default defineConfig({
   },
   theme: {
     colors: {
+      zinc: {
+        '25': '#fbfbfc',
+        '50': '#f9f9fa'
+      },
       'main-50': '#fafafa',
       'main-100': '#f5f5f5',
       'main-200': '#e5e5e5',
