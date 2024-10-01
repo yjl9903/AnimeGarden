@@ -23,7 +23,7 @@ export const remix = <E extends Env = any>(options: RemixHandlerOptions): Handle
       const url = new URL(request.url);
       const ttl = url.pathname.startsWith('/assets/')
         ? 60 * 60 * 24 * 365 // 1 year
-        : 60 * 5; // 5 minutes
+        : 60; // 5 minutes
       return await getAssetFromKV(
         // @ts-ignore
         { request, waitUntil },

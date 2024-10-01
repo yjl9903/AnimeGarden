@@ -10,6 +10,9 @@ kv_namespaces = [
   { binding = "ASSETS", id = "4ab440b1ea1e42c18cdd62a454daba24", preview_id = "4ab440b1ea1e42c18cdd62a454daba24" },
 ]
 
+[observability]
+enabled = true
+
 [vars]
 APP_HOST = "garden.test.breadio.wiki"
 SERVER_PROTOCOL = "https"
