@@ -13,6 +13,8 @@ export const remix = <E extends Env = any>(options: RemixHandlerOptions): Handle
   const handleRemixRequest = createRequestHandler(options.build);
 
   return async (ctx) => {
+    console.log('ctx', ctx, ctx.env, ctx.var);
+
     const waitUntil = ctx.event.waitUntil.bind(ctx.event);
     const passThroughOnException = ctx.event.passThroughOnException.bind(ctx.event);
     const request = ctx.req.raw;
