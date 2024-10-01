@@ -11,12 +11,13 @@ import __STATIC_CONTENT_MANIFEST from '__STATIC_CONTENT_MANIFEST';
 import type { Bindings } from '../node/types';
 
 import { api } from '../node/api';
-
+import { feed } from '../node/feed';
 import { remix } from './remix';
 
 export const app = new Hono<{ Bindings: Bindings }>();
 
 app.all('/api/*', api());
+app.all('/feed.xml', feed());
 app.all('*', remix({ build: build as any, manifest: __STATIC_CONTENT_MANIFEST }));
 
 app.onError((err, c) => {

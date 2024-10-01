@@ -7,11 +7,13 @@ import * as build from '../build/server'; // eslint-disable-line import/no-unres
 import type { Bindings } from './types';
 
 import { api } from './api';
+import { feed } from './feed';
 import { remix } from './remix';
 
 export const app = new Hono<{ Bindings: Bindings }>();
 
 app.all('/api/*', api());
+app.all('/feed.xml', feed());
 app.all('*', remix({ build: build as any }));
 
 app.onError((err, c) => {
