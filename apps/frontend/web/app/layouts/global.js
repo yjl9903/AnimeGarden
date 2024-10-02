@@ -12,16 +12,16 @@ function updateHeroLayout() {
   const paddingBottom = y <= MaxPaddingBottom ? MaxPaddingBottom - y : 0;
   const height = paddingTop + SearchHeight + paddingBottom;
 
-  const hero = document.querySelector('.hero') as HTMLElement;
+  const hero = document.querySelector('.hero');
   if (hero) hero.style.height = height + 'px';
-  const top = document.querySelector('.hero-top') as HTMLElement;
+  const top = document.querySelector('.hero-top');
   if (top) {
     top.style.top = paddingTop - MaxPaddingTop + 'px';
     top.classList.remove('hidden');
   }
-  const search = document.querySelector('.hero-search') as HTMLElement;
+  const search = document.querySelector('.hero-search');
   if (search) search.style.top = paddingTop + 'px';
-  const bottom = document.querySelector('.hero-bottom') as HTMLElement;
+  const bottom = document.querySelector('.hero-bottom');
   if (bottom) {
     bottom.style.top = paddingTop + SearchHeight + 'px';
     bottom.style.height = paddingBottom + 'px';
