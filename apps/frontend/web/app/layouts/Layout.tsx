@@ -2,7 +2,6 @@ import { NavLink } from '@remix-run/react';
 
 import Search from '~/components/Search';
 import { Sidebar } from '~/components/Sidebar';
-import { useDocumentScroll } from '~/hooks';
 
 import { Loading } from './Loading';
 
@@ -32,58 +31,18 @@ export default function Layout(props: { children?: React.ReactNode; feedURL?: st
   );
 }
 
-export const useHero = () => {
-  const { y } = useDocumentScroll();
-
-  const paddingTop = y <= MaxPaddingTop ? MaxPaddingTop - y : 0;
-
-  const paddingBottom = Math.max(
-    y > MaxPaddingTop ? MaxPaddingBottom - (y - MaxPaddingTop) : MaxPaddingBottom,
-    0
-  );
-
-  const height = paddingTop + SearchHeight + paddingBottom;
-
-  return {
-    height,
-    paddingTop,
-    paddingBottom,
-    injectScript: `requestAnimationFrame(() => {
-  const y = document.documentElement.scrollTop;
-  const paddingTop = y <= ${MaxPaddingTop} ? ${MaxPaddingTop} - y : 0;
-  const paddingBottom = Math.max(
-    y > ${MaxPaddingTop} ? ${MaxPaddingBottom} - (y - ${MaxPaddingTop}) : ${MaxPaddingBottom},
-    0
-  );
-  const height = paddingTop + ${SearchHeight} + paddingBottom;
-
-  const hero = document.querySelector('.hero');
-  if (hero) hero.style.height = height + 'px';
-  const top = document.querySelector('.hero-top');
-  if (top) top.style.top = (paddingTop - ${MaxPaddingTop}) + 'px';
-  const search = document.querySelector('.hero-search');
-  if (search) search.style.top = paddingTop + 'px';
-  const bottom = document.querySelector('.hero-bottom');
-  if (bottom) { bottom.style.top = (paddingTop + ${SearchHeight}) + 'px'; bottom.style.height = paddingBottom + 'px'; }
-});`
-  };
-};
-
 function Hero(props: { feedURL?: string }) {
-  const { height, paddingTop, paddingBottom, injectScript } = useHero();
-
   return (
     <div className="w-full">
       <div
         className="hero z-1 w-full fixed bg-[#fef8f7] border-b border-b-gray-200"
-        suppressHydrationWarning={true}
-        style={{ height: `${height}px` }}
+        // style={{ height: `${height}px` }}
       ></div>
       <Header feedURL={props.feedURL}></Header>
       <div
-        className="hero-top z-10 fixed w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none"
+        className="hidden hero-top z-10 fixed w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none"
         suppressHydrationWarning={true}
-        style={{ top: `${paddingTop - MaxPaddingTop}px` }}
+        // style={{ top: `${paddingTop - MaxPaddingTop}px` }}
       >
         <NavLink to="/" className="pointer-events-auto cursor-pointer">
           🌸 Anime Garden
@@ -94,7 +53,7 @@ function Hero(props: { feedURL?: string }) {
         suppressHydrationWarning={true}
         style={{
           height: `${NavHeight}px`,
-          top: `${paddingTop}px`,
+          // top: `${paddingTop}px`,
           paddingTop: '8px',
           paddingBottom: '8px'
         }}
@@ -106,15 +65,8 @@ function Hero(props: { feedURL?: string }) {
       <div
         className="hero-bottom z-10 fixed w-full"
         suppressHydrationWarning={true}
-        style={{ top: `${paddingTop + SearchHeight}px`, height: `${paddingBottom}px` }}
+        // style={{ top: `${paddingTop + SearchHeight}px`, height: `${paddingBottom}px` }}
       ></div>
-      {injectScript && (
-        <script
-          dangerouslySetInnerHTML={{
-            __html: injectScript
-          }}
-        />
-      )}
     </div>
   );
 }
@@ -124,8 +76,8 @@ function Header(props: { feedURL?: string }) {
 
   return (
     <div className="z-11 bg-[#fef8f7] fixed pt-[1px] flex justify-center items-center w-full h-$nav-height">
-      <nav className="main flex gap-4 [&>div]:leading-$nav-height">
-        <div className="text-2xl font-quicksand font-bold">
+      <nav className="main flex gap-3 [&>div]:leading-$nav-height">
+        <div className="box-content w-[32px] pl3 lt-sm:pl1 text-2xl text-center font-quicksand font-bold">
           <NavLink to="/">🌸</NavLink>
         </div>
         <div>

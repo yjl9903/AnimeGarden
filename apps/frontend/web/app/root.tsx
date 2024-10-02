@@ -8,6 +8,7 @@ import './styles/main.css';
 import './styles/layout.css';
 import './styles/sonner.css';
 
+import global from '~/layouts/global?url';
 import { Toaster } from '~/components/ui/sonner';
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -22,6 +23,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <link rel="mask-icon" color="#FFFFFF" href="/favicon.svg" />
         <meta name="msapplication-TileColor" content="#FFFFFF" />
         <meta name="theme-color" content="#ffffff" />
+        <script src={global}></script>
         <Meta />
         <Links />
       </head>
