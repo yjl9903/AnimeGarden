@@ -23,7 +23,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <link rel="mask-icon" color="#FFFFFF" href="/favicon.svg" />
         <meta name="msapplication-TileColor" content="#FFFFFF" />
         <meta name="theme-color" content="#ffffff" />
-        <script dangerouslySetInnerHTML={{ __html: global }}></script>
         <Meta />
         <Links />
       </head>
@@ -32,6 +31,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Toaster />
         <ScrollRestoration />
         <Scripts />
+        <script dangerouslySetInnerHTML={{ __html: global }}></script>
       </body>
     </html>
   );

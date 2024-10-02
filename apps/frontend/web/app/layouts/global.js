@@ -59,6 +59,4 @@ function setupGlobalListener() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  setupGlobalListener();
-});
+setupGlobalListener();
