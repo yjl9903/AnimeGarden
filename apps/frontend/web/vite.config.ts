@@ -70,7 +70,7 @@ export default defineConfig({
          */
         SERVER_BASE
       },
-      cloudflare: process.env.cloudflare === 'true'
+      cloudflare: process.env.SSR_ADAPTER === 'cloudflare'
     }),
     Analytics({
       analytics: {
