@@ -47,7 +47,6 @@ export default async function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
-  console.log(request.url, isSitemapUrl(request));
   if (isSitemapUrl(request)) {
     // @ts-ignore
     return await sitemap(request, remixContext);

@@ -187,8 +187,8 @@ importers:
         specifier: ^0.0.11
         version: 0.0.11(esbuild@0.17.19)(rollup@4.21.2)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))
       unplugin-info:
-        specifier: ^1.2.0
-        version: 1.2.0(esbuild@0.17.19)(rollup@4.21.2)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(webpack-sources@3.2.3)
+        specifier: ^1.2.1
+        version: 1.2.1(esbuild@0.17.19)(rollup@4.21.2)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(webpack-sources@3.2.3)
       vite-tsconfig-paths:
         specifier: ^4.2.1
         version: 4.3.2(typescript@5.6.2)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))
@@ -374,8 +374,8 @@ importers:
         specifier: ^0.0.11
         version: 0.0.11(esbuild@0.17.19)(rollup@2.79.1)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))
       unplugin-info:
-        specifier: ^1.2.0
-        version: 1.2.0(esbuild@0.17.19)(rollup@2.79.1)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(webpack-sources@3.2.3)
+        specifier: ^1.2.1
+        version: 1.2.1(esbuild@0.17.19)(rollup@2.79.1)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(webpack-sources@3.2.3)
 
   packages/cli:
     dependencies:
@@ -8814,8 +8814,8 @@ packages:
       webpack:
         optional: true
 
-  unplugin-info@1.2.0:
-    resolution: {integrity: sha512-ePDKvnNi9b5nm8NHpeZZeaaORgfnvEGSnfYS6ed6HKyX84prRT20oYiuTQp2neUwI6blsN4Y3SoZX7XIt+BNZQ==}
+  unplugin-info@1.2.1:
+    resolution: {integrity: sha512-NwssEGmXCBYnGE3i9UhhK1nva1GF8EU21mBGmGZQVOYZwmNHOs+wcwgGnHsmc1nX4PkVQTLiawaLQBeP6HJKkA==}
     peerDependencies:
       '@nuxt/kit': ^3
       '@nuxt/schema': ^3
@@ -19138,7 +19138,7 @@ snapshots:
       rollup: 4.21.2
       vite: 5.4.2(@types/node@20.16.5)(terser@5.31.6)
 
-  unplugin-info@1.2.0(esbuild@0.17.19)(rollup@2.79.1)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(webpack-sources@3.2.3):
+  unplugin-info@1.2.1(esbuild@0.17.19)(rollup@2.79.1)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(webpack-sources@3.2.3):
     dependencies:
       ci-info: 4.0.0
       git-url-parse: 15.0.0
@@ -19152,7 +19152,7 @@ snapshots:
       - supports-color
       - webpack-sources
 
-  unplugin-info@1.2.0(esbuild@0.17.19)(rollup@4.21.2)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(webpack-sources@3.2.3):
+  unplugin-info@1.2.1(esbuild@0.17.19)(rollup@4.21.2)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(webpack-sources@3.2.3):
     dependencies:
       ci-info: 4.0.0
       git-url-parse: 15.0.0

@@ -69,7 +69,8 @@ export default defineConfig({
          * The base url of server
          */
         SERVER_BASE
-      }
+      },
+      cloudflare: process.env.cloudflare === 'true'
     }),
     Analytics({
       analytics: {

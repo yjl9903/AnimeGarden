@@ -63,6 +63,8 @@ jobs:
 
       - name: Build
         run: pnpm build:web
+        env:
+          cloudflare: 'true'
 
       - name: Deploy
         run: pnpm -C apps/frontend/web run deploy:worker
