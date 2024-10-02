@@ -5,11 +5,11 @@ const SearchHeight = NavHeight;
 
 function updateHeroLayout() {
   const y = document.documentElement.scrollTop;
-  const paddingTop = y <= MaxPaddingTop ? MaxPaddingTop - y : 0;
-  const paddingBottom = Math.max(
-    y > MaxPaddingTop ? MaxPaddingBottom - (y - MaxPaddingTop) : MaxPaddingBottom,
+  const paddingTop = Math.max(
+    y > MaxPaddingBottom ? MaxPaddingTop - (y - MaxPaddingBottom) : MaxPaddingTop,
     0
   );
+  const paddingBottom = y <= MaxPaddingBottom ? MaxPaddingBottom - y : 0;
   const height = paddingTop + SearchHeight + paddingBottom;
 
   const hero = document.querySelector('.hero') as HTMLElement;
