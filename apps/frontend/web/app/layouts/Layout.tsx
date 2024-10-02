@@ -42,7 +42,6 @@ function Hero(props: { feedURL?: string }) {
       <div
         className="hidden hero-top z-10 fixed w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none"
         suppressHydrationWarning={true}
-        // style={{ top: `${paddingTop - MaxPaddingTop}px` }}
       >
         <NavLink to="/" className="pointer-events-auto cursor-pointer">
           🌸 Anime Garden
@@ -53,7 +52,7 @@ function Hero(props: { feedURL?: string }) {
         suppressHydrationWarning={true}
         style={{
           height: `${NavHeight}px`,
-          // top: `${paddingTop}px`,
+          top: `${MaxPaddingTop}px`,
           paddingTop: '8px',
           paddingBottom: '8px'
         }}
@@ -65,7 +64,7 @@ function Hero(props: { feedURL?: string }) {
       <div
         className="hero-bottom z-10 fixed w-full"
         suppressHydrationWarning={true}
-        // style={{ top: `${paddingTop + SearchHeight}px`, height: `${paddingBottom}px` }}
+        style={{ top: `${MaxPaddingTop + SearchHeight}px`, height: `${MaxPaddingBottom}px` }}
       ></div>
     </div>
   );
