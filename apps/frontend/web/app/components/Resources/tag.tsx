@@ -1,6 +1,6 @@
-import { memo } from 'react'
+import { memo } from 'react';
 
-export const  Tag = memo((props: { text: string; color?: string; className?: string }) => {
+export const Tag = memo((props: { text: string; color?: string; className?: string }) => {
   const { text, className = '', color = 'bg-gray-200' } = props;
 
   return (

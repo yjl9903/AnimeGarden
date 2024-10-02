@@ -181,7 +181,10 @@ export default function Resources() {
             <h2 className="text-lg font-bold border-b px4 py2">文件列表</h2>
             <div className="mb4 max-h-[80vh] overflow-auto px4">
               {files.map((f) => (
-                <div key={f.name + '_' + f.size} className="py2 flex justify-between items-center gap4">
+                <div
+                  key={f.name + '_' + f.size}
+                  className="py2 flex justify-between items-center gap4"
+                >
                   <div className="text-sm text-base-600">{f.name}</div>
                   <div className="text-xs text-base-400 select-none">{f.size}</div>
                 </div>

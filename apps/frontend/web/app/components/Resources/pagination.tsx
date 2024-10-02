@@ -19,7 +19,9 @@ export const Pagination = (props: PaginationProps) => {
   const { page, complete, timestamp } = props;
   const isPrev = page > 1;
   const isNext = !complete;
-  const pages = isPrev ? [page - 1, page, page + 1, page + 2, page + 3] : [page, page + 1, page + 2, page + 3, page + 4];
+  const pages = isPrev
+    ? [page - 1, page, page + 1, page + 2, page + 3]
+    : [page, page + 1, page + 2, page + 3, page + 4];
 
   if (page === 1 && complete) {
     // Only one page data, no pagination
@@ -52,10 +54,7 @@ export const Pagination = (props: PaginationProps) => {
               page={p}
               link={props.link}
               navigate={props.navigate}
-              className={clsx(
-                'block',
-                p === page && 'text-pink-600'
-              )}
+              className={clsx('block', p === page && 'text-pink-600')}
             >
               <span>{p}</span>
             </PageItem>
