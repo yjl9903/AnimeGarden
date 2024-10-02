@@ -3,8 +3,16 @@ const MaxPaddingTop = 152;
 const MaxPaddingBottom = 96;
 const SearchHeight = NavHeight;
 
+let scrollY;
+
 function updateHeroLayout() {
   const y = document.documentElement.scrollTop;
+  if (y !== scrollY) {
+    scrollY = y;
+  } else {
+    return;
+  }
+
   const paddingTop = Math.max(
     y > MaxPaddingBottom ? MaxPaddingTop - (y - MaxPaddingBottom) : MaxPaddingTop,
     0
@@ -41,6 +49,11 @@ function setupGlobalListener() {
   };
 
   document.addEventListener('scroll', handler, {
+    capture: false,
+    passive: true
+  });
+
+  document.addEventListener('touchmove', handler, {
     capture: false,
     passive: true
   });
