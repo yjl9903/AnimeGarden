@@ -17,7 +17,24 @@ import { APP_HOST } from '~build/env';
 
 const { isSitemapUrl, sitemap } = createSitemapGenerator({
   siteUrl: `https://${APP_HOST}`,
-  generateRobotsTxt: true
+  generateRobotsTxt: true,
+  robotsTxtOptions: {
+    policies: [
+      {
+        userAgent: '*',
+        allow: [
+          '/docs/',
+          '/anime/',
+          '/detail/',
+          '/resource/',
+          '/resources/1',
+          '/resources/2',
+          '/resources/3'
+        ],
+        disallow: ['/feed.xml', '/api/']
+      }
+    ]
+  }
 });
 
 export default async function handleRequest(
