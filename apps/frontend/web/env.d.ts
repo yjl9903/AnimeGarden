@@ -2,7 +2,7 @@
 
 import type * as CSS from 'csstype';
 
-declare module '~build/meta' {
+declare module '~build/env' {
   export const KEEPSHARE: string;
 
   export const APP_HOST: string;

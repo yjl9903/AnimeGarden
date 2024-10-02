@@ -5,6 +5,7 @@ import { vitePlugin as remix } from '@remix-run/dev';
 
 import UnoCSS from 'unocss/vite';
 import Info from 'unplugin-info/vite';
+import Analytics from 'unplugin-analytics/vite';
 
 const KEEPSHARE = 'gv78k1oi';
 
@@ -21,6 +22,13 @@ if (SERVER_HOST) {
   );
 }
 
+// Analytics Engines
+const UMAMI_HOST = `umami.onekuma.cn`;
+const UMAMI_ID = `ac2c4863-3409-4c64-9ac8-fd94bf937583`;
+// const PLAUSIBLE_HOST = `garden.breadio.wiki`;
+const CLARITY = `nbvdca15ui`;
+const CF_BEACON = `7307ee3d2d8f4bafac906844704dab10`;
+
 export default defineConfig({
   ssr: {
     resolve: {
@@ -36,7 +44,7 @@ export default defineConfig({
   },
   plugins: [
     Info({
-      meta: {
+      env: {
         /**
          * Keepshare id
          */
@@ -61,6 +69,23 @@ export default defineConfig({
          * The base url of server
          */
         SERVER_BASE
+      }
+    }),
+    Analytics({
+      analytics: {
+        umami: {
+          src: UMAMI_HOST,
+          id: UMAMI_ID
+        },
+        // plausible: {
+        //   domain: PLAUSIBLE_HOST
+        // },
+        clarity: {
+          id: CLARITY
+        },
+        cloudflare: {
+          beacon: CF_BEACON
+        }
       }
     }),
     UnoCSS(),
