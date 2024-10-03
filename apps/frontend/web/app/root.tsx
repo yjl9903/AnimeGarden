@@ -1,6 +1,7 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 
 import { Provider } from 'jotai';
+import { useState, useEffect } from 'react';
 
 import 'virtual:uno.css';
 
@@ -13,6 +14,12 @@ import { Toaster } from '~/components/ui/sonner';
 import { MaxPaddingTop, MaxPaddingBottom } from '~/layouts/Layout';
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  });
+  
   return (
     <html lang="zh-CN">
       <head>
@@ -33,7 +40,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         suppressHydrationWarning={true}
       >
         <div
-          className="page-overlay absolute w-full h-full bg-white z-9999"
+          className={"page-overlay absolute w-full h-full bg-white z-9999 " + (isClient ? 'hidden' : '')}
           suppressHydrationWarning={true}
         ></div>
         <Provider>{children}</Provider>
