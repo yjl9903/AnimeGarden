@@ -93,7 +93,7 @@ export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }>
     </a>
   </td> */}
       <td className="py2 pl3 lt-md:pl1">
-        <div className="flex xl:min-w-[600px] lg:min-w-[480px] lt-md:w-[calc(95vw-4px)]">
+        <div className="flex xl:min-w-[600px] lg:min-w-[480px] lt-lg:w-[calc(95vw-4px)]">
           <div className="flex-shrink-0 mr3 flex justify-center items-center">
             <NavLink
               to={`/resources/1?${followSearch(location, { type: r.type })}`}

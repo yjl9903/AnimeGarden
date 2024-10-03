@@ -44,7 +44,7 @@ const Hero = memo((props: { feedURL?: string }) => {
       ></div>
       <Header feedURL={props.feedURL}></Header>
       <div
-        className="hero-top md:z-12 lt-md:z-10 fixed w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none"
+        className="hero-top lg:z-12 lt-lg:z-10 fixed w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none"
         suppressHydrationWarning={true}
       >
         <NavLink to="/" className="pointer-events-auto cursor-pointer">
@@ -52,7 +52,7 @@ const Hero = memo((props: { feedURL?: string }) => {
         </NavLink>
       </div>
       <div
-        className="hero-search w-full flex justify-center items-center fixed md:z-12 lt-md:z-10 pointer-events-none"
+        className="hero-search w-full flex justify-center items-center fixed lg:z-12 lt-lg:z-10 pointer-events-none"
         suppressHydrationWarning={true}
         style={{
           height: `${NavHeight}px`,
@@ -60,7 +60,7 @@ const Hero = memo((props: { feedURL?: string }) => {
           paddingBottom: '8px'
         }}
       >
-        <div className="main flex justify-center md:px-[220px]">
+        <div className="main flex justify-center lg:px-[220px]">
           <div className="vercel relative h-[44.4px] xl:w-[800px] md:w-[600px] lt-md:w-[95vw] max-w-full pointer-events-auto">
             <Search></Search>
           </div>
