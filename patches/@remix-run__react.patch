@@ -1,0 +1,30 @@
+diff --git a/dist/scroll-restoration.d.ts b/dist/scroll-restoration.d.ts
+index fbfe1d149da86ecb95341e9a00443b395b875d05..826cabf5a217db7f2d75b72142194217017ad612 100644
+--- a/dist/scroll-restoration.d.ts
++++ b/dist/scroll-restoration.d.ts
+@@ -9,4 +9,5 @@ import type { ScriptProps } from "./components";
+  */
+ export declare function ScrollRestoration({ getKey, ...props }: ScriptProps & {
+     getKey?: ScrollRestorationPropsRR["getKey"];
++    afterScroll?: (x: number, y: number) => void;
+ }): React.JSX.Element | null;
+diff --git a/dist/scroll-restoration.js b/dist/scroll-restoration.js
+index b7aa82aeabc7de43007c66c2a15e23c1026ace7e..99d8d522ae909d7f33d76a4b10c667b96a291e89 100644
+--- a/dist/scroll-restoration.js
++++ b/dist/scroll-restoration.js
+@@ -47,6 +47,7 @@ let STORAGE_KEY = "positions";
+  */
+ function ScrollRestoration({
+   getKey,
++  afterScroll,
+   ...props
+ }) {
+   let {
+@@ -91,6 +92,7 @@ function ScrollRestoration({
+       let storedY = positions[restoreKey || window.history.state.key];
+       if (typeof storedY === "number") {
+         window.scrollTo(0, storedY);
++        afterScroll?.(0, storedY);
+       }
+     } catch (error) {
+       console.error(error);

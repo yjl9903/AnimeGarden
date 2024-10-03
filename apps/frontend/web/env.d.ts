@@ -19,5 +19,17 @@ declare module '~build/env' {
 declare module 'csstype' {
   interface Properties {
     '--nav-height'?: string;
+    '--search-height'?: string;
+    '--max-hero-pt'?: string;
+    '--max-hero-pb'?: string;
+  }
+}
+
+declare global {
+  interface Window {
+    /**
+     * Update hero scroll layout
+     */
+    updateHeroLayout?: () => void;
   }
 }

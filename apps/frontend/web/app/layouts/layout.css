@@ -1,3 +1,22 @@
+/* Hero */
+.hero {
+  height: calc(var(--hero-pt, var(--max-hero-pt)) + var(--search-height) + var(--hero-pb, var(--max-hero-pb))) !important;
+}
+
+.hero-top {
+  top: calc(var(--hero-pt, var(--max-hero-pt)) - var(--max-hero-pt)) !important;
+}
+
+.hero-search {
+  top: var(--hero-pt, var(--max-hero-pt)) !important;
+}
+
+.hero-bottom {
+  top: calc(var(--hero-pt, var(--max-hero-pt)) + var(--search-height)) !important;
+  height: var(--hero-pb, var(--max-hero-pb)) !important;
+}
+
+/* Progress bar */
 #animegarden-progress div {
   position: fixed;
   z-index: 10000;

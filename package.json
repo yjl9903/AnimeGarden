@@ -49,5 +49,10 @@
   "packageManager": "pnpm@9.10.0",
   "engines": {
     "node": ">=v18.16.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@remix-run/react": "patches/@remix-run__react.patch"
+    }
   }
 }

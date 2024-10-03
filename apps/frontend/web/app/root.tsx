@@ -5,11 +5,12 @@ import { Provider } from 'jotai';
 import 'virtual:uno.css';
 
 import './styles/main.css';
-import './styles/layout.css';
 import './styles/sonner.css';
+import './layouts/layout.css';
 
 import global from '~/layouts/global.js?raw';
 import { Toaster } from '~/components/ui/sonner';
+import { MaxPaddingTop, MaxPaddingBottom } from '~/layouts/Layout';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -26,12 +27,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="font-sans">
+      <body
+        className="font-sans"
+        style={{ '--max-hero-pt': `${MaxPaddingTop}px`, '--max-hero-pb': `${MaxPaddingBottom}px` }}
+      >
+        <script dangerouslySetInnerHTML={{ __html: global }}></script>
         <Provider>{children}</Provider>
         <Toaster />
-        <ScrollRestoration />
+        <ScrollRestoration afterScroll={() => window.updateHeroLayout?.()} />
         <Scripts />
-        <script dangerouslySetInnerHTML={{ __html: global }}></script>
       </body>
     </html>
   );
