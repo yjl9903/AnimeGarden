@@ -5,13 +5,14 @@ const SearchHeight = NavHeight;
 
 let cacheScrollY;
 
-function updateHeroLayout() {
-  const y = document.documentElement.scrollTop;
+function updateHeroLayout(_y) {
+  const y = _y ?? document.documentElement.scrollTop;
   if (y !== cacheScrollY) {
     cacheScrollY = y;
   } else {
     return;
   }
+  document.querySelector('.page-overlay')?.classList.add('hidden');
 
   const paddingTop = Math.max(
     y > MaxPaddingBottom ? MaxPaddingTop - (y - MaxPaddingBottom) : MaxPaddingTop,

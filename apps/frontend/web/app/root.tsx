@@ -28,14 +28,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body
-        className="font-sans"
+        className="font-sans relative"
         style={{ '--max-hero-pt': `${MaxPaddingTop}px`, '--max-hero-pb': `${MaxPaddingBottom}px` }}
+        suppressHydrationWarning={true}
       >
-        <script dangerouslySetInnerHTML={{ __html: global }}></script>
+        <div
+          className="page-overlay absolute w-full h-full bg-white z-9999"
+          suppressHydrationWarning={true}
+        ></div>
         <Provider>{children}</Provider>
-        <Toaster />
-        <ScrollRestoration afterScroll={() => window.updateHeroLayout?.()} />
+        <ScrollRestoration beforeScroll={(_, y) => window.updateHeroLayout?.(y)} />
+        <script dangerouslySetInnerHTML={{ __html: global }}></script>
         <Scripts />
+        <Toaster />
       </body>
     </html>
   );

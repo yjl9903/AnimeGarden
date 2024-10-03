@@ -1,22 +1,24 @@
 diff --git a/dist/esm/scroll-restoration.js b/dist/esm/scroll-restoration.js
-index 3dd0d16bc415809496c3e0628cffb2bfc2fd4ec9..4f2449fd309d2171b92259d27c42cb91c3b2b0b2 100644
+index 3dd0d16bc415809496c3e0628cffb2bfc2fd4ec9..4fe1219f413e1a490492d8f637f425418a50e771 100644
 --- a/dist/esm/scroll-restoration.js
 +++ b/dist/esm/scroll-restoration.js
-@@ -23,6 +23,7 @@ let STORAGE_KEY = "positions";
+@@ -23,6 +23,8 @@ let STORAGE_KEY = "positions";
   */
  function ScrollRestoration({
    getKey,
++  beforeScroll,
 +  afterScroll,
    ...props
  }) {
    let {
-@@ -55,6 +56,13 @@ function ScrollRestoration({
+@@ -55,6 +57,14 @@ function ScrollRestoration({
    if (isSpaMode) {
      return null;
    }
 +
 +  React.useEffect(() => {
 +    if (window) {
++      window.__beforeScroll__ = beforeScroll;
 +      window.__afterScroll__ = afterScroll;
 +    }
 +  });
@@ -24,43 +26,48 @@ index 3dd0d16bc415809496c3e0628cffb2bfc2fd4ec9..4f2449fd309d2171b92259d27c42cb91
    let restoreScroll = ((STORAGE_KEY, restoreKey) => {
      if (!window.history.state || !window.history.state.key) {
        let key = Math.random().toString(32).slice(2);
-@@ -67,6 +75,7 @@ function ScrollRestoration({
+@@ -66,7 +76,9 @@ function ScrollRestoration({
+       let positions = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "{}");
        let storedY = positions[restoreKey || window.history.state.key];
        if (typeof storedY === "number") {
++        window.__beforeScroll__?.(0, storedY);
          window.scrollTo(0, storedY);
 +        window.__afterScroll__?.(0, storedY);
        }
      } catch (error) {
        console.error(error);
 diff --git a/dist/scroll-restoration.d.ts b/dist/scroll-restoration.d.ts
-index fbfe1d149da86ecb95341e9a00443b395b875d05..826cabf5a217db7f2d75b72142194217017ad612 100644
+index fbfe1d149da86ecb95341e9a00443b395b875d05..774daba2b4733f5194e2cc2a6300d0365bc0e2ed 100644
 --- a/dist/scroll-restoration.d.ts
 +++ b/dist/scroll-restoration.d.ts
-@@ -9,4 +9,5 @@ import type { ScriptProps } from "./components";
+@@ -9,4 +9,6 @@ import type { ScriptProps } from "./components";
   */
  export declare function ScrollRestoration({ getKey, ...props }: ScriptProps & {
      getKey?: ScrollRestorationPropsRR["getKey"];
++    beforeScroll?: (x: number, y: number) => void;
 +    afterScroll?: (x: number, y: number) => void;
  }): React.JSX.Element | null;
 diff --git a/dist/scroll-restoration.js b/dist/scroll-restoration.js
-index b7aa82aeabc7de43007c66c2a15e23c1026ace7e..e8b68ab4b009233bf16432cfdb7655eebf680ef4 100644
+index b7aa82aeabc7de43007c66c2a15e23c1026ace7e..907e0902000443df83c1fab7efb950f11d651f7a 100644
 --- a/dist/scroll-restoration.js
 +++ b/dist/scroll-restoration.js
-@@ -47,6 +47,7 @@ let STORAGE_KEY = "positions";
+@@ -47,6 +47,8 @@ let STORAGE_KEY = "positions";
   */
  function ScrollRestoration({
    getKey,
++  beforeScroll,
 +  afterScroll,
    ...props
  }) {
    let {
-@@ -79,6 +80,13 @@ function ScrollRestoration({
+@@ -79,6 +81,14 @@ function ScrollRestoration({
    if (isSpaMode) {
      return null;
    }
 +
 +  React__namespace.useEffect(() => {
 +    if (window) {
++      window.__beforeScroll__ = beforeScroll;
 +      window.__afterScroll__ = afterScroll;
 +    }
 +  });
@@ -68,9 +75,11 @@ index b7aa82aeabc7de43007c66c2a15e23c1026ace7e..e8b68ab4b009233bf16432cfdb7655ee
    let restoreScroll = ((STORAGE_KEY, restoreKey) => {
      if (!window.history.state || !window.history.state.key) {
        let key = Math.random().toString(32).slice(2);
-@@ -91,6 +99,7 @@ function ScrollRestoration({
+@@ -90,7 +100,9 @@ function ScrollRestoration({
+       let positions = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "{}");
        let storedY = positions[restoreKey || window.history.state.key];
        if (typeof storedY === "number") {
++        window.__beforeScroll__?.(0, storedY);
          window.scrollTo(0, storedY);
 +        window.__afterScroll__?.(0, storedY);
        }

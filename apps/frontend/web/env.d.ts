@@ -30,6 +30,6 @@ declare global {
     /**
      * Update hero scroll layout
      */
-    updateHeroLayout?: () => void;
+    updateHeroLayout?: (y?: number) => void;
   }
 }
