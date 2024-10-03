@@ -9,7 +9,7 @@ index fbfe1d149da86ecb95341e9a00443b395b875d05..826cabf5a217db7f2d75b72142194217
 +    afterScroll?: (x: number, y: number) => void;
  }): React.JSX.Element | null;
 diff --git a/dist/scroll-restoration.js b/dist/scroll-restoration.js
-index b7aa82aeabc7de43007c66c2a15e23c1026ace7e..99d8d522ae909d7f33d76a4b10c667b96a291e89 100644
+index b7aa82aeabc7de43007c66c2a15e23c1026ace7e..005593ae155709c1679cae844851cc8c340778d9 100644
 --- a/dist/scroll-restoration.js
 +++ b/dist/scroll-restoration.js
 @@ -47,6 +47,7 @@ let STORAGE_KEY = "positions";
@@ -20,11 +20,21 @@ index b7aa82aeabc7de43007c66c2a15e23c1026ace7e..99d8d522ae909d7f33d76a4b10c667b9
    ...props
  }) {
    let {
-@@ -91,6 +92,7 @@ function ScrollRestoration({
+@@ -79,6 +80,9 @@ function ScrollRestoration({
+   if (isSpaMode) {
+     return null;
+   }
++  if (!import.meta.env.SSR) {
++    window.__afterScroll__ = afterScroll;
++  }
+   let restoreScroll = ((STORAGE_KEY, restoreKey) => {
+     if (!window.history.state || !window.history.state.key) {
+       let key = Math.random().toString(32).slice(2);
+@@ -91,6 +95,7 @@ function ScrollRestoration({
        let storedY = positions[restoreKey || window.history.state.key];
        if (typeof storedY === "number") {
          window.scrollTo(0, storedY);
-+        afterScroll?.(0, storedY);
++        window.__afterScroll__?.(0, storedY);
        }
      } catch (error) {
        console.error(error);

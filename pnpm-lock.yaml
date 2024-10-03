@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@remix-run/react':
-    hash: tjklarcareafw44rqcncf7js64
+    hash: byqxw5ezivyl44qnwucuz5vzxi
     path: patches/@remix-run__react.patch
 
 importers:
@@ -90,7 +90,7 @@ importers:
         version: 2.12.0(typescript@5.6.2)
       '@remix-run/react':
         specifier: ^2.12.0
-        version: 2.12.0(patch_hash=tjklarcareafw44rqcncf7js64)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)
+        version: 2.12.0(patch_hash=byqxw5ezivyl44qnwucuz5vzxi)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)
       '@remix-run/serve':
         specifier: ^2.12.0
         version: 2.12.0(typescript@5.6.2)
@@ -160,7 +160,7 @@ importers:
         version: 1.2.0
       '@remix-run/dev':
         specifier: ^2.12.0
-        version: 2.12.0(@remix-run/react@2.12.0(patch_hash=tjklarcareafw44rqcncf7js64)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2))(@remix-run/serve@2.12.0(typescript@5.6.2))(@types/node@20.16.5)(bufferutil@4.0.8)(terser@5.31.6)(typescript@5.6.2)(utf-8-validate@6.0.4)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(wrangler@3.78.2(@cloudflare/workers-types@4.20240909.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4))
+        version: 2.12.0(@remix-run/react@2.12.0(patch_hash=byqxw5ezivyl44qnwucuz5vzxi)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2))(@remix-run/serve@2.12.0(typescript@5.6.2))(@types/node@20.16.5)(bufferutil@4.0.8)(terser@5.31.6)(typescript@5.6.2)(utf-8-validate@6.0.4)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(wrangler@3.78.2(@cloudflare/workers-types@4.20240909.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4))
       '@types/react':
         specifier: ^18.3.5
         version: 18.3.5
@@ -11797,7 +11797,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.6.2
 
-  '@remix-run/dev@2.12.0(@remix-run/react@2.12.0(patch_hash=tjklarcareafw44rqcncf7js64)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2))(@remix-run/serve@2.12.0(typescript@5.6.2))(@types/node@20.16.5)(bufferutil@4.0.8)(terser@5.31.6)(typescript@5.6.2)(utf-8-validate@6.0.4)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(wrangler@3.78.2(@cloudflare/workers-types@4.20240909.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4))':
+  '@remix-run/dev@2.12.0(@remix-run/react@2.12.0(patch_hash=byqxw5ezivyl44qnwucuz5vzxi)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2))(@remix-run/serve@2.12.0(typescript@5.6.2))(@types/node@20.16.5)(bufferutil@4.0.8)(terser@5.31.6)(typescript@5.6.2)(utf-8-validate@6.0.4)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(wrangler@3.78.2(@cloudflare/workers-types@4.20240909.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4))':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/generator': 7.25.6
@@ -11810,7 +11810,7 @@ snapshots:
       '@mdx-js/mdx': 2.3.0
       '@npmcli/package-json': 4.0.1
       '@remix-run/node': 2.12.0(typescript@5.6.2)
-      '@remix-run/react': 2.12.0(patch_hash=tjklarcareafw44rqcncf7js64)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)
+      '@remix-run/react': 2.12.0(patch_hash=byqxw5ezivyl44qnwucuz5vzxi)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)
       '@remix-run/router': 1.19.2
       '@remix-run/server-runtime': 2.12.0(typescript@5.6.2)
       '@types/mdx': 2.0.13
@@ -11893,7 +11893,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.6.2
 
-  '@remix-run/react@2.12.0(patch_hash=tjklarcareafw44rqcncf7js64)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)':
+  '@remix-run/react@2.12.0(patch_hash=byqxw5ezivyl44qnwucuz5vzxi)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)':
     dependencies:
       '@remix-run/router': 1.19.2
       '@remix-run/server-runtime': 2.12.0(typescript@5.6.2)
