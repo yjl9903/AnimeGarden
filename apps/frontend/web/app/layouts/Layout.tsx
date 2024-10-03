@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { NavLink } from '@remix-run/react';
 
 import Search from '~/components/Search';
@@ -34,7 +35,7 @@ export default function Layout(props: { children?: React.ReactNode; feedURL?: st
   );
 }
 
-function Hero(props: { feedURL?: string }) {
+const Hero = memo((props: { feedURL?: string }) => {
   return (
     <div className="w-full">
       <div
@@ -47,7 +48,7 @@ function Hero(props: { feedURL?: string }) {
         suppressHydrationWarning={true}
       >
         <NavLink to="/" className="pointer-events-auto cursor-pointer">
-          🌸 Anime Garden
+          <span>🌸 Anime Garden</span>
         </NavLink>
       </div>
       <div
@@ -59,21 +60,23 @@ function Hero(props: { feedURL?: string }) {
           paddingBottom: '8px'
         }}
       >
-        <div className="vercel relative h-[44.4px] xl:w-[800px] md:w-[600px] lt-md:w-[95vw] max-w-[95vw] pointer-events-auto">
-          <Search></Search>
+        <div className="main flex justify-center md:px-[220px]">
+          <div className="vercel relative h-[44.4px] xl:w-[800px] md:w-[600px] lt-md:w-[95vw] max-w-full pointer-events-auto">
+            <Search></Search>
+          </div>
         </div>
       </div>
       <div className="hero-bottom z-10 fixed w-full" suppressHydrationWarning={true}></div>
     </div>
   );
-}
+});
 
-function Header(props: { feedURL?: string }) {
+const Header = memo((props: { feedURL?: string }) => {
   const { feedURL } = props;
 
   return (
     <div className="z-11 bg-[#fef8f7] fixed pt-[1px] flex justify-center items-center w-full h-$nav-height">
-      <nav className="main flex gap-3 [&>div]:leading-$nav-height">
+      <nav className="main flex gap-1 [&>div]:leading-$nav-height">
         <div className="box-content w-[32px] pl3 lt-sm:pl1 text-2xl text-center font-quicksand font-bold">
           <NavLink to="/">🌸</NavLink>
         </div>
@@ -108,4 +111,4 @@ function Header(props: { feedURL?: string }) {
       </nav>
     </div>
   );
-}
+});
