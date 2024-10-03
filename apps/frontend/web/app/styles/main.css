@@ -20,3 +20,9 @@
   /* prettier-ignore */
   @apply: hover:text-sky-600;
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
