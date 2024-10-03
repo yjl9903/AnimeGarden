@@ -10,8 +10,8 @@ export function getRuntimeEnv(locals: App.Locals): Env | undefined {
 }
 
 export function getPikPakUrlChecker(magnet: string) {
-  // const url = magnet.split('&')[0];
+  const url = magnet.split('&')[0];
   // return 'https://keepshare.org/gv78k1oi/' + encodeURIComponent(url);
-  const replaced = magnet.replace(/^magnet:\?xt/, 'magnet:?xt.1');
+  const replaced = url.replace(/^magnet:\?xt/, 'magnet:?xt.1');
   return `https://mypikpak.com/drive/url-checker?url=${replaced}`;
 }
