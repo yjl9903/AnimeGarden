@@ -34,19 +34,48 @@ function setupGlobalListener() {
 
   updateHeroLayout();
 
-  const handler = () => {
-    updateHeroLayout();
-  };
+  document.addEventListener(
+    'scroll',
+    () => {
+      updateHeroLayout();
+    },
+    {
+      capture: false,
+      passive: true
+    }
+  );
 
-  document.addEventListener('scroll', handler, {
-    capture: false,
-    passive: true
-  });
-
-  document.addEventListener('touchmove', handler, {
-    capture: false,
-    passive: true
-  });
+  let raf;
+  document.addEventListener(
+    'touchmove',
+    () => {
+      updateHeroLayout();
+    },
+    {
+      capture: false,
+      passive: true
+    }
+  );
+  document.addEventListener(
+    'touchend',
+    () => {
+      cancelAnimationFrame(raf);
+      const now = new Date().getTime();
+      updateHeroLayout();
+      const handler = () => {
+        if (new Date().getTime() - now > 1000) {
+          return;
+        }
+        updateHeroLayout();
+        raf = requestAnimationFrame(handler);
+      };
+      requestAnimationFrame(handler);
+    },
+    {
+      capture: false,
+      passive: true
+    }
+  );
 }
 
 setupGlobalListener();
