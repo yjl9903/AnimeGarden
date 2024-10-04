@@ -18,7 +18,7 @@ import { useActiveElement, useDocument, useEventListener } from '@/hooks';
 
 import './cmdk.css';
 
-import { DMHY_RE, debounce, parseSearch, resolveSearchURL } from './utils';
+import { DMHY_RE, debounce, parseSearch, resolveSearchURL, stringifySearch } from './utils';
 
 const SEARCH_HELP_URL = `https://animespace.onekuma.cn/animegarden/search.html`;
 
@@ -50,7 +50,8 @@ export const Search = memo(() => {
 
   useEffect(() => {
     if (location.state?.trigger !== 'search') {
-      setInput('');
+      const content = stringifySearch(new URLSearchParams(location.search));
+      setInput(content);
     }
   }, [location]);
 
