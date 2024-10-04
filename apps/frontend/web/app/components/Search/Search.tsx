@@ -166,6 +166,13 @@ export const Search = memo(() => {
           className={`${enable ? 'searched' : ''}`}
         />
         <span
+          className="absolute right-[20px] top-0 h-[30px] flex items-center cursor-pointer"
+          onMouseDown={() => cleanUp()}
+        >
+          <span className="i-carbon-close text-xl text-base-500 hover:text-base-900"></span>
+        </span>
+        <span className="absolute right-[20px] top-[4px] h-[22px] border-r"></span>
+        <span
           className="absolute right-0 top-0 h-[30px] flex items-center cursor-pointer"
           onMouseDown={() => selectGoToSearch()}
         >
