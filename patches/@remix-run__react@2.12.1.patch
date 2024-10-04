@@ -1,5 +1,5 @@
 diff --git a/dist/esm/scroll-restoration.js b/dist/esm/scroll-restoration.js
-index 3dd0d16bc415809496c3e0628cffb2bfc2fd4ec9..4fe1219f413e1a490492d8f637f425418a50e771 100644
+index 5ca1e5fdde73a871b70f58ad20636fcd462291f7..799f06583ebe4652471067ec9e092b5f4ed3c941 100644
 --- a/dist/esm/scroll-restoration.js
 +++ b/dist/esm/scroll-restoration.js
 @@ -23,6 +23,8 @@ let STORAGE_KEY = "positions";
@@ -48,7 +48,7 @@ index fbfe1d149da86ecb95341e9a00443b395b875d05..774daba2b4733f5194e2cc2a6300d036
 +    afterScroll?: (x: number, y: number) => void;
  }): React.JSX.Element | null;
 diff --git a/dist/scroll-restoration.js b/dist/scroll-restoration.js
-index b7aa82aeabc7de43007c66c2a15e23c1026ace7e..907e0902000443df83c1fab7efb950f11d651f7a 100644
+index 3a1228bb9b53c86ac1079a96179392127633370b..825094593d540d94b61355bc79d6d2bc7faf8ccd 100644
 --- a/dist/scroll-restoration.js
 +++ b/dist/scroll-restoration.js
 @@ -47,6 +47,8 @@ let STORAGE_KEY = "positions";
