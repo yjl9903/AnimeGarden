@@ -109,6 +109,14 @@ const QuickLinks = memo(() => {
         <span className="i-carbon-list mr1"></span>
         <span>所有资源</span>
       </NavLink>
+      <a
+        href="https://animespace.onekuma.cn/animegarden/search"
+        className={clsx(className)}
+        target='_blank'
+      >
+        <span className="i-carbon-help mr1"></span>
+        <span>高级搜索帮助</span>
+      </a>
     </>
   );
 });

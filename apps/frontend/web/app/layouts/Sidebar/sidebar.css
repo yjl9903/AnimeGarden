@@ -25,7 +25,7 @@
 }
 
 .collection-container {
-  height: calc(100vh - var(--sidebar-pt) - 34px - 36px - 36px - 24px - 26px - 16px);
+  max-height: calc(100vh - var(--sidebar-pt) - 34px - 36px - 36px - 36px - 32px - 26px - 24px);
   @apply: mr-[8px] overflow-y-auto overscroll-none;
 }
 
