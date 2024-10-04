@@ -17,7 +17,7 @@ import { DisplayType, DisplayTypeColor, QueryType } from '~/constant';
 
 export type DisplayResolvedFilterOptions = ReturnType<typeof resolveFilterOptions>;
 
-export function resolveFilterOptions(filter: Omit<ResolvedFilterOptions, 'page'>) {
+export function resolveFilterOptions(filter: Omit<ResolvedFilterOptions, 'page' | 'pageSize'>) {
   const fansubId = filter.fansubId;
   const fansubs = fansubId
     ? fansubId.map((id) => {

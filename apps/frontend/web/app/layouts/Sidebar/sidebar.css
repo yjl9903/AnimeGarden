@@ -34,7 +34,7 @@
 }
 
 .collection-container .collection-item:has(.collection-item-title[contenteditable="plaintext-only"]) {
-  @apply: outline outline-zinc-300 mr-[32px];
+  @apply: outline outline-zinc-300 bg-transparent!;
 }
 
 .collection-container .collection-item-title {
@@ -55,4 +55,8 @@
 .collection-container .collection-item:hover .collection-item-op,
 .collection-container .collection-item:has([data-state='open']) .collection-item-op {
   @apply: flex;
+}
+
+.collection-container .collection-item:has(.collection-item-title[contenteditable="plaintext-only"]) .collection-item-op {
+  @apply: hidden!;
 }

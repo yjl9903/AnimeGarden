@@ -14,23 +14,28 @@ import { stringifySearch } from '~/components/Search/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger
 } from '~/components/ui/dropdown-menu';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/ui/tooltip';
 
 import './sidebar.css';
 import { isOpenSidebar } from './atom';
 import { toast } from 'sonner';
+import { resolveFilterOptions } from '@/routes/resources.($page)/Filter';
+import { format } from 'date-fns';
 
 type CollectionItem = Collection['items'][0];
+
+const safeFormat: typeof format = (...args) => {
+  try {
+    return format(...args);
+  } catch (error) {
+    console.log(error);
+    return '';
+  }
+};
 
 export const Sidebar = memo(() => {
   const [isOpen] = useAtom(isOpenSidebar);
@@ -128,7 +133,7 @@ const Collection = memo((props: { collection: Collection }) => {
         </div>
       </div>
       {collection.items.length > 0 ? (
-        <div className="collection-container space-y-2 overflow-y-auto">
+        <div className="collection-container pt-1 space-y-2 overflow-y-auto">
           {collection.items.map((item) => (
             <CollectionItemContent
               key={item.searchParams}
@@ -154,8 +159,6 @@ const Collection = memo((props: { collection: Collection }) => {
 });
 
 const CollectionItemContent = memo((props: { collection: Collection; item: CollectionItem }) => {
-  const navigate = useNavigate();
-
   const { collection, item } = props;
   const name = inferCollectionItemName(props.item);
   const fansub = name.fansubs?.map((f) => f.name).join(' ');
@@ -165,6 +168,11 @@ const CollectionItemContent = memo((props: { collection: Collection; item: Colle
       ? name.title + (fansub ? ' 字幕组:' + fansub : '')
       : name.text!;
   const [collections, setCollections] = useAtom(collectionsAtom);
+  const display = useMemo(() => resolveFilterOptions(item), [item]);
+
+  // --- Open state
+  const [tipOpen, setTipOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const copyRSS = useCallback(async () => {
     const feedURL = generateFeed(new URLSearchParams(item.searchParams));
@@ -255,89 +263,199 @@ const CollectionItemContent = memo((props: { collection: Collection; item: Colle
   // --- Rename title
 
   return (
-    <NavLink
-      to={`/resources/1${item.searchParams}`}
-      key={item.searchParams}
-      className="collection-item hover:bg-layer-subtle-overlay rounded-md text-base-800 text-xs"
-      onClick={(e) => {
-        if (editable) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      }}
-    >
-      <span
-        ref={titleRef}
-        className="collection-item-title"
-        contentEditable={editable ? 'plaintext-only' : 'false'}
-        onKeyDown={handleTitleKeydown}
-        onBlur={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          commitRename();
+    <TooltipProvider>
+      <Tooltip
+        open={tipOpen}
+        onOpenChange={(flag) => {
+          if (menuOpen || editable) {
+            setTipOpen(false);
+          } else {
+            setTipOpen(flag);
+          }
         }}
       >
-        {title}
-      </span>
-      <DropdownMenu modal={false}>
-        <DropdownMenuTrigger
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        >
-          <span
-            className="collection-item-op hidden absolute h-full top-0 right-[4px] py-[1px] justify-center items-center"
+        <TooltipTrigger asChild>
+          <NavLink
+            to={`/resources/1${item.searchParams}`}
+            key={item.searchParams}
+            className="collection-item hover:bg-layer-subtle-overlay rounded-md text-base-800 text-xs"
             onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }}
-          >
-            <span className="w-[16px] items-center justify-center hover:bg-layer-mask rounded-md">
-              <span className="i-ant-design:more-outlined inline-block relative top-[1px] left-[-1px] font-bold text-base"></span>
-            </span>
-          </span>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-        >
-          <DropdownMenuItem asChild>
-            <NavLink
-              to={`/resources/1${item.searchParams}`}
-              target="_blank"
-              onClick={(e) => {
+              if (editable) {
                 e.preventDefault();
                 e.stopPropagation();
-                window.open(`/resources/1${item.searchParams}`)
+              }
+            }}
+          >
+            <span
+              ref={titleRef}
+              className="collection-item-title"
+              contentEditable={editable ? 'plaintext-only' : 'false'}
+              suppressContentEditableWarning={true}
+              onKeyDown={handleTitleKeydown}
+              onBlur={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                commitRename();
               }}
             >
-              <span className="i-ant-design:link-outlined mr1"></span>
-              <span>在新页面中打开</span>
-            </NavLink>
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => copyRSS()}>
-            <span className="i-carbon-rss mr1"></span>
-            <span>复制 RSS 订阅链接</span>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => startRename()}>
-            <span className="i-ant-design:edit-outlined mr1"></span>
-            <span>重命名</span>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            className="hover:(text-red-500! bg-red-100!)"
-            onClick={() => deleteItem()}
-          >
-            <span className="i-carbon-trash-can mr1"></span>
-            <span>删除</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </NavLink>
+              {title}
+            </span>
+            <DropdownMenu
+              modal={false}
+              open={menuOpen}
+              onOpenChange={(flag) => {
+                setMenuOpen(flag);
+                setTipOpen(false);
+              }}
+            >
+              <DropdownMenuTrigger
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setTipOpen(false);
+                }}
+              >
+                <span className="collection-item-op hidden absolute h-full top-0 right-[4px] py-[1px] justify-center items-center">
+                  <span className="w-[16px] items-center justify-center hover:bg-layer-mask rounded-md">
+                    <span className="i-ant-design:more-outlined inline-block relative top-[1px] left-[-1px] font-bold text-base"></span>
+                  </span>
+                </span>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
+                <DropdownMenuItem asChild>
+                  <NavLink
+                    to={`/resources/1${item.searchParams}`}
+                    target="_blank"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      window.open(`/resources/1${item.searchParams}`);
+                    }}
+                  >
+                    <span className="i-ant-design:link-outlined mr1"></span>
+                    <span>在新页面中打开</span>
+                  </NavLink>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => copyRSS()}>
+                  <span className="i-carbon-rss mr1"></span>
+                  <span>复制 RSS 订阅链接</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => startRename()}>
+                  <span className="i-ant-design:edit-outlined mr1"></span>
+                  <span>重命名</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="hover:(text-red-500! bg-red-100!)"
+                  onClick={() => deleteItem()}
+                >
+                  <span className="i-carbon-trash-can mr1"></span>
+                  <span>删除</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </NavLink>
+        </TooltipTrigger>
+        <TooltipContent side="right" sideOffset={20} align="start" alignOffset={-10}>
+          <div>
+            {/* <div className='font-bold pb2 mb2 border-b'>搜索条件</div> */}
+            <div className="space-y-1 py-1 text-sm">
+              {item.name && (
+                <div>
+                  <span className="font-bold mr2 select-none">条件别名</span>
+                  <span className={`select-text text-base-600`}>{item.name}</span>
+                </div>
+              )}
+              {display.type && (
+                <div>
+                  <span className="font-bold mr2 select-none">类型</span>
+                  <span className={`select-text text-base-600 ${display.type.color}`}>
+                    {display.type.name}
+                  </span>
+                </div>
+              )}
+              {display.search.length > 0 && (
+                <div>
+                  <span className="font-bold mr2 select-none">标题搜索</span>
+                  {display.search.map((text, idx) => (
+                    <span key={text}>
+                      {idx > 0 && <span className="">|</span>}
+                      <span className="">{text}</span>
+                    </span>
+                  ))}
+                </div>
+              )}
+              {display.include.length > 0 && (
+                <div>
+                  <span className="font-bold mr2 select-none">标题匹配</span>
+                  {display.include.map((text, idx) => (
+                    <span key={text}>
+                      {idx > 0 && <span className="ml2 mr2 text-base-400 select-none">|</span>}
+                      <span className="">{text}</span>
+                    </span>
+                  ))}
+                </div>
+              )}
+              {display.keywords.length > 0 && (
+                <div>
+                  <span className="font-bold mr2 select-none">包含关键词</span>
+                  {display.keywords.map((text, idx) => (
+                    <span key={text}>
+                      {idx > 0 && <span className="ml2 mr2 text-base-400 select-none">&</span>}
+                      <span className="">{text}</span>
+                    </span>
+                  ))}
+                </div>
+              )}
+              {display.exclude.length > 0 && (
+                <div>
+                  <span className="font-bold mr2 select-none">排除关键词</span>
+                  {display.exclude.map((text) => (
+                    <span key={text}>{text}</span>
+                  ))}
+                </div>
+              )}
+              {display.fansubs && display.fansubs.length > 0 && (
+                <div>
+                  <span className="font-bold mr2 select-none">字幕组</span>
+                  {display.fansubs.map((fansub) => (
+                    <a
+                      key={`${fansub.provider}:${fansub.providerId}`}
+                      href={`/resources/1?fansubId=${fansub.providerId}`}
+                      className="select-text text-link mr2"
+                    >
+                      {fansub.name}
+                    </a>
+                  ))}
+                </div>
+              )}
+              {display.after && (
+                <div>
+                  <span className="font-bold mr2 select-none">搜索开始于</span>
+                  <span className="select-text">
+                    {safeFormat(display.after, 'yyyy 年 M 月 d 日 hh:mm')}
+                  </span>
+                </div>
+              )}
+              {display.before && (
+                <div>
+                  <span className="font-bold mr2 select-none">搜索结束于</span>
+                  <span className="select-text">
+                    {safeFormat(display.before, 'yyyy 年 M 月 d 日 hh:mm')}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 });
 
