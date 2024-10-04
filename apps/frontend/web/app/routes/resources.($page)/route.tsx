@@ -59,7 +59,7 @@ export default function ResourcesIndex() {
 
   return (
     <Layout feedURL={feedURL}>
-      <div className="w-full pt-14 pb-24">
+      <div className="w-full pt-12 pb-24">
         {ok ? (
           <>
             <Filter filter={filter as any}></Filter>

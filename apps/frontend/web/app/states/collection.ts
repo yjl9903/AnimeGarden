@@ -3,7 +3,7 @@ import type { ResolvedFilterOptions } from 'animegarden';
 import { atom } from 'jotai';
 import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 
-interface Collection {
+export interface Collection {
   name: string;
   items: (ResolvedFilterOptions & { searchParams: string })[];
 }

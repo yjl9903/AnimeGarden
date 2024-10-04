@@ -54,7 +54,7 @@ export default function Resources() {
 
   return (
     <Layout>
-      <div className="w-full pt-14 pb-24">
+      <div className="w-full pt-12 pb-24">
         <div className="detail mt-4vh w-full space-y-4">
           <h1 className="text-xl font-bold resource-title">
             <span>{detail.title}</span>
