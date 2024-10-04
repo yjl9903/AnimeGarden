@@ -16,6 +16,19 @@
   height: var(--hero-pb, var(--max-hero-pb)) !important;
 }
 
+/* main layout */
+.main {
+  @apply: lg:max-w-[calc(100vw-232px)] lg:w-[80vw] md:w-[46rem] lt-md:w-[95vw];
+}
+
+.main-with-sidebar {
+  @apply: lg:pl-[200px] transition-all;
+}
+
+.main-with-sidebar .main {
+  @apply: lg:w-[80vw] md:w-[46rem] lt-md:w-[95vw];
+}
+
 /* Progress bar */
 #animegarden-progress div {
   position: fixed;

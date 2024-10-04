@@ -1,0 +1,25 @@
+.sidebar-root {
+  --sidebar-pt: calc(
+    var(--hero-pt, var(--max-hero-pt)) + var(--search-height) + var(--hero-pb, var(--max-hero-pb))
+  );
+}
+
+.sidebar-wrapper {
+  height: calc(100vh - var(--sidebar-pt));
+  width: 200px;
+  top: var(--sidebar-pt);
+  left: 0;
+
+  @apply: bg-layer-on z-5;
+  @apply: fixed border-r-1 flex-shrink-0 flex-grow-0;
+}
+
+.sidebar-trigger {
+  top: calc(var(--sidebar-pt) + 16px);
+
+  @apply: fixed bg-layer-on z-5;
+  @apply: select-none cursor-pointer pl1 pr3 py1 rounded-r-xl;
+  @apply: text-base-700;
+  @apply: border-1 border-l-0;
+  @apply: hover:bg-layer-subtle drop-md;
+}

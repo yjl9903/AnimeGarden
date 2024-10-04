@@ -1,10 +1,12 @@
+import clsx from 'clsx';
 import { memo } from 'react';
 import { NavLink } from '@remix-run/react';
+import { useAtomValue } from 'jotai';
 
 import Search from '~/components/Search';
-import { Sidebar } from '~/components/Sidebar';
 
 import { Loading } from './Loading';
+import { isOpenSidebar, Sidebar } from './Sidebar';
 
 export const NavHeight = 68;
 export const MaxPaddingTop = 152;
@@ -13,6 +15,7 @@ export const SearchHeight = NavHeight;
 
 export default function Layout(props: { children?: React.ReactNode; feedURL?: string }) {
   const { feedURL } = props;
+  const isOpen = useAtomValue(isOpenSidebar);
 
   return (
     <div
@@ -24,12 +27,13 @@ export default function Layout(props: { children?: React.ReactNode; feedURL?: st
         className="flex"
         style={{ paddingTop: `${MaxPaddingTop + NavHeight + MaxPaddingBottom}px` }}
       ></div>
-      <div className="w-full flex">
+      <div className={clsx('w-full flex', isOpen && 'main-with-sidebar')}>
         <Sidebar></Sidebar>
-        <div className="flex-auto flex items-center">
+        <div className="flex-auto flex items-center justify-center">
           <div className="main">{props.children}</div>
         </div>
       </div>
+      <div className="border-t border-t-1 py-12"></div>
       <Loading></Loading>
     </div>
   );
@@ -75,7 +79,7 @@ const Header = memo((props: { feedURL?: string }) => {
   const { feedURL } = props;
 
   return (
-    <div className="z-11 bg-[#fef8f7] fixed pt-[1px] flex justify-center items-center w-full h-$nav-height">
+    <div className="z-11 bg-[#fef8f7] fixed pt-[1px] flex justify-center items-center w-full h-$nav-height text-base-500">
       <nav className="main flex gap-1 [&>div]:leading-$nav-height">
         <div className="box-content w-[32px] pl3 lt-sm:pl1 text-2xl text-center font-quicksand font-bold">
           <NavLink to="/">🌸</NavLink>
