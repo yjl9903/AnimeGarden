@@ -7,7 +7,7 @@ import { parseSearchURL, Resource } from 'animegarden';
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
 import { generateFeed } from '~/utils/feed';
-import { fetchResources } from '~/utils';
+import { fetchResources } from '~/utils/fetch';
 
 import { Error } from './Error';
 import { Filter } from './Filter';

@@ -133,6 +133,7 @@ export function Filter(props: Props) {
           {fansubs.map((fansub) => (
             <NavLink
               to={`/resources/1?fansubId=${fansub.providerId}`}
+              key={fansub.provider + '/' + fansub.providerId}
               className="text-4 select-text text-link"
             >
               {fansub.name}

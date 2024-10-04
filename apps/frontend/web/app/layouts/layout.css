@@ -1,6 +1,8 @@
 /* Hero */
 .hero {
-  height: calc(var(--hero-pt, var(--max-hero-pt)) + var(--search-height) + var(--hero-pb, var(--max-hero-pb))) !important;
+  height: calc(
+    var(--hero-pt, var(--max-hero-pt)) + var(--search-height) + var(--hero-pb, var(--max-hero-pb))
+  ) !important;
 }
 
 .hero-top {

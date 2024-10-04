@@ -1,15 +1,34 @@
 import clsx from 'clsx';
-import { memo, useMemo } from 'react';
-import { NavLink, useLocation } from '@remix-run/react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 
+import { findFansub } from 'animegarden';
+
+import { APP_HOST } from '~build/env';
+
+import { generateFeed } from '~/utils/feed';
 import { getActivePageTab } from '~/utils/routes';
 import { collectionsAtom, type Collection } from '~/states/collection';
+import { stringifySearch } from '~/components/Search/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger
+} from '~/components/ui/dropdown-menu';
 
 import './sidebar.css';
 import { isOpenSidebar } from './atom';
-import { stringifySearch } from '~/components/Search/utils';
-import { findFansub } from 'animegarden';
+import { toast } from 'sonner';
 
 type CollectionItem = Collection['items'][0];
 
@@ -95,7 +114,10 @@ const Collection = memo((props: { collection: Collection }) => {
   return (
     <div>
       <div className="px2 flex items-center text-sm">
-        <NavLink to={`/collection/filter/${JSON.stringify(collection)}`} className={'block text-xs text-base-500 text-link-active'}>
+        <NavLink
+          to={`/collection/filter/${JSON.stringify(collection)}`}
+          className={'block text-xs text-base-500 text-link-active'}
+        >
           <span className="select-none">{collection.name}</span>
         </NavLink>
         <div className="flex-auto flex items-center pl-2 pr-1">
@@ -106,15 +128,13 @@ const Collection = memo((props: { collection: Collection }) => {
         </div>
       </div>
       {collection.items.length > 0 ? (
-        <div className="space-y-2">
+        <div className="collection-container space-y-2 overflow-y-auto">
           {collection.items.map((item) => (
-            <NavLink
-              to={`/resources/1${item.searchParams}`}
+            <CollectionItemContent
               key={item.searchParams}
-              className="block mx2 px2 py1 hover:bg-layer-subtle-overlay rounded-md text-base-800 text-xs"
-            >
-              <CollectionName item={item}></CollectionName>
-            </NavLink>
+              collection={collection}
+              item={item}
+            ></CollectionItemContent>
           ))}
         </div>
       ) : (
@@ -133,14 +153,192 @@ const Collection = memo((props: { collection: Collection }) => {
   );
 });
 
-const CollectionName = memo((props: { item: CollectionItem }) => {
+const CollectionItemContent = memo((props: { collection: Collection; item: CollectionItem }) => {
+  const navigate = useNavigate();
+
+  const { collection, item } = props;
   const name = inferCollectionItemName(props.item);
-  if (name.title) {
-    const fansub = name.fansubs?.map(f => f.name).join(' ');
-    return <span>{name.title + (fansub ? ' 字幕组:' + fansub : '')}</span>
-    // return <span>{name.title}</span>
-  }
-  return <span>{name.text}</span>;
+  const fansub = name.fansubs?.map((f) => f.name).join(' ');
+  const title = item.name
+    ? item.name
+    : name.title
+      ? name.title + (fansub ? ' 字幕组:' + fansub : '')
+      : name.text!;
+  const [collections, setCollections] = useAtom(collectionsAtom);
+
+  const copyRSS = useCallback(async () => {
+    const feedURL = generateFeed(new URLSearchParams(item.searchParams));
+    try {
+      if (!feedURL) throw new Error(`RSS URL is empty`);
+      await navigator.clipboard.writeText(`https://${APP_HOST}/feed.xml?filter=${feedURL}`);
+      toast.success('复制 RSS 订阅成功', {
+        dismissible: true,
+        duration: 3000,
+        closeButton: true
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error('复制 RSS 订阅失败', { closeButton: true });
+    }
+  }, [item]);
+
+  const deleteItem = useCallback(() => {
+    const newCollections = collections.map((c) => {
+      if (c.name === collection.name) {
+        const idx = c.items.findIndex((i) => i.searchParams === item.searchParams);
+        if (idx !== -1) {
+          return {
+            ...c,
+            items: [...c.items.slice(0, idx), ...c.items.slice(idx + 1)]
+          };
+        }
+      }
+      return c;
+    });
+    setCollections(newCollections);
+  }, [collection, item, collections, setCollections]);
+
+  // --- Rename title
+  const titleRef = useRef<HTMLSpanElement>(null);
+  const [editable, setEditable] = useState(false);
+  const startRename = useCallback(() => {
+    setEditable(true);
+    setTimeout(() => {
+      const dom = titleRef.current;
+      dom?.focus();
+      // 设置选区
+      const selection = window.getSelection();
+      if (dom && selection) {
+        selection.removeAllRanges();
+        const range = document.createRange();
+        range.selectNodeContents(dom);
+        range.collapse(false);
+        selection.addRange(range);
+      }
+    });
+  }, [titleRef, setEditable]);
+  const commitRename = useCallback(() => {
+    const dom = titleRef.current;
+    if (!dom) return;
+    const newTitle = dom.textContent || title;
+    if (!newTitle) return;
+
+    const newCollections = collections.map((c) => {
+      if (c.name === collection.name) {
+        const idx = c.items.findIndex((i) => i.searchParams === item.searchParams);
+        if (idx !== -1) {
+          return {
+            ...c,
+            items: [
+              ...c.items.slice(0, idx),
+              { ...item, name: newTitle },
+              ...c.items.slice(idx + 1)
+            ]
+          };
+        }
+      }
+      return c;
+    });
+    setEditable(false);
+    setCollections(newCollections);
+  }, [setEditable, collection, item, title, collections, setCollections]);
+  const handleTitleKeydown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        commitRename();
+      }
+    },
+    [commitRename]
+  );
+  // --- Rename title
+
+  return (
+    <NavLink
+      to={`/resources/1${item.searchParams}`}
+      key={item.searchParams}
+      className="collection-item hover:bg-layer-subtle-overlay rounded-md text-base-800 text-xs"
+      onClick={(e) => {
+        if (editable) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      }}
+    >
+      <span
+        ref={titleRef}
+        className="collection-item-title"
+        contentEditable={editable ? 'plaintext-only' : 'false'}
+        onKeyDown={handleTitleKeydown}
+        onBlur={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          commitRename();
+        }}
+      >
+        {title}
+      </span>
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <span
+            className="collection-item-op hidden absolute h-full top-0 right-[4px] py-[1px] justify-center items-center"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            <span className="w-[16px] items-center justify-center hover:bg-layer-mask rounded-md">
+              <span className="i-ant-design:more-outlined inline-block relative top-[1px] left-[-1px] font-bold text-base"></span>
+            </span>
+          </span>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          <DropdownMenuItem asChild>
+            <NavLink
+              to={`/resources/1${item.searchParams}`}
+              target="_blank"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.open(`/resources/1${item.searchParams}`)
+              }}
+            >
+              <span className="i-ant-design:link-outlined mr1"></span>
+              <span>在新页面中打开</span>
+            </NavLink>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => copyRSS()}>
+            <span className="i-carbon-rss mr1"></span>
+            <span>复制 RSS 订阅链接</span>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => startRename()}>
+            <span className="i-ant-design:edit-outlined mr1"></span>
+            <span>重命名</span>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="hover:(text-red-500! bg-red-100!)"
+            onClick={() => deleteItem()}
+          >
+            <span className="i-carbon-trash-can mr1"></span>
+            <span>删除</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </NavLink>
+  );
 });
 
 function inferCollectionItemName(item: CollectionItem) {

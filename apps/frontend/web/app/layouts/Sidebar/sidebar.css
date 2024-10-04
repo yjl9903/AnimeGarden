@@ -23,3 +23,36 @@
   @apply: border-1 border-l-0;
   @apply: hover:bg-layer-subtle drop-md;
 }
+
+.collection-container {
+  height: calc(100vh - var(--sidebar-pt) - 34px - 36px - 36px - 24px - 26px - 16px);
+  @apply: mr-[8px] overflow-y-auto overscroll-none;
+}
+
+.collection-container .collection-item {
+  @apply: flex items-center ml2 pl2 py1 relative;
+}
+
+.collection-container .collection-item:has(.collection-item-title[contenteditable="plaintext-only"]) {
+  @apply: outline outline-zinc-300 mr-[32px];
+}
+
+.collection-container .collection-item-title {
+  @apply: inline-block;
+  @apply: w-full lg:max-w-[167px] lt-lg:max-w-[267px];
+  @apply: outline-none;
+}
+
+.collection-container .collection-item-title[contenteditable="false"] {
+  @apply: truncate;
+}
+
+.collection-container .collection-item:hover .collection-item-title,
+.collection-container .collection-item:has([data-state='open']) .collection-item-title {
+  @apply: lg:max-w-[145px] lt-lg:max-w-[245px];
+}
+
+.collection-container .collection-item:hover .collection-item-op,
+.collection-container .collection-item:has([data-state='open']) .collection-item-op {
+  @apply: flex;
+}
