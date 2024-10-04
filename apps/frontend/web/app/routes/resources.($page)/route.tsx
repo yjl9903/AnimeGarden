@@ -62,7 +62,7 @@ export default function ResourcesIndex() {
       <div className="w-full pt-12 pb-24">
         {ok ? (
           <>
-            <Filter filter={filter as any}></Filter>
+            <Filter filter={filter as any} feedURL={feedURL}></Filter>
             <Resources
               resources={resources}
               page={page}

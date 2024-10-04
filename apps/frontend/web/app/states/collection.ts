@@ -5,7 +5,10 @@ import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 
 export interface Collection {
   name: string;
-  items: (ResolvedFilterOptions & { searchParams: string })[];
+  items: (Omit<ResolvedFilterOptions, 'page' | 'pageSize'> & {
+    name: string;
+    searchParams: string;
+  })[];
 }
 
 export const collectionsAtom = atomWithStorage(
@@ -15,12 +18,10 @@ export const collectionsAtom = atomWithStorage(
 );
 
 export const currentCollectionNameAtom = atomWithStorage(
-  'animegarden:cur_collections',
+  'animegarden:cur_collection_name',
   '收藏夹',
   createJSONStorage<string>(() => localStorage)
 );
-
-export const openCollectionAtom = atom(false);
 
 export const currentCollectionAtom = atom<Collection, [Collection], void>(
   (get) => {

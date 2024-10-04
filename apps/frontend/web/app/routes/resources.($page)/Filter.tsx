@@ -1,10 +1,19 @@
+import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { NavLink, useLocation } from '@remix-run/react';
+import { useCallback } from 'react';
+import { useAtom, useSetAtom } from 'jotai';
 
 import { findFansub, type ResolvedFilterOptions, type ResourceType } from 'animegarden';
 
-import { removeQuote } from '@/utils';
-import { DisplayType, DisplayTypeColor, QueryType } from '@/constant';
-import { NavLink } from '@remix-run/react';
+import { APP_HOST } from '~build/env';
+
+import { removeQuote } from '~/utils';
+import { Button } from '~/components/ui/button';
+import { SearchTooltip } from '~/components/Help';
+import { isOpenSidebar } from '~/layouts/Sidebar/atom';
+import { currentCollectionAtom } from '~/states/collection';
+import { DisplayType, DisplayTypeColor, QueryType } from '~/constant';
 
 export type DisplayResolvedFilterOptions = ReturnType<typeof resolveFilterOptions>;
 
@@ -56,7 +65,52 @@ const safeFormat: typeof format = (...args) => {
 };
 
 export function Filter(props: Props) {
-  const { filter } = props;
+  const { filter, feedURL } = props;
+
+  const location = useLocation();
+  const [collection, setCollection] = useAtom(currentCollectionAtom);
+  const setIsOpen = useSetAtom(isOpenSidebar);
+
+  const copyRSS = useCallback(
+    async (e: React.MouseEvent) => {
+      try {
+        if (!feedURL) throw new Error(`RSS URL is empty`);
+        const query = encodeURI(feedURL.slice(`/feed.xml?filter=`.length));
+        await navigator.clipboard.writeText(`https://${APP_HOST}/feed.xml?filter=${query}`);
+        toast.success('复制 RSS 订阅成功', {
+          dismissible: true,
+          duration: 3000,
+          closeButton: true
+        });
+      } catch (error) {
+        console.error(error);
+        toast.error('复制 RSS 订阅失败', { closeButton: true });
+      }
+    },
+    [feedURL]
+  );
+  const addToCollection = useCallback(() => {
+    if (!filter) return;
+    if (!collection.items.find((i) => i.searchParams === location.search)) {
+      setCollection({
+        name: collection.name,
+        items: [{ ...filter, name: '', searchParams: location.search }, ...collection.items]
+      });
+
+      toast.success(`成功添加到 ${collection.name}`, {
+        dismissible: true,
+        duration: 3000,
+        closeButton: true
+      });
+    } else {
+      toast.warning(`已添加到 ${collection.name}`, {
+        dismissible: true,
+        duration: 3000,
+        closeButton: true
+      });
+    }
+    setIsOpen(true);
+  }, [filter, collection, setCollection]);
 
   if (!filter) return;
 
@@ -150,19 +204,23 @@ export function Filter(props: Props) {
           ))}
         </div>
       )}
-      {/* {
-    (search.length !== 0 || include.length !== 0 || keywords.length !== 0) && (
-      <div className="flex items-center gap4 pt-4">
-        <Button client:load variant="default" size="sm" className="copy-rss" data-rss={feedURL}>
-          复制 RSS 订阅链接
-        </Button>
-        <Button client:load size="sm" className="add-collection">
-          添加到收藏夹
-        </Button>
-        <SearchTooltip />
-      </div>
-    )
-  } */}
+      {(search.length !== 0 || include.length !== 0 || keywords.length !== 0) && (
+        <div className="flex items-center gap4 pt-4">
+          <Button
+            variant="default"
+            size="sm"
+            className="copy-rss"
+            data-rss={feedURL}
+            onClick={(e) => copyRSS(e)}
+          >
+            <span>复制 RSS 订阅链接</span>
+          </Button>
+          <Button size="sm" className="add-collection" onClick={() => addToCollection()}>
+            <span>添加到收藏夹</span>
+          </Button>
+          <SearchTooltip />
+        </div>
+      )}
     </div>
   );
 }

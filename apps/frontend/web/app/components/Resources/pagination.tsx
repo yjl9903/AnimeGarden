@@ -23,18 +23,15 @@ export const Pagination = (props: PaginationProps) => {
     ? [page - 1, page, page + 1, page + 2, page + 3]
     : [page, page + 1, page + 2, page + 3, page + 4];
 
-  if (page === 1 && complete) {
-    // Only one page data, no pagination
-    return;
-  } else {
-    return (
-      <div className="mt-4 flex lt-md:flex-col font-sm">
-        <div className="text-base-400 py-1 pl3 lt-sm:pl1">
-          <span className="mr1 text-sm i-carbon-update-now op-80"></span>
-          <span className="select-none">数据更新于 </span>
-          <span>{formatChinaTime(timestamp)}</span>
-        </div>
-        <div className="flex-auto"></div>
+  return (
+    <div className="mt-4 flex lt-md:flex-col font-sm">
+      <div className="text-base-400 py-1 pl3 lt-sm:pl1">
+        <span className="mr1 text-sm i-carbon-update-now op-80"></span>
+        <span className="select-none">数据更新于 </span>
+        <span>{formatChinaTime(timestamp)}</span>
+      </div>
+      <div className="flex-auto"></div>
+      {page !== 1 && !complete && (
         <div className="flex lt-md:(mt-4 justify-center) items-center gap-2 text-base-500">
           <PageItem
             page={page - 1}
@@ -72,9 +69,9 @@ export const Pagination = (props: PaginationProps) => {
             <span>下一页</span>
           </PageItem>
         </div>
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 };
 
 const PageItem = (

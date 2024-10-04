@@ -9,7 +9,7 @@
   top: var(--sidebar-pt);
   left: 0;
 
-  @apply: w-[200px] lt-lg:w-[400px];
+  @apply: w-[200px] lt-lg:w-[300px];
   @apply: bg-layer-on z-5;
   @apply: fixed border-r-1 flex-shrink-0 flex-grow-0;
 }

@@ -8,6 +8,10 @@ import { collectionsAtom, type Collection } from '~/states/collection';
 
 import './sidebar.css';
 import { isOpenSidebar } from './atom';
+import { stringifySearch } from '~/components/Search/utils';
+import { findFansub } from 'animegarden';
+
+type CollectionItem = Collection['items'][0];
 
 export const Sidebar = memo(() => {
   const [isOpen] = useAtom(isOpenSidebar);
@@ -91,7 +95,7 @@ const Collection = memo((props: { collection: Collection }) => {
   return (
     <div>
       <div className="px2 flex items-center text-sm">
-        <NavLink to={`/collection`} className={'block text-xs text-base-500 text-link-active'}>
+        <NavLink to={`/collection/filter/${JSON.stringify(collection)}`} className={'block text-xs text-base-500 text-link-active'}>
           <span className="select-none">{collection.name}</span>
         </NavLink>
         <div className="flex-auto flex items-center pl-2 pr-1">
@@ -102,16 +106,65 @@ const Collection = memo((props: { collection: Collection }) => {
         </div>
       </div>
       {collection.items.length > 0 ? (
-        <div></div>
+        <div className="space-y-2">
+          {collection.items.map((item) => (
+            <NavLink
+              to={`/resources/1${item.searchParams}`}
+              key={item.searchParams}
+              className="block mx2 px2 py1 hover:bg-layer-subtle-overlay rounded-md text-base-800 text-xs"
+            >
+              <CollectionName item={item}></CollectionName>
+            </NavLink>
+          ))}
+        </div>
       ) : (
-        <NavLink to='/resources/1?search=%5B"败犬女主太多了"%5D&type=動畫' className="h-[80px] px2 flex items-center justify-center text-base-700 text-link-active">
+        <NavLink
+          to='/resources/1?search=%5B"败犬女主太多了"%5D&type=動畫'
+          className="h-[80px] px2 flex items-center justify-center text-base-700 text-link-active"
+        >
           <span className="text-sm">收藏一个搜索条件吧</span>
           <span className="i-carbon:arrow-up-right"></span>
         </NavLink>
       )}
-      <div className="px2 flex items-center">
+      <div className="mt2 px2 flex items-center">
         <div className="h-[1px] w-full bg-zinc-200"></div>
       </div>
     </div>
   );
 });
+
+const CollectionName = memo((props: { item: CollectionItem }) => {
+  const name = inferCollectionItemName(props.item);
+  if (name.title) {
+    const fansub = name.fansubs?.map(f => f.name).join(' ');
+    return <span>{name.title + (fansub ? ' 字幕组:' + fansub : '')}</span>
+    // return <span>{name.title}</span>
+  }
+  return <span>{name.text}</span>;
+});
+
+function inferCollectionItemName(item: CollectionItem) {
+  let title;
+  if (item.search) {
+    title = item.search.join(' ');
+  }
+  if (item.include) {
+    title = item.include.join(' ');
+  }
+  if (title) {
+    const fansubId = item.fansubId;
+    const fansubs = fansubId
+      ? fansubId.map((id) => {
+          const provider = 'dmhy';
+          const fs = findFansub(provider, id);
+          return fs ? fs : { provider, providerId: id, name: id };
+        })
+      : undefined;
+
+    return { title, fansubs };
+  }
+
+  return {
+    text: stringifySearch(new URLSearchParams(item.searchParams))
+  };
+}
