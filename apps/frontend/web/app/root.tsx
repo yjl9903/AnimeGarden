@@ -1,17 +1,20 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 
 import { Provider } from 'jotai';
+import { kebabCase } from 'scule';
 import { useState, useEffect } from 'react';
+
+import global from '~/layouts/global.js?raw';
+import { Toaster } from '~/components/ui/sonner';
+import { MaxPaddingTop, MaxPaddingBottom } from '~/layouts/Layout';
+
+import Tags from '~analytics/scripts';
 
 import 'virtual:uno.css';
 
 import './styles/main.css';
 import './styles/sonner.css';
 import './layouts/layout.css';
-
-import global from '~/layouts/global.js?raw';
-import { Toaster } from '~/components/ui/sonner';
-import { MaxPaddingTop, MaxPaddingBottom } from '~/layouts/Layout';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [isClient, setIsClient] = useState(false);
@@ -34,6 +37,28 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <link rel="mask-icon" color="#FFFFFF" href="/favicon.svg" />
         <meta name="msapplication-TileColor" content="#FFFFFF" />
         <meta name="theme-color" content="#ffffff" />
+        {Tags.slice(0, 1).map((t) =>
+          'src' in t ? (
+            <script
+              suppressHydrationWarning={true}
+              key={t.src}
+              src={t.src}
+              {...Object.fromEntries(
+                Object.entries(t.dataset ?? {}).map(([k, v]) => ['data-' + kebabCase(k), v])
+              )}
+            ></script>
+          ) : (
+            <script
+              suppressHydrationWarning={true}
+              key={t.children}
+              type={t.type}
+              dangerouslySetInnerHTML={{ __html: t.children }}
+              {...Object.fromEntries(
+                Object.entries(t.dataset ?? {}).map(([k, v]) => ['data-' + kebabCase(k), v])
+              )}
+            ></script>
+          )
+        )}
         <Meta />
         <Links />
       </head>

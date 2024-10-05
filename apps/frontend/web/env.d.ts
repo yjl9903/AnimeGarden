@@ -1,4 +1,5 @@
 /// <reference types="unplugin-info/client" />
+/// <reference types="unplugin-analytics/client" />
 
 import type * as CSS from 'csstype';
 
