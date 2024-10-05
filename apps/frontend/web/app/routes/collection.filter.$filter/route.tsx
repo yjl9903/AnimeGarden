@@ -53,8 +53,13 @@ export default function Resources() {
           {collection.items.map((item) => (
             <div key={item.item.searchParams} className={clsx('py-4 rounded-md border drop-md')}>
               <div className="mb-4 px-4 pb-4 border-b">
-                <h2 className="text-xl font-bold text-link-active">
-                  <NavLink to={`/resources/1${item.item.searchParams}`}>{item.item.name}</NavLink>
+                <h2 className="text-xl font-bold">
+                  <NavLink
+                    to={`/resources/1${item.item.searchParams}`}
+                    className="text-link-active"
+                  >
+                    {item.item.name}
+                  </NavLink>
                 </h2>
               </div>
               <div className="px-4">
