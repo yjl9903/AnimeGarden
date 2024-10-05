@@ -112,7 +112,7 @@ const QuickLinks = memo(() => {
       <a
         href="https://animespace.onekuma.cn/animegarden/search"
         className={clsx(className)}
-        target='_blank'
+        target="_blank"
       >
         <span className="i-carbon-help mr1"></span>
         <span>高级搜索帮助</span>
@@ -141,7 +141,7 @@ const Collection = memo((props: { collection: Collection }) => {
         </div>
       </div>
       {collection.items.length > 0 ? (
-        <div className="collection-container pt-1 space-y-2 overflow-y-auto">
+        <div className="collection-container py-[1px] pr-[1px] space-y-2 overflow-y-auto">
           {collection.items.map((item) => (
             <CollectionItemContent
               key={item.searchParams}
@@ -216,23 +216,29 @@ const CollectionItemContent = memo((props: { collection: Collection; item: Colle
 
   // --- Rename title
   const titleRef = useRef<HTMLSpanElement>(null);
+  const focusTime = useRef<number>();
   const [editable, setEditable] = useState(false);
+  const focusTitle = useCallback(() => {
+    focusTime.current = new Date().getTime();
+    const dom = titleRef.current;
+    dom?.focus();
+    // 设置选区
+    const selection = window.getSelection();
+    if (dom && selection) {
+      selection.removeAllRanges();
+      const range = document.createRange();
+      range.selectNodeContents(dom);
+      range.collapse(false);
+      selection.addRange(range);
+    }
+  }, []);
   const startRename = useCallback(() => {
+    if (editable) return;
     setEditable(true);
     setTimeout(() => {
-      const dom = titleRef.current;
-      dom?.focus();
-      // 设置选区
-      const selection = window.getSelection();
-      if (dom && selection) {
-        selection.removeAllRanges();
-        const range = document.createRange();
-        range.selectNodeContents(dom);
-        range.collapse(false);
-        selection.addRange(range);
-      }
+      focusTitle();
     });
-  }, [titleRef, setEditable]);
+  }, [titleRef, editable, setEditable]);
   const commitRename = useCallback(() => {
     const dom = titleRef.current;
     if (!dom) return;
@@ -260,18 +266,33 @@ const CollectionItemContent = memo((props: { collection: Collection; item: Colle
   }, [setEditable, collection, item, title, collections, setCollections]);
   const handleTitleKeydown = useCallback(
     (e: React.KeyboardEvent) => {
+      if (!editable) return;
       if (e.key === 'Enter') {
         e.preventDefault();
         e.stopPropagation();
         commitRename();
       }
     },
-    [commitRename]
+    [editable, commitRename]
+  );
+  const handleTitleBlur = useCallback(
+    (e: React.FocusEvent) => {
+      if (!editable) return;
+      // Blur immediate after focus
+      if (new Date().getTime() - (focusTime.current ?? 0) < 200) {
+        focusTitle();
+        return;
+      }
+      e.preventDefault();
+      e.stopPropagation();
+      commitRename();
+    },
+    [editable, commitRename]
   );
   // --- Rename title
 
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={300} skipDelayDuration={100}>
       <Tooltip
         open={tipOpen}
         onOpenChange={(flag) => {
@@ -300,11 +321,7 @@ const CollectionItemContent = memo((props: { collection: Collection; item: Colle
               contentEditable={editable ? 'plaintext-only' : 'false'}
               suppressContentEditableWarning={true}
               onKeyDown={handleTitleKeydown}
-              onBlur={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                commitRename();
-              }}
+              onBlur={handleTitleBlur}
             >
               {title}
             </span>
@@ -330,6 +347,7 @@ const CollectionItemContent = memo((props: { collection: Collection; item: Colle
                 </span>
               </DropdownMenuTrigger>
               <DropdownMenuContent
+                sideOffset={14}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -343,6 +361,7 @@ const CollectionItemContent = memo((props: { collection: Collection; item: Colle
                       e.preventDefault();
                       e.stopPropagation();
                       window.open(`/resources/1${item.searchParams}`);
+                      console.log('open', e)
                     }}
                   >
                     <span className="i-ant-design:link-outlined mr1"></span>

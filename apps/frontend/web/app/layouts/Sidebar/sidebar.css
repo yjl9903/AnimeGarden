@@ -33,8 +33,9 @@
   @apply: flex items-center ml2 pl2 py1 relative;
 }
 
-.collection-container .collection-item:has(.collection-item-title[contenteditable="plaintext-only"]) {
-  @apply: outline outline-zinc-300 bg-transparent!;
+.collection-container
+  .collection-item:has(.collection-item-title[contenteditable='plaintext-only']) {
+  @apply: outline outline-1 outline-zinc-300 bg-transparent!;
 }
 
 .collection-container .collection-item-title {
@@ -43,7 +44,7 @@
   @apply: outline-none;
 }
 
-.collection-container .collection-item-title[contenteditable="false"] {
+.collection-container .collection-item-title[contenteditable='false'] {
   @apply: truncate;
 }
 
@@ -57,6 +58,8 @@
   @apply: flex;
 }
 
-.collection-container .collection-item:has(.collection-item-title[contenteditable="plaintext-only"]) .collection-item-op {
+.collection-container
+  .collection-item:has(.collection-item-title[contenteditable='plaintext-only'])
+  .collection-item-op {
   @apply: hidden!;
 }
