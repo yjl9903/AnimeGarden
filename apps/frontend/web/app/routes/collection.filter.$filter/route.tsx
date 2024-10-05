@@ -16,7 +16,6 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  console.log(params.filter);
   const filter = safeParseJSON<Collection>(params.filter, { decode: true });
   if (filter.result) {
     const collection = filter.result;

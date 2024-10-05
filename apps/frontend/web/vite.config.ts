@@ -9,7 +9,7 @@ import Analytics from 'unplugin-analytics/vite';
 
 const KEEPSHARE = 'gv78k1oi';
 
-const APP_HOST = process.env.APP_HOST ?? `garden.test.breadio.wiki`;
+const APP_HOST = process.env.APP_HOST ?? `garden.breadio.wiki`;
 
 const SERVER_HOST = process.env.SERVER_HOST;
 const SERVER_PORT = process.env.SERVER_PORT;
