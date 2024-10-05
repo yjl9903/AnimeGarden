@@ -48,6 +48,10 @@
   @apply: truncate;
 }
 
+.collection-container .collection-item-title[contenteditable='plaintext-only'] {
+  @apply: cursor-text;
+}
+
 .collection-container .collection-item:hover .collection-item-title,
 .collection-container .collection-item:has([data-state='open']) .collection-item-title {
   @apply: lg:max-w-[145px] lt-lg:max-w-[245px];

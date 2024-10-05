@@ -220,16 +220,23 @@ export function Filter(props: Props) {
       {(search.length !== 0 || include.length !== 0 || keywords.length !== 0) && (
         <div className="flex items-center gap4 pt-4">
           <Button
-            variant="default"
+            variant="outline"
+            size="sm"
+            className="add-collection"
+            onClick={() => addToCollection()}
+          >
+            <span className="i-carbon:bookmark mr1"></span>
+            <span>添加到收藏夹</span>
+          </Button>
+          <Button
+            variant="outline"
             size="sm"
             className="copy-rss"
             data-rss={feedURL}
             onClick={(e) => copyRSS(e)}
           >
+            <span className="i-carbon-rss mr1"></span>
             <span>复制 RSS 订阅链接</span>
-          </Button>
-          <Button size="sm" className="add-collection" onClick={() => addToCollection()}>
-            <span>添加到收藏夹</span>
           </Button>
           <SearchTooltip />
         </div>
