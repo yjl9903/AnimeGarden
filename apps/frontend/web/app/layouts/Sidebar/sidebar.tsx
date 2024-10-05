@@ -78,15 +78,16 @@ const SidebarContent = memo(() => {
           <span className="i-fluent:panel-right-expand-16-regular w-[1em]"></span>
         </div>
       </div>
-      <QuickLinks></QuickLinks>
+      <QuickLinks collection={collections[0]}></QuickLinks>
       <Collection collection={collections[0]}></Collection>
     </div>
   );
 });
 
-const QuickLinks = memo(() => {
+const QuickLinks = memo((props: { collection: Collection }) => {
+  const { collection } = props;
   const location = useLocation();
-  const match = useMemo(() => getActivePageTab(location), [location]);
+  const match = useMemo(() => getActivePageTab(location, collection), [location, collection]);
   const className =
     'ml1 mr2 px1 py2 cursor-pointer select-none block text-sm text-base-700 flex items-center hover:bg-layer-subtle-overlay rounded-md';
   const activeClassName = 'bg-layer-muted';
@@ -122,7 +123,9 @@ const QuickLinks = memo(() => {
 });
 
 const Collection = memo((props: { collection: Collection }) => {
+  const location = useLocation();
   const { collection } = props;
+  const match = useMemo(() => getActivePageTab(location, collection), [location, collection]);
 
   return (
     <div>
@@ -147,6 +150,7 @@ const Collection = memo((props: { collection: Collection }) => {
               key={item.searchParams}
               collection={collection}
               item={item}
+              active={match === item.searchParams}
             ></CollectionItemContent>
           ))}
         </div>
@@ -166,325 +170,330 @@ const Collection = memo((props: { collection: Collection }) => {
   );
 });
 
-const CollectionItemContent = memo((props: { collection: Collection; item: CollectionItem }) => {
-  const { collection, item } = props;
-  const name = inferCollectionItemName(props.item);
-  const fansub = name.fansubs?.map((f) => f.name).join(' ');
-  const title = item.name
-    ? item.name
-    : name.title
-      ? name.title + (fansub ? ' 字幕组:' + fansub : '')
-      : name.text!;
-  const [collections, setCollections] = useAtom(collectionsAtom);
-  const display = useMemo(() => resolveFilterOptions(item), [item]);
+const CollectionItemContent = memo(
+  (props: { collection: Collection; item: CollectionItem; active: boolean }) => {
+    const { collection, item, active } = props;
+    const name = inferCollectionItemName(props.item);
+    const fansub = name.fansubs?.map((f) => f.name).join(' ');
+    const title = item.name
+      ? item.name
+      : name.title
+        ? name.title + (fansub ? ' 字幕组:' + fansub : '')
+        : name.text!;
+    const [collections, setCollections] = useAtom(collectionsAtom);
+    const display = useMemo(() => resolveFilterOptions(item), [item]);
 
-  // --- Open state
-  const [tipOpen, setTipOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+    // --- Open state
+    const [tipOpen, setTipOpen] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
 
-  const copyRSS = useCallback(async () => {
-    const feedURL = generateFeed(new URLSearchParams(item.searchParams));
-    try {
-      if (!feedURL) throw new Error(`RSS URL is empty`);
-      await navigator.clipboard.writeText(`https://${APP_HOST}/feed.xml?filter=${feedURL}`);
-      toast.success('复制 RSS 订阅成功', {
-        dismissible: true,
-        duration: 3000,
-        closeButton: true
+    const copyRSS = useCallback(async () => {
+      const feedURL = generateFeed(new URLSearchParams(item.searchParams));
+      try {
+        if (!feedURL) throw new Error(`RSS URL is empty`);
+        await navigator.clipboard.writeText(`https://${APP_HOST}/feed.xml?filter=${feedURL}`);
+        toast.success('复制 RSS 订阅成功', {
+          dismissible: true,
+          duration: 3000,
+          closeButton: true
+        });
+      } catch (error) {
+        console.error(error);
+        toast.error('复制 RSS 订阅失败', { closeButton: true });
+      }
+    }, [item]);
+
+    const deleteItem = useCallback(() => {
+      const newCollections = collections.map((c) => {
+        if (c.name === collection.name) {
+          const idx = c.items.findIndex((i) => i.searchParams === item.searchParams);
+          if (idx !== -1) {
+            return {
+              ...c,
+              items: [...c.items.slice(0, idx), ...c.items.slice(idx + 1)]
+            };
+          }
+        }
+        return c;
       });
-    } catch (error) {
-      console.error(error);
-      toast.error('复制 RSS 订阅失败', { closeButton: true });
-    }
-  }, [item]);
+      setCollections(newCollections);
+    }, [collection, item, collections, setCollections]);
 
-  const deleteItem = useCallback(() => {
-    const newCollections = collections.map((c) => {
-      if (c.name === collection.name) {
-        const idx = c.items.findIndex((i) => i.searchParams === item.searchParams);
-        if (idx !== -1) {
-          return {
-            ...c,
-            items: [...c.items.slice(0, idx), ...c.items.slice(idx + 1)]
-          };
-        }
+    // --- Rename title
+    const titleRef = useRef<HTMLSpanElement>(null);
+    const focusTime = useRef<number>();
+    const [editable, setEditable] = useState(false);
+    const focusTitle = useCallback(() => {
+      focusTime.current = new Date().getTime();
+      const dom = titleRef.current;
+      dom?.focus();
+      // 设置选区
+      const selection = window.getSelection();
+      if (dom && selection) {
+        selection.removeAllRanges();
+        const range = document.createRange();
+        range.selectNodeContents(dom);
+        range.collapse(false);
+        selection.addRange(range);
       }
-      return c;
-    });
-    setCollections(newCollections);
-  }, [collection, item, collections, setCollections]);
+    }, []);
+    const startRename = useCallback(() => {
+      if (editable) return;
+      setEditable(true);
+      setTimeout(() => {
+        focusTitle();
+      });
+    }, [titleRef, editable, setEditable]);
+    const commitRename = useCallback(() => {
+      const dom = titleRef.current;
+      if (!dom) return;
+      const newTitle = dom.textContent || title;
+      if (!newTitle) return;
 
-  // --- Rename title
-  const titleRef = useRef<HTMLSpanElement>(null);
-  const focusTime = useRef<number>();
-  const [editable, setEditable] = useState(false);
-  const focusTitle = useCallback(() => {
-    focusTime.current = new Date().getTime();
-    const dom = titleRef.current;
-    dom?.focus();
-    // 设置选区
-    const selection = window.getSelection();
-    if (dom && selection) {
-      selection.removeAllRanges();
-      const range = document.createRange();
-      range.selectNodeContents(dom);
-      range.collapse(false);
-      selection.addRange(range);
-    }
-  }, []);
-  const startRename = useCallback(() => {
-    if (editable) return;
-    setEditable(true);
-    setTimeout(() => {
-      focusTitle();
-    });
-  }, [titleRef, editable, setEditable]);
-  const commitRename = useCallback(() => {
-    const dom = titleRef.current;
-    if (!dom) return;
-    const newTitle = dom.textContent || title;
-    if (!newTitle) return;
-
-    const newCollections = collections.map((c) => {
-      if (c.name === collection.name) {
-        const idx = c.items.findIndex((i) => i.searchParams === item.searchParams);
-        if (idx !== -1) {
-          return {
-            ...c,
-            items: [
-              ...c.items.slice(0, idx),
-              { ...item, name: newTitle },
-              ...c.items.slice(idx + 1)
-            ]
-          };
+      const newCollections = collections.map((c) => {
+        if (c.name === collection.name) {
+          const idx = c.items.findIndex((i) => i.searchParams === item.searchParams);
+          if (idx !== -1) {
+            return {
+              ...c,
+              items: [
+                ...c.items.slice(0, idx),
+                { ...item, name: newTitle },
+                ...c.items.slice(idx + 1)
+              ]
+            };
+          }
         }
-      }
-      return c;
-    });
-    setEditable(false);
-    setCollections(newCollections);
-  }, [setEditable, collection, item, title, collections, setCollections]);
-  const handleTitleKeydown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (!editable) return;
-      if (e.key === 'Enter') {
+        return c;
+      });
+      setEditable(false);
+      setCollections(newCollections);
+    }, [setEditable, collection, item, title, collections, setCollections]);
+    const handleTitleKeydown = useCallback(
+      (e: React.KeyboardEvent) => {
+        if (!editable) return;
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          e.stopPropagation();
+          commitRename();
+        }
+      },
+      [editable, commitRename]
+    );
+    const handleTitleBlur = useCallback(
+      (e: React.FocusEvent) => {
+        if (!editable) return;
+        // Blur immediate after focus
+        if (new Date().getTime() - (focusTime.current ?? 0) < 200) {
+          focusTitle();
+          return;
+        }
         e.preventDefault();
         e.stopPropagation();
         commitRename();
-      }
-    },
-    [editable, commitRename]
-  );
-  const handleTitleBlur = useCallback(
-    (e: React.FocusEvent) => {
-      if (!editable) return;
-      // Blur immediate after focus
-      if (new Date().getTime() - (focusTime.current ?? 0) < 200) {
-        focusTitle();
-        return;
-      }
-      e.preventDefault();
-      e.stopPropagation();
-      commitRename();
-    },
-    [editable, commitRename]
-  );
-  // --- Rename title
+      },
+      [editable, commitRename]
+    );
+    // --- Rename title
 
-  return (
-    <TooltipProvider delayDuration={300} skipDelayDuration={100}>
-      <Tooltip
-        open={tipOpen}
-        onOpenChange={(flag) => {
-          if (menuOpen || editable) {
-            setTipOpen(false);
-          } else {
-            setTipOpen(flag);
-          }
-        }}
-      >
-        <TooltipTrigger asChild>
-          <NavLink
-            to={`/resources/1${item.searchParams}`}
-            key={item.searchParams}
-            className="collection-item hover:bg-layer-subtle-overlay rounded-md text-base-800 text-xs"
-            onClick={(e) => {
-              if (editable) {
-                e.preventDefault();
-                e.stopPropagation();
-              }
-            }}
-          >
-            <span
-              ref={titleRef}
-              className="collection-item-title"
-              contentEditable={editable ? 'plaintext-only' : 'false'}
-              suppressContentEditableWarning={true}
-              onKeyDown={handleTitleKeydown}
-              onBlur={handleTitleBlur}
-            >
-              {title}
-            </span>
-            <DropdownMenu
-              modal={false}
-              open={menuOpen}
-              onOpenChange={(flag) => {
-                setMenuOpen(flag);
-                setTipOpen(false);
-              }}
-            >
-              <DropdownMenuTrigger
-                onClick={(e) => {
+    return (
+      <TooltipProvider delayDuration={300} skipDelayDuration={100}>
+        <Tooltip
+          open={tipOpen}
+          onOpenChange={(flag) => {
+            if (menuOpen || editable) {
+              setTipOpen(false);
+            } else {
+              setTipOpen(flag);
+            }
+          }}
+        >
+          <TooltipTrigger asChild>
+            <NavLink
+              to={`/resources/1${item.searchParams}`}
+              key={item.searchParams}
+              className={clsx(
+                'collection-item hover:bg-layer-subtle-overlay rounded-md text-base-800 text-xs',
+                active && 'bg-layer-muted'
+              )}
+              onClick={(e) => {
+                if (editable) {
                   e.preventDefault();
                   e.stopPropagation();
+                }
+              }}
+            >
+              <span
+                ref={titleRef}
+                className="collection-item-title"
+                contentEditable={editable ? 'plaintext-only' : 'false'}
+                suppressContentEditableWarning={true}
+                onKeyDown={handleTitleKeydown}
+                onBlur={handleTitleBlur}
+              >
+                {title}
+              </span>
+              <DropdownMenu
+                modal={false}
+                open={menuOpen}
+                onOpenChange={(flag) => {
+                  setMenuOpen(flag);
                   setTipOpen(false);
                 }}
               >
-                <span className="collection-item-op hidden absolute h-full top-0 right-[4px] py-[1px] justify-center items-center">
-                  <span className="w-[16px] items-center justify-center hover:bg-layer-mask rounded-md">
-                    <span className="i-ant-design:more-outlined inline-block relative top-[1px] left-[-1px] font-bold text-base"></span>
-                  </span>
-                </span>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                sideOffset={14}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                }}
-              >
-                <DropdownMenuItem asChild>
-                  <NavLink
-                    to={`/resources/1${item.searchParams}`}
-                    target="_blank"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      window.open(`/resources/1${item.searchParams}`);
-                      console.log('open', e);
-                    }}
-                  >
-                    <span className="i-ant-design:link-outlined mr1"></span>
-                    <span>在新页面中打开</span>
-                  </NavLink>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => copyRSS()}>
-                  <span className="i-carbon-rss mr1"></span>
-                  <span>复制 RSS 订阅链接</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => startRename()}>
-                  <span className="i-ant-design:edit-outlined mr1"></span>
-                  <span>重命名</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="hover:(text-red-500! bg-red-100!)"
-                  onClick={() => deleteItem()}
+                <DropdownMenuTrigger
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setTipOpen(false);
+                  }}
                 >
-                  <span className="i-carbon-trash-can mr1"></span>
-                  <span>删除</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </NavLink>
-        </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={20} align="start" alignOffset={-10}>
-          <div>
-            {/* <div className='font-bold pb2 mb2 border-b'>搜索条件</div> */}
-            <div className="space-y-1 py-1 text-sm">
-              {item.name && (
-                <div>
-                  <span className="font-bold mr2 select-none">条件别名</span>
-                  <span className={`select-text text-base-600`}>{item.name}</span>
-                </div>
-              )}
-              {display.type && (
-                <div>
-                  <span className="font-bold mr2 select-none">类型</span>
-                  <span className={`select-text text-base-600 ${display.type.color}`}>
-                    {display.type.name}
+                  <span className="collection-item-op hidden absolute h-full top-0 right-[4px] py-[1px] justify-center items-center">
+                    <span className="w-[16px] items-center justify-center hover:bg-layer-mask rounded-md">
+                      <span className="i-ant-design:more-outlined inline-block relative top-[1px] left-[-1px] font-bold text-base"></span>
+                    </span>
                   </span>
-                </div>
-              )}
-              {display.search.length > 0 && (
-                <div>
-                  <span className="font-bold mr2 select-none">标题搜索</span>
-                  {display.search.map((text, idx) => (
-                    <span key={text}>
-                      {idx > 0 && <span className="">|</span>}
-                      <span className="">{text}</span>
-                    </span>
-                  ))}
-                </div>
-              )}
-              {display.include.length > 0 && (
-                <div>
-                  <span className="font-bold mr2 select-none">标题匹配</span>
-                  {display.include.map((text, idx) => (
-                    <span key={text}>
-                      {idx > 0 && <span className="ml2 mr2 text-base-400 select-none">|</span>}
-                      <span className="">{text}</span>
-                    </span>
-                  ))}
-                </div>
-              )}
-              {display.keywords.length > 0 && (
-                <div>
-                  <span className="font-bold mr2 select-none">包含关键词</span>
-                  {display.keywords.map((text, idx) => (
-                    <span key={text}>
-                      {idx > 0 && <span className="ml2 mr2 text-base-400 select-none">&</span>}
-                      <span className="">{text}</span>
-                    </span>
-                  ))}
-                </div>
-              )}
-              {display.exclude.length > 0 && (
-                <div>
-                  <span className="font-bold mr2 select-none">排除关键词</span>
-                  {display.exclude.map((text) => (
-                    <span key={text}>{text}</span>
-                  ))}
-                </div>
-              )}
-              {display.fansubs && display.fansubs.length > 0 && (
-                <div>
-                  <span className="font-bold mr2 select-none">字幕组</span>
-                  {display.fansubs.map((fansub) => (
-                    <a
-                      key={`${fansub.provider}:${fansub.providerId}`}
-                      href={`/resources/1?fansubId=${fansub.providerId}`}
-                      className="select-text text-link mr2"
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  sideOffset={14}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                >
+                  <DropdownMenuItem asChild>
+                    <NavLink
+                      to={`/resources/1${item.searchParams}`}
+                      target="_blank"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.open(`/resources/1${item.searchParams}`);
+                        console.log('open', e);
+                      }}
                     >
-                      {fansub.name}
-                    </a>
-                  ))}
-                </div>
-              )}
-              {display.after && (
-                <div>
-                  <span className="font-bold mr2 select-none">搜索开始于</span>
-                  <span className="select-text">
-                    {safeFormat(display.after, 'yyyy 年 M 月 d 日 hh:mm')}
-                  </span>
-                </div>
-              )}
-              {display.before && (
-                <div>
-                  <span className="font-bold mr2 select-none">搜索结束于</span>
-                  <span className="select-text">
-                    {safeFormat(display.before, 'yyyy 年 M 月 d 日 hh:mm')}
-                  </span>
-                </div>
-              )}
+                      <span className="i-ant-design:link-outlined mr1"></span>
+                      <span>在新页面中打开</span>
+                    </NavLink>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => copyRSS()}>
+                    <span className="i-carbon-rss mr1"></span>
+                    <span>复制 RSS 订阅链接</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => startRename()}>
+                    <span className="i-ant-design:edit-outlined mr1"></span>
+                    <span>重命名</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="hover:(text-red-500! bg-red-100!)"
+                    onClick={() => deleteItem()}
+                  >
+                    <span className="i-carbon-trash-can mr1"></span>
+                    <span>删除</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </NavLink>
+          </TooltipTrigger>
+          <TooltipContent side="right" sideOffset={20} align="start" alignOffset={-10}>
+            <div>
+              {/* <div className='font-bold pb2 mb2 border-b'>搜索条件</div> */}
+              <div className="space-y-1 py-1 text-sm">
+                {item.name && (
+                  <div>
+                    <span className="font-bold mr2 select-none">条件别名</span>
+                    <span className={`select-text text-base-600`}>{item.name}</span>
+                  </div>
+                )}
+                {display.type && (
+                  <div>
+                    <span className="font-bold mr2 select-none">类型</span>
+                    <span className={`select-text text-base-600 ${display.type.color}`}>
+                      {display.type.name}
+                    </span>
+                  </div>
+                )}
+                {display.search.length > 0 && (
+                  <div>
+                    <span className="font-bold mr2 select-none">标题搜索</span>
+                    {display.search.map((text, idx) => (
+                      <span key={text}>
+                        {idx > 0 && <span className="">|</span>}
+                        <span className="">{text}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {display.include.length > 0 && (
+                  <div>
+                    <span className="font-bold mr2 select-none">标题匹配</span>
+                    {display.include.map((text, idx) => (
+                      <span key={text}>
+                        {idx > 0 && <span className="ml2 mr2 text-base-400 select-none">|</span>}
+                        <span className="">{text}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {display.keywords.length > 0 && (
+                  <div>
+                    <span className="font-bold mr2 select-none">包含关键词</span>
+                    {display.keywords.map((text, idx) => (
+                      <span key={text}>
+                        {idx > 0 && <span className="ml2 mr2 text-base-400 select-none">&</span>}
+                        <span className="">{text}</span>
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {display.exclude.length > 0 && (
+                  <div>
+                    <span className="font-bold mr2 select-none">排除关键词</span>
+                    {display.exclude.map((text) => (
+                      <span key={text}>{text}</span>
+                    ))}
+                  </div>
+                )}
+                {display.fansubs && display.fansubs.length > 0 && (
+                  <div>
+                    <span className="font-bold mr2 select-none">字幕组</span>
+                    {display.fansubs.map((fansub) => (
+                      <a
+                        key={`${fansub.provider}:${fansub.providerId}`}
+                        href={`/resources/1?fansubId=${fansub.providerId}`}
+                        className="select-text text-link mr2"
+                      >
+                        {fansub.name}
+                      </a>
+                    ))}
+                  </div>
+                )}
+                {display.after && (
+                  <div>
+                    <span className="font-bold mr2 select-none">搜索开始于</span>
+                    <span className="select-text">
+                      {safeFormat(display.after, 'yyyy 年 M 月 d 日 hh:mm')}
+                    </span>
+                  </div>
+                )}
+                {display.before && (
+                  <div>
+                    <span className="font-bold mr2 select-none">搜索结束于</span>
+                    <span className="select-text">
+                      {safeFormat(display.before, 'yyyy 年 M 月 d 日 hh:mm')}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
-  );
-});
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+);
 
 function inferCollectionItemName(item: CollectionItem) {
   let title;
