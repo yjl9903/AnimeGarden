@@ -141,9 +141,13 @@ const Collection = memo((props: { collection: Collection }) => {
         <div className="flex-auto flex items-center pl-2 pr-1">
           <div className="h-[1px] w-full bg-zinc-200"></div>
         </div>
-        <div className="h-[26px] w-auto rounded-md px-1 flex items-center cursor-pointer hover:bg-layer-muted">
+        <a
+          className="block h-[26px] w-auto rounded-md px-1 flex items-center cursor-pointer hover:bg-layer-muted"
+          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`看看动画`)}&url=${encodeURIComponent(`https://${APP_HOST}/collection/filter/${base64URLencode(JSON.stringify(collection))}`)}`}
+          target="_blank"
+        >
           <span className="i-carbon-share"></span>
-        </div>
+        </a>
       </div>
       {collection.items.length > 0 ? (
         <div className="collection-container py-[1px] pr-[1px] space-y-2 overflow-y-auto">
