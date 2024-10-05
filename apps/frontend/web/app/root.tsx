@@ -19,12 +19,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setIsClient(true);
   });
-  
+
   return (
     <html lang="zh-CN">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+        />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="alternate icon" sizes="64x64" href="/favicon.ico" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
@@ -40,7 +43,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         suppressHydrationWarning={true}
       >
         <div
-          className={"page-overlay absolute w-full h-full bg-white z-9999 " + (isClient ? 'hidden' : '')}
+          className={
+            'page-overlay absolute w-full h-full bg-white z-9999 ' + (isClient ? 'hidden' : '')
+          }
           suppressHydrationWarning={true}
         ></div>
         <Provider>{children}</Provider>

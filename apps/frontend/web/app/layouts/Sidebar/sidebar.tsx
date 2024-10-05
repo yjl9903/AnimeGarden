@@ -68,7 +68,7 @@ const SidebarContent = memo(() => {
       <div className="mt-[8px] px2 py1 text-base-700 select-none font-500 font-quicksand flex items-center">
         <div className="block">
           <span className="i-carbon:bookmark text-sm relative top-[2px] mr1"></span>
-          <span className="text-sm">收藏夹</span>
+          <span className="text-sm font-bold">收藏夹</span>
         </div>
         <div className="flex-auto"></div>
         <div
@@ -361,7 +361,7 @@ const CollectionItemContent = memo((props: { collection: Collection; item: Colle
                       e.preventDefault();
                       e.stopPropagation();
                       window.open(`/resources/1${item.searchParams}`);
-                      console.log('open', e)
+                      console.log('open', e);
                     }}
                   >
                     <span className="i-ant-design:link-outlined mr1"></span>
