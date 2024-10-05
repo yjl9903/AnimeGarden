@@ -3,8 +3,7 @@ import { memo } from 'react';
 import { NavLink } from '@remix-run/react';
 import { useAtomValue } from 'jotai';
 
-import Search from '~/components/Search';
-
+import Search from './Search';
 import { Loading } from './Loading';
 import { isOpenSidebar, Sidebar } from './Sidebar';
 

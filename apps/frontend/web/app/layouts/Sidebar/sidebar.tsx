@@ -10,7 +10,6 @@ import { APP_HOST } from '~build/env';
 import { generateFeed } from '~/utils/feed';
 import { getActivePageTab } from '~/utils/routes';
 import { collectionsAtom, type Collection } from '~/states/collection';
-import { stringifySearch } from '~/components/Search/utils';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +18,8 @@ import {
   DropdownMenuTrigger
 } from '~/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/ui/tooltip';
+
+import { stringifySearch } from '../Search/utils';
 
 import './sidebar.css';
 import { isOpenSidebar } from './atom';
