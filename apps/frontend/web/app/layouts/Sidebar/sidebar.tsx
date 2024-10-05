@@ -1,7 +1,9 @@
 import clsx from 'clsx';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
-import { NavLink, useLocation, useNavigate } from '@remix-run/react';
+import { toast } from 'sonner';
+import { format } from 'date-fns';
+import { NavLink, useLocation } from '@remix-run/react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 
 import { findFansub } from 'animegarden';
 
@@ -18,14 +20,13 @@ import {
   DropdownMenuTrigger
 } from '~/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/ui/tooltip';
+import { resolveFilterOptions } from '~/routes/resources.($page)/Filter';
+import { base64URLencode } from '~/utils/json';
 
 import { stringifySearch } from '../Search/utils';
 
 import './sidebar.css';
 import { isOpenSidebar } from './atom';
-import { toast } from 'sonner';
-import { resolveFilterOptions } from '@/routes/resources.($page)/Filter';
-import { format } from 'date-fns';
 
 type CollectionItem = Collection['items'][0];
 
@@ -132,7 +133,7 @@ const Collection = memo((props: { collection: Collection }) => {
     <div>
       <div className="px2 flex items-center text-sm">
         <NavLink
-          to={`/collection/filter/${JSON.stringify(collection)}`}
+          to={`/collection/filter/${base64URLencode(JSON.stringify(collection))}`}
           className={'block text-xs text-base-500 text-link-active'}
         >
           <span className="select-none">{collection.name}</span>

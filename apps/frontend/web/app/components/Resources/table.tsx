@@ -11,7 +11,7 @@ import { Tag } from './tag';
 import { formatChinaTime } from './utils';
 import { Pagination, PaginationProps } from './pagination';
 
-export interface ResourcesTableProps extends PaginationProps {
+export interface ResourcesTableProps extends Partial<PaginationProps> {
   className?: string;
 
   resources: Resource<{ tracker: true }>[];
@@ -66,13 +66,15 @@ export default function ResourcesTable(props: ResourcesTableProps) {
           </tbody>
         </table>
       </div>
-      <Pagination
-        timestamp={props.timestamp}
-        page={props.page}
-        link={props.link}
-        navigate={props.navigate}
-        complete={props.complete ?? false}
-      />
+      {props.page !== undefined && (
+        <Pagination
+          timestamp={props.timestamp}
+          page={props.page}
+          link={props.link}
+          navigate={props.navigate}
+          complete={props.complete ?? false}
+        />
+      )}
     </div>
   );
 }

@@ -4,7 +4,8 @@ import {
   type ProviderType,
   type FilterOptions,
   fetchResources as rawFetchResources,
-  fetchResourceDetail as rawFetchResourceDetail
+  fetchResourceDetail as rawFetchResourceDetail,
+  FetchResourcesOptions
 } from 'animegarden';
 
 export const baseURL = import.meta.env.SSR
@@ -39,13 +40,17 @@ export async function fetchResources(
   } = {}
 ) {
   try {
-    return await rawFetchResources(options.fetch ?? ofetch, {
-      baseURL,
-      tracker: true,
-      signal: options.signal,
-      retry: options.retry,
-      ...filter
-    });
+    const resp = await rawFetchResources<FetchResourcesOptions & { tracker: true }>(
+      options.fetch ?? ofetch,
+      {
+        baseURL,
+        signal: options.signal,
+        retry: options.retry,
+        ...filter,
+        tracker: true
+      } as const
+    );
+    return resp;
   } catch (error) {
     console.error(error);
     return {

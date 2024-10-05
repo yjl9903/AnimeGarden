@@ -8,7 +8,7 @@ export interface PaginationProps {
 
   complete: boolean;
 
-  timestamp: Date;
+  timestamp?: Date;
 
   link?: (page: number) => string;
 
@@ -25,11 +25,13 @@ export const Pagination = (props: PaginationProps) => {
 
   return (
     <div className="mt-4 flex lt-md:flex-col font-sm">
-      <div className="text-base-400 py-1 pl3 lt-sm:pl1">
-        <span className="mr1 text-sm i-carbon-update-now op-80"></span>
-        <span className="select-none">数据更新于 </span>
-        <span>{formatChinaTime(timestamp)}</span>
-      </div>
+      {timestamp && (
+        <div className="text-base-400 py-1 pl3 lt-sm:pl1">
+          <span className="mr1 text-sm i-carbon-update-now op-80"></span>
+          <span className="select-none">数据更新于 </span>
+          <span>{formatChinaTime(timestamp)}</span>
+        </div>
+      )}
       <div className="flex-auto"></div>
       {(page !== 1 || !complete) && (
         <div className="flex lt-md:(mt-4 justify-center) items-center gap-2 text-base-500">
