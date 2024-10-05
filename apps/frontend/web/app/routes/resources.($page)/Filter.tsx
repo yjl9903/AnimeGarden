@@ -117,7 +117,19 @@ export function Filter(props: Props) {
   const { type, fansubs, after, before, search, include, keywords, exclude } =
     resolveFilterOptions(filter);
 
-  if (!(type || search.length > 0 || include.length > 0 || before || after || fansubs)) return;
+  if (
+    !(
+      type ||
+      search.length > 0 ||
+      include.length > 0 ||
+      keywords.length > 0 ||
+      before ||
+      after ||
+      fansubs
+    )
+  ) {
+    return;
+  }
 
   return (
     <div className="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
