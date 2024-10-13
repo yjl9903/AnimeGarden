@@ -1,0 +1,312 @@
+.vercel {
+  --font-sans: 'Inter', --apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
+    Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  --app-bg: var(--gray1);
+  --cmdk-shadow: 0 16px 70px rgba(0, 0, 0, 0.2);
+  --lowContrast: #fff;
+  --highContrast: #000;
+  --gray1: #fcfcfc;
+  --gray2: #f8f8f8;
+  --gray3: #f3f3f3;
+  --gray4: #ededed;
+  --gray5: #e8e8e8;
+  --gray6: #e2e2e2;
+  --gray7: #dbdbdb;
+  --gray8: #c7c7c7;
+  --gray9: #8f8f8f;
+  --gray10: #858585;
+  --gray11: #6f6f6f;
+  --gray12: #171717;
+  --grayA1: rgba(0, 0, 0, 0.012);
+  --grayA2: rgba(0, 0, 0, 0.027);
+  --grayA3: rgba(0, 0, 0, 0.047);
+  --grayA4: rgba(0, 0, 0, 0.071);
+  --grayA5: rgba(0, 0, 0, 0.09);
+  --grayA6: rgba(0, 0, 0, 0.114);
+  --grayA7: rgba(0, 0, 0, 0.141);
+  --grayA8: rgba(0, 0, 0, 0.22);
+  --grayA9: rgba(0, 0, 0, 0.439);
+  --grayA10: rgba(0, 0, 0, 0.478);
+  --grayA11: rgba(0, 0, 0, 0.565);
+  --grayA12: rgba(0, 0, 0, 0.91);
+  --blue1: #fbfdff;
+  --blue2: #f5faff;
+  --blue3: #edf6ff;
+  --blue4: #e1f0ff;
+  --blue5: #cee7fe;
+  --blue6: #b7d9f8;
+  --blue7: #96c7f2;
+  --blue8: #5eb0ef;
+  --blue9: #0091ff;
+  --blue10: #0081f1;
+  --blue11: #006adc;
+  --blue12: #00254d;
+}
+
+.dark .vercel {
+  --app-bg: var(--gray1);
+  --lowContrast: #000;
+  --highContrast: #fff;
+  --gray1: #161616;
+  --gray2: #1c1c1c;
+  --gray3: #232323;
+  --gray4: #282828;
+  --gray5: #2e2e2e;
+  --gray6: #343434;
+  --gray7: #3e3e3e;
+  --gray8: #505050;
+  --gray9: #707070;
+  --gray10: #7e7e7e;
+  --gray11: #a0a0a0;
+  --gray12: #ededed;
+  --grayA1: hsla(0, 0%, 100%, 0);
+  --grayA2: hsla(0, 0%, 100%, 0.026);
+  --grayA3: hsla(0, 0%, 100%, 0.056);
+  --grayA4: hsla(0, 0%, 100%, 0.077);
+  --grayA5: hsla(0, 0%, 100%, 0.103);
+  --grayA6: hsla(0, 0%, 100%, 0.129);
+  --grayA7: hsla(0, 0%, 100%, 0.172);
+  --grayA8: hsla(0, 0%, 100%, 0.249);
+  --grayA9: hsla(0, 0%, 100%, 0.386);
+  --grayA10: hsla(0, 0%, 100%, 0.446);
+  --grayA11: hsla(0, 0%, 100%, 0.592);
+  --grayA12: hsla(0, 0%, 100%, 0.923);
+  --blue1: #0f1720;
+  --blue2: #0f1b2d;
+  --blue3: #10243e;
+  --blue4: #102a4c;
+  --blue5: #0f3058;
+  --blue6: #0d3868;
+  --blue7: #0a4481;
+  --blue8: #0954a5;
+  --blue9: #0091ff;
+  --blue10: #369eff;
+  --blue11: #52a9ff;
+  --blue12: #eaf6ff;
+}
+
+.vercel [cmdk-root] {
+  position: absolute;
+  top: 0;
+
+  width: 100%;
+  padding: 6px 6px;
+
+  background: #fff;
+  border-radius: 8px;
+  /* overflow: hidden; */
+  font-family: var(--font-sans);
+  border: 1px solid var(--gray6);
+  /* box-shadow: var(--cmdk-shadow); */
+  transition: transform 0.1s ease;
+}
+
+.dark .vercel [cmdk-root] {
+  background: hsla(0, 0%, 9%, 0.7);
+}
+
+.vercel [cmdk-input] {
+  font-family: var(--font-sans);
+  border: none;
+  width: 100%;
+  font-size: 16px;
+  padding: 2px 2px 4px;
+  outline: none;
+  background: var(--bg);
+  color: var(--gray12);
+  border-bottom: 1px solid var(--gray6);
+  margin-bottom: 0px;
+  border-radius: 0;
+}
+
+.vercel [cmdk-input].searched {
+  margin-bottom: 16px;
+}
+
+.vercel [cmdk-input]::-moz-placeholder {
+  color: var(--gray9);
+}
+
+.vercel [cmdk-input]:-ms-input-placeholder {
+  color: var(--gray9);
+}
+
+.vercel [cmdk-input]::placeholder {
+  color: var(--gray9);
+}
+
+.vercel [cmdk-vercel-badge] {
+  height: 20px;
+  background: var(--grayA3);
+  display: inline-flex;
+  padding: 0 8px;
+  font-size: 12px;
+  color: var(--grayA11);
+  border-radius: 4px;
+  margin: 4px 0 4px 4px;
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+.vercel [cmdk-loading] {
+  cursor: auto !important;
+}
+
+.vercel [cmdk-item],
+.vercel [cmdk-vercel-badge],
+.vercel [cmdk-loading] {
+  align-items: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.vercel [cmdk-item],
+.vercel [cmdk-loading] {
+  content-visibility: auto;
+  cursor: pointer;
+  height: 48px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: flex;
+  gap: 8px;
+  padding: 0 16px;
+  color: var(--gray11);
+  will-change: background, color;
+  transition: all 0.15s ease;
+  transition-property: none;
+}
+
+.vercel [cmdk-item][data-selected='true'] {
+  background: var(--grayA3);
+  color: var(--gray12);
+}
+
+.vercel [cmdk-item][data-disabled='true'] {
+  color: var(--gray8);
+  cursor: not-allowed;
+}
+
+.vercel [cmdk-item]:active {
+  transition-property: background;
+  background: var(--gray4);
+}
+
+.vercel [cmdk-item] + [cmdk-item] {
+  margin-top: 4px;
+}
+
+.vercel [cmdk-item] svg {
+  width: 18px;
+  height: 18px;
+}
+
+.vercel [cmdk-list] {
+  /* position: absolute; */
+  height: min(330px, var(--cmdk-list-height));
+  max-height: 400px;
+  overflow: auto;
+  -ms-scroll-chaining: none;
+  overscroll-behavior: contain;
+  transition: 0.1s ease;
+  transition-property: height;
+}
+
+.vercel [cmdk-vercel-shortcuts] {
+  display: flex;
+  margin-left: auto;
+  gap: 8px;
+}
+
+.vercel [cmdk-vercel-shortcuts] kbd {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  min-width: 20px;
+  padding: 4px;
+  height: 20px;
+  border-radius: 4px;
+  color: var(--gray11);
+  background: var(--gray4);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.vercel [cmdk-separator] {
+  height: 1px;
+  width: 100%;
+  background: var(--gray5);
+  margin: 4px 0;
+}
+
+.vercel :not([hidden]) + [cmdk-group] {
+  margin-top: 8px;
+}
+
+.vercel [cmdk-group-heading] {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-size: 12px;
+  padding: 0 8px;
+  margin-bottom: 8px;
+}
+
+.vercel [cmdk-empty],
+.vercel [cmdk-group-heading] {
+  color: var(--gray11);
+  display: flex;
+  align-items: center;
+}
+
+.vercel [cmdk-empty] {
+  font-size: 14px;
+  justify-content: center;
+  height: 48px;
+  white-space: pre-wrap;
+}
+
+/* Loading animation from https://loading.io/css/ */
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 1em;
+  height: 1em;
+  margin-right: 0.25em;
+}
+
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  border: 0.2em solid var(--gray11);
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: var(--gray11) transparent transparent transparent;
+}
+
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
