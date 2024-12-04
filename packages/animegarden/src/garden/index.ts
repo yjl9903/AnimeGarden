@@ -38,7 +38,7 @@ interface FetchResourcesResult<T extends FetchResourcesOptions> {
 export async function fetchResources<T extends FetchResourcesOptions = FetchResourcesOptions>(
   fetch: (request: RequestInfo, init?: RequestInit) => Promise<Response>,
   options: T = {} as T
-): Promise<FetchResourcesResult<FetchResourcesOptions>> {
+): Promise<FetchResourcesResult<T>> {
   const { baseURL = DefaultBaseURL, retry = 0 } = options;
 
   const url = stringifySearchURL(baseURL, options);

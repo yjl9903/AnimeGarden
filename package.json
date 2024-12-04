@@ -9,10 +9,11 @@
     "build:app": "turbo run build --filter @animegarden/app...",
     "build:cli": "turbo run build --filter @animegarden/cli...",
     "build:server": "turbo run build --filter @animegarden/server...",
+    "build:web": "turbo run build --filter @animegarden/web...",
     "build:worker": "turbo run build --filter @animegarden/worker...",
     "dev": "turbo run dev --parallel",
-    "dev:app": "pnpm -C packages/app dev",
     "dev:server": "pnpm -C packages/server dev",
+    "dev:web": "pnpm -C apps/frontend/web dev",
     "dev:worker": "pnpm -C packages/worker dev",
     "format": "turbo run format --parallel",
     "release": "bumpp package.json packages/*/package.json --commit --push --tag && pnpm -r publish --access public",
@@ -48,5 +49,10 @@
   "packageManager": "pnpm@9.10.0",
   "engines": {
     "node": ">=v18.16.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@remix-run/react@2.12.1": "patches/@remix-run__react@2.12.1.patch"
+    }
   }
 }
