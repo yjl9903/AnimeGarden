@@ -9,7 +9,7 @@ export function getRuntimeEnv(locals: App.Locals): Env | undefined {
   return locals?.runtime?.env;
 }
 
-const USE_KEEPSHARE = false
+const USE_KEEPSHARE = true;
 
 export function getPikPakUrlChecker(magnet: string) {
   const url = magnet.split('&')[0];
