@@ -23,10 +23,10 @@
         "./packages/scraper/src/index.ts"
       ],
       "@animegarden/database": [
-        "./packages/database/src/index.ts"
+        "./apps/backend/database/src/index.ts"
       ],
-      "@animegarden/cli": [
-        "./packages/cli/src/index.ts"
+      "@animegarden/manager": [
+        "./apps/backend/manager/src/index.ts"
       ]
     }
   },
