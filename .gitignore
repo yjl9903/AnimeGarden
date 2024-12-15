@@ -3,10 +3,12 @@ node_modules
 
 # Env
 .env
-.env*
+.env.*
+!.env.local
 
 # Build output
 .turbo
+.animegarden
 chunk
 output
 dist
