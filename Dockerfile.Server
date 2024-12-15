@@ -17,6 +17,7 @@ COPY ./packages/database/package.json ./packages/database/
 COPY ./packages/scraper/package.json ./packages/scraper/
 COPY ./packages/server/package.json ./packages/server/
 COPY ./packages/worker/package.json ./packages/worker/
+COPY ./apps/frontend/web/package.json ./apps/frontend/web/
 
 RUN pnpm install
 
