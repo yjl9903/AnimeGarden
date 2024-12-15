@@ -8,7 +8,7 @@ WORKDIR /animegarden
 
 RUN npm i -g pnpm
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json .npmrc .node-version ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json .npmrc .node-version patches ./
 COPY ./packages/animegarden/package.json ./packages/animegarden/
 COPY ./packages/app/package.json ./packages/app/
 COPY ./packages/cli/package.json ./packages/cli/
