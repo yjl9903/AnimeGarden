@@ -47,13 +47,13 @@ export class Tokenizer {
       const char = this.text[this.cursor];
       if (Tokenizer.wrappers.has(char)) {
         if (cur) {
-          this.tokens.push(new Token(cur));
+          this.tokens.push(new Token(cur.trim()));
           cur = '';
         }
         left = char;
         right = Tokenizer.wrappers.get(char)!;
       } else if (left && right && char === right) {
-        this.tokens.push(new Token(cur, left, right));
+        this.tokens.push(new Token(cur.trim(), left, right));
         cur = '';
         left = undefined;
         right = undefined;
@@ -63,8 +63,8 @@ export class Tokenizer {
       this.cursor += 1;
     }
     if (cur) {
-      this.tokens.push(new Token(cur));
+      this.tokens.push(new Token(cur.trim()));
     }
-    return this.tokens;
+    return this.tokens.filter((t) => t.text);
   }
 }
