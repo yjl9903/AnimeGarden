@@ -1,4 +1,7 @@
-export interface ParseOptions {}
+export interface ParseOptions {
+  // Pass fansub to use specify parser variants
+  fansub?: string;
+}
 
 export interface ParseResult {
   title: string;
