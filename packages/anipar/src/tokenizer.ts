@@ -20,51 +20,43 @@ export class Token {
   }
 }
 
-export class Tokenizer {
-  public static wrappers = new Map([
-    ['[', ']'],
-    ['【', '】'],
-    ['(', ')'],
-    ['（', '）'],
-    ['{', '}']
-  ]);
+const Wrappers = new Map([
+  ['[', ']'],
+  ['【', '】'],
+  ['(', ')'],
+  ['（', '）'],
+  ['{', '}']
+]);
 
-  private readonly text: string;
+export function tokenize(text: string) {
+  const tokens: Token[] = [];
 
-  private readonly tokens: Token[] = [];
-
-  private cursor = 0;
-
-  public constructor(text: string) {
-    this.text = text;
-  }
-
-  public run() {
-    let cur = '';
-    let left: string | undefined = undefined;
-    let right: string | undefined = undefined;
-    while (this.cursor < this.text.length) {
-      const char = this.text[this.cursor];
-      if (Tokenizer.wrappers.has(char)) {
-        if (cur) {
-          this.tokens.push(new Token(cur.trim()));
-          cur = '';
-        }
-        left = char;
-        right = Tokenizer.wrappers.get(char)!;
-      } else if (left && right && char === right) {
-        this.tokens.push(new Token(cur.trim(), left, right));
+  let cursor = 0;
+  let cur = '';
+  let left: string | undefined = undefined;
+  let right: string | undefined = undefined;
+  while (cursor < text.length) {
+    const char = text[cursor];
+    if (Wrappers.has(char)) {
+      if (cur) {
+        tokens.push(new Token(cur.trim()));
         cur = '';
-        left = undefined;
-        right = undefined;
-      } else {
-        cur += char;
       }
-      this.cursor += 1;
+      left = char;
+      right = Wrappers.get(char)!;
+    } else if (left && right && char === right) {
+      tokens.push(new Token(cur.trim(), left, right));
+      cur = '';
+      left = undefined;
+      right = undefined;
+    } else {
+      cur += char;
     }
-    if (cur) {
-      this.tokens.push(new Token(cur.trim()));
-    }
-    return this.tokens.filter((t) => t.text);
+    cursor += 1;
   }
+  if (cur) {
+    tokens.push(new Token(cur.trim()));
+  }
+
+  return tokens.filter((t) => t.text);
 }
