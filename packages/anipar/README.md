@@ -1,6 +1,6 @@
 # anipar
 
-[![version](https://img.shields.io/npm/v/@animegarden/scraper?label=@animegarden/scraper)](https://www.npmjs.com/package/@animegarden/scraper)
+[![version](https://img.shields.io/npm/v/anipar?label=anipar)](https://www.npmjs.com/package/anipar)
 [![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://garden.breadio.wiki)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
