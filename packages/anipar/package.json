@@ -1,10 +1,11 @@
 {
-  "name": "@animegarden/scraper",
+  "name": "anipar",
   "version": "0.3.0",
-  "description": "A scraper for AnimeGarden.",
+  "description": "Anime title Parser built for AnimeGarden.",
   "keywords": [
     "dmhy",
     "scraper",
+    "anitomy",
     "animegarden",
     "animespace"
   ],
@@ -40,19 +41,11 @@
     "test:ci": "vitest --run",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "animegarden": "workspace:*",
-    "cheerio": "1.0.0",
-    "jsdom": "^25.0.0",
-    "parse-torrent": "^11.0.17",
-    "rss-parser": "^3.13.0",
-    "zod": "^3.23.8"
+  "engines": {
+    "node": ">=v18.16.0"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
     "@types/parse-torrent": "^5.8.7"
-  },
-  "engines": {
-    "node": ">=v18.16.0"
   }
 }

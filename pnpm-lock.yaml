@@ -361,6 +361,15 @@ importers:
         specifier: ^3.23.8
         version: 3.23.8
 
+  packages/anipar:
+    devDependencies:
+      '@types/jsdom':
+        specifier: ^21.1.7
+        version: 21.1.7
+      '@types/parse-torrent':
+        specifier: ^5.8.7
+        version: 5.8.7
+
   packages/app:
     dependencies:
       '@astrojs/cloudflare':
@@ -12644,7 +12653,7 @@ snapshots:
 
   '@types/jsdom@21.1.7':
     dependencies:
-      '@types/node': 20.16.3
+      '@types/node': 20.16.5
       '@types/tough-cookie': 4.0.5
       parse5: 7.1.2
 
