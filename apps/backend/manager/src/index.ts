@@ -1,3 +1,1 @@
-export * from './commands';
-
-export { ufetch } from './utils';
+export * from './legacy';
