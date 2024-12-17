@@ -46,10 +46,10 @@ export interface ParseResult {
   // Release version
   version?: string;
 
-  // Video language
+  // Subtitles language
   language?: string;
 
-  // Subtitles including language, e.g. 简日内嵌
+  // Subtitles format
   subtitles?: string;
 
   // Source, e.g. WEB-DL
@@ -66,9 +66,6 @@ export interface ParseResult {
 
   // Video file info
   file?: FileInfo;
-
-  // Other tags
-  tags: string[];
 }
 
 export interface EpisodeInfo {
