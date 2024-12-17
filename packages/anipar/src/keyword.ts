@@ -13,15 +13,21 @@ const AudioTerm = new Set([
   // Audio codec
   'AAC',
   'AACX2',
+  'AAC×2',
   'AACX3',
+  'AAC×3',
   'AACX4',
+  'AAC×4',
   'AC3',
   'EAC3',
   'E-AC-3',
   'FLAC',
   'FLACX2',
+  'FLAC×2',
   'FLACX3',
+  'FLAC×3',
   'FLACX4',
+  'FLAC×4',
   'LOSSLESS',
   'MP3',
   'OGG',
@@ -86,7 +92,9 @@ const VideoResolution = new Set([
   '1080P',
   '2160P',
   '1280X720',
+  '1280×720',
   '1920X1080',
+  '1920×1080',
   '2K',
   '4K'
 ]);
@@ -236,7 +244,7 @@ function matchSingleTag(ctx: Context, text: string) {
     ctx.update('platform', text);
     return true;
   }
-  if (Type.has(text)) {
+  if (Type.has(upper)) {
     ctx.update('type', text);
     return true;
   }

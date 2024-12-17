@@ -1,6 +1,7 @@
 import { Context } from './context';
 
 const WrappedEpisodeRE = /^(?<ep1>\d+)(?:\.(\d))?(?:[vV](\d+))?$|^第(?<ep2>\d+)[集话]$/;
+const WrappedMovieRE = /^Movie [vV](\d+)$/;
 
 const EpisodesRange1 = /^(\d+)-(\d+)(?:\s*.*)$/;
 const EpisodesRange2 = /^全(\d+)集$/;
@@ -27,6 +28,18 @@ export function parseWrappedEpisodes(ctx: Context) {
           ctx.right -= 1;
           return true;
         }
+      }
+    }
+    {
+      // [Movie] / [Movie v2]
+      const res = WrappedMovieRE.exec(text);
+      if (res) {
+        if (res[1] && !Number.isNaN(res[1])) {
+          ctx.update('version', +res[1]);
+        }
+        ctx.update('type', 'Movie');
+        ctx.right -= 1;
+        return true;
       }
     }
 
