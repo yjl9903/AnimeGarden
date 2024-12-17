@@ -1,8 +1,8 @@
 import { Context } from './context';
 
-const WrappedEpisodeRE = /^(?<ep1>\d+)(?:\.(\d))?(?:[vV](\d+))?|第(?<ep2>\d+)[集话]$/;
+const WrappedEpisodeRE = /^(?<ep1>\d+)(?:\.(\d))?(?:[vV](\d+))?$|^第(?<ep2>\d+)[集话]$/;
 
-const EpisodesRange1 = /^(\d+)-(\d+)$/;
+const EpisodesRange1 = /^(\d+)-(\d+)(?:\s*.*)$/;
 const EpisodesRange2 = /^全(\d+)集$/;
 
 export function parseWrappedEpisodes(ctx: Context) {

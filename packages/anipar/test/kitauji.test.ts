@@ -31,7 +31,30 @@ const titles = [
   '[北宇治字幕组] 青之箱 / 青春之箱 / 青春盒子 / 蓝箱 / Ao no Hako / Blue Box [10][WebRip][HEVC_AAC][简繁日内封]',
   '[北宇治字幕组] 青春之箱 / 青春盒子 / Ao no Hako / Blue Box [10][WebRip][HEVC_AAC][繁日內嵌]',
   '[北宇治字幕组] 青之箱 / 蓝箱 / Ao no Hako / Blue Box [10][WebRip][HEVC_AAC][简日内嵌]',
-  '[北宇治字幕组] 青之箱 / 青春之箱 / 青春盒子 / 蓝箱 / Ao no Hako / Blue Box [09][WebRip][HEVC_AAC][简繁日内封]  '
+  '[北宇治字幕组] 青之箱 / 青春之箱 / 青春盒子 / 蓝箱 / Ao no Hako / Blue Box [09][WebRip][HEVC_AAC][简繁日内封]',
+  '[北宇治字幕组] 偶像大師 閃耀色彩 第二季 / THE IDOLM@STER SHINY COLORS S2 [07][WebRip][HEVC_AAC][繁日內嵌]',
+  '[北宇治字幕组] 偶像大師 閃耀色彩 第二季 / THE IDOLM@STER SHINY COLORS S2 [08][WebRip][HEVC_AAC][繁日內嵌]',
+  '[北宇治字幕组] 偶像大师 闪耀色彩 第二季 / THE IDOLM@STER SHINY COLORS S2 [08][WebRip][HEVC_AAC][简日内嵌]',
+  '[北宇治字幕组] 偶像大师 闪耀色彩 第二季 / THE IDOLM@STER SHINY COLORS S2 [08][WebRip][HEVC_AAC][简繁日内封]',
+  '[北宇治字幕组] 地。-关于地球的运动- / Chi. Chikyuu no Undou ni Tsuite [09][WebRip][HEVC_AAC][简繁日内封]',
+  '[北宇治字幕组] 地。-关于地球的运动- / Chi. Chikyuu no Undou ni Tsuite [08][WebRip][HEVC_AAC][简日内嵌]',
+  '[北宇治字幕组] 地。-关于地球的运动- / Chi. Chikyuu no Undou ni Tsuite [09][WebRip][HEVC_AAC][简日内嵌]',
+  '[北宇治字幕组] 地。-關於地球的運動- / Chi. Chikyuu no Undou ni Tsuite [09][WebRip][HEVC_AAC][繁日內嵌]',
+  '[北宇治字幕组] 地。-关于地球的运动- / Chi. Chikyuu no Undou ni Tsuite [08][WebRip][HEVC_AAC][简繁日内封]',
+  '[北宇治字幕组] 地。-關於地球的運動- / Chi. Chikyuu no Undou ni Tsuite [08][WebRip][HEVC_AAC][繁日內嵌]',
+  '[北宇治字幕组] 偶像大师 闪耀色彩 第二季 / THE IDOLM@STER SHINY COLORS S2 [07][WebRip][HEVC_AAC][简日内嵌]',
+  '[北宇治字幕组] 偶像大师 闪耀色彩 第二季 / THE IDOLM@STER SHINY COLORS S2 [07][WebRip][HEVC_AAC][简繁日内封]',
+  '[北宇治字幕组] 地。-关于地球的运动- / Chi. Chikyuu no Undou ni Tsuite [07][WebRip][HEVC_AAC][简繁日内封]',
+  '[北宇治字幕组] 地。-關於地球的運動- / Chi. Chikyuu no Undou ni Tsuite [07][WebRip][HEVC_AAC][繁日內嵌]',
+  '[北宇治字幕组] 地。-关于地球的运动- / Chi. Chikyuu no Undou ni Tsuite [07][WebRip][HEVC_AAC][简日内嵌]',
+  '[北宇治字幕组] 青之箱 / 蓝箱 / Ao no Hako / Blue Box [08][WebRip][HEVC_AAC][简日内嵌]',
+  '[北宇治字幕组] 青春之箱 / 青春盒子 / Ao no Hako / Blue Box [08][WebRip][HEVC_AAC][繁日內嵌]',
+  '[北宇治字幕组] 青之箱 / 青春之箱 / 青春盒子 / 蓝箱 / Ao no Hako / Blue Box [08][WebRip][HEVC_AAC][简繁日内封]',
+  '[北宇治字幕组] 偶像大师 闪耀色彩 第二季 / THE IDOLM@STER SHINY COLORS S2 [06][WebRip][HEVC_AAC][简日内嵌]',
+  '[北宇治字幕组] 偶像大师 闪耀色彩 第二季 / THE IDOLM@STER SHINY COLORS S2 [06][WebRip][HEVC_AAC][繁日内嵌]',
+  '[北宇治字幕组] 漩渦 / Uzumaki [01-04 修正合集][WebRip][HEVC_AAC][繁日內嵌]',
+  '[北宇治字幕组] 漩涡 / Uzumaki [01-04 修正合集][WebRip][HEVC_AAC][简日内嵌]',
+  '[北宇治字幕组] 漩涡 / Uzumaki [01-04 修正合集][WebRip][HEVC_AAC][简繁日内封]'
 ];
 
 describe('Kitauji', () => {
