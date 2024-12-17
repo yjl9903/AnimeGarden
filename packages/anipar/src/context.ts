@@ -23,7 +23,6 @@ export class Context {
     this.right = tokens.length - 1;
     this.tags = [];
     this.result = {};
-    this.result.tags = this.tags;
   }
 
   public update<K1 extends keyof ParseResult>(key: K1, value: ParseResult[K1]) {
@@ -61,6 +60,7 @@ export class Context {
   }
 
   public validate(): ParseResult | undefined {
+    this.result.tags = this.tags;
     return this.result as ParseResult;
   }
 }

@@ -80,7 +80,16 @@ const VideoTerm = new Set([
   'SD'
 ]);
 
-const VideoResolution = new Set(['480P', '720P', '1080P', '1280X720', '1920X1080', '2K', '4K']);
+const VideoResolution = new Set([
+  '480P',
+  '720P',
+  '1080P',
+  '2160P',
+  '1280X720',
+  '1920X1080',
+  '2K',
+  '4K'
+]);
 
 const Source = new Set([
   'BD',
@@ -109,7 +118,7 @@ const Source = new Set([
   'WEB-MKV'
 ]);
 
-const Platfrom = new Set(['Baha', 'B-Global', 'ABEMA', 'CR', 'ViuTV', 'AMZN']);
+const Platfrom = new Set(['Baha', 'B-Global', 'ABEMA', 'CR', 'ViuTV', 'AMZN', 'ADN']);
 
 const Type = new Set([
   'GEKIJOUBAN',

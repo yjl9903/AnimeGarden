@@ -20,6 +20,11 @@ export class Token {
     return new Token(text, this.left, this.right);
   }
 
+  public trim() {
+    const text = this.text.trim();
+    return new Token(text, this.left, this.right);
+  }
+
   public toString() {
     return `${this.left ?? ''}${this.text}${this.right ?? ''}`;
   }
