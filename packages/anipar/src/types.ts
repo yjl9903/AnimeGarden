@@ -44,7 +44,7 @@ export interface ParseResult {
   };
 
   // Release version
-  version?: string;
+  version?: number;
 
   // Subtitles language
   language?: string;
@@ -66,6 +66,9 @@ export interface ParseResult {
 
   // Video file info
   file?: FileInfo;
+
+  // Tags
+  tags: string[];
 }
 
 export interface EpisodeInfo {

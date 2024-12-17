@@ -15,6 +15,11 @@ export class Token {
     return this.left && this.right;
   }
 
+  public slice(start: number, end?: number) {
+    const text = this.text.slice(start, end);
+    return new Token(text, this.left, this.right);
+  }
+
   public toString() {
     return `${this.left ?? ''}${this.text}${this.right ?? ''}`;
   }

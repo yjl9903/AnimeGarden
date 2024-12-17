@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { tokenize } from '../src/tokenizer';
 
 describe('tokenizer', () => {
-  it('should handle ani', () => {
+  it('should handle ANi', () => {
     expect(
       tokenize('[ANi] Seirei Gensouki / 精靈幻想記 2 - 11 [1080P][Baha][WEB-DL][AAC AVC][CHT][MP4]')
     ).toMatchInlineSnapshot(`
@@ -98,6 +98,42 @@ describe('tokenizer', () => {
     `);
   });
 
+  it('should handle 千夏字幕组', () => {
+    expect(
+      tokenize(
+        '[千夏字幕組][大室家 dear friends_Ohmuro-ke - dear friends][劇場版][BDRip_1080p_AVC][繁體]'
+      )
+    ).toMatchInlineSnapshot(`
+      [
+        Token {
+          "left": "[",
+          "right": "]",
+          "text": "千夏字幕組",
+        },
+        Token {
+          "left": "[",
+          "right": "]",
+          "text": "大室家 dear friends_Ohmuro-ke - dear friends",
+        },
+        Token {
+          "left": "[",
+          "right": "]",
+          "text": "劇場版",
+        },
+        Token {
+          "left": "[",
+          "right": "]",
+          "text": "BDRip_1080p_AVC",
+        },
+        Token {
+          "left": "[",
+          "right": "]",
+          "text": "繁體",
+        },
+      ]
+    `);
+  });
+
   it('should handle inner wrapper', () => {
     expect(
       tokenize(
@@ -154,42 +190,6 @@ describe('tokenizer', () => {
           "left": "[",
           "right": "]",
           "text": "AVC AAC",
-        },
-      ]
-    `);
-  });
-
-  it('should handle 千夏字幕组', () => {
-    expect(
-      tokenize(
-        '[千夏字幕組][大室家 dear friends_Ohmuro-ke - dear friends][劇場版][BDRip_1080p_AVC][繁體]'
-      )
-    ).toMatchInlineSnapshot(`
-      [
-        Token {
-          "left": "[",
-          "right": "]",
-          "text": "千夏字幕組",
-        },
-        Token {
-          "left": "[",
-          "right": "]",
-          "text": "大室家 dear friends_Ohmuro-ke - dear friends",
-        },
-        Token {
-          "left": "[",
-          "right": "]",
-          "text": "劇場版",
-        },
-        Token {
-          "left": "[",
-          "right": "]",
-          "text": "BDRip_1080p_AVC",
-        },
-        Token {
-          "left": "[",
-          "right": "]",
-          "text": "繁體",
         },
       ]
     `);
