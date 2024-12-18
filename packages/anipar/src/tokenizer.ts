@@ -30,13 +30,15 @@ export class Token {
   }
 }
 
-const Wrappers = new Map([
+export const Wrappers = new Map([
   ['[', ']'],
   ['【', '】'],
   ['(', ')'],
   ['（', '）'],
   ['{', '}']
 ]);
+
+export const RevWrappers = new Map([...Wrappers.entries()].map(([k, v]) => [v, k]));
 
 export function tokenize(text: string) {
   const tokens: Token[] = [];

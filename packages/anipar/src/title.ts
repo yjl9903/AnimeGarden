@@ -1,5 +1,5 @@
 import { Context } from './context';
-import { parseSuffixEpisodes } from './episodes';
+import { parseSuffixEpisodes, parseSuffixSeasonOrEpisodes } from './episodes';
 
 export function parseFansub(ctx: Context) {
   // [fansub] title
@@ -52,13 +52,32 @@ export function parseTitle(ctx: Context) {
   const text = rest.length === 1 ? rest[0].text : rest.map((t) => t.toString()).join('');
 
   // 2.1. Try split multiple titles
-  const parts = text.split('/').map((t) => t.trim());
-  if (parts.length > 1) {
-    const [title, ...other] = parts;
-    ctx.update('title', title);
-    ctx.update('titles', other);
-  } else {
-    ctx.update('title', text);
+  let found = false;
+  const separators = ['/', '\\'];
+  for (const sep of separators) {
+    const parts = text
+      .split(sep)
+      .map((t) => t.trim())
+      .filter((t) => !!t);
+    if (parts.length > 1) {
+      const [title, ...other] = parts;
+
+      const trimmedTitle = parseSuffixSeasonOrEpisodes(ctx, title);
+      const trimmedOther = other
+        .map((t) => parseSuffixSeasonOrEpisodes(ctx, t))
+        .map((t) => t.trim())
+        .filter((t) => !!t);
+
+      ctx.update('title', trimmedTitle);
+      if (trimmedOther.length > 0) {
+        ctx.update('titles', trimmedOther);
+      }
+      found = true;
+    }
+  }
+  if (!found) {
+    const trimmed = parseSuffixSeasonOrEpisodes(ctx, text);
+    ctx.update('title', trimmed);
   }
 
   return true;

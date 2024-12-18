@@ -39,6 +39,7 @@
     "format": "prettier --write src/**/*.ts test/**/*.ts",
     "test": "vitest",
     "test:ci": "vitest --run",
+    "start:fetch": "tsx scripts/fetch.ts",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

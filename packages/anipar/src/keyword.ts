@@ -1,4 +1,5 @@
 import { Context } from './context';
+import { matchEpiodes } from './episodes';
 
 const AudioTerm = new Set([
   // Audio channels
@@ -163,7 +164,17 @@ const Type = new Set([
   'PV'
 ]);
 
-const Languages = new Set(['CHS', 'CHT', '简体', '国语中字', '繁體', '简日双语', '繁日雙語']);
+const Languages = new Set([
+  'CHS',
+  'CHT',
+  '简体',
+  '国语中字',
+  '繁體',
+  '中日双语',
+  '简日双语',
+  '繁日雙語',
+  'HOY粵語'
+]);
 
 const Subtitles = new Set([
   'ASS',
@@ -197,6 +208,9 @@ const LanguagePrefixes = [
 const SubtitlesSufixes = new Set(['内嵌', '內嵌', '内封', '内封字幕', '外挂', '外掛']);
 
 const LanguageSubtitles = new Map([
+  ['简体字幕', ['简体', undefined]],
+  ['繁體字幕', ['繁體', undefined]],
+  ['TVB粵語', ['粵語', undefined]],
   ['粵日雙語+內封繁體中文字幕', ['繁體中文', '內封字幕']],
   ['粵語+無對白字幕', [undefined, '無對白字幕']]
 ]);
@@ -266,6 +280,13 @@ function matchSingleTag(ctx: Context, text: string) {
       return true;
     }
     // Combine language and subtitles
+    const combined = LanguageSubtitles.get(text);
+    if (combined) {
+      ctx.update('language', combined[0]);
+      ctx.update('subtitles', combined[1]);
+      return true;
+    }
+    // Auto combined
     for (const prefix of LanguagePrefixes) {
       if (text.startsWith(prefix)) {
         const language = prefix;
@@ -276,12 +297,6 @@ function matchSingleTag(ctx: Context, text: string) {
           return true;
         }
       }
-    }
-    const combined = LanguageSubtitles.get(text);
-    if (combined) {
-      ctx.update('language', combined[0]);
-      ctx.update('subtitles', combined[1]);
-      return true;
     }
   }
 
@@ -363,6 +378,9 @@ function parseTag(ctx: Context, cursor: number) {
     if (matchSingleTag(ctx, text)) {
       return true;
     }
+    if (matchEpiodes(ctx, text)) {
+      return true;
+    }
     if (matchMultipleTags(ctx, text)) {
       return true;
     }
@@ -371,11 +389,17 @@ function parseTag(ctx: Context, cursor: number) {
 }
 
 export function parseRightTags(ctx: Context) {
-  while (ctx.right > ctx.left) {
+  while (ctx.left < ctx.right) {
     if (parseTag(ctx, ctx.right)) {
       ctx.right -= 1;
     } else {
-      break;
+      // Unknown tags
+      if (ctx.left + 1 < ctx.right && ctx.right === ctx.tokens.length - 1) {
+        ctx.tags.push(ctx.tokens[ctx.right].text);
+        ctx.right -= 1;
+      } else {
+        break;
+      }
     }
   }
 }
