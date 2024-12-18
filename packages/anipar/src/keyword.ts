@@ -93,6 +93,7 @@ const VideoResolution = new Set([
   '720P',
   '1080P',
   '2160P',
+  'AI2160p',
   '1280X720',
   '1280×720',
   '1920X816',
@@ -108,6 +109,7 @@ const Source = new Set([
   'BDRIP',
   'BLURAY',
   'BLU-RAY',
+  'BDRemux',
   'DVD',
   'DVD5',
   'DVD9',
@@ -168,6 +170,7 @@ const Type = new Set([
 const Languages = new Set([
   'CHS',
   'CHT',
+  'JP',
   '简体',
   '国语中字',
   '繁體',
@@ -208,9 +211,12 @@ const LanguagePrefixes = [
 
 const SubtitlesSufixes = new Set(['内嵌', '內嵌', '内封', '内封字幕', '外挂', '外掛']);
 
+const PlatformLanguage = new Map([['ViuTV粵語', ['ViuTV', '粵語']]]);
+
 const LanguageSubtitles = new Map([
   ['简体字幕', ['简体', undefined]],
   ['繁體字幕', ['繁體', undefined]],
+  ['简日双语字幕', ['简日双语', undefined]],
   ['TVB粵語', ['粵語', undefined]],
   ['代理商粵語', ['粵語', undefined]],
   ['粵日雙語+內封繁體中文字幕', ['繁體中文', '內封字幕']],
@@ -235,7 +241,7 @@ const Extension = new Set([
   'WMV'
 ]);
 
-const Tags = new Set(['国漫']);
+const Tags = new Set(['国漫', '先行版本', '正式版本']);
 
 // Prefix
 const SearchPrefix = ['检索：', '检索用：'];
@@ -294,6 +300,13 @@ function matchSingleTag(ctx: Context, text: string) {
       ctx.update('subtitles', combined[1]);
       return true;
     }
+    const combined2 = PlatformLanguage.get(text);
+    if (combined2) {
+      ctx.update('platform', combined2[0]);
+      ctx.update('language', combined2[1]);
+      return true;
+    }
+
     // Auto combined
     for (const prefix of LanguagePrefixes) {
       if (text.startsWith(prefix)) {
@@ -316,8 +329,12 @@ function matchSingleTag(ctx: Context, text: string) {
       if (match) {
         const year = +match[1];
         const month = +match[2];
-        ctx.update('year', year);
-        ctx.update('month', month);
+        if (1949 <= year && year <= 2099) {
+          ctx.update('year', year);
+        }
+        if (1 <= month && month <= 12) {
+          ctx.update('month', month);
+        }
         return true;
       }
     }
@@ -326,7 +343,24 @@ function matchSingleTag(ctx: Context, text: string) {
       const match = /^★?(\d\d?)月新?番★?$/.exec(text);
       if (match) {
         const month = +match[1];
-        ctx.update('month', month);
+        if (1 <= month && month <= 12) {
+          ctx.update('month', month);
+        }
+        return true;
+      }
+    }
+    {
+      // [2024.12.15]
+      const match = /^(\d\d\d\d)\.(\d?\d)\.(\d?\d)$/.exec(text);
+      if (match) {
+        const year = +match[1];
+        const month = +match[2];
+        if (1949 <= year && year <= 2099) {
+          ctx.update('year', year);
+        }
+        if (1 <= month && month <= 12) {
+          ctx.update('month', month);
+        }
         return true;
       }
     }
@@ -402,7 +436,7 @@ export function parseRightTags(ctx: Context) {
       ctx.right -= 1;
     } else {
       // Unknown tags
-      if (ctx.left + 1 < ctx.right && ctx.right === ctx.tokens.length - 1) {
+      if (ctx.left + 1 < ctx.right && ctx.right >= ctx.tokens.length - 3) {
         ctx.tags.push(ctx.tokens[ctx.right].text);
         ctx.right -= 1;
       } else {
