@@ -55,8 +55,7 @@ export function parseTitle(ctx: Context) {
   let found = false;
   const separators = ['/', '\\'];
   for (const sep of separators) {
-    const parts = text
-      .split(sep)
+    const parts = splitText(text, sep)
       .map((t) => t.trim())
       .filter((t) => !!t);
     if (parts.length > 1) {
@@ -66,7 +65,7 @@ export function parseTitle(ctx: Context) {
       const trimmedOther = other
         .map((t) => parseSuffixSeasonOrEpisodes(ctx, t))
         .map((t) => t.trim())
-        .filter((t) => !!t);
+        .filter((t) => !!t && t !== trimmedTitle);
 
       ctx.update('title', trimmedTitle);
       if (trimmedOther.length > 0) {
@@ -81,4 +80,23 @@ export function parseTitle(ctx: Context) {
   }
 
   return true;
+}
+
+function splitText(text: string, sep: string) {
+  const parts = text.split(sep);
+  const ans = [];
+  for (let i = 0; i < parts.length; i++) {
+    if (i === 0) {
+      ans.push(parts[i]);
+    } else {
+      // 【喵萌奶茶屋】★10月新番★[乱马 1/2 2024年版 / Ranma ½ / Ranma 1/2 (2024)][10][1080p][简日双语][招募翻译]
+      if (sep === '/' && /\d$/.test(parts[i - 1]) && /^\d/.test(parts[i])) {
+        ans.pop();
+        ans.push(parts[i - 1] + '/' + parts[i]);
+      } else {
+        ans.push(parts[i]);
+      }
+    }
+  }
+  return ans;
 }

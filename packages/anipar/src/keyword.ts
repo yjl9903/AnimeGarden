@@ -424,6 +424,9 @@ export function parseLeftTags(ctx: Context) {
       const month = +match[1];
       ctx.update('month', month);
       ctx.tokens[ctx.left] = token.slice(matched.length);
+      if (ctx.tokens[ctx.left].text.length === 0) {
+        ctx.left += 1;
+      }
     }
   }
   {
@@ -435,6 +438,9 @@ export function parseLeftTags(ctx: Context) {
       const type = match[1];
       ctx.update('type', type);
       ctx.tokens[ctx.left] = token.slice(matched.length);
+      if (ctx.tokens[ctx.left].text.length === 0) {
+        ctx.left += 1;
+      }
     }
   }
 }

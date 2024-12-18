@@ -125,7 +125,20 @@ const SuffixRes: Array<[RegExp, (res: RegExpExecArray, ctx: Context) => boolean]
     }
   ],
   [
-    /第(\d+)季$/,
+    /(1st|2nd|3rd|[456789]th) Season$/,
+    (res, ctx) => {
+      const season = Number.parseInt(res[1]);
+      if (!Number.isNaN(season)) {
+        if (!ctx.result.season?.number || ctx.result.season.number === season) {
+          ctx.update2('season', 'number', season);
+          return true;
+        }
+      }
+      return false;
+    }
+  ],
+  [
+    /第?(\d+)[季期]$/,
     (res, ctx) => {
       const season = +res[1];
       if (!Number.isNaN(season)) {
@@ -138,7 +151,7 @@ const SuffixRes: Array<[RegExp, (res: RegExpExecArray, ctx: Context) => boolean]
     }
   ],
   [
-    /第((?:[零一二三四五六七八九]十)?[零一二三四五六七八九])季$/,
+    /第?((?:[零一二三四五六七八九]十)?[零一二三四五六七八九])[季期]$/,
     (res, ctx) => {
       const text = res[1];
       const map = {
