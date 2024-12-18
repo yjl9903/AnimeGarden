@@ -1,5 +1,5 @@
 import { Context } from './context';
-import { RevWrappers } from './tokenizer';
+import { RevWrappers, Token } from './tokenizer';
 import { matchEpiodes, SuffixSeasonOrEpisodesRes } from './episodes';
 
 const AudioTerm = new Set([
@@ -70,6 +70,7 @@ const VideoTerm = new Set([
   'HEVC',
   'HEVC2',
   'HEVC-10BIT',
+  'HEVC_OPUS',
   'DIVX',
   'DIVX5',
   'DIVX6',
@@ -171,6 +172,7 @@ const Type = new Set([
 ]);
 
 const Languages = new Set([
+  'CN',
   'CHS',
   'CHT',
   'YUE',
@@ -251,6 +253,7 @@ const Tags = new Set(['国漫', '先行版', '先行版本', '正式版', '正�
 // Prefix
 const SearchPrefix = ['检索：', '检索用：'];
 const HiringPrefix = ['招募', '字幕社招人'];
+const OtherPrefix = ['▶'];
 
 function matchSingleTag(ctx: Context, text: string) {
   const upper = text.toUpperCase();
@@ -407,6 +410,12 @@ function matchSingleTag(ctx: Context, text: string) {
         return true;
       }
     }
+    for (const prefix of OtherPrefix) {
+      if (text.startsWith(prefix)) {
+        ctx.tags.push(text);
+        return true;
+      }
+    }
   }
 
   return false;
@@ -459,6 +468,43 @@ export function parseRightTags(ctx: Context) {
         ctx.right -= 1;
       } else {
         break;
+      }
+    }
+  }
+
+  {
+    // Handle space splitted tags: 【極影字幕社】★10月新番 在地下城尋求邂逅是否搞錯了什麼 第五季 豐饒的女神篇 第06話 BIG5 1080P MP4（字幕社招人內詳）
+    const token = ctx.tokens[ctx.right];
+    const text = token.text;
+    const sepearators = [' ', '★'];
+    for (const sep of sepearators) {
+      const parts = text.split(sep);
+      if (parts.length > 1) {
+        let changed = 0;
+        while (parts.length > 1) {
+          const part = parts[parts.length - 1];
+          // Skip single number
+          if (/^\d+$/.test(part)) {
+            break;
+          }
+          if (
+            matchSingleTag(ctx, part) ||
+            matchEpiodes(ctx, part) ||
+            matchMultipleTags(ctx, part)
+          ) {
+            changed++;
+            parts.pop();
+          } else {
+            break;
+          }
+        }
+        if (changed > 1) {
+          const trimmed = parts.join(sep);
+          ctx.tokens[ctx.right] = new Token(trimmed, token.left, token.right);
+        }
+        if (changed > 0) {
+          break;
+        }
       }
     }
   }
@@ -515,7 +561,7 @@ export function parseSuffixSeasonOrEpisodes(ctx: Context, text: string) {
       if (leftIdx !== -1) {
         const maybe = text.slice(leftIdx + 1, text.length - 1);
         if (maybe.length > 0) {
-          if (matchSingleTag(ctx, maybe) || matchEpiodes(ctx, maybe)) {
+          if (matchSingleTag(ctx, maybe) || (!ctx.hasEpisode && matchEpiodes(ctx, maybe))) {
             text = text.slice(0, text.length - maybe.length - 2).trimEnd();
             found = true;
           }
@@ -534,5 +580,6 @@ export function parseSuffixSeasonOrEpisodes(ctx: Context, text: string) {
     }
     if (!found) break;
   }
+
   return text;
 }

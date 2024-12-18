@@ -85,7 +85,7 @@ export function matchEpiodes(ctx: Context, text: string) {
   return false;
 }
 
-const SuffixEpisodeRE = /- (\d+)(?:\.(\d))?$/;
+const SuffixEpisodeRE = [/- (\d+)(?:\.(\d))?$/, /第(\d+)(?:\.(\d))?[集话話]$/];
 
 export function parseSuffixEpisodes(ctx: Context) {
   if (ctx.result.episode || ctx.result.episodes || ctx.result.episodeRange) {
@@ -94,8 +94,8 @@ export function parseSuffixEpisodes(ctx: Context) {
 
   const token = ctx.tokens[ctx.right];
   const text = token.text;
-  {
-    const res = SuffixEpisodeRE.exec(text);
+  for (const RE of SuffixEpisodeRE) {
+    const res = RE.exec(text);
     if (res) {
       const ep = +res[1];
       if (!Number.isNaN(ep)) {
