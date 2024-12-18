@@ -126,6 +126,7 @@ const Source = new Set([
   'HDTVRIP',
   'TVRIP',
   'TV-RIP',
+  'WEB',
   'WEBCAST',
   'WEBDL',
   'WEB-DL',
@@ -196,7 +197,8 @@ const Subtitles = new Set([
   'SOFTSUBS',
   'SUB',
   'SUBBED',
-  'SUBTITLED'
+  'SUBTITLED',
+  'SRT'
 ]);
 
 const LanguagePrefixes = [
@@ -244,7 +246,7 @@ const Extension = new Set([
   'WMV'
 ]);
 
-const Tags = new Set(['国漫', '先行版本', '正式版本']);
+const Tags = new Set(['国漫', '先行版', '先行版本', '正式版', '正式版本', 'Ani-One']);
 
 // Prefix
 const SearchPrefix = ['检索：', '检索用：'];

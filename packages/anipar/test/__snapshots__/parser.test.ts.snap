@@ -1,5 +1,33 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`Other > [DBD-Raws][名侦探柯南剧场版27 百万美元的五棱星/Detective Conan Movie 27: The Million-Dollar Pentagram/名探偵コナン 100万ドルの五稜星][先行版][1080P][BDRip][HEVC-10bit][FLAC][MKV] 1`] = `
+{
+  "fansub": {
+    "name": "DBD-Raws",
+  },
+  "file": {
+    "audio": {
+      "term": "FLAC",
+    },
+    "extension": "MKV",
+    "video": {
+      "resolution": "1080P",
+      "term": "HEVC-10bit",
+    },
+  },
+  "source": "BDRip",
+  "tags": [
+    "先行版",
+  ],
+  "title": "名侦探柯南剧场版27 百万美元的五棱星",
+  "titles": [
+    "Detective Conan Movie 27: The Million-Dollar Pentagram",
+    "名探偵コナン 100万ドルの五稜星",
+  ],
+  "type": "Movie",
+}
+`;
+
 exports[`Other > [GM-Team][国漫][吞噬星空][Swallowed Star][2021][149][AVC][GB][1080P] 1`] = `
 {
   "episode": {
@@ -144,6 +172,7 @@ exports[`Other > [jibaketa合成&音頻壓制][TVB粵語]閃躍吧！星夢☆�
     },
   },
   "language": "粵語",
+  "source": "WEB",
   "subtitles": undefined,
   "tags": [
     "WEB 1920x1080 AVC AACx2 SRT TVB CHT",
@@ -152,6 +181,39 @@ exports[`Other > [jibaketa合成&音頻壓制][TVB粵語]閃躍吧！星夢☆�
   "titles": [
     "美妙☆频道",
     "Kiratto Pri-chan",
+  ],
+}
+`;
+
+exports[`Other > [jibaketa合成][代理商粵語]【我推的孩子】第二季 / Oshi no Ko 2nd Season - 04 [粵日雙語+內封繁體中文字幕](WEB 1920x1080 AVC AACx2 SRT Ani-One CHT) 1`] = `
+{
+  "episode": {
+    "number": 4,
+  },
+  "fansub": {
+    "name": "jibaketa合成",
+  },
+  "file": {
+    "audio": {
+      "term": "AACx2",
+    },
+    "video": {
+      "resolution": "1920x1080",
+      "term": "AVC",
+    },
+  },
+  "language": "粵語",
+  "season": {
+    "number": 2,
+  },
+  "source": "WEB",
+  "subtitles": undefined,
+  "tags": [
+    "Ani-One",
+  ],
+  "title": "【我推的孩子】",
+  "titles": [
+    "Oshi no Ko",
   ],
 }
 `;

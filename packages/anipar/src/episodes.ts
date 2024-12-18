@@ -1,6 +1,6 @@
 import { Context } from './context';
 
-const WrappedEpisodeRE = /^(?<ep1>\d+)(?:\.(\d))?(?:[vV](\d+))?$|^第(?<ep2>\d+)[集话]$/;
+const WrappedEpisodeRE = /^(?<ep1>\d+)(?:\.(\d))?(?:[vV](\d+))?$|^第(?<ep2>\d+)[集话話]$/;
 const WrappedMovieRE = /^Movie [vV](\d+)$/;
 
 const EpisodesRange1 = /^(\d+)-(\d+)(?:\s*.*)$/;
@@ -210,7 +210,7 @@ export const SuffixSeasonOrEpisodesRes: Array<
     }
   ],
   [
-    /(?<ep1>\d+)(?:\.(\d))?(?:[vV](\d+))?$|^第(?<ep2>\d+)[集话]$/,
+    /(?<ep1>\d+)(?:\.(\d))?(?:[vV](\d+))?$|^第(?<ep2>\d+)[集话話]$/,
     (res, ctx) => {
       const ep = +(res.groups?.ep1! || res.groups?.ep2!);
       if (!Number.isNaN(ep)) {

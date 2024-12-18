@@ -10,7 +10,9 @@ const titles = [
   `[jibaketa合成&音頻壓制][TVB粵語]閃躍吧！星夢☆頻道 / 美妙☆频道 / Kiratto Pri-chan - 140 [粵日雙語+內封繁體中文字幕][WEB 1920x1080 AVC AACx2 SRT TVB CHT]`,
   `[Up to 21°C] 最狂輔助職業【話術士】世界最強戰團聽我號令 / Saikyou no Shienshoku 'Wajutsushi' - 12 (CR 1920x1080 AVC AAC MKV)`,
   `[SweetSub][鬼太郎誕生 咯咯咯之謎（真生版）][The Birth of Kitaro - The Mystery of GeGeGe (True Birth Edition)][Movie][BDRip][1080P][AVC 8bit][繁日雙語]`,
-  `[Up to 21°C] Shibuya♡Hachi Part 2 - 21 (ABEMA 1920x1080 AVC AAC MP4)`
+  `[Up to 21°C] Shibuya♡Hachi Part 2 - 21 (ABEMA 1920x1080 AVC AAC MP4)`,
+  `[jibaketa合成][代理商粵語]【我推的孩子】第二季 / Oshi no Ko 2nd Season - 04 [粵日雙語+內封繁體中文字幕](WEB 1920x1080 AVC AACx2 SRT Ani-One CHT)`,
+  `[DBD-Raws][名侦探柯南剧场版27 百万美元的五棱星/Detective Conan Movie 27: The Million-Dollar Pentagram/名探偵コナン 100万ドルの五稜星][先行版][1080P][BDRip][HEVC-10bit][FLAC][MKV]`
 ];
 
 describe.only('Other', () => {
