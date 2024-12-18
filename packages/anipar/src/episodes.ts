@@ -197,6 +197,10 @@ export const SuffixSeasonOrEpisodesRes: Array<
         !Number.isNaN(season) &&
         (ctx.result.episode || ctx.result.episodes || ctx.result.episodeRange)
       ) {
+        // Skip: Part 2
+        if (/Parts? \d+$/.test(res.input)) {
+          return false;
+        }
         if (!ctx.result.season?.number || ctx.result.season.number === season) {
           ctx.update2('season', 'number', season);
           return true;
@@ -210,6 +214,11 @@ export const SuffixSeasonOrEpisodesRes: Array<
     (res, ctx) => {
       const ep = +(res.groups?.ep1! || res.groups?.ep2!);
       if (!Number.isNaN(ep)) {
+        // Skip: Part 2
+        if (/Parts? \d+$/.test(res.input)) {
+          return false;
+        }
+
         ctx.update2('episode', 'number', ep);
         // 1.5
         if (res[2] && !Number.isNaN(res[2])) {
@@ -227,7 +236,14 @@ export const SuffixSeasonOrEpisodesRes: Array<
   [
     /（日配版）$/,
     (res, ctx) => {
-      ctx.update('language', res[1]);
+      ctx.update('language', res[0]);
+      return true;
+    }
+  ],
+  [
+    /（重播）$/,
+    (res, ctx) => {
+      ctx.tags.push(res[0]);
       return true;
     }
   ]

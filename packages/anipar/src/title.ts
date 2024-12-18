@@ -19,7 +19,7 @@ export function parseFansub(ctx: Context) {
 
       if (collab.length > 0) {
         // Hack: [jibaketa合成&壓制]
-        if (collab.length === 1 && collab[0] === '壓制') {
+        if (collab.length === 1 && collab[0].endsWith('壓制')) {
           break;
         }
 

@@ -50,12 +50,17 @@ export function tokenize(text: string) {
   while (cursor < text.length) {
     const char = text[cursor];
     if (Wrappers.has(char)) {
-      if (cur) {
-        tokens.push(new Token(cur.trim()));
-        cur = '';
+      if (!left) {
+        if (cur) {
+          tokens.push(new Token(cur.trim()));
+          cur = '';
+        }
+        left = char;
+        right = Wrappers.get(char)!;
+      } else {
+        // nest wrapper
+        cur += char;
       }
-      left = char;
-      right = Wrappers.get(char)!;
     } else if (left && right && char === right) {
       tokens.push(new Token(cur.trim(), left, right));
       cur = '';

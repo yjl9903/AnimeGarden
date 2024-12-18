@@ -81,6 +81,7 @@ const VideoTerm = new Set([
   'WMV3',
   'WMV9',
   // Video quality
+  'HDR',
   'HQ',
   'LQ',
   // Video resolution
@@ -109,7 +110,8 @@ const Source = new Set([
   'BDRIP',
   'BLURAY',
   'BLU-RAY',
-  'BDRemux',
+  'BDREMUX',
+  'UHDBDRIP',
   'DVD',
   'DVD5',
   'DVD9',
@@ -170,6 +172,7 @@ const Type = new Set([
 const Languages = new Set([
   'CHS',
   'CHT',
+  'YUE',
   'JP',
   '简体',
   '国语中字',
@@ -365,6 +368,19 @@ function matchSingleTag(ctx: Context, text: string) {
       }
     }
     {
+      // [2024SP]
+      const match = /^(\d\d\d\d)(SP)$/.exec(text);
+      if (match) {
+        const year = +match[1];
+        const type = match[2];
+        if (1949 <= year && year <= 2099) {
+          ctx.update('year', year);
+        }
+        ctx.update('type', type);
+        return true;
+      }
+    }
+    {
       // v2
       const match = /^[vV](\d+)$/.exec(text);
       if (match) {
@@ -436,7 +452,7 @@ export function parseRightTags(ctx: Context) {
       ctx.right -= 1;
     } else {
       // Unknown tags
-      if (ctx.left + 1 < ctx.right && ctx.right >= ctx.tokens.length - 3) {
+      if (ctx.left + 2 < ctx.right && ctx.right >= ctx.tokens.length - 1) {
         ctx.tags.push(ctx.tokens[ctx.right].text);
         ctx.right -= 1;
       } else {
