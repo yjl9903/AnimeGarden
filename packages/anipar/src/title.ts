@@ -1,5 +1,6 @@
 import { Context } from './context';
-import { parseSuffixEpisodes, parseSuffixSeasonOrEpisodes } from './episodes';
+import { parseSuffixEpisodes } from './episodes';
+import { parseSuffixSeasonOrEpisodes } from './keyword';
 
 export function parseFansub(ctx: Context) {
   // [fansub] title
@@ -49,34 +50,48 @@ export function parseTitle(ctx: Context) {
   const rest = ctx.tokens.slice(ctx.left, ctx.right + 1);
   if (rest.length === 0) return false;
 
-  const text = rest.length === 1 ? rest[0].text : rest.map((t) => t.toString()).join('');
-
   // 2.1. Try split multiple titles
   let found = false;
   const separators = ['/', '\\'];
-  for (const sep of separators) {
-    const parts = splitText(text, sep)
+  const matchParts = (parts: string[]) => {
+    const [title, ...other] = parts;
+
+    const trimmedTitle = parseSuffixSeasonOrEpisodes(ctx, title);
+    const trimmedOther = other
+      .map((t) => parseSuffixSeasonOrEpisodes(ctx, t))
       .map((t) => t.trim())
-      .filter((t) => !!t);
-    if (parts.length > 1) {
-      const [title, ...other] = parts;
+      .filter((t) => !!t && t !== trimmedTitle);
 
-      const trimmedTitle = parseSuffixSeasonOrEpisodes(ctx, title);
-      const trimmedOther = other
-        .map((t) => parseSuffixSeasonOrEpisodes(ctx, t))
-        .map((t) => t.trim())
-        .filter((t) => !!t && t !== trimmedTitle);
-
-      ctx.update('title', trimmedTitle);
-      if (trimmedOther.length > 0) {
-        ctx.update('titles', trimmedOther);
-      }
-      found = true;
+    ctx.update('title', trimmedTitle);
+    if (trimmedOther.length > 0) {
+      ctx.update('titles', trimmedOther);
     }
+  };
+
+  // [xxx][yyy]
+  if (rest.length > 1 && rest.every((t) => t.isWrapped)) {
+    matchParts(rest.map((t) => t.text));
+    found = true;
   }
+
   if (!found) {
-    const trimmed = parseSuffixSeasonOrEpisodes(ctx, text);
-    ctx.update('title', trimmed);
+    const text = rest.length === 1 ? rest[0].text : rest.map((t) => t.toString()).join('');
+
+    for (const sep of separators) {
+      const parts = splitText(text, sep)
+        .map((t) => t.trim())
+        .filter((t) => !!t);
+      if (parts.length > 1) {
+        matchParts(parts);
+        found = true;
+        break;
+      }
+    }
+
+    if (!found) {
+      const trimmed = parseSuffixSeasonOrEpisodes(ctx, text);
+      ctx.update('title', trimmed);
+    }
   }
 
   return true;

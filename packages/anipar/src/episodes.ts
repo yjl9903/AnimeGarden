@@ -1,5 +1,4 @@
 import { Context } from './context';
-import { RevWrappers } from './tokenizer';
 
 const WrappedEpisodeRE = /^(?<ep1>\d+)(?:\.(\d))?(?:[vV](\d+))?$|^第(?<ep2>\d+)[集话]$/;
 const WrappedMovieRE = /^Movie [vV](\d+)$/;
@@ -22,8 +21,15 @@ export function matchEpiodes(ctx: Context, text: string) {
   {
     const res = WrappedEpisodeRE.exec(text);
     if (res) {
-      const ep = +(res.groups?.ep1! || res.groups?.ep2!);
+      const epText = res.groups?.ep1! || res.groups?.ep2!;
+      const ep = +epText;
       if (!Number.isNaN(ep)) {
+        // Handle year: [2024]
+        if (1949 <= ep && ep <= 2099 && text === epText && ctx.hasEpisode) {
+          ctx.update('year', ep);
+          return true;
+        }
+
         ctx.update2('episode', 'number', ep);
         // 1.5
         if (res[2] && !Number.isNaN(res[2])) {
@@ -109,8 +115,10 @@ export function parseSuffixEpisodes(ctx: Context) {
   }
 }
 
-// Season
-const SuffixRes: Array<[RegExp, (res: RegExpExecArray, ctx: Context) => boolean]> = [
+// Season regexp
+export const SuffixSeasonOrEpisodesRes: Array<
+  [RegExp, (res: RegExpExecArray, ctx: Context) => boolean]
+> = [
   [
     /(?:S|Season\s?)(\d+)$/,
     (res, ctx) => {
@@ -224,37 +232,3 @@ const SuffixRes: Array<[RegExp, (res: RegExpExecArray, ctx: Context) => boolean]
     }
   ]
 ];
-
-export function parseSuffixSeasonOrEpisodes(ctx: Context, text: string) {
-  while (true) {
-    let found = false;
-    // Ends with: [45]
-    if (RevWrappers.has(text[text.length - 1])) {
-      const leftWrapper = RevWrappers.get(text[text.length - 1])!;
-      const leftIdx = text.lastIndexOf(leftWrapper);
-      if (leftIdx !== -1) {
-        const maybe = text.slice(leftIdx + 1, text.length - 1);
-        if (maybe.length > 0) {
-          for (const [re, fn] of SuffixRes) {
-            const res = re.exec(maybe);
-            if (res && res[0].length === maybe.length && fn(res, ctx)) {
-              text = text.slice(0, text.length - maybe.length - 2).trimEnd();
-              found = true;
-              break;
-            }
-          }
-        }
-      }
-    }
-    for (const [re, fn] of SuffixRes) {
-      const res = re.exec(text);
-      if (res && fn(res, ctx)) {
-        text = text.slice(0, text.length - res[0].length).trimEnd();
-        found = true;
-        break;
-      }
-    }
-    if (!found) break;
-  }
-  return text;
-}

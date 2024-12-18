@@ -59,6 +59,10 @@ export class Context {
     this.result[key1][key2][key3] = value;
   }
 
+  public get hasEpisode() {
+    return this.result.episode || this.result.episodes || this.result.episodeRange;
+  }
+
   public validate(): ParseResult | undefined {
     this.result.tags = this.tags;
     return this.result as ParseResult;

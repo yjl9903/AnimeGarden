@@ -1,5 +1,6 @@
 import { Context } from './context';
-import { matchEpiodes } from './episodes';
+import { RevWrappers } from './tokenizer';
+import { matchEpiodes, SuffixSeasonOrEpisodesRes } from './episodes';
 
 const AudioTerm = new Set([
   // Audio channels
@@ -211,6 +212,7 @@ const LanguageSubtitles = new Map([
   ['简体字幕', ['简体', undefined]],
   ['繁體字幕', ['繁體', undefined]],
   ['TVB粵語', ['粵語', undefined]],
+  ['代理商粵語', ['粵語', undefined]],
   ['粵日雙語+內封繁體中文字幕', ['繁體中文', '內封字幕']],
   ['粵語+無對白字幕', [undefined, '無對白字幕']]
 ]);
@@ -232,6 +234,8 @@ const Extension = new Set([
   'WEBM',
   'WMV'
 ]);
+
+const Tags = new Set(['国漫']);
 
 // Prefix
 const SearchPrefix = ['检索：', '检索用：'];
@@ -266,6 +270,10 @@ function matchSingleTag(ctx: Context, text: string) {
   }
   if (Extension.has(upper)) {
     ctx.update2('file', 'extension', text);
+    return true;
+  }
+  if (Tags.has(text)) {
+    ctx.tags.push(text);
     return true;
   }
 
@@ -443,4 +451,36 @@ export function parseLeftTags(ctx: Context) {
       }
     }
   }
+}
+
+export function parseSuffixSeasonOrEpisodes(ctx: Context, text: string) {
+  while (true) {
+    let found = false;
+    // Ends with: [45]
+    if (RevWrappers.has(text[text.length - 1])) {
+      const leftWrapper = RevWrappers.get(text[text.length - 1])!;
+      const leftIdx = text.lastIndexOf(leftWrapper);
+      if (leftIdx !== -1) {
+        const maybe = text.slice(leftIdx + 1, text.length - 1);
+        if (maybe.length > 0) {
+          if (matchSingleTag(ctx, maybe) || matchEpiodes(ctx, maybe)) {
+            text = text.slice(0, text.length - maybe.length - 2).trimEnd();
+            found = true;
+          }
+        }
+      }
+    }
+
+    //
+    for (const [re, fn] of SuffixSeasonOrEpisodesRes) {
+      const res = re.exec(text);
+      if (res && fn(res, ctx)) {
+        text = text.slice(0, text.length - res[0].length).trimEnd();
+        found = true;
+        break;
+      }
+    }
+    if (!found) break;
+  }
+  return text;
 }

@@ -24,5 +24,18 @@ export function parse(title: string, options: ParseOptions = {}): ParseResult | 
   }
 
   // 6. Return result
-  return context.validate();
+  const result = context.validate();
+  return result ? postprocess(result) : undefined;
+}
+
+function postprocess(result: ParseResult) {
+  if (result.fansub?.name === 'ANi') {
+    if (result.title && result.titles && result.titles.length === 1) {
+      const t1 = result.title;
+      const t2 = result.titles[0];
+      result.title = t2;
+      result.titles = [t1];
+    }
+  }
+  return result;
 }
