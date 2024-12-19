@@ -1,0 +1,87 @@
+diff --git a/dist/esm/scroll-restoration.js b/dist/esm/scroll-restoration.js
+index 5ca1e5fdde73a871b70f58ad20636fcd462291f7..799f06583ebe4652471067ec9e092b5f4ed3c941 100644
+--- a/dist/esm/scroll-restoration.js
++++ b/dist/esm/scroll-restoration.js
+@@ -23,6 +23,8 @@ let STORAGE_KEY = "positions";
+  */
+ function ScrollRestoration({
+   getKey,
++  beforeScroll,
++  afterScroll,
+   ...props
+ }) {
+   let {
+@@ -55,6 +57,14 @@ function ScrollRestoration({
+   if (isSpaMode) {
+     return null;
+   }
++
++  React.useEffect(() => {
++    if (window) {
++      window.__beforeScroll__ = beforeScroll;
++      window.__afterScroll__ = afterScroll;
++    }
++  });
++
+   let restoreScroll = ((STORAGE_KEY, restoreKey) => {
+     if (!window.history.state || !window.history.state.key) {
+       let key = Math.random().toString(32).slice(2);
+@@ -66,7 +76,9 @@ function ScrollRestoration({
+       let positions = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "{}");
+       let storedY = positions[restoreKey || window.history.state.key];
+       if (typeof storedY === "number") {
++        window.__beforeScroll__?.(0, storedY);
+         window.scrollTo(0, storedY);
++        window.__afterScroll__?.(0, storedY);
+       }
+     } catch (error) {
+       console.error(error);
+diff --git a/dist/scroll-restoration.d.ts b/dist/scroll-restoration.d.ts
+index fbfe1d149da86ecb95341e9a00443b395b875d05..774daba2b4733f5194e2cc2a6300d0365bc0e2ed 100644
+--- a/dist/scroll-restoration.d.ts
++++ b/dist/scroll-restoration.d.ts
+@@ -9,4 +9,6 @@ import type { ScriptProps } from "./components";
+  */
+ export declare function ScrollRestoration({ getKey, ...props }: ScriptProps & {
+     getKey?: ScrollRestorationPropsRR["getKey"];
++    beforeScroll?: (x: number, y: number) => void;
++    afterScroll?: (x: number, y: number) => void;
+ }): React.JSX.Element | null;
+diff --git a/dist/scroll-restoration.js b/dist/scroll-restoration.js
+index 3a1228bb9b53c86ac1079a96179392127633370b..825094593d540d94b61355bc79d6d2bc7faf8ccd 100644
+--- a/dist/scroll-restoration.js
++++ b/dist/scroll-restoration.js
+@@ -47,6 +47,8 @@ let STORAGE_KEY = "positions";
+  */
+ function ScrollRestoration({
+   getKey,
++  beforeScroll,
++  afterScroll,
+   ...props
+ }) {
+   let {
+@@ -79,6 +81,14 @@ function ScrollRestoration({
+   if (isSpaMode) {
+     return null;
+   }
++
++  React__namespace.useEffect(() => {
++    if (window) {
++      window.__beforeScroll__ = beforeScroll;
++      window.__afterScroll__ = afterScroll;
++    }
++  });
++
+   let restoreScroll = ((STORAGE_KEY, restoreKey) => {
+     if (!window.history.state || !window.history.state.key) {
+       let key = Math.random().toString(32).slice(2);
+@@ -90,7 +100,9 @@ function ScrollRestoration({
+       let positions = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || "{}");
+       let storedY = positions[restoreKey || window.history.state.key];
+       if (typeof storedY === "number") {
++        window.__beforeScroll__?.(0, storedY);
+         window.scrollTo(0, storedY);
++        window.__afterScroll__?.(0, storedY);
+       }
+     } catch (error) {
+       console.error(error);
