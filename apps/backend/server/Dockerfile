@@ -31,24 +31,19 @@ RUN apt-get update -qq && \
 COPY --link package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json .npmrc .node-version ./
 COPY ./packages/animegarden/package.json ./packages/animegarden/
 COPY ./packages/app/package.json ./packages/app/
+COPY ./packages/cli/package.json ./packages/cli/
+COPY ./packages/database/package.json ./packages/database/
 COPY ./packages/scraper/package.json ./packages/scraper/
+COPY ./packages/server/package.json ./packages/server/
 COPY ./packages/worker/package.json ./packages/worker/
-COPY ./apps/backend/database/package.json ./apps/backend/database/
-COPY ./apps/backend/server/package.json ./apps/backend/server/
-COPY ./apps/backend/manager/package.json ./apps/backend/manager/
-COPY ./apps/frontend/web/package.json ./apps/frontend/web/
+# COPY ./apps/frontend/web/package.json ./apps/frontend/web/
 RUN pnpm install --frozen-lockfile --prod=false
 
 # Copy application code
 COPY --link . .
 
 # Setup environment and Build application
-RUN --mount=type=secret,id=SERVER_HOST \
-    --mount=type=secret,id=APP_HOST \
-    export SERVER_PROTOCOL=https && \
-    export SERVER_HOST="$(cat /run/secrets/SERVER_HOST)" && \
-    export APP_HOST="$(cat /run/secrets/APP_HOST)" && \
-    pnpm run build && pnpm run build:web && pnpm run build:app
+RUN pnpm run build && pnpm run build:server
 
 # Remove development dependencies
 RUN pnpm prune --prod
@@ -61,9 +56,9 @@ FROM base
 COPY --from=build /app /app
 
 # Listen on 3000
-ENV HOST=0.0.0.0 PORT=3000
+ENV HOST=:: PORT=3000 CRON=true
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
 
-CMD [ "node", "packages/app/dist/server/entry.mjs" ]
+CMD [ "node", "packages/server/dist/index.mjs" ]
