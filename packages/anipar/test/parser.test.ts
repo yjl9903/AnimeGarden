@@ -15,7 +15,7 @@ const titles = [
   `[DBD-Raws][名侦探柯南剧场版27 百万美元的五棱星/Detective Conan Movie 27: The Million-Dollar Pentagram/名探偵コナン 100万ドルの五稜星][先行版][1080P][BDRip][HEVC-10bit][FLAC][MKV]`
 ];
 
-describe.only('Other', () => {
+describe('Other', () => {
   for (const title of titles) {
     it(title, () => {
       expect(parse(title)).toMatchSnapshot();
