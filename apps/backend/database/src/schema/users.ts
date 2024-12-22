@@ -16,7 +16,7 @@ export const users = pgTable(
   },
   (t) => {
     return {
-      uniqueName: uniqueIndex('unique_user_name').on(t.name)
+      uniqueName: uniqueIndex('unique_users_name').on(t.name)
     };
   }
 );
@@ -31,7 +31,7 @@ export const teams = pgTable(
   },
   (t) => {
     return {
-      uniqueName: uniqueIndex('unique_team_name').on(t.name)
+      uniqueName: uniqueIndex('unique_teams_name').on(t.name)
     };
   }
 );

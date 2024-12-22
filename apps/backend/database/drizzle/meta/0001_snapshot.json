@@ -1,7 +1,45 @@
 {
+  "id": "ab4e346d-7396-4dcd-86a1-5e4d7b793776",
+  "prevId": "dacba1f9-bbee-4714-970a-2ad77d5f15a3",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.providers": {
+      "name": "providers",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "resources_provider",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "refreshed_at": {
+          "name": "refreshed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.resources": {
       "name": "resources",
       "schema": "",
@@ -12,51 +50,64 @@
           "primaryKey": true,
           "notNull": true
         },
-        "provider_type": {
-          "name": "provider_type",
+        "provider_name": {
+          "name": "provider_name",
           "type": "resources_provider",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
         "provider_id": {
           "name": "provider_id",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "href": {
-          "name": "href",
-          "type": "varchar(256)",
+          "type": "varchar(128)",
           "primaryKey": false,
           "notNull": true
         },
         "title": {
           "name": "title",
-          "type": "varchar(256)",
+          "type": "varchar(1024)",
           "primaryKey": false,
           "notNull": true
         },
         "title_alt": {
           "name": "title_alt",
-          "type": "varchar(256)",
+          "type": "varchar(1024)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title_search": {
+          "name": "title_search",
+          "type": "tsvector",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "href": {
+          "name": "href",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
         "type": {
           "name": "type",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "size": {
-          "name": "size",
-          "type": "varchar(256)",
+          "type": "varchar(64)",
           "primaryKey": false,
           "notNull": true
         },
         "magnet": {
           "name": "magnet",
           "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tracker": {
+          "name": "tracker",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "size": {
+          "name": "size",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true
         },
@@ -74,21 +125,27 @@
           "notNull": false,
           "default": "now()"
         },
-        "anitomy": {
-          "name": "anitomy",
-          "type": "json",
+        "publisher_id": {
+          "name": "publisher_id",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "fansub_id": {
           "name": "fansub_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "publisher_id": {
-          "name": "publisher_id",
+        "subject_id": {
+          "name": "subject_id",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "json",
           "primaryKey": false,
           "notNull": false
         },
@@ -108,10 +165,11 @@
         }
       },
       "indexes": {
-        "unique_resource_provider": {
+        "unique_resources_provider_id": {
+          "name": "unique_resources_provider_id",
           "columns": [
             {
-              "expression": "provider_type",
+              "expression": "provider_name",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -123,90 +181,192 @@
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "unique_resource_provider",
           "isUnique": true,
+          "with": {},
           "method": "btree",
           "concurrently": false
         },
-        "sort_by_created_at": {
+        "resources_title_alt_index": {
+          "name": "resources_title_alt_index",
+          "columns": [
+            {
+              "expression": "title_alt",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "resources_magnet_index": {
+          "name": "resources_magnet_index",
+          "columns": [
+            {
+              "expression": "magnet",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "resources_sort_by_created_at": {
+          "name": "resources_sort_by_created_at",
           "columns": [
             {
               "expression": "created_at",
               "isExpression": false,
-              "asc": true,
+              "asc": false,
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "sort_by_created_at",
           "isUnique": false,
+          "with": {},
           "method": "btree",
           "concurrently": false
         },
-        "fansub_index": {
+        "resources_title_search_index": {
+          "name": "resources_title_search_index",
           "columns": [
             {
-              "expression": "fansub_id",
+              "expression": "title_search",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "fansub_index",
           "isUnique": false,
-          "method": "btree",
-          "concurrently": false
-        },
-        "publisher_index": {
-          "columns": [
-            {
-              "expression": "publisher_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
           "with": {},
-          "name": "publisher_index",
-          "isUnique": false,
-          "method": "btree",
+          "method": "gin",
           "concurrently": false
         }
       },
-      "foreignKeys": {
-        "resources_fansub_id_teams_id_fk": {
-          "name": "resources_fansub_id_teams_id_fk",
-          "tableFrom": "resources",
-          "columnsFrom": [
-            "fansub_id"
-          ],
-          "tableTo": "teams",
-          "schemaTo": "public",
-          "columnsTo": [
-            "id"
-          ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
-        },
-        "resources_publisher_id_users_id_fk": {
-          "name": "resources_publisher_id_users_id_fk",
-          "tableFrom": "resources",
-          "columnsFrom": [
-            "publisher_id"
-          ],
-          "tableTo": "users",
-          "schemaTo": "public",
-          "columnsTo": [
-            "id"
-          ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "public.subjects": {
+      "name": "subjects",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bangumi_id": {
+          "name": "bangumi_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "keywords": {
+          "name": "keywords",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actived_at": {
+          "name": "actived_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_archived": {
+          "name": "is_archived",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        }
+      },
+      "indexes": {
+        "unique_subjects_name": {
+          "name": "unique_subjects_name",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "subjects_name_unique": {
+          "name": "subjects_name_unique",
+          "columns": [
+            "name"
+          ],
+          "nullsNotDistinct": false
+        }
+      }
+    },
+    "public.tags": {
+      "name": "tags",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "unique_tags_name": {
+          "name": "unique_tags_name",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "tags_name_unique": {
+          "name": "tags_name_unique",
+          "columns": [
+            "name"
+          ],
+          "nullsNotDistinct": false
+        }
+      }
     },
     "public.teams": {
       "name": "teams",
@@ -218,51 +378,54 @@
           "primaryKey": true,
           "notNull": true
         },
-        "provider_type": {
-          "name": "provider_type",
-          "type": "resources_provider",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "provider_id": {
-          "name": "provider_id",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true
-        },
         "name": {
           "name": "name",
-          "type": "varchar(256)",
+          "type": "varchar(128)",
           "primaryKey": false,
           "notNull": true
+        },
+        "avatar": {
+          "name": "avatar",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "providers": {
+          "name": "providers",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'::json"
         }
       },
       "indexes": {
-        "unique_team_provider": {
+        "unique_teams_name": {
+          "name": "unique_teams_name",
           "columns": [
             {
-              "expression": "provider_type",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "provider_id",
+              "expression": "name",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "unique_team_provider",
           "isUnique": true,
+          "with": {},
           "method": "btree",
           "concurrently": false
         }
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "teams_name_unique": {
+          "name": "teams_name_unique",
+          "columns": [
+            "name"
+          ],
+          "nullsNotDistinct": false
+        }
+      }
     },
     "public.users": {
       "name": "users",
@@ -274,51 +437,54 @@
           "primaryKey": true,
           "notNull": true
         },
-        "provider_type": {
-          "name": "provider_type",
-          "type": "resources_provider",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "provider_id": {
-          "name": "provider_id",
-          "type": "varchar(256)",
-          "primaryKey": false,
-          "notNull": true
-        },
         "name": {
           "name": "name",
-          "type": "varchar(256)",
+          "type": "varchar(128)",
           "primaryKey": false,
           "notNull": true
+        },
+        "avatar": {
+          "name": "avatar",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "providers": {
+          "name": "providers",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'{}'::json"
         }
       },
       "indexes": {
-        "unique_user_provider": {
+        "unique_users_name": {
+          "name": "unique_users_name",
           "columns": [
             {
-              "expression": "provider_type",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "provider_id",
+              "expression": "name",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             }
           ],
-          "with": {},
-          "name": "unique_user_provider",
           "isUnique": true,
+          "with": {},
           "method": "btree",
           "concurrently": false
         }
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "users_name_unique": {
+          "name": "users_name_unique",
+          "columns": [
+            "name"
+          ],
+          "nullsNotDistinct": false
+        }
+      }
     }
   },
   "enums": {
@@ -327,16 +493,16 @@
       "schema": "public",
       "values": [
         "dmhy",
-        "moe"
+        "moe",
+        "ani"
       ]
     }
   },
   "schemas": {},
+  "sequences": {},
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "id": "a27c7314-751e-40b1-b3b9-858ae9902da4",
-  "prevId": "be0483f5-b846-4d0b-86dc-95a86593343c"
+    "tables": {}
+  }
 }

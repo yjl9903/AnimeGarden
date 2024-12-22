@@ -76,9 +76,12 @@ importers:
 
   apps/backend/database:
     dependencies:
-      animegarden:
+      '@animegarden/client':
         specifier: workspace:*
-        version: link:../../../packages/animegarden
+        version: link:../../../packages/client
+      anipar:
+        specifier: workspace:*
+        version: link:../../../packages/anipar
       anitomy:
         specifier: 0.0.35
         version: 0.0.35
