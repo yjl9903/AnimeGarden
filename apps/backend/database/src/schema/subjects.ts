@@ -1,4 +1,13 @@
-import { boolean, integer, json, pgTable, serial, timestamp, uniqueIndex, varchar } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  integer,
+  json,
+  pgTable,
+  serial,
+  timestamp,
+  uniqueIndex,
+  varchar
+} from 'drizzle-orm/pg-core';
 
 export const subjects = pgTable(
   'subjects',

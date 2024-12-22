@@ -7,3 +7,4 @@ INSERT INTO "providers" ("id", "name", "refreshed_at", "is_active") VALUES ('ani
 
 -- anonymous users
 INSERT INTO "users" ("name", "avatar", "providers") VALUES ('anonymous', 'https://garden.onekuma.cn/favicon.svg', '{}');
+INSERT INTO "users" ("name", "avatar", "providers") VALUES ('ANi', 'https://garden.onekuma.cn/favicon.svg', '{}');
