@@ -1,40 +1,21 @@
-import { type ConsolaInstance, createConsola } from 'consola';
-
 import { SystemError } from '../error';
-import { generateRandomPassword } from '../utils/secret';
-import { connectDatabase, Database } from '../connect/database';
-import { connectRedis, RedisStorage as Storage } from '../connect/redis';
+import { connectRedis } from '../connect/redis';
+import { connectDatabase } from '../connect/database';
 
-export type { Database, Storage };
+import { TagsModule } from '../tags';
+import { SubjectsModule } from '../subjects';
+import { ResoucresModule } from '../resources';
 
-// Store secret here, not in system instance
-let secret: string | undefined;
+import { setSecret } from './secret';
+import { System as ISystem } from './system';
 
-export class System {
-  public readonly logger: ConsolaInstance;
+export * from './module';
 
-  public database!: Database;
-
-  public storage?: Storage;
-
-  public disposables: Array<(sys: System) => void | Promise<void>> = [];
-
-  public constructor() {
-    this.logger = createConsola().withTag('System');
-  }
-
-  public async initialize() {}
-
-  public async close() {
-    for (const fn of this.disposables) {
-      try {
-        await fn(this);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }
-}
+export type System = ISystem<{
+  resources: ResoucresModule;
+  tags: TagsModule;
+  subjects: SubjectsModule;
+}>;
 
 export interface SystemOptions {
   secret?: string;
@@ -45,13 +26,12 @@ export interface SystemOptions {
 }
 
 export async function makeSystem(options: SystemOptions) {
-  const system = new System();
+  const system: System = new ISystem();
   system.logger.wrapConsole();
 
+  const secret = setSecret(options.secret);
   if (!options.secret) {
-    secret = generateRandomPassword(32);
-  } else {
-    secret = options.secret;
+    system.logger.info(`Secret: ${secret}`);
   }
 
   if (!options.postgresUri) {
@@ -76,6 +56,11 @@ export async function makeSystem(options: SystemOptions) {
       throw error;
     }
   }
+
+  // Register modules
+  system.modules.tags = new TagsModule(system);
+  system.modules.subjects = new SubjectsModule(system);
+  system.modules.resources = new ResoucresModule(system);
 
   return system;
 }

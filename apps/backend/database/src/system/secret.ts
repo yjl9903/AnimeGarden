@@ -16,3 +16,19 @@ export function generateRandomPassword(length: number) {
 
   return password;
 }
+
+// Store secret here, not in system instance
+let secret: string | undefined;
+
+export function getSecret() {
+  return secret!;
+}
+
+export function setSecret(input: string | undefined) {
+  if (input) {
+    secret = input;
+  } else {
+    secret = generateRandomPassword(32);
+  }
+  return secret;
+}
