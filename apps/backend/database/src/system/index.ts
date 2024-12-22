@@ -1,10 +1,14 @@
 import { type ConsolaInstance, createConsola } from 'consola'
 
 import { SystemError } from '../error';
+import { generateRandomPassword } from '../utils/secret';
 import { connectDatabase, Database } from '../connect/database'
 import { connectRedis, RedisStorage as Storage } from '../connect/redis'
 
 export type { Database, Storage }
+
+// Store secret here, not in system instance
+let secret: string | undefined;
 
 export class System {
   public readonly logger: ConsolaInstance
@@ -35,6 +39,8 @@ export class System {
 }
 
 export interface SystemOptions {
+  secret?: string;
+  
   postgresUri?: string
 
   redisUri?: string
@@ -43,6 +49,12 @@ export interface SystemOptions {
 export async function makeSystem(options: SystemOptions) {
   const system = new System();
   system.logger.wrapConsole();
+  
+  if (!options.secret) {
+    secret = generateRandomPassword(32)
+  } else {
+    secret = options.secret;
+  }
 
   if (!options.postgresUri) {
     throw new SystemError('No postgres connection uri');
