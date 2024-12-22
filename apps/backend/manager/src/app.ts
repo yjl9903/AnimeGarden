@@ -21,12 +21,13 @@ async function initialize(options: SystemOptions) {
   if (!options.redisUri) {
     options.redisUri = process.env.REDIS_URI;
   }
-  return await makeSystem(options)
+  return await makeSystem(options);
 }
 
 // --- Server ---
 
-app.command('start', 'Start Anime Garden Server')
+app
+  .command('start', 'Start Anime Garden Server')
   .option('--cron', 'Enable cron jobs')
   .action(async (options) => {
     const sys = await initialize(options);
@@ -36,34 +37,32 @@ app.command('start', 'Start Anime Garden Server')
 
 // --- Admin ---
 
-app.command('migrate', 'Migrate Postgres database schema')
-  .action(async (options) => {
-    const sys = await initialize(options);
-    await migrate(sys);
-    await sys.close();
-  });
+app.command('migrate', 'Migrate Postgres database schema').action(async (options) => {
+  const sys = await initialize(options);
+  await migrate(sys);
+  await sys.close();
+});
 
-app.command('transfer', 'Transfer data from Anime Garden API V1')
-  .action(async (options) => {
-    const sys = await initialize(options);
-    await sys.initialize();
-    // TODO
-    await sys.close();
-  });
+app.command('transfer', 'Transfer data from Anime Garden API V1').action(async (options) => {
+  const sys = await initialize(options);
+  await sys.initialize();
+  // TODO
+  await sys.close();
+});
 
-app.command('fetch', 'Fetch data from providers')
+app
+  .command('fetch', 'Fetch data from providers')
   .option('--out-dir <dir>')
   .action(async (options) => {
     const sys = await initialize(options);
     await sys.initialize();
     // TODO
     await sys.close();
-  })
-
-app.command('import [dir]', 'Import local resources data')
-  .action(async (data, options) => {
-    const sys = await initialize(options);
-    await sys.initialize();
-    // TODO
-    await sys.close();
   });
+
+app.command('import [dir]', 'Import local resources data').action(async (data, options) => {
+  const sys = await initialize(options);
+  await sys.initialize();
+  // TODO
+  await sys.close();
+});

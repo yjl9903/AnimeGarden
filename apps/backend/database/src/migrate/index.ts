@@ -1,5 +1,5 @@
-import path from 'node:path'
-import { existsSync } from 'node:fs'
+import path from 'node:path';
+import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
@@ -21,9 +21,9 @@ function lookupMigration(folder: string) {
   } else {
     const parent = path.join(folder, '../');
     if (parent.length < folder.length) {
-      return lookupMigration(parent)
+      return lookupMigration(parent);
     } else {
-      throw new SystemError('Can not find migrations folder')
+      throw new SystemError('Can not find migrations folder');
     }
   }
 }

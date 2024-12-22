@@ -49,4 +49,3 @@ export interface ResourceDocument {
 
   isDuplicated: Resource['isDuplicated'];
 }
-

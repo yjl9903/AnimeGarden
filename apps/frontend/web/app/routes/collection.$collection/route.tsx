@@ -12,8 +12,7 @@ export const meta: MetaFunction = () => {
 export default function Resources() {
   return (
     <Layout>
-      <div className="w-full pt-12 pb-24">
-      </div>
+      <div className="w-full pt-12 pb-24"></div>
     </Layout>
   );
 }

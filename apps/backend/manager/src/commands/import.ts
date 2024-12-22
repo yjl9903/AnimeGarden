@@ -1,3 +1,1 @@
-export function importFromAnimeGardenAPI() {
-  
-}
+export function importFromAnimeGardenAPI() {}

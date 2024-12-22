@@ -1,31 +1,29 @@
-import { type ConsolaInstance, createConsola } from 'consola'
+import { type ConsolaInstance, createConsola } from 'consola';
 
 import { SystemError } from '../error';
 import { generateRandomPassword } from '../utils/secret';
-import { connectDatabase, Database } from '../connect/database'
-import { connectRedis, RedisStorage as Storage } from '../connect/redis'
+import { connectDatabase, Database } from '../connect/database';
+import { connectRedis, RedisStorage as Storage } from '../connect/redis';
 
-export type { Database, Storage }
+export type { Database, Storage };
 
 // Store secret here, not in system instance
 let secret: string | undefined;
 
 export class System {
-  public readonly logger: ConsolaInstance
-  
-  public database!:  Database;
+  public readonly logger: ConsolaInstance;
+
+  public database!: Database;
 
   public storage?: Storage;
 
-  public disposables: Array<(sys: System) => (void | Promise<void>)> = []
+  public disposables: Array<(sys: System) => void | Promise<void>> = [];
 
   public constructor() {
     this.logger = createConsola().withTag('System');
   }
-  
-  public async initialize() {
-    
-  }
+
+  public async initialize() {}
 
   public async close() {
     for (const fn of this.disposables) {
@@ -40,18 +38,18 @@ export class System {
 
 export interface SystemOptions {
   secret?: string;
-  
-  postgresUri?: string
 
-  redisUri?: string
+  postgresUri?: string;
+
+  redisUri?: string;
 }
 
 export async function makeSystem(options: SystemOptions) {
   const system = new System();
   system.logger.wrapConsole();
-  
+
   if (!options.secret) {
-    secret = generateRandomPassword(32)
+    secret = generateRandomPassword(32);
   } else {
     secret = options.secret;
   }
@@ -63,7 +61,7 @@ export async function makeSystem(options: SystemOptions) {
   try {
     const { connection, database } = connectDatabase(options.postgresUri);
     system.database = database;
-    system.disposables.push(() => connection.end())
+    system.disposables.push(() => connection.end());
     system.logger.success('connect to Postgres');
   } catch (error) {
     throw error;
