@@ -9,5 +9,17 @@ export abstract class Module<M extends Record<string, Module> = {}> {
     this.system = system;
   }
 
+  public get logger() {
+    return this.system.logger;
+  }
+
+  public get database() {
+    return this.system.database;
+  }
+
+  public get storage() {
+    return this.system.storage;
+  }
+
   public async initialize(): Promise<void> {}
 }
