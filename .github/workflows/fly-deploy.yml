@@ -16,7 +16,7 @@ jobs:
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - run: flyctl deploy --config ./packages/app/fly.toml --app animegarden-app-test --remote-only --build-secret SERVER_HOST=animegarden-server-production.internal --build-secret APP_HOST=garden.breadio.wiki
+      - run: flyctl deploy --config ./packages/app/fly.toml --app animegarden-web-test --remote-only --build-secret SERVER_HOST=animegarden-server-production.internal --build-secret APP_HOST=garden.breadio.wiki
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
