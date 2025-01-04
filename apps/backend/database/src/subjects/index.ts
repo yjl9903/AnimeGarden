@@ -1,5 +1,10 @@
-import { Module, type System } from '../system';
+import type { System } from '../system/system';
 
+import { Module } from '../system/module';
+
+import type { InsertSubjectOptions } from './types';
+
+import { importFromBgmd } from './bgmd';
 import { NewSubject, Subject, subjects } from './schema';
 
 export class SubjectsModule extends Module<System['modules']> {
@@ -19,19 +24,21 @@ export class SubjectsModule extends Module<System['modules']> {
 
   public async insertSubject(subject: NewSubject, options: InsertSubjectOptions = {}) {
     try {
-      this.database.insert(subjects).values(subject).onConflictDoUpdate({
-        target: subjects.id,
-        set: {
-          name: subject.name,
-          bgmId: subject.bgmId,
-          activedAt: subject.activedAt,
-          keywords: subject.keywords
-        }
-      })
-      const resp = await this.database.insert(subjects).values(subject);
+      const resp = await this.database
+        .insert(subjects)
+        .values(subject)
+        .onConflictDoUpdate({
+          target: subjects.id,
+          set: {
+            name: subject.name,
+            bgmId: subject.bgmId,
+            activedAt: subject.activedAt,
+            keywords: subject.keywords
+          }
+        });
       const changed = resp.length > 0;
       if (changed && options.reIndexResources) {
-        // TODO: trigger resources update
+        await this.indexSubject(subject);
       }
       return changed;
     } catch (error) {
@@ -40,14 +47,26 @@ export class SubjectsModule extends Module<System['modules']> {
     }
   }
 
-  public async insertSubjects(subs: NewSubject[], options: InsertSubjectOptions = {}) {
-    
+  public async indexSubject(subject: NewSubject) {
+    // TODO: index subjects
   }
-}
 
-interface InsertSubjectOptions {
-  /**
-   * @default false
-   */
-  reIndexResources?: boolean;
+  public async insertSubjects(subs: NewSubject[], options: InsertSubjectOptions = {}) {
+    if (options.reIndexResources) {
+      const resp = await Promise.all(subs.map((sub) => this.insertSubject(sub, options)));
+      return resp.filter(Boolean).length;
+    } else {
+      try {
+        const resp = await this.database.insert(subjects).values(subs).onConflictDoNothing();
+        return resp.length;
+      } catch (error) {
+        this.logger.error(error);
+        return 0;
+      }
+    }
+  }
+
+  public async importFromBgmd() {
+    return importFromBgmd(this);
+  }
 }

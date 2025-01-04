@@ -60,7 +60,31 @@ app
     await sys.close();
   });
 
-app.command('import [dir]', 'Import local resources data').action(async (data, options) => {
+app
+  .command('import [dir]', 'Import subjects, tags, and local resources data')
+  .action(async (dir, options) => {
+    const sys = await initialize(options);
+    await sys.initialize();
+    await sys.modules.subjects.importFromBgmd();
+    await sys.modules.tags.importFromAnipar();
+    await sys.close();
+  });
+
+app.command('import tags', 'Import tags from anipar').action(async (options) => {
+    const sys = await initialize(options);
+    await sys.initialize();
+    await sys.modules.tags.importFromAnipar();
+    await sys.close();
+  });
+
+app.command('import subjects', 'Import subjects from bgmd').action(async (options) => {
+  const sys = await initialize(options);
+  await sys.initialize();
+  await sys.modules.subjects.importFromBgmd();
+  await sys.close();
+});
+
+app.command('import resources [dir]', 'Import local resources data').action(async (dir, options) => {
   const sys = await initialize(options);
   await sys.initialize();
   // TODO
