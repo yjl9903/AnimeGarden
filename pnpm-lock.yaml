@@ -187,14 +187,14 @@ importers:
         version: 3.23.8
     devDependencies:
       '@iconify-json/ant-design':
-        specifier: ^1.2.0
-        version: 1.2.0
+        specifier: ^1.2.5
+        version: 1.2.5
       '@iconify-json/carbon':
-        specifier: ^1.2.1
-        version: 1.2.1
+        specifier: ^1.2.5
+        version: 1.2.5
       '@iconify-json/devicon':
-        specifier: ^1.2.1
-        version: 1.2.1
+        specifier: ^1.2.11
+        version: 1.2.11
       '@onekuma/preset.css':
         specifier: ^0.1.11
         version: 0.1.11
@@ -2098,14 +2098,14 @@ packages:
       hono: '>=3.9.0'
       zod: ^3.19.1
 
-  '@iconify-json/ant-design@1.2.0':
-    resolution: {integrity: sha512-lVdhuMsMdBNHhycm85uRp0j1s2gvjZhB6QSOxCZNiY0/NDtiDua3f7lxzpKUCpLvv++MLcAce34u9gcKusCeUA==}
+  '@iconify-json/ant-design@1.2.5':
+    resolution: {integrity: sha512-SYxhrx1AFq2MBcXk77AERYz2mPhLQes1F0vtvG64+dJZWyge9studXo7MiR8PPeLjRjZdWRrReRbxiwdRMf70Q==}
 
-  '@iconify-json/carbon@1.2.1':
-    resolution: {integrity: sha512-dIMY6OOY9LnwR3kOqAtfz4phGFG+KNfESEwSL6muCprBelSlSPpRXtdqvEEO/qWhkf5AJ9hWrOV3Egi5Z2IuKA==}
+  '@iconify-json/carbon@1.2.5':
+    resolution: {integrity: sha512-aI3TEzOrUDGhs74zIT3ym/ZQBUEziyu8JifntX2Hb4siVzsP5sQ/QEfVdmcCUj37kQUYT3TYBSeAw2vTfCJx9w==}
 
-  '@iconify-json/devicon@1.2.1':
-    resolution: {integrity: sha512-Djgx9b6zt68BRXaLw/t4I4BAuc7qQW5TWcGJnlR+gnCqBLUkZhHDHfr4eRy/7tmH1Mqbu7LQjGGMFzcYTWd1Cg==}
+  '@iconify-json/devicon@1.2.11':
+    resolution: {integrity: sha512-siDWSFqmPKOYiMvgixqsZ/0rbUXae1M7gF14vefBtFuKXJkTvr4WPzbv1ARc7rqQlkU8XZPyH1edCXO4uToTyw==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -9535,15 +9535,15 @@ snapshots:
       hono: 4.5.11
       zod: 3.23.8
 
-  '@iconify-json/ant-design@1.2.0':
+  '@iconify-json/ant-design@1.2.5':
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/carbon@1.2.1':
+  '@iconify-json/carbon@1.2.5':
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/devicon@1.2.1':
+  '@iconify-json/devicon@1.2.11':
     dependencies:
       '@iconify/types': 2.0.0
 
