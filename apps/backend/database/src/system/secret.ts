@@ -2,8 +2,7 @@ import { randomInt } from 'node:crypto';
 
 export function generateRandomPassword(length: number) {
   // Define the characters you want to include in the password
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?';
+  const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
   const charactersLength = characters.length;
   let password = '';
 

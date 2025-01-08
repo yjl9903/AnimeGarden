@@ -13,6 +13,7 @@ export async function migrateDrizzle(sys: System) {
   const db = sys.database;
   const migrationsFolder = lookupMigration(fileURLToPath(new URL('../', import.meta.url)));
   await migrate(db, { migrationsFolder });
+  sys.logger.success('Migrate Postgres OK');
 }
 
 function lookupMigration(folder: string) {

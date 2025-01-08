@@ -42,7 +42,7 @@ export async function makeSystem(options: SystemOptions) {
     const { connection, database } = connectDatabase(options.postgresUri);
     system.database = database;
     system.disposables.push(() => connection.end());
-    system.logger.success('connect to Postgres');
+    system.logger.success('Connect to Postgres');
   } catch (error) {
     throw error;
   }
