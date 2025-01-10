@@ -13,7 +13,9 @@ export class SubjectsModule extends Module<System['modules']> {
   public readonly subjects: Subject[] = [];
 
   public async initialize() {
+    this.system.logger.info('Initializing Subjects module');
     await this.fetchSubjects();
+    this.system.logger.success('Initialize Subjects module OK');
   }
 
   public async fetchSubjects() {

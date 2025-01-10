@@ -4,29 +4,26 @@ import { connectDatabase } from '../connect/database';
 
 import { TagsModule } from '../tags';
 import { SubjectsModule } from '../subjects';
-import { ResoucresModule } from '../resources';
+import { ResourcesModule } from '../resources';
+import { UsersModule, TeamsModule } from '../users';
 
 import { setSecret } from './secret';
-import { System as ISystem } from './system';
+import { type SystemOptions, System as ISystem } from './system';
 
 export * from './module';
 
+export { type SystemOptions } from './system';
+
 export type System = ISystem<{
-  resources: ResoucresModule;
+  resources: ResourcesModule;
   tags: TagsModule;
   subjects: SubjectsModule;
+  users: UsersModule;
+  teams: TeamsModule;
 }>;
 
-export interface SystemOptions {
-  secret?: string;
-
-  postgresUri?: string;
-
-  redisUri?: string;
-}
-
 export async function makeSystem(options: SystemOptions) {
-  const system: System = new ISystem();
+  const system: System = new ISystem(options);
   system.logger.wrapConsole();
 
   const secret = setSecret(options.secret);
@@ -35,7 +32,7 @@ export async function makeSystem(options: SystemOptions) {
   }
 
   if (!options.postgresUri) {
-    throw new SystemError('No postgres connection uri');
+    throw new SystemError('No postgres connection URI');
   }
 
   try {
@@ -51,7 +48,7 @@ export async function makeSystem(options: SystemOptions) {
     try {
       const storage = connectRedis(options.postgresUri);
       system.storage = storage;
-      system.logger.success('connect to Redis');
+      system.logger.success('Connect to Redis');
     } catch (error) {
       throw error;
     }
@@ -60,7 +57,9 @@ export async function makeSystem(options: SystemOptions) {
   // Register modules
   system.modules.tags = new TagsModule(system);
   system.modules.subjects = new SubjectsModule(system);
-  system.modules.resources = new ResoucresModule(system);
+  system.modules.resources = new ResourcesModule(system);
+  system.modules.users = new UsersModule(system);
+  system.modules.teams = new TeamsModule(system);
 
   return system;
 }

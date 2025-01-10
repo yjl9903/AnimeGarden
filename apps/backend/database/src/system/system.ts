@@ -7,6 +7,14 @@ import { Module } from './module';
 
 export type { Database, Storage };
 
+export interface SystemOptions {
+  secret?: string;
+
+  postgresUri?: string;
+
+  redisUri?: string;
+}
+
 export class System<M extends Record<string, Module> = {}> {
   public readonly logger: ConsolaInstance;
 
@@ -14,18 +22,22 @@ export class System<M extends Record<string, Module> = {}> {
 
   public storage?: Storage;
 
+  public readonly options: SystemOptions;
+
   public readonly modules: M = {} as M;
 
   public readonly disposables: Array<(sys: System) => void | Promise<void>> = [];
 
-  public constructor() {
+  public constructor(options: SystemOptions = {}) {
     this.logger = createConsola().withTag('System');
+    this.options = options;
   }
 
   public async initialize() {
     for (const mod of Object.values(this.modules)) {
       await mod.initialize();
     }
+    this.logger.success('Initialized OK');
   }
 
   public async close() {

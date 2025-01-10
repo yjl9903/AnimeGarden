@@ -10,7 +10,7 @@ primary_region = 'hkg'
   dockerfile = 'Dockerfile'
 
 [processes]
-  server = 'node apps/backend/manager/cli.mjs --cron'
+  server = 'node apps/backend/manager/cli.mjs transfer'
 
 [http_service]
   internal_port = 3000

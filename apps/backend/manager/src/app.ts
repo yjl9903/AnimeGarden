@@ -43,10 +43,11 @@ app.command('migrate', 'Migrate Postgres database schema').action(async (options
   await sys.close();
 });
 
-app.command('transfer', 'Transfer data from Anime Garden API V1').action(async (options) => {
+app.command('transfer [database]', 'Transfer data from Anime Garden API V1').action(async (name, options) => {
   const sys = await initialize(options);
   await sys.initialize();
-  // TODO
+  const { transferFromV1 } = await import('@animegarden/database');
+  await transferFromV1(sys, name ?? 'animegarden');
   await sys.close();
 });
 
@@ -71,11 +72,11 @@ app
   });
 
 app.command('import tags', 'Import tags from anipar').action(async (options) => {
-    const sys = await initialize(options);
-    await sys.initialize();
-    await sys.modules.tags.importFromAnipar();
-    await sys.close();
-  });
+  const sys = await initialize(options);
+  await sys.initialize();
+  await sys.modules.tags.importFromAnipar();
+  await sys.close();
+});
 
 app.command('import subjects', 'Import subjects from bgmd').action(async (options) => {
   const sys = await initialize(options);
