@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@animegarden/client": "workspace:*",
+    "@node-rs/jieba": "^2.0.1",
     "anipar": "workspace:*",
     "anitomy": "0.0.35",
     "bgmd": "^0.0.57",
@@ -54,6 +55,7 @@
     "drizzle-orm": "^0.33.0",
     "meilisearch": "^0.42.0",
     "postgres": "^3.4.4",
+    "simptrad": "^0.2.0",
     "unstorage": "^1.12.0"
   },
   "devDependencies": {

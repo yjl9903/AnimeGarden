@@ -43,13 +43,22 @@ app.command('migrate', 'Migrate Postgres database schema').action(async (options
   await sys.close();
 });
 
-app.command('transfer [database]', 'Transfer data from Anime Garden API V1').action(async (name, options) => {
-  const sys = await initialize(options);
-  await sys.initialize();
-  const { transferFromV1 } = await import('@animegarden/database');
-  await transferFromV1(sys, name ?? 'animegarden');
-  await sys.close();
-});
+app
+  .command('transfer [database]', 'Transfer data from Anime Garden API V1')
+  .option('--start <number>', 'Fetch resources start at page')
+  .option('--end <number>', 'Fetch resources end before page')
+  .option('--page-size <number>', 'Fetch resources batch page size')
+  .action(async (name, options) => {
+    const sys = await initialize(options);
+    await sys.initialize();
+    const { transferFromV1 } = await import('@animegarden/database');
+    await transferFromV1(sys, name ?? 'animegarden', {
+      startPage: options.start ? +options.start : undefined,
+      endPage: options.end ? +options.end : undefined,
+      pageSize: options.pageSize ? +options.pageSize : undefined
+    });
+    await sys.close();
+  });
 
 app
   .command('fetch', 'Fetch data from providers')
@@ -85,9 +94,11 @@ app.command('import subjects', 'Import subjects from bgmd').action(async (option
   await sys.close();
 });
 
-app.command('import resources [dir]', 'Import local resources data').action(async (dir, options) => {
-  const sys = await initialize(options);
-  await sys.initialize();
-  // TODO
-  await sys.close();
-});
+app
+  .command('import resources [dir]', 'Import local resources data')
+  .action(async (dir, options) => {
+    const sys = await initialize(options);
+    await sys.initialize();
+    // TODO
+    await sys.close();
+  });

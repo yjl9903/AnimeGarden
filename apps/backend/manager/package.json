@@ -47,10 +47,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@animegarden/client": "workspace:*",
     "@animegarden/database": "workspace:*",
     "@animegarden/scraper": "workspace:*",
     "@breadc/color": "^0.9.7",
-    "animegarden": "workspace:*",
     "breadc": "^0.9.7",
     "dotenv": "^16.4.5",
     "fs-extra": "^11.2.0",

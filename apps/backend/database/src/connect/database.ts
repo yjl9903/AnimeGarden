@@ -6,6 +6,12 @@ import { users, teams } from '../schema/users';
 import { tags } from '../schema/tags';
 import { subjects } from '../schema/subjects';
 import { resources } from '../schema/resources';
+import {
+  resourcesRelations,
+  userRelations,
+  teamRelations,
+  subjectRelations
+} from '../schema/relations';
 
 export interface ConnectDatabaseOptions extends postgres.Options<{}> {}
 
@@ -20,7 +26,18 @@ export function connectDatabase(
     connection: queryClient,
     database: drizzle(queryClient, {
       logger: false,
-      schema: { providers, resources, users, teams, tags, subjects }
+      schema: {
+        providers,
+        resources,
+        users,
+        teams,
+        tags,
+        subjects,
+        resourcesRelations,
+        userRelations,
+        teamRelations,
+        subjectRelations
+      }
     })
   };
 }

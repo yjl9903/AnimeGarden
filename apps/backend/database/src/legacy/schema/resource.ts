@@ -14,6 +14,7 @@ import {
 import { providerEnum } from './provider';
 import { users } from './user';
 import { teams } from './team';
+import { relations } from 'drizzle-orm';
 
 export const resources = pgTable(
   'resources',
@@ -57,3 +58,22 @@ export const resources = pgTable(
     };
   }
 );
+
+export const resourcesRelations = relations(resources, ({ one }) => ({
+  publisher: one(users, {
+    fields: [resources.provider, resources.publisherId],
+    references: [users.provider, users.providerId]
+  }),
+  fansub: one(teams, {
+    fields: [resources.provider, resources.fansubId],
+    references: [teams.provider, teams.providerId]
+  })
+}));
+
+export const userRelations = relations(users, ({ many }) => ({
+  resources: many(resources)
+}));
+
+export const teamRelations = relations(teams, ({ many }) => ({
+  resources: many(resources)
+}));

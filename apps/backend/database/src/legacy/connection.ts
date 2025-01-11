@@ -3,7 +3,7 @@ import { drizzle } from 'drizzle-orm/postgres-js';
 
 import { users } from './schema/user';
 import { teams } from './schema/team';
-import { resources } from './schema/resource';
+import { resources, resourcesRelations, userRelations, teamRelations } from './schema/resource';
 
 export interface DatabaseConnectionConfig extends postgres.Options<{}> {}
 
@@ -16,6 +16,9 @@ export function connectDatabase(
   const queryClient = typeof uri === 'string' ? postgres(uri, options) : postgres(uri);
   return {
     connection: queryClient,
-    database: drizzle(queryClient, { logger: false, schema: { resources, users, teams } })
+    database: drizzle(queryClient, {
+      logger: false,
+      schema: { resources, users, teams, resourcesRelations, userRelations, teamRelations }
+    })
   };
 }

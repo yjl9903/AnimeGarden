@@ -111,6 +111,12 @@ export class UsersModule extends Module<System['modules']> {
       return [...inserted, ...updated.flat()];
     });
   }
+
+  // ---
+
+  public get(name: string) {
+    return this.users.get(name);
+  }
 }
 
 export class TeamsModule extends Module<System['modules']> {
@@ -213,5 +219,11 @@ export class TeamsModule extends Module<System['modules']> {
 
       return [...inserted, ...updated.flat()];
     });
+  }
+
+  // ---
+
+  public get(name: string) {
+    return this.teams.get(name);
   }
 }

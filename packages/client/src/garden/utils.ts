@@ -1,7 +1,7 @@
 import { fullToHalf, tradToSimple } from 'simptrad';
 
 export function normalizeTitle(title: string) {
-  return fullToHalf(tradToSimple(title));
+  return fullToHalf(tradToSimple(title), { punctuation: true });
 }
 
 export async function retryFn<T>(fn: () => Promise<T>, count: number): Promise<T> {

@@ -38,13 +38,13 @@ export const resources = pgTable(
     // Authors
     publisherId: integer('publisher_id').notNull(),
     fansubId: integer('fansub_id'),
+    // Duplicated resources
+    duplicatedId: integer('duplicated_id'),
     // Metadata
     subjectId: integer('subject_id'),
     metadata: json('metadata').$type<{ anipar?: {} }>(),
     // Logic deletion
-    isDeleted: boolean('is_deleted').default(false),
-    // Remove duplicated resources from different providers
-    isDuplicated: boolean('is_duplicated').default(false)
+    isDeleted: boolean('is_deleted').default(false)
   },
   (t) => {
     return {
