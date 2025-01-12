@@ -6,6 +6,7 @@ import { users, teams } from '../schema/users';
 import { tags } from '../schema/tags';
 import { subjects } from '../schema/subjects';
 import { resources } from '../schema/resources';
+import { details } from '../schema/details';
 import {
   resourcesRelations,
   userRelations,
@@ -29,6 +30,7 @@ export function connectDatabase(
       schema: {
         providers,
         resources,
+        details,
         users,
         teams,
         tags,

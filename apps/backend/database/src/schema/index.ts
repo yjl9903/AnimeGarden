@@ -1,5 +1,6 @@
 import { providers } from './providers';
 import { resources } from './resources';
+import { details } from './details';
 import { subjects } from './subjects';
 import { tags } from './tags';
 import { users, teams } from './users';
@@ -17,6 +18,10 @@ export type NewTeam = typeof teams.$inferInsert;
 export type NewResource = typeof resources.$inferInsert;
 
 export type Resource = typeof resources.$inferSelect;
+
+export type NewDetail = typeof details.$inferInsert;
+
+export type Detail = typeof details.$inferSelect;
 
 export type NewTag = typeof tags.$inferInsert;
 
