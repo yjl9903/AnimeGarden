@@ -2,7 +2,7 @@ import MeiliSearch from 'meilisearch';
 
 import { parse } from 'anitomy';
 import { desc, eq, sql } from 'drizzle-orm';
-import { normalizeTitle, type FetchedResource } from 'animegarden';
+import { normalizeTitle, type FetchedResource } from '@animegarden/client';
 
 import type { Resource } from '../schema';
 import type { Database } from '../connection';
