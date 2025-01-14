@@ -28,7 +28,7 @@ importers:
         version: 0.9.7
       bumpp:
         specifier: latest
-        version: 9.9.2(magicast@0.3.5)
+        version: 9.10.0(magicast@0.3.5)
       drizzle-kit:
         specifier: ^0.24.2
         version: 0.24.2
@@ -132,8 +132,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       bgmd:
-        specifier: ^0.0.57
-        version: 0.0.57
+        specifier: ^0.0.59
+        version: 0.0.59
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -399,8 +399,8 @@ importers:
         specifier: 0.0.35
         version: 0.0.35
       bgmd:
-        specifier: ^0.0.57
-        version: 0.0.57
+        specifier: ^0.0.59
+        version: 0.0.59
       hono:
         specifier: ^4.5.11
         version: 4.5.11
@@ -3598,8 +3598,8 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
-  bangumi-data@0.3.159:
-    resolution: {integrity: sha512-wnmkeNgCM+rIQ4uv6fVObcfbO+LQkLiqBA5R8NjLHuY6lFHNTen+7tz0vbbuFW/U8RZCtDKx26meYwzwrBmDVg==}
+  bangumi-data@0.3.160:
+    resolution: {integrity: sha512-4ryQ+AxOkmsQyx+5xmSAUsd6aEFIyryp9g33hhqKYsrhdcZQldHK3TJc3fb9iQnqgASpOppqtIvWRw7qWjdUhA==}
 
   bare-events@2.4.2:
     resolution: {integrity: sha512-qMKFd2qG/36aA4GwvKq8MxnPgCQAmBWmSyLWsJcbn8v03wvIPQ/hG1Ms8bPzndZxMDoHpxez5VOS+gC9Yi24/Q==}
@@ -3642,8 +3642,12 @@ packages:
     engines: {node: '>=v20.8.0'}
     hasBin: true
 
-  bgmd@0.0.57:
-    resolution: {integrity: sha512-VYRTn26+F0EGylXhRKdF5JcwAlCO1SnPT/2guyQ9tmwIsE7GyosDkT5iYklLlWQTND74mv0an/hG6KsWcMIlNQ==}
+  bgmd@0.0.59:
+    resolution: {integrity: sha512-65IfePd0cqiuwq4tsyM6q5aikW7vYPIJb35LHQSPZnu696fjNByrNJ67zHzPipc2iDhQF6jQ0JxCw3/TO0J8sw==}
+    engines: {node: '>=v20.8.0'}
+
+  bgmt@0.1.0:
+    resolution: {integrity: sha512-lHKCIODzIgLV6pwlWrAXr1XYzuddn2gpT6Ju5SXWCiWEKd8Y/Ef/+XqXUJB/lhO+zvAZxMaIOwzAE/jXNIy0BA==}
     engines: {node: '>=v20.8.0'}
 
   binary-extensions@2.3.0:
@@ -3722,8 +3726,8 @@ packages:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
     engines: {node: '>=6'}
 
-  bumpp@9.9.2:
-    resolution: {integrity: sha512-ggRxRV1rWHEyWXnf55UqYzGvttS/Vpkl1zxcNdE5xoYMTHlSgRA0Td4nKn3ckCcMuC+MTgaGQrbKBeyr0V9+Hg==}
+  bumpp@9.10.0:
+    resolution: {integrity: sha512-gNY3tYEGKyqW8+qtpeLQ2UfQW7G81d/vhCWNGrMlvy0Toq1LZPRs8wk9woAw8o9Tzv7pvjaF/Gno+UN3qiqNxA==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -5962,6 +5966,9 @@ packages:
   package-manager-detector@0.2.0:
     resolution: {integrity: sha512-E385OSk9qDcXhcM9LNSe4sdhx8a9mAPrZ4sMLW+tmxl5ZuGtPUcdFu+MPP2jbgiWAZ6Pfe5soGFMd+0Db5Vrog==}
 
+  package-manager-detector@0.2.8:
+    resolution: {integrity: sha512-ts9KSdroZisdvKMWVAVCXiKqnqNfXz4+IbrBG8/BWx/TR5le+jfenvoBuIZ6UWM9nz47W7AbD9qYfAwfWMIwzA==}
+
   parse-entities@2.0.0:
     resolution: {integrity: sha512-kkywGpCcRYhqQIchaWqZ875wzpS/bMKhz5HnN3p7wveJTkTtyAB/AlnS0f8DFSqYW1T82t6yEAkEcB+A1I3MbQ==}
 
@@ -6850,6 +6857,9 @@ packages:
   simptrad@0.1.0:
     resolution: {integrity: sha512-sK6XU47544K8i/QVDHlm3aEx+pgvKsI5AGEuCV6vV8m2QkD/W28e7A5EWAFVhEV3ADb7E/SZ90TZE/dhg6Nhog==}
 
+  simptrad@0.2.0:
+    resolution: {integrity: sha512-SADENHX3KNuTLThG/LQCZvIywDOwCFTC2aLufwmSgjVbHUEZKIjRzleb28J856kL4ozkKptv08eR3GyJFRCnMg==}
+
   sirv@2.0.4:
     resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
     engines: {node: '>= 10'}
@@ -7171,6 +7181,9 @@ packages:
   tinyexec@0.3.1:
     resolution: {integrity: sha512-WiCJLEECkO18gwqIp6+hJg0//p23HXp4S+gGtAKu3mI2F2/sXC4FvHvXvB0zJVVaTPhx1/tOwdbRsa1sOBIKqQ==}
 
+  tinyexec@0.3.2:
+    resolution: {integrity: sha512-KQQR9yN7R5+OSwaK0XQoj22pwHoTlgYqmUscPYoknOoWCWfj/5/ABTMRi69FrKU5ffPVh5QcFikpWJI/P1ocHA==}
+
   tinyglobby@0.2.10:
     resolution: {integrity: sha512-Zc+8eJlFMvgatPZTl6A9L/yht8QqdmUNtURHaKZLmKBE12hNPSrqNkUp2cs3M/UKmNVVAMFQYSjYIVHDjW5zew==}
     engines: {node: '>=12.0.0'}
@@ -7331,8 +7344,8 @@ packages:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
     engines: {node: '>=12.20'}
 
-  type-fest@4.31.0:
-    resolution: {integrity: sha512-yCxltHW07Nkhv/1F6wWBr8kz+5BGMfP+RbRSYFnegVb0qV/UMT0G0ElBloPVerqn4M2ZV80Ir1FtCcYv1cT6vQ==}
+  type-fest@4.32.0:
+    resolution: {integrity: sha512-rfgpoi08xagF3JSdtJlCwMq9DGNDE0IMh3Mkpc1wUypg9vPi786AiqeBBKcqvIkq42azsBM85N490fyZjeUftw==}
     engines: {node: '>=16'}
 
   typed-array-buffer@1.0.2:
@@ -11460,7 +11473,7 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  bangumi-data@0.3.159: {}
+  bangumi-data@0.3.160: {}
 
   bare-events@2.4.2: {}
 
@@ -11502,12 +11515,18 @@ snapshots:
     dependencies:
       breadc: 0.9.7
 
-  bgmd@0.0.57:
+  bgmd@0.0.59:
     dependencies:
-      bangumi-data: 0.3.159
+      bangumi-data: 0.3.160
       bgmc: 0.0.10
+      bgmt: 0.1.0
       tmdbc: 0.0.2
-      type-fest: 4.31.0
+      type-fest: 4.32.0
+
+  bgmt@0.1.0:
+    dependencies:
+      bgmc: 0.0.10
+      simptrad: 0.2.0
 
   binary-extensions@2.3.0: {}
 
@@ -11638,16 +11657,17 @@ snapshots:
 
   builtin-modules@3.3.0: {}
 
-  bumpp@9.9.2(magicast@0.3.5):
+  bumpp@9.10.0(magicast@0.3.5):
     dependencies:
       c12: 2.0.1(magicast@0.3.5)
       cac: 6.7.14
       escalade: 3.2.0
       js-yaml: 4.1.0
       jsonc-parser: 3.3.1
+      package-manager-detector: 0.2.8
       prompts: 2.4.2
       semver: 7.6.3
-      tinyexec: 0.3.1
+      tinyexec: 0.3.2
       tinyglobby: 0.2.10
     transitivePeerDependencies:
       - magicast
@@ -14220,6 +14240,8 @@ snapshots:
 
   package-manager-detector@0.2.0: {}
 
+  package-manager-detector@0.2.8: {}
+
   parse-entities@2.0.0:
     dependencies:
       character-entities: 1.2.4
@@ -15229,6 +15251,8 @@ snapshots:
 
   simptrad@0.1.0: {}
 
+  simptrad@0.2.0: {}
+
   sirv@2.0.4:
     dependencies:
       '@polka/url': 1.0.0-next.25
@@ -15661,6 +15685,8 @@ snapshots:
 
   tinyexec@0.3.1: {}
 
+  tinyexec@0.3.2: {}
+
   tinyglobby@0.2.10:
     dependencies:
       fdir: 6.4.2(picomatch@4.0.2)
@@ -15802,7 +15828,7 @@ snapshots:
 
   type-fest@2.19.0: {}
 
-  type-fest@4.31.0: {}
+  type-fest@4.32.0: {}
 
   typed-array-buffer@1.0.2:
     dependencies:
