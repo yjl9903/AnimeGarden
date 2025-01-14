@@ -1,1 +1,3 @@
-export * from './legacy';
+export * from './commands/import';
+
+export * from './commands/migrate';

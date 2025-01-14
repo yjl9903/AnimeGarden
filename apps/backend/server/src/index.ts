@@ -1,1 +1,1 @@
-import './legacy';
+export const app = 1;
