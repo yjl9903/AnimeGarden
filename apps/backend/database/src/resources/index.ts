@@ -43,10 +43,10 @@ export class ResourcesModule extends Module<System['modules']> {
 
           const titleSearch =
             search1 && search2
-              ? sql`(setweight(to_tsvector('simple', ${search1}), 'A') || setweight(to_tsvector('simple', ${search2}), 'B'))`
+              ? sql`(setweight(to_tsvector('simple', ${search1}), 'A') || setweight(to_tsvector('simple', ${search2}), 'D'))`
               : search1
                 ? sql`setweight(to_tsvector('simple', ${search1}), 'A')`
-                : sql`setweight(to_tsvector('simple', ${search2 ?? ''}), 'B')`;
+                : sql`setweight(to_tsvector('simple', ${search2 ?? ''}), 'D')`;
           const duplicatedId = sql`(SELECT ${resourceSchema.id} FROM ${resourceSchema} WHERE (${r.provider} != ${resourceSchema.provider}) AND (${r.magnet} = ${resourceSchema.magnet} OR ${r.title} = ${resourceSchema.title}))`;
 
           return {
