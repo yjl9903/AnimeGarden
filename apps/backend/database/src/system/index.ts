@@ -41,6 +41,8 @@ export async function makeSystem(options: SystemOptions) {
     system.disposables.push(() => connection.end());
     system.logger.success('Connect to Postgres');
   } catch (error) {
+    system.logger.error(options);
+    system.logger.error(error);
     throw error;
   }
 
