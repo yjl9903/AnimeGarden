@@ -20,7 +20,7 @@ export function transformNewResources(
   }
 
   const titleAlt = normalizeTitle(res.title);
-  const size = parseSize(res.size);
+  const size = Math.floor(parseSize(res.size));
   const publisher = sys.modules.users.get(res.publisher);
   const fansub = res.fansub ? sys.modules.teams.get(res.fansub) : undefined;
 
