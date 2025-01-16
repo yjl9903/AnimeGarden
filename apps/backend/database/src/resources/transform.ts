@@ -1,17 +1,13 @@
-import { Jieba } from '@node-rs/jieba';
-import { dict } from '@node-rs/jieba/dict.js';
-
 import { parse } from 'anipar';
 import { normalizeTitle } from '@animegarden/client';
 
 import type { System } from '../system';
 import type { NewResource as NewDbResource } from '../schema';
 
+import { jieba } from '../utils';
 import { SupportProviders } from '../schema/providers';
 
 import type { NewResource } from './types';
-
-const jieba = Jieba.withDict(dict);
 
 export function transformNewResources(
   sys: System,
@@ -49,6 +45,8 @@ export function transformNewResources(
             .map((t) => t.trim())
             .filter(Boolean)
         : undefined,
+      undefined,
+      undefined,
       jieba
         .cut(titleAlt, false)
         .map((t) => t.trim())

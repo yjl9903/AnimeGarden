@@ -6,7 +6,8 @@ import { Module } from '../system/module';
 import { resources as resourceSchema } from '../schema/resources';
 
 import type { NewResource } from './types';
-import { transformNewResources } from './utils';
+
+import { transformNewResources } from './transform';
 
 export * from './types';
 
@@ -39,7 +40,7 @@ export class ResourcesModule extends Module<System['modules']> {
       .values(
         newResources.map((r) => {
           const search1 = r.titleSearch[0] ? r.titleSearch[0].join(' ') : undefined;
-          const search2 = r.titleSearch[1] ? r.titleSearch[1].join(' ') : undefined;
+          const search2 = r.titleSearch[3] ? r.titleSearch[3].join(' ') : undefined;
 
           const titleSearch =
             search1 && search2
