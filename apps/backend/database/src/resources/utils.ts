@@ -1,5 +1,5 @@
 import { Jieba } from '@node-rs/jieba';
-import { dict } from '@node-rs/jieba/dict';
+import { dict } from '@node-rs/jieba/dict.js';
 
 import { parse } from 'anipar';
 import { normalizeTitle } from '@animegarden/client';
