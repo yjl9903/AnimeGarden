@@ -80,7 +80,11 @@ export class SubjectsModule extends Module<System['modules']> {
     }
 
     if (options.indexResources) {
-      const resp = await Promise.all(subs.map((sub) => this.insertSubject(sub, options)));
+      const resp: Array<{ id: number; name: string; bgmId: number | null } | undefined> = [];
+      for (const sub of subs) {
+        const res = await this.insertSubject(sub, options);
+        resp.push(res);
+      }
       const map = new Map(resp.filter(Boolean).map((s) => [s!.name, s!] as const));
       return {
         inserted: resp.filter((s) => s),
