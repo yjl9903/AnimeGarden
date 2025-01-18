@@ -46,7 +46,7 @@ export class SubjectsModule extends Module<System['modules']> {
         .insert(subjects)
         .values(subject)
         .onConflictDoUpdate({
-          target: subjects.id,
+          target: [subjects.name],
           set: {
             name: subject.name,
             bgmId: subject.bgmId,
@@ -59,6 +59,10 @@ export class SubjectsModule extends Module<System['modules']> {
           id: subjects.id,
           name: subjects.name,
           bgmId: subjects.bgmId
+        })
+        .catch((err) => {
+          this.logger.error(err);
+          return [];
         });
       const changed = resp.length > 0;
       if (
