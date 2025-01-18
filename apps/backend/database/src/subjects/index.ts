@@ -38,7 +38,7 @@ export class SubjectsModule extends Module<System['modules']> {
   public async insertSubject(subject: NewSubject, options: InsertSubjectOptions = {}) {
     try {
       this.logger.info(
-        `Insert subject ${subject.name} (id: ${subject.bgmId}) -> ${subject.keywords.map((t) => `"${t}"`).join(' ')}`
+        `Insert subject ${subject.name} (id: ${subject.bgmId}, ${subject.activedAt.toLocaleDateString()}) -> ${subject.keywords.map((t) => `"${t}"`).join(' ')}`
       );
       const isArchived =
         subject.isArchived === null || subject.isArchived === undefined ? true : subject.isArchived;
