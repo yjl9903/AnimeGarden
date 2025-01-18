@@ -1,4 +1,5 @@
 import type { FullBangumi } from 'bgmd/types';
+import type { calendar as Calendar, web as Web } from 'bgmd/calendar';
 
 import { normalizeTitle } from '@animegarden/client';
 
@@ -12,8 +13,14 @@ import type { SubjectsModule } from './index';
  */
 export async function updateCalendar(mod: SubjectsModule) {
   // 1. Load bgmd
-  const { calendar } = await import('bgmd/calendar', { with: { type: 'json' } });
-  const onairBangumis = calendar.flat();
+  const bgmd = await import('bgmd/calendar', { with: { type: 'json' } });
+  // @ts-ignore
+  const { calendar, web } = (bgmd?.default ?? bgmd) as {
+    calendar: typeof Calendar;
+    web: typeof Web;
+  };
+  const onair = calendar.flat();
+
   // 2. Diff new subjects
   // 3. Insert new subjects
 
@@ -29,7 +36,10 @@ export async function updateCalendar(mod: SubjectsModule) {
  * 重置所有 resources 的 subject id
  */
 export async function importFromBgmd(mod: SubjectsModule) {
-  const { bangumis } = await import('bgmd', { with: { type: 'json' } });
+  const bgmd = await import('bgmd', { with: { type: 'json' } });
+  // @ts-ignore
+  const { bangumis } = (bgmd?.default ?? bgmd) as { bangumis: Omit<FullBangumi, 'summary'>[] };
+
   const subs: NewSubject[] = [];
   const errors: typeof bangumis = [];
 

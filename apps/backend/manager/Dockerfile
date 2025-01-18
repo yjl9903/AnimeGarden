@@ -2,7 +2,7 @@
 
 # Adjust NODE_VERSION as desired
 ARG NODE_VERSION=20.10.0
-ARG PNPM_VERSION=9.10.0
+ARG PNPM_VERSION=9.15.2
 
 
 # Base Image
