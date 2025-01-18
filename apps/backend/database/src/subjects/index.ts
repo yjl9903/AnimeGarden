@@ -59,7 +59,10 @@ export class SubjectsModule extends Module<System['modules']> {
         });
       const changed = resp.length > 0;
       if (changed && options.indexResources && !subject.isArchived) {
-        await this.indexSubject({ isArchived, ...subject, ...resp[0] }, options);
+        const indexed = await this.indexSubject({ isArchived, ...subject, ...resp[0] }, options);
+        this.logger.info(
+          `Insert subject ${subject.name} with ${indexed.matched.length} related resources`
+        );
       }
       return resp[0];
     } catch (error) {

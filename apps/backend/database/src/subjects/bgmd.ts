@@ -25,11 +25,11 @@ export async function updateCalendar(mod: SubjectsModule) {
 }
 
 /**
- * 从 bgmd/full 导入番剧数据
+ * 从 bgmd 导入番剧数据
  * 重置所有 resources 的 subject id
  */
 export async function importFromBgmd(mod: SubjectsModule) {
-  const { bangumis } = await import('bgmd');
+  const { bangumis } = await import('bgmd', { with: { type: 'json' } });
   const subs: NewSubject[] = [];
   const errors: typeof bangumis = [];
 
