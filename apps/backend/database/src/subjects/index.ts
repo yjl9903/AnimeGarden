@@ -61,7 +61,11 @@ export class SubjectsModule extends Module<System['modules']> {
           bgmId: subjects.bgmId
         });
       const changed = resp.length > 0;
-      if (changed && options.indexResources && !subject.isArchived) {
+      if (
+        changed &&
+        options.indexResources &&
+        subject.activedAt.getTime() >= new Date('2000-01-01').getTime()
+      ) {
         const indexed = await this.indexSubject({ isArchived, ...subject, ...resp[0] }, options);
         this.logger.success(
           `Insert subject ${subject.name} with ${indexed.matched.length} related resources`
