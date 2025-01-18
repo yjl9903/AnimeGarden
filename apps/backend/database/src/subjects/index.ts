@@ -37,6 +37,9 @@ export class SubjectsModule extends Module<System['modules']> {
 
   public async insertSubject(subject: NewSubject, options: InsertSubjectOptions = {}) {
     try {
+      this.logger.info(
+        `Insert subject ${subject.name} (id: ${subject.bgmId}) -> ${subject.keywords.join(' ')}`
+      );
       const isArchived =
         subject.isArchived === null || subject.isArchived === undefined ? true : subject.isArchived;
       const resp = await this.database
@@ -60,7 +63,7 @@ export class SubjectsModule extends Module<System['modules']> {
       const changed = resp.length > 0;
       if (changed && options.indexResources && !subject.isArchived) {
         const indexed = await this.indexSubject({ isArchived, ...subject, ...resp[0] }, options);
-        this.logger.info(
+        this.logger.success(
           `Insert subject ${subject.name} with ${indexed.matched.length} related resources`
         );
       }
