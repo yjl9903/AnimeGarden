@@ -168,6 +168,12 @@ export class SubjectsModule extends Module<System['modules']> {
   }
 
   public async importFromBgmd() {
-    return importFromBgmd(this);
+    const resp = await importFromBgmd(this);
+    if (resp.conflict.length > 0) {
+      for (const item of resp.conflict) {
+        this.logger.warn(`Conflict subject: ${item.name} (id: ${item.bgmId})`);
+      }
+    }
+    return resp;
   }
 }
