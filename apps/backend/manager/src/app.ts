@@ -61,7 +61,7 @@ app
   });
 
 app
-  .command('fetch', 'Fetch data from providers')
+  .command('fetch', 'Fetch data from providers (WIP)')
   .option('--out-dir <dir>')
   .action(async (options) => {
     const sys = await initialize(options);
@@ -71,16 +71,17 @@ app
   });
 
 app
-  .command('import [dir]', 'Import subjects, tags, and local resources data')
+  .command('import [dir]', 'Import subjects, tags, and local resources data (WIP)')
   .action(async (dir, options) => {
     const sys = await initialize(options);
     await sys.initialize();
     await sys.modules.subjects.importFromBgmd();
+    await sys.modules.subjects.updateCalendar();
     await sys.modules.tags.importFromAnipar();
     await sys.close();
   });
 
-app.command('import tags', 'Import tags from anipar').action(async (options) => {
+app.command('import tags', 'Import tags from anipar (WIP)').action(async (options) => {
   const sys = await initialize(options);
   await sys.initialize();
   await sys.modules.tags.importFromAnipar();
@@ -91,11 +92,12 @@ app.command('import subjects', 'Import subjects from bgmd').action(async (option
   const sys = await initialize(options);
   await sys.initialize();
   await sys.modules.subjects.importFromBgmd();
+  await sys.modules.subjects.updateCalendar();
   await sys.close();
 });
 
 app
-  .command('import resources [dir]', 'Import local resources data')
+  .command('import resources [dir]', 'Import local resources data (WIP)')
   .action(async (dir, options) => {
     const sys = await initialize(options);
     await sys.initialize();

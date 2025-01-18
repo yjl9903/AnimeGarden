@@ -46,8 +46,13 @@ async function transferResources(
   oldDatabase: LegacyDatabase,
   options: TransferOptions
 ) {
-  sys.logger.info('Start transfering Resources');
   const PAGE_SIZE = options.pageSize ?? 1000;
+  if (PAGE_SIZE <= 0) {
+    sys.logger.success('Skip transfering Resources');
+    return;
+  }
+
+  sys.logger.info('Start transfering Resources');
 
   let cursor = options.startPage ?? 0;
   let end = options.endPage ?? Number.MAX_SAFE_INTEGER;

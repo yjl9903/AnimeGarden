@@ -1,11 +1,13 @@
-import type { System } from '../system/system';
+import { and, or, eq, gte, ilike, isNull } from 'drizzle-orm';
+
+import type { System } from '../system';
 
 import { Module } from '../system/module';
 
-import type { InsertSubjectOptions } from './types';
+import type { IndexOptions, InsertSubjectOptions } from './types';
 
-import { importFromBgmd } from './bgmd';
-import { NewSubject, Subject, subjects } from './schema';
+import { importFromBgmd, updateCalendar } from './bgmd';
+import { type NewSubject, type Subject, subjects, resources } from './schema';
 
 export class SubjectsModule extends Module<System['modules']> {
   public static name = 'subjects';
@@ -15,6 +17,7 @@ export class SubjectsModule extends Module<System['modules']> {
   public async initialize() {
     this.system.logger.info('Initializing Subjects module');
     await this.fetchSubjects();
+    await this.updateCalendar();
     this.system.logger.success('Initialize Subjects module OK');
   }
 
@@ -24,8 +27,18 @@ export class SubjectsModule extends Module<System['modules']> {
     return subs;
   }
 
+  public get activedSubjects() {
+    return this.subjects.filter((sub) => !sub.isArchived);
+  }
+
+  public get archivedSubjects() {
+    return this.subjects.filter((sub) => sub.isArchived);
+  }
+
   public async insertSubject(subject: NewSubject, options: InsertSubjectOptions = {}) {
     try {
+      const isArchived =
+        subject.isArchived === null || subject.isArchived === undefined ? true : subject.isArchived;
       const resp = await this.database
         .insert(subjects)
         .values(subject)
@@ -35,37 +48,123 @@ export class SubjectsModule extends Module<System['modules']> {
             name: subject.name,
             bgmId: subject.bgmId,
             activedAt: subject.activedAt,
-            keywords: subject.keywords
+            keywords: subject.keywords,
+            isArchived
           }
+        })
+        .returning({
+          id: subjects.id,
+          name: subjects.name,
+          bgmId: subjects.bgmId
         });
       const changed = resp.length > 0;
-      if (changed && options.reIndexResources) {
-        await this.indexSubject(subject);
+      if (changed && options.indexResources && !subject.isArchived) {
+        await this.indexSubject({ isArchived, ...subject, ...resp[0] }, options);
       }
-      return changed;
+      return resp[0];
     } catch (error) {
       this.logger.error(error);
-      return false;
+      return undefined;
     }
-  }
-
-  public async indexSubject(subject: NewSubject) {
-    // TODO: index subjects
   }
 
   public async insertSubjects(subs: NewSubject[], options: InsertSubjectOptions = {}) {
-    if (options.reIndexResources) {
+    if (subs.length === 0) {
+      return {
+        inserted: [],
+        conflict: []
+      };
+    }
+
+    if (options.indexResources) {
       const resp = await Promise.all(subs.map((sub) => this.insertSubject(sub, options)));
-      return resp.filter(Boolean).length;
+      const map = new Map(resp.filter(Boolean).map((s) => [s!.name, s!] as const));
+      return {
+        inserted: resp.filter((s) => s),
+        conflict: subs.filter((s) => !map.has(s.name))
+      };
     } else {
       try {
-        const resp = await this.database.insert(subjects).values(subs).onConflictDoNothing();
-        return resp.length;
+        const resp = await this.database
+          .insert(subjects)
+          .values(subs)
+          .onConflictDoNothing()
+          .returning({ id: subjects.id, name: subjects.name, bgmId: subjects.bgmId });
+        const map = new Map(resp.map((s) => [s!.name, s!] as const));
+        return {
+          inserted: resp,
+          conflict: subs.filter((s) => !map.has(s.name))
+        };
       } catch (error) {
         this.logger.error(error);
-        return 0;
+        return {
+          inserted: [],
+          conflict: [...subs]
+        };
       }
     }
+  }
+
+  /**
+   * Index resources with subject
+   *
+   * @param subject
+   * @param options
+   * @returns
+   */
+  public async indexSubject(
+    subject: Subject,
+    options: IndexOptions = {}
+  ): Promise<{ matched: Array<{ id: number; title: string }>; error?: any }> {
+    if (subject.keywords.length === 0) {
+      this.logger.warn(`Invalid keywords for ${subject.name} (id ${subject.bgmId})`);
+      return {
+        matched: []
+      };
+    }
+
+    try {
+      const offset = (options.offset ?? 31) * 24 * 60 * 60 * 1000;
+      const start = new Date(subject.activedAt.getTime() - offset);
+
+      const keywords = subject.keywords.map((k) => ilike(resources.titleAlt, `%${k}%`));
+
+      const resp = await this.database
+        .update(resources)
+        .set({ subjectId: subject.id })
+        .where(
+          and(
+            // 未被删除
+            eq(resources.isDeleted, false),
+            // 不是重复
+            isNull(resources.duplicatedId),
+            // 是否覆盖
+            options.overwrite ? undefined : isNull(resources.subjectId),
+            // 资源时间 >= 开播时间 - 30d
+            gte(resources.createdAt, start),
+            // 匹配关键词
+            or(...keywords)
+          )
+        )
+        .returning({
+          id: resources.id,
+          title: resources.title
+        });
+
+      return {
+        matched: resp
+      };
+    } catch (error) {
+      this.logger.error(error);
+      return {
+        error,
+        matched: []
+      };
+    }
+  }
+
+  public async updateCalendar() {
+    return updateCalendar(this);
   }
 
   public async importFromBgmd() {

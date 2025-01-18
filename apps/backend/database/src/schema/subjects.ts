@@ -17,7 +17,7 @@ export const subjects = pgTable(
     bgmId: integer('bangumi_id'),
     keywords: json('keywords').$type<string[]>().notNull(),
     activedAt: timestamp('actived_at', { withTimezone: true }).notNull(),
-    isArchived: boolean('is_archived').default(false)
+    isArchived: boolean('is_archived').notNull().default(true)
   },
   (t) => {
     return {

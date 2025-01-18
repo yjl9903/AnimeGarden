@@ -89,8 +89,8 @@ importers:
         specifier: 0.0.35
         version: 0.0.35
       bgmd:
-        specifier: ^0.0.57
-        version: 0.0.57
+        specifier: ^0.0.60
+        version: 0.0.60
       consola:
         specifier: ^3.3.0
         version: 3.4.0
@@ -439,8 +439,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       bgmd:
-        specifier: ^0.0.59
-        version: 0.0.59
+        specifier: ^0.0.60
+        version: 0.0.60
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -609,8 +609,8 @@ importers:
         specifier: 0.0.35
         version: 0.0.35
       bgmd:
-        specifier: ^0.0.59
-        version: 0.0.59
+        specifier: ^0.0.60
+        version: 0.0.60
       hono:
         specifier: ^4.5.11
         version: 4.5.11
@@ -4384,12 +4384,8 @@ packages:
     engines: {node: '>=v20.8.0'}
     hasBin: true
 
-  bgmd@0.0.57:
-    resolution: {integrity: sha512-VYRTn26+F0EGylXhRKdF5JcwAlCO1SnPT/2guyQ9tmwIsE7GyosDkT5iYklLlWQTND74mv0an/hG6KsWcMIlNQ==}
-    engines: {node: '>=v20.8.0'}
-
-  bgmd@0.0.59:
-    resolution: {integrity: sha512-65IfePd0cqiuwq4tsyM6q5aikW7vYPIJb35LHQSPZnu696fjNByrNJ67zHzPipc2iDhQF6jQ0JxCw3/TO0J8sw==}
+  bgmd@0.0.60:
+    resolution: {integrity: sha512-eFg1MKxEaWEkmyDXXgMNmpFuqtmCuKh88bDwDGKj7WqKOLi6se14TiE72itV9mEO/tLOMjsKqeSlW6D9HQDR1w==}
     engines: {node: '>=v20.8.0'}
 
   bgmt@0.1.0:
@@ -13927,14 +13923,7 @@ snapshots:
     dependencies:
       breadc: 0.9.7
 
-  bgmd@0.0.57:
-    dependencies:
-      bangumi-data: 0.3.160
-      bgmc: 0.0.10
-      tmdbc: 0.0.2
-      type-fest: 4.32.0
-
-  bgmd@0.0.59:
+  bgmd@0.0.60:
     dependencies:
       bangumi-data: 0.3.160
       bgmc: 0.0.10
