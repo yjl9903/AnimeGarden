@@ -38,7 +38,7 @@ export class SubjectsModule extends Module<System['modules']> {
   public async insertSubject(subject: NewSubject, options: InsertSubjectOptions = {}) {
     try {
       this.logger.info(
-        `Insert subject ${subject.name} (id: ${subject.bgmId}) -> ${subject.keywords.join(' ')}`
+        `Insert subject ${subject.name} (id: ${subject.bgmId}) -> ${subject.keywords.map((t) => `"${t}"`).join(' ')}`
       );
       const isArchived =
         subject.isArchived === null || subject.isArchived === undefined ? true : subject.isArchived;
@@ -66,9 +66,14 @@ export class SubjectsModule extends Module<System['modules']> {
         options.indexResources &&
         subject.activedAt.getTime() >= new Date('2000-01-01').getTime()
       ) {
+        const offset = (options.offset ?? 31) * 24 * 60 * 60 * 1000;
+        const start = new Date(subject.activedAt.getTime() - offset);
+        this.logger.info(
+          `Start indexing subject ${subject.name} after ${start.toLocaleDateString()}`
+        );
         const indexed = await this.indexSubject({ isArchived, ...subject, ...resp[0] }, options);
         this.logger.success(
-          `Insert subject ${subject.name} with ${indexed.matched.length} related resources`
+          `Finish inserting subject ${subject.name} with ${indexed.matched.length} related resources`
         );
       }
       return resp[0];
