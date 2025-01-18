@@ -66,8 +66,8 @@ export async function importFromBgmd(mod: SubjectsModule) {
   subs.sort((lhs, rhs) => rhs.activedAt.getTime() - lhs.activedAt.getTime());
 
   // 清空所有 resources 的 subject id
-  mod.logger.info('Clear all the subject ids of resources')
-  await mod.system.database.update(resources).set({ subjectId: null });
+  // mod.logger.info('Clear all the subject ids of resources')
+  // await mod.system.database.update(resources).set({ subjectId: null });
 
   // 插入 subject 并生成索引
   const { inserted, conflict } = await mod.insertSubjects(subs, {
