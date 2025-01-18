@@ -65,7 +65,17 @@ export async function importFromBgmd(mod: SubjectsModule) {
   }
 
   // 时间倒序排序
-  subs.sort((lhs, rhs) => rhs.activedAt.getTime() - lhs.activedAt.getTime());
+  subs.sort((lhs, rhs) => {
+    const l = lhs.activedAt.getTime();
+    const r = rhs.activedAt.getTime();
+    if (l < r) {
+      return 1;
+    } else if (l > r) {
+      return -1;
+    } else {
+      return 0;
+    }
+  });
 
   // 清空所有 resources 的 subject id
   // mod.logger.info('Start clearing all the subject ids of resources');
