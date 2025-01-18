@@ -167,16 +167,21 @@ export class SubjectsModule extends Module<System['modules']> {
   }
 
   public async updateCalendar() {
-    return updateCalendar(this);
+    this.logger.info('Start updating calendar from bgmd');
+    const resp = await updateCalendar(this);
+    this.logger.success('Finish updating calendar from bgmd');
+    return resp;
   }
 
   public async importFromBgmd() {
+    this.logger.info('Start importing bangumis from bgmd');
     const resp = await importFromBgmd(this);
     if (resp.conflict.length > 0) {
       for (const item of resp.conflict) {
         this.logger.warn(`Conflict subject: ${item.name} (id: ${item.bgmId})`);
       }
     }
+    this.logger.success(`Finish importing ${resp.inserted.length} bangumis`);
     return resp;
   }
 }
