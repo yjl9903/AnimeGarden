@@ -78,7 +78,7 @@ export async function importFromBgmd(mod: SubjectsModule) {
   const { inserted, conflict } = await mod.insertSubjects(subs, {
     indexResources: true,
     offset: 30,
-    overwrite: false
+    overwrite: true
   });
 
   return {
