@@ -73,7 +73,7 @@ export async function importFromBgmd(mod: SubjectsModule) {
     } else if (l > r) {
       return -1;
     } else {
-      return 0;
+      return (rhs.bgmId ?? 0) - (lhs.bgmId ?? 0);
     }
   });
 
