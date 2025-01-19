@@ -9,7 +9,7 @@ import {
   FilterSchema,
   fetchResources,
   stringifySearchURL
-} from 'animegarden';
+} from '@animegarden/client';
 
 import { wfetch, baseURL } from '../fetch';
 import { removeQuote, getRuntimeEnv } from '../utils';

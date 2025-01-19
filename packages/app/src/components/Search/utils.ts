@@ -1,5 +1,5 @@
 import { navigate } from 'astro:transitions/client';
-import { findFansub, parseSearchURL, stringifySearchURL } from 'animegarden';
+import { findFansub, parseSearchURL, stringifySearchURL } from '@animegarden/client';
 
 import { DisplayType } from '@/constant';
 import { store, inputAtom } from '@/state';

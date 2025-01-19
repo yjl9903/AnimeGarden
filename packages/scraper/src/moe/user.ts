@@ -1,4 +1,4 @@
-import { retryFn } from 'animegarden';
+import { retryFn } from '@animegarden/client';
 
 const Users = new Map<string, { provider: 'moe'; providerId: string; name: string }>();
 

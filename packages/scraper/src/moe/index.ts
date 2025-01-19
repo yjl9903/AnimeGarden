@@ -1,6 +1,6 @@
-import type { FetchedResource, ResourceDetail } from 'animegarden';
+import type { FetchedResource, ResourceDetail } from '@animegarden/client';
 
-import { retryFn } from 'animegarden';
+import { retryFn } from '@animegarden/client';
 
 import { getType } from './tag';
 import { fetchTeam, fetchUser } from './user';

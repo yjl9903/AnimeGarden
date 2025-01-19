@@ -1,4 +1,4 @@
-import { findFansub, type ResolvedFilterOptions, type ResourceType } from 'animegarden';
+import { findFansub, type ResolvedFilterOptions, type ResourceType } from '@animegarden/client';
 
 import { removeQuote } from '@/utils';
 import { DisplayType, DisplayTypeColor, QueryType } from '@/constant';

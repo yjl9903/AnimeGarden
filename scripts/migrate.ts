@@ -2,9 +2,9 @@ import 'dotenv/config';
 
 import { eq } from 'drizzle-orm';
 
-import { database } from '../packages/server/src/database';
-import { meiliSearch } from '../packages/server/src/meilisearch';
-import { resources, insertResourceDocuments } from '../packages/database/src';
+import { database } from '../apps/backend/server/src/database';
+import { meiliSearch } from '../apps/backend/server/src/meilisearch';
+import { resources, insertResourceDocuments } from '../apps/backend/database/src';
 
 const PAGE_SIZE = 1000;
 

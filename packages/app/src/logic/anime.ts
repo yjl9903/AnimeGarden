@@ -1,7 +1,7 @@
 import type { FullBangumi } from 'bgmd/types';
 
 import { calendar as rawCalendar } from 'bgmd/calendar';
-import { stringifySearchURL } from 'animegarden';
+import { stringifySearchURL } from '@animegarden/client';
 
 import { APP_HOST } from '~build/meta';
 
