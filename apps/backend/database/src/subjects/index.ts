@@ -46,10 +46,9 @@ export class SubjectsModule extends Module<System['modules']> {
         .insert(subjects)
         .values(subject)
         .onConflictDoUpdate({
-          target: [subjects.name],
+          target: [subjects.bgmId],
           set: {
             name: subject.name,
-            bgmId: subject.bgmId,
             activedAt: subject.activedAt,
             keywords: subject.keywords,
             isArchived

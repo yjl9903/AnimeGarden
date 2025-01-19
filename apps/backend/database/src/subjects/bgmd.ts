@@ -78,18 +78,18 @@ export async function importFromBgmd(mod: SubjectsModule) {
   });
 
   // 清空所有 resources 的 subject id
-  // mod.logger.info('Start clearing all the subject ids of resources');
-  // await mod.system.database
-  //   .update(resources)
-  //   .set({ subjectId: null })
-  //   .where(isNotNull(resources.subjectId));
-  // mod.logger.success('Finish clearing all the subject ids of resources');
+  mod.logger.info('Start clearing all the subject ids of resources');
+  await mod.system.database
+    .update(resources)
+    .set({ subjectId: null })
+    .where(isNotNull(resources.subjectId));
+  mod.logger.success('Finish clearing all the subject ids of resources');
 
   // 插入 subject 并生成索引
   const { inserted, conflict } = await mod.insertSubjects(subs, {
     indexResources: true,
     offset: 30,
-    overwrite: true
+    overwrite: false
   });
 
   return {

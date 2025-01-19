@@ -14,14 +14,15 @@ export const subjects = pgTable(
   {
     id: serial('id').primaryKey(),
     name: varchar('name', { length: 256 }).unique().notNull(),
-    bgmId: integer('bangumi_id'),
+    bgmId: integer('bangumi_id').unique().notNull(),
     keywords: json('keywords').$type<string[]>().notNull(),
     activedAt: timestamp('actived_at', { withTimezone: true }).notNull(),
     isArchived: boolean('is_archived').notNull().default(true)
   },
   (t) => {
     return {
-      uniqueName: uniqueIndex('unique_subjects_name').on(t.name)
+      uniqueName: uniqueIndex('unique_subjects_name').on(t.name),
+      uniqueBangumiId: uniqueIndex('unique_subjects_bangumi_id').on(t.bgmId)
     };
   }
 );
