@@ -1,14 +1,11 @@
-import { isNotNull } from 'drizzle-orm';
-
+import { subjects } from './../schema/subjects';
 import type { FullBangumi } from 'bgmd/types';
 import type { calendar as Calendar, web as Web } from 'bgmd/calendar';
 
 import { normalizeTitle } from '@animegarden/client';
 
-import { resources } from '../schema/resources';
-
-import type { NewSubject } from './schema';
 import type { SubjectsModule } from './index';
+import type { NewSubject, Subject } from './schema';
 
 /**
  * @todo
@@ -21,15 +18,36 @@ export async function updateCalendar(mod: SubjectsModule) {
     calendar: typeof Calendar;
     web: typeof Web;
   };
-  const onair = calendar.flat();
+  const onair = [...calendar, web].flat();
 
   // 2. Diff new subjects
-  // 3. Insert new subjects
+  const insertMap = new Map<number, FullBangumi>();
+  const archiveMap = new Map<number, Subject>();
+  for (const bgm of onair) {
+    const id = bgm.id;
+    insertMap.set(id, bgm);
+  }
+  for (const sub of mod.activeSubjects) {
+    if (insertMap.has(sub.bgmId)) {
+      insertMap.delete(sub.bgmId);
+    } else {
+      archiveMap.set(sub.bgmId, sub);
+    }
+  }
+
+  // 3. Archive old subjects, and insert new subjects
+  const archived = await mod.archiveSubjects([...archiveMap.keys()]);
+  const { subs, errors } = transformFullBangumis(mod, onair, false);
+  const { inserted, conflict } = await mod.insertSubjects(subs);
+
+  // 4. Update mod cache
+  await mod.fetchSubjects();
 
   return {
-    active: [],
-    update: [],
-    archive: []
+    inserted,
+    archived,
+    conflict,
+    errors
   };
 }
 
@@ -42,27 +60,7 @@ export async function importFromBgmd(mod: SubjectsModule) {
   // @ts-ignore
   const { bangumis } = (bgmd?.default ?? bgmd) as { bangumis: Omit<FullBangumi, 'summary'>[] };
 
-  const subs: NewSubject[] = [];
-  const errors: typeof bangumis = [];
-
-  for (const bgm of bangumis) {
-    const bgmId = bgm.bangumi?.id ?? +bgm.id;
-    const activedAt = toShanghai(bgm.air_date);
-    const keywords = normalizeTags(bgm);
-
-    if (bgmId && activedAt) {
-      subs.push({
-        name: bgm.name,
-        bgmId,
-        activedAt,
-        keywords,
-        isArchived: true
-      });
-    } else {
-      mod.system.logger.warn(`Invalid bangumi item: ${bgm.name} (id: ${bgm.id})`);
-      errors.push(bgm);
-    }
-  }
+  const { subs, errors } = transformFullBangumis(mod, bangumis, true);
 
   // 时间倒序排序
   subs.sort((lhs, rhs) => {
@@ -78,12 +76,7 @@ export async function importFromBgmd(mod: SubjectsModule) {
   });
 
   // 清空所有 resources 的 subject id
-  mod.logger.info('Start clearing all the subject ids of resources');
-  await mod.system.database
-    .update(resources)
-    .set({ subjectId: null })
-    .where(isNotNull(resources.subjectId));
-  mod.logger.success('Finish clearing all the subject ids of resources');
+  await mod.clearAllSubjectIds();
 
   // 插入 subject 并生成索引
   const { inserted, conflict } = await mod.insertSubjects(subs, {
@@ -100,6 +93,36 @@ export async function importFromBgmd(mod: SubjectsModule) {
     // 非法数据
     errors
   };
+}
+
+function transformFullBangumis(
+  mod: SubjectsModule,
+  bangumis: Omit<FullBangumi, 'summary'>[],
+  isArchived = true
+) {
+  const subs: NewSubject[] = [];
+  const errors: typeof bangumis = [];
+
+  for (const bgm of bangumis) {
+    const bgmId = bgm.bangumi?.id ?? +bgm.id;
+    const activedAt = toShanghai(bgm.air_date);
+    const keywords = normalizeTags(bgm);
+
+    if (bgmId && activedAt) {
+      subs.push({
+        name: bgm.name,
+        bgmId,
+        activedAt,
+        keywords,
+        isArchived
+      });
+    } else {
+      mod.system.logger.warn(`Invalid bangumi item: ${bgm.name} (id: ${bgm.id})`);
+      errors.push(bgm);
+    }
+  }
+
+  return { subs, errors };
 }
 
 /**

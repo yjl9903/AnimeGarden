@@ -1,4 +1,4 @@
-import { and, or, eq, gte, ilike, isNull } from 'drizzle-orm';
+import { and, or, eq, gte, ilike, isNull, isNotNull, inArray } from 'drizzle-orm';
 
 import type { System } from '../system';
 
@@ -27,7 +27,7 @@ export class SubjectsModule extends Module<System['modules']> {
     return subs;
   }
 
-  public get activedSubjects() {
+  public get activeSubjects() {
     return this.subjects.filter((sub) => !sub.isArchived);
   }
 
@@ -42,6 +42,7 @@ export class SubjectsModule extends Module<System['modules']> {
       );
       const isArchived =
         subject.isArchived === null || subject.isArchived === undefined ? true : subject.isArchived;
+
       const resp = await this.database
         .insert(subjects)
         .values(subject)
@@ -63,7 +64,9 @@ export class SubjectsModule extends Module<System['modules']> {
           this.logger.error(err);
           return [];
         });
+
       const changed = resp.length > 0;
+
       if (
         changed &&
         options.indexResources &&
@@ -79,6 +82,7 @@ export class SubjectsModule extends Module<System['modules']> {
           `Finish inserting subject ${subject.name} with ${indexed.matched.length} related resources`
         );
       }
+
       return resp[0];
     } catch (error) {
       this.logger.error(error);
@@ -183,6 +187,34 @@ export class SubjectsModule extends Module<System['modules']> {
         matched: []
       };
     }
+  }
+
+  /**
+   * 归档过时的 subject
+   */
+  public async archiveSubjects(bgmIds: number[]) {
+    if (bgmIds.length === 0) return [];
+
+    this.logger.info('Start archiving out-of-date subjects');
+    const resp = await this.database
+      .update(subjects)
+      .set({ isArchived: true })
+      .where(inArray(subjects.bgmId, bgmIds))
+      .returning({ bgmId: subjects.bgmId });
+    this.logger.success(`Finish archiving ${resp.length} subjects`);
+    return resp;
+  }
+
+  /**
+   * 清空所有 resources 的 subject id
+   */
+  public async clearAllSubjectIds() {
+    this.logger.info('Start clearing all the subject ids of resources');
+    await this.system.database
+      .update(resources)
+      .set({ subjectId: null })
+      .where(isNotNull(resources.subjectId));
+    this.logger.success('Finish clearing all the subject ids of resources');
   }
 
   public async updateCalendar() {
