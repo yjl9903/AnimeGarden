@@ -4,6 +4,7 @@ import type { Database } from '../connect/database';
 import type { RedisStorage as Storage } from '../connect/redis';
 
 import { Module } from './module';
+import { getSecret } from './secret';
 
 export type { Database, Storage };
 
@@ -38,6 +39,16 @@ export class System<M extends Record<string, Module> = {}> {
       await mod.initialize();
     }
     this.logger.success('Initialized OK');
+  }
+
+  public async import() {
+    for (const mod of Object.values(this.modules)) {
+      await mod.import();
+    }
+  }
+
+  public get secret() {
+    return getSecret();
   }
 
   public async close() {

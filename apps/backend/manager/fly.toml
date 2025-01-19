@@ -10,7 +10,8 @@ primary_region = 'hkg'
   dockerfile = 'Dockerfile'
 
 [processes]
-  server = 'node apps/backend/manager/cli.mjs import'
+  server = 'node apps/backend/manager/cli.mjs start'
+  cron   = 'node apps/backend/manager/cli.mjs cron'
 
 [http_service]
   internal_port = 3000
@@ -22,7 +23,7 @@ primary_region = 'hkg'
 [[restart]]
   policy = 'on-failure'
   retries = 10
-  processes = ['server']
+  processes = ['server', 'cron']
 
 [[vm]]
   memory = '512mb'

@@ -38,7 +38,11 @@ export async function updateCalendar(mod: SubjectsModule) {
   // 3. Archive old subjects, and insert new subjects
   const archived = await mod.archiveSubjects([...archiveMap.keys()]);
   const { subs, errors } = transformFullBangumis(mod, onair, false);
-  const { inserted, conflict } = await mod.insertSubjects(subs);
+  const { inserted, conflict } = await mod.insertSubjects(subs, {
+    indexResources: true,
+    offset: 30,
+    overwrite: false
+  });
 
   // 4. Update mod cache
   await mod.fetchSubjects();

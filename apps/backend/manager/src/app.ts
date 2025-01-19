@@ -1,5 +1,8 @@
 import 'dotenv/config';
+
 import { breadc } from 'breadc';
+
+import { makeServer, makeExecutor } from '@animegarden/server';
 import { type SystemOptions, makeSystem } from '@animegarden/database';
 
 import { version } from '../package.json';
@@ -27,13 +30,26 @@ async function initialize(options: SystemOptions) {
 // --- Server ---
 
 app
-  .command('start', 'Start Anime Garden Server')
-  .option('--cron', 'Enable cron jobs')
+  .command('start', 'Start Anime Garden server')
+  .option('--host <ip>', 'Listen host')
+  .option('--port <port>', 'Listen port')
   .action(async (options) => {
     const sys = await initialize(options);
     await sys.initialize();
-    // TODO: create server
+    await sys.import();
+    const server = await makeServer(sys, {});
+
+    const host = options.host ?? process.env.HOST;
+    const port = options.port ?? process.env.PORT;
+    await server.listen({ host, port });
   });
+
+app.command('cron', 'Start Anime Garden cron jobs executor').action(async (options) => {
+  const sys = await initialize(options);
+  await sys.initialize();
+  const executor = await makeExecutor(sys, {});
+  await executor.start();
+});
 
 // --- Admin ---
 

@@ -63,4 +63,4 @@ ENV HOST=:: PORT=3000 CRON=true
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
 
-CMD [ "node", "apps/backend/manager/cli.mjs", "start", "--cron" ]
+CMD [ "node", "apps/backend/manager/cli.mjs", "start" ]

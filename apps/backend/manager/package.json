@@ -33,7 +33,7 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "bin": {
-    "animegarden": "./cli.mjs"
+    "animegarden-manager": "./cli.mjs"
   },
   "files": [
     "*.mjs",
@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@animegarden/client": "workspace:*",
+    "@animegarden/server": "workspace:*",
     "@animegarden/database": "workspace:*",
     "@animegarden/scraper": "workspace:*",
     "@breadc/color": "^0.9.7",

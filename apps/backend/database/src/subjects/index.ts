@@ -17,8 +17,11 @@ export class SubjectsModule extends Module<System['modules']> {
   public async initialize() {
     this.system.logger.info('Initializing Subjects module');
     await this.fetchSubjects();
-    await this.updateCalendar();
     this.system.logger.success('Initialize Subjects module OK');
+  }
+
+  public async import() {
+    await this.updateCalendar();
   }
 
   public async fetchSubjects() {
@@ -221,7 +224,7 @@ export class SubjectsModule extends Module<System['modules']> {
     this.logger.info('Start updating bangumi calendar from bgmd');
     try {
       const resp = await updateCalendar(this);
-      this.logger.success('Finish updating calendar from bgmd');
+      this.logger.success('Finish updating bangumi calendar from bgmd');
       return resp;
     } catch (error) {
       this.logger.error('Failed update bangumi calendar');

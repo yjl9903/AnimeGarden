@@ -21,5 +21,13 @@ export abstract class Module<M extends Record<string, Module> = {}> {
     return this.system.storage;
   }
 
+  /**
+   * Initializing module with necessary data
+   */
   public async initialize(): Promise<void> {}
+
+  /**
+   * Importing data after initializing
+   */
+  public async import(): Promise<void> {}
 }

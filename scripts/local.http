@@ -1,3 +1,16 @@
+### Fetch all users
+GET http://0.0.0.0:8080/users
+Content-Type: application/json
+
+### Fetch all teams
+GET http://0.0.0.0:8080/users
+Content-Type: application/json
+
+### Fetch all subjects
+GET http://0.0.0.0:8080/subjects
+Content-Type: application/json
+
+###
 POST http://0.0.0.0:8080/resources
 Content-Type: application/json
 
