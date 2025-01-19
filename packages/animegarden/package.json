@@ -41,8 +41,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "simptrad": "^0.2.0",
-    "zod": "^3.23.8"
+    "@animegarden/client": "workspace:*"
   },
   "engines": {
     "node": ">=v18.16.0"

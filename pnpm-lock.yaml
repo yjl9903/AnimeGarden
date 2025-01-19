@@ -200,6 +200,9 @@ importers:
 
   apps/frontend/web:
     dependencies:
+      '@animegarden/client':
+        specifier: workspace:*
+        version: link:../../../packages/client
       '@cloudflare/kv-asset-handler':
         specifier: ^0.3.4
         version: 0.3.4
@@ -242,9 +245,6 @@ importers:
       '@remix-run/server-runtime':
         specifier: ^2.12.1
         version: 2.12.1(typescript@5.6.2)
-      animegarden:
-        specifier: workspace:*
-        version: link:../../../packages/animegarden
       anitomy:
         specifier: 0.0.35
         version: 0.0.35
@@ -372,12 +372,9 @@ importers:
 
   packages/animegarden:
     dependencies:
-      simptrad:
-        specifier: ^0.2.0
-        version: 0.2.0
-      zod:
-        specifier: ^3.23.8
-        version: 3.23.8
+      '@animegarden/client':
+        specifier: workspace:*
+        version: link:../client
 
   packages/anipar:
     devDependencies:
@@ -496,6 +493,9 @@ importers:
         specifier: ^3.23.8
         version: 3.23.8
     devDependencies:
+      '@animegarden/client':
+        specifier: workspace:*
+        version: link:../client
       '@iconify-json/ant-design':
         specifier: ^1.2.5
         version: 1.2.5
@@ -532,9 +532,6 @@ importers:
       '@vite-pwa/astro':
         specifier: ^0.4.3
         version: 0.4.3(@vite-pwa/assets-generator@0.2.6)(astro@4.15.4(@types/node@20.16.5)(rollup@2.79.1)(terser@5.31.6)(typescript@5.6.2))(vite-plugin-pwa@0.20.2(@vite-pwa/assets-generator@0.2.6)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0))
-      animegarden:
-        specifier: workspace:*
-        version: link:../animegarden
       anitomy:
         specifier: 0.0.35
         version: 0.0.35
@@ -574,9 +571,9 @@ importers:
 
   packages/scraper:
     dependencies:
-      animegarden:
+      '@animegarden/client':
         specifier: workspace:*
-        version: link:../animegarden
+        version: link:../client
       cheerio:
         specifier: 1.0.0
         version: 1.0.0
@@ -602,12 +599,12 @@ importers:
 
   packages/worker:
     dependencies:
+      '@animegarden/client':
+        specifier: workspace:*
+        version: link:../client
       '@animegarden/scraper':
         specifier: workspace:*
         version: link:../scraper
-      animegarden:
-        specifier: workspace:*
-        version: link:../animegarden
       anitomy:
         specifier: 0.0.35
         version: 0.0.35

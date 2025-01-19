@@ -1,4 +1,4 @@
-import type { ResolvedFilterOptions } from 'animegarden';
+import type { ResolvedFilterOptions } from '@animegarden/client';
 
 import { atom } from 'jotai';
 import { atomWithStorage, createJSONStorage } from 'jotai/utils';

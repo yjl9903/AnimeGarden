@@ -1,6 +1,6 @@
 import type { Context } from 'hono';
 
-import { parseSearchURL } from 'animegarden';
+import { parseSearchURL } from '@animegarden/client';
 
 import { registerApp } from '../app';
 

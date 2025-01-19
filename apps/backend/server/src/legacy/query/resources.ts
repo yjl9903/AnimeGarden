@@ -12,7 +12,7 @@ import {
   type ResolvedFilterOptions,
   Resource,
   normalizeTitle
-} from 'animegarden';
+} from '@animegarden/client';
 import {
   getRefreshTimestamp,
   getTeam,

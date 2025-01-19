@@ -1,4 +1,4 @@
-import { parseSearchURL } from 'animegarden';
+import { parseSearchURL } from '@animegarden/client';
 
 import { removeQuote } from '../utils';
 

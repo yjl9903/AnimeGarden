@@ -2,7 +2,7 @@ import { NavLink, useLocation, type Location } from '@remix-run/react';
 
 import { memo } from 'react';
 
-import type { Resource } from 'animegarden';
+import type { Resource } from '@animegarden/client';
 
 import { getPikPakUrlChecker } from '@/utils';
 import { DisplayType, DisplayTypeColor, DisplayTypeIcon } from '@/constant';

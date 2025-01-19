@@ -1,8 +1,8 @@
 import { load } from 'cheerio';
 
-import type { FetchedResource, ResourceDetail, ResourceType } from 'animegarden';
+import type { FetchedResource, ResourceDetail, ResourceType } from '@animegarden/client';
 
-import { retryFn } from 'animegarden';
+import { retryFn } from '@animegarden/client';
 
 import { splitOnce, stripSuffix, toShanghai } from '../utils';
 

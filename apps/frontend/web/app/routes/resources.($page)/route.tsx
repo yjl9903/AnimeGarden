@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { redirect, useLoaderData, useLocation } from '@remix-run/react';
 import { json, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare';
 
-import { parseSearchURL, Resource } from 'animegarden';
+import { parseSearchURL, Resource } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';

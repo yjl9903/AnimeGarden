@@ -1,4 +1,4 @@
-import type { FetchedResource } from 'animegarden';
+import type { FetchedResource } from '@animegarden/client';
 
 import { fetchDmhyPage } from '@animegarden/scraper';
 

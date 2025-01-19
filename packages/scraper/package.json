@@ -41,7 +41,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "animegarden": "workspace:*",
+    "@animegarden/client": "workspace:*",
     "cheerio": "1.0.0",
     "jsdom": "^25.0.0",
     "parse-torrent": "^11.0.17",

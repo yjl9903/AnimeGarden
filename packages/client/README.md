@@ -1,10 +1,10 @@
-# AnimeGarden
+# @animegarden/client
 
 [![version](https://img.shields.io/npm/v/@animegarden/client?label=@animegarden/client)](https://www.npmjs.com/package/@animegarden/client)
 [![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://garden.breadio.wiki)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
-API client and utils for [AnimeGarden](https://garden.breadio.wiki/).
+[AnimeGarden](https://garden.breadio.wiki/) API client and utils.
 
 ## Installation
 
@@ -33,9 +33,7 @@ You can check more filter conditions [FilterOptions](https://github.com/yjl9903/
 + [動漫花園](https://share.dmhy.org/)
 + [Bangumi 番组计划](https://bgm.tv/)
 + [bangumi-data](https://github.com/bangumi-data/bangumi-data)
-+ [erengy/anitomy](https://github.com/erengy/anitomy)
-+ [tabratton/AnitomySharp](https://github.com/tabratton/AnitomySharp)
 
 ## License
 
-MIT License © 2023 [XLor](https://github.com/yjl9903)
+MIT License © 2025 [XLor](https://github.com/yjl9903)

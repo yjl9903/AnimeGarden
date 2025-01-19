@@ -4,7 +4,7 @@ import { NavLink, useLocation } from '@remix-run/react';
 import { useCallback } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 
-import { findFansub, type ResolvedFilterOptions, type ResourceType } from 'animegarden';
+import { findFansub, type ResolvedFilterOptions, type ResourceType } from '@animegarden/client';
 
 import { APP_HOST } from '~build/env';
 

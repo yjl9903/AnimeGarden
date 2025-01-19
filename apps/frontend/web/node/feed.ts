@@ -8,7 +8,7 @@ import {
   FilterSchema,
   fetchResources,
   stringifySearchURL
-} from 'animegarden';
+} from '@animegarden/client';
 
 import { removeQuote } from '../app/utils/string';
 

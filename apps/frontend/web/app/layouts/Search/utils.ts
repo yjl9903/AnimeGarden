@@ -1,4 +1,4 @@
-import { findFansub, parseSearchURL, ResourceType, stringifySearchURL } from 'animegarden';
+import { findFansub, parseSearchURL, ResourceType, stringifySearchURL } from '@animegarden/client';
 
 import { DisplayType } from '~/constant';
 

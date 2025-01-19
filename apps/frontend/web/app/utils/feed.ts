@@ -1,4 +1,4 @@
-import { parseSearchURL, type ResolvedFilterOptions } from 'animegarden';
+import { parseSearchURL, type ResolvedFilterOptions } from '@animegarden/client';
 
 import { removeQuote } from './string';
 

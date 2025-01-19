@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'node:path';
 
-import type { FetchedResource } from 'animegarden';
+import type { FetchedResource } from '@animegarden/client';
 
 export async function readResources(root: string) {
   const map = new Map<string, FetchedResource>();

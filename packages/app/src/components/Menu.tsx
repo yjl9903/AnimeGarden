@@ -2,7 +2,7 @@ import { APP_HOST } from '~build/meta';
 import { navigate } from 'astro:transitions/client';
 
 import { format } from 'date-fns';
-import { stringifySearchURL, type ResolvedFilterOptions } from 'animegarden';
+import { stringifySearchURL, type ResolvedFilterOptions } from '@animegarden/client';
 
 import {
   useFloating,

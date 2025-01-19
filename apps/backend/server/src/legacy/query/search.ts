@@ -1,8 +1,8 @@
-import type { ResolvedFilterOptions, ResourceType } from 'animegarden';
+import type { ResolvedFilterOptions, ResourceType } from '@animegarden/client';
 import type { ResourceDocument } from '@animegarden/database';
 
 import { hash } from 'ohash';
-import { Resource } from 'animegarden';
+import { Resource } from '@animegarden/client';
 import { memoAsync } from 'memofunc';
 
 import {

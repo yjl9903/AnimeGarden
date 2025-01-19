@@ -15,7 +15,7 @@ npm i @animegarden/scraper
 ## Usage
 
 ```ts
-import { fetchDmhyPage } from 'animegarden'
+import { fetchDmhyPage } from '@animegarden/scraper'
 
 // Fetch the first page of 動漫花園
 const dmhy = await fetchDmhyPage(fetch)

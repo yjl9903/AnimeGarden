@@ -1,4 +1,4 @@
-import type { ResourceType } from 'animegarden';
+import type { ResourceType } from '@animegarden/client';
 
 export const Anime = '549ef207fe682f7549f1ea90';
 

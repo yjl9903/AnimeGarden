@@ -5,7 +5,7 @@ import { NavLink, useLocation } from '@remix-run/react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 
-import { findFansub } from 'animegarden';
+import { findFansub } from '@animegarden/client';
 
 import { APP_HOST } from '~build/env';
 

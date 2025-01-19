@@ -6,7 +6,7 @@ import {
   fetchResources as rawFetchResources,
   fetchResourceDetail as rawFetchResourceDetail,
   FetchResourcesOptions
-} from 'animegarden';
+} from '@animegarden/client';
 
 export const baseURL = import.meta.env.SSR
   ? SERVER_HOST
