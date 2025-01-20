@@ -84,10 +84,10 @@ export function transformNewResources(
   }
 }
 
-const KB_RE = /^(\d+(?:\.\d+)?)\s*[Kk][Bb]$/;
-const MB_RE = /^(\d+(?:\.\d+)?)\s*[Mm][Bb]$/;
-const GB_RE = /^(\d+(?:\.\d+)?)\s*[Gg][Bb]$/;
-const TB_RE = /^(\d+(?:\.\d+)?)\s*[Tt][Bb]$/;
+const KB_RE = /^(\d+(?:\.\d+)?)\s*[Kk]i?[Bb]$/;
+const MB_RE = /^(\d+(?:\.\d+)?)\s*[Mm]i?[Bb]$/;
+const GB_RE = /^(\d+(?:\.\d+)?)\s*[Gg]i?[Bb]$/;
+const TB_RE = /^(\d+(?:\.\d+)?)\s*[Tt]i?[Bb]$/;
 
 function parseSize(size: string) {
   if (!size) return 0;

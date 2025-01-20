@@ -1,4 +1,4 @@
-# @animegarden/client
+# 🌸 Anime Garden Client
 
 [![version](https://img.shields.io/npm/v/@animegarden/client?label=@animegarden/client)](https://www.npmjs.com/package/@animegarden/client)
 [![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://garden.breadio.wiki)

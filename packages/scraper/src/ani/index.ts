@@ -4,7 +4,13 @@ import parseTorrent from 'parse-torrent';
 import { JSDOM } from 'jsdom';
 import { toMagnetURI } from 'parse-torrent';
 
-import { type FetchedResource, ResourceDetail, retryFn, ANiTeam, ANiUser } from '@animegarden/client';
+import {
+  type ScrapedResource,
+  type ScrapedResourceDetail,
+  retryFn,
+  ANiTeam,
+  ANiUser
+} from '@animegarden/client';
 
 import { parseSize, splitOnce } from '../utils';
 
@@ -21,7 +27,7 @@ export interface FetchANiDetailOptions {
 export async function fetchLastestANi(
   ofetch: (request: string, init?: RequestInit) => Promise<Response>,
   options: FetchANiOptions = {}
-) {
+): Promise<ScrapedResource[] | undefined> {
   const { retry = 5 } = options;
 
   const resp = await retryFn(async () => {
@@ -44,7 +50,7 @@ export async function fetchLastestANi(
 
   const feed = await parser.parseString(await resp.text());
 
-  const res: FetchedResource[] = [];
+  const res: ScrapedResource[] = [];
   for (const item of feed.items) {
     if (!item.title || !item.pubDate || !item.enclosure?.length) continue;
 
@@ -101,7 +107,7 @@ export async function fetchANiDetail(
   ofetch: (request: string, init?: RequestInit) => Promise<Response>,
   id: string,
   options: FetchANiDetailOptions = {}
-): Promise<ResourceDetail | undefined> {
+): Promise<ScrapedResourceDetail | undefined> {
   const { retry = 5 } = options;
 
   const resp = await retryFn(async () => {
@@ -160,15 +166,7 @@ export async function fetchANiDetail(
     title,
     href: `https://nyaa.si/view/${id}`,
     description,
-    magnet: {
-      user: `https://nyaa.si/download/${id}.torrent`,
-      href: fullMagnet,
-      href2: magnet,
-      ddplay: '',
-      files,
-      hasMoreFiles: false
-    },
-    type: '動畫',
+    type: '动画',
     size,
     publisher: {
       id: ANiUser.providerId,
@@ -180,6 +178,18 @@ export async function fetchANiDetail(
       name: ANiTeam.name,
       avatar: ANiTeam.avatar
     },
-    createdAt: createdAt.toISOString()
+    createdAt: createdAt.toISOString(),
+    magnets: [
+      {
+        name: '种子',
+        url: `https://nyaa.si/download/${id}.torrent`
+      },
+      {
+        name: '磁力链接',
+        url: fullMagnet
+      }
+    ],
+    files,
+    hasMoreFiles: false
   };
 }

@@ -1,6 +1,6 @@
 import type { Resource, ResourceDetail, ResourceWithId } from '../types';
 
-import { version } from '../../package.json';
+import { version } from '../../../package.json';
 
 import type {
   ResolvedFilterOptions,
