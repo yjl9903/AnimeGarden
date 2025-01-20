@@ -5,7 +5,7 @@ import type { System } from '../system';
 import { Module } from '../system/module';
 import { resources as resourceSchema } from '../schema/resources';
 
-import type { NewResource } from './types';
+import type { InsertResourcesOptions, NewResource } from './types';
 
 import { transformNewResources } from './transform';
 
@@ -19,12 +19,12 @@ export class ResourcesModule extends Module<System['modules']> {
     this.system.logger.success('Initialize Resources module OK');
   }
 
-  public async insertResources(resources: NewResource[]) {
+  public async insertResources(resources: NewResource[], options: InsertResourcesOptions = {}) {
     const map = new Map<string, NonNullable<ReturnType<typeof transformNewResources>['result']>>();
     const newResources = [];
     const errors = [];
     for (const r of resources) {
-      const res = transformNewResources(this.system, r);
+      const res = transformNewResources(this.system, r, options);
       if (!res.errors && res.result) {
         map.set(`${r.provider}:${r.providerId}`, res.result);
         newResources.push(res.result);

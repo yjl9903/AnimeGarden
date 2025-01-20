@@ -24,3 +24,10 @@ export interface NewResource {
 
   fansub?: string;
 }
+
+export interface InsertResourcesOptions {
+  /**
+   * @default false
+   */
+  indexSubject?: boolean;
+}

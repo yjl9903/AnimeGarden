@@ -7,11 +7,12 @@ import type { NewResource as NewDbResource } from '../schema';
 import { jieba } from '../utils';
 import { SupportProviders } from '../schema/providers';
 
-import type { NewResource } from './types';
+import type { InsertResourcesOptions, NewResource } from './types';
 
 export function transformNewResources(
   sys: System,
-  res: NewResource
+  res: NewResource,
+  options: InsertResourcesOptions
 ): { result: NewDbResource | undefined; errors?: string[] } {
   const errors = [];
 
@@ -69,6 +70,7 @@ export function transformNewResources(
         fetchedAt: res.fetchedAt ?? new Date(),
         publisherId: publisher!.id,
         fansubId: fansub?.id,
+        subjectId: options?.indexSubject ? matchActiveSubjects(sys, titleAlt) : null,
         metadata: {
           ...metadata
         }
@@ -112,4 +114,17 @@ function parseSize(size: string) {
   } catch {
     return 0;
   }
+}
+
+function matchActiveSubjects(sys: System, titleAlt: string) {
+  const active = sys.modules.subjects.activeSubjects;
+  const title = titleAlt.toLowerCase();
+  for (const sub of active) {
+    for (const key of sub.keywords) {
+      if (title.indexOf(key.toLowerCase()) !== -1) {
+        return sub.id;
+      }
+    }
+  }
+  return null;
 }

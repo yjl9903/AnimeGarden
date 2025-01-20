@@ -86,7 +86,10 @@ async function transferResources(
         publisher: r.publisher?.name,
         fansub: r.fansub?.name,
         isDeleted: r.isDeleted
-      }))
+      })),
+      {
+        indexSubject: false
+      }
     );
     sys.logger.info(`Insert ${inserted.length} new resources`);
     if (errors.length > 0) {
