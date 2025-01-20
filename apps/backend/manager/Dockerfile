@@ -3,6 +3,7 @@
 ARG NODE_VERSION=20.10.0
 ARG PNPM_VERSION=9.15.4
 
+ARG PORT=3000
 
 # Base Image
 FROM node:${NODE_VERSION}-slim AS base
@@ -57,9 +58,9 @@ FROM base
 COPY --from=build /app /app
 
 # Listen on 3000
-ENV HOST=:: PORT=3000 CRON=true
+ENV HOST=:: PORT=${PORT}
 
 # Start the server by default, this can be overwritten at runtime
-EXPOSE 3000
+EXPOSE ${PORT}
 
 CMD [ "node", "apps/backend/manager/cli.mjs", "start" ]
