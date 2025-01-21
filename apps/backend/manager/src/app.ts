@@ -68,11 +68,16 @@ app
     const sys = await initialize(options);
     await sys.initialize();
     const { transferFromV1 } = await import('@animegarden/database');
+    // Transfer from old database
     await transferFromV1(sys, name ?? 'animegarden', {
       startPage: options.start ? +options.start : undefined,
       endPage: options.end ? +options.end : undefined,
       pageSize: options.pageSize ? +options.pageSize : undefined
     });
+    // Import new data
+    await sys.modules.subjects.importFromBgmd();
+    await sys.modules.subjects.updateCalendar();
+    await sys.modules.tags.importFromAnipar();
     await sys.close();
   });
 
