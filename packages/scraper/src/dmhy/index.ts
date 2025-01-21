@@ -4,6 +4,7 @@ import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client
 
 import { retryFn } from '@animegarden/client';
 
+import { NetworkError } from '../error';
 import { splitOnce, toShanghai } from '../utils';
 
 export interface FetchDmhyPageOptions {
@@ -25,19 +26,16 @@ export async function fetchDmhyPage(
   const resp = await retryFn(async () => {
     const resp = await ofetch(`https://share.dmhy.org/topics/list/page/${page}`);
     if (!resp.ok) {
-      throw new Error(resp.statusText, { cause: resp });
+      throw new NetworkError('dmhy', `https://share.dmhy.org/topics/list/page/${page}`, resp);
     }
     return resp;
   }, retry);
-  if (!resp.ok) {
-    throw new Error('Failed connecting https://share.dmhy.org');
-  }
 
   const html = await resp.text();
   const { document } = new JSDOM(html).window;
 
   if (document.querySelector('.ui-state-error')) {
-    throw new Error('dmhy server is down');
+    throw new NetworkError('dmhy', `https://share.dmhy.org/topics/list/page/${page}`, resp);
   }
 
   const res: ScrapedResource[] = [];
@@ -115,19 +113,16 @@ export async function fetchDmhyDetail(
   const resp = await retryFn(async () => {
     const resp = await ofetch(url.href);
     if (!resp.ok) {
-      throw new Error(resp.statusText, { cause: resp });
+      throw new NetworkError('dmhy', url.href, resp);
     }
     return resp;
   }, retry);
-  if (!resp.ok) {
-    throw new Error('Failed connecting https://share.dmhy.org');
-  }
 
   const html = await resp.text();
   const { document } = new JSDOM(html).window;
 
   if (document.querySelector('.ui-state-error')) {
-    throw new Error('dmhy server is down');
+    throw new NetworkError('dmhy', url.href, resp);
   }
 
   const title = document.querySelector('.topic-main>.topic-title>h3')?.textContent?.trim();

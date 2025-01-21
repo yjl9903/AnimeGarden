@@ -27,6 +27,8 @@ export interface NewResource {
 
 export interface InsertResourcesOptions {
   /**
+   * Whether match resources' title with active subjects
+   *
    * @default false
    */
   indexSubject?: boolean;

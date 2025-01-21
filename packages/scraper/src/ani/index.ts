@@ -12,6 +12,7 @@ import {
   ANiUser
 } from '@animegarden/client';
 
+import { NetworkError } from '../error';
 import { parseSize, splitOnce } from '../utils';
 
 const parser = new Parser();
@@ -27,7 +28,7 @@ export interface FetchANiDetailOptions {
 export async function fetchLastestANi(
   ofetch: (request: string, init?: RequestInit) => Promise<Response>,
   options: FetchANiOptions = {}
-): Promise<ScrapedResource[] | undefined> {
+): Promise<ScrapedResource[]> {
   const { retry = 5 } = options;
 
   const resp = await retryFn(async () => {
@@ -40,13 +41,10 @@ export async function fetchLastestANi(
       ])
     });
     if (!resp.ok) {
-      throw new Error(resp.statusText, { cause: resp });
+      throw new NetworkError('ani', 'https://api.ani.rip/', resp);
     }
     return resp;
   }, retry);
-  if (!resp.ok) {
-    throw new Error('Failed connecting https://api.ani.rip/');
-  }
 
   const feed = await parser.parseString(await resp.text());
 
@@ -67,13 +65,10 @@ export async function fetchLastestANi(
         ])
       });
       if (!resp.ok) {
-        throw new Error(resp.statusText, { cause: resp });
+        throw new NetworkError('ani', link, resp);
       }
       return resp;
     }, retry);
-    if (!resp.ok) {
-      throw new Error('Failed connecting https://api.ani.rip/');
-    }
 
     const filename = link.split('/').at(-1)!;
     const providerId = filename.slice(0, filename.indexOf('.'));
@@ -120,13 +115,10 @@ export async function fetchANiDetail(
       ])
     });
     if (!resp.ok) {
-      throw new Error(resp.statusText, { cause: resp });
+      throw new NetworkError('ani', `https://nyaa.si/view/${id}`, resp);
     }
     return resp;
   }, retry);
-  if (!resp.ok) {
-    throw new Error('Failed connecting https://nyaa.si/');
-  }
 
   const html = await resp.text();
   const { document } = new JSDOM(html).window;

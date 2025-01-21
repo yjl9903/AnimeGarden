@@ -1,6 +1,7 @@
-import { sql } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 
 import type { System } from '../system';
+import type { ProviderType } from '../schema/providers';
 
 import { Module } from '../system/module';
 import { resources as resourceSchema } from '../schema/resources';
@@ -19,6 +20,32 @@ export class ResourcesModule extends Module<System['modules']> {
     this.system.logger.success('Initialize Resources module OK');
   }
 
+  /**
+   * Check whether each input  provider id has been inserted to DB
+   *
+   * @param provider
+   * @param ids provider id set
+   * @returns
+   */
+  public async getResourcesByProviderId(provider: string, ids: string[]) {
+    return await this.database
+      .select({ provider: resourceSchema.provider, providerId: resourceSchema.providerId })
+      .from(resourceSchema)
+      .where(
+        and(
+          eq(resourceSchema.provider, provider as ProviderType),
+          inArray(resourceSchema.providerId, ids)
+        )
+      );
+  }
+
+  /**
+   * Insert resources to DB
+   *
+   * @param resources
+   * @param options
+   * @returns
+   */
   public async insertResources(resources: NewResource[], options: InsertResourcesOptions = {}) {
     const map = new Map<string, NonNullable<ReturnType<typeof transformNewResources>['result']>>();
     const newResources = [];
@@ -63,7 +90,8 @@ export class ResourcesModule extends Module<System['modules']> {
         id: resourceSchema.id,
         provider: resourceSchema.provider,
         providerId: resourceSchema.providerId,
-        title: resourceSchema.title
+        title: resourceSchema.title,
+        duplicatedId: resourceSchema.duplicatedId
       });
 
     const conflict: NonNullable<ReturnType<typeof transformNewResources>['result']>[] = [];

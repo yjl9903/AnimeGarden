@@ -2,6 +2,8 @@ import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client
 
 import { retryFn } from '@animegarden/client';
 
+import { NetworkError } from '../error';
+
 import { getType } from './tag';
 import { fetchTeam, fetchUser } from './user';
 
@@ -33,13 +35,11 @@ export async function fetchMoePage(
       ])
     });
     if (!resp.ok) {
-      throw new Error(resp.statusText, { cause: resp });
+      throw new NetworkError('moe', `https://bangumi.moe/api/torrent/page/${page}`, resp);
     }
     return resp;
   }, retry);
-  if (!resp.ok) {
-    throw new Error('Failed connecting https://bangumi.moe/');
-  }
+
   const data = await resp.json();
 
   const result: ScrapedResource[] = [];
@@ -79,7 +79,7 @@ export async function fetchMoeDetail(
   ofetch: (request: string, init?: RequestInit) => Promise<Response>,
   id: string,
   options: FetchMoeDetailOptions = {}
-): Promise<ScrapedResourceDetail | undefined> {
+): Promise<ScrapedResourceDetail> {
   const { retry = 5 } = options;
 
   const resp = await retryFn(async () => {
@@ -88,13 +88,10 @@ export async function fetchMoeDetail(
       body: JSON.stringify({ _id: id })
     });
     if (!resp.ok) {
-      throw new Error(resp.statusText, { cause: resp });
+      throw new NetworkError('moe', `https://bangumi.moe/api/torrent/fetch`, resp);
     }
     return resp;
   }, retry);
-  if (!resp.ok) {
-    throw new Error('Failed connecting https://bangumi.moe/');
-  }
 
   const torrent = await resp.json();
 

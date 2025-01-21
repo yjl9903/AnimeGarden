@@ -1,5 +1,7 @@
 import { retryFn } from '@animegarden/client';
 
+import { NetworkError } from '../error';
+
 const Users = new Map<string, { provider: 'moe'; providerId: string; name: string }>();
 
 const Teams = new Map<
@@ -27,13 +29,10 @@ export async function fetchUser(
       ])
     });
     if (!resp.ok) {
-      throw new Error(resp.statusText, { cause: resp });
+      throw new NetworkError('moe', `https://bangumi.moe/api/user/fetch`, resp);
     }
     return resp;
   }, 10);
-  if (!resp.ok) {
-    throw new Error('Failed connecting https://bangumi.moe/');
-  }
 
   const data = await resp.json();
 
@@ -68,13 +67,10 @@ export async function fetchTeam(
       ])
     });
     if (!resp.ok) {
-      throw new Error(resp.statusText, { cause: resp });
+      throw new NetworkError('moe', `https://bangumi.moe/api/team/fetch`, resp);
     }
     return resp;
   }, 10);
-  if (!resp.ok) {
-    throw new Error('Failed connecting https://bangumi.moe/');
-  }
 
   const data = await resp.json();
 

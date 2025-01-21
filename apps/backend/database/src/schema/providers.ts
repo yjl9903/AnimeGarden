@@ -2,6 +2,8 @@ import { boolean, pgEnum, pgTable, timestamp, varchar } from 'drizzle-orm/pg-cor
 
 export const SupportProviders = ['dmhy', 'moe', 'ani'] as const;
 
+export type ProviderType = (typeof SupportProviders)[number];
+
 export const providerEnum = pgEnum('resources_provider', SupportProviders);
 
 export const providers = pgTable('providers', {
