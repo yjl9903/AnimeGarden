@@ -36,7 +36,6 @@ app
   .action(async (options) => {
     const sys = await initialize(options);
     await sys.initialize();
-    await sys.import();
     const server = await makeServer(sys, {});
 
     const host = options.host ?? process.env.HOST;
@@ -47,6 +46,7 @@ app
 app.command('cron', 'Start Anime Garden cron jobs executor').action(async (options) => {
   const sys = await initialize(options);
   await sys.initialize();
+  await sys.import();
   const executor = await makeExecutor(sys, {});
   await executor.start();
 });
