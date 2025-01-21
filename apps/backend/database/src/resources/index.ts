@@ -21,7 +21,7 @@ export class ResourcesModule extends Module<System['modules']> {
   }
 
   /**
-   * Check whether each input  provider id has been inserted to DB
+   * Check whether each input provider id has been inserted to DB
    *
    * @param provider
    * @param ids provider id set
@@ -75,13 +75,25 @@ export class ResourcesModule extends Module<System['modules']> {
               : search1
                 ? sql`setweight(to_tsvector('simple', ${search1}), 'A')`
                 : sql`setweight(to_tsvector('simple', ${search2 ?? ''}), 'D')`;
-          const duplicatedId = sql`(SELECT ${resourceSchema.id} FROM ${resourceSchema} WHERE (${r.provider} != ${resourceSchema.provider}) AND (false != ${resourceSchema.isDeleted}) AND (${r.magnet} = ${resourceSchema.magnet} OR ${r.title} = ${resourceSchema.title}))`;
+
+          // 1. provider is different
+          // 2. exisit, isDeleted = false
+          // 3. root resource has no duplicated id, duplicatedId is null
+          // 4. Same magnet or same title
+          const duplicatedId = sql`(SELECT ${resourceSchema.id}
+FROM ${resourceSchema}
+WHERE (${resourceSchema.provider} != ${r.provider}) 
+AND (${resourceSchema.isDeleted} = false)
+AND (${resourceSchema.duplicatedId} is null)
+AND (${resourceSchema.magnet} = ${r.magnet} OR ${resourceSchema.title} = ${r.title})
+ORDER BY ${resourceSchema.createdAt} asc
+LIMIT 1)`;
 
           return {
+            isDeleted: false,
             ...r,
             titleSearch,
-            duplicatedId,
-            isDeleted: false
+            duplicatedId
           };
         })
       )
@@ -91,6 +103,7 @@ export class ResourcesModule extends Module<System['modules']> {
         provider: resourceSchema.provider,
         providerId: resourceSchema.providerId,
         title: resourceSchema.title,
+        isDeleted: resourceSchema.isDeleted,
         duplicatedId: resourceSchema.duplicatedId
       });
 

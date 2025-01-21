@@ -10,6 +10,21 @@ Content-Type: application/json
 GET http://0.0.0.0:8080/subjects
 Content-Type: application/json
 
+### Trigger fetch dmhy resources
+POST http://0.0.0.0:8080/admin/resources/dmhy
+Authorization: Bearer 123456
+Content-Type: application/json
+
+### Trigger fetch moe resources
+POST http://0.0.0.0:8080/admin/resources/moe
+Authorization: Bearer 123456
+Content-Type: application/json
+
+### Trigger fetch ani resources
+POST http://0.0.0.0:8080/admin/resources/ani
+Authorization: Bearer 123456
+Content-Type: application/json
+
 ###
 POST http://0.0.0.0:8080/resources
 Content-Type: application/json

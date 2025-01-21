@@ -68,7 +68,7 @@ async function transferResources(
       },
       offset: cursor * PAGE_SIZE,
       limit: PAGE_SIZE,
-      orderBy: (res, { asc }) => [asc(res.isDuplicated), asc(res.createdAt)]
+      orderBy: (res, { asc }) => [asc(res.createdAt)]
     });
     if (oldResources.length === 0) break;
     const { inserted, conflict, errors } = await sys.modules.resources.insertResources(
@@ -93,10 +93,16 @@ async function transferResources(
     );
     sys.logger.info(`Insert ${inserted.length} new resources`);
     if (errors.length > 0) {
-      sys.logger.warn(`Have ${conflict.length} error resources`);
+      sys.logger.warn(`Have ${errors.length} error resources`);
+      for (const res of errors) {
+        sys.logger.warn(`Error resource: ${res.title} (${res.provider} / ${res.providerId})`);
+      }
     }
     if (conflict.length > 0) {
       sys.logger.warn(`Have ${conflict.length} conflict resources`);
+      for (const res of conflict) {
+        sys.logger.warn(`Conflict resource: ${res.title} (${res.provider} / ${res.providerId})`);
+      }
     }
     cursor += 1;
   }
