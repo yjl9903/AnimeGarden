@@ -4,7 +4,7 @@ export * from './error';
 
 export * from './constants';
 
-export { SupportProviders, ProviderType } from './schema/providers';
+export { type ProviderType, SupportProviders } from './schema/providers';
 
 export * from './connect/database';
 
