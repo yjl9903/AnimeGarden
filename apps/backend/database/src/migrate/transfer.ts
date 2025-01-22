@@ -104,12 +104,18 @@ async function transferResources(
             sys.logger.warn(`Error resource: ${res.title} (${res.provider} / ${res.providerId})`);
           }
         }
-        if (conflict.length > 0) {
-          sys.logger.warn(`Have ${conflict.length} conflict resources`);
-          for (const res of conflict) {
-            sys.logger.warn(
-              `Conflict resource: ${res.title} (${res.provider} / ${res.providerId})`
-            );
+        if (inserted.length > 0) {
+          if (conflict.length > 0) {
+            sys.logger.warn(`Have ${conflict.length} conflict resources`);
+            for (const res of conflict) {
+              sys.logger.warn(
+                `Conflict resource: ${res.title} (${res.provider} / ${res.providerId})`
+              );
+            }
+          }
+        } else {
+          if (conflict.length > 0) {
+            sys.logger.warn(`There are ${conflict.length} resources that have been inserted`);
           }
         }
         cursor += 1;
