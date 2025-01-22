@@ -3,6 +3,7 @@ import { and, eq, inArray, sql } from 'drizzle-orm';
 import type { System } from '../system';
 import type { ProviderType } from '../schema/providers';
 
+import { retryFn } from '../utils';
 import { Module } from '../system/module';
 import { resources as resourceSchema } from '../schema/resources';
 
@@ -80,10 +81,11 @@ export class ResourcesModule extends Module<System['modules']> {
           // 2. exisit, isDeleted = false
           // 3. root resource has no duplicated id, duplicatedId is null
           // 4. Same magnet or same title
-          const duplicatedId = sql`(SELECT ${resourceSchema.id}
+          const duplicatedId = options.duplicatedManager
+            ? options.duplicatedManager.find(r.title, r.magnet)
+            : sql`(SELECT ${resourceSchema.id}
 FROM ${resourceSchema}
-WHERE (${resourceSchema.provider} != ${r.provider}) 
-AND (${resourceSchema.isDeleted} = false)
+WHERE (${resourceSchema.isDeleted} = false)
 AND (${resourceSchema.duplicatedId} is null)
 AND (${resourceSchema.createdAt} < ${r.createdAt})
 AND (${resourceSchema.magnet} = ${r.magnet} OR ${resourceSchema.title} = ${r.title})
@@ -104,9 +106,36 @@ LIMIT 1)`;
         provider: resourceSchema.provider,
         providerId: resourceSchema.providerId,
         title: resourceSchema.title,
+        magnet: resourceSchema.magnet,
         isDeleted: resourceSchema.isDeleted,
         duplicatedId: resourceSchema.duplicatedId
       });
+
+    // Use in-memory duplicated checker
+    if (options.duplicatedManager) {
+      const dup = options.duplicatedManager;
+      for (const r of resp) {
+        if (r.duplicatedId) continue;
+        if (r.isDeleted) continue;
+        const duplicatedId = dup.find(r.title, r.magnet);
+        if (duplicatedId) {
+          try {
+            await retryFn(
+              () =>
+                this.database
+                  .update(resourceSchema)
+                  .set({ duplicatedId })
+                  .where(eq(resourceSchema.id, r.id)),
+              5
+            );
+          } catch (error) {
+            this.logger.error(`Failed updating duplicated id`);
+            this.logger.error(error);
+          }
+        }
+        dup.insert(r);
+      }
+    }
 
     const conflict: NonNullable<ReturnType<typeof transformNewResources>['result']>[] = [];
     if (resp.length < newResources.length) {

@@ -1,6 +1,7 @@
 import type { System } from '../system';
 
 import { connectDatabase } from '../legacy';
+import { DuplicatedManager } from '../resources/duplicated';
 
 type LegacyDatabase = ReturnType<typeof connectDatabase>['database'];
 
@@ -59,6 +60,8 @@ async function transferResources(
   let cursor = options.startPage ?? 0;
   let end = options.endPage ?? Number.MAX_SAFE_INTEGER;
 
+  const dup = new DuplicatedManager();
+
   while (cursor < end) {
     sys.logger.info(
       `Fetching resources from ${cursor * PAGE_SIZE} to ${cursor * PAGE_SIZE + PAGE_SIZE - 1}`
@@ -93,7 +96,8 @@ async function transferResources(
             isDeleted: r.isDeleted
           })),
           {
-            indexSubject: false
+            indexSubject: false,
+            duplicatedManager: dup
           }
         );
 
