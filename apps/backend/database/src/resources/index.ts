@@ -85,6 +85,7 @@ FROM ${resourceSchema}
 WHERE (${resourceSchema.provider} != ${r.provider}) 
 AND (${resourceSchema.isDeleted} = false)
 AND (${resourceSchema.duplicatedId} is null)
+AND (${resourceSchema.createdAt} < ${r.createdAt})
 AND (${resourceSchema.magnet} = ${r.magnet} OR ${resourceSchema.title} = ${r.title})
 ORDER BY ${resourceSchema.createdAt} asc
 LIMIT 1)`;
