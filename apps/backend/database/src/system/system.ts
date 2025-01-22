@@ -35,15 +35,25 @@ export class System<M extends Record<string, Module> = {}> {
   }
 
   public async initialize() {
-    for (const mod of Object.values(this.modules)) {
-      await mod.initialize();
+    try {
+      for (const mod of Object.values(this.modules)) {
+        await mod.initialize();
+      }
+      this.logger.success('Initialized OK');
+    } catch (error) {
+      this.logger.error(error);
+      process.exit(1);
     }
-    this.logger.success('Initialized OK');
   }
 
   public async import() {
-    for (const mod of Object.values(this.modules)) {
-      await mod.import();
+    try {
+      for (const mod of Object.values(this.modules)) {
+        await mod.import();
+      }
+    } catch (error) {
+      this.logger.error(error);
+      process.exit(1);
     }
   }
 

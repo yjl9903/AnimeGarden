@@ -1,7 +1,7 @@
 import { bearerAuth } from 'hono/bearer-auth';
 
 import { NetworkError } from '@animegarden/scraper';
-import { SupportProviders, type System, anonymous } from '@animegarden/database';
+import { type System, type ProviderType, SupportProviders, anonymous } from '@animegarden/database';
 
 import { defineHandler } from '../utils/hono';
 import { ScraperProviders } from '../providers';
@@ -33,7 +33,7 @@ export const defineAdminRoutes = defineHandler((sys, app) => {
   return app;
 });
 
-async function fetchResources(sys: System, platform: string) {
+async function fetchResources(sys: System, platform: ProviderType) {
   sys.logger.info(`Start fetching and inserting new ${platform} resources`);
 
   try {
@@ -87,7 +87,9 @@ async function fetchResources(sys: System, platform: string) {
       }
     );
 
-    // TODO: maintain provider status
+    // Maintain provider status
+    await sys.modules.providers.updateRefreshTimestamp(platform, fetchedAt);
+    await sys.modules.providers.notifyRefreshedResources();
 
     sys.logger.success(`Finish inserting ${resources.inserted.length} new ${platform} resources`);
 

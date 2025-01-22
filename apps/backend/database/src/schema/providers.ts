@@ -7,8 +7,8 @@ export type ProviderType = (typeof SupportProviders)[number];
 export const providerEnum = pgEnum('resources_provider', SupportProviders);
 
 export const providers = pgTable('providers', {
-  id: providerEnum('id'),
+  id: providerEnum('id').notNull(),
   name: varchar('name', { length: 32 }).notNull(),
   refreshedAt: timestamp('refreshed_at', { withTimezone: true }).notNull(),
-  isActive: boolean('is_active').default(true)
+  isActive: boolean('is_active').default(true).notNull()
 });

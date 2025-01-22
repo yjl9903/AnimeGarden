@@ -5,6 +5,7 @@ import { connectDatabase } from '../connect/database';
 import { TagsModule } from '../tags';
 import { SubjectsModule } from '../subjects';
 import { ResourcesModule } from '../resources';
+import { ProvidersModule } from '../providers';
 import { UsersModule, TeamsModule } from '../users';
 
 import { setSecret } from './secret';
@@ -15,6 +16,7 @@ export * from './module';
 export { type SystemOptions } from './system';
 
 export type System = ISystem<{
+  providers: ProvidersModule;
   resources: ResourcesModule;
   tags: TagsModule;
   subjects: SubjectsModule;
@@ -55,11 +57,12 @@ export async function makeSystem(options: SystemOptions) {
   }
 
   // Register modules
+  system.modules.providers = new ProvidersModule(system);
   system.modules.tags = new TagsModule(system);
   system.modules.subjects = new SubjectsModule(system);
-  system.modules.resources = new ResourcesModule(system);
   system.modules.users = new UsersModule(system);
   system.modules.teams = new TeamsModule(system);
+  system.modules.resources = new ResourcesModule(system);
 
   return system;
 }

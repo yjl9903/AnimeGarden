@@ -96,7 +96,7 @@ async function transferResources(
             indexSubject: false
           }
         );
-    
+
         sys.logger.info(`Insert ${inserted.length} new resources`);
         if (errors.length > 0) {
           sys.logger.warn(`Have ${errors.length} error resources`);
@@ -107,7 +107,9 @@ async function transferResources(
         if (conflict.length > 0) {
           sys.logger.warn(`Have ${conflict.length} conflict resources`);
           for (const res of conflict) {
-            sys.logger.warn(`Conflict resource: ${res.title} (${res.provider} / ${res.providerId})`);
+            sys.logger.warn(
+              `Conflict resource: ${res.title} (${res.provider} / ${res.providerId})`
+            );
           }
         }
         cursor += 1;
