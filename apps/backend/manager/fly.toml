@@ -11,7 +11,7 @@ primary_region = 'hkg'
 
 [processes]
   server = 'node apps/backend/manager/cli.mjs -h'
-  cron   = 'node apps/backend/manager/cli.mjs transfer'
+  cron   = 'node apps/backend/manager/cli.mjs transfer --page-size=500'
 
 [http_service]
   internal_port = 3000
