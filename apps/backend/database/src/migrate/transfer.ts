@@ -8,6 +8,7 @@ interface TransferOptions {
   startPage?: number;
   endPage?: number;
   pageSize?: number;
+  retry?: number;
 }
 
 export async function transferFromV1(
@@ -47,6 +48,7 @@ async function transferResources(
   options: TransferOptions
 ) {
   const PAGE_SIZE = options.pageSize ?? 1000;
+  const RETRY = options.retry ?? 5;
   if (PAGE_SIZE <= 0) {
     sys.logger.success('Skip transfering Resources');
     return;
@@ -71,41 +73,56 @@ async function transferResources(
       orderBy: (res, { asc }) => [asc(res.createdAt)]
     });
     if (oldResources.length === 0) break;
-    const { inserted, conflict, errors } = await sys.modules.resources.insertResources(
-      oldResources.map((r) => ({
-        provider: r.provider,
-        providerId: r.providerId,
-        title: r.title,
-        href: r.href,
-        type: SimpleType[r.type in DisplayType ? DisplayType[r.type] : r.type] ?? '动画',
-        magnet: r.magnet,
-        tracker: r.tracker,
-        size: r.size,
-        createdAt: r.createdAt!,
-        fetchedAt: r.fetchedAt!,
-        publisher: r.publisher?.name,
-        fansub: r.fansub?.name,
-        isDeleted: r.isDeleted
-      })),
-      {
-        indexSubject: false
-      }
-    );
-    sys.logger.info(`Insert ${inserted.length} new resources`);
-    if (errors.length > 0) {
-      sys.logger.warn(`Have ${errors.length} error resources`);
-      for (const res of errors) {
-        sys.logger.warn(`Error resource: ${res.title} (${res.provider} / ${res.providerId})`);
+
+    for (let i = 0; i < RETRY; i++) {
+      try {
+        const { inserted, conflict, errors } = await sys.modules.resources.insertResources(
+          oldResources.map((r) => ({
+            provider: r.provider,
+            providerId: r.providerId,
+            title: r.title,
+            href: r.href,
+            type: SimpleType[r.type in DisplayType ? DisplayType[r.type] : r.type] ?? '动画',
+            magnet: r.magnet,
+            tracker: r.tracker,
+            size: r.size,
+            createdAt: r.createdAt!,
+            fetchedAt: r.fetchedAt!,
+            publisher: r.publisher?.name,
+            fansub: r.fansub?.name,
+            isDeleted: r.isDeleted
+          })),
+          {
+            indexSubject: false
+          }
+        );
+    
+        sys.logger.info(`Insert ${inserted.length} new resources`);
+        if (errors.length > 0) {
+          sys.logger.warn(`Have ${errors.length} error resources`);
+          for (const res of errors) {
+            sys.logger.warn(`Error resource: ${res.title} (${res.provider} / ${res.providerId})`);
+          }
+        }
+        if (conflict.length > 0) {
+          sys.logger.warn(`Have ${conflict.length} conflict resources`);
+          for (const res of conflict) {
+            sys.logger.warn(`Conflict resource: ${res.title} (${res.provider} / ${res.providerId})`);
+          }
+        }
+        cursor += 1;
+
+        break;
+      } catch (error) {
+        if (i + 1 === RETRY) {
+          throw error;
+        } else {
+          sys.logger.error(error);
+        }
       }
     }
-    if (conflict.length > 0) {
-      sys.logger.warn(`Have ${conflict.length} conflict resources`);
-      for (const res of conflict) {
-        sys.logger.warn(`Conflict resource: ${res.title} (${res.provider} / ${res.providerId})`);
-      }
-    }
-    cursor += 1;
   }
+
   sys.logger.success('Finish transfering Resources OK');
 }
 
