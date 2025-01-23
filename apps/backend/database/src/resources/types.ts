@@ -1,3 +1,5 @@
+import type { ProviderType } from '@animegarden/client';
+
 import { DuplicatedManager } from './duplicated';
 
 export interface NewResource {

@@ -1,11 +1,10 @@
 import { parse } from 'anipar';
-import { normalizeTitle } from '@animegarden/client';
+import { SupportProviders, normalizeTitle } from '@animegarden/client';
 
 import type { System } from '../system';
 import type { NewResource as NewDbResource } from '../schema';
 
 import { jieba } from '../utils';
-import { SupportProviders } from '../schema/providers';
 
 import type { InsertResourcesOptions, NewResource } from './types';
 

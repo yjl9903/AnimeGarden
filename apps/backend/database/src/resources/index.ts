@@ -1,7 +1,8 @@
 import { and, eq, inArray, sql } from 'drizzle-orm';
 
+import type { ProviderType } from '@animegarden/client';
+
 import type { System } from '../system';
-import type { ProviderType } from '../schema/providers';
 import type { NewResource as NewDbResource } from '../schema';
 
 import { retryFn } from '../utils';

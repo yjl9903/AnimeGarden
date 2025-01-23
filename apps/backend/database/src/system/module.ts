@@ -1,24 +1,26 @@
+import type { ConsolaInstance } from 'consola';
+
 import type { System } from './system';
 
 export abstract class Module<M extends Record<string, Module> = {}> {
-  public static readonly name: string;
-
   public readonly system: System<M>;
 
-  public constructor(system: System<M>) {
-    this.system = system;
-  }
+  public readonly name: string;
 
-  public get logger() {
-    return this.system.logger;
+  public readonly logger: ConsolaInstance;
+
+  public constructor(system: System<M>, name: string) {
+    this.system = system;
+    this.name = name;
+    this.logger = this.system.logger.create({}).withTag(name);
   }
 
   public get database() {
     return this.system.database;
   }
 
-  public get storage() {
-    return this.system.storage;
+  public get redis() {
+    return this.system.redis;
   }
 
   /**

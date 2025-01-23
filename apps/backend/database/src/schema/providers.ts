@@ -1,8 +1,6 @@
 import { boolean, pgEnum, pgTable, timestamp, varchar } from 'drizzle-orm/pg-core';
 
-export const SupportProviders = ['dmhy', 'moe', 'ani'] as const;
-
-export type ProviderType = (typeof SupportProviders)[number];
+import { SupportProviders } from '@animegarden/client';
 
 export const providerEnum = pgEnum('resources_provider', SupportProviders);
 

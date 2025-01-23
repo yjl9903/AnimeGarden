@@ -1,4 +1,5 @@
 import { boolean, integer, json, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+
 import { resources } from './resources';
 
 export interface MagnetInfo {

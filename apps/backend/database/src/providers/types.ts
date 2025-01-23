@@ -1,4 +1,4 @@
-import type { ProviderType } from '../schema/providers';
+import type { ProviderType } from '@animegarden/client';
 
 export interface NotifiedResources {
   id: number;
