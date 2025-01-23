@@ -2,6 +2,7 @@ import { and, eq, inArray, sql } from 'drizzle-orm';
 
 import type { System } from '../system';
 import type { ProviderType } from '../schema/providers';
+import type { NewResource as NewDbResource } from '../schema';
 
 import { retryFn } from '../utils';
 import { Module } from '../system/module';
@@ -49,7 +50,7 @@ export class ResourcesModule extends Module<System['modules']> {
    */
   public async insertResources(resources: NewResource[], options: InsertResourcesOptions = {}) {
     const map = new Map<string, NonNullable<ReturnType<typeof transformNewResources>['result']>>();
-    const newResources = [];
+    const newResources: NewDbResource[] = [];
     const errors = [];
     for (const r of resources) {
       const res = transformNewResources(this.system, r, options);
@@ -63,27 +64,29 @@ export class ResourcesModule extends Module<System['modules']> {
 
     if (newResources.length === 0) return { inserted: [], conflict: [], errors: [] };
 
-    const resp = await this.database
-      .insert(resourceSchema)
-      .values(
-        newResources.map((r) => {
-          const search1 = r.titleSearch[0] ? r.titleSearch[0].join(' ') : undefined;
-          const search2 = r.titleSearch[3] ? r.titleSearch[3].join(' ') : undefined;
+    const resp = await retryFn(
+      () =>
+        this.database
+          .insert(resourceSchema)
+          .values(
+            newResources.map((r) => {
+              const search1 = r.titleSearch[0] ? r.titleSearch[0].join(' ') : undefined;
+              const search2 = r.titleSearch[3] ? r.titleSearch[3].join(' ') : undefined;
 
-          const titleSearch =
-            search1 && search2
-              ? sql`(setweight(to_tsvector('simple', ${search1}), 'A') || setweight(to_tsvector('simple', ${search2}), 'D'))`
-              : search1
-                ? sql`setweight(to_tsvector('simple', ${search1}), 'A')`
-                : sql`setweight(to_tsvector('simple', ${search2 ?? ''}), 'D')`;
+              const titleSearch =
+                search1 && search2
+                  ? sql`(setweight(to_tsvector('simple', ${search1}), 'A') || setweight(to_tsvector('simple', ${search2}), 'D'))`
+                  : search1
+                    ? sql`setweight(to_tsvector('simple', ${search1}), 'A')`
+                    : sql`setweight(to_tsvector('simple', ${search2 ?? ''}), 'D')`;
 
-          // 1. provider is different
-          // 2. exisit, isDeleted = false
-          // 3. root resource has no duplicated id, duplicatedId is null
-          // 4. Same magnet or same title
-          const duplicatedId = options.duplicatedManager
-            ? options.duplicatedManager.find(r.title, r.magnet)
-            : sql`(SELECT ${resourceSchema.id}
+              // 1. provider is different
+              // 2. exisit, isDeleted = false
+              // 3. root resource has no duplicated id, duplicatedId is null
+              // 4. Same magnet or same title
+              const duplicatedId = options.duplicatedManager
+                ? options.duplicatedManager.find(r.title, r.magnet)
+                : sql`(SELECT ${resourceSchema.id}
 FROM ${resourceSchema}
 WHERE (${resourceSchema.isDeleted} = false)
 AND (${resourceSchema.duplicatedId} is null)
@@ -92,24 +95,26 @@ AND (${resourceSchema.magnet} = ${r.magnet} OR ${resourceSchema.title} = ${r.tit
 ORDER BY ${resourceSchema.createdAt} asc
 LIMIT 1)`;
 
-          return {
-            isDeleted: false,
-            ...r,
-            titleSearch,
-            duplicatedId
-          };
-        })
-      )
-      .onConflictDoNothing()
-      .returning({
-        id: resourceSchema.id,
-        provider: resourceSchema.provider,
-        providerId: resourceSchema.providerId,
-        title: resourceSchema.title,
-        magnet: resourceSchema.magnet,
-        isDeleted: resourceSchema.isDeleted,
-        duplicatedId: resourceSchema.duplicatedId
-      });
+              return {
+                isDeleted: false,
+                ...r,
+                titleSearch,
+                duplicatedId
+              };
+            })
+          )
+          .onConflictDoNothing()
+          .returning({
+            id: resourceSchema.id,
+            provider: resourceSchema.provider,
+            providerId: resourceSchema.providerId,
+            title: resourceSchema.title,
+            magnet: resourceSchema.magnet,
+            isDeleted: resourceSchema.isDeleted,
+            duplicatedId: resourceSchema.duplicatedId
+          }),
+      5
+    );
 
     // Use in-memory duplicated checker
     if (options.duplicatedManager) {
