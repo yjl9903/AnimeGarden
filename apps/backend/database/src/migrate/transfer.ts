@@ -50,12 +50,14 @@ async function transferResources(
 ) {
   const PAGE_SIZE = options.pageSize ?? 1000;
   const RETRY = options.retry ?? 5;
+  const logger = sys.logger.withTag('transfer');
+
   if (PAGE_SIZE <= 0) {
-    sys.logger.success('Skip transfering Resources');
+    logger.success('Skip transfering Resources');
     return;
   }
 
-  sys.logger.info('Start transfering Resources');
+  logger.info('Start transfering Resources');
 
   let cursor = options.startPage ?? 0;
   let end = options.endPage ?? Number.MAX_SAFE_INTEGER;
@@ -63,22 +65,23 @@ async function transferResources(
   const dup = new DuplicatedManager();
 
   while (cursor < end) {
-    sys.logger.info(
+    logger.info(
       `Fetching resources from ${cursor * PAGE_SIZE} to ${cursor * PAGE_SIZE + PAGE_SIZE - 1}`
     );
-    const oldResources = await oldDatabase.query.resources.findMany({
-      with: {
-        publisher: true,
-        fansub: true
-      },
-      offset: cursor * PAGE_SIZE,
-      limit: PAGE_SIZE,
-      orderBy: (res, { asc }) => [asc(res.createdAt)]
-    });
-    if (oldResources.length === 0) break;
 
     for (let i = 0; i < RETRY; i++) {
       try {
+        const oldResources = await oldDatabase.query.resources.findMany({
+          with: {
+            publisher: true,
+            fansub: true
+          },
+          offset: cursor * PAGE_SIZE,
+          limit: PAGE_SIZE,
+          orderBy: (res, { asc }) => [asc(res.createdAt)]
+        });
+        if (oldResources.length === 0) break;
+
         const { inserted, conflict, errors } = await sys.modules.resources.insertResources(
           oldResources.map((r) => ({
             provider: r.provider,
@@ -101,25 +104,23 @@ async function transferResources(
           }
         );
 
-        sys.logger.info(`Insert ${inserted.length} new resources`);
+        logger.info(`Insert ${inserted.length} new resources`);
         if (errors.length > 0) {
-          sys.logger.warn(`Have ${errors.length} error resources`);
+          logger.warn(`Have ${errors.length} error resources`);
           for (const res of errors) {
-            sys.logger.warn(`Error resource: ${res.title} (${res.provider} / ${res.providerId})`);
+            logger.warn(`Error resource: ${res.title} (${res.provider} / ${res.providerId})`);
           }
         }
         if (inserted.length > 0) {
           if (conflict.length > 0) {
-            sys.logger.warn(`Have ${conflict.length} conflict resources`);
+            logger.warn(`Have ${conflict.length} conflict resources`);
             for (const res of conflict) {
-              sys.logger.warn(
-                `Conflict resource: ${res.title} (${res.provider} / ${res.providerId})`
-              );
+              logger.warn(`Conflict resource: ${res.title} (${res.provider} / ${res.providerId})`);
             }
           }
         } else {
           if (conflict.length > 0) {
-            sys.logger.warn(`There are ${conflict.length} resources that have been inserted`);
+            logger.warn(`There are ${conflict.length} resources that have been inserted`);
           }
         }
         cursor += 1;
@@ -129,13 +130,13 @@ async function transferResources(
         if (i + 1 === RETRY) {
           throw error;
         } else {
-          sys.logger.error(error);
+          logger.error(error);
         }
       }
     }
   }
 
-  sys.logger.success('Finish transfering Resources OK');
+  logger.success('Finish transfering Resources OK');
 }
 
 const SimpleType: Record<string, string> = {
