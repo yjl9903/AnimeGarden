@@ -70,4 +70,4 @@ const sakurato = await fetchResources(fetch, { count: -1, fansub: 619 })
 
 ## 开源协议
 
-MIT License © 2023 [XLor](https://github.com/yjl9903)
+AGPL-3.0 License © 2023 [XLor](https://github.com/yjl9903)
