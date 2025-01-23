@@ -1,7 +1,8 @@
 import { bearerAuth } from 'hono/bearer-auth';
 
 import { NetworkError } from '@animegarden/scraper';
-import { type System, type ProviderType, SupportProviders, anonymous } from '@animegarden/database';
+import { type System, anonymous } from '@animegarden/database';
+import { type ProviderType, SupportProviders } from '@animegarden/client';
 
 import { defineHandler } from '../utils/hono';
 import { ScraperProviders } from '../providers';

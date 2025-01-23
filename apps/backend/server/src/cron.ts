@@ -1,7 +1,9 @@
 import { Hono } from 'hono';
 import { Cron } from 'croner';
 
-import { SupportProviders, System } from '@animegarden/database';
+import type { System } from '@animegarden/database';
+
+import { SupportProviders } from '@animegarden/client';
 
 export interface ExecutorOptions {}
 
