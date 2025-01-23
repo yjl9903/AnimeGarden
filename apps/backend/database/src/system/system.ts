@@ -1,7 +1,7 @@
+import { type Redis as RedisStorage } from 'ioredis';
 import { type ConsolaInstance, createConsola } from 'consola';
 
 import type { Database } from '../connect/database';
-import type { RedisStorage } from '../connect/redis';
 
 import { Module } from './module';
 import { getSecret } from './secret';

@@ -36,7 +36,7 @@ importers:
         version: 0.9.7
       bumpp:
         specifier: latest
-        version: 9.10.0(magicast@0.3.5)
+        version: 9.10.2(magicast@0.3.5)
       drizzle-kit:
         specifier: ^0.24.2
         version: 0.24.2
@@ -103,6 +103,9 @@ importers:
       drizzle-orm:
         specifier: ^0.33.0
         version: 0.33.0(@cloudflare/workers-types@4.20240909.0)(@types/react@18.3.18)(postgres@3.4.4)(react@18.3.1)
+      ioredis:
+        specifier: ^5.4.1
+        version: 5.4.1
       meilisearch:
         specifier: ^0.42.0
         version: 0.42.0
@@ -4845,8 +4848,8 @@ packages:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
     engines: {node: '>=6'}
 
-  bumpp@9.10.0:
-    resolution: {integrity: sha512-gNY3tYEGKyqW8+qtpeLQ2UfQW7G81d/vhCWNGrMlvy0Toq1LZPRs8wk9woAw8o9Tzv7pvjaF/Gno+UN3qiqNxA==}
+  bumpp@9.10.2:
+    resolution: {integrity: sha512-QX1JdswFLLVgrA+I/t+926/jsuJ92BTKKxGvMYC6fg+1lFpCl9RbILQJg0thc5UirIjQ6/jY1Sj+b4tz3evA5g==}
     engines: {node: '>=10'}
     hasBin: true
 
@@ -12006,7 +12009,7 @@ snapshots:
     dependencies:
       astro: 4.15.4(@types/node@20.16.5)(rollup@4.30.1)(terser@5.31.6)(typescript@5.7.3)
       astro-integration-kit: 0.16.1(astro@4.15.4(@types/node@20.16.5)(rollup@4.30.1)(terser@5.31.6)(typescript@5.7.3))
-      debug: 4.3.6
+      debug: 4.3.7
     transitivePeerDependencies:
       - supports-color
 
@@ -14690,7 +14693,7 @@ snapshots:
 
   builtin-modules@3.3.0: {}
 
-  bumpp@9.10.0(magicast@0.3.5):
+  bumpp@9.10.2(magicast@0.3.5):
     dependencies:
       c12: 2.0.1(magicast@0.3.5)
       cac: 6.7.14
