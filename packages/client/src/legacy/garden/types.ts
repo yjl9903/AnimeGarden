@@ -1,6 +1,6 @@
 import type { Resource } from '../types';
 
-export type ProviderType = 'dmhy' | 'moe';
+type ProviderType = 'dmhy' | 'moe';
 
 export interface FilterOptions {
   /**

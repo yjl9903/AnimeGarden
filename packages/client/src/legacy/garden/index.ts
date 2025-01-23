@@ -5,9 +5,9 @@ import { version } from '../../../package.json';
 import type {
   ResolvedFilterOptions,
   FetchResourcesOptions,
-  FetchResourceDetailOptions,
-  ProviderType
+  FetchResourceDetailOptions
 } from './types';
+import type { ProviderType } from '../../constants';
 
 import { retryFn } from './utils';
 import { stringifySearchURL } from './url';
