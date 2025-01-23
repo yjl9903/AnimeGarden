@@ -24,7 +24,13 @@ async function initialize(options: SystemOptions) {
   if (!options.redisUri) {
     options.redisUri = process.env.REDIS_URI;
   }
-  return await makeSystem(options);
+
+  try {
+    return await makeSystem(options);
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
 }
 
 // --- Server ---

@@ -1,13 +1,8 @@
-import { type Storage, type StorageValue, createStorage } from 'unstorage';
-import redisDriver from 'unstorage/drivers/redis';
+import { Redis } from 'ioredis';
 
-export type RedisStorage = Storage<StorageValue>;
+export type RedisStorage = Redis;
 
-export function connectRedis(url: string): Storage<StorageValue> {
-  return createStorage({
-    driver: redisDriver({
-      base: 'unstorage',
-      url
-    })
-  });
+export function connectRedis(url: string): Redis {
+  const redis = new Redis(url);
+  return redis;
 }

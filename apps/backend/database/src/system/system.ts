@@ -1,12 +1,12 @@
 import { type ConsolaInstance, createConsola } from 'consola';
 
 import type { Database } from '../connect/database';
-import type { RedisStorage as Storage } from '../connect/redis';
+import type { RedisStorage } from '../connect/redis';
 
 import { Module } from './module';
 import { getSecret } from './secret';
 
-export type { Database, Storage };
+export type { Database, RedisStorage };
 
 export interface SystemOptions {
   secret?: string;
@@ -21,7 +21,7 @@ export class System<M extends Record<string, Module> = {}> {
 
   public database!: Database;
 
-  public storage?: Storage;
+  public redis?: RedisStorage;
 
   public readonly options: SystemOptions;
 

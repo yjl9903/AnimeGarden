@@ -73,41 +73,49 @@ async function fetchResources(sys: System, platform: ProviderType) {
       )
     );
 
-    const fetchedAt = new Date();
-    const resources = await sys.modules.resources.insertResources(
-      newResources.map((r) => ({
-        ...r,
-        publisher: r.publisher?.name ?? anonymous,
-        fansub: r.fansub?.name,
-        createdAt: new Date(r.createdAt),
-        fetchedAt
-      })),
-      {
-        indexSubject: true
-      }
-    );
+    if (newResources.length > 0) {
+      const fetchedAt = new Date();
+      const resources = await sys.modules.resources.insertResources(
+        newResources.map((r) => ({
+          ...r,
+          publisher: r.publisher?.name ?? anonymous,
+          fansub: r.fansub?.name,
+          createdAt: new Date(r.createdAt),
+          fetchedAt
+        })),
+        {
+          indexSubject: true
+        }
+      );
 
-    // Maintain provider status
-    await sys.modules.providers.updateRefreshTimestamp(platform, fetchedAt);
-    await sys.modules.providers.notifyRefreshedResources();
+      // Maintain provider status
+      await sys.modules.providers.updateRefreshTimestamp(platform, fetchedAt);
+      await sys.modules.providers.notifyRefreshedResources(resources.inserted);
 
-    sys.logger.success(`Finish inserting ${resources.inserted.length} new ${platform} resources`);
+      sys.logger.success(`Finish inserting ${resources.inserted.length} new ${platform} resources`);
 
-    return {
-      users,
-      teams,
-      resources
-    };
+      return {
+        users,
+        teams,
+        resources
+      };
+    } else {
+      return {
+        users,
+        teams,
+        resources: []
+      };
+    }
   } catch (error) {
     sys.logger.error(error);
     if (error instanceof NetworkError) {
-      // TODO: maintain provider status
+      await sys.modules.providers.updateActiveStatus(platform, false);
     }
     return undefined;
   }
 }
 
-async function syncResources(sys: System, platform: string, from: number, to: number) {
+async function syncResources(sys: System, platform: ProviderType, from: number, to: number) {
   sys.logger.info(`Start syncing and updating ${platform} resources`);
 
   try {
@@ -148,7 +156,7 @@ async function syncResources(sys: System, platform: string, from: number, to: nu
     //   )
     // );
 
-    // const fetchedAt = new Date();
+    const fetchedAt = new Date();
     // const resources = await sys.modules.resources.insertResources(
     //   newResources.map((r) => ({
     //     ...r,
@@ -162,7 +170,7 @@ async function syncResources(sys: System, platform: string, from: number, to: nu
     //   }
     // );
 
-    // TODO: maintain provider status
+    await sys.modules.providers.updateRefreshTimestamp(platform, fetchedAt);
 
     // sys.logger.success(`Finish updating ${resources.inserted.length} new ${platform} resources`);
 
@@ -174,7 +182,7 @@ async function syncResources(sys: System, platform: string, from: number, to: nu
   } catch (error) {
     sys.logger.error(error);
     if (error instanceof NetworkError) {
-      // TODO: maintain provider status
+      await sys.modules.providers.updateActiveStatus(platform, false);
     }
     return undefined;
   }
