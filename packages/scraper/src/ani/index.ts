@@ -85,7 +85,7 @@ export async function fetchLastestANi(
       providerId,
       title: item.title,
       href: link,
-      type: '動畫',
+      type: '动画',
       magnet,
       tracker,
       size,
