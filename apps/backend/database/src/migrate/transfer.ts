@@ -69,7 +69,7 @@ async function transferResources(
       `Fetching resources from ${cursor * PAGE_SIZE} to ${cursor * PAGE_SIZE + PAGE_SIZE - 1}`
     );
 
-    for (let i = 0; i < RETRY; i++) {
+    for (let i = 0, end = false; i < RETRY && !end; i++) {
       try {
         const oldResources = await oldDatabase.query.resources.findMany({
           with: {
@@ -80,7 +80,10 @@ async function transferResources(
           limit: PAGE_SIZE,
           orderBy: (res, { asc }) => [asc(res.createdAt)]
         });
-        if (oldResources.length === 0) break;
+        if (oldResources.length === 0) {
+          end = true;
+          break;
+        }
 
         const { inserted, conflict, errors } = await sys.modules.resources.insertResources(
           oldResources.map((r) => ({
