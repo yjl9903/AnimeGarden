@@ -18,13 +18,13 @@ import {
   sql
 } from 'drizzle-orm';
 
-import { normalizeTitle, type ResolvedFilterOptions, SupportProviders } from '@animegarden/client';
+import { normalizeTitle, type ResolvedFilterOptions } from '@animegarden/client';
 
 import type { System } from '../system';
 import type { NotifiedResources } from '../providers/types';
 
-import { jieba, retryFn } from '../utils';
 import { resources } from '../schema/resources';
+import { jieba, nextTick, retryFn } from '../utils';
 
 import type { DatabaseResource } from './types';
 
@@ -215,6 +215,7 @@ export class QueryManager {
         const task = tasks[i];
         if (this.tasks.has(task.key)) {
           this.tasks.delete(task.key);
+          task.clear();
         }
       }
     }
@@ -427,12 +428,14 @@ export class QueryManager {
     const tasks = [...this.tasks.values()];
     for (const task of tasks) {
       if (!task.ok) continue;
+      if (!this.tasks.has(task.key)) continue;
       if (task.options.search) {
         task.clear();
       } else {
         // Insert resources
         task.insertResources(resp);
       }
+      await nextTick();
     }
   }
 }
