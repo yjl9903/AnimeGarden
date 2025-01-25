@@ -205,6 +205,45 @@ describe('parse url', () => {
         ],
       }
     `);
+  });
+});
+
+describe('parse url with body', () => {
+  it('should work', () => {
+    expect(parseURLSearch(new URLSearchParams(), { page: 2 })).toMatchInlineSnapshot(`
+      {
+        "duplicate": false,
+        "page": 2,
+        "pageSize": 100,
+        "providers": [
+          "dmhy",
+          "moe",
+          "ani",
+        ],
+      }
+    `);
+  });
+});
+
+describe('stringify url', () => {
+  it('should work', () => {
+    const params = [
+      'after=2023-06-10',
+      'before=2023-06-13',
+      'fansub=abc',
+      'fansub=def',
+      'publisher=456',
+      'page=2',
+      'pageSize=100',
+      'search=hello',
+      'search=world',
+      'include=hello',
+      'include=world1',
+      'include=world3',
+      'keywords=简中',
+      'exclude=h1',
+      'type=动画'
+    ];
 
     expect(
       stringifyURLSearch(parseURLSearch(new URLSearchParams(params.join('&')))).toString()

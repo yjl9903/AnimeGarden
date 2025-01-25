@@ -44,7 +44,7 @@ const MAX_TASK = 1000;
 /**
  * 单个缓存预取数量
  */
-const TASK_PREFETCH_COUNT = 10000;
+const TASK_PREFETCH_COUNT = 1000;
 
 export class QueryManager {
   private readonly system: System;
@@ -86,14 +86,9 @@ export class QueryManager {
     const dbOptions = this.normalizeDatabaseFilterOptions(filter);
     const { resources, hasMore } = await this.findFromTask(dbOptions, filter.page, filter.pageSize);
 
-    const { users, teams } = this.system.modules;
+    const { users, teams, subjects } = this.system.modules;
 
     return {
-      filter: {
-        page: filter.page,
-        pageSize: filter.pageSize,
-        ...dbOptions
-      },
       resources: await Promise.all(
         resources.map(async (r) => ({
           id: r.id,
@@ -113,7 +108,17 @@ export class QueryManager {
           metadata: r.metadata
         }))
       ),
-      hasMore
+      complete: !hasMore,
+      filter: {
+        page: filter.page,
+        pageSize: filter.pageSize,
+        ...dbOptions,
+        publishers: dbOptions.publishers?.map((p) => users.ids.get(p)?.name!),
+        fansubs: dbOptions.fansubs?.map((p) => teams.ids.get(p)?.name!),
+        before: dbOptions.before?.toISOString(),
+        after: dbOptions.after?.toISOString(),
+        subjects: dbOptions.subjects?.map((i) => subjects.getSubjectById(i))
+      }
     };
   }
 
@@ -227,7 +232,11 @@ export class QueryManager {
   }
 
   public async findFromDatabase(filter: DatabaseFilterOptions, offset: number, limit: number) {
-    this.logger.info(`Executing resources query on database: ${filter}`);
+    const now = performance.now();
+    const payload = JSON.stringify(filter);
+    this.logger.info(
+      `Start executing resources query on database: ${payload} (offset: ${offset}, limit: ${limit})`
+    );
 
     const {
       providers,
@@ -344,6 +353,11 @@ export class QueryManager {
           .offset(offset)
           .limit(limit),
       5
+    );
+
+    const end = performance.now();
+    this.logger.info(
+      `Finish selecting ${resp.length} resources in ${Math.floor(end - now)} ms from database: ${payload} (offset: ${offset}, limit: ${limit})`
     );
 
     return resp;

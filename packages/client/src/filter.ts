@@ -195,7 +195,7 @@ export type FilterOptions = {
         /**
          * Filter by the bangumi subject ids
          */
-        subjects?: string[];
+        subjects?: number[];
       }
   ) &
   (

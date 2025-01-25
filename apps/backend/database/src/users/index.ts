@@ -102,6 +102,7 @@ export class UsersModule extends Module<System['modules']> {
           : [];
       for (const user of inserted) {
         this.users.set(user.name, { ...insertions.get(user.name)!, ...user });
+        this.ids.set(user.id, { ...insertions.get(user.name)!, ...user });
       }
 
       const updated = await Promise.all(
@@ -128,9 +129,14 @@ export class UsersModule extends Module<System['modules']> {
     if (this.ids.has(id)) {
       return this.ids.get(id);
     }
-    return await this.database.query.users.findFirst({
+    const resp = await this.database.query.users.findFirst({
       where: (users, { eq }) => eq(users.id, id)
     });
+    if (resp) {
+      this.users.set(resp.name, resp);
+      this.ids.set(resp.id, resp);
+    }
+    return resp;
   });
 }
 
@@ -225,6 +231,7 @@ export class TeamsModule extends Module<System['modules']> {
           : [];
       for (const team of inserted) {
         this.teams.set(team.name, { ...insertions.get(team.name)!, ...team });
+        this.ids.set(team.id, { ...insertions.get(team.name)!, ...team });
       }
 
       const updated = await Promise.all(
@@ -251,8 +258,13 @@ export class TeamsModule extends Module<System['modules']> {
     if (this.ids.has(id)) {
       return this.ids.get(id);
     }
-    return await this.database.query.teams.findFirst({
+    const resp = await this.database.query.teams.findFirst({
       where: (teams, { eq }) => eq(teams.id, id)
     });
+    if (resp) {
+      this.teams.set(resp.name, resp);
+      this.ids.set(resp.id, resp);
+      return resp;
+    }
   });
 }

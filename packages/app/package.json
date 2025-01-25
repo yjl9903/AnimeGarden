@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "astro": "astro",
-    "build": "astro build && node scripts/postbuild.mjs",
     "dev": "astro dev",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal public/favicon.svg",
     "preview": "astro preview",

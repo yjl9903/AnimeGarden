@@ -20,8 +20,8 @@ const providerArray = z.array(providerEnum).transform((t) => [...new Set(t)]);
 const UrlSearchSchema = {
   provider: providerArray.optional(),
   duplicate: z.union([z.null(), z.undefined(), z.coerce.boolean()]).optional(),
-  page: z.coerce.number().optional(),
-  pageSize: z.coerce.number().optional(),
+  page: z.union([z.null(), z.undefined(), z.coerce.number()]).optional(),
+  pageSize: z.union([z.null(), z.undefined(), z.coerce.number()]).optional(),
   fansub: z.string().array().optional(),
   publisher: z.string().array().optional(),
   type: z.string().array().optional(),
@@ -270,7 +270,7 @@ export function stringifyURLSearch(options: FilterOptions) {
     params.set('subject', '' + subject);
   } else if (subjects) {
     for (const subject of subjects) {
-      params.append('subject', subject);
+      params.append('subject', '' + subject);
     }
   }
 

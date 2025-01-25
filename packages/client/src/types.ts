@@ -1,4 +1,6 @@
-interface Resource<T extends { tracker?: boolean } = {}> {
+import type { ParseResult } from 'anipar';
+
+interface Resource<T extends { tracker?: boolean; metadata?: boolean } = {}> {
   id: number;
 
   provider: string;
@@ -40,6 +42,12 @@ interface Resource<T extends { tracker?: boolean } = {}> {
   createdAt: Date;
 
   fetchedAt: Date;
+
+  metadata?: T['metadata'] extends true
+    ? { anipar?: ParseResult }
+    : T['metadata'] extends false
+      ? null | undefined
+      : { anipar?: ParseResult } | null | undefined;
 }
 
 export interface ScrapedResource {

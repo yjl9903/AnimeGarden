@@ -58,7 +58,7 @@ export async function makeSystem(options: SystemOptions) {
 
   if (options.redisUri) {
     try {
-      const redis = connectRedis(options.postgresUri);
+      const redis = connectRedis(options.redisUri);
       system.redis = redis;
       system.logger.success('Connect to Redis');
     } catch (error) {

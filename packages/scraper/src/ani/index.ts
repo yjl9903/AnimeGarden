@@ -4,13 +4,7 @@ import parseTorrent from 'parse-torrent';
 import { JSDOM } from 'jsdom';
 import { toMagnetURI } from 'parse-torrent';
 
-import {
-  type ScrapedResource,
-  type ScrapedResourceDetail,
-  retryFn,
-  ANiTeam,
-  ANiUser
-} from '@animegarden/client';
+import { type ScrapedResource, type ScrapedResourceDetail, retryFn } from '@animegarden/client';
 
 import { NetworkError } from '../error';
 import { parseSize, splitOnce } from '../utils';
@@ -24,6 +18,20 @@ export interface FetchANiOptions {
 export interface FetchANiDetailOptions {
   retry?: number;
 }
+
+const ANiUser = {
+  name: 'ANi',
+  provider: 'ani',
+  providerId: '1',
+  avatar: ''
+} as const;
+
+const ANiTeam = {
+  name: 'ANi',
+  provider: 'ani',
+  providerId: '1',
+  avatar: ''
+} as const;
 
 export async function fetchLastestANi(
   ofetch: (request: string, init?: RequestInit) => Promise<Response>,
@@ -89,8 +97,8 @@ export async function fetchLastestANi(
       magnet,
       tracker,
       size,
-      fansub: { id: '1', name: 'ANi' },
-      publisher: { id: '1', name: 'ANi' },
+      publisher: { id: ANiUser.providerId, name: ANiUser.name },
+      fansub: { id: ANiTeam.providerId, name: ANiTeam.name },
       createdAt: item.pubDate
     });
   }

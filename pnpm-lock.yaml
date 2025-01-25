@@ -36,7 +36,7 @@ importers:
         version: 0.9.7
       bumpp:
         specifier: latest
-        version: 9.10.2(magicast@0.3.5)
+        version: 10.0.1(magicast@0.3.5)
       drizzle-kit:
         specifier: ^0.24.2
         version: 0.24.2
@@ -571,6 +571,9 @@ importers:
 
   packages/client:
     dependencies:
+      anipar:
+        specifier: ^0.3.0
+        version: 0.3.0
       simptrad:
         specifier: ^0.2.0
         version: 0.2.0
@@ -4560,6 +4563,10 @@ packages:
   ajv@8.17.1:
     resolution: {integrity: sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==}
 
+  anipar@0.3.0:
+    resolution: {integrity: sha512-r5E6S6dYCwhQy6EEpV4TimMbGgaCCy0K6T1m7tkXzWvZXBtCnCV5xysfBmDRKs6v2R8PjO1/V3Ackl2deS7rhw==}
+    engines: {node: '>=v18.16.0'}
+
   anitomy@0.0.35:
     resolution: {integrity: sha512-lwTWQAWKrgvQhlTssPDqz+1BVYJ7EqNVo7OTsqyND0SoVehOgdIdDZKeaAXI+D8z7xAV/fABWBZsVpbURF1MBg==}
     engines: {node: '>=v18.16.0'}
@@ -4854,9 +4861,9 @@ packages:
     resolution: {integrity: sha512-zhaCDicdLuWN5UbN5IMnFqNMhNfo919sH85y2/ea+5Yg9TsTkeZxpL+JLbp6cgYFS4sRLp3YV4S6yDuqVWHYOw==}
     engines: {node: '>=6'}
 
-  bumpp@9.10.2:
-    resolution: {integrity: sha512-QX1JdswFLLVgrA+I/t+926/jsuJ92BTKKxGvMYC6fg+1lFpCl9RbILQJg0thc5UirIjQ6/jY1Sj+b4tz3evA5g==}
-    engines: {node: '>=10'}
+  bumpp@10.0.1:
+    resolution: {integrity: sha512-TBCR4FjNiubf+t6QFncNHJzCDwcz6SM2PPt/UoIGwGoe5ZTbSqu37nNJFlxBngWCUb1rYbf43ocNT1pPaNu5CQ==}
+    engines: {node: '>=18'}
     hasBin: true
 
   bundle-require@5.0.0:
@@ -14238,6 +14245,8 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
+  anipar@0.3.0: {}
+
   anitomy@0.0.35: {}
 
   ansi-align@3.0.1:
@@ -14699,7 +14708,7 @@ snapshots:
 
   builtin-modules@3.3.0: {}
 
-  bumpp@9.10.2(magicast@0.3.5):
+  bumpp@10.0.1(magicast@0.3.5):
     dependencies:
       c12: 2.0.1(magicast@0.3.5)
       cac: 6.7.14

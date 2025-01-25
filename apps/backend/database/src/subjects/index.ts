@@ -16,6 +16,8 @@ export class SubjectsModule extends Module<System['modules']> {
 
   public readonly bgms: Map<number, Subject> = new Map();
 
+  public readonly ids: Map<number, Subject> = new Map();
+
   public async initialize() {
     this.system.logger.info('Initializing Subjects module');
     await this.fetchSubjects();
@@ -30,8 +32,10 @@ export class SubjectsModule extends Module<System['modules']> {
     const subs = await this.database.select().from(subjects);
     this.subjects.splice(0, this.subjects.length, ...subs);
     this.bgms.clear();
+    this.ids.clear();
     for (const sub of subs) {
       this.bgms.set(sub.bgmId, sub);
+      this.ids.set(sub.id, sub);
     }
     return subs;
   }
@@ -46,6 +50,10 @@ export class SubjectsModule extends Module<System['modules']> {
 
   public getSubject(bgmId: number) {
     return this.bgms.get(bgmId);
+  }
+
+  public getSubjectById(id: number) {
+    return this.ids.get(id);
   }
 
   public async insertSubject(subject: NewSubject, options: InsertSubjectOptions = {}) {

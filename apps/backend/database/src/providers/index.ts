@@ -33,6 +33,14 @@ export class ProvidersModule extends Module<System['modules']> {
     return this.providers;
   }
 
+  public get timestamp() {
+    const now = [...this.providers.values()].reduce(
+      (acc, c) => Math.max(acc, c.refreshedAt.getTime()),
+      0
+    );
+    return new Date(now);
+  }
+
   public async updateRefreshTimestamp(provider: ProviderType, timestamp: Date) {
     try {
       const resp = await retryFn(
