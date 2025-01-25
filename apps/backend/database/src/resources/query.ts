@@ -53,6 +53,8 @@ export class QueryManager {
 
   private readonly tasks: Map<string, Task> = new Map();
 
+  private readonly downgrade: Set<string> = new Set();
+
   public constructor(system: System) {
     this.system = system;
     this.logger = system.logger.withTag('query');
@@ -93,7 +95,7 @@ export class QueryManager {
           provider: r.provider,
           providerId: r.providerId,
           title: r.title,
-          href: r.href, // TODO
+          href: r.href,
           type: r.type,
           magnet: r.magnet,
           tracker: r.tracker,
@@ -121,51 +123,57 @@ export class QueryManager {
   }
 
   public async findFromTask(dbOptions: DatabaseFilterOptions, page: number, pageSize: number) {
-    const { search, include, keywords, fansubs, publishers, types, subjects } = dbOptions;
+    const fullKey = `${hash(dbOptions)}:${page}:${pageSize}`;
 
-    let task: Task;
-    if (search && search.length > 0) {
-      // 1. 搜索
-      task = this.getTask({ search, exclude: dbOptions.exclude });
-    } else if ((include && include.length > 0) || (keywords && keywords.length > 0)) {
-      // 2. 标题匹配
-      task = this.getTask({ include, keywords, exclude: dbOptions.exclude });
-    } else if ((fansubs && fansubs.length > 0) || (publishers && publishers.length > 0)) {
-      // 3. 字幕组匹配
-      task = this.getTask({ fansubs, publishers });
-    } else if (types && types.length > 0) {
-      // 4. 类型
-      task = this.getTask({ types });
-    } else if (subjects && subjects.length > 0) {
-      // 5. 类型
-      task = this.getTask({ subjects });
-    } else {
-      // 6. 回退到直接缓存数据库
-      task = this.getTask(dbOptions);
-    }
+    if (!this.downgrade.has(fullKey)) {
+      const { search, include, keywords, fansubs, publishers, types, subjects } = dbOptions;
 
-    if (task) {
-      // 预取缓存
-      await task.prefetch();
+      let task: Task;
+      if (search && search.length > 0) {
+        // 1. 搜索
+        task = this.getTask({ search, exclude: dbOptions.exclude });
+      } else if ((include && include.length > 0) || (keywords && keywords.length > 0)) {
+        // 2. 标题匹配
+        task = this.getTask({ include, keywords, exclude: dbOptions.exclude });
+      } else if ((fansubs && fansubs.length > 0) || (publishers && publishers.length > 0)) {
+        // 3. 字幕组匹配
+        task = this.getTask({ fansubs, publishers });
+      } else if (types && types.length > 0) {
+        // 4. 类型
+        task = this.getTask({ types });
+      } else if (subjects && subjects.length > 0) {
+        // 5. 类型
+        task = this.getTask({ subjects });
+      } else {
+        // 6. 回退到直接缓存数据库
+        task = this.getTask(dbOptions);
+      }
 
-      // 最多再预取 1 次
-      for (let i = 0; i < 2; i++) {
-        if (i > 0) {
-          await task.prefetchNextPage();
-        }
+      if (task) {
+        // 预取缓存
+        await task.prefetch();
 
-        const cache = await task.fetch(dbOptions, page, pageSize);
-        if (cache.ok) {
-          return {
-            resources: cache.resources,
-            hasMore: cache.hasMore
-          };
+        // 最多再预取 1 次
+        for (let i = 0; i < 2; i++) {
+          if (i > 0) {
+            await task.prefetchNextPage();
+          }
+
+          const cache = await task.fetch(dbOptions, page, pageSize);
+          if (cache.ok) {
+            return {
+              resources: cache.resources,
+              hasMore: cache.hasMore
+            };
+          }
         }
       }
     }
 
-    // 回退到直接查数据库, TODO: 标记回退的请求
-    const resp = await this.findFromDatabase(dbOptions, (page - 1) * pageSize, pageSize + 1);
+    // 回退到直接查数据库
+    this.downgrade.add(fullKey);
+    const resp = await this.findFromRedis(dbOptions, (page - 1) * pageSize, pageSize + 1);
+
     return {
       resources: resp.slice(0, pageSize),
       hasMore: resp.length > pageSize
@@ -185,9 +193,16 @@ export class QueryManager {
   private async clearDeadTasks() {
     const tasks = [...this.tasks.values()];
 
-    // 1. 清理或者重试过期的缓存, TODO
+    // 1. 重试过期的缓存
+    const now = new Date();
+    for (const task of tasks) {
+      const delta = now.getTime() - task.fetchedAt.getTime();
+      if (delta > 2 * 60 * 60 * 1000) {
+        task.clear();
+      }
+    }
 
-    // 2. 清理多余的缓存, TODO
+    // 2. 清理多余的缓存
     if (tasks.length > MAX_TASK) {
       tasks.sort((lhs, rhs) => {
         if (lhs.visited.count !== rhs.visited.count) {
@@ -228,6 +243,18 @@ export class QueryManager {
       exclude: filter.exclude?.map((t) => normalizeTitle(t))
     };
   }
+
+  public findFromRedis = memoAsync(
+    async (filter: DatabaseFilterOptions, offset: number, limit: number) => {
+      // TODO: read redis here
+      return await this.findFromDatabase(filter, offset, limit);
+    },
+    {
+      serialize: (filter, offset, limit) => {
+        return [hash(filter), offset, limit];
+      }
+    }
+  );
 
   public async findFromDatabase(filter: DatabaseFilterOptions, offset: number, limit: number) {
     const now = performance.now();
@@ -358,6 +385,8 @@ export class QueryManager {
   }
 
   public async onNotifications(notified: NotifiedResources[]) {
+    await this.findFromRedis.clear();
+
     const resp = await retryFn(
       () =>
         this.system.database
@@ -395,7 +424,16 @@ export class QueryManager {
 
     this.logger.info(`Notified ${resp.length} new resources`);
 
-    // TODO: insert resources
+    const tasks = [...this.tasks.values()];
+    for (const task of tasks) {
+      if (!task.ok) continue;
+      if (task.options.search) {
+        task.clear();
+      } else {
+        // Insert resources
+        task.insertResources(resp);
+      }
+    }
   }
 }
 
@@ -405,6 +443,8 @@ export class Task {
   public readonly key: string;
 
   public readonly options: DatabaseFilterOptions;
+
+  public readonly conds: Array<(r: DatabaseResource) => boolean> = [];
 
   public readonly visited = { count: 0, last: new Date() };
 
@@ -422,11 +462,72 @@ export class Task {
     this.query = query;
     this.key = key;
     this.options = options;
+
+    const conds = this.conds;
+    const {
+      provider,
+      duplicate,
+      publishers,
+      fansubs,
+      types,
+      subjects,
+      before,
+      after,
+      include,
+      keywords,
+      exclude
+    } = options;
+    if (provider) {
+      conds.push((r) => r.provider === provider);
+    }
+    if (include || keywords) {
+      conds.push((r) => {
+        const title = normalizeTitle(r.title);
+        return (
+          (include?.some((i) => title.indexOf(i) !== -1) ?? true) &&
+          (keywords?.every((i) => title.indexOf(i) !== -1) ?? true) &&
+          (exclude?.every((i) => title.indexOf(i) === -1) ?? true)
+        );
+      });
+    }
+    if (duplicate) {
+      conds.push((r) => r.duplicatedId !== null && r.duplicatedId !== undefined);
+    }
+    if (publishers && publishers.length > 0) {
+      conds.push((r) => publishers.some((p) => r.publisherId === p));
+    }
+    if (fansubs && fansubs.length > 0) {
+      conds.push((r) => fansubs.some((p) => r.publisherId === p));
+    }
+    if (types && types.length > 0) {
+      conds.push((r) => types.some((t) => r.type === t));
+    }
+    if (subjects && subjects.length > 0) {
+      conds.push((r) => subjects.some((s) => r.subjectId === s));
+    }
+    if (before) {
+      const t = before.getTime();
+      conds.push((r) => r.createdAt.getTime() <= t);
+    }
+    if (after) {
+      const t = after.getTime();
+      conds.push((r) => r.createdAt.getTime() >= t);
+    }
   }
 
   public visit() {
     this.visited.count += 1;
     this.visited.last = new Date();
+    return this;
+  }
+
+  public clear() {
+    this.prefetch.clear();
+    this.prefetchNextPage.clear();
+    this.prefetchCount = 0;
+    this.ok = false;
+    this.resources = [];
+    this.hasMore = false;
     return this;
   }
 
@@ -506,5 +607,19 @@ export class Task {
       resources: slice,
       hasMore: matched >= page * pageSize || cursor < this.resources.length || this.hasMore
     };
+  }
+
+  public insertResources(resp: DatabaseResource[]) {
+    let changed = false;
+    for (const r of resp) {
+      if (this.conds.every((c) => c(r))) {
+        changed = true;
+        this.resources.push(r);
+      }
+    }
+    if (changed) {
+      this.prefetchCount = this.resources.length;
+      this.resources.sort((lhs, rhs) => rhs.createdAt.getTime() - lhs.createdAt.getTime());
+    }
   }
 }
