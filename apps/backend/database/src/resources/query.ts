@@ -59,11 +59,9 @@ export class QueryManager {
   }
 
   public async initialize() {
-    await this.find({
+    this.find({
       page: 1,
       pageSize: 100,
-      providers: [...SupportProviders],
-      duplicate: false,
       types: ['动画']
     });
 
@@ -211,7 +209,7 @@ export class QueryManager {
     const { users, teams, subjects } = this.system.modules;
 
     return {
-      providers: filter.providers,
+      provider: filter.provider,
       duplicate: filter.duplicate,
       publishers: filter.publishers
         ?.map((p) => users.getByName(p)?.id)
@@ -239,7 +237,7 @@ export class QueryManager {
     );
 
     const {
-      providers,
+      provider,
       duplicate,
       fansubs,
       publishers,
@@ -254,12 +252,8 @@ export class QueryManager {
 
     const conds: SQLWrapper[] = [eq(resources.isDeleted, false)];
 
-    if (providers && providers.length > 0 && providers.length < SupportProviders.length) {
-      if (providers.length === 1) {
-        conds.push(eq(resources.provider, providers[0]));
-      } else {
-        conds.push(inArray(resources.provider, providers));
-      }
+    if (provider) {
+      conds.push(eq(resources.provider, provider));
     }
 
     if (duplicate) {
@@ -460,8 +454,15 @@ export class Task {
   });
 
   public async fetch(options: DatabaseFilterOptions, page: number, pageSize: number) {
-    const { publishers, fansubs, types, subjects, before, after } = options;
+    const { provider, duplicate, publishers, fansubs, types, subjects, before, after } = options;
     const conds: Array<(r: DatabaseResource) => boolean> = [];
+
+    if (provider) {
+      conds.push((r) => r.provider === provider);
+    }
+    if (duplicate) {
+      conds.push((r) => r.duplicatedId !== null && r.duplicatedId !== undefined);
+    }
     if (publishers && publishers.length > 0) {
       conds.push((r) => publishers.some((p) => r.publisherId === p));
     }
@@ -473,6 +474,14 @@ export class Task {
     }
     if (subjects && subjects.length > 0) {
       conds.push((r) => subjects.some((s) => r.subjectId === s));
+    }
+    if (before) {
+      const t = before.getTime();
+      conds.push((r) => r.createdAt.getTime() <= t);
+    }
+    if (after) {
+      const t = after.getTime();
+      conds.push((r) => r.createdAt.getTime() >= t);
     }
 
     let cursor = 0;

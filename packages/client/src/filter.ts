@@ -50,9 +50,9 @@ export interface ResolvedFilterOptions {
 
   pageSize: number;
 
-  providers: ProviderType[];
+  provider?: ProviderType;
 
-  duplicate: boolean;
+  duplicate?: boolean;
 
   types?: string[];
 
@@ -89,6 +89,11 @@ export type FilterOptions = {
    * @default 100
    */
   pageSize?: number;
+
+  /**
+   * Only filter resources in the specific provider
+   */
+  provider?: string;
 
   /**
    * Whether include duplicated resources from different platfrom.
@@ -129,51 +134,27 @@ export type FilterOptions = {
 } & (
   | {
       /**
-       * Only filter resources in the specific provider
+       * Filter by the resource type
        */
-      provider?: string;
+      type?: string;
 
       /**
-       * Only filter resources in the specific provider
+       * Filter by the resource type
        */
-      providers?: null | undefined;
+      types?: null | undefined;
     }
   | {
       /**
-       * Only filter resources in the specific provider
+       * Filter by the resource type
        */
-      provider?: null | undefined;
+      type?: null | undefined;
 
       /**
-       * Only filter resources in the specific provider
+       * Filter by the resource type
        */
-      providers?: string[];
+      types?: string[];
     }
 ) &
-  (
-    | {
-        /**
-         * Filter by the resource type
-         */
-        type?: string;
-
-        /**
-         * Filter by the resource type
-         */
-        types?: null | undefined;
-      }
-    | {
-        /**
-         * Filter by the resource type
-         */
-        type?: null | undefined;
-
-        /**
-         * Filter by the resource type
-         */
-        types?: string[];
-      }
-  ) &
   (
     | {
         /**

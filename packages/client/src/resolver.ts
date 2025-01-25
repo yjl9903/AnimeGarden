@@ -15,10 +15,8 @@ const stringArray = z.union([z.string().transform((s) => [s]), z.array(z.string(
 
 const providerEnum = z.enum(SupportProviders);
 
-const providerArray = z.array(providerEnum).transform((t) => [...new Set(t)]);
-
 const UrlSearchSchema = {
-  provider: providerArray.optional(),
+  provider: providerEnum.optional(),
   duplicate: z.union([z.null(), z.undefined(), z.coerce.boolean()]).optional(),
   page: z.union([z.null(), z.undefined(), z.coerce.number()]).optional(),
   pageSize: z.union([z.null(), z.undefined(), z.coerce.number()]).optional(),
@@ -36,7 +34,6 @@ const UrlSearchSchema = {
 
 const BodySchema = {
   provider: providerEnum.optional(),
-  providers: providerArray.optional(),
   duplicate: z.union([z.null(), z.undefined(), z.coerce.boolean()]).optional(),
   page: z.coerce.number().optional(),
   pageSize: z.coerce.number().optional(),
@@ -59,7 +56,7 @@ const BodySchema = {
 export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
   const res1 = params
     ? {
-        provider: UrlSearchSchema.provider.safeParse(params.getAll('provider')).data,
+        provider: UrlSearchSchema.provider.safeParse(params.get('provider')).data,
         duplicate: UrlSearchSchema.duplicate.safeParse(params.get('duplicate')).data,
         page: UrlSearchSchema.page.safeParse(params.get('page')).data,
         pageSize: UrlSearchSchema.pageSize.safeParse(params.get('pageSize')).data,
@@ -79,7 +76,6 @@ export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
   const res2 = body
     ? {
         provider: BodySchema.provider.safeParse(body.provider).data,
-        providers: BodySchema.providers.safeParse(body.providers).data,
         duplicate: BodySchema.duplicate.safeParse(body.duplicate).data,
         page: BodySchema.page.safeParse(body.page).data,
         pageSize: BodySchema.pageSize.safeParse(body.pageSize).data,
@@ -102,9 +98,7 @@ export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
 
   const filter: ResolvedFilterOptions = {
     page: res1?.page ?? res2?.page ?? 1,
-    pageSize: res1?.pageSize ?? res2?.pageSize ?? 100,
-    duplicate: false,
-    providers: []
+    pageSize: res1?.pageSize ?? res2?.pageSize ?? 100
   };
 
   const isNaN = (d: unknown): boolean => d === undefined || d === null || Number.isNaN(d);
@@ -123,22 +117,10 @@ export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
 
   if (res2?.provider) {
     filter.duplicate = res1?.duplicate ?? res2?.duplicate ?? true;
-    filter.providers = [res2.provider];
-  } else if (res2?.providers && res2.providers.length > 0) {
-    filter.providers = res2.providers;
-    filter.duplicate =
-      res2?.duplicate ??
-      res1?.duplicate ??
-      (filter.providers.length < SupportProviders.length ? true : false);
-  } else if (res1?.provider && res1.provider.length > 0) {
-    filter.providers = res1.provider;
-    filter.duplicate =
-      res2?.duplicate ??
-      res1?.duplicate ??
-      (filter.providers.length < SupportProviders.length ? true : false);
-  } else {
-    filter.providers = [...SupportProviders];
-    filter.duplicate = res1?.duplicate ?? res2?.duplicate ?? false;
+    filter.provider = res2.provider;
+  } else if (res1?.provider) {
+    filter.provider = res1.provider;
+    filter.duplicate = res2?.duplicate ?? res1?.duplicate ?? true;
   }
 
   if (res2?.fansub) {
@@ -256,13 +238,9 @@ export function stringifyURLSearch(options: FilterOptions) {
     }
   }
 
-  const { provider, providers } = options;
+  const { provider } = options;
   if (provider) {
     params.set('provider', provider);
-  } else if (providers) {
-    for (const provider of providers) {
-      params.append('provider', provider);
-    }
   }
 
   const { subject, subjects } = options;
