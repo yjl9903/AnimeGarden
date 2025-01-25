@@ -3,6 +3,7 @@ import { and, eq, inArray, sql } from 'drizzle-orm';
 import type { ProviderType } from '@animegarden/client';
 
 import type { System } from '../system';
+import type { NotifiedResources } from '../providers/types';
 import type { NewResource as NewDbResource } from '../schema';
 
 import { retryFn } from '../utils';
@@ -11,6 +12,7 @@ import { resources as resourceSchema } from '../schema/resources';
 
 import type { InsertResourcesOptions, NewResource } from './types';
 
+import { QueryManager } from './query';
 import { transformNewResources } from './transform';
 
 export * from './types';
@@ -18,8 +20,16 @@ export * from './types';
 export class ResourcesModule extends Module<System['modules']> {
   public static name = 'resources';
 
+  public readonly query: QueryManager;
+
+  public constructor(sys: System, name?: string) {
+    super(sys, name || ResourcesModule.name);
+    this.query = new QueryManager(sys);
+  }
+
   public async initialize() {
     this.system.logger.info('Initializing Resources module');
+    await this.query.initialize();
     this.system.logger.success('Initialize Resources module OK');
   }
 
@@ -156,5 +166,9 @@ LIMIT 1)`;
       conflict,
       errors
     };
+  }
+
+  public async onNotifications(notified: NotifiedResources[]) {
+    await this.onNotifications(notified);
   }
 }

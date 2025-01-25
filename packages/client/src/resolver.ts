@@ -27,6 +27,7 @@ const UrlSearchSchema = {
   type: z.string().array().optional(),
   before: dateLike.optional(),
   after: dateLike.optional(),
+  subject: z.coerce.number().array().optional(),
   search: z.string().array().optional(),
   include: z.string().array().optional(),
   keyword: z.string().array().optional(),
@@ -47,6 +48,8 @@ const BodySchema = {
   types: z.string().array().optional(),
   before: dateLike.optional(),
   after: dateLike.optional(),
+  subject: z.coerce.number().optional(),
+  subjects: z.coerce.number().array().optional(),
   search: stringArray.optional(),
   include: stringArray.optional(),
   keywords: stringArray.optional(),
@@ -65,6 +68,7 @@ export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
         type: UrlSearchSchema.type.safeParse(params.getAll('type')).data,
         before: UrlSearchSchema.before.safeParse(params.get('before')).data,
         after: UrlSearchSchema.after.safeParse(params.get('after')).data,
+        subject: UrlSearchSchema.subject.safeParse(params.getAll('subject')).data,
         search: UrlSearchSchema.search.safeParse(params.getAll('search')).data,
         include: UrlSearchSchema.include.safeParse(params.getAll('include')).data,
         keyword: UrlSearchSchema.keyword.safeParse(params.getAll('keyword')).data,
@@ -87,6 +91,8 @@ export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
         types: BodySchema.types.safeParse(body.types).data,
         before: BodySchema.before.safeParse(body.before).data,
         after: BodySchema.after.safeParse(body.after).data,
+        subject: BodySchema.subject.safeParse(body.subject).data,
+        subjects: BodySchema.subjects.safeParse(body.subjects).data,
         search: BodySchema.search.safeParse(body.search).data,
         include: BodySchema.include.safeParse(body.include).data,
         keywords: BodySchema.keywords.safeParse(body.keywords).data,
@@ -164,6 +170,14 @@ export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
   }
   if (res2?.after || res1?.after) {
     filter.after = res2?.after || res1?.after || undefined;
+  }
+
+  if (res2?.subject) {
+    filter.subjects = [res2.subject];
+  } else if (res2?.subjects && res2?.subjects.length > 0) {
+    filter.subjects = res2.subjects;
+  } else if (res1?.subject && res1.subject.length > 0) {
+    filter.subjects = res1.subject;
   }
 
   if (res2?.search && res2.search.length > 0) {
@@ -248,6 +262,15 @@ export function stringifyURLSearch(options: FilterOptions) {
   } else if (providers) {
     for (const provider of providers) {
       params.append('provider', provider);
+    }
+  }
+
+  const { subject, subjects } = options;
+  if (subject) {
+    params.set('subject', '' + subject);
+  } else if (subjects) {
+    for (const subject of subjects) {
+      params.append('subject', subject);
     }
   }
 

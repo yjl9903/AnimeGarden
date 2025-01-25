@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { memoAsync } from 'memofunc';
 
 import type { System } from '../system/system';
 import type { User, Team } from '../schema';
@@ -15,6 +16,8 @@ export class UsersModule extends Module<System['modules']> {
 
   public readonly users: Map<string, User> = new Map();
 
+  public readonly ids: Map<number, User> = new Map();
+
   public async initialize() {
     this.system.logger.info('Initializing Users module');
     await this.fetchUsers();
@@ -24,8 +27,11 @@ export class UsersModule extends Module<System['modules']> {
   public async fetchUsers() {
     const users = await this.database.query.users.findMany();
     this.users.clear();
+    this.ids.clear();
+    this.getById.clear();
     for (const user of users) {
       this.users.set(user.name, user);
+      this.ids.set(user.id, user);
     }
     return users;
   }
@@ -114,15 +120,26 @@ export class UsersModule extends Module<System['modules']> {
 
   // ---
 
-  public get(name: string) {
+  public getByName(name: string) {
     return this.users.get(name);
   }
+
+  public getById = memoAsync(async (id: number) => {
+    if (this.ids.has(id)) {
+      return this.ids.get(id);
+    }
+    return await this.database.query.users.findFirst({
+      where: (users, { eq }) => eq(users.id, id)
+    });
+  });
 }
 
 export class TeamsModule extends Module<System['modules']> {
   public static name = 'teams';
 
   public teams: Map<string, Team> = new Map();
+
+  public ids: Map<number, Team> = new Map();
 
   public async initialize() {
     this.system.logger.info('Initializing Teams module');
@@ -133,8 +150,11 @@ export class TeamsModule extends Module<System['modules']> {
   public async fetchTeams() {
     const teams = await this.database.query.teams.findMany();
     this.teams.clear();
+    this.ids.clear();
+    this.getById.clear();
     for (const team of teams) {
       this.teams.set(team.name, team);
+      this.ids.set(team.id, team);
     }
     return teams;
   }
@@ -223,7 +243,16 @@ export class TeamsModule extends Module<System['modules']> {
 
   // ---
 
-  public get(name: string) {
+  public getByName(name: string) {
     return this.teams.get(name);
   }
+
+  public getById = memoAsync(async (id: number) => {
+    if (this.ids.has(id)) {
+      return this.ids.get(id);
+    }
+    return await this.database.query.teams.findFirst({
+      where: (teams, { eq }) => eq(teams.id, id)
+    });
+  });
 }

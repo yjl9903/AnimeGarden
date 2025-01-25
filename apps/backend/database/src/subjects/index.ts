@@ -14,6 +14,8 @@ export class SubjectsModule extends Module<System['modules']> {
 
   public readonly subjects: Subject[] = [];
 
+  public readonly bgms: Map<number, Subject> = new Map();
+
   public async initialize() {
     this.system.logger.info('Initializing Subjects module');
     await this.fetchSubjects();
@@ -27,6 +29,10 @@ export class SubjectsModule extends Module<System['modules']> {
   public async fetchSubjects() {
     const subs = await this.database.select().from(subjects);
     this.subjects.splice(0, this.subjects.length, ...subs);
+    this.bgms.clear();
+    for (const sub of subs) {
+      this.bgms.set(sub.bgmId, sub);
+    }
     return subs;
   }
 
@@ -36,6 +42,10 @@ export class SubjectsModule extends Module<System['modules']> {
 
   public get archivedSubjects() {
     return this.subjects.filter((sub) => sub.isArchived);
+  }
+
+  public getSubject(bgmId: number) {
+    return this.bgms.get(bgmId);
   }
 
   public async insertSubject(subject: NewSubject, options: InsertSubjectOptions = {}) {

@@ -1,3 +1,5 @@
+import type { ParseResult } from 'anipar';
+
 import {
   bigint,
   boolean,
@@ -33,8 +35,8 @@ export const resources = pgTable(
     tracker: text('tracker').notNull(),
     size: bigint('size', { mode: 'number' }).notNull(),
     // Timestamp
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
-    fetchedAt: timestamp('fetched_at', { withTimezone: true }).defaultNow(),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+    fetchedAt: timestamp('fetched_at', { withTimezone: true }).notNull().defaultNow(),
     // Authors
     publisherId: integer('publisher_id').notNull(),
     fansubId: integer('fansub_id'),
@@ -42,7 +44,7 @@ export const resources = pgTable(
     duplicatedId: integer('duplicated_id'),
     // Metadata
     subjectId: integer('subject_id'),
-    metadata: json('metadata').$type<{ anipar?: {} }>(),
+    metadata: json('metadata').$type<{ anipar?: ParseResult }>(),
     // Logic deletion
     isDeleted: boolean('is_deleted').default(false)
   },

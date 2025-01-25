@@ -21,8 +21,8 @@ export function transformNewResources(
 
   const titleAlt = normalizeTitle(res.title);
   const size = Math.floor(parseSize(res.size));
-  const publisher = sys.modules.users.get(res.publisher);
-  const fansub = res.fansub ? sys.modules.teams.get(res.fansub) : undefined;
+  const publisher = sys.modules.users.getByName(res.publisher);
+  const fansub = res.fansub ? sys.modules.teams.getByName(res.fansub) : undefined;
 
   if (!publisher) {
     errors.push(`Unknown publisher: ${res.publisher}`);

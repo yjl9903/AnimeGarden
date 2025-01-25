@@ -1,6 +1,6 @@
-import type { ProviderType } from '@animegarden/client';
+import type { ParseResult } from 'anipar';
 
-import { DuplicatedManager } from './duplicated';
+import type { DuplicatedManager } from './duplicated';
 
 export interface NewResource {
   provider: string;
@@ -27,6 +27,40 @@ export interface NewResource {
   publisher: string;
 
   fansub?: string;
+}
+
+export interface DatabaseResource {
+  id: number;
+
+  provider: string;
+
+  providerId: string;
+
+  title: string;
+
+  href: string;
+
+  type: string;
+
+  magnet: string;
+
+  tracker: string;
+
+  size: number;
+
+  createdAt: Date;
+
+  fetchedAt: Date;
+
+  publisherId: number;
+
+  fansubId: number | null;
+
+  subjectId: number | null;
+
+  duplicatedId: number | null;
+
+  metadata: { anipar?: ParseResult } | null;
 }
 
 export interface InsertResourcesOptions {

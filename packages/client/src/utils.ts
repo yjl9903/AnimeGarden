@@ -1,7 +1,8 @@
-import { Jieba } from '@node-rs/jieba';
-import { dict } from '@node-rs/jieba/dict.js';
+import { fullToHalf, tradToSimple } from 'simptrad';
 
-export const jieba = Jieba.withDict(dict);
+export function normalizeTitle(title: string) {
+  return fullToHalf(tradToSimple(title), { punctuation: true });
+}
 
 export async function retryFn<T>(fn: () => Promise<T>, count: number): Promise<T> {
   if (count < 0) {
@@ -16,8 +17,4 @@ export async function retryFn<T>(fn: () => Promise<T>, count: number): Promise<T
     }
   }
   throw e;
-}
-
-export function nextTick() {
-  return new Promise<void>((resolve) => process.nextTick(resolve));
 }

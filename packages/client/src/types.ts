@@ -1,4 +1,4 @@
-interface Resource<T extends { tracker?: boolean } = {  }> {
+interface Resource<T extends { tracker?: boolean } = {}> {
   id: number;
 
   provider: string;
