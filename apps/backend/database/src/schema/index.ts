@@ -5,6 +5,8 @@ import { subjects } from './subjects';
 import { tags } from './tags';
 import { users, teams } from './users';
 
+export { MagnetInfo, FileInfo } from './details';
+
 export type Provider = typeof providers.$inferSelect;
 
 export type User = typeof users.$inferSelect;

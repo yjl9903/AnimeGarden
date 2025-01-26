@@ -23,9 +23,9 @@ export const details = pgTable(
       .primaryKey()
       .references(() => resources.id),
     description: text('description').notNull().default(''),
-    magnets: json('magnets').$type<MagnetInfo[]>().default([]),
-    files: json('files').$type<FileInfo[]>().default([]),
-    hasMoreFiles: boolean('has_more_files').default(false),
+    magnets: json('magnets').$type<MagnetInfo[]>().notNull().default([]),
+    files: json('files').$type<FileInfo[]>().notNull().default([]),
+    hasMoreFiles: boolean('has_more_files').notNull().default(false),
     fetchedAt: timestamp('fetched_at', { withTimezone: true }).notNull().defaultNow()
   },
   (_t) => {
