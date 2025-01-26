@@ -12,6 +12,7 @@ import { Executor, type ExecutorOptions } from './cron';
 import { defineUsersRoutes } from './routes/users';
 import { defineSubjectsRoutes } from './routes/subjects';
 import { defineResourcesRoutes } from './routes/resources';
+import { defineCollectionsRoutes } from './routes/collections';
 import { defineAdminRoutes } from './routes/admin';
 
 export * from './app';
@@ -41,6 +42,7 @@ function registerHono(sys: System, app: Hono) {
   defineUsersRoutes(sys, app);
   defineSubjectsRoutes(sys, app);
   defineResourcesRoutes(sys, app);
+  defineCollectionsRoutes(sys, app);
   defineAdminRoutes(sys, app);
 
   // Handle errors

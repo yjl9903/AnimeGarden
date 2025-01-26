@@ -4,8 +4,11 @@ import { details } from './details';
 import { subjects } from './subjects';
 import { tags } from './tags';
 import { users, teams } from './users';
+import { collections } from './collections';
 
-export { MagnetInfo, FileInfo } from './details';
+export type { MagnetInfo, FileInfo } from './details';
+
+export type { CollectionFilterOptions } from './collections';
 
 export type Provider = typeof providers.$inferSelect;
 
@@ -32,3 +35,7 @@ export type Tag = typeof tags.$inferSelect;
 export type NewSubject = typeof subjects.$inferInsert;
 
 export type Subject = typeof subjects.$inferSelect;
+
+export type NewCollection = typeof collections.$inferInsert;
+
+export type Collection = typeof collections.$inferSelect;

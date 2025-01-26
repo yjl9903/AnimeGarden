@@ -1,5 +1,6 @@
 import type { Context } from 'hono';
 
+import { etag } from 'hono/etag';
 import { memoAsync } from 'memofunc';
 
 import type { System } from '@animegarden/database';
@@ -44,17 +45,19 @@ async function listResources(ctx: Context, sys: System, provider?: ProviderType)
     }
   }
 
+  ctx.res.headers.set('Cache-Control', `public, max-age=${5 * 60}`);
+
   return ctx.json({ status: 'OK', ...resp, timestamp: sys.modules.providers.timestamp });
 }
 
 const findProviderDetail = memoAsync(
-  async (ctx: Context, sys: System, provider: Provider, path: string) => {
+  async (sys: System, provider: Provider, path: string) => {
     const detailURL = await provider.getDetailURL(sys, path);
     if (!detailURL) {
-      return ctx.json({
+      return {
         status: 'ERROR',
         message: `Unknown detail id: ${provider.name} ${path}`
-      });
+      };
     }
 
     const { providerId, href } = detailURL;
@@ -64,36 +67,48 @@ const findProviderDetail = memoAsync(
       () => provider.fetchResourceDetail(sys, href)
     );
 
-    return ctx.json({
+    return {
       status: 'OK',
       ...resp
-    });
+    };
   },
-  { expirationTtl: 60 * 60 * 1000, serialize: (_ctx, _sys, provider, path) => [provider, path] }
+  { expirationTtl: 60 * 60 * 1000, serialize: (_sys, provider, path) => [provider, path] }
 );
 
 export const defineResourcesRoutes = defineHandler((sys, app) => {
   app
-    .all('/resources', (c) => {
+    .all('/resources', etag(), (c) => {
       return listResources(c, sys);
     })
-    .all('/resources/', (c) => {
+    .all('/resources/', etag(), (c) => {
       return listResources(c, sys);
     });
 
   for (const provider of SupportProviders) {
     app
-      .all(`/resources/${provider}`, (c) => {
+      .all(`/resources/${provider}`, etag(), (c) => {
         return listResources(c, sys, provider);
       })
-      .all(`/resources/${provider}/`, (c) => {
+      .all(`/resources/${provider}/`, etag(), (c) => {
         return listResources(c, sys, provider);
       })
-      .get(`/resource/${provider}/:id`, (c) => {
-        return findProviderDetail(c, sys, ScraperProviders.get(provider)!, c.req.param('id'));
+      .get(`/resource/${provider}/:id`, etag(), async (c) => {
+        const resp = await findProviderDetail(
+          sys,
+          ScraperProviders.get(provider)!,
+          c.req.param('id')
+        );
+        c.res.headers.set('Cache-Control', `public, max-age=${24 * 60 * 60}`);
+        return c.json({ ...resp });
       })
-      .get(`/detail/${provider}/:id`, (c) => {
-        return findProviderDetail(c, sys, ScraperProviders.get(provider)!, c.req.param('id'));
+      .get(`/detail/${provider}/:id`, etag(), async (c) => {
+        const resp = await findProviderDetail(
+          sys,
+          ScraperProviders.get(provider)!,
+          c.req.param('id')
+        );
+        c.res.headers.set('Cache-Control', `public, max-age=${24 * 60 * 60}`);
+        return c.json({ ...resp });
       });
   }
 
