@@ -133,6 +133,7 @@ export class ProvidersModule extends Module<System['modules']> {
       this.system.modules.teams.initialize(),
       this.system.modules.tags.initialize(),
       this.system.modules.subjects.initialize(),
+      this.system.modules.collections.initialize(),
       this.system.modules.resources.onNotifications(resources)
     ]);
   }
