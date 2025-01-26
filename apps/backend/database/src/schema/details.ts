@@ -5,9 +5,7 @@ import { resources } from './resources';
 export interface MagnetInfo {
   name: string;
 
-  magnet: string;
-
-  tracker: string;
+  url: string;
 }
 
 export interface FileInfo {

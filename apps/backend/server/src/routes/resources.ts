@@ -1,48 +1,12 @@
-import { Context } from 'hono';
+import type { Context } from 'hono';
+
+import { memoAsync } from 'memofunc';
 
 import type { System } from '@animegarden/database';
-import { type ProviderType, parseURLSearch } from '@animegarden/client';
+import { type ProviderType, SupportProviders, parseURLSearch } from '@animegarden/client';
 
 import { defineHandler } from '../utils/hono';
-
-export const defineResourcesRoutes = defineHandler((sys, app) =>
-  app
-    .all('/resources', (c) => {
-      return listResources(c, sys);
-    })
-    .all('/resources/', (c) => {
-      return listResources(c, sys);
-    })
-    .all('/resources/dmhy', (c) => {
-      return listResources(c, sys, 'dmhy');
-    })
-    .all('/resources/moe', (c) => {
-      return listResources(c, sys, 'moe');
-    })
-    .all('/resources/ani', (c) => {
-      return listResources(c, sys, 'ani');
-    })
-    .get('/detail/:id', (c) => {
-      return c.json({
-        status: 'OK'
-      });
-    })
-    .get('/detail/dmhy/:id', (c) => {
-      return c.json({
-        status: 'OK'
-      });
-    })
-    .get('/detail/moe/:id', (c) => {
-      return c.json({
-        status: 'OK'
-      });
-    })
-    .get('/detail/ani/:id', (c) => {
-      return c.json({
-        status: 'OK'
-      });
-    })
-);
+import { type Provider, ScraperProviders } from '../providers';
 
 async function listResources(ctx: Context, sys: System, provider?: ProviderType) {
   const url = new URL(ctx.req.url);
@@ -82,3 +46,56 @@ async function listResources(ctx: Context, sys: System, provider?: ProviderType)
 
   return ctx.json({ status: 'OK', ...resp, timestamp: sys.modules.providers.timestamp });
 }
+
+const findProviderDetail = memoAsync(
+  async (ctx: Context, sys: System, provider: Provider, path: string) => {
+    const detailURL = await provider.getDetailURL(sys, path);
+    if (!detailURL) {
+      return ctx.json({
+        status: 'ERROR',
+        message: `Unknown detail id: ${provider.name} ${path}`
+      });
+    }
+
+    const { providerId, href } = detailURL;
+    const resp = await sys.modules.resources.details.getByProviderId(
+      provider.name,
+      providerId,
+      () => provider.fetchResourceDetail(sys, href)
+    );
+
+    return ctx.json({
+      status: 'OK',
+      ...resp
+    });
+  },
+  { expirationTtl: 60 * 60 * 1000, serialize: (_ctx, _sys, provider, path) => [provider, path] }
+);
+
+export const defineResourcesRoutes = defineHandler((sys, app) => {
+  app
+    .all('/resources', (c) => {
+      return listResources(c, sys);
+    })
+    .all('/resources/', (c) => {
+      return listResources(c, sys);
+    });
+
+  for (const provider of SupportProviders) {
+    app
+      .all(`/resources/${provider}`, (c) => {
+        return listResources(c, sys, provider);
+      })
+      .all(`/resources/${provider}/`, (c) => {
+        return listResources(c, sys, provider);
+      })
+      .get(`/resource/${provider}/:id`, (c) => {
+        return findProviderDetail(c, sys, ScraperProviders.get(provider)!, c.req.param('id'));
+      })
+      .get(`/detail/${provider}/:id`, (c) => {
+        return findProviderDetail(c, sys, ScraperProviders.get(provider)!, c.req.param('id'));
+      });
+  }
+
+  return app;
+});

@@ -1,9 +1,11 @@
-import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client';
+import type { ProviderType, ScrapedResource, ScrapedResourceDetail } from '@animegarden/client';
 
 import { type System } from '@animegarden/database';
 
 export abstract class Provider {
   public static readonly name: string;
+
+  public abstract get name(): ProviderType;
 
   public abstract fetchLatestResources(sys: System): Promise<ScrapedResource[]>;
 
@@ -17,6 +19,18 @@ export abstract class Provider {
     sys: System,
     id: string
   ): Promise<ScrapedResourceDetail | undefined>;
+
+  public abstract getDetailURL(
+    sys: System,
+    id: string
+  ): Promise<
+    | {
+        provider: ProviderType;
+        providerId: string;
+        href: string;
+      }
+    | undefined
+  >;
 }
 
 export async function fetchLatestPages(
@@ -25,6 +39,7 @@ export async function fetchLatestPages(
   fetch: (page: number) => Promise<ScrapedResource[]>
 ): Promise<ScrapedResource[]> {
   const visited = new Map<string, ScrapedResource>();
+
   for (let page = 1; ; page++) {
     sys.logger.info(`Start fetching ${provider} resources at page ${page}`);
 
@@ -58,7 +73,6 @@ export async function fetchResourcePages(
   end: number
 ) {
   const visited = new Map<string, ScrapedResource>();
-  sys.logger.success(`Fetched ${visited.size} new ${provider} resources in total`);
 
   for (let page = start; page <= end; page++) {
     sys.logger.info(`Start fetching ${provider} resources at page ${page}`);
@@ -69,6 +83,8 @@ export async function fetchResourcePages(
 
     sys.logger.info(`Fetched ${newRes.length} ${provider} resources at page ${page}`);
   }
+
+  sys.logger.success(`Fetched ${visited.size} new ${provider} resources in total`);
 
   return [...visited.values()];
 }

@@ -1,12 +1,16 @@
 import type { System } from '@animegarden/database';
-import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client';
+import type { ProviderType, ScrapedResource, ScrapedResourceDetail } from '@animegarden/client';
 
 import { fetchMoeDetail, fetchMoePage } from '@animegarden/scraper';
 
 import { Provider, fetchLatestPages, fetchResourcePages } from './base';
 
 export class MoeProvider extends Provider {
-  public static readonly name = 'moe';
+  public static readonly name: ProviderType = 'moe';
+
+  public get name() {
+    return MoeProvider.name;
+  }
 
   public async fetchLatestResources(sys: System): Promise<ScrapedResource[]> {
     return await fetchLatestPages(sys, MoeProvider.name, (page) =>
@@ -29,9 +33,17 @@ export class MoeProvider extends Provider {
   }
 
   public async fetchResourceDetail(
-    sys: System,
+    _sys: System,
     id: string
   ): Promise<ScrapedResourceDetail | undefined> {
-    return await fetchMoeDetail(fetch, id);
+    return await fetchMoeDetail(fetch, id, { retry: 5 });
+  }
+
+  public async getDetailURL(_sys: System, id: string) {
+    return {
+      provider: MoeProvider.name,
+      providerId: id,
+      href: id
+    };
   }
 }

@@ -13,6 +13,7 @@ import { resources as resourceSchema } from '../schema/resources';
 import type { InsertResourcesOptions, NewResource } from './types';
 
 import { QueryManager } from './query';
+import { DetailsManager } from './details';
 import { transformNewResources } from './transform';
 
 export * from './types';
@@ -22,14 +23,18 @@ export class ResourcesModule extends Module<System['modules']> {
 
   public readonly query: QueryManager;
 
+  public readonly details: DetailsManager;
+
   public constructor(sys: System, name?: string) {
     super(sys, name || ResourcesModule.name);
     this.query = new QueryManager(sys);
+    this.details = new DetailsManager(sys);
   }
 
   public async initialize() {
     this.system.logger.info('Initializing Resources module');
     await this.query.initialize();
+    await this.details.initialize();
     this.system.logger.success('Initialize Resources module OK');
   }
 

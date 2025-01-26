@@ -53,6 +53,25 @@ const MAX_TASK = 1000;
  */
 const TASK_PREFETCH_COUNT = 1000;
 
+export const RESOURCE_SELECTOR = {
+  id: resources.id,
+  provider: resources.provider,
+  providerId: resources.providerId,
+  title: resources.title,
+  href: resources.href,
+  type: resources.type,
+  magnet: resources.magnet,
+  tracker: resources.tracker,
+  size: resources.size,
+  createdAt: resources.createdAt,
+  fetchedAt: resources.fetchedAt,
+  publisherId: resources.publisherId,
+  fansubId: resources.fansubId,
+  subjectId: resources.subjectId,
+  duplicatedId: resources.duplicatedId,
+  metadata: resources.metadata
+};
+
 export class QueryManager {
   private readonly system: System;
 
@@ -96,25 +115,7 @@ export class QueryManager {
     const { users, teams, subjects } = this.system.modules;
 
     return {
-      resources: await Promise.all(
-        resources.map(async (r) => ({
-          id: r.id,
-          provider: r.provider,
-          providerId: r.providerId,
-          title: r.title,
-          href: transformResourceHref(r.provider as ProviderType, r.href),
-          type: r.type,
-          magnet: r.magnet,
-          tracker: r.tracker,
-          size: r.size,
-          createdAt: r.createdAt.toISOString(),
-          fetchedAt: r.fetchedAt.toISOString(),
-          publisher: transformDatabaseUser(await users.getById(r.publisherId)),
-          fansub: r.fansubId ? transformDatabaseUser(await teams.getById(r.fansubId)) : undefined,
-          subjectId: r.subjectId,
-          metadata: r.metadata
-        }))
-      ),
+      resources: await Promise.all(resources.map(async (r) => this.transform(r))),
       complete: !hasMore,
       filter: {
         page: filter.page,
@@ -126,6 +127,28 @@ export class QueryManager {
         after: dbOptions.after?.toISOString(),
         subjects: dbOptions.subjects?.map((i) => subjects.getSubjectById(i))
       }
+    };
+  }
+
+  public async transform(r: DatabaseResource) {
+    const { users, teams } = this.system.modules;
+
+    return {
+      id: r.id,
+      provider: r.provider,
+      providerId: r.providerId,
+      title: r.title,
+      href: transformResourceHref(r.provider as ProviderType, r.href),
+      type: r.type,
+      magnet: r.magnet,
+      tracker: r.tracker,
+      size: r.size,
+      createdAt: r.createdAt.toISOString(),
+      fetchedAt: r.fetchedAt.toISOString(),
+      publisher: transformDatabaseUser(await users.getById(r.publisherId)),
+      fansub: r.fansubId ? transformDatabaseUser(await teams.getById(r.fansubId)) : undefined,
+      subjectId: r.subjectId,
+      metadata: r.metadata
     };
   }
 
@@ -359,24 +382,7 @@ export class QueryManager {
     const resp = await retryFn(
       () =>
         this.system.database
-          .select({
-            id: resources.id,
-            provider: resources.provider,
-            providerId: resources.providerId,
-            title: resources.title,
-            href: resources.href,
-            type: resources.type,
-            magnet: resources.magnet,
-            tracker: resources.tracker,
-            size: resources.size,
-            createdAt: resources.createdAt,
-            fetchedAt: resources.fetchedAt,
-            publisherId: resources.publisherId,
-            fansubId: resources.fansubId,
-            subjectId: resources.subjectId,
-            duplicatedId: resources.duplicatedId,
-            metadata: resources.metadata
-          })
+          .select(RESOURCE_SELECTOR)
           .from(resources)
           .where(and(...conds))
           .orderBy(desc(resources.createdAt))
@@ -399,24 +405,7 @@ export class QueryManager {
     const resp = await retryFn(
       () =>
         this.system.database
-          .select({
-            id: resources.id,
-            provider: resources.provider,
-            providerId: resources.providerId,
-            title: resources.title,
-            href: resources.href,
-            type: resources.type,
-            magnet: resources.magnet,
-            tracker: resources.tracker,
-            size: resources.size,
-            createdAt: resources.createdAt,
-            fetchedAt: resources.fetchedAt,
-            publisherId: resources.publisherId,
-            fansubId: resources.fansubId,
-            subjectId: resources.subjectId,
-            duplicatedId: resources.duplicatedId,
-            metadata: resources.metadata
-          })
+          .select(RESOURCE_SELECTOR)
           .from(resources)
           .where(
             and(
