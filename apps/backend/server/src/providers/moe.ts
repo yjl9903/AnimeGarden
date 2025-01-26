@@ -3,7 +3,7 @@ import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client
 
 import { fetchMoeDetail, fetchMoePage } from '@animegarden/scraper';
 
-import { Provider, fetchLatestPages } from './base';
+import { Provider, fetchLatestPages, fetchResourcePages } from './base';
 
 export class MoeProvider extends Provider {
   public static readonly name = 'moe';
@@ -11,6 +11,20 @@ export class MoeProvider extends Provider {
   public async fetchLatestResources(sys: System): Promise<ScrapedResource[]> {
     return await fetchLatestPages(sys, MoeProvider.name, (page) =>
       fetchMoePage(fetch, { page, retry: 5 })
+    );
+  }
+
+  public async fetchResourcePages(
+    sys: System,
+    start: number,
+    end: number
+  ): Promise<ScrapedResource[]> {
+    return await fetchResourcePages(
+      sys,
+      MoeProvider.name,
+      (page) => fetchMoePage(fetch, { page, retry: 5 }),
+      start,
+      end
     );
   }
 

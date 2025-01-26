@@ -29,10 +29,7 @@ function registerHono(sys: System, app: Hono) {
   );
 
   app.get('/', async (c) => {
-    const timestamp = [...sys.modules.providers.providers.values()].reduce(
-      (acc, cur) => Math.max(acc, cur.refreshedAt.getTime()),
-      0
-    );
+    const timestamp = sys.modules.providers.timestamp;
     return c.json({
       message: 'Anime Garden 動漫花園 镜像站 / 动画 BT 资源聚合站',
       timestamp: new Date(timestamp).toISOString(),

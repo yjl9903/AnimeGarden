@@ -8,7 +8,11 @@ import { Provider } from './base';
 export class ANiProvider extends Provider {
   public static readonly name = 'ani';
 
-  public async fetchLatestResources(sys: System): Promise<ScrapedResource[]> {
+  public async fetchLatestResources(): Promise<ScrapedResource[]> {
+    return await fetchLastestANi(fetch);
+  }
+
+  public async fetchResourcePages(): Promise<ScrapedResource[]> {
     return await fetchLastestANi(fetch);
   }
 

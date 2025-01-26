@@ -24,7 +24,7 @@ interface Resource<T extends { tracker?: boolean; metadata?: boolean } = {}> {
   size: number;
 
   fansub?: {
-    id: string;
+    id: number;
 
     name: string;
 
@@ -32,7 +32,7 @@ interface Resource<T extends { tracker?: boolean; metadata?: boolean } = {}> {
   };
 
   publisher: {
-    id: string;
+    id: number;
 
     name: string;
 

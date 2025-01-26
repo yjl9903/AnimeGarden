@@ -22,7 +22,9 @@ export const defineAdminRoutes = defineHandler((sys, app) => {
         } as const);
       })
       .post(`/admin/resources/${provider}/sync`, async (c) => {
-        const resp = await syncResources(sys, provider, 1, 10);
+        const start = +(c.req.query('start') ?? '1');
+        const end = +(c.req.query('end') ?? '10');
+        const resp = await syncResources(sys, provider, start, end);
 
         return c.json({
           status: 'OK',
@@ -116,70 +118,62 @@ async function fetchResources(sys: System, platform: ProviderType) {
   }
 }
 
-async function syncResources(sys: System, platform: ProviderType, from: number, to: number) {
+async function syncResources(sys: System, platform: ProviderType, start: number, end: number) {
   sys.logger.info(`Start syncing and updating ${platform} resources`);
 
   try {
     const provider = ScraperProviders.get(platform)!;
 
-    // TODO:
-    // const newResources = await provider.fetchLatestResources(sys);
+    const newResources = (await provider.fetchResourcePages(sys, start, end)).map((r) => ({
+      ...r,
+      publisher: r.publisher?.name ?? anonymous,
+      fansub: r.fansub?.name,
+      createdAt: new Date(r.createdAt)
+    }));
     // Sort created at asc
-    // newResources.sort((lhs, rhs) => lhs.createdAt.localeCompare(rhs.createdAt));
+    newResources.sort((lhs, rhs) => lhs.createdAt.getTime() - rhs.createdAt.getTime());
 
-    // const users = await sys.modules.users.insertUsers(
-    //   filterDef(
-    //     newResources.map((r) =>
-    //       r.publisher
-    //         ? {
-    //             provider: r.provider,
-    //             providerId: r.publisher.id,
-    //             name: r.publisher.name,
-    //             avatar: r.publisher.avatar
-    //           }
-    //         : undefined
-    //     )
-    //   )
-    // );
+    if (newResources.length > 0) {
+      // 1. Update resource
+      const updatedAt = new Date();
+      const updated: Array<{
+        id: number;
+        provider: ProviderType;
+        providerId: string;
+        title: string;
+      }> = [];
+      for (const r of newResources) {
+        const resp = await sys.modules.resources.updateResource(r, updatedAt);
+        if (resp && resp.updated) {
+          updated.push(resp.updated);
+        }
+      }
 
-    // const teams = await sys.modules.teams.insertTeams(
-    //   filterDef(
-    //     newResources.map((r) =>
-    //       r.fansub
-    //         ? {
-    //             provider: r.provider,
-    //             providerId: r.fansub.id,
-    //             name: r.fansub.name,
-    //             avatar: r.fansub.avatar
-    //           }
-    //         : undefined
-    //     )
-    //   )
-    // );
+      if (updated.length > 0) {
+        sys.logger.success(`Finish updating ${updated.length} new ${platform} resources`);
+        await sys.modules.providers.updateRefreshTimestamp(platform, updatedAt);
+        await sys.modules.providers.notifyRefreshedResources(updated);
+      }
 
-    const fetchedAt = new Date();
-    // const resources = await sys.modules.resources.insertResources(
-    //   newResources.map((r) => ({
-    //     ...r,
-    //     publisher: r.publisher?.name ?? anonymous,
-    //     fansub: r.fansub?.name,
-    //     createdAt: new Date(r.createdAt),
-    //     fetchedAt
-    //   })),
-    //   {
-    //     indexSubject: true
-    //   }
-    // );
+      // 2. Delete resources
+      const deletedAt = new Date();
+      const sync = await sys.modules.resources.syncResources(newResources);
+      if (sync.deleted.length > 0) {
+        sys.logger.success(`Finish deleting ${updated.length} missing ${platform} resources`);
+        await sys.modules.providers.updateRefreshTimestamp(platform, deletedAt);
+      }
 
-    await sys.modules.providers.updateRefreshTimestamp(platform, fetchedAt);
-
-    // sys.logger.success(`Finish updating ${resources.inserted.length} new ${platform} resources`);
-
-    return {
-      // users,
-      // teams,
-      // resources
-    };
+      return {
+        resources: {
+          updated,
+          deleted: sync.deleted
+        }
+      };
+    } else {
+      return {
+        resources: undefined
+      };
+    }
   } catch (error) {
     sys.logger.error(error);
     if (error instanceof NetworkError) {

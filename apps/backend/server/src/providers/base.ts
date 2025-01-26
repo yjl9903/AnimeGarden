@@ -7,6 +7,12 @@ export abstract class Provider {
 
   public abstract fetchLatestResources(sys: System): Promise<ScrapedResource[]>;
 
+  public abstract fetchResourcePages(
+    sys: System,
+    start: number,
+    end: number
+  ): Promise<ScrapedResource[]>;
+
   public abstract fetchResourceDetail(
     sys: System,
     id: string
@@ -40,6 +46,29 @@ export async function fetchLatestPages(
   }
 
   sys.logger.success(`Fetched ${visited.size} new ${provider} resources in total`);
+
+  return [...visited.values()];
+}
+
+export async function fetchResourcePages(
+  sys: System,
+  provider: string,
+  fetch: (page: number) => Promise<ScrapedResource[]>,
+  start: number,
+  end: number
+) {
+  const visited = new Map<string, ScrapedResource>();
+  sys.logger.success(`Fetched ${visited.size} new ${provider} resources in total`);
+
+  for (let page = start; page <= end; page++) {
+    sys.logger.info(`Start fetching ${provider} resources at page ${page}`);
+
+    const resp = await fetch(page);
+    const newRes = resp.filter((r) => !visited.has(r.providerId));
+    newRes.forEach((r) => visited.set(r.providerId, r));
+
+    sys.logger.info(`Fetched ${newRes.length} ${provider} resources at page ${page}`);
+  }
 
   return [...visited.values()];
 }

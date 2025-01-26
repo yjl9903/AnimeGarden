@@ -17,6 +17,8 @@ export class ProvidersModule extends Module<System['modules']> {
 
   public readonly providers: Map<ProviderType, typeof providers.$inferSelect> = new Map();
 
+  private notifyTimeout: NodeJS.Timeout | undefined;
+
   public async initialize() {
     this.system.logger.info('Initializing Providers module');
     await this.fetchProviders();
@@ -138,8 +140,19 @@ export class ProvidersModule extends Module<System['modules']> {
   public async notifyRefreshedResources(resources: NotifiedResources[]) {
     if (this.system.redis) {
       const { redis } = this.system;
-      this.logger.info(`Publish ${resources.length} new resources to channel ${NOTIFY_CHANNEL}`);
-      await redis.publish(NOTIFY_CHANNEL, JSON.stringify({ resources }));
+
+      if (this.notifyTimeout) {
+        clearTimeout(this.notifyTimeout);
+      }
+
+      this.notifyTimeout = setTimeout(async () => {
+        this.logger.info(`Publish ${resources.length} new resources to channel ${NOTIFY_CHANNEL}`);
+        try {
+          await redis.publish(NOTIFY_CHANNEL, JSON.stringify({ resources }));
+        } catch (error) {
+          this.logger.error(error);
+        }
+      }, 10 * 1000);
     }
   }
 }

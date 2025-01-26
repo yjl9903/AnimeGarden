@@ -1,4 +1,4 @@
-import { and, eq, inArray, sql } from 'drizzle-orm';
+import { and, desc, eq, gt, inArray, lt, sql } from 'drizzle-orm';
 
 import type { ProviderType } from '@animegarden/client';
 
@@ -165,6 +165,161 @@ LIMIT 1)`;
       inserted: resp,
       conflict,
       errors
+    };
+  }
+
+  public async updateResource(resource: NewResource, fetchedAt?: Date) {
+    const { result: updated } = transformNewResources(this.system, resource, {
+      indexSubject: true
+    });
+    if (!updated) return;
+    const dbRes = await retryFn(
+      () =>
+        this.database.query.resources.findFirst({
+          where: and(
+            eq(resourceSchema.provider, updated.provider),
+            eq(resourceSchema.providerId, updated.providerId),
+            eq(resourceSchema.isDeleted, false)
+          )
+        }),
+      5
+    ).catch(() => undefined);
+    if (!dbRes) return;
+
+    let changed = false;
+    const set: Partial<typeof resourceSchema.$inferInsert> = {};
+
+    if (updated.magnet !== dbRes.magnet) {
+      set.magnet = updated.magnet;
+    }
+    if (updated.tracker !== dbRes.tracker) {
+      set.tracker = updated.tracker;
+    }
+
+    if (updated.subjectId !== dbRes.subjectId) {
+      set.subjectId = updated.subjectId;
+    }
+
+    if (updated.title !== dbRes?.title) {
+      set.title = updated.title;
+      set.titleAlt = updated.titleAlt;
+
+      // title search
+      const search1 = updated.titleSearch[0] ? updated.titleSearch[0].join(' ') : undefined;
+      const search2 = updated.titleSearch[3] ? updated.titleSearch[3].join(' ') : undefined;
+
+      const titleSearch =
+        search1 && search2
+          ? sql`(setweight(to_tsvector('simple', ${search1}), 'A') || setweight(to_tsvector('simple', ${search2}), 'D'))`
+          : search1
+            ? sql`setweight(to_tsvector('simple', ${search1}), 'A')`
+            : sql`setweight(to_tsvector('simple', ${search2 ?? ''}), 'D')`;
+
+      // @ts-ignore
+      set.titleSearch = titleSearch;
+
+      // @ts-ignore
+      set.duplicatedId = sql`(SELECT ${resourceSchema.id}
+FROM ${resourceSchema}
+WHERE (${resourceSchema.isDeleted} = false)
+AND (${resourceSchema.duplicatedId} is null)
+AND (${resourceSchema.createdAt} < ${updated.createdAt})
+AND (${resourceSchema.magnet} = ${updated.magnet} OR ${resourceSchema.title} = ${updated.title})
+ORDER BY ${resourceSchema.createdAt} asc
+LIMIT 1)`;
+
+      changed = true;
+    }
+
+    // Do update
+    if (changed) {
+      set.fetchedAt = fetchedAt ?? new Date();
+
+      const resp = await retryFn(
+        () =>
+          this.database
+            .update(resourceSchema)
+            .set(set)
+            .where(
+              and(
+                eq(resourceSchema.provider, updated.provider),
+                eq(resourceSchema.providerId, updated.providerId)
+              )
+            )
+            .returning({
+              id: resourceSchema.id,
+              provider: resourceSchema.provider,
+              providerId: resourceSchema.providerId,
+              title: resourceSchema.title
+            }),
+        5
+      ).catch(() => undefined);
+      if (resp && resp.length === 1) {
+        return { updated: resp[0] };
+      }
+    }
+  }
+
+  public async syncResources(resources: NewResource[]) {
+    const visited = new Set(resources.map((r) => r.provider + ':' + r.providerId));
+
+    const minCreatedAt = resources.reduce((acc, cur) => {
+      return Math.min(acc, new Date(cur.createdAt!).getTime());
+    }, Number.MAX_SAFE_INTEGER);
+    const maxCreatedAt = resources.reduce((acc, cur) => {
+      return Math.max(acc, new Date(cur.createdAt!).getTime());
+    }, Number.MIN_SAFE_INTEGER);
+    const stored = await retryFn(
+      () =>
+        this.database
+          .select({
+            id: resourceSchema.id,
+            title: resourceSchema.title,
+            provider: resourceSchema.provider,
+            providerId: resourceSchema.providerId
+          })
+          .from(resourceSchema)
+          .where(
+            and(
+              eq(resourceSchema.provider, 'dmhy'),
+              eq(resourceSchema.isDeleted, false),
+              gt(resourceSchema.createdAt, new Date(minCreatedAt)),
+              lt(resourceSchema.createdAt, new Date(maxCreatedAt))
+            )
+          )
+          .orderBy(desc(resourceSchema.createdAt)),
+      5
+    ).catch(() => []);
+
+    const deleted = stored.filter((st) => !visited.has(st.provider + ':' + st.providerId));
+    if (deleted.length > 0) {
+      const resp = await retryFn(
+        () =>
+          this.database
+            .update(resourceSchema)
+            .set({ isDeleted: true })
+            .where(
+              inArray(
+                resourceSchema.id,
+                deleted.map((st) => st.id)
+              )
+            )
+            .returning({
+              id: resourceSchema.id,
+              provider: resourceSchema.provider,
+              providerId: resourceSchema.providerId,
+              title: resourceSchema.title
+            }),
+        5
+      ).catch(() => []);
+
+      return {
+        deleted: resp
+      };
+    }
+
+    return {
+      deleted: []
     };
   }
 

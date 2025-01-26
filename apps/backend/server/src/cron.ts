@@ -20,11 +20,10 @@ export class Executor {
   }
 
   public async start() {
-    this.system.logger.info('Start running cron jobs');
+    this.system.logger.info('Start registering cron jobs');
 
-    const fetching = Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
-      this.system.logger.info(`Start fetching resources`);
-      const tasks = SupportProviders.map(async (provider) => {
+    const fetching = SupportProviders.map((provider) =>
+      Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
         try {
           const req = new Request(`https://api.animes.garden/admin/resources/${provider}`, {
             method: 'POST',
@@ -38,14 +37,11 @@ export class Executor {
         } catch (error) {
           this.system.logger.error(error);
         }
-      });
-      await Promise.all(tasks);
-      this.system.logger.success(`Finish fetching resources`);
-    });
+      })
+    );
 
-    const syncing = Cron(`0 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
-      this.system.logger.info(`Start updating resources`);
-      const tasks = SupportProviders.map(async (provider) => {
+    const syncing = SupportProviders.map((provider) =>
+      Cron(`0 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
         try {
           const req = new Request(`https://api.animes.garden/admin/resources/${provider}/sync`, {
             method: 'POST',
@@ -59,13 +55,13 @@ export class Executor {
         } catch (error) {
           this.system.logger.error(error);
         }
-      });
-      await Promise.all(tasks);
-      this.system.logger.success(`Finish updating resources`);
-    });
+      })
+    );
 
-    this.disposables.push(() => fetching.stop());
-    this.disposables.push(() => syncing.stop());
+    this.disposables.push(() => {
+      fetching.forEach((f) => f.stop());
+      syncing.forEach((f) => f.stop());
+    });
   }
 
   public async stop() {
