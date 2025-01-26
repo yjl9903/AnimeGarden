@@ -7,7 +7,7 @@ import {
   type ResolvedFilterOptions,
   FilterSchema,
   fetchResources,
-  stringifySearchURL
+  stringifyURLSearch
 } from '@animegarden/client';
 
 import { removeQuote } from '../app/utils/string';
@@ -82,7 +82,7 @@ export const feed = <E extends { Bindings: Bindings } = { Bindings: Bindings }>(
         const feed = await rss({
           title,
           description: DESCRIPTION,
-          site: stringifySearchURL(origin, filter.data[0]).toString(),
+          site: stringifyURLSearch(origin, filter.data[0]).toString(),
           trailingSlash: false,
           items: resources.map((r) => {
             return {
