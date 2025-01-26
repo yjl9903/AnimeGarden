@@ -39,9 +39,9 @@ export interface Resource<T extends { tracker?: boolean; metadata?: boolean } = 
     avatar?: string;
   };
 
-  createdAt: Date;
+  createdAt: string;
 
-  fetchedAt: Date;
+  fetchedAt: string;
 
   metadata?: T['metadata'] extends true
     ? { anipar?: ParseResult }

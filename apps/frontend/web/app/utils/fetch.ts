@@ -40,19 +40,18 @@ export async function fetchResources(
   } = {}
 ) {
   try {
-    const resp = await rawFetchResources<FetchResourcesOptions & { tracker: true }>(
-      options.fetch ?? ofetch,
-      {
-        baseURL,
-        signal: options.signal,
-        retry: options.retry,
-        ...filter,
-        tracker: true
-      } as const
-    );
+    const resp = await rawFetchResources<FetchResourcesOptions & { tracker: true }>({
+      fetch: options.fetch ?? ofetch,
+      baseURL,
+      signal: options.signal,
+      retry: options.retry,
+      ...filter,
+      tracker: true
+    } as const);
     return resp;
   } catch (error) {
     console.error(error);
+
     return {
       ok: false,
       resources: [],
@@ -65,7 +64,8 @@ export async function fetchResources(
 
 export async function fetchResourceDetail(provider: string, href: string) {
   try {
-    return await rawFetchResourceDetail(ofetch, provider as ProviderType, href, {
+    return await rawFetchResourceDetail(provider as ProviderType, href, {
+      fetch: ofetch,
       baseURL
     });
   } catch (error) {

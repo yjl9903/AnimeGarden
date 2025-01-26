@@ -24,7 +24,7 @@ interface FetchResourcesResult<T extends FetchResourcesOptions> {
 
 interface FetchResourceDetailResult {
   ok: boolean;
-  resource: Resource[];
+  resource: ResourceDetail;
   timestamp: Date | undefined;
 }
 
@@ -58,7 +58,7 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
 
     const map = new Map<string, Resource<T>>();
     let aborted = false;
-    let timestamp = new Date(0);
+    let timestamp!: Date;
     let complete = false;
     let filter: Omit<ResolvedFilterOptions, 'page'> | undefined = undefined;
 
@@ -75,12 +75,15 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
           break;
         }
 
-        timestamp = resp.timestamp;
         complete = resp.complete;
+        if (!timestamp) {
+          timestamp = resp.timestamp;
+        }
         if (resp.filter) {
           filter = resp.filter;
         }
 
+        // No new resources
         if (resp.resources.length === 0) {
           break;
         }
@@ -171,19 +174,6 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
         const r = await resp.json();
         const timestamp = new Date(r.timestamp);
         if (!isNaN(timestamp.getTime())) {
-          // --- Fix date type ---
-          for (const res of r.resources) {
-            res.createdAt = new Date(res.createdAt);
-            res.fetchedAt = new Date(res.fetchedAt);
-          }
-          if (r.filter.before) {
-            r.filter.before = new Date(r.filter.before);
-          }
-          if (r.filter.after) {
-            r.filter.after = new Date(r.filter.after);
-          }
-          // ---------------------
-
           return {
             resources: r.resources as Resource<T>[],
             complete: r.complete as boolean,
@@ -194,7 +184,7 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
           throw new Error(`Failed to connect ${baseURL}`);
         }
       }
-    }, retry).catch(() => undefined);
+    }, retry);
   }
 
   function uniq(resources: Resource<T>[]) {
@@ -204,7 +194,7 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
         map.set(r.href, r);
       }
     }
-    return [...map.values()].sort((lhs, rhs) => rhs.createdAt.getTime() - lhs.createdAt.getTime());
+    return [...map.values()].sort((lhs, rhs) => rhs.createdAt.localeCompare(lhs.createdAt));
   }
 }
 

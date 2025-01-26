@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { redirect, useLoaderData, useLocation } from '@remix-run/react';
 import { json, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare';
 
-import { parseSearchURL, Resource } from '@animegarden/client';
+import { parseURLSearch } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
@@ -32,7 +32,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     return redirect(url.toString());
   }
 
-  const parsed = parseSearchURL(url.searchParams, { pageSize: 80 });
+  const parsed = parseURLSearch(url.searchParams, { pageSize: 80 });
   const page = +(params.page ?? '1');
   const { ok, resources, complete, filter, timestamp } = await fetchResources({
     ...parsed,
@@ -41,7 +41,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
   return json({
     ok,
-    resources: resources as Resource<{ tracker: true }>[],
+    resources,
     complete,
     page,
     filter,

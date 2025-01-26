@@ -1,11 +1,12 @@
-import { parseSearchURL, type ResolvedFilterOptions } from '@animegarden/client';
+import { parseURLSearch, type ResolvedFilterOptions } from '@animegarden/client';
 
 import { removeQuote } from './string';
 
 export function generateFeed(...params: URLSearchParams[]) {
   const filters: any[] = [];
+
   for (const param of params) {
-    const filter: Partial<ResolvedFilterOptions> = parseSearchURL(param);
+    const filter: Partial<ResolvedFilterOptions> = parseURLSearch(param);
     // Hack: manually remove duplicate
     if (!filter.provider && filter.duplicate === false) {
       delete filter['duplicate'];
@@ -21,5 +22,6 @@ export function generateFeed(...params: URLSearchParams[]) {
     }
     filters.push({ ...filter });
   }
+
   return encodeURIComponent(JSON.stringify(filters));
 }

@@ -1,6 +1,4 @@
-import { findFansub, parseSearchURL, ResourceType, stringifySearchURL } from '@animegarden/client';
-
-import { DisplayType } from '~/constant';
+import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
 
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
 
@@ -81,14 +79,7 @@ export function parseSearch(input: string) {
       exclude.push(word);
     },
     'fansub:,字幕:,字幕组:': (word) => {
-      if (/^\d+$/.test(word)) {
-        fansub.push(word);
-      } else {
-        const found = findFansub('dmhy', word, { fuzzy: true });
-        if (found) {
-          fansub.push(found.providerId);
-        }
-      }
+      fansub.push(word);
     },
     'after:,开始:,晚于:': (word) => {
       after.push(new Date(word));
@@ -139,7 +130,7 @@ export function parseSearch(input: string) {
 }
 
 export function stringifySearch(search: URLSearchParams) {
-  const filter = parseSearchURL(search, { pageSize: 80 });
+  const filter = parseURLSearch(search, { pageSize: 80 });
   const content: string[] = [];
 
   if (filter.search) {
@@ -155,11 +146,8 @@ export function stringifySearch(search: URLSearchParams) {
       content.push(...filter.exclude.map((t) => '排除:' + wrap(t)));
     }
   }
-  if (filter.fansubId) {
-    content.push(...filter.fansubId.map((f) => '字幕组:' + (findFansub('dmhy', f)?.name ?? f)));
-  }
-  if (filter.fansubName) {
-    content.push(...filter.fansubName.map((f) => '字幕组:' + f));
+  if (filter.fansubs) {
+    content.push(...filter.fansubs.map((f) => '字幕组:' + f));
   }
   if (filter.after) {
     content.push('开始:' + formatDate(filter.after));
@@ -167,10 +155,10 @@ export function stringifySearch(search: URLSearchParams) {
   if (filter.before) {
     content.push('结束:' + formatDate(filter.before));
   }
-  if (filter.type) {
-    const type =
-      filter.type in DisplayType ? DisplayType[filter.type as ResourceType] : filter.type;
-    content.push('类型:' + type);
+  if (filter.types) {
+    for (const type of filter.types) {
+      content.push('类型:' + type);
+    }
   }
 
   return content.map((c) => c).join(' ');
@@ -205,8 +193,10 @@ export function resolveSearchURL(search: string) {
     if (match) {
       return `/detail/dmhy/${match[1]}`;
     } else {
-      const url = stringifySearchURL(location.origin, parseSearch(search));
-      return `${url.pathname}${url.search}`;
+      const searchParams = stringifyURLSearch(parseSearch(search));
+      const url = new URL(location.href);
+      url.search = searchParams.toString();
+      return url.toString();
     }
   }
 }

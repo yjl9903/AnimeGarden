@@ -1,5 +1,3 @@
-import type { ResourceType } from '@animegarden/client';
-
 export const types = [
   '动画',
   '季度全集',
@@ -44,7 +42,7 @@ export const QueryType: Record<string, string> = {
   特摄: '特攝'
 };
 
-export const DisplayType: Record<ResourceType, string> = {
+export const DisplayType: Record<string, string> = {
   動畫: '动画',
   季度全集: '季度全集',
   音樂: '音乐',
@@ -67,29 +65,19 @@ export const DisplayType: Record<ResourceType, string> = {
 };
 
 // @unocss-include
-export const DisplayTypeColor: Record<ResourceType, string> = {
-  動畫: 'text-red-600',
-  季度全集: 'text-[#ff0000]',
-  漫畫: 'text-green-600',
-  港台原版: 'text-green-600',
-  日文原版: 'text-green-600',
-  音樂: 'text-purple-600',
-  動漫音樂: 'text-purple-600',
-  同人音樂: 'text-purple-600',
-  流行音樂: 'text-purple-600',
-  日劇: 'text-blue-600',
-  ＲＡＷ: 'text-[#ffa500]',
-  遊戲: 'text-[#0eb9e7]',
-  電腦遊戲: 'text-[#0eb9e7]',
-  電視遊戲: 'text-[#0eb9e7]',
-  掌機遊戲: 'text-[#0eb9e7]',
-  網絡遊戲: 'text-[#0eb9e7]',
-  遊戲周邊: 'text-[#0eb9e7]',
-  特攝: 'text-[#a52a2a]',
+export const DisplayTypeColor: Record<string, string> = {
+  动画: 'text-red-600',
+  合集: 'text-[#ff0000]',
+  漫画: 'text-green-600',
+  音乐: 'text-purple-600',
+  日剧: 'text-blue-600',
+  RAW: 'text-[#ffa500]',
+  游戏: 'text-[#0eb9e7]',
+  特摄: 'text-[#a52a2a]',
   其他: 'text-base-800'
 };
 
-export const DisplayTypeIcon: Record<ResourceType, string> = {
+export const DisplayTypeIcon: Record<string, string> = {
   動畫: 'i-solar:tv-linear',
   季度全集: 'i-solar:folder-with-files-outline',
   漫畫: 'i-solar:notebook-minimalistic-linear',

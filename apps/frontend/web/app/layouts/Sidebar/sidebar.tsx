@@ -5,8 +5,6 @@ import { NavLink, useLocation } from '@remix-run/react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 
-import { findFansub } from '@animegarden/client';
-
 import { APP_HOST } from '~build/env';
 
 import { generateFeed } from '~/utils/feed';
@@ -91,7 +89,7 @@ const QuickLinks = memo((props: { collection: Collection }) => {
   const location = useLocation();
   const match = useMemo(() => getActivePageTab(location, collection), [location, collection]);
   const className =
-    'ml1 mr2 px1 py2 cursor-pointer select-none block text-sm text-base-700 flex items-center hover:bg-layer-subtle-overlay rounded-md';
+    'ml1 mr2 px1 py2 cursor-pointer select-none text-sm text-base-700 flex items-center hover:bg-layer-subtle-overlay rounded-md';
   const activeClassName = 'bg-layer-muted';
 
   return (
@@ -142,7 +140,7 @@ const Collection = memo((props: { collection: Collection }) => {
           <div className="h-[1px] w-full bg-zinc-200"></div>
         </div>
         <a
-          className="block h-[26px] w-auto rounded-md px-1 flex items-center cursor-pointer hover:bg-layer-muted"
+          className="h-[26px] w-auto rounded-md px-1 flex items-center cursor-pointer hover:bg-layer-muted"
           href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`看看动画`)}&url=${encodeURIComponent(`https://${APP_HOST}/collection/filter/${base64URLencode(JSON.stringify(collection))}`)}`}
           target="_blank"
         >
@@ -180,7 +178,7 @@ const CollectionItemContent = memo(
   (props: { collection: Collection; item: CollectionItem; active: boolean }) => {
     const { collection, item, active } = props;
     const name = inferCollectionItemName(props.item);
-    const fansub = name.fansubs?.map((f) => f.name).join(' ');
+    const fansub = name.fansubs?.join(' ');
     const title = item.name
       ? item.name
       : name.title
@@ -467,11 +465,11 @@ const CollectionItemContent = memo(
                     <span className="font-bold mr2 select-none">字幕组</span>
                     {display.fansubs.map((fansub) => (
                       <a
-                        key={`${fansub.provider}:${fansub.providerId}`}
-                        href={`/resources/1?fansubId=${fansub.providerId}`}
+                        key={fansub}
+                        href={`/resources/1?fansub=${fansub}`}
                         className="select-text text-link mr2"
                       >
-                        {fansub.name}
+                        {fansub}
                       </a>
                     ))}
                   </div>
@@ -510,15 +508,7 @@ function inferCollectionItemName(item: CollectionItem) {
     title = item.include.join(' ');
   }
   if (title) {
-    const fansubId = item.fansubId;
-    const fansubs = fansubId
-      ? fansubId.map((id) => {
-          const provider = 'dmhy';
-          const fs = findFansub(provider, id);
-          return fs ? fs : { provider, providerId: id, name: id };
-        })
-      : undefined;
-
+    const fansubs = item.fansubs;
     return { title, fansubs };
   }
 

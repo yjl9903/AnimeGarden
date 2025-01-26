@@ -5,7 +5,7 @@ import { memo } from 'react';
 import type { Resource } from '@animegarden/client';
 
 import { getPikPakUrlChecker } from '@/utils';
-import { DisplayType, DisplayTypeColor, DisplayTypeIcon } from '@/constant';
+import { DisplayTypeColor, DisplayTypeIcon } from '@/constant';
 
 import { Tag } from './tag';
 import { formatChinaTime } from './utils';
@@ -166,7 +166,7 @@ export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }>
         <div className="flex justify-center items-center">
           {r.fansub ? (
             <NavLink
-              to={`/resources/1?${followSearch(location, { fansubId: r.fansub.id })}`}
+              to={`/resources/1?${followSearch(location, { fansub: r.fansub.name })}`}
               className="block w-max"
               aria-label={`Go to resources list of fansub ${r.fansub.name}`}
             >
@@ -174,7 +174,7 @@ export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }>
             </NavLink>
           ) : r.publisher ? (
             <NavLink
-              to={`/resources/1?${followSearch(location, { publisherId: r.publisher.id })}`}
+              to={`/resources/1?${followSearch(location, { publisher: r.publisher.name })}`}
               className="block w-max"
               aria-label={`Go to resources list of publisher ${r.publisher.name}`}
             >

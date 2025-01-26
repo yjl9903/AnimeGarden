@@ -4,41 +4,30 @@ import { NavLink, useLocation } from '@remix-run/react';
 import { useCallback } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 
-import { findFansub, type ResolvedFilterOptions, type ResourceType } from '@animegarden/client';
+import type { ResolvedFilterOptions } from '@animegarden/client';
 
 import { APP_HOST } from '~build/env';
 
 import { removeQuote } from '~/utils';
+import { DisplayTypeColor } from '~/constant';
 import { Button } from '~/components/ui/button';
 import { SearchTooltip } from '~/components/Help';
 import { isOpenSidebar } from '~/layouts/Sidebar/atom';
 import { currentCollectionAtom } from '~/states/collection';
-import { DisplayType, DisplayTypeColor, QueryType } from '~/constant';
 
 export type DisplayResolvedFilterOptions = ReturnType<typeof resolveFilterOptions>;
 
 export function resolveFilterOptions(filter: Omit<ResolvedFilterOptions, 'page' | 'pageSize'>) {
-  const fansubId = filter.fansubId;
-  const fansubs = fansubId
-    ? fansubId.map((id) => {
-        const provider = 'dmhy';
-        const fs = findFansub(provider, id);
-        return fs ? fs : { provider, providerId: id, name: id };
-      })
-    : undefined;
-
-  const rawType = (
-    filter.type && filter.type in QueryType ? QueryType[filter.type] : filter.type
-  ) as ResourceType | undefined;
-  const type = rawType && rawType in DisplayType ? DisplayType[rawType] : (rawType ?? '動畫');
+  const fansubs = filter.fansubs;
+  const type = filter.types?.[0];
 
   return {
-    publisher: filter.publisherId,
+    publisher: filter.publishers?.[0],
     fansubs,
-    type: rawType
+    type: type
       ? {
           name: type,
-          color: DisplayTypeColor[type as ResourceType] ?? DisplayTypeColor[rawType]
+          color: DisplayTypeColor[type]
         }
       : undefined,
     before: filter.before ? new Date(filter.before) : undefined,
@@ -144,11 +133,11 @@ export function Filter(props: Props) {
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">字幕组</span>
           {fansubs.map((fansub) => (
             <NavLink
-              to={`/resources/1?fansubId=${fansub.providerId}`}
-              key={fansub.provider + '/' + fansub.providerId}
+              to={`/resources/1?fansub=${fansub}`}
+              key={fansub}
               className="text-4 select-text text-link"
             >
-              {fansub.name}
+              {fansub}
             </NavLink>
           ))}
         </div>
