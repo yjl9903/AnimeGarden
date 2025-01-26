@@ -1,78 +1,89 @@
-// import type { Resource } from './types';
+import type { Resource } from './types';
 import type { ProviderType } from './constants';
 
-// type FetchResourcesOptions = FilterOptions & {
-//   /**
-//    * The base URL of anime garden API
-//    *
-//    * @default 'https://garden.breadio.wiki/api/'
-//    */
-//   baseURL?: string;
+export type FetchResourcesOptions = FilterOptions & {
+  /**
+   * Fetch method
+   */
+  fetch?: (request: RequestInfo, init?: RequestInit) => Promise<Response>;
 
-//   /**
-//    * Query count resources
-//    */
-//   count?: number;
+  /**
+   * The base URL of anime garden API
+   *
+   * @default 'https://garden.breadio.wiki/api/'
+   */
+  baseURL?: string;
 
-//   /**
-//    * The number of retry times
-//    */
-//   retry?: number;
+  /**
+   * Query count resources
+   */
+  count?: number;
 
-//   /**
-//    * Abort fetch
-//    */
-//   signal?: AbortSignal;
+  /**
+   * The number of retry times
+   */
+  retry?: number;
 
-//   /**
-//    * Should return tracker href
-//    *
-//    * @default false
-//    */
-//   tracker?: boolean;
+  /**
+   * Abort fetch
+   */
+  signal?: AbortSignal;
 
-//   /**
-//    * Request headers
-//    */
-//   headers?: Record<string, string | ReadonlyArray<string>>;
+  /**
+   * Should return tracker
+   *
+   * @default false
+   */
+  tracker?: boolean;
 
-//   /**
-//    * Progress callback when querying multiple pages
-//    */
-//   progress?: (
-//     delta: Resource[],
-//     payload: { url: string; page: number; timestamp: Date }
-//   ) => void | Promise<void>;
-// }
+  /**
+   * Should return metadata
+   *
+   * @default false
+   */
+  metadata?: boolean;
 
-export interface ResolvedFilterOptions {
-  page: number;
+  /**
+   * Request headers
+   */
+  headers?: Record<string, string | ReadonlyArray<string>>;
 
-  pageSize: number;
+  /**
+   * Progress callback when querying multiple pages
+   */
+  progress?: (
+    delta: Resource[],
+    payload: { url: string; page: number; timestamp: Date }
+  ) => void | Promise<void>;
+};
 
-  provider?: ProviderType;
+export interface FetchResourceDetailOptions {
+  /**
+   * Fetch method
+   */
+  fetch?: (request: RequestInfo, init?: RequestInit) => Promise<Response>;
 
-  duplicate?: boolean;
+  /**
+   * The base URL of anime garden API
+   *
+   * @default 'https://garden.breadio.wiki/api/'
+   */
+  baseURL?: string;
 
-  types?: string[];
+  /**
+   * Abort fetch
+   */
+  signal?: AbortSignal;
 
-  after?: Date;
+  /**
+   * The number of retry
+   */
+  retry?: number;
 
-  before?: Date;
-
-  fansubs?: string[];
-
-  publishers?: string[];
-
-  subjects?: number[];
-
-  search?: string[];
-
-  include?: string[];
-
-  keywords?: string[];
-
-  exclude?: string[];
+  /**
+   * Request headers
+   */
+  headers?: Record<string, string | ReadonlyArray<string>>;
 }
 
 export type FilterOptions = {
@@ -227,6 +238,36 @@ export type FilterOptions = {
         publishers?: string[];
       }
   );
+
+export interface ResolvedFilterOptions {
+  page: number;
+
+  pageSize: number;
+
+  provider?: ProviderType;
+
+  duplicate?: boolean;
+
+  types?: string[];
+
+  after?: Date;
+
+  before?: Date;
+
+  fansubs?: string[];
+
+  publishers?: string[];
+
+  subjects?: number[];
+
+  search?: string[];
+
+  include?: string[];
+
+  keywords?: string[];
+
+  exclude?: string[];
+}
 
 // export function makeResourcesFilter(filter: Omit<ResolvedFilterOptions, 'page' | 'pageSize' | 'duplicate'>) {
 //   const conds: Array<(res: Resource) => boolean> = [];

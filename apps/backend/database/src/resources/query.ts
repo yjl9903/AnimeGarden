@@ -196,6 +196,9 @@ export class QueryManager {
               hasMore: cache.hasMore
             };
           }
+          if (!task.hasMore) {
+            break;
+          }
         }
       }
     }
