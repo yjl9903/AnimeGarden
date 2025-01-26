@@ -18,7 +18,12 @@ import {
   sql
 } from 'drizzle-orm';
 
-import { normalizeTitle, type ResolvedFilterOptions } from '@animegarden/client';
+import {
+  type ProviderType,
+  type ResolvedFilterOptions,
+  normalizeTitle,
+  transformResourceHref
+} from '@animegarden/client';
 
 import type { System } from '../system';
 import type { NotifiedResources } from '../providers/types';
@@ -27,6 +32,8 @@ import { resources } from '../schema/resources';
 import { jieba, nextTick, retryFn } from '../utils';
 
 import type { DatabaseResource } from './types';
+
+import { transformDatabaseUser } from './transform';
 
 type DatabaseFilterOptions = Omit<
   Partial<ResolvedFilterOptions>,
@@ -95,15 +102,15 @@ export class QueryManager {
           provider: r.provider,
           providerId: r.providerId,
           title: r.title,
-          href: r.href,
+          href: transformResourceHref(r.provider as ProviderType, r.href),
           type: r.type,
           magnet: r.magnet,
           tracker: r.tracker,
           size: r.size,
           createdAt: r.createdAt.toISOString(),
           fetchedAt: r.fetchedAt.toISOString(),
-          publisher: await users.getById(r.publisherId),
-          fansub: r.fansubId ? await teams.getById(r.fansubId) : undefined,
+          publisher: transformDatabaseUser(await users.getById(r.publisherId)),
+          fansub: r.fansubId ? transformDatabaseUser(await teams.getById(r.fansubId)) : undefined,
           subjectId: r.subjectId,
           metadata: r.metadata
         }))
@@ -248,7 +255,8 @@ export class QueryManager {
   public findFromRedis = memoAsync(
     async (filter: DatabaseFilterOptions, offset: number, limit: number) => {
       // TODO: read redis here
-      return await this.findFromDatabase(filter, offset, limit);
+      const resp = await this.findFromDatabase(filter, offset, limit);
+      return resp;
     },
     {
       serialize: (filter, offset, limit) => {

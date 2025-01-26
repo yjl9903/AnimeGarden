@@ -2,7 +2,7 @@ import { parse } from 'anipar';
 import { SupportProviders, normalizeTitle } from '@animegarden/client';
 
 import type { System } from '../system';
-import type { NewResource as NewDbResource } from '../schema';
+import type { NewResource as NewDbResource, Team, User } from '../schema';
 
 import { jieba } from '../utils';
 
@@ -126,4 +126,14 @@ function matchActiveSubjects(sys: System, titleAlt: string) {
     }
   }
   return null;
+}
+
+export function transformDatabaseUser(user?: User | Team) {
+  if (!user) return undefined;
+
+  return {
+    id: user.id,
+    name: user.name,
+    avatar: user.avatar
+  };
 }
