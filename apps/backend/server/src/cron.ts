@@ -62,6 +62,8 @@ export class Executor {
       fetching.forEach((f) => f.stop());
       syncing.forEach((f) => f.stop());
     });
+
+    this.system.logger.info(`Finish registering ${fetching.length + syncing.length} cron jobs`);
   }
 
   public async stop() {
