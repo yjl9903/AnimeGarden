@@ -61,15 +61,16 @@ async function transferResources(
 
   let cursor = options.startPage ?? 0;
   let end = options.endPage ?? Number.MAX_SAFE_INTEGER;
+  let done = false;
 
   const dup = new DuplicatedManager();
 
-  while (cursor < end) {
+  while (cursor < end && !done) {
     logger.info(
       `Fetching resources from ${cursor * PAGE_SIZE} to ${cursor * PAGE_SIZE + PAGE_SIZE - 1}`
     );
 
-    for (let i = 0, end = false; i < RETRY && !end; i++) {
+    for (let i = 0; i < RETRY; i++) {
       try {
         const oldResources = await oldDatabase.query.resources.findMany({
           with: {
@@ -81,7 +82,7 @@ async function transferResources(
           orderBy: (res, { asc }) => [asc(res.createdAt)]
         });
         if (oldResources.length === 0) {
-          end = true;
+          done = true;
           break;
         }
 
