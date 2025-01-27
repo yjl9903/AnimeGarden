@@ -22,7 +22,10 @@ export class ProvidersModule extends Module<System['modules']> {
   public async initialize() {
     this.system.logger.info('Initializing Providers module');
     await this.fetchProviders();
-    await this.registerNotification();
+    // Only server processes subscribe notification event
+    if (!this.system.options.cron) {
+      await this.registerNotification();
+    }
     this.system.logger.success('Initialize Providers module OK');
   }
 

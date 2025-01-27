@@ -40,7 +40,7 @@ app
   .option('--host <ip>', 'Listen host')
   .option('--port <port>', 'Listen port')
   .action(async (options) => {
-    const sys = await initialize(options);
+    const sys = await initialize({ ...options, cron: false });
     await sys.initialize();
     const server = await makeServer(sys, {});
 
@@ -50,7 +50,7 @@ app
   });
 
 app.command('cron', 'Start Anime Garden cron jobs executor').action(async (options) => {
-  const sys = await initialize(options);
+  const sys = await initialize({ ...options, cron: true });
   await sys.initialize();
   await sys.import();
   const executor = await makeExecutor(sys, {});

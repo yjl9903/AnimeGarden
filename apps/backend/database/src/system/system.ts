@@ -14,6 +14,8 @@ export interface SystemOptions {
   postgresUri?: string;
 
   redisUri?: string;
+
+  cron?: boolean;
 }
 
 export class System<M extends Record<string, Module> = {}> {
