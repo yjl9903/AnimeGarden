@@ -136,8 +136,9 @@ LIMIT 1)`;
     if (options.duplicatedManager) {
       const dup = options.duplicatedManager;
       for (const r of resp) {
-        if (r.duplicatedId) continue;
         if (r.isDeleted) continue;
+        if (r.duplicatedId !== undefined || r.duplicatedId !== null) continue;
+
         const duplicatedId = dup.find(r.title, r.magnet);
         if (duplicatedId) {
           try {

@@ -91,8 +91,8 @@ export async function fetchDmhyPage(
       fansub: fansubId && fansubName ? { id: fansubId, name: fansubName } : undefined,
       publisher:
         publisherId && publisherName
-          // @hack ANiTorrent -> ANi
-          ? { id: publisherId, name: publisherName === 'ANiTorrent' ? 'ANi' : publisherName }
+          ? // @hack ANiTorrent -> ANi
+            { id: publisherId, name: publisherName === 'ANiTorrent' ? 'ANi' : publisherName }
           : undefined,
       createdAt
     });

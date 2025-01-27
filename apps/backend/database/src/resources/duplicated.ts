@@ -11,7 +11,8 @@ export class DuplicatedManager {
     duplicatedId?: number | null;
   }) {
     if (resource.isDeleted) return;
-    if (resource.duplicatedId === undefined || resource.duplicatedId === null) return;
+    if (resource.duplicatedId !== undefined || resource.duplicatedId !== null) return;
+
     const { id, title, magnet } = resource;
     if (!this.titleMap.has(title)) {
       this.titleMap.set(title, id);
