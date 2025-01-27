@@ -108,7 +108,7 @@ async function transferResources(
           })),
           {
             indexSubject: false,
-            duplicatedManager: dup
+            duplicatedManager: undefined
           }
         );
 
