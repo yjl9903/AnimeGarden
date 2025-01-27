@@ -112,7 +112,7 @@ export class QueryManager {
     const dbOptions = this.normalizeDatabaseFilterOptions(filter);
     const { resources, hasMore } = await this.findFromTask(dbOptions, filter.page, filter.pageSize);
 
-    const { users, teams, subjects } = this.system.modules;
+    const { users, teams } = this.system.modules;
 
     return {
       resources: await Promise.all(resources.map(async (r) => this.transform(r))),
@@ -125,7 +125,7 @@ export class QueryManager {
         fansubs: dbOptions.fansubs?.map((p) => teams.ids.get(p)?.name!),
         before: dbOptions.before?.toISOString(),
         after: dbOptions.after?.toISOString(),
-        subjects: dbOptions.subjects?.map((i) => subjects.getSubjectById(i))
+        subjects: dbOptions.subjects
       }
     };
   }
@@ -255,7 +255,7 @@ export class QueryManager {
   }
 
   private normalizeDatabaseFilterOptions(filter: ResolvedFilterOptions): DatabaseFilterOptions {
-    const { users, teams, subjects } = this.system.modules;
+    const { users, teams } = this.system.modules;
 
     return {
       provider: filter.provider,
@@ -267,10 +267,7 @@ export class QueryManager {
       types: filter.types,
       before: filter.before,
       after: filter.after,
-      // Map from bgm id to subject id
-      subjects: filter.subjects
-        ?.map((s) => subjects.getSubject(s)?.id)
-        .filter((s) => s !== undefined),
+      subjects: filter.subjects,
       search: filter.search?.map((t) => normalizeTitle(t)),
       include: filter.include?.map((t) => normalizeTitle(t)),
       keywords: filter.keywords?.map((t) => normalizeTitle(t)),

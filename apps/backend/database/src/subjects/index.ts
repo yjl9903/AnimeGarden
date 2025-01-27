@@ -16,8 +16,6 @@ export class SubjectsModule extends Module<System['modules']> {
 
   public readonly bgms: Map<number, Subject> = new Map();
 
-  public readonly ids: Map<number, Subject> = new Map();
-
   public async initialize() {
     this.system.logger.info('Initializing Subjects module');
     await this.fetchSubjects();
@@ -32,10 +30,8 @@ export class SubjectsModule extends Module<System['modules']> {
     const subs = await this.database.select().from(subjects);
     this.subjects.splice(0, this.subjects.length, ...subs);
     this.bgms.clear();
-    this.ids.clear();
     for (const sub of subs) {
-      this.bgms.set(sub.bgmId, sub);
-      this.ids.set(sub.id, sub);
+      this.bgms.set(sub.id, sub);
     }
     return subs;
   }
@@ -48,18 +44,14 @@ export class SubjectsModule extends Module<System['modules']> {
     return this.subjects.filter((sub) => sub.isArchived);
   }
 
-  public getSubject(bgmId: number) {
-    return this.bgms.get(bgmId);
-  }
-
-  public getSubjectById(id: number) {
-    return this.ids.get(id);
+  public getSubject(id: number) {
+    return this.bgms.get(id);
   }
 
   public async insertSubject(subject: NewSubject, options: InsertSubjectOptions = {}) {
     try {
       this.logger.info(
-        `Insert subject ${subject.name} (id: ${subject.bgmId}, ${subject.activedAt.toLocaleDateString()}) -> ${subject.keywords.map((t) => `"${t}"`).join(' ')}`
+        `Insert subject ${subject.name} (id: ${subject.id}, ${subject.activedAt.toLocaleDateString()}) -> ${subject.keywords.map((t) => `"${t}"`).join(' ')}`
       );
       const isArchived =
         subject.isArchived === null || subject.isArchived === undefined ? true : subject.isArchived;
@@ -68,7 +60,7 @@ export class SubjectsModule extends Module<System['modules']> {
         .insert(subjects)
         .values(subject)
         .onConflictDoUpdate({
-          target: [subjects.bgmId],
+          target: [subjects.id],
           set: {
             name: subject.name,
             activedAt: subject.activedAt,
@@ -78,8 +70,7 @@ export class SubjectsModule extends Module<System['modules']> {
         })
         .returning({
           id: subjects.id,
-          name: subjects.name,
-          bgmId: subjects.bgmId
+          name: subjects.name
         })
         .catch((err) => {
           this.logger.error(err);
@@ -120,7 +111,7 @@ export class SubjectsModule extends Module<System['modules']> {
     }
 
     if (options.indexResources) {
-      const resp: Array<{ id: number; name: string; bgmId: number | null } | undefined> = [];
+      const resp: Array<{ id: number; name: string } | undefined> = [];
       for (const sub of subs) {
         const res = await this.insertSubject(sub, options);
         resp.push(res);
@@ -136,7 +127,7 @@ export class SubjectsModule extends Module<System['modules']> {
           .insert(subjects)
           .values(subs)
           .onConflictDoNothing()
-          .returning({ id: subjects.id, name: subjects.name, bgmId: subjects.bgmId });
+          .returning({ id: subjects.id, name: subjects.name });
         const map = new Map(resp.map((s) => [s!.name, s!] as const));
         return {
           inserted: resp,
@@ -164,7 +155,7 @@ export class SubjectsModule extends Module<System['modules']> {
     options: IndexOptions = {}
   ): Promise<{ matched: Array<{ id: number; title: string }>; error?: any }> {
     if (subject.keywords.length === 0) {
-      this.logger.warn(`Invalid keywords for ${subject.name} (id ${subject.bgmId})`);
+      this.logger.warn(`Invalid keywords for ${subject.name} (id ${subject.id})`);
       return {
         matched: []
       };
@@ -213,15 +204,15 @@ export class SubjectsModule extends Module<System['modules']> {
   /**
    * 归档过时的 subject
    */
-  public async archiveSubjects(bgmIds: number[]) {
-    if (bgmIds.length === 0) return [];
+  public async archiveSubjects(ids: number[]) {
+    if (ids.length === 0) return [];
 
     this.logger.info('Start archiving out-of-date subjects');
     const resp = await this.database
       .update(subjects)
       .set({ isArchived: true })
-      .where(inArray(subjects.bgmId, bgmIds))
-      .returning({ bgmId: subjects.bgmId });
+      .where(inArray(subjects.id, ids))
+      .returning({ id: subjects.id });
     this.logger.success(`Finish archiving ${resp.length} subjects`);
     return resp;
   }
@@ -256,7 +247,7 @@ export class SubjectsModule extends Module<System['modules']> {
       const resp = await importFromBgmd(this);
       if (resp.conflict.length > 0) {
         for (const item of resp.conflict) {
-          this.logger.warn(`Conflict subject: ${item.name} (id: ${item.bgmId})`);
+          this.logger.warn(`Conflict subject: ${item.name} (id: ${item.id})`);
         }
       }
       this.logger.success(`Finish importing ${resp.inserted.length} bangumis`);

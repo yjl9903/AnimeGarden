@@ -1,4 +1,3 @@
-import { subjects } from './../schema/subjects';
 import type { FullBangumi } from 'bgmd/types';
 import type { calendar as Calendar, web as Web } from 'bgmd/calendar';
 
@@ -28,10 +27,10 @@ export async function updateCalendar(mod: SubjectsModule) {
     insertMap.set(id, bgm);
   }
   for (const sub of mod.activeSubjects) {
-    if (insertMap.has(sub.bgmId)) {
-      insertMap.delete(sub.bgmId);
+    if (insertMap.has(sub.id)) {
+      insertMap.delete(sub.id);
     } else {
-      archiveMap.set(sub.bgmId, sub);
+      archiveMap.set(sub.id, sub);
     }
   }
 
@@ -75,7 +74,7 @@ export async function importFromBgmd(mod: SubjectsModule) {
     } else if (l > r) {
       return -1;
     } else {
-      return (rhs.bgmId ?? 0) - (lhs.bgmId ?? 0);
+      return (rhs.id ?? 0) - (lhs.id ?? 0);
     }
   });
 
@@ -114,8 +113,8 @@ function transformFullBangumis(
 
     if (bgmId && activedAt) {
       subs.push({
+        id: bgmId,
         name: bgm.name,
-        bgmId,
         activedAt,
         keywords,
         isArchived
