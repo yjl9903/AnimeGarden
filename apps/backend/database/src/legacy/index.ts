@@ -6,10 +6,4 @@ export { teams } from './schema/team';
 
 export { resources } from './schema/resource';
 
-export * from './redis';
-
-export * from './meilisearch';
-
 export * from './connection';
-
-export * from './operations';

@@ -70,4 +70,9 @@ export interface InsertResourcesOptions {
    * @default true
    */
   indexSubject?: boolean;
+
+  /**
+   * @default false
+   */
+  keepshare?: boolean;
 }
