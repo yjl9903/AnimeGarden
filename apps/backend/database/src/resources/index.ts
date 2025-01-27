@@ -1,4 +1,4 @@
-import { and, desc, eq, gt, inArray, lt, sql } from 'drizzle-orm';
+import { and, desc, eq, gt, inArray, isNull, lt, sql } from 'drizzle-orm';
 
 import type { ProviderType } from '@animegarden/client';
 
@@ -104,10 +104,10 @@ export class ResourcesModule extends Module<System['modules']> {
                 ? options.duplicatedManager.find(r.title, r.magnet)
                 : sql`(SELECT ${resourceSchema.id}
 FROM ${resourceSchema}
-WHERE (${resourceSchema.isDeleted} = false)
-AND (${resourceSchema.duplicatedId} is null)
-AND (${resourceSchema.createdAt} < ${r.createdAt})
-AND (${resourceSchema.magnet} = ${r.magnet} OR ${resourceSchema.title} = ${r.title})
+WHERE (${eq(resourceSchema.isDeleted, false)})
+AND (${isNull(resourceSchema.duplicatedId)})
+AND (${lt(resourceSchema.createdAt, r.createdAt!)})
+AND (${eq(resourceSchema.title, r.title)} OR ${eq(resourceSchema.magnet, r.magnet)})
 ORDER BY ${resourceSchema.createdAt} asc
 LIMIT 1)`;
 
@@ -229,10 +229,10 @@ LIMIT 1)`;
       // @ts-ignore
       set.duplicatedId = sql`(SELECT ${resourceSchema.id}
 FROM ${resourceSchema}
-WHERE (${resourceSchema.isDeleted} = false)
-AND (${resourceSchema.duplicatedId} is null)
-AND (${resourceSchema.createdAt} < ${updated.createdAt})
-AND (${resourceSchema.magnet} = ${updated.magnet} OR ${resourceSchema.title} = ${updated.title})
+WHERE (${eq(resourceSchema.isDeleted, false)})
+AND (${isNull(resourceSchema.duplicatedId)})
+AND (${lt(resourceSchema.createdAt, updated.createdAt!)})
+AND (${eq(resourceSchema.title, updated.title)} OR ${eq(resourceSchema.magnet, updated.magnet)})
 ORDER BY ${resourceSchema.createdAt} asc
 LIMIT 1)`;
 
