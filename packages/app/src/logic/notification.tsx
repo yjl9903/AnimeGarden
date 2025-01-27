@@ -7,15 +7,14 @@ const event = {
     toast(`AnimeGarden 更新通知`, {
       description: (
         <div className="mt-1 space-y-1">
-          <p>AnimeGarden 近期正在进行迁移.</p>
-          <p>请更新相关收藏链接和 RSS 订阅链接.</p>
+          <p>AnimeGarden 即将迁移到新版本, 过年期间服务会出现一些波动.</p>
           <p>
             问题反馈:{' '}
-            <a href="https://github.com/yjl9903/AnimeGarden/issues" className="text-link-active">
-              yjl9903/AnimeGarden
-            </a>{' '}
             <a href="https://t.me/animegarden_dev" className="text-link-active">
               Telegram
+            </a>{' '}
+            <a href="https://github.com/yjl9903/AnimeGarden/issues" className="text-link-active">
+              yjl9903/AnimeGarden
             </a>
           </p>
         </div>
