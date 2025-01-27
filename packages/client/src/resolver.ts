@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import type { FilterOptions, ResolvedFilterOptions } from './filter';
+import type { FilterOptions, ResolvedFilterOptions } from './types';
 
 import { SupportProviders } from './constants';
 

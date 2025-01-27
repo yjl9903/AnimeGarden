@@ -8,8 +8,6 @@ import { collections } from './collections';
 
 export type { MagnetInfo, FileInfo } from './details';
 
-export type { CollectionFilterOptions } from './collections';
-
 export type Provider = typeof providers.$inferSelect;
 
 export type User = typeof users.$inferSelect;

@@ -1,18 +1,17 @@
-import type { Resource, ResourceDetail } from './types';
-
 import { version } from '../package.json';
 
+import type { Resource, ResourceDetail } from './types';
+
 import type {
+  ProviderType,
   ResolvedFilterOptions,
   FetchResourcesOptions,
   FetchResourceDetailOptions
-} from './filter';
-import type { ProviderType } from './constants';
+} from './types';
 
 import { retryFn } from './utils';
+import { DefaultBaseURL } from './constants';
 import { stringifyURLSearch } from './resolver';
-
-const DefaultBaseURL = 'https://garden.breadio.wiki/api/';
 
 interface FetchResourcesResult<T extends FetchResourcesOptions> {
   ok: boolean;
@@ -29,7 +28,7 @@ interface FetchResourceDetailResult {
 }
 
 /**
- * Fetch resources data from dmhy mirror site
+ * Fetch resources list data from anime garden
  */
 export async function fetchResources<T extends FetchResourcesOptions = FetchResourcesOptions>(
   options: T = {} as T
@@ -98,8 +97,7 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
 
         await options.progress?.(newRes, {
           url: url.toString(),
-          page,
-          timestamp
+          page
         });
       } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {
@@ -142,8 +140,7 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
     const resources = uniq(resp.resources);
     await options.progress?.(resources, {
       url: url.toString(),
-      page: 1,
-      timestamp: resp.timestamp
+      page: 1
     });
 
     return {
@@ -174,6 +171,19 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
         const r = await resp.json();
         const timestamp = new Date(r.timestamp);
         if (!isNaN(timestamp.getTime())) {
+          // --- Fix date type ---
+          for (const res of r.resources) {
+            res.createdAt = new Date(res.createdAt);
+            res.fetchedAt = new Date(res.fetchedAt);
+          }
+          if (r.filter.before) {
+            r.filter.before = new Date(r.filter.before);
+          }
+          if (r.filter.after) {
+            r.filter.after = new Date(r.filter.after);
+          }
+          // ---------------------
+
           return {
             resources: r.resources as Resource<T>[],
             complete: r.complete as boolean,
@@ -194,10 +204,13 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
         map.set(r.href, r);
       }
     }
-    return [...map.values()].sort((lhs, rhs) => rhs.createdAt.localeCompare(lhs.createdAt));
+    return [...map.values()].sort((lhs, rhs) => rhs.createdAt.getTime() - lhs.createdAt.getTime());
   }
 }
 
+/**
+ * Fetch resource detail from anime garden
+ */
 export async function fetchResourceDetail(
   provider: ProviderType,
   href: string,

@@ -2,7 +2,7 @@ import { NavLink, useLocation, type Location } from '@remix-run/react';
 
 import { memo } from 'react';
 
-import type { Resource } from '@animegarden/client';
+import type { Resource, Jsonify } from '@animegarden/client';
 
 import { getPikPakUrlChecker } from '@/utils';
 import { DisplayTypeColor, DisplayTypeIcon } from '@/constant';
@@ -14,10 +14,10 @@ import { Pagination, PaginationProps } from './pagination';
 export interface ResourcesTableProps extends Partial<PaginationProps> {
   className?: string;
 
-  resources: Resource<{ tracker: true }>[];
+  resources: Jsonify<Resource<{ tracker: true }>>[];
 }
 
-function getDetailHref(r: Resource) {
+function getDetailHref(r: Jsonify<Resource>) {
   return `/detail/${r.provider}/${r.providerId}`;
 }
 
@@ -79,7 +79,7 @@ export default function ResourcesTable(props: ResourcesTableProps) {
   );
 }
 
-export const ResourceItem = memo((props: { resource: Resource<{ tracker: true }> }) => {
+export const ResourceItem = memo((props: { resource: Jsonify<Resource<{ tracker: true }>> }) => {
   const location = useLocation();
   const { resource: r } = props;
 

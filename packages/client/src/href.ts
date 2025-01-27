@@ -1,4 +1,4 @@
-import type { ProviderType } from './constants';
+import type { ProviderType } from './types';
 
 export function transformResourceHref(provider: ProviderType, href?: string) {
   if (!href) return undefined;

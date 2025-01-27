@@ -1,21 +1,15 @@
 import { json, pgTable, serial, varchar, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
 
-import type { ResolvedFilterOptions } from '@animegarden/client';
-
-export type CollectionFilterOptions = Omit<ResolvedFilterOptions, 'page' | 'pageSize'> & {
-  name?: string;
-
-  command?: string;
-};
+import type { CollectionFilter } from '@animegarden/client';
 
 export const collections = pgTable(
   'collections',
   {
     id: serial('id').primaryKey(),
     hash: varchar('hash', { length: 64 }).notNull(),
-    user: varchar('user', { length: 64 }).notNull(),
     name: varchar('name', { length: 64 }).notNull().default(''),
-    filters: json('filters').$type<CollectionFilterOptions[]>().notNull().default([]),
+    authorization: varchar('user', { length: 64 }).notNull(),
+    filters: json('filters').$type<CollectionFilter<true, false, {}>[]>().notNull().default([]),
     createdAt: timestamp('fetched_at', { withTimezone: true }).notNull().defaultNow()
   },
   (t) => {

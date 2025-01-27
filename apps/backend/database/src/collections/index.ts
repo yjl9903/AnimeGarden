@@ -1,10 +1,9 @@
-import { hash } from 'ohash';
-import { memoAsync } from 'memofunc';
 import { eq } from 'drizzle-orm';
+import { memoAsync } from 'memofunc';
 
 import type { System } from '../system';
 
-import type { CollectionFilterOptions } from '../schema';
+import { type Collection, type CollectionFilter, hashCollection } from '@animegarden/client';
 
 import { Module } from '../system/module';
 import { retryFn } from '../utils';
@@ -17,22 +16,24 @@ export class CollectionsModule extends Module<System['modules']> {
     await this.getCollection.clear();
   }
 
-  public async generateCollection(user: string, name: string, filters: CollectionFilterOptions[]) {
-    const hsh = hash(filters);
+  public async generateCollection(collection: Collection<true>) {
+    const hsh = hashCollection(collection);
+
     try {
       const resp = await this.database
         .insert(collections)
         .values({
           hash: hsh,
-          user,
-          name,
-          filters
+          authorization: collection.authorization,
+          name: collection.name,
+          filters: collection.filters
         })
         .onConflictDoNothing()
         .returning({
           id: collections.id,
           hash: collections.hash
         });
+
       if (resp.length === 1) {
         return resp[0];
       } else {

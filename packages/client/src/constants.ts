@@ -1,3 +1,3 @@
-export const SupportProviders = ['dmhy', 'moe', 'ani'] as const;
+export const DefaultBaseURL = 'https://api.animes.garden/';
 
-export type ProviderType = (typeof SupportProviders)[number];
+export const SupportProviders = ['dmhy', 'moe', 'ani'] as const;
