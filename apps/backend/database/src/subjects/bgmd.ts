@@ -7,7 +7,7 @@ import type { SubjectsModule } from './index';
 import type { NewSubject, Subject } from './schema';
 
 /**
- * @todo
+ * Update yuc.wiki calendar
  */
 export async function updateCalendar(mod: SubjectsModule) {
   // 1. Load bgmd
