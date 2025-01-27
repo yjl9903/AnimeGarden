@@ -192,7 +192,12 @@ LIMIT 1)`;
         }),
       5
     ).catch(() => undefined);
-    if (!dbRes) return;
+    if (!dbRes) {
+      const { inserted } = await this.insertResources([{ ...resource, fetchedAt }], {
+        indexSubject: true
+      });
+      return { updated: inserted[0] };
+    }
 
     let changed = false;
     const set: Partial<typeof resourceSchema.$inferInsert> = {};

@@ -13,6 +13,8 @@ export function transformNewResources(
   res: NewResource,
   options: InsertResourcesOptions
 ): { result: NewDbResource | undefined; errors?: string[] } {
+  const { indexSubject = true } = options;
+
   const errors = [];
 
   if (!SupportProviders.includes(res.provider as any)) {
@@ -69,7 +71,7 @@ export function transformNewResources(
         fetchedAt: res.fetchedAt ?? new Date(),
         publisherId: publisher!.id,
         fansubId: fansub?.id,
-        subjectId: options?.indexSubject ? matchActiveSubjects(sys, titleAlt) : null,
+        subjectId: indexSubject ? matchActiveSubjects(sys, titleAlt) : null,
         metadata: {
           ...metadata
         }
