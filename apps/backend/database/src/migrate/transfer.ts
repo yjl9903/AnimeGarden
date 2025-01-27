@@ -97,7 +97,11 @@ async function transferResources(
             size: r.size,
             createdAt: r.createdAt!,
             fetchedAt: r.fetchedAt!,
-            publisher: r.publisher?.name,
+            // @hack ANiTorrent -> ANi
+            publisher:
+              r.provider === 'dmhy' && r.publisher?.name === 'ANiTorrent'
+                ? 'ANi'
+                : r.publisher?.name,
             fansub: r.fansub?.name,
             isDeleted: r.isDeleted
           })),

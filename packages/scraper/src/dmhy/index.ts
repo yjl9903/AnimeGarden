@@ -90,7 +90,10 @@ export async function fetchDmhyPage(
       size,
       fansub: fansubId && fansubName ? { id: fansubId, name: fansubName } : undefined,
       publisher:
-        publisherId && publisherName ? { id: publisherId, name: publisherName } : undefined,
+        publisherId && publisherName
+          // @hack ANiTorrent -> ANi
+          ? { id: publisherId, name: publisherName === 'ANiTorrent' ? 'ANi' : publisherName }
+          : undefined,
       createdAt
     });
   }
