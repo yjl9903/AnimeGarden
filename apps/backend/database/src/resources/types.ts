@@ -1,7 +1,5 @@
 import type { ParseResult } from 'anipar';
 
-import type { DuplicatedManager } from './duplicated';
-
 export interface NewResource {
   provider: string;
 
@@ -70,9 +68,4 @@ export interface InsertResourcesOptions {
    * @default true
    */
   indexSubject?: boolean;
-
-  /**
-   * Check duplicated in memory
-   */
-  duplicatedManager?: DuplicatedManager;
 }
