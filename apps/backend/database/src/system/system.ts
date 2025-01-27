@@ -32,7 +32,8 @@ export class System<M extends Record<string, Module> = {}> {
   public readonly disposables: Array<(sys: System) => void | Promise<void>> = [];
 
   public constructor(options: SystemOptions = {}) {
-    this.logger = createConsola().withTag('System');
+    const cron = options.cron ?? false;
+    this.logger = createConsola().withTag(!cron ? 'System' : 'Worker');
     this.options = options;
   }
 
