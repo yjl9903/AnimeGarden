@@ -25,6 +25,8 @@ export interface NewResource {
   publisher: string;
 
   fansub?: string;
+
+  isDeleted?: boolean | null | undefined;
 }
 
 export interface DatabaseResource {

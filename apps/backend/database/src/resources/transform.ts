@@ -74,7 +74,8 @@ export function transformNewResources(
         subjectId: indexSubject ? matchActiveSubjects(sys, titleAlt) : null,
         metadata: {
           ...metadata
-        }
+        },
+        isDeleted: res.isDeleted ?? false
       }
     };
   } else {

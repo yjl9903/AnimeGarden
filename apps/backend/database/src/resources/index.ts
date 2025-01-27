@@ -100,17 +100,19 @@ export class ResourcesModule extends Module<System['modules']> {
               // 2. exisit, isDeleted = false
               // 3. root resource has no duplicated id, duplicatedId is null
               // 4. Same magnet or same title
-              const duplicatedId = sql`(SELECT ${resourceSchema.id}
+              const duplicatedId =
+                r.magnet && r.title
+                  ? sql`(SELECT ${resourceSchema.id}
 FROM ${resourceSchema}
 WHERE (${eq(resourceSchema.isDeleted, false)})
 AND (${isNull(resourceSchema.duplicatedId)})
 AND (${lt(resourceSchema.createdAt, r.createdAt!)})
 AND (${eq(resourceSchema.title, r.title)} OR ${eq(resourceSchema.magnet, r.magnet)})
 ORDER BY ${resourceSchema.createdAt} asc
-LIMIT 1)`;
+LIMIT 1)`
+                  : undefined;
 
               return {
-                isDeleted: false,
                 ...r,
                 titleSearch,
                 duplicatedId
