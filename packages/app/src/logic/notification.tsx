@@ -13,6 +13,9 @@ const event = {
             问题反馈:{' '}
             <a href="https://github.com/yjl9903/AnimeGarden/issues" className="text-link-active">
               yjl9903/AnimeGarden
+            </a>{' '}
+            <a href="https://t.me/animegarden_dev" className="text-link-active">
+              Telegram
             </a>
           </p>
         </div>
