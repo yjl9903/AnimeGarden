@@ -31,7 +31,7 @@ export class DuplicatedManager {
     } else if (id2 !== undefined) {
       return id2;
     } else {
-      return undefined;
+      return null;
     }
   }
 }

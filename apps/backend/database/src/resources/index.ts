@@ -141,6 +141,7 @@ LIMIT 1)`;
         const duplicatedId = dup.find(r.title, r.magnet);
         if (duplicatedId) {
           try {
+            this.logger.info(`Updating duplicated id: ${r.title} ${r.id} -> ${duplicatedId}`);
             await retryFn(
               () =>
                 this.database
