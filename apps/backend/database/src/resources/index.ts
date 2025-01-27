@@ -156,6 +156,7 @@ LIMIT 1)`;
             this.logger.error(error);
           }
         }
+        this.logger.info(`Inserting duplicated id ${r.id} : ${r.title} ${r.magnet}`);
         dup.insert(r);
       }
     }
