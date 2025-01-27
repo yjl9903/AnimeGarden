@@ -6,53 +6,29 @@ describe('parse url', () => {
   it('page and page size should work', () => {
     expect(parseURLSearch(new URLSearchParams('page=1&pageSize=10'))).toMatchInlineSnapshot(`
       {
-        "duplicate": false,
         "page": 1,
         "pageSize": 10,
-        "providers": [
-          "dmhy",
-          "moe",
-          "ani",
-        ],
       }
     `);
 
     expect(parseURLSearch(new URLSearchParams('page=2&pageSize=1000000'))).toMatchInlineSnapshot(`
       {
-        "duplicate": false,
         "page": 2,
         "pageSize": 100,
-        "providers": [
-          "dmhy",
-          "moe",
-          "ani",
-        ],
       }
     `);
 
     expect(parseURLSearch(new URLSearchParams('page=2.2&pageSize=4.6'))).toMatchInlineSnapshot(`
       {
-        "duplicate": false,
         "page": 2,
         "pageSize": 5,
-        "providers": [
-          "dmhy",
-          "moe",
-          "ani",
-        ],
       }
     `);
 
     expect(parseURLSearch(new URLSearchParams('page=-1&pageSize=1000000'))).toMatchInlineSnapshot(`
       {
-        "duplicate": false,
         "page": 1,
         "pageSize": 100,
-        "providers": [
-          "dmhy",
-          "moe",
-          "ani",
-        ],
       }
     `);
   });
@@ -61,14 +37,8 @@ describe('parse url', () => {
     expect(parseURLSearch(new URLSearchParams(`after=2023-06-14`))).toMatchInlineSnapshot(`
       {
         "after": 2023-06-14T00:00:00.000Z,
-        "duplicate": false,
         "page": 1,
         "pageSize": 100,
-        "providers": [
-          "dmhy",
-          "moe",
-          "ani",
-        ],
       }
     `);
 
@@ -76,14 +46,8 @@ describe('parse url', () => {
       .toMatchInlineSnapshot(`
         {
           "before": 2023-06-13T00:00:00.000Z,
-          "duplicate": false,
           "page": 1,
           "pageSize": 100,
-          "providers": [
-            "dmhy",
-            "moe",
-            "ani",
-          ],
         }
       `);
   });
@@ -91,14 +55,8 @@ describe('parse url', () => {
   it('parse search', () => {
     expect(parseURLSearch(new URLSearchParams(`search=你好世界`))).toMatchInlineSnapshot(`
       {
-        "duplicate": false,
         "page": 1,
         "pageSize": 100,
-        "providers": [
-          "dmhy",
-          "moe",
-          "ani",
-        ],
         "search": [
           "你好世界",
         ],
@@ -112,9 +70,7 @@ describe('parse url', () => {
         "duplicate": true,
         "page": 1,
         "pageSize": 100,
-        "providers": [
-          "dmhy",
-        ],
+        "provider": "dmhy",
       }
     `);
 
@@ -124,10 +80,7 @@ describe('parse url', () => {
           "duplicate": true,
           "page": 1,
           "pageSize": 100,
-          "providers": [
-            "dmhy",
-            "moe",
-          ],
+          "provider": "dmhy",
         }
       `);
   });
@@ -178,7 +131,6 @@ describe('parse url', () => {
       {
         "after": 2023-06-10T00:00:00.000Z,
         "before": 2023-06-13T00:00:00.000Z,
-        "duplicate": false,
         "exclude": [
           "h1",
         ],
@@ -188,11 +140,6 @@ describe('parse url', () => {
         ],
         "page": 2,
         "pageSize": 100,
-        "providers": [
-          "dmhy",
-          "moe",
-          "ani",
-        ],
         "publishers": [
           "456",
         ],
@@ -212,14 +159,8 @@ describe('parse url with body', () => {
   it('should work', () => {
     expect(parseURLSearch(new URLSearchParams(), { page: 2 })).toMatchInlineSnapshot(`
       {
-        "duplicate": false,
         "page": 2,
         "pageSize": 100,
-        "providers": [
-          "dmhy",
-          "moe",
-          "ani",
-        ],
       }
     `);
   });
@@ -248,7 +189,7 @@ describe('stringify url', () => {
     expect(
       stringifyURLSearch(parseURLSearch(new URLSearchParams(params.join('&')))).toString()
     ).toMatchInlineSnapshot(
-      `"after=1686355200000&before=1686614400000&exclude=h1&fansub=def&page=2&pageSize=100&provider=dmhy&provider=moe&provider=ani&publisher=456&search=hello&search=world&type=%E5%8A%A8%E7%94%BB"`
+      `"after=1686355200000&before=1686614400000&exclude=h1&fansub=def&page=2&pageSize=100&publisher=456&search=hello&search=world&type=%E5%8A%A8%E7%94%BB"`
     );
   });
 });
