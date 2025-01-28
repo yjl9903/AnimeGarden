@@ -96,9 +96,10 @@ async function fetchResources(sys: System, platform: ProviderType) {
         await sys.modules.providers.updateRefreshTimestamp(platform, fetchedAt);
         await sys.modules.providers.notifyRefreshedResources(resources.inserted);
 
-        sys.logger.success(`Finish inserting ${resources.inserted.length} new ${platform} resources`);
+        sys.logger.success(
+          `Finish inserting ${resources.inserted.length} new ${platform} resources`
+        );
       }
-
 
       return {
         users,

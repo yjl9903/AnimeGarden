@@ -308,6 +308,6 @@ LIMIT 1)`;
   }
 
   public async onNotifications(notified: NotifiedResources[]) {
-    await this.onNotifications(notified);
+    await this.query.onNotifications(notified);
   }
 }
