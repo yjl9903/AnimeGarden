@@ -19,6 +19,8 @@ export * from './app';
 
 export * from './cron';
 
+export * from './rss';
+
 function registerHono(sys: System, app: Hono) {
   app.use('*', cors());
   app.use('*', prettyJSON());
