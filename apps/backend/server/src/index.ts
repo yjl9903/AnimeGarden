@@ -13,6 +13,7 @@ import { defineUsersRoutes } from './routes/users';
 import { defineSubjectsRoutes } from './routes/subjects';
 import { defineResourcesRoutes } from './routes/resources';
 import { defineCollectionsRoutes } from './routes/collections';
+import { defineFeedRoutes } from './routes/feed';
 import { defineAdminRoutes } from './routes/admin';
 
 export * from './app';
@@ -45,6 +46,7 @@ function registerHono(sys: System, app: Hono) {
   defineSubjectsRoutes(sys, app);
   defineResourcesRoutes(sys, app);
   defineCollectionsRoutes(sys, app);
+  defineFeedRoutes(sys, app);
   defineAdminRoutes(sys, app);
 
   // Handle errors

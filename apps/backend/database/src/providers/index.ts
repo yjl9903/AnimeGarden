@@ -9,6 +9,7 @@ import { Module } from '../system/module';
 import { providers } from '../schema/providers';
 
 import type { NotifiedResources } from './types';
+import { makeChannelMessageBus, subscribeRedisChannel } from '../connect/redis';
 
 const NOTIFY_CHANNEL = `notify-resources`;
 
@@ -99,31 +100,12 @@ export class ProvidersModule extends Module<System['modules']> {
     if (this.system.redis) {
       const { redis } = this.system;
 
-      await new Promise<void>((res, rej) => {
-        redis.subscribe(NOTIFY_CHANNEL, (err) => {
-          if (err) {
-            this.logger.error(`Failed to subscribe ${NOTIFY_CHANNEL}: ${err.message}`);
-            rej();
-          } else {
-            this.logger.success(`Subscribe to ${NOTIFY_CHANNEL} OK`);
-            res();
-          }
-        });
-
-        redis.on('message', async (channel, message) => {
-          if (channel === NOTIFY_CHANNEL) {
-            try {
-              const msg: { resources: NotifiedResources[] } = JSON.parse(message);
-              await this.onNotification(msg.resources);
-            } catch (error) {
-              this.logger.error(error);
-            }
-          } else {
-            this.logger.warn(`Receive message from ${channel}`);
-            this.logger.warn(message);
-          }
-        });
+      const subs = subscribeRedisChannel(redis, NOTIFY_CHANNEL);
+      const bus = makeChannelMessageBus(redis);
+      bus.addListener<{ resources: NotifiedResources[] }>(NOTIFY_CHANNEL, async (msg) => {
+        await this.onNotification(msg.resources);
       });
+      await subs;
     }
   }
 

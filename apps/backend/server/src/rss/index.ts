@@ -88,7 +88,7 @@ const rssOptionsValidator = z.object({
   trailingSlash: z.boolean().default(true)
 });
 
-export default async function getRssResponse(rssOptions: RSSOptions): Promise<Response> {
+export async function getRssResponse(rssOptions: RSSOptions): Promise<Response> {
   const rssString = await getRssString(rssOptions);
   return new Response(rssString, {
     headers: {
