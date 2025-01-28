@@ -4,17 +4,22 @@ import { Hono } from 'hono';
 // @ts-ignore This file won’t exist if it hasn’t yet been built
 import * as build from '../build/server'; // eslint-disable-line import/no-unresolved
 
-import type { Bindings } from './types';
+// eslint-disable-next-line import/no-unresolved
+// @ts-ignore
+import __STATIC_CONTENT_MANIFEST from '__STATIC_CONTENT_MANIFEST';
 
-import { api } from './api';
-import { feed } from './feed';
+import type { Bindings } from '../node/types';
+
+import { api } from '../node/api';
+import { feed } from '../node/feed';
+
 import { remix } from './remix';
 
 export const app = new Hono<{ Bindings: Bindings }>();
 
 app.all('/api/*', api());
 app.all('/feed.xml', feed());
-app.all('*', remix({ build: build as any }));
+app.all('*', remix({ build: build as any, manifest: __STATIC_CONTENT_MANIFEST }));
 
 app.onError((err, c) => {
   if (err.message) {

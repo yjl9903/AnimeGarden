@@ -20,7 +20,7 @@ primary_region = 'hkg'
   SERVER_HOST = 'animegarden-server-test.internal'
 
 [processes]
-  server = 'node apps/frontend/web/cli.mjs'
+  server = 'node apps/frontend/web/server.mjs'
 
 [http_service]
   internal_port = 3000

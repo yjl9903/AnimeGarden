@@ -1,4 +1,4 @@
-import { app } from './cloudflare/entry';
+import { app } from './cloudflare/index';
 
 export default {
   fetch: app.fetch

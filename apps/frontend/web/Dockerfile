@@ -69,4 +69,4 @@ ENV HOST=:: PORT=${PORT}
 # Start the server by default, this can be overwritten at runtime
 EXPOSE ${PORT}
 
-CMD [ "node", "apps/frontend/web/cli.mjs" ]
+CMD [ "node", "apps/frontend/web/server.mjs" ]

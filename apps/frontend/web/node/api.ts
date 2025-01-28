@@ -37,7 +37,7 @@ export const api = <E extends { Bindings: Bindings } = { Bindings: Bindings }>()
 
       return new Response(
         JSON.stringify({
-          status: 500,
+          status: 'ERROR',
           message: (error as any)?.message ?? 'unknown'
         }),
         { status: 500 }

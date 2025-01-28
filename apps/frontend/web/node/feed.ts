@@ -14,7 +14,7 @@ import { removeQuote } from '../app/utils/string';
 
 import type { Bindings } from './types';
 
-import rss from './rss';
+import { getRssResponse } from '@animegarden/server';
 
 const ManyFilterSchema = z.union([z.array(FilterSchema), FilterSchema.transform((f) => [f])]);
 

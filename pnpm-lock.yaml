@@ -221,6 +221,12 @@ importers:
       '@animegarden/client':
         specifier: workspace:*
         version: link:../../../packages/client
+      '@animegarden/database':
+        specifier: workspace:*
+        version: link:../../backend/database
+      '@animegarden/server':
+        specifier: workspace:*
+        version: link:../../backend/server
       '@cloudflare/kv-asset-handler':
         specifier: ^0.3.4
         version: 0.3.4
@@ -272,6 +278,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      consola:
+        specifier: ^3.3.0
+        version: 3.4.0
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
