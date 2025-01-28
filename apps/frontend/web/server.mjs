@@ -5,8 +5,9 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { Hono } from 'hono';
-import { logger } from 'hono/logger';
+import { etag } from 'hono/logger';
 import { serve } from '@hono/node-server';
+import { logger } from 'hono/logger';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { createConsola } from 'consola';
 
@@ -14,13 +15,14 @@ import { createConsola } from 'consola';
 // @ts-ignore This file won’t exist if it hasn’t yet been built
 import * as build from './build/server/index.js'; // eslint-disable-line import/no-unresolved
 
-import { api, remix } from './dist/node/index.cjs';
+import { api, remix, cache, MemoryCacheStorage } from './dist/node/index.cjs';
 
 createConsola().withTag('Web').wrapConsole();
 
 const __dirname = fileURLToPath(new URL('./', import.meta.url));
 
 const app = new Hono();
+const storage = new MemoryCacheStorage();
 
 app.use(
   '*',
@@ -40,15 +42,32 @@ for (const file of fs.readdirSync(ClientRoot)) {
   if (stat && stat.isFile()) {
     app.all(
       `/${file}`,
+      etag(),
+      cache({
+        cacheName: 'assets',
+        cacheControl: 'max-age=86400',
+        wait: true,
+        caches: storage
+      }),
       serveStatic({
         root: path.relative(process.cwd(), ClientRoot),
-        path: path.relative(process.cwd(), filepath)
+        path: `/${file}`
       })
     );
   }
 }
 
-app.all('/assets/*', serveStatic({ root: path.relative(process.cwd(), ClientRoot) }));
+app.all(
+  '/assets/*',
+  etag(),
+  cache({
+    cacheName: 'assets',
+    cacheControl: 'max-age=86400',
+    wait: true,
+    caches: storage
+  }),
+  serveStatic({ root: path.relative(process.cwd(), ClientRoot) })
+);
 
 app.all('*', remix({ build, mode: process.env.NODE_ENV }));
 
