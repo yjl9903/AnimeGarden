@@ -78,15 +78,17 @@ export async function fetchLastestANi(
       return resp;
     }, retry);
 
-    const filename = link.split('/').at(-1)!;
-    const providerId = filename.slice(0, filename.indexOf('.'));
-
     const blob = await resp.blob();
     const buffer = Buffer.from(await blob.arrayBuffer());
     // parseTorrent return a promise
     const torrent = await parseTorrent(buffer);
     const [magnet, tracker] = splitOnce(toMagnetURI(torrent), '&');
     const size = parseSize(item.enclosure.length);
+
+    const filename = link.split('/').at(-1)!;
+    const providerId = link.startsWith('https://tds.ani.rip/')
+      ? magnet.slice('magnet:?xt=urn:btih:'.length)
+      : filename.slice(0, filename.indexOf('.'));
 
     res.push({
       provider: 'ani',
