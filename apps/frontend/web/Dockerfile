@@ -3,6 +3,9 @@
 ARG NODE_VERSION=20.10.0
 ARG PNPM_VERSION=9.15.4
 
+ARG APP_HOST=test.animes.garden
+ARG SERVER_HOST=animegarden-server-test.internal
+
 ARG PORT=3000
 
 # Base Image
@@ -22,6 +25,9 @@ RUN npm install -g pnpm@$PNPM_VERSION
 
 # Throw-away build stage to reduce size of final image
 FROM base AS build
+
+# Add build args to env
+ENV APP_HOST=$APP_HOST SERVER_HOST=$SERVER_HOST
 
 # Install packages needed to build node modules
 RUN apt-get update -qq && \
@@ -45,7 +51,7 @@ RUN pnpm install --frozen-lockfile --prod=false
 COPY --link . .
 
 # Setup environment and Build application
-RUN pnpm run build && pnpm run build:server
+RUN pnpm run build && pnpm run build:web
 
 # Remove development dependencies
 RUN pnpm prune --prod

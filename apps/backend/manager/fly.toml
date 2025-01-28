@@ -9,6 +9,10 @@ primary_region = 'hkg'
 [build]
   dockerfile = 'Dockerfile'
 
+[build.args]
+  NODE_VERSION = '20.10.0'
+  PNPM_VERSION = '9.15.4'
+
 [processes]
   server = 'node apps/backend/manager/cli.mjs start'
   cron   = 'node apps/backend/manager/cli.mjs cron'
