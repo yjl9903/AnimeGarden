@@ -174,8 +174,6 @@ export class SubjectsModule extends Module<System['modules']> {
           and(
             // 未被删除
             eq(resources.isDeleted, false),
-            // 不是重复
-            isNull(resources.duplicatedId),
             // 是否覆盖
             options.overwrite ? undefined : isNull(resources.subjectId),
             // 资源时间 >= 开播时间 - 30d
