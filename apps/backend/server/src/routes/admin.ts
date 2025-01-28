@@ -92,10 +92,13 @@ async function fetchResources(sys: System, platform: ProviderType) {
       );
 
       // Maintain provider status
-      await sys.modules.providers.updateRefreshTimestamp(platform, fetchedAt);
-      await sys.modules.providers.notifyRefreshedResources(resources.inserted);
+      if (resources.inserted.length > 0) {
+        await sys.modules.providers.updateRefreshTimestamp(platform, fetchedAt);
+        await sys.modules.providers.notifyRefreshedResources(resources.inserted);
 
-      sys.logger.success(`Finish inserting ${resources.inserted.length} new ${platform} resources`);
+        sys.logger.success(`Finish inserting ${resources.inserted.length} new ${platform} resources`);
+      }
+
 
       return {
         users,
@@ -150,17 +153,19 @@ async function syncResources(sys: System, platform: ProviderType, start: number,
       }
 
       if (updated.length > 0) {
-        sys.logger.success(`Finish updating ${updated.length} new ${platform} resources`);
         await sys.modules.providers.updateRefreshTimestamp(platform, updatedAt);
         await sys.modules.providers.notifyRefreshedResources(updated);
+
+        sys.logger.success(`Finish updating ${updated.length} new ${platform} resources`);
       }
 
       // 2. Delete resources
       const deletedAt = new Date();
       const sync = await sys.modules.resources.syncResources(newResources);
       if (sync.deleted.length > 0) {
-        sys.logger.success(`Finish deleting ${updated.length} missing ${platform} resources`);
         await sys.modules.providers.updateRefreshTimestamp(platform, deletedAt);
+
+        sys.logger.success(`Finish deleting ${updated.length} missing ${platform} resources`);
       }
 
       return {

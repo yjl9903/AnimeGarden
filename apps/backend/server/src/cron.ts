@@ -32,8 +32,7 @@ export class Executor {
             }
           });
           const res = await this.hono.fetch(req);
-          const out = await res.json();
-          this.system.logger.success(out);
+          await res.json();
         } catch (error) {
           this.system.logger.error(error);
         }
@@ -50,8 +49,7 @@ export class Executor {
             }
           });
           const res = await this.hono.fetch(req);
-          const out = await res.json();
-          this.system.logger.success(out);
+          await res.json();
         } catch (error) {
           this.system.logger.error(error);
         }
