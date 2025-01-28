@@ -5,7 +5,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import { Hono } from 'hono';
-import { etag } from 'hono/logger';
+import { etag } from 'hono/etag';
 import { serve } from '@hono/node-server';
 import { logger } from 'hono/logger';
 import { serveStatic } from '@hono/node-server/serve-static';
