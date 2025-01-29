@@ -21,6 +21,6 @@ export const DisplayTypeIcon: Record<string, string> = {
   日剧: 'i-solar:videocamera-record-outline',
   RAW: 'i-solar:file-linear',
   游戏: 'i-solar:gamepad-broken',
-  特设: 'i-solar:videocamera-record-outline',
+  特摄: 'i-solar:videocamera-record-outline',
   其他: 'i-solar:document-text-outline'
 };
