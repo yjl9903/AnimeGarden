@@ -40,15 +40,17 @@ export async function fetchResources(
   } = {}
 ) {
   try {
-    console.log('Request', baseURL);
-    const resp = await rawFetchResources<FetchResourcesOptions & { tracker: true }>({
-      fetch: options.fetch ?? ofetch,
-      baseURL,
-      signal: options.signal,
-      retry: options.retry,
-      ...filter,
-      tracker: true
-    } as const);
+    const resp = await rawFetchResources<FetchResourcesOptions & { tracker: true; metadata: true }>(
+      {
+        fetch: options.fetch ?? ofetch,
+        baseURL,
+        signal: options.signal,
+        retry: options.retry,
+        ...filter,
+        tracker: true,
+        metadata: true
+      } as const
+    );
     return resp;
   } catch (error) {
     console.error(error);
