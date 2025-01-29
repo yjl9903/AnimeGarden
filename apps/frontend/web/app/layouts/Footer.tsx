@@ -20,7 +20,9 @@ export const Footer = memo((props: FooterProps) => {
     ref.current.timestamp = timestampStr;
   }
   const timestamp =
-    (timestampStr ?? ref.current?.timestamp) ? new Date(timestampStr ?? ref.current.timestamp!) : undefined;
+    (timestampStr ?? ref.current?.timestamp)
+      ? new Date(timestampStr ?? ref.current.timestamp!)
+      : undefined;
 
   return (
     <footer

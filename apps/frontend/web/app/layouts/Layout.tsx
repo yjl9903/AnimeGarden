@@ -36,7 +36,7 @@ export default function Layout(props: LayoutProps) {
       <div className={clsx('w-full flex', isOpen && 'main-with-sidebar')}>
         <Sidebar></Sidebar>
         <div className="flex-auto flex items-center justify-center min-h-[calc(100vh-316px-196px)]">
-          <div className="main">{props.children}</div>
+          <main className="main">{props.children}</main>
         </div>
       </div>
       <Footer timestamp={timestamp}></Footer>

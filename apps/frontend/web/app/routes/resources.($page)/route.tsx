@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { redirect, useLoaderData, useLocation } from '@remix-run/react';
-import { json, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare';
+import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/cloudflare';
 
-import { parseURLSearch } from '@animegarden/client';
+import { type Jsonify, type ResolvedFilterOptions, parseURLSearch } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
@@ -12,9 +12,11 @@ import { fetchResources } from '~/utils/fetch';
 import { Error } from './Error';
 import { Filter } from './Filter';
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  const title = generateShortFilterTitle(data?.filter ?? {});
+
   return [
-    { title: 'Anime Garden 動漫花園資源網第三方镜像站' },
+    { title: title + ' | Anime Garden 動漫花園資源網第三方镜像站' },
     { name: 'description', content: '}Anime Garden 動漫花園資源網第三方镜像站' }
   ];
 };
@@ -77,4 +79,25 @@ export default function ResourcesIndex() {
       </div>
     </Layout>
   );
+}
+
+function generateShortFilterTitle(
+  filter: Jsonify<Omit<ResolvedFilterOptions, 'page' | 'pageSize'>>
+) {
+  if (filter.search && filter.search.length > 0) {
+    return filter.search.join(' ') + ' 最新资源';
+  }
+  if (filter.include && filter.include.length > 0) {
+    return filter.include[0] + ' 最新资源';
+  }
+  if (filter.fansubs && filter.fansubs.length === 1) {
+    return filter.fansubs[0] + ' 最新资源';
+  }
+  if (filter.publishers && filter.publishers.length === 1) {
+    return filter.publishers[0] + ' 最新资源';
+  }
+  if (filter.types && filter.types.length === 1) {
+    return `最新${filter.types[0]}资源`;
+  }
+  return '所有资源';
 }
