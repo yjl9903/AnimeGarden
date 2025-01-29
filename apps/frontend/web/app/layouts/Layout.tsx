@@ -96,12 +96,12 @@ const Header = memo((props: { feedURL?: string }) => {
           </NavLink>
         </div>
         <div>
-          <NavLink to="/resources" className="rounded-md p-2 hover:(bg-zinc-100)">
+          <NavLink to="/resources/1" className="rounded-md p-2 hover:(bg-zinc-100)">
             字幕组
           </NavLink>
         </div>
         <div>
-          <NavLink to="/resources" className="rounded-md p-2 hover:(bg-zinc-100)">
+          <NavLink to="/resources/1" className="rounded-md p-2 hover:(bg-zinc-100)">
             资源
           </NavLink>
         </div>
