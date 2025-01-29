@@ -42,7 +42,6 @@ for (const file of fs.readdirSync(ClientRoot)) {
   if (stat && stat.isFile()) {
     app.all(
       `/${file}`,
-      etag(),
       cache({
         cacheName: 'assets',
         cacheControl: 'max-age=86400',
@@ -59,7 +58,6 @@ for (const file of fs.readdirSync(ClientRoot)) {
 
 app.all(
   '/assets/*',
-  etag(),
   cache({
     cacheName: 'assets',
     cacheControl: 'max-age=86400',
