@@ -29,6 +29,7 @@ function followSearch(location: Location, params: Record<string, string>) {
 }
 
 export default function ResourcesTable(props: ResourcesTableProps) {
+  const location = useLocation();
   const { resources, className } = props;
 
   return (
@@ -41,7 +42,7 @@ export default function ResourcesTable(props: ResourcesTableProps) {
             <col className="w-max whitespace-nowrap" />
             <col className="w-max whitespace-nowrap" />
           </colgroup>
-          <thead className="resources-table-head border-b border-b-2 text-lg lt-lg:text-base">
+          <thead className="resources-table-head border-b-2 text-lg lt-lg:text-base">
             <tr className="">
               {/* <th className="py3 w-[160px] min-w-[100px] lt-lg:w-[100px] lt-sm:w-[100px]">
               发布时间
@@ -65,7 +66,29 @@ export default function ResourcesTable(props: ResourcesTableProps) {
           </tbody>
         </table>
       </div>
-      {props.page !== undefined && (
+      {props.page !== undefined && resources.length === 0 && (
+        <div>
+          <div className="h-20 text-2xl text-orange-600/80 flex items-center justify-center">
+            <span className="mr2 i-carbon-error" />
+            <span>没有搜索到匹配的资源</span>
+          </div>
+          <div className="flex items-center justify-center">
+            <span className="">返回&nbsp;</span>
+            {!location.pathname.endsWith('/1') && (
+              <>
+                <NavLink to={`/resources/1${location.search}`} className="text-link">
+                  第 1 页
+                </NavLink>
+                <span>&nbsp;</span>
+              </>
+            )}
+            <NavLink to="/" className="text-link">
+              主页
+            </NavLink>
+          </div>
+        </div>
+      )}
+      {props.page !== undefined && resources.length > 0 && (
         <Pagination
           timestamp={props.timestamp}
           page={props.page}
