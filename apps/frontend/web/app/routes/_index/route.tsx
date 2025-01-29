@@ -44,7 +44,7 @@ export default function Index() {
             page={1}
             timestamp={new Date(timestamp!)}
             complete={false}
-            link={(page) => `/resources/${page}?type=動畫`}
+            link={(page) => `/resources/${page}?type=动画`}
           ></Resources>
         ) : (
           <Error></Error>

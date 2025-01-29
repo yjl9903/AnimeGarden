@@ -108,7 +108,7 @@ export const ResourceItem = memo((props: { resource: Jsonify<Resource<{ tracker:
             <div className="flex items-center justify-start">
               <div className="flex-1">
                 <span className="mr3">
-                  {['動畫', '季度全集', '日劇', '特攝'].includes(r.type) ? (
+                  {['动画', '合集', '日剧', '特摄'].includes(r.type) ? (
                     <>
                       <a
                         href={getPikPakUrlChecker(r.magnet)}
