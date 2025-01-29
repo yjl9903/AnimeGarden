@@ -11,9 +11,8 @@ import { env } from './node/env';
 
 const { APP_HOST, SERVER_URL, KEEPSHARE } = env();
 
-if (SERVER_URL) {
-  console.log(`API Server is located at: ${SERVER_URL}`);
-}
+console.log(`APP host is located at: ${APP_HOST}`);
+console.log(`API Server is located at: ${SERVER_URL}`);
 
 // Analytics Engines
 const UMAMI_HOST = `umami.onekuma.cn`;

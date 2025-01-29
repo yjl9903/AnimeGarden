@@ -64,7 +64,9 @@ FROM base
 COPY --from=build /app /app
 
 # Listen on 3000
-ENV HOST=:: PORT=${PORT} APP_HOST=$APP_HOST SERVER_URL=$SERVER_URL
+ENV HOST=:: PORT=${PORT} APP_HOST=${APP_HOST} SERVER_URL=${SERVER_URL}
+
+RUN echo $APP_HOST && echo $SERVER_URL
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE ${PORT}
