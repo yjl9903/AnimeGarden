@@ -17,7 +17,7 @@ LABEL fly_launch_runtime="Node.js"
 WORKDIR /app
 
 # Set production environment
-ENV NODE_ENV="production" APP_HOST=$APP_HOST SERVER_URL=$SERVER_URL
+ENV NODE_ENV="production"
 
 # Install pnpm
 RUN npm install -g pnpm@$PNPM_VERSION
@@ -47,6 +47,11 @@ RUN pnpm install --frozen-lockfile --prod=false
 # Copy application code
 COPY --link . .
 
+# Declare args
+ARG APP_HOST
+ARG SERVER_URL
+ENV APP_HOST=$APP_HOST SERVER_URL=$SERVER_URL
+
 # Setup environment and Build application
 RUN pnpm run build && pnpm run build:web
 
@@ -63,6 +68,10 @@ COPY --from=build /app /app
 # Listen on 3000
 ENV HOST=:: PORT=${PORT}
 
+# Declare args
+ARG APP_HOST
+ARG SERVER_URL
+ENV APP_HOST=$APP_HOST SERVER_URL=$SERVER_URL
 RUN echo $APP_HOST && echo $SERVER_URL
 
 # Start the server by default, this can be overwritten at runtime
