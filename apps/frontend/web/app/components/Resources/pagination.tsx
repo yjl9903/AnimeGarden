@@ -1,7 +1,8 @@
 import clsx from 'clsx';
 
-import { formatChinaTime } from './utils';
 import { Link } from '@remix-run/react';
+
+import { formatChinaTime } from '@/utils/date';
 
 export interface PaginationProps {
   page: number;
@@ -25,13 +26,13 @@ export const Pagination = (props: PaginationProps) => {
 
   return (
     <div className="mt-4 flex lt-md:flex-col font-sm">
-      {timestamp && (
+      {/* {timestamp && (
         <div className="text-base-400 py-1 pl3 lt-sm:pl1">
           <span className="mr1 text-sm i-carbon-update-now op-80"></span>
           <span className="select-none">数据更新于 </span>
           <span>{formatChinaTime(timestamp)}</span>
         </div>
-      )}
+      )} */}
       <div className="flex-auto"></div>
       {(page !== 1 || !complete) && (
         <div className="flex lt-md:(mt-4 justify-center) items-center gap-2 text-base-500">
@@ -39,13 +40,20 @@ export const Pagination = (props: PaginationProps) => {
             page={page - 1}
             link={props.link}
             navigate={props.navigate}
-            className={clsx(
-              isPrev || 'hidden',
-              'block text-link-active underline decoration-dotted underline-offset-4'
-            )}
+            className={clsx(isPrev || 'hidden', 'block text-link-active')}
           >
             <span>上一页</span>
           </PageItem>
+          {page > 2 && (
+            <PageItem
+              page={1}
+              link={props.link}
+              navigate={props.navigate}
+              className={clsx('block')}
+            >
+              <span>1</span>
+            </PageItem>
+          )}
           {page > 2 && <span className="select-none i-ant-design:ellipsis-outlined"></span>}
           {pages.map((p) => (
             <PageItem
@@ -63,10 +71,7 @@ export const Pagination = (props: PaginationProps) => {
             page={page + 1}
             link={props.link}
             navigate={props.navigate}
-            className={clsx(
-              isNext || 'hidden',
-              'block text-link-active underline decoration-dotted underline-offset-4'
-            )}
+            className={clsx(isNext || 'hidden', 'block text-link-active')}
           >
             <span>下一页</span>
           </PageItem>

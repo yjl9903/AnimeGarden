@@ -4,11 +4,10 @@ import { memo } from 'react';
 
 import type { Resource, Jsonify } from '@animegarden/client';
 
-import { getPikPakUrlChecker } from '@/utils';
+import { getPikPakUrlChecker, formatChinaTime } from '@/utils';
 import { DisplayTypeColor, DisplayTypeIcon } from '@/constant';
 
 import { Tag } from './tag';
-import { formatChinaTime } from './utils';
 import { Pagination, PaginationProps } from './pagination';
 
 export interface ResourcesTableProps extends Partial<PaginationProps> {

@@ -5,6 +5,7 @@ import { useAtomValue } from 'jotai';
 
 import Search from './Search';
 import { Loading } from './Loading';
+import { Footer } from './Footer';
 import { isOpenSidebar, Sidebar } from './Sidebar';
 
 export const NavHeight = 68;
@@ -12,8 +13,14 @@ export const MaxPaddingTop = 152;
 export const MaxPaddingBottom = 96;
 export const SearchHeight = NavHeight;
 
-export default function Layout(props: { children?: React.ReactNode; feedURL?: string }) {
-  const { feedURL } = props;
+export interface LayoutProps {
+  children?: React.ReactNode;
+  timestamp?: string;
+  feedURL?: string;
+}
+
+export default function Layout(props: LayoutProps) {
+  const { timestamp, feedURL } = props;
   const isOpen = useAtomValue(isOpenSidebar);
 
   return (
@@ -28,11 +35,11 @@ export default function Layout(props: { children?: React.ReactNode; feedURL?: st
       ></div>
       <div className={clsx('w-full flex', isOpen && 'main-with-sidebar')}>
         <Sidebar></Sidebar>
-        <div className="flex-auto flex items-center justify-center">
+        <div className="flex-auto flex items-center justify-center min-h-[calc(100vh-316px-196px)]">
           <div className="main">{props.children}</div>
         </div>
       </div>
-      <div className="border-t border-t-1 py-12"></div>
+      <Footer timestamp={timestamp}></Footer>
       <Loading></Loading>
     </div>
   );
@@ -78,7 +85,7 @@ const Header = memo((props: { feedURL?: string }) => {
   const { feedURL } = props;
 
   return (
-    <div className="z-11 bg-[#fef8f7] fixed pt-[1px] flex justify-center items-center w-full h-$nav-height text-base-500">
+    <header className="z-11 bg-[#fef8f7] fixed pt-[1px] flex justify-center items-center w-full h-$nav-height text-base-500">
       <nav className="main flex gap-1 [&>div]:leading-$nav-height">
         <div className="box-content w-[32px] pl3 lt-sm:pl1 text-2xl text-center font-quicksand font-bold">
           <NavLink to="/">🌸</NavLink>
@@ -112,6 +119,6 @@ const Header = memo((props: { feedURL?: string }) => {
           )}
         </div>
       </nav>
-    </div>
+    </header>
   );
 });

@@ -1,14 +1,4 @@
-export const types = [
-  '动画',
-  '合集',
-  '音乐',
-  '日剧',
-  'RAW',
-  '漫画',
-  '游戏',
-  '特摄',
-  '其他',
-];
+export const types = ['动画', '合集', '音乐', '日剧', 'RAW', '漫画', '游戏', '特摄', '其他'];
 
 // @unocss-include
 export const DisplayTypeColor: Record<string, string> = {

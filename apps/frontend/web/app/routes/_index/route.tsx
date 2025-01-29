@@ -36,7 +36,7 @@ export default function Index() {
   );
 
   return (
-    <Layout feedURL={feedURL}>
+    <Layout feedURL={feedURL} timestamp={timestamp}>
       <div className="w-full pt-12 pb-24">
         {ok ? (
           <Resources
