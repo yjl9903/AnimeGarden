@@ -4,8 +4,8 @@ import { memo } from 'react';
 
 import type { Resource, Jsonify } from '@animegarden/client';
 
-import { getPikPakUrlChecker, formatChinaTime } from '@/utils';
 import { DisplayTypeColor, DisplayTypeIcon } from '@/constant';
+import { getPikPakUrlChecker, formatChinaTime, parseSize } from '@/utils';
 
 import { Tag } from './tag';
 import { Pagination, PaginationProps } from './pagination';
@@ -170,7 +170,7 @@ export const ResourceItem = memo((props: { resource: Jsonify<Resource<{ tracker:
               </span>
               {/* <span className="text-xs text-zinc-400">上传者 {r.publisher.name}</span>
           {r.fansub && <span className="text-xs text-zinc-400">字幕组 {r.fansub?.name}</span>} */}
-              <span className="text-xs text-zinc-400">大小 {r.size}</span>
+              <span className="text-xs text-zinc-400">大小 {parseSize(r.size)}</span>
               <NavLink
                 to={getDetailHref(r)}
                 className="text-link-secondary text-xs"
