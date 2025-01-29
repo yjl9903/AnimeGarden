@@ -17,7 +17,7 @@ LABEL fly_launch_runtime="Node.js"
 WORKDIR /app
 
 # Set production environment
-ENV NODE_ENV="production"
+ENV NODE_ENV="production" APP_HOST=$APP_HOST SERVER_URL=$SERVER_URL
 
 # Install pnpm
 RUN npm install -g pnpm@$PNPM_VERSION
@@ -25,9 +25,6 @@ RUN npm install -g pnpm@$PNPM_VERSION
 
 # Throw-away build stage to reduce size of final image
 FROM base AS build
-
-# Add build args to env
-ENV APP_HOST=$APP_HOST SERVER_URL=$SERVER_URL
 
 # Install packages needed to build node modules
 RUN apt-get update -qq && \
@@ -64,7 +61,7 @@ FROM base
 COPY --from=build /app /app
 
 # Listen on 3000
-ENV HOST=:: PORT=${PORT} APP_HOST=${APP_HOST} SERVER_URL=${SERVER_URL}
+ENV HOST=:: PORT=${PORT}
 
 RUN echo $APP_HOST && echo $SERVER_URL
 
