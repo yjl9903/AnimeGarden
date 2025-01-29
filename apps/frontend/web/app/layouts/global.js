@@ -32,12 +32,22 @@ function setupGlobalListener() {
     return;
   }
 
+  let ticking = false;
+  function update() {
+    if (ticking) return;
+    requestAnimationFrame(() => {
+      updateHeroLayout();
+      ticking = false;
+    });
+    ticking = true;
+  }
+
   updateHeroLayout();
 
   document.addEventListener(
     'scroll',
     () => {
-      updateHeroLayout();
+      update();
     },
     {
       capture: false,
@@ -49,13 +59,14 @@ function setupGlobalListener() {
   document.addEventListener(
     'touchmove',
     () => {
-      updateHeroLayout();
+      update();
     },
     {
       capture: false,
       passive: true
     }
   );
+
   document.addEventListener(
     'touchend',
     () => {
