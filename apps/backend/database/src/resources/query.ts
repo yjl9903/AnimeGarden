@@ -499,7 +499,7 @@ export class Task {
       conds.push((r) => publishers.some((p) => r.publisherId === p));
     }
     if (fansubs && fansubs.length > 0) {
-      conds.push((r) => fansubs.some((p) => r.publisherId === p));
+      conds.push((r) => fansubs.some((p) => r.fansubId === p));
     }
     if (types && types.length > 0) {
       conds.push((r) => types.some((t) => r.type === t));
@@ -570,7 +570,7 @@ export class Task {
       conds.push((r) => publishers.some((p) => r.publisherId === p));
     }
     if (fansubs && fansubs.length > 0) {
-      conds.push((r) => fansubs.some((p) => r.publisherId === p));
+      conds.push((r) => fansubs.some((p) => r.fansubId === p));
     }
     if (types && types.length > 0) {
       conds.push((r) => types.some((t) => r.type === t));
