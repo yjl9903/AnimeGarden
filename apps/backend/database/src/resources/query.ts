@@ -87,11 +87,13 @@ export class QueryManager {
   }
 
   public async initialize() {
-    this.find({
-      page: 1,
-      pageSize: 100,
-      types: ['动画']
-    });
+    if (!this.system.options.cron) {
+      this.find({
+        page: 1,
+        pageSize: 100,
+        types: ['动画']
+      });
+    }
 
     // LRU 垃圾回收, 每小时 1 次
     let ev: NodeJS.Timeout;

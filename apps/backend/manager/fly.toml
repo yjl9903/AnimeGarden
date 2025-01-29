@@ -33,10 +33,4 @@ primary_region = 'hkg'
   memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1
-  processes = ['server']
-
-[[vm]]
-  memory = '256mb'
-  cpu_kind = 'shared'
-  cpus = 1
-  processes = ['cron']
+  processes = ['server', 'cron']
