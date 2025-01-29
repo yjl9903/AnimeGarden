@@ -16,8 +16,12 @@ LABEL fly_launch_runtime="Node.js"
 # Node.js app lives here
 WORKDIR /app
 
+# Declare args
+ARG APP_HOST
+ARG SERVER_URL
+
 # Set production environment
-ENV NODE_ENV="production"
+ENV NODE_ENV="production" APP_HOST=$APP_HOST SERVER_URL=$SERVER_URL
 
 # Install pnpm
 RUN npm install -g pnpm@$PNPM_VERSION
@@ -46,12 +50,6 @@ RUN pnpm install --frozen-lockfile --prod=false
 
 # Copy application code
 COPY --link . .
-
-# Declare args
-ARG APP_HOST
-ARG SERVER_URL
-ENV APP_HOST=$APP_HOST SERVER_URL=$SERVER_URL
-RUN echo $APP_HOST && echo $SERVER_URL
 
 # Setup environment and Build application
 RUN pnpm run build && pnpm run build:web

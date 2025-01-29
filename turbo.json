@@ -2,10 +2,8 @@
   "$schema": "https://turborepo.org/schema.json",
   "globalEnv": [
     "APP_HOST",
-    "SERVER_PROTOCOL",
-    "SERVER_HOST",
-    "SERVER_PORT",
-    "SERVER_BASE",
+    "SERVER_URL",
+    "KEEPSHARE",
     "SSR_ADAPTER"
   ],
   "tasks": {
