@@ -165,12 +165,22 @@ export const ResourceItem = memo((props: { resource: Jsonify<Resource<{ tracker:
               className={`px2 py1 text-xs text-center text-base-600 ${DisplayTypeColor[r.type]} `}
             />
           </a> */}
-              <span className="text-xs text-zinc-400">
+              <NavLink
+                to={getDetailHref(r)}
+                className="text-link-secondary-hover-base text-xs text-zinc-400"
+              >
                 发布于 {formatChinaTime(new Date(r.createdAt))}
-              </span>
+              </NavLink>
               {/* <span className="text-xs text-zinc-400">上传者 {r.publisher.name}</span>
           {r.fansub && <span className="text-xs text-zinc-400">字幕组 {r.fansub?.name}</span>} */}
-              <span className="text-xs text-zinc-400">大小 {parseSize(r.size)}</span>
+              <a
+                href={r.magnet + r.tracker}
+                data-resource-title={r.title}
+                className="text-link-secondary-hover-base text-xs text-zinc-400"
+                aria-label="Download resource"
+              >
+                大小 {parseSize(r.size)}
+              </a>
               <NavLink
                 to={getDetailHref(r)}
                 className="text-link-secondary text-xs"

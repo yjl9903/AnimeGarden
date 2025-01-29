@@ -11,6 +11,16 @@
   @apply: text-sky-700/60 hover:text-sky-500/60;
 }
 
+.text-link-secondary-hover-base {
+  /* prettier-ignore */
+  @apply: hover:text-sky-700/60;
+}
+
+.text-link-secondary-hover-active {
+  /* prettier-ignore */
+  @apply: hover:text-sky-500/60;
+}
+
 .text-link-active {
   /* prettier-ignore */
   @apply: hover:text-sky-600;
