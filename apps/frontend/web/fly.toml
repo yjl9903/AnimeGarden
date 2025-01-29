@@ -13,7 +13,7 @@ primary_region = 'hkg'
   NODE_VERSION = '20.10.0'
   PNPM_VERSION = '9.15.4'
   APP_HOST = 'test.animes.garden'
-  SERVER_URL = 'https://animegarden-server-test.internal'
+  SERVER_URL = 'http://animegarden-server-test.internal'
 
 [processes]
   server = 'node apps/frontend/web/server.mjs'
