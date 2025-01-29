@@ -18,18 +18,14 @@ import { currentCollectionAtom } from '~/states/collection';
 export type DisplayResolvedFilterOptions = ReturnType<typeof resolveFilterOptions>;
 
 export function resolveFilterOptions(filter: Omit<ResolvedFilterOptions, 'page' | 'pageSize'>) {
-  const fansubs = filter.fansubs;
-  const type = filter.types?.[0];
+  const types = [...new Set(filter.types ?? [])];
+  const publishers = [...new Set(filter.publishers ?? [])];
+  const fansubs = [...new Set(filter.fansubs ?? [])];
 
   return {
-    publisher: filter.publishers?.[0],
+    types,
+    publishers,
     fansubs,
-    type: type
-      ? {
-          name: type,
-          color: DisplayTypeColor[type]
-        }
-      : undefined,
     before: filter.before ? new Date(filter.before) : undefined,
     after: filter.after ? new Date(filter.after) : undefined,
     search: filter.search ? removeQuote(filter.search) : [],
@@ -40,7 +36,8 @@ export function resolveFilterOptions(filter: Omit<ResolvedFilterOptions, 'page' 
 }
 
 interface Props {
-  filter?: Omit<ResolvedFilterOptions, 'page'>;
+  filter?: Omit<ResolvedFilterOptions, 'page' | 'pageSize'>;
+
   feedURL?: string;
 }
 
@@ -103,18 +100,19 @@ export function Filter(props: Props) {
 
   if (!filter) return;
 
-  const { type, fansubs, after, before, search, include, keywords, exclude } =
+  const { types, fansubs, publishers, after, before, search, include, keywords, exclude } =
     resolveFilterOptions(filter);
 
   if (
     !(
-      type ||
+      fansubs.length > 0 ||
+      publishers.length > 0 ||
+      types.length > 0 ||
       search.length > 0 ||
       include.length > 0 ||
       keywords.length > 0 ||
       before ||
-      after ||
-      fansubs
+      after
     )
   ) {
     return;
@@ -122,13 +120,34 @@ export function Filter(props: Props) {
 
   return (
     <div className="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
-      {type && (
+      {types.length > 0 && (
         <div className="space-x-2 text-0">
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">类型</span>
-          <span className={`text-4 select-text text-base-600 ${type.color}`}>{type.name}</span>
+          {types.map((type) => (
+            <span
+              key={type}
+              className={`text-4 select-text text-base-600 ${DisplayTypeColor[type]}`}
+            >
+              {type}
+            </span>
+          ))}
         </div>
       )}
-      {fansubs && (
+      {publishers.length > 0 && (
+        <div className="space-x-2 text-0">
+          <span className="text-4 text-base-800 font-bold mr2 select-none keyword">发布者</span>
+          {publishers.map((publisher) => (
+            <NavLink
+              to={`/resources/1?publisher=${publisher}`}
+              key={publisher}
+              className="text-4 select-text text-link"
+            >
+              {publisher}
+            </NavLink>
+          ))}
+        </div>
+      )}
+      {fansubs.length > 0 && (
         <div className="space-x-2 text-0">
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">字幕组</span>
           {fansubs.map((fansub) => (

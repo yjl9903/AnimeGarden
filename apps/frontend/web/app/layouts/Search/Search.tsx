@@ -25,7 +25,6 @@ const SEARCH_HELP_URL = `https://animespace.onekuma.cn/animegarden/search.html`;
 export const Search = memo(() => {
   const location = useLocation();
   const navigate = useNavigate();
-  const goTo = (url: string) => navigate(url, { state: { trigger: 'search' } });
 
   const ref = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -48,10 +47,16 @@ export const Search = memo(() => {
   const [input, setInput] = useAtom(inputAtom);
   const [search, setSearch] = useState(input);
 
+  const goTo = (url: string) => navigate(url, { state: { trigger: 'search', input } });
+
   useEffect(() => {
     if (location.state?.trigger !== 'search') {
       const content = stringifySearch(new URLSearchParams(location.search));
       setInput(content);
+    } else if (location.state?.trigger === 'search' && typeof location.state?.input === 'string') {
+      if (location.state.input !== input) {
+        setInput(location.state.input);
+      }
     }
   }, [location]);
 

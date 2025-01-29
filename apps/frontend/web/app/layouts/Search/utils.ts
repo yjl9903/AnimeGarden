@@ -63,8 +63,9 @@ export function parseSearch(input: string) {
   const keywords: string[] = [];
   const exclude: string[] = [];
 
-  const fansub: string[] = [];
-  const type: string[] = [];
+  const publishers: string[] = [];
+  const fansubs: string[] = [];
+  const types: string[] = [];
   const after: Date[] = [];
   const before: Date[] = [];
 
@@ -78,8 +79,11 @@ export function parseSearch(input: string) {
     '!,！,-,exclude:,排除:': (word) => {
       exclude.push(word);
     },
+    'publisher:,发布:,发布者:发布人:': (word) => {
+      publishers.push(word);
+    },
     'fansub:,字幕:,字幕组:': (word) => {
-      fansub.push(word);
+      fansubs.push(word);
     },
     'after:,开始:,晚于:': (word) => {
       after.push(new Date(word));
@@ -88,7 +92,7 @@ export function parseSearch(input: string) {
       before.push(new Date(word));
     },
     '类型:,type:': (word) => {
-      type.push(word);
+      types.push(word);
     }
   };
 
@@ -122,10 +126,11 @@ export function parseSearch(input: string) {
     include,
     keywords,
     exclude,
-    fansubId: fansub,
+    publishers,
+    fansubs,
     after: after.at(-1),
     before: before.at(-1),
-    type: type.at(-1)
+    types
   };
 }
 
@@ -146,19 +151,22 @@ export function stringifySearch(search: URLSearchParams) {
       content.push(...filter.exclude.map((t) => '排除:' + wrap(t)));
     }
   }
+  if (filter.publishers) {
+    content.push(...filter.publishers.map((f) => '发布者:' + f));
+  }
   if (filter.fansubs) {
     content.push(...filter.fansubs.map((f) => '字幕组:' + f));
+  }
+  if (filter.types) {
+    for (const type of filter.types) {
+      content.push('类型:' + type);
+    }
   }
   if (filter.after) {
     content.push('开始:' + formatDate(filter.after));
   }
   if (filter.before) {
     content.push('结束:' + formatDate(filter.before));
-  }
-  if (filter.types) {
-    for (const type of filter.types) {
-      content.push('类型:' + type);
-    }
   }
 
   return content.map((c) => c).join(' ');
@@ -194,9 +202,7 @@ export function resolveSearchURL(search: string) {
       return `/detail/dmhy/${match[1]}`;
     } else {
       const searchParams = stringifyURLSearch(parseSearch(search));
-      const url = new URL(location.href);
-      url.search = searchParams.toString();
-      return url.toString();
+      return `/resources/1?${searchParams.toString()}`;
     }
   }
 }
