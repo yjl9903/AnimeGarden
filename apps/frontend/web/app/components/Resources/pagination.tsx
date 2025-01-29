@@ -2,8 +2,6 @@ import clsx from 'clsx';
 
 import { Link } from '@remix-run/react';
 
-import { formatChinaTime } from '@/utils/date';
-
 export interface PaginationProps {
   page: number;
 
@@ -17,7 +15,7 @@ export interface PaginationProps {
 }
 
 export const Pagination = (props: PaginationProps) => {
-  const { page, complete, timestamp } = props;
+  const { page, complete } = props;
   const isPrev = page > 1;
   const isNext = !complete;
   const pages = isPrev
