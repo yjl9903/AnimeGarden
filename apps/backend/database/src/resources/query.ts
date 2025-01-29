@@ -612,9 +612,10 @@ export class Task {
   }
 
   public insertResources(resp: DatabaseResource[]) {
+    const visited = new Set(this.resources.map(r => r.id));
     let changed = false;
     for (const r of resp) {
-      if (this.conds.every((c) => c(r))) {
+      if (!visited.has(r.id) && this.conds.every((c) => c(r))) {
         changed = true;
         this.resources.push(r);
       }
