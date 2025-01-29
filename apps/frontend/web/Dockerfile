@@ -4,7 +4,7 @@ ARG NODE_VERSION=20.10.0
 ARG PNPM_VERSION=9.15.4
 
 ARG APP_HOST=test.animes.garden
-ARG SERVER_HOST=animegarden-server-test.internal
+ARG SERVER_URL=https://animegarden-server-test.internal
 
 ARG PORT=3000
 
@@ -27,7 +27,7 @@ RUN npm install -g pnpm@$PNPM_VERSION
 FROM base AS build
 
 # Add build args to env
-ENV APP_HOST=$APP_HOST SERVER_HOST=$SERVER_HOST
+ENV APP_HOST=$APP_HOST SERVER_URL=$SERVER_URL
 
 # Install packages needed to build node modules
 RUN apt-get update -qq && \
@@ -64,7 +64,7 @@ FROM base
 COPY --from=build /app /app
 
 # Listen on 3000
-ENV HOST=:: PORT=${PORT}
+ENV HOST=:: PORT=${PORT} APP_HOST=$APP_HOST SERVER_URL=$SERVER_URL
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE ${PORT}

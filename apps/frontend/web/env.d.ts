@@ -8,13 +8,7 @@ declare module '~build/env' {
 
   export const APP_HOST: string;
 
-  export const SERVER_HOST: string | undefined;
-
-  export const SERVER_PORT: string | undefined;
-
-  export const SERVER_PROTOCOL: string | undefined;
-
-  export const SERVER_BASE: string | undefined;
+  export const SERVER_URL: string | undefined;
 }
 
 declare module 'csstype' {

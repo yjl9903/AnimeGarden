@@ -9,6 +9,7 @@
     "build:node": "unbuild",
     "deploy:cloudflare": "wrangler deploy",
     "dev": "remix vite:dev",
+    "dev:node": "unbuild --stub",
     "format": "prettier . **/*.{mjs,ts,tsx} --write",
     "preview": "remix-serve ./build/server/index.js",
     "start:node": "node server.mjs",

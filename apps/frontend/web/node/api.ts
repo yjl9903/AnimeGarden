@@ -2,31 +2,43 @@ import type { Handler } from 'hono';
 
 import type { Bindings } from './types';
 
+import { env } from './env';
+
+const SERVER_URL = new URL(env().SERVER_URL);
+
 export const api = <E extends { Bindings: Bindings } = { Bindings: Bindings }>(): Handler<E> => {
   return async (ctx) => {
     const url = new URL(ctx.req.url);
-    const { SERVER_PROTOCOL, SERVER_HOST, SERVER_PORT, SERVER_BASE } = ctx.env;
 
-    if (SERVER_HOST) {
-      url.protocol = SERVER_PROTOCOL + ':';
-      url.host = SERVER_HOST;
-      url.port = SERVER_PORT ?? '';
-    }
+    url.protocol = SERVER_URL.protocol;
+    url.host = SERVER_URL.host;
+    url.port = SERVER_URL.port;
 
-    url.pathname = SERVER_BASE
-      ? url.pathname.replace(/^\/api\/?/, SERVER_BASE)
+    url.pathname = SERVER_URL.pathname
+      ? url.pathname.replace(/^\/api\/?/, SERVER_URL.pathname)
       : url.pathname.replace(/^\/api/, '');
 
     try {
+      const now = performance.now();
+      console.info(`--> ${ctx.req.method} ${url.toString()}`);
+
       const request = ctx.req.raw;
       const subRequest = new Request(url, request.clone());
-      const response = await fetch(subRequest);
+      const subResponse = await fetch(subRequest);
+      const response = subResponse.clone();
+      const body = await response.text();
 
-      return new Response(response.body, {
+      console.info(
+        `<-- ${ctx.req.method} ${url.toString()} ${response.status} ${Math.floor(performance.now() - now)}ms`
+      );
+
+      return new Response(body, {
         headers: {
-          'cache-control': request.method === 'GET' ? `public, max-age=300` : 'no-store',
-          // @ts-ignore
-          ...Object.fromEntries(response.headers.entries()),
+          'content-type': 'application/json; charset=UTF-8',
+          'cache-control':
+            (response.headers.get('cache-control') ?? request.method === 'GET')
+              ? `public, max-age=300`
+              : '',
           'access-control-allow-origin': '*',
           'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
           'access-control-allow-headers': 'Content-Type, Cache-Control, Authorization'

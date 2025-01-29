@@ -2,6 +2,8 @@ import type { Handler, Env } from 'hono';
 
 import { createRequestHandler, type ServerBuild } from '@remix-run/node';
 
+import { env } from './env';
+
 export interface RemixHandlerOptions {
   build: ServerBuild;
 
@@ -15,7 +17,7 @@ export const remix = <E extends Env = any>(options: RemixHandlerOptions): Handle
     const request = ctx.req.raw;
 
     try {
-      const loadContext = {};
+      const loadContext = env(process.env);
       return await handleRemixRequest(request, loadContext);
     } catch (error) {
       throw error;

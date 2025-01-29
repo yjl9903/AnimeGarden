@@ -1,4 +1,4 @@
-import { APP_HOST, SERVER_HOST, SERVER_PORT, SERVER_PROTOCOL, SERVER_BASE } from '~build/env';
+import { APP_HOST, SERVER_URL } from '~build/env';
 
 import {
   type ProviderType,
@@ -9,8 +9,8 @@ import {
 } from '@animegarden/client';
 
 export const baseURL = import.meta.env.SSR
-  ? SERVER_HOST
-    ? `${SERVER_PROTOCOL || 'http'}://${SERVER_HOST}${SERVER_PORT ? ':' + SERVER_PORT : ''}${SERVER_BASE}`
+  ? SERVER_URL
+    ? SERVER_URL
     : `https://${APP_HOST}/api/`
   : `https://${APP_HOST}/api/`;
 
@@ -40,6 +40,7 @@ export async function fetchResources(
   } = {}
 ) {
   try {
+    console.log('Request', baseURL);
     const resp = await rawFetchResources<FetchResourcesOptions & { tracker: true }>({
       fetch: options.fetch ?? ofetch,
       baseURL,

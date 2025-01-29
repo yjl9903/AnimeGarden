@@ -7,19 +7,12 @@ import UnoCSS from 'unocss/vite';
 import Info from 'unplugin-info/vite';
 import Analytics from 'unplugin-analytics/vite';
 
-const KEEPSHARE = 'gv78k1oi';
+import { env } from './node/env';
 
-const APP_HOST = process.env.APP_HOST ?? `garden.breadio.wiki`;
+const { APP_HOST, SERVER_URL, KEEPSHARE } = env();
 
-const SERVER_HOST = process.env.SERVER_HOST;
-const SERVER_PORT = process.env.SERVER_PORT;
-const SERVER_PROTOCOL = process.env.SERVER_PROTOCOL ?? 'http'; // http or https
-const SERVER_BASE = SERVER_HOST ? (process.env.SERVER_BASE ?? '') : '';
-
-if (SERVER_HOST) {
-  console.log(
-    `Server is located at: ${SERVER_PROTOCOL}://${SERVER_HOST}${SERVER_PORT ? ':' + SERVER_PORT : ''}${SERVER_BASE}`
-  );
+if (SERVER_URL) {
+  console.log(`API Server is located at: ${SERVER_URL}`);
 }
 
 // Analytics Engines
@@ -54,21 +47,9 @@ export default defineConfig({
          */
         APP_HOST,
         /**
-         * The host of server
+         * The URL of API server
          */
-        SERVER_HOST,
-        /**
-         * The port of server
-         */
-        SERVER_PORT,
-        /**
-         * The protocal of server
-         */
-        SERVER_PROTOCOL,
-        /**
-         * The base url of server
-         */
-        SERVER_BASE
+        SERVER_URL
       },
       cloudflare: process.env.SSR_ADAPTER === 'cloudflare'
     }),
