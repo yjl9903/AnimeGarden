@@ -15,7 +15,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   const { ok, resources, timestamp } = await fetchResources({
     page: 1,
     pageSize: 80,
-    type: '動畫'
+    type: '动画'
   });
   return json({ ok, resources: resources as Resource<{ tracker: true }>[], timestamp });
 };
