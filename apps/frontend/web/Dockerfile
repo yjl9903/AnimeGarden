@@ -4,7 +4,7 @@ ARG NODE_VERSION=20.10.0
 ARG PNPM_VERSION=9.15.4
 
 ARG APP_HOST=test.animes.garden
-ARG SERVER_URL=https://animegarden-server-test.internal
+ARG SERVER_URL=https://test.api.animes.garden/
 
 ARG PORT=3000
 
@@ -51,6 +51,7 @@ COPY --link . .
 ARG APP_HOST
 ARG SERVER_URL
 ENV APP_HOST=$APP_HOST SERVER_URL=$SERVER_URL
+RUN echo $APP_HOST && echo $SERVER_URL
 
 # Setup environment and Build application
 RUN pnpm run build && pnpm run build:web
@@ -72,7 +73,6 @@ ENV HOST=:: PORT=${PORT}
 ARG APP_HOST
 ARG SERVER_URL
 ENV APP_HOST=$APP_HOST SERVER_URL=$SERVER_URL
-RUN echo $APP_HOST && echo $SERVER_URL
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE ${PORT}
