@@ -24,9 +24,9 @@ export const defineSitemapsRoutes = defineHandler((sys, app) =>
         if (2020 <= year && year <= now.getFullYear()) {
           if (1 <= month && month <= (year < now.getFullYear() ? 12 : now.getMonth() + 1)) {
             const resources = await fetchMonth(sys, year, month);
-
             return c.json({
               status: 'OK',
+              count: resources.length,
               resources
             });
           }
@@ -55,7 +55,7 @@ const fetchMonth = memoAsync(
           gte(resources.createdAt, getShanghai(year, month, 1)),
           lt(
             resources.createdAt,
-            getShanghai(month === 12 ? year + 1 : year, month === 12 ? 1 : month, 1)
+            getShanghai(month === 12 ? year + 1 : year, month === 12 ? 1 : month + 1, 1)
           )
         )
     });

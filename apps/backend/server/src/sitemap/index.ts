@@ -13,7 +13,7 @@ export function sitemapIndex(options: SitemapIndexOptions): MiddlewareHandler {
     try {
       const smis = new SitemapIndexStream();
       const urls = await options.getUrls(ctx);
-      if (urls) {
+      if (urls && urls.length > 0) {
         for (const url of urls) {
           smis.write({ url });
         }

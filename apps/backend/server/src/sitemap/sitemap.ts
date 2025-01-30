@@ -1,11 +1,16 @@
 import type { Context, MiddlewareHandler } from 'hono';
 
-import { type SitemapItem, SitemapStreamOptions, SitemapStream, streamToPromise } from 'sitemap';
+import {
+  type SitemapItemLoose,
+  type SitemapStreamOptions,
+  SitemapStream,
+  streamToPromise
+} from 'sitemap';
 
 export interface SitemapOptions {
   sitemap: SitemapStreamOptions;
 
-  getURLs: (ctx: Context) => Promise<SitemapItem[] | undefined>;
+  getURLs: (ctx: Context) => Promise<SitemapItemLoose[] | undefined>;
 }
 
 export function sitemap(options: SitemapOptions): MiddlewareHandler {
@@ -13,7 +18,7 @@ export function sitemap(options: SitemapOptions): MiddlewareHandler {
     const sms = new SitemapStream(options.sitemap);
     try {
       const items = await options.getURLs(ctx);
-      if (items) {
+      if (items && items.length > 0) {
         for (const item of items) {
           sms.write(item);
         }

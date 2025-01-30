@@ -3,12 +3,16 @@ import { etag as honoEtag } from 'hono/etag';
 
 import { sitemap, sitemapIndex } from '@animegarden/server';
 
+import { version } from '../../../../package.json';
+
 import { env } from './env';
 import { MemoryCacheStorage, cache as honoCache } from './caches';
 
 const app = new Hono();
 const storage = new MemoryCacheStorage();
 const { APP_HOST, SERVER_URL } = env();
+
+const SITE = `https://${APP_HOST}`;
 
 const index = sitemapIndex({
   getUrls: async () => {
@@ -25,7 +29,7 @@ const index = sitemapIndex({
       }
     }
 
-    return [...pages, ...months.reverse()].map((url) => `https://${APP_HOST}/${url}`);
+    return [...pages, ...months.reverse()].map((url) => `${SITE}/${url}`);
   }
 });
 
@@ -40,20 +44,46 @@ const items = sitemap({
   async getURLs(ctx) {
     const url = new URL(ctx.req.url);
 
-    if (url.pathname === '/sitemap-0.xml') {
-    } else if (url.pathname === '/sitemap-subjects.xml') {
-    } else {
-      const match = /\/sitemap-(\d{4})-(\d{1,2}).xml$/.exec(url.pathname);
-      if (match) {
-        const now = new Date();
-        const year = +match[1];
-        const month = +match[2];
-        if (2020 <= year && year <= now.getFullYear()) {
-          if (1 <= month && month <= (year < now.getFullYear() ? 12 : now.getMonth() + 1)) {
-            return [];
+    try {
+      if (url.pathname === '/sitemap-0.xml') {
+        return [{ url: `${SITE}/` }, { url: `${SITE}/anime` }];
+      } else if (url.pathname === '/sitemap-subjects.xml') {
+        const url = new URL('sitemaps/subjects', SERVER_URL);
+        const resp = await fetch(url, { headers: { 'user-agent': `animegarden@${version}` } });
+        if (resp.ok) {
+          const data: any = await resp.json();
+          return data.subjects.map((r: any) => ({
+            url: `${SITE}/subject/${r.id}`
+          }));
+        } else {
+          console.error(resp);
+        }
+      } else {
+        const match = /\/sitemap-(\d{4})-(\d{1,2}).xml$/.exec(url.pathname);
+        if (match) {
+          const now = new Date();
+          const year = +match[1];
+          const month = +match[2];
+          if (2020 <= year && year <= now.getFullYear()) {
+            if (1 <= month && month <= (year < now.getFullYear() ? 12 : now.getMonth() + 1)) {
+              const url = new URL(`sitemaps/${year}/${month}`, SERVER_URL);
+              const resp = await fetch(url, {
+                headers: { 'user-agent': `animegarden@${version}` }
+              });
+              if (resp.ok) {
+                const data: any = await resp.json();
+                return data.resources.map((r: any) => ({
+                  url: `${SITE}/detail/${r.provider}/${r.providerId}`
+                }));
+              } else {
+                console.error(resp);
+              }
+            }
           }
         }
       }
+    } catch (error) {
+      console.error(error);
     }
 
     return undefined;
@@ -70,8 +100,6 @@ const cache = honoCache({
 
 app.get('/sitemap-index.xml', etag, cache, index);
 
-app.get('/sitemap-0.xml', etag, cache, items);
-app.get('/sitemap-subjects.xml', etag, cache, items);
-app.get('/sitemap-:year{[0-9]+}-:month{[0-9]+}.xml', etag, cache, items);
+app.get('/:sitemap{sitemap-[a-z0-9-]\\.xml}', etag, cache, items);
 
 export const sitemaps = app;
