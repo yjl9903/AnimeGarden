@@ -3,19 +3,18 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createConsola } from 'consola';
 
 import { Hono } from 'hono';
-import { etag } from 'hono/etag';
-import { serve } from '@hono/node-server';
 import { logger } from 'hono/logger';
+import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
-import { createConsola } from 'consola';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore This file won’t exist if it hasn’t yet been built
 import * as build from './build/server/index.js'; // eslint-disable-line import/no-unresolved
 
-import { api, remix, cache, MemoryCacheStorage } from './dist/node/index.mjs';
+import { api, remix, cache, sitemaps, MemoryCacheStorage } from './dist/node/index.mjs';
 
 createConsola().withTag('Web').wrapConsole();
 
@@ -67,16 +66,13 @@ app.all(
   serveStatic({ root: path.relative(process.cwd(), ClientRoot) })
 );
 
+app.route('/', sitemaps);
+
 app.all('*', remix({ build, mode: process.env.NODE_ENV }));
 
 app.onError((err, c) => {
-  if (err.message) {
-    console.log(...err.message.trim().split('\n'));
-  }
-  if (err.stack) {
-    console.log(...err.stack.trim().split('\n'));
-  }
-  return c.json({ status: 500, messsage: err?.message ?? 'Internal Error' }, 500);
+  console.error(err);
+  return c.text('Internal Error', 500);
 });
 
 // Listening

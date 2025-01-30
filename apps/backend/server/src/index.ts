@@ -15,12 +15,15 @@ import { defineResourcesRoutes } from './routes/resources';
 import { defineCollectionsRoutes } from './routes/collections';
 import { defineFeedRoutes } from './routes/feed';
 import { defineAdminRoutes } from './routes/admin';
+import { defineSitemapsRoutes } from './routes/sitemaps';
 
 export * from './app';
 
 export * from './cron';
 
 export * from './rss';
+
+export * from './sitemap';
 
 function registerHono(sys: System, app: Hono) {
   app.use('*', cors());
@@ -48,14 +51,13 @@ function registerHono(sys: System, app: Hono) {
   defineCollectionsRoutes(sys, app);
   defineFeedRoutes(sys, app);
   defineAdminRoutes(sys, app);
+  defineSitemapsRoutes(sys, app);
 
   // Handle errors
   app.onError((err, c) => {
     sys.logger.error(err);
 
-    c.status(500);
-
-    return c.json({ status: 'ERROR' });
+    return c.json({ status: 'ERROR' }, 500);
   });
 
   process.on('uncaughtException', (err) => {
