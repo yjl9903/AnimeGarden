@@ -228,6 +228,7 @@ export async function fetchResourceDetail(
     }
 
     const resp = await fetch(url.toString(), {
+      headers,
       signal: options.signal
     });
     if (resp.ok) {

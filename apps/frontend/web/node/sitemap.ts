@@ -1,9 +1,8 @@
 import { Hono } from 'hono';
 import { etag as honoEtag } from 'hono/etag';
 
+import { fetchAPI } from '@animegarden/client';
 import { sitemap, sitemapIndex } from '@animegarden/server';
-
-import { version } from '../../../../package.json';
 
 import { env } from './env';
 import { MemoryCacheStorage, cache as honoCache } from './caches';
@@ -48,16 +47,13 @@ const items = sitemap({
       if (url.pathname === '/sitemap-0.xml') {
         return [{ url: `${SITE}/` }, { url: `${SITE}/anime` }];
       } else if (url.pathname === '/sitemap-subjects.xml') {
-        const url = new URL('sitemaps/subjects', SERVER_URL);
-        const resp = await fetch(url, { headers: { 'user-agent': `animegarden@${version}` } });
-        if (resp.ok) {
-          const data: any = await resp.json();
-          return data.subjects.map((r: any) => ({
-            url: `${SITE}/subject/${r.id}`
-          }));
-        } else {
-          console.error(resp);
-        }
+        const data: any = await fetchAPI('sitemaps/subjects', undefined, {
+          baseURL: SERVER_URL,
+          retry: 5
+        });
+        return data.subjects.map((r: any) => ({
+          url: `${SITE}/subject/${r.id}`
+        }));
       } else {
         const match = /\/sitemap-(\d{4})-(\d{1,2}).xml$/.exec(url.pathname);
         if (match) {
@@ -66,18 +62,13 @@ const items = sitemap({
           const month = +match[2];
           if (2020 <= year && year <= now.getFullYear()) {
             if (1 <= month && month <= (year < now.getFullYear() ? 12 : now.getMonth() + 1)) {
-              const url = new URL(`sitemaps/${year}/${month}`, SERVER_URL);
-              const resp = await fetch(url, {
-                headers: { 'user-agent': `animegarden@${version}` }
+              const data: any = await fetchAPI(`sitemaps/${year}/${month}`, undefined, {
+                baseURL: SERVER_URL,
+                retry: 5
               });
-              if (resp.ok) {
-                const data: any = await resp.json();
-                return data.resources.map((r: any) => ({
-                  url: `${SITE}/detail/${r.provider}/${r.providerId}`
-                }));
-              } else {
-                console.error(resp);
-              }
+              return data.resources.map((r: any) => ({
+                url: `${SITE}/detail/${r.provider}/${r.providerId}`
+              }));
             }
           }
         }
@@ -100,6 +91,6 @@ const cache = honoCache({
 
 app.get('/sitemap-index.xml', etag, cache, index);
 
-app.get('/:sitemap{sitemap-[a-z0-9-]\\.xml}', etag, cache, items);
+app.get('/:sitemap{sitemap-[a-z0-9-]+\\.xml}', etag, cache, items);
 
 export const sitemaps = app;
