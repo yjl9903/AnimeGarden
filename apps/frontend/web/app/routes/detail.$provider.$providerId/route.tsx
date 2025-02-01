@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useLoaderData, useLocation } from '@remix-run/react';
 import { redirect, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare';
 

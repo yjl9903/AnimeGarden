@@ -14,10 +14,16 @@ html {
 
 #hero-banner {
   @apply: border-bottom [border-bottom:1px_solid_rgb(187_187_187_/_20%)];
+
+  /* background: url(https://pbs.twimg.com/media/GirTmexbYAAk_0F?format=jpg&name=4096x4096);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center; */
 }
 
 #hero-placeholder.fix-hero {
-  @apply: block! fixed top-0 inset-0 transform-gpu [-webkit-backdrop-filter:saturate(180%)_blur(20px)] [backdrop-filter:saturate(180%)_blur(20px)] [backface-visibility:hidden] bg-[#fef8f7]/80 [border-bottom:1px_solid_rgb(187_187_187_/_20%)];
+  @apply: block! fixed top-0 inset-0
+  @apply: transform-gpu [-webkit-backdrop-filter:saturate(180%)_blur(20px)] [backdrop-filter:saturate(180%)_blur(20px)] [backface-visibility:hidden] bg-[#fef8f7]/80 [border-bottom:1px_solid_rgb(187_187_187_/_20%)];
 }
 
 /* main layout */
