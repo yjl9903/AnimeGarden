@@ -3,6 +3,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vite';
 import { vitePlugin as remix } from '@remix-run/dev';
 
+import Icons from 'unplugin-icons/vite';
 import UnoCSS from 'unocss/vite';
 import Info from 'unplugin-info/vite';
 import Analytics from 'unplugin-analytics/vite';
@@ -74,6 +75,7 @@ export default defineConfig({
         v3_throwAbortReason: true
       }
     }),
+    Icons({ compiler: 'jsx', jsx: 'react' }),
     tsconfigPaths(),
     {
       name: 'animegarden-web:print',

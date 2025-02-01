@@ -1,21 +1,23 @@
+/* Background */
+html {
+  @apply: bg-[#fef8f7];
+}
+
 /* Hero */
-.hero {
-  height: calc(
-    var(--hero-pt, var(--max-hero-pt)) + var(--search-height) + var(--hero-pb, var(--max-hero-pb))
-  ) !important;
+#hero-search {
+  @apply: absolute top-$search-top;
 }
 
-.hero-top {
-  top: calc(var(--hero-pt, var(--max-hero-pt)) - var(--max-hero-pt)) !important;
+#hero-search.fix-hero {
+  @apply: fixed top-[0px];
 }
 
-.hero-search {
-  top: var(--hero-pt, var(--max-hero-pt)) !important;
+#hero-banner {
+  @apply: border-bottom [border-bottom:1px_solid_rgb(187_187_187_/_20%)];
 }
 
-.hero-bottom {
-  top: calc(var(--hero-pt, var(--max-hero-pt)) + var(--search-height)) !important;
-  height: var(--hero-pb, var(--max-hero-pb)) !important;
+#hero-placeholder.fix-hero {
+  @apply: block! fixed top-0 inset-0 transform-gpu [-webkit-backdrop-filter:saturate(180%)_blur(20px)] [backdrop-filter:saturate(180%)_blur(20px)] [backface-visibility:hidden] bg-[#fef8f7]/80 [border-bottom:1px_solid_rgb(187_187_187_/_20%)];
 }
 
 /* main layout */

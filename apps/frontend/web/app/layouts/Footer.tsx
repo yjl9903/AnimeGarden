@@ -1,20 +1,23 @@
 import clsx from 'clsx';
 import { useAtomValue } from 'jotai';
 import { memo, useRef } from 'react';
+import { NavLink } from '@remix-run/react';
 
-import { formatChinaTime } from '@/utils/date';
+import { formatChinaTime } from '~/utils';
 
 import { isOpenSidebar } from './Sidebar';
 
 export interface FooterProps {
   timestamp: string | undefined;
+
+  feedURL: string | undefined;
 }
 
 export const Footer = memo((props: FooterProps) => {
   const isOpen = useAtomValue(isOpenSidebar);
 
   const ref = useRef<{ timestamp?: string }>({});
-  const { timestamp: timestampStr } = props;
+  const { timestamp: timestampStr, feedURL } = props;
   if (timestampStr) {
     if (!ref.current) ref.current = {};
     ref.current.timestamp = timestampStr;
@@ -27,11 +30,12 @@ export const Footer = memo((props: FooterProps) => {
   return (
     <footer
       className={clsx(
-        'w-full',
         isOpen && 'main-with-sidebar',
+        'w-full',
+        'relative',
         'flex',
         'justify-center',
-        'border-t border-t-1 py-6 h-[196px] bg-[#fef8f7] bg-op-50'
+        'border-t border-t-1 py-6 h-[196px] bg-[#fef8f7]'
       )}
     >
       <div className={clsx('main', 'w-full')}>
@@ -46,9 +50,9 @@ export const Footer = memo((props: FooterProps) => {
           <div className="flex mt-2">
             <span className="text-main-900 font-bold select-none">关于</span>
             <span className="i-carbon:chevron-right text-xl lt-sm:text-base text-main-900 font-bold select-none relative top-[2px]"></span>
-            <a href="https://animespace.onekuma.cn" className="ml-2 lt-sm:ml-2">
+            <NavLink to="/about" className="ml-2 lt-sm:ml-2">
               关于本站
-            </a>
+            </NavLink>
             <a
               href="https://github.com/yjl9903/AnimeGarden"
               target="_blank"
@@ -95,11 +99,11 @@ export const Footer = memo((props: FooterProps) => {
               </span>
               <span> | </span>
               <span>
-                <a href="/feed.xml">RSS</a>
+                <a href={feedURL ?? '/feed.xml'}>RSS</a>
               </span>
               <span> | </span>
               <span>
-                <a href="/site-map.xml">站点地图</a>
+                <a href="/sitemap-index.xml">站点地图</a>
               </span>
             </div>
           </div>

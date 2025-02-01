@@ -8,6 +8,8 @@ import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { APP_HOST } from '~build/env';
 
 import { generateFeed } from '~/utils/feed';
+import { base64URLencode } from '~/utils/json';
+import { DisplayTypeColor } from '~/utils';
 import { getActivePageTab } from '~/utils/routes';
 import { collectionsAtom, type Collection } from '~/states/collection';
 import {
@@ -19,11 +21,9 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/ui/tooltip';
 import { resolveFilterOptions } from '~/routes/resources.($page)/Filter';
-import { base64URLencode } from '~/utils/json';
 
 import { stringifySearch } from '../Search/utils';
 
-import './sidebar.css';
 import { isOpenSidebar } from './atom';
 
 type CollectionItem = Collection['items'][0];
@@ -41,7 +41,7 @@ export const Sidebar = memo(() => {
   const [isOpen] = useAtom(isOpenSidebar);
 
   return (
-    <div className="sidebar-root">
+    <div className="sidebar-root" suppressHydrationWarning={true}>
       {!isOpen && <SidebarTrigger></SidebarTrigger>}
       {isOpen && <SidebarContent></SidebarContent>}
     </div>
@@ -411,12 +411,17 @@ const CollectionItemContent = memo(
                     <span className={`select-text text-base-600`}>{item.name}</span>
                   </div>
                 )}
-                {display.type && (
+                {display.types.length > 0 && (
                   <div>
-                    <span className="font-bold mr2 select-none">类型</span>
-                    <span className={`select-text text-base-600 ${display.type.color}`}>
-                      {display.type.name}
-                    </span>
+                    <span className="font-bold select-none">类型</span>
+                    {display.types.map((type) => (
+                      <span
+                        key={type}
+                        className={`select-text text-base-600 ml2 ${DisplayTypeColor[type]}`}
+                      >
+                        {type}
+                      </span>
+                    ))}
                   </div>
                 )}
                 {display.search.length > 0 && (

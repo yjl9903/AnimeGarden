@@ -12,15 +12,3 @@ export const DisplayTypeColor: Record<string, string> = {
   特摄: 'text-[#a52a2a]',
   其他: 'text-base-800'
 };
-
-export const DisplayTypeIcon: Record<string, string> = {
-  动画: 'i-solar:tv-linear',
-  合集: 'i-solar:folder-with-files-outline',
-  漫画: 'i-solar:notebook-minimalistic-linear',
-  音乐: 'i-solar:music-note-2-outline',
-  日剧: 'i-solar:videocamera-record-outline',
-  RAW: 'i-solar:file-linear',
-  游戏: 'i-solar:gamepad-broken',
-  特摄: 'i-solar:videocamera-record-outline',
-  其他: 'i-solar:document-text-outline'
-};

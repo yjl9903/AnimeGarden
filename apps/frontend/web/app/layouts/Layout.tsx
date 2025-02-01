@@ -4,14 +4,15 @@ import { NavLink } from '@remix-run/react';
 import { useAtomValue } from 'jotai';
 
 import Search from './Search';
-import { Loading } from './Loading';
 import { Footer } from './Footer';
+import { Loading } from './Loading';
 import { isOpenSidebar, Sidebar } from './Sidebar';
 
-export const NavHeight = 68;
-export const MaxPaddingTop = 152;
-export const MaxPaddingBottom = 96;
-export const SearchHeight = NavHeight;
+export const NavHeight = 66;
+
+export const SearchTop = 128;
+
+export const HeroHeight = 300;
 
 export interface LayoutProps {
   children?: React.ReactNode;
@@ -24,60 +25,50 @@ export default function Layout(props: LayoutProps) {
   const isOpen = useAtomValue(isOpenSidebar);
 
   return (
-    <div
-      className="w-full"
-      style={{ '--nav-height': `${NavHeight - 2}px`, '--search-height': `${SearchHeight}px` }}
-    >
+    <>
       <Hero feedURL={feedURL}></Hero>
-      <div
-        className="flex"
-        style={{ paddingTop: `${MaxPaddingTop + NavHeight + MaxPaddingBottom}px` }}
-      ></div>
-      <div className={clsx('w-full flex', isOpen && 'main-with-sidebar')}>
+      <div className={clsx('w-full flex', isOpen ? 'main-with-sidebar' : 'main-without-sidebar')}>
         <Sidebar></Sidebar>
         <div className="flex-auto flex items-center justify-center min-h-[calc(100vh-316px-196px)]">
           <main className="main">{props.children}</main>
         </div>
       </div>
-      <Footer timestamp={timestamp}></Footer>
+      <Footer timestamp={timestamp} feedURL={feedURL}></Footer>
       <Loading></Loading>
-    </div>
+    </>
   );
 }
 
 const Hero = memo((props: { feedURL?: string }) => {
   return (
-    <div className="w-full">
-      <div
-        className="hero z-1 w-full fixed bg-[#fef8f7] border-b border-b-gray-200"
-        // style={{ height: `${height}px` }}
-      ></div>
+    <>
+      <search
+        id="hero-search"
+        className="w-full h-$nav-height z-12 flex items-center justify-center pointer-events-none"
+        suppressHydrationWarning={true}
+      >
+        <div className="vercel relative h-[44.4px] md:w-[600px] lt-md:w-[95vw] max-w-full pointer-events-auto">
+          <Search></Search>
+        </div>
+      </search>
       <Header feedURL={props.feedURL}></Header>
       <div
-        className="hero-top lg:z-12 lt-lg:z-10 fixed w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none"
+        id="hero-banner"
+        className="w-full h-$hero-height bg-[#fef8f7]"
         suppressHydrationWarning={true}
       >
-        <NavLink to="/" className="pointer-events-auto cursor-pointer">
-          <span>🌸 Anime Garden</span>
-        </NavLink>
-      </div>
-      <div
-        className="hero-search w-full flex justify-center items-center fixed lg:z-12 lt-lg:z-10 pointer-events-none"
-        suppressHydrationWarning={true}
-        style={{
-          height: `${NavHeight}px`,
-          paddingTop: '8px',
-          paddingBottom: '8px'
-        }}
-      >
-        <div className="main flex justify-center lg:px-[220px]">
-          <div className="vercel relative h-[44.4px] xl:w-[800px] md:w-[600px] lt-md:w-[95vw] max-w-full pointer-events-auto">
-            <Search></Search>
-          </div>
+        <div className="lg:z-12 lt-lg:z-10 w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none">
+          <NavLink to="/" className="pointer-events-auto cursor-pointer">
+            <span>🌸 Anime Garden</span>
+          </NavLink>
         </div>
       </div>
-      <div className="hero-bottom z-10 fixed w-full" suppressHydrationWarning={true}></div>
-    </div>
+      <div
+        id="hero-placeholder"
+        className="w-full h-$nav-height hidden z-1"
+        suppressHydrationWarning={true}
+      ></div>
+    </>
   );
 });
 
@@ -85,8 +76,8 @@ const Header = memo((props: { feedURL?: string }) => {
   const { feedURL } = props;
 
   return (
-    <header className="z-11 bg-[#fef8f7] fixed pt-[1px] flex justify-center items-center w-full h-$nav-height text-base-500">
-      <nav className="main flex gap-1 [&>div]:leading-$nav-height">
+    <header className="fixed z-11 pt-[1px] flex justify-center items-center w-full h-$nav-height text-base-500">
+      <nav className="main flex gap-1 [&>div]:(leading-$nav-height)">
         <div className="box-content w-[32px] pl3 lt-sm:pl1 text-2xl text-center font-quicksand font-bold">
           <NavLink to="/">🌸</NavLink>
         </div>

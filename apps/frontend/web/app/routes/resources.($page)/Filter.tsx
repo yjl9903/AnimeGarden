@@ -8,8 +8,7 @@ import type { ResolvedFilterOptions } from '@animegarden/client';
 
 import { APP_HOST } from '~build/env';
 
-import { removeQuote } from '~/utils';
-import { DisplayTypeColor } from '~/constant';
+import { removeQuote, DisplayTypeColor } from '~/utils';
 import { Button } from '~/components/ui/button';
 import { SearchTooltip } from '~/components/Help';
 import { isOpenSidebar } from '~/layouts/Sidebar/atom';

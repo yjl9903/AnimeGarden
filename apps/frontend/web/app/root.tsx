@@ -4,9 +4,8 @@ import { Provider } from 'jotai';
 import { kebabCase } from 'scule';
 import { useState, useEffect } from 'react';
 
-import global from '~/layouts/global.js?raw';
 import { Toaster } from '~/components/ui/sonner';
-import { MaxPaddingTop, MaxPaddingBottom } from '~/layouts/Layout';
+import { NavHeight, SearchTop, HeroHeight } from '~/layouts/Layout';
 
 import Tags from '~analytics/scripts';
 
@@ -14,7 +13,8 @@ import 'virtual:uno.css';
 
 import './styles/main.css';
 import './styles/sonner.css';
-import './layouts/layout.css';
+import './styles/layout.css';
+import './styles/sidebar.css';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [isClient, setIsClient] = useState(false);
@@ -64,18 +64,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body
         className="font-sans relative"
-        style={{ '--max-hero-pt': `${MaxPaddingTop}px`, '--max-hero-pb': `${MaxPaddingBottom}px` }}
+        style={{
+          '--nav-height': `${NavHeight}px`,
+          '--search-top': `${SearchTop}px`,
+          '--hero-height': `${HeroHeight}px`
+        }}
         suppressHydrationWarning={true}
       >
-        <div
-          className={
-            'page-overlay absolute w-full h-full bg-white z-9999 ' + (isClient ? 'hidden' : '')
-          }
-          suppressHydrationWarning={true}
-        ></div>
         <Provider>{children}</Provider>
-        <ScrollRestoration beforeScroll={(_, y) => window.updateHeroLayout?.(y)} />
-        <script dangerouslySetInnerHTML={{ __html: global }}></script>
+        <ScrollRestoration />
         <Scripts />
         <Toaster />
       </body>

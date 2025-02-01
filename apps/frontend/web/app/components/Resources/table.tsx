@@ -1,11 +1,16 @@
 import { NavLink, useLocation, type Location } from '@remix-run/react';
 
+import CarbonError from '~icons/carbon/error';
+import CarbonLaunch from '~icons/carbon/launch';
+import CarbonPlay from '~icons/carbon/play';
+import CarbonDownload from '~icons/carbon/download';
+
 import { memo } from 'react';
 
 import type { Resource, Jsonify } from '@animegarden/client';
 
-import { DisplayTypeColor, DisplayTypeIcon } from '@/constant';
-import { getPikPakUrlChecker, formatChinaTime, parseSize } from '@/utils';
+import { CarbonTypes, DisplayTypeIcon } from '~/components/Icons';
+import { DisplayTypeColor, getPikPakUrlChecker, formatChinaTime, parseSize } from '~/utils';
 
 import { Tag } from './tag';
 import { Pagination, PaginationProps } from './pagination';
@@ -50,7 +55,7 @@ export default function ResourcesTable(props: ResourcesTableProps) {
               <th className="py3 pl3 lt-sm:pl1 text-left xl:min-w-[600px] lg:min-w-[480px]">
                 <div className="flex">
                   <div className="flex-shrink-0 mr3 flex justify-center items-center w-[32px]">
-                    <span className="text-2xl i-carbon-types"></span>
+                    <CarbonTypes />
                   </div>
                   <div>资源</div>
                 </div>
@@ -69,7 +74,7 @@ export default function ResourcesTable(props: ResourcesTableProps) {
       {props.page !== undefined && resources.length === 0 && (
         <div>
           <div className="h-20 text-2xl text-orange-600/80 flex items-center justify-center">
-            <span className="mr2 i-carbon-error" />
+            <CarbonError className="mr-2"></CarbonError>
             <span>没有搜索到匹配的资源</span>
           </div>
           <div className="flex items-center justify-center">
@@ -123,7 +128,7 @@ export const ResourceItem = memo((props: { resource: Jsonify<Resource<{ tracker:
               to={`/resources/1?${followSearch(location, { type: r.type })}`}
               className={`flex items-center justify-center h-[32px] w-[32px] rounded-full bg-gray-100 hover:bg-gray-200 ${DisplayTypeColor[r.type]}`}
             >
-              <span className={`text-xl ${DisplayTypeIcon[r.type]}`}></span>
+              {DisplayTypeIcon[r.type]({})}
             </NavLink>
           </div>
           <div>
@@ -186,7 +191,7 @@ export const ResourceItem = memo((props: { resource: Jsonify<Resource<{ tracker:
                 className="text-link-secondary text-xs"
                 aria-label={`Go to resource detail of ${r.title}`}
               >
-                <span className="i-carbon-launch vertical-middle relative bottom-[1px]"></span>
+                <CarbonLaunch className="vertical-middle relative bottom-[1px] inline-block"></CarbonLaunch>
                 <span> </span>
                 <span className="more">更多</span>
               </NavLink>
@@ -220,16 +225,20 @@ export const ResourceItem = memo((props: { resource: Jsonify<Resource<{ tracker:
           <a
             href={getPikPakUrlChecker(r.magnet)}
             data-resource-title={r.title}
-            className="play i-carbon-play text-2xl text-base-500 hover:text-base-900"
+            className="play text-xl text-base-500 hover:text-base-900"
             aria-label="Play resource"
             target="_blank"
-          />
+          >
+            <CarbonPlay />
+          </a>
           <a
             href={r.magnet + r.tracker}
             data-resource-title={r.title}
-            className="download i-carbon-download text-2xl text-base-500 hover:text-base-900"
+            className="download text-xl text-base-500 hover:text-base-900"
             aria-label="Download resource"
-          />
+          >
+            <CarbonDownload />
+          </a>
           {/* <span className="text-xs text-base-400 whitespace-nowrap">{r.size}</span> */}
         </div>
       </td>

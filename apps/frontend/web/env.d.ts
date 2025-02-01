@@ -1,5 +1,6 @@
 /// <reference types="unplugin-info/client" />
 /// <reference types="unplugin-analytics/client" />
+/// <reference types="unplugin-icons/types/react" />
 
 import type * as CSS from 'csstype';
 
@@ -14,9 +15,8 @@ declare module '~build/env' {
 declare module 'csstype' {
   interface Properties {
     '--nav-height'?: string;
-    '--search-height'?: string;
-    '--max-hero-pt'?: string;
-    '--max-hero-pb'?: string;
+    '--search-top'?: string;
+    '--hero-height'?: string;
   }
 }
 

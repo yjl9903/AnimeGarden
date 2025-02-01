@@ -3,9 +3,10 @@ import { APP_HOST, SERVER_URL } from '~build/env';
 import {
   type ProviderType,
   type FilterOptions,
+  type FetchResourcesOptions,
+  fetchAPI as rawFetchAPI,
   fetchResources as rawFetchResources,
-  fetchResourceDetail as rawFetchResourceDetail,
-  FetchResourcesOptions
+  fetchResourceDetail as rawFetchResourceDetail
 } from '@animegarden/client';
 
 export const baseURL = import.meta.env.SSR
@@ -30,6 +31,19 @@ export const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
     return fetch(url, init);
   }
 };
+
+export async function fetchAPI<T>(path: string, request: RequestInit | undefined) {
+  try {
+    const resp = await rawFetchAPI<T>(path, request, {
+      fetch: ofetch,
+      baseURL
+    } as const);
+    return resp;
+  } catch (error) {
+    console.error(error);
+    return undefined;
+  }
+}
 
 export async function fetchResources(
   filter: FilterOptions = {},
