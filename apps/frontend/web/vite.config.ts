@@ -11,9 +11,6 @@ import { env } from './node/env';
 
 const { APP_HOST, SERVER_URL, KEEPSHARE } = env();
 
-console.log(`APP host is located at: ${APP_HOST}`);
-console.log(`API Server is located at: ${SERVER_URL}`);
-
 // Analytics Engines
 const UMAMI_HOST = `umami.onekuma.cn`;
 const UMAMI_ID = `ac2c4863-3409-4c64-9ac8-fd94bf937583`;
@@ -77,6 +74,13 @@ export default defineConfig({
         v3_throwAbortReason: true
       }
     }),
-    tsconfigPaths()
+    tsconfigPaths(),
+    {
+      name: 'animegarden-web:print',
+      buildStart() {
+        console.log(`  ➜  APP host:   ${APP_HOST}`);
+        console.log(`  ➜  API Server: ${SERVER_URL}`);
+      }
+    }
   ]
 });
