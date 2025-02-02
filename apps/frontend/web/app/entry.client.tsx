@@ -17,6 +17,8 @@ import { NavHeight, HeroHeight, SearchTop } from './layouts/Layout';
   let heroPlaceholder = document.querySelector('#hero-placeholder');
   let sidebarRoot: HTMLDivElement | null = document.querySelector('.sidebar-root');
   function updateHero() {
+    console.trace('Update hero', document.documentElement.scrollTop);
+
     const y = document.documentElement.scrollTop;
 
     if (!heroSearch || !heroSearch.isConnected) {
