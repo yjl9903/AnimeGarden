@@ -617,6 +617,7 @@ export class Task {
     for (const r of resp) {
       if (!visited.has(r.id) && this.conds.every((c) => c(r))) {
         changed = true;
+        visited.add(r.id);
         this.resources.push(r);
       }
     }
