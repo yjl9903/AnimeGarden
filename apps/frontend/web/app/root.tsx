@@ -70,7 +70,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       >
         <Provider>{children}</Provider>
         <script
-          type="text/javascript"
           dangerouslySetInnerHTML={{
             __html: scrollHandler
           }}
