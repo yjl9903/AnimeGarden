@@ -7,6 +7,8 @@ let heroSearch = document.querySelector('#hero-search');
 let heroPlaceholder = document.querySelector('#hero-placeholder');
 let sidebarRoot: HTMLDivElement | null = document.querySelector('.sidebar-root');
 function updateHero() {
+  console.log('=== update hero', document.documentElement.scrollTop);
+
   const y = document.documentElement.scrollTop;
 
   if (!heroSearch || !heroSearch.isConnected) {
