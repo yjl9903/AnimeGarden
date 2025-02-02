@@ -2,7 +2,6 @@ import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/reac
 
 import { Provider } from 'jotai';
 import { kebabCase } from 'scule';
-import { useState, useEffect } from 'react';
 
 import { Toaster } from '~/components/ui/sonner';
 import { NavHeight, SearchTop, HeroHeight } from '~/layouts/Layout';
@@ -15,14 +14,12 @@ import './styles/main.css';
 import './styles/sonner.css';
 import './styles/layout.css';
 import './styles/sidebar.css';
+import './layouts/Search/cmdk.css';
+
+// @ts-ignore
+import scrollHandler from './layouts/global.js?raw';
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  });
-
   return (
     <html lang="zh-CN">
       <head>
@@ -37,30 +34,36 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <link rel="mask-icon" color="#FFFFFF" href="/favicon.svg" />
         <meta name="msapplication-TileColor" content="#FFFFFF" />
         <meta name="theme-color" content="#ffffff" />
-        {Tags.slice(0, 1).map((t) =>
-          'src' in t ? (
-            <script
-              suppressHydrationWarning={true}
-              key={t.src}
-              src={t.src}
-              {...Object.fromEntries(
-                Object.entries(t.dataset ?? {}).map(([k, v]) => ['data-' + kebabCase(k), v])
-              )}
-            ></script>
-          ) : (
-            <script
-              suppressHydrationWarning={true}
-              key={t.children}
-              type={t.type}
-              dangerouslySetInnerHTML={{ __html: t.children }}
-              {...Object.fromEntries(
-                Object.entries(t.dataset ?? {}).map(([k, v]) => ['data-' + kebabCase(k), v])
-              )}
-            ></script>
-          )
-        )}
+        {!import.meta.env.DEV &&
+          Tags.map((t) =>
+            'src' in t ? (
+              <script
+                suppressHydrationWarning={true}
+                key={t.src}
+                src={t.src}
+                {...Object.fromEntries(
+                  Object.entries(t.dataset ?? {}).map(([k, v]) => ['data-' + kebabCase(k), v])
+                )}
+              ></script>
+            ) : (
+              <script
+                suppressHydrationWarning={true}
+                key={t.children}
+                type={t.type}
+                dangerouslySetInnerHTML={{ __html: t.children }}
+                {...Object.fromEntries(
+                  Object.entries(t.dataset ?? {}).map(([k, v]) => ['data-' + kebabCase(k), v])
+                )}
+              ></script>
+            )
+          )}
         <Meta />
         <Links />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: scrollHandler
+          }}
+        />
       </head>
       <body
         className="font-sans relative"

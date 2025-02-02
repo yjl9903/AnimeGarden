@@ -314,9 +314,6 @@ importers:
       remix-hono:
         specifier: ^0.0.16
         version: 0.0.16(@remix-run/cloudflare@2.12.1(@cloudflare/workers-types@4.20240909.0)(typescript@5.7.3))(typescript@5.7.3)(zod@3.23.8)
-      remix-sitemap:
-        specifier: ^3.2.0
-        version: 3.2.0(@remix-run/server-runtime@2.12.1(typescript@5.7.3))(typescript@5.7.3)
       scule:
         specifier: ^1.3.0
         version: 1.3.0
@@ -395,13 +392,13 @@ importers:
         version: 0.3.1(unocss-preset-animations@1.1.0(@unocss/preset-wind@0.62.3)(unocss@0.61.9(postcss@8.4.43)(rollup@4.30.1)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))))(unocss@0.61.9(postcss@8.4.43)(rollup@4.30.1)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6)))
       unplugin-analytics:
         specifier: ^0.0.12
-        version: 0.0.12(esbuild@0.17.19)(rollup@4.30.1)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))
+        version: 0.0.12(esbuild@0.23.1)(rollup@4.30.1)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))
       unplugin-icons:
         specifier: ^22.0.0
         version: 22.0.0(@svgr/core@8.1.0(typescript@5.7.3))
       unplugin-info:
         specifier: ^1.2.1
-        version: 1.2.1(esbuild@0.17.19)(rollup@4.30.1)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))
+        version: 1.2.1(esbuild@0.23.1)(rollup@4.30.1)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))
       vite-tsconfig-paths:
         specifier: ^4.2.1
         version: 4.3.2(typescript@5.7.3)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))
@@ -1588,12 +1585,6 @@ packages:
     resolution: {integrity: sha512-LXV7QsWJxRuMYvKbiznh+U1ilIop3g2TeKRzUxOG5X3YITc8JyyTa90BmLwqqv0YnX4v32CSlG+vsziZp9dMvA==}
     peerDependencies:
       esbuild: '*'
-
-  '@esbuild-plugins/tsconfig-paths@0.1.2':
-    resolution: {integrity: sha512-TusFR26Y+Ze+Zm+NdfqZTSG4XyrXKxIaAfYCL3jASEI/gHjSdoCujATjzNWaaXs6Sk6Bv2D7NLr4Jdz1gysy/Q==}
-    peerDependencies:
-      esbuild: '*'
-      typescript: '*'
 
   '@esbuild/aix-ppc64@0.19.12':
     resolution: {integrity: sha512-bmoCYyWdEL3wDQIVbcyzRyeKLgk2WtWLTWz1ZIAZF/EGbNOwSA6ew3PftJ1PqMiOOGu0OyFMzG53L0zqIpPeNA==}
@@ -6730,9 +6721,6 @@ packages:
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
-  isomorphic-fetch@3.0.0:
-    resolution: {integrity: sha512-qvUtwJ3j6qwsF3jLxkZ72qCgjMysPzDfeV240JHiGZsANBYd+EEuu35v7dfrJ9Up0Ak07D7GGSkGhCHTqg/5wA==}
-
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
 
@@ -8586,12 +8574,6 @@ packages:
       zod:
         optional: true
 
-  remix-sitemap@3.2.0:
-    resolution: {integrity: sha512-eyn8QHUegaNzCu+eVnxYqx1FtF61wdIUh/LecG+bXKdOJgp0YBRd4VNtrJj8vC08SFZ0O29MA746hs00hRLQCw==}
-    hasBin: true
-    peerDependencies:
-      '@remix-run/server-runtime': ^2.0.0
-
   repeat-string@1.6.1:
     resolution: {integrity: sha512-PV0dzCYDNfRi1jCDbJzpW7jNNDRuCOG/jI5ctQcGKt/clZD+YcPS3yIlWuTJMmESC8aevCFmWJy5wjAFgNqN6w==}
     engines: {node: '>=0.10'}
@@ -9073,10 +9055,6 @@ packages:
   strip-json-comments@2.0.1:
     resolution: {integrity: sha512-4gB8na07fecVVkOI6Rs4e7T6NOTki5EmL7TUduTs6bu3EdnSycntVJ4re8kgZA+wx9IueI2Y11bfbgwtzuE0KQ==}
     engines: {node: '>=0.10.0'}
-
-  strip-json-comments@3.1.1:
-    resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
-    engines: {node: '>=8'}
 
   strnum@1.0.5:
     resolution: {integrity: sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==}
@@ -10026,9 +10004,6 @@ packages:
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
-
-  whatwg-fetch@3.6.20:
-    resolution: {integrity: sha512-EqhiFU6daOA8kpjOWTL0olhVOF3i7OrFzSYiGsEMB8GcXS+RrzauAERX65xMeNWVqxA6HXH2m69Z9LaKKdisfg==}
 
   whatwg-mimetype@4.0.0:
     resolution: {integrity: sha512-QaKxh0eNIi2mE9p2vEdzfagOKHCcj1pJ56EEHGQOVxp8r9/iszLUUV7v89x9O1p/T+NlTM5W7jW6+cz4Fq1YVg==}
@@ -11506,16 +11481,6 @@ snapshots:
       esbuild: 0.17.19
       escape-string-regexp: 4.0.0
       rollup-plugin-node-polyfills: 0.2.1
-
-  '@esbuild-plugins/tsconfig-paths@0.1.2(esbuild@0.17.19)(typescript@5.7.3)':
-    dependencies:
-      debug: 4.3.7
-      esbuild: 0.17.19
-      find-up: 5.0.0
-      strip-json-comments: 3.1.1
-      typescript: 5.7.3
-    transitivePeerDependencies:
-      - supports-color
 
   '@esbuild/aix-ppc64@0.19.12':
     optional: true
@@ -16966,13 +16931,6 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  isomorphic-fetch@3.0.0:
-    dependencies:
-      node-fetch: 2.7.0
-      whatwg-fetch: 3.6.20
-    transitivePeerDependencies:
-      - encoding
-
   jackspeak@3.4.3:
     dependencies:
       '@isaacs/cliui': 8.0.2
@@ -19290,20 +19248,6 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  remix-sitemap@3.2.0(@remix-run/server-runtime@2.12.1(typescript@5.7.3))(typescript@5.7.3):
-    dependencies:
-      '@esbuild-plugins/tsconfig-paths': 0.1.2(esbuild@0.17.19)(typescript@5.7.3)
-      '@remix-run/server-runtime': 2.12.1(typescript@5.7.3)
-      esbuild: 0.17.19
-      fast-xml-parser: 4.5.0
-      isomorphic-fetch: 3.0.0
-      require-from-string: 2.0.2
-      ufo: 1.5.4
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-      - typescript
-
   repeat-string@1.6.1: {}
 
   require-directory@2.1.1: {}
@@ -19900,8 +19844,6 @@ snapshots:
   strip-final-newline@3.0.0: {}
 
   strip-json-comments@2.0.1: {}
-
-  strip-json-comments@3.1.1: {}
 
   strnum@1.0.5: {}
 
@@ -20664,6 +20606,17 @@ snapshots:
       rollup: 4.30.1
       vite: 5.4.2(@types/node@20.16.5)(terser@5.31.6)
 
+  unplugin-analytics@0.0.12(esbuild@0.23.1)(rollup@4.30.1)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6)):
+    dependencies:
+      '@unplugin-analytics/core': 0.0.12
+      defu: 6.1.4
+      scule: 1.3.0
+      unplugin: 1.16.0
+    optionalDependencies:
+      esbuild: 0.23.1
+      rollup: 4.30.1
+      vite: 5.4.2(@types/node@20.16.5)(terser@5.31.6)
+
   unplugin-icons@22.0.0(@svgr/core@8.1.0(typescript@5.7.3)):
     dependencies:
       '@antfu/install-pkg': 0.5.0
@@ -20686,6 +20639,19 @@ snapshots:
       unplugin: 1.16.0
     optionalDependencies:
       esbuild: 0.17.19
+      rollup: 4.30.1
+      vite: 5.4.2(@types/node@20.16.5)(terser@5.31.6)
+    transitivePeerDependencies:
+      - supports-color
+
+  unplugin-info@1.2.1(esbuild@0.23.1)(rollup@4.30.1)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6)):
+    dependencies:
+      ci-info: 4.0.0
+      git-url-parse: 15.0.0
+      simple-git: 3.27.0
+      unplugin: 1.16.0
+    optionalDependencies:
+      esbuild: 0.23.1
       rollup: 4.30.1
       vite: 5.4.2(@types/node@20.16.5)(terser@5.31.6)
     transitivePeerDependencies:
@@ -21088,8 +21054,6 @@ snapshots:
   whatwg-encoding@3.1.1:
     dependencies:
       iconv-lite: 0.6.3
-
-  whatwg-fetch@3.6.20: {}
 
   whatwg-mimetype@4.0.0: {}
 

@@ -16,8 +16,6 @@ import { fetchResources } from '@/utils/fetch';
 import { inputAtom, historiesAtom } from '@/states/search';
 import { useActiveElement, useDocument, useEventListener } from '@/hooks';
 
-import './cmdk.css';
-
 import { DMHY_RE, debounce, parseSearch, resolveSearchURL, stringifySearch } from './utils';
 
 const SEARCH_HELP_URL = `https://animespace.onekuma.cn/animegarden/search.html`;

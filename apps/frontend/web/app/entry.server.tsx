@@ -11,32 +11,6 @@ import { RemixServer } from '@remix-run/react';
 // @ts-ignore
 import { renderToReadableStream } from 'react-dom/server.browser';
 
-import { createSitemapGenerator } from 'remix-sitemap';
-
-import { APP_HOST } from '~build/env';
-
-const { isSitemapUrl, sitemap } = createSitemapGenerator({
-  siteUrl: `https://${APP_HOST}`,
-  generateRobotsTxt: true,
-  robotsTxtOptions: {
-    policies: [
-      {
-        userAgent: '*',
-        allow: [
-          '/docs/',
-          '/anime/',
-          '/detail/',
-          '/resource/',
-          '/resources/1',
-          '/resources/2',
-          '/resources/3'
-        ],
-        disallow: ['/feed.xml', '/api/']
-      }
-    ]
-  }
-});
-
 export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
@@ -47,11 +21,6 @@ export default async function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
-  if (isSitemapUrl(request)) {
-    // @ts-ignore
-    return await sitemap(request, remixContext);
-  }
-
   const body = await renderToReadableStream(
     <RemixServer context={remixContext} url={request.url} />,
     {
