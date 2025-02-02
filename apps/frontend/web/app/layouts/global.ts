@@ -45,6 +45,7 @@ function handleScroll() {
 }
 
 updateHero();
+document.addEventListener('DOMContentLoaded', updateHero);
 document.addEventListener('scroll', handleScroll);
 
 // @ts-ignore
