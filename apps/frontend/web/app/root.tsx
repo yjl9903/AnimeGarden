@@ -59,9 +59,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
         <script
+          type="text/javascript"
           dangerouslySetInnerHTML={{
             __html: scrollHandler
           }}
+          suppressHydrationWarning={true}
         />
       </head>
       <body
