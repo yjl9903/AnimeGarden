@@ -69,9 +69,12 @@ export class ResourcesModule extends Module<System['modules']> {
     const newResources: NewDbResource[] = [];
     const errors = [];
     for (const r of resources) {
+      const key = `${r.provider}:${r.providerId}`;
+      if (map.has(key)) continue;
+
       const res = transformNewResources(this.system, r, options);
       if (!res.errors && res.result) {
-        map.set(`${r.provider}:${r.providerId}`, res.result);
+        map.set(key, res.result);
         newResources.push(res.result);
       } else {
         errors.push(r);
