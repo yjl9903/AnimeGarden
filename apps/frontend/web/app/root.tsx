@@ -58,13 +58,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
           )}
         <Meta />
         <Links />
-        <script
-          type="text/javascript"
-          dangerouslySetInnerHTML={{
-            __html: scrollHandler
-          }}
-          suppressHydrationWarning={true}
-        />
       </head>
       <body
         className="font-sans relative"
@@ -77,6 +70,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
       >
         <Provider>{children}</Provider>
         <ScrollRestoration />
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: scrollHandler
+          }}
+          suppressHydrationWarning={true}
+        />
         <Scripts />
         <Toaster />
       </body>

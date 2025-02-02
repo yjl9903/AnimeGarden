@@ -44,10 +44,8 @@ function handleScroll() {
   requestAnimationFrame(updateHero);
 }
 
-window.addEventListener('load', () => {
-  handleScroll();
-  document.addEventListener('scroll', handleScroll);
-});
+handleScroll();
+document.addEventListener('scroll', handleScroll);
 
 // @ts-ignore
 const scrollTo = window.scrollTo;
