@@ -56,6 +56,15 @@ import { NavHeight, HeroHeight, SearchTop } from './layouts/Layout';
 
   handleScroll();
   document.addEventListener('scroll', handleScroll);
+
+  const scrollTo = window.scrollTo;
+  // @ts-ignore
+  window.scrollTo = (...args) => {
+    // @ts-ignore
+    const r = scrollTo(...args);
+    handleScroll();
+    return r;
+  };
 }
 
 startTransition(() => {
