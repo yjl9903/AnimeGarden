@@ -60,9 +60,9 @@ export default defineConfig({
         // plausible: {
         //   domain: PLAUSIBLE_HOST
         // },
-        clarity: {
-          id: CLARITY
-        },
+        // clarity: {
+        //   id: CLARITY
+        // },
         cloudflare: {
           beacon: CF_BEACON
         }
