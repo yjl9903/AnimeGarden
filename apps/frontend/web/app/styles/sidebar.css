@@ -20,7 +20,7 @@
 .sidebar-root.fix-hero .sidebar-wrapper {
   height: calc(100vh - var(--nav-height));
   top: var(--nav-height);
-  
+
   @apply: fixed;
 }
 

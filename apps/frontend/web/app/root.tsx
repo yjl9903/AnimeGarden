@@ -69,7 +69,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         suppressHydrationWarning={true}
       >
         <Provider>{children}</Provider>
-        <ScrollRestoration />
         <script
           type="text/javascript"
           dangerouslySetInnerHTML={{
@@ -77,6 +76,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           }}
           suppressHydrationWarning={true}
         />
+        <ScrollRestoration />
         <Scripts />
         <Toaster />
       </body>

@@ -19,13 +19,13 @@ function updateHero() {
     sidebarRoot = document.querySelector('.sidebar-root');
   }
 
-  if (y > SearchTop) {
+  if (y >= SearchTop) {
     heroSearch?.classList.add('fix-hero');
   } else {
     heroSearch?.classList.remove('fix-hero');
   }
 
-  if (y > HeroHeight - NavHeight) {
+  if (y >= HeroHeight - NavHeight) {
     heroPlaceholder?.classList.add('fix-hero');
     sidebarRoot?.classList.add('fix-hero');
     sidebarRoot?.style.removeProperty('--sidebar-pt');
@@ -44,16 +44,16 @@ function handleScroll() {
   requestAnimationFrame(updateHero);
 }
 
-handleScroll();
+updateHero();
 document.addEventListener('scroll', handleScroll);
 
 // @ts-ignore
 const scrollTo = window.scrollTo;
 // @ts-ignore
 window.scrollTo = (...args) => {
-  handleScroll();
+  updateHero();
   // @ts-ignore
   const r = scrollTo(...args);
-  handleScroll();
+  updateHero();
   return r;
 };
