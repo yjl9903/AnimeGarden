@@ -5,7 +5,7 @@ const HeroHeight = 300;
 let handling = false;
 let heroSearch = document.querySelector('#hero-search');
 let heroPlaceholder = document.querySelector('#hero-placeholder');
-let sidebarRoot = document.querySelector('.sidebar-root');
+let sidebarRoot: HTMLDivElement | null = document.querySelector('.sidebar-root');
 function updateHero() {
   const y = document.documentElement.scrollTop;
 
@@ -49,9 +49,12 @@ document.addEventListener('load', () => {
   document.addEventListener('scroll', handleScroll);
 });
 
+// @ts-ignore
 const scrollTo = window.scrollTo;
+// @ts-ignore
 window.scrollTo = (...args) => {
   handleScroll();
+  // @ts-ignore
   const r = scrollTo(...args);
   handleScroll();
   return r;

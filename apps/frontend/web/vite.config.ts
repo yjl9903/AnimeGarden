@@ -7,6 +7,7 @@ import Icons from 'unplugin-icons/vite';
 import UnoCSS from 'unocss/vite';
 import Info from 'unplugin-info/vite';
 import Analytics from 'unplugin-analytics/vite';
+import Inline from 'vite-plugin-inline';
 
 import { env } from './node/env';
 
@@ -77,6 +78,7 @@ export default defineConfig({
     }),
     Icons({ compiler: 'jsx', jsx: 'react' }),
     tsconfigPaths(),
+    Inline(),
     {
       name: 'animegarden-web:print',
       buildStart() {

@@ -1,3 +1,5 @@
+/// <reference types="vite-plugin-inline/client" />
+
 /// <reference types="unplugin-info/client" />
 /// <reference types="unplugin-analytics/client" />
 /// <reference types="unplugin-icons/types/react" />

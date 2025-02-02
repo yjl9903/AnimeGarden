@@ -16,8 +16,7 @@ import './styles/layout.css';
 import './styles/sidebar.css';
 import './layouts/Search/cmdk.css';
 
-// @ts-ignore
-import scrollHandler from './layouts/global.js?raw';
+import scrollHandler from './layouts/global.ts?inline&raw';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

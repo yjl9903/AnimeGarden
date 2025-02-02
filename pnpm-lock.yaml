@@ -399,6 +399,9 @@ importers:
       unplugin-info:
         specifier: ^1.2.1
         version: 1.2.1(esbuild@0.23.1)(rollup@4.30.1)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))
+      vite-plugin-inline:
+        specifier: ^0.0.3
+        version: 0.0.3(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))
       vite-tsconfig-paths:
         specifier: ^4.2.1
         version: 4.3.2(typescript@5.7.3)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))
@@ -9875,6 +9878,11 @@ packages:
     resolution: {integrity: sha512-uPAwSr57kYjAUux+8E2j0q0Fxpn8M9VoyfGiRI8Kfktz9NcYMCenwY5RnZxnF1WTu3TGiYipirIzacLL3VVGFg==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
+
+  vite-plugin-inline@0.0.3:
+    resolution: {integrity: sha512-2W5PIHrDJwdeLvubn3hYoFmFQKqK8AAMVj0Lgltc6wwpilO2gP/rFfzlmbXgwPLUSnt20rY10omWo9TSh8kOMw==}
+    peerDependencies:
+      vite: ^6.0.0
 
   vite-plugin-pwa@0.21.1:
     resolution: {integrity: sha512-rkTbKFbd232WdiRJ9R3u+hZmf5SfQljX1b45NF6oLA6DSktEKpYllgTo1l2lkiZWMWV78pABJtFjNXfBef3/3Q==}
@@ -20896,6 +20904,10 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+
+  vite-plugin-inline@0.0.3(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6)):
+    dependencies:
+      vite: 5.4.2(@types/node@20.16.5)(terser@5.31.6)
 
   vite-plugin-pwa@0.21.1(@vite-pwa/assets-generator@0.2.6)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(workbox-build@7.1.1(@types/babel__core@7.20.5))(workbox-window@7.1.0):
     dependencies:
