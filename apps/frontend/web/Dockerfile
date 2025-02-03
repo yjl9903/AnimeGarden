@@ -20,8 +20,8 @@ WORKDIR /app
 ARG APP_HOST
 ARG SERVER_URL
 
-# Set production environment
-ENV NODE_ENV="production" APP_HOST=$APP_HOST SERVER_URL=$SERVER_URL
+# Set production environment or development for test
+ENV NODE_ENV="development" APP_HOST=$APP_HOST SERVER_URL=$SERVER_URL
 
 # Install pnpm
 RUN npm install -g pnpm@$PNPM_VERSION

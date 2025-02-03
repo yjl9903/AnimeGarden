@@ -31,7 +31,7 @@ export default defineConfig({
     alias: { '@': path.resolve(__dirname, './app') }
   },
   build: {
-    minify: true
+    minify: false
   },
   plugins: [
     Info({
@@ -63,9 +63,9 @@ export default defineConfig({
         // clarity: {
         //   id: CLARITY
         // },
-        cloudflare: {
-          beacon: CF_BEACON
-        }
+        // cloudflare: {
+        //   beacon: CF_BEACON
+        // }
       }
     }),
     UnoCSS(),
