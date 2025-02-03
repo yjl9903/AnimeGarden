@@ -12,6 +12,8 @@ import { CollectionsModule } from '../collections';
 import { setSecret } from './secret';
 import { type SystemOptions, System as ISystem } from './system';
 
+export * from './types';
+
 export * from './module';
 
 export { type SystemOptions } from './system';

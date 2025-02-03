@@ -2,8 +2,7 @@ import { and, desc, eq, gt, inArray, isNull, lt, sql } from 'drizzle-orm';
 
 import type { ProviderType } from '@animegarden/client';
 
-import type { System } from '../system';
-import type { NotifiedResources } from '../providers/types';
+import type { System, Notification } from '../system';
 import type { NewResource as NewDbResource } from '../schema';
 
 import { retryFn } from '../utils';
@@ -36,6 +35,12 @@ export class ResourcesModule extends Module<System['modules']> {
     await this.query.initialize();
     await this.details.initialize();
     this.system.logger.success('Initialize Resources module OK');
+  }
+
+  public async refresh(notification: Notification) {
+    this.system.logger.info('Refreshing Resources module');
+    await this.query.onNotifications(notification.resources.inserted);
+    this.system.logger.success('Refresh Resources module OK');
   }
 
   /**
@@ -308,9 +313,5 @@ LIMIT 1)`;
     return {
       deleted: []
     };
-  }
-
-  public async onNotifications(notified: NotifiedResources[]) {
-    await this.query.onNotifications(notified);
   }
 }

@@ -24,6 +24,12 @@ export class UsersModule extends Module<System['modules']> {
     this.system.logger.success('Initialize Users module OK');
   }
 
+  public async refresh() {
+    this.system.logger.info('Refreshing Users module');
+    await this.fetchUsers();
+    this.system.logger.success('Refresh Users module OK');
+  }
+
   public async fetchUsers() {
     const users = await this.database.query.users.findMany();
     this.users.clear();
@@ -151,6 +157,12 @@ export class TeamsModule extends Module<System['modules']> {
     this.system.logger.info('Initializing Teams module');
     await this.fetchTeams();
     this.system.logger.success('Initialize Teams module OK');
+  }
+
+  public async refresh() {
+    this.system.logger.info('Refreshing Teams module');
+    await this.fetchTeams();
+    this.system.logger.success('Refresh Teams module OK');
   }
 
   public async fetchTeams() {

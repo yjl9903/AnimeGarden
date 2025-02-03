@@ -2,13 +2,12 @@ import { eq } from 'drizzle-orm';
 
 import type { ProviderType } from '@animegarden/client';
 
-import type { System } from '../system';
+import type { System, Notification, NotifiedResources } from '../system';
 
 import { retryFn } from '../utils';
 import { Module } from '../system/module';
 import { providers } from '../schema/providers';
 
-import type { NotifiedResources } from './types';
 import { makeChannelMessageBus, subscribeRedisChannel } from '../connect/redis';
 
 const NOTIFY_CHANNEL = `notify-resources`;
@@ -28,6 +27,12 @@ export class ProvidersModule extends Module<System['modules']> {
       await this.registerNotification();
     }
     this.system.logger.success('Initialize Providers module OK');
+  }
+
+  public async refresh() {
+    this.system.logger.info('Refreshing Providers module');
+    await this.fetchProviders();
+    this.system.logger.success('Refresh Providers module OK');
   }
 
   public async fetchProviders() {
@@ -102,25 +107,19 @@ export class ProvidersModule extends Module<System['modules']> {
 
       const subs = subscribeRedisChannel(redis, NOTIFY_CHANNEL);
       const bus = makeChannelMessageBus(redis);
-      bus.addListener<{ resources: NotifiedResources[] }>(NOTIFY_CHANNEL, async (msg) => {
-        await this.onNotification(msg.resources);
+      bus.addListener<Notification>(NOTIFY_CHANNEL, async (msg) => {
+        await this.onNotification(msg);
       });
       await subs;
     }
   }
 
-  public async onNotification(resources: NotifiedResources[]) {
-    this.logger.info(`Recive update notification message: ${resources.length} new resources`);
+  public async onNotification(notification: Notification) {
+    this.logger.info(
+      `Recive update notification message: ${notification.resources.inserted.length} new resources`
+    );
 
-    await Promise.all([
-      this.initialize(),
-      this.system.modules.users.initialize(),
-      this.system.modules.teams.initialize(),
-      this.system.modules.tags.initialize(),
-      this.system.modules.subjects.initialize(),
-      this.system.modules.collections.initialize(),
-      this.system.modules.resources.onNotifications(resources)
-    ]);
+    await this.system.refresh(notification);
   }
 
   public async notifyRefreshedResources(resources: NotifiedResources[]) {
@@ -134,9 +133,14 @@ export class ProvidersModule extends Module<System['modules']> {
       this.notifyTimeout = setTimeout(async () => {
         this.logger.info(`Publish ${resources.length} new resources to channel ${NOTIFY_CHANNEL}`);
         try {
-          await redis.publish(NOTIFY_CHANNEL, JSON.stringify({ resources }));
+          await redis.publish(
+            NOTIFY_CHANNEL,
+            JSON.stringify({ resources: { inserted: resources } })
+          );
         } catch (error) {
           this.logger.error(error);
+        } finally {
+          this.notifyTimeout = undefined;
         }
       }, 10 * 1000);
     }

@@ -10,5 +10,10 @@ export class TagsModule extends Module<System['modules']> {
     // this.system.logger.success('Initialize Tags module OK');
   }
 
+  public async refresh() {
+    // this.system.logger.info('Refreshing Tags module');
+    // this.system.logger.success('Refresh Tags module OK');
+  }
+
   public async importFromAnipar() {}
 }

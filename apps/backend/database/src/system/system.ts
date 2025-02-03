@@ -3,6 +3,8 @@ import { type ConsolaInstance, createConsola } from 'consola';
 
 import type { Database } from '../connect/database';
 
+import type { Notification } from './types';
+
 import { Module } from './module';
 import { getSecret } from './secret';
 
@@ -31,6 +33,8 @@ export class System<M extends Record<string, Module> = {}> {
 
   public readonly disposables: Array<(sys: System) => void | Promise<void>> = [];
 
+  private refreshing: Promise<void> | undefined = undefined;
+
   public constructor(options: SystemOptions = {}) {
     const cron = options.cron ?? false;
     this.logger = createConsola().withTag(!cron ? 'System' : 'Worker');
@@ -54,10 +58,30 @@ export class System<M extends Record<string, Module> = {}> {
       for (const mod of Object.values(this.modules)) {
         await mod.import();
       }
+      this.logger.success('Import OK');
     } catch (error) {
       this.logger.error(error);
       process.exit(1);
     }
+  }
+
+  public async refresh(notification: Notification) {
+    while (this.refreshing) {
+      await this.refreshing;
+    }
+    const refreshing = new Promise<void>(async (res) => {
+      for (const mod of Object.values(this.modules)) {
+        try {
+          await mod.refresh(notification);
+        } catch (error) {
+          this.logger.error(error);
+        }
+      }
+      this.refreshing = undefined;
+      res();
+    });
+    this.refreshing = refreshing;
+    await refreshing;
   }
 
   public get secret() {

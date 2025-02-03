@@ -1,6 +1,7 @@
 import type { ConsolaInstance } from 'consola';
 
 import type { System } from './system';
+import type { Notification } from './types';
 
 export abstract class Module<M extends Record<string, Module> = {}> {
   public readonly system: System<M>;
@@ -32,4 +33,9 @@ export abstract class Module<M extends Record<string, Module> = {}> {
    * Importing data after initializing
    */
   public async import(): Promise<void> {}
+
+  /**
+   * Refreshing data after receiving some updation
+   */
+  public async refresh(_notification: Notification): Promise<void> {}
 }

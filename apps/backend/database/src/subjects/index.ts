@@ -22,6 +22,12 @@ export class SubjectsModule extends Module<System['modules']> {
     this.system.logger.success('Initialize Subjects module OK');
   }
 
+  public async refresh() {
+    // this.system.logger.info('Refreshing Subjects module');
+    // await this.fetchSubjects();
+    // this.system.logger.success('Refreshing Subjects module OK');
+  }
+
   public async import() {
     await this.updateCalendar();
   }
