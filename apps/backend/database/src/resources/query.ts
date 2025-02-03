@@ -25,8 +25,7 @@ import {
   transformResourceHref
 } from '@animegarden/client';
 
-import type { System } from '../system';
-import type { NotifiedResources } from '../providers/types';
+import type { System, NotifiedResources } from '../system';
 
 import { resources } from '../schema/resources';
 import { jieba, nextTick, retryFn } from '../utils';
