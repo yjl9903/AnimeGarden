@@ -593,7 +593,7 @@ export class Task {
       const res = this.resources[cursor];
       const ok = conds.every((c) => c(res));
       if (ok) {
-        if ((page - 1) * pageSize <= matched) {
+        if ((page - 1) * pageSize <= matched && matched < page * pageSize) {
           slice.push(res);
         }
         matched++;
@@ -606,7 +606,7 @@ export class Task {
     return {
       ok: true,
       resources: slice,
-      hasMore: matched >= page * pageSize || cursor < this.resources.length || this.hasMore
+      hasMore: matched >= page * pageSize || this.hasMore
     };
   }
 
