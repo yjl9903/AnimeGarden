@@ -2,7 +2,7 @@ import { useLoaderData } from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/node';
 
 import Layout from '~/layouts/Layout';
-import { fetchAPI } from '~/utils';
+import { fetchTimestamp } from '~/utils';
 
 export const meta: MetaFunction = () => {
   return [
@@ -12,11 +12,7 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const resp = await fetchAPI<{ timestamp: string }>('/', undefined);
-
-  return json({
-    timestamp: resp?.timestamp
-  });
+  return json(await fetchTimestamp());
 };
 
 export default function About() {

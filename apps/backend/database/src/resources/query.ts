@@ -173,7 +173,7 @@ export class QueryManager {
         // 4. 类型
         task = this.getTask({ types });
       } else if (subjects && subjects.length > 0) {
-        // 5. 类型
+        // 5. subject
         task = this.getTask({ subjects });
       } else {
         // 6. 回退到直接缓存数据库

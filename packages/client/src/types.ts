@@ -268,32 +268,17 @@ export type FilterOptions = {
        */
       types?: string[];
     }
-) &
-  (
-    | {
-        /**
-         * Filter by the bangumi subject id
-         */
-        subject?: number;
+) & {
+    /**
+     * Filter by the bangumi subject id
+     */
+    subject?: number;
 
-        /**
-         * Filter by the bangumi subject ids
-         */
-        subjects?: null | undefined;
-      }
-    | {
-        /**
-         * Filter by the bangumi subject id
-         */
-        subject?: null | undefined;
-
-        /**
-         * Filter by the bangumi subject ids
-         */
-        subjects?: number[];
-      }
-  ) &
-  (
+    /**
+     * Filter by the bangumi subject ids
+     */
+    subjects?: number[];
+  } & (
     | {
         /**
          * Filter by the fansub names

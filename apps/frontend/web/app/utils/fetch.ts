@@ -45,6 +45,20 @@ export async function fetchAPI<T>(path: string, request: RequestInit | undefined
   }
 }
 
+export async function fetchTimestamp() {
+  try {
+    const resp = await fetchAPI<{ timestamp: string }>('/', undefined);
+    return {
+      timestamp: resp?.timestamp
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      timestamp: undefined
+    };
+  }
+}
+
 export async function fetchResources(
   filter: FilterOptions = {},
   options: {

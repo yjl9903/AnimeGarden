@@ -3,6 +3,7 @@ const SearchTop = 128;
 const HeroHeight = 300;
 
 let handling = false;
+let header = document.querySelector('header');
 let heroSearch = document.querySelector('#hero-search');
 let heroPlaceholder = document.querySelector('#hero-placeholder');
 let sidebarRoot: HTMLDivElement | null = document.querySelector('.sidebar-root');
@@ -11,6 +12,9 @@ function updateHero() {
 
   const y = document.documentElement.scrollTop;
 
+  if (!header || !header.isConnected) {
+    header = document.querySelector('header');
+  }
   if (!heroSearch || !heroSearch.isConnected) {
     heroSearch = document.querySelector('#hero-search');
   }
@@ -31,10 +35,14 @@ function updateHero() {
     heroPlaceholder?.classList.add('fix-hero');
     sidebarRoot?.classList.add('fix-hero');
     sidebarRoot?.style.removeProperty('--sidebar-pt');
+
+    header?.classList.add('fix-hero');
   } else {
     heroPlaceholder?.classList.remove('fix-hero');
     sidebarRoot?.classList.remove('fix-hero');
     sidebarRoot?.style.setProperty('--sidebar-pt', HeroHeight - y + 'px');
+
+    header?.classList.remove('fix-hero');
   }
 
   handling = false;

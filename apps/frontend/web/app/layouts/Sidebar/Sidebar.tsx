@@ -160,7 +160,7 @@ const Collection = memo((props: { collection: Collection }) => {
         </div>
       ) : (
         <NavLink
-          to='/resources/1?search=败犬女主太多了&type=动画'
+          to="/resources/1?search=败犬女主太多了&type=动画"
           className="h-[80px] px2 flex items-center justify-center text-base-700 text-link-active"
         >
           <span className="text-sm">收藏一个搜索条件吧</span>

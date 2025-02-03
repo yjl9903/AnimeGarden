@@ -2,7 +2,7 @@ import type { FullBangumi } from 'bgmd/types';
 
 import { calendar as rawCalendar } from 'bgmd/calendar';
 
-import { APP_HOST } from '~build/meta';
+import { stringifyURLSearch } from '@animegarden/client';
 
 // Before 6:00
 export const Weekday = (new Date(new Date().getTime() - 6 * 60 * 60 * 1000).getDay() + 6) % 7;
@@ -45,9 +45,8 @@ export function getDisplayName(bgm: FullBangumi) {
 }
 
 export function getSearchURL(bgm: FullBangumi) {
-  const url = stringifyURLSearch('https://' + APP_HOST, {
-    include: [bgm.name, ...bgm.alias],
+  const search = stringifyURLSearch({
     after: new Date(new Date(bgm.air_date).getTime() - 7 * 24 * 60 * 60 * 1000)
   });
-  return `${url.pathname}${url.search}`;
+  return `/subject/${bgm.id}?${search.toString()}`;
 }
