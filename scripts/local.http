@@ -53,7 +53,11 @@ Content-Type: application/json
   "search": ["BanG Dream! Ave Mujica"]
 }
 
-###
+### Subjects
+POST http://0.0.0.0:8080/resources?subject=504591
+Content-Type: application/json
+
+### Title search
 POST http://0.0.0.0:8080/resources
 Cache-Control: no-store
 Content-Type: application/json

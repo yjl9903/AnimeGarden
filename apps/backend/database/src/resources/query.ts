@@ -302,6 +302,7 @@ export class QueryManager {
       fansubs,
       publishers,
       types,
+      subjects,
       before,
       after,
       search,
@@ -343,6 +344,14 @@ export class QueryManager {
         conds.push(eq(resources.type, types[0]));
       } else {
         conds.push(inArray(resources.type, types));
+      }
+    }
+
+    if (subjects && subjects.length > 0) {
+      if (subjects.length === 1) {
+        conds.push(eq(resources.subjectId, subjects[0]));
+      } else {
+        conds.push(inArray(resources.subjectId, subjects));
       }
     }
 
@@ -540,19 +549,21 @@ export class Task {
     this.hasMore = resp.length > TASK_PREFETCH_COUNT;
     this.fetchedAt = new Date();
     this.ok = true;
-    return resp;
+    return;
   });
 
   public prefetchNextPage = memoAsync(async () => {
+    if (!this.hasMore) return;
+    
     const prevCount = this.prefetchCount;
-    const resp = await this.query.findFromDatabase(this.options, prevCount, TASK_PREFETCH_COUNT);
+    const resp = await this.query.findFromDatabase(this.options, prevCount, TASK_PREFETCH_COUNT + 1);
     this.resources.push(...resp);
     this.prefetchCount += resp.length;
     this.hasMore = resp.length > TASK_PREFETCH_COUNT;
     this.fetchedAt = new Date();
     this.ok = true;
     this.prefetchNextPage.clear();
-    return resp;
+    return;
   });
 
   public async fetch(options: DatabaseFilterOptions, page: number, pageSize: number) {
@@ -603,10 +614,13 @@ export class Task {
       }
     }
 
+    const hasMore = matched >= page * pageSize || this.hasMore;
+    const ok = slice.length >= pageSize || !hasMore;
+
     return {
-      ok: true,
+      ok,
       resources: slice,
-      hasMore: matched >= page * pageSize || this.hasMore
+      hasMore
     };
   }
 

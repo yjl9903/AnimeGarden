@@ -72,12 +72,12 @@ export async function makeSystem(options: SystemOptions) {
 
   // Register modules
   system.modules.providers = new ProvidersModule(system, ProvidersModule.name);
-  system.modules.tags = new TagsModule(system, TagsModule.name);
-  system.modules.subjects = new SubjectsModule(system, SubjectsModule.name);
   system.modules.users = new UsersModule(system, UsersModule.name);
   system.modules.teams = new TeamsModule(system, TeamsModule.name);
-  system.modules.collections = new CollectionsModule(system, CollectionsModule.name);
   system.modules.resources = new ResourcesModule(system, ResourcesModule.name);
+  system.modules.collections = new CollectionsModule(system, CollectionsModule.name);
+  system.modules.tags = new TagsModule(system, TagsModule.name);
+  system.modules.subjects = new SubjectsModule(system, SubjectsModule.name);
 
   return system;
 }
