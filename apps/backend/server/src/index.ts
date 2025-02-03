@@ -35,6 +35,11 @@ function registerHono(sys: System, app: Hono) {
     })
   );
 
+  app.use('*', async (_ctx, next) => {
+    await sys.initialize();
+    await next();
+  });
+
   app.get('/', async (c) => {
     const timestamp = sys.modules.providers.timestamp;
     return c.json({

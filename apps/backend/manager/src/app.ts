@@ -41,7 +41,8 @@ app
   .option('--port <port>', 'Listen port')
   .action(async (options) => {
     const sys = await initialize({ ...options, cron: false });
-    await sys.initialize();
+    sys.initialize(); // async initializing system
+
     const server = await makeServer(sys, {});
 
     const host = options.host ?? process.env.HOST;

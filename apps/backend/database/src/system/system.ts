@@ -33,6 +33,8 @@ export class System<M extends Record<string, Module> = {}> {
 
   public readonly disposables: Array<(sys: System) => void | Promise<void>> = [];
 
+  private initializing: Promise<void> | undefined = undefined;
+
   private refreshing: Promise<void> | undefined = undefined;
 
   public constructor(options: SystemOptions = {}) {
@@ -42,15 +44,25 @@ export class System<M extends Record<string, Module> = {}> {
   }
 
   public async initialize() {
-    try {
-      for (const mod of Object.values(this.modules)) {
-        await mod.initialize();
-      }
-      this.logger.success('Initialized OK');
-    } catch (error) {
-      this.logger.error(error);
-      process.exit(1);
+    if (this.initializing) {
+      await this.initializing;
+      return;
     }
+
+    this.initializing = new Promise(async (res) => {
+      try {
+        for (const mod of Object.values(this.modules)) {
+          await mod.initialize();
+        }
+        this.logger.success('Initialized OK');
+        res();
+      } catch (error) {
+        this.logger.error(error);
+        process.exit(1);
+      }
+    });
+    await this.initializing;
+    this.initializing = undefined;
   }
 
   public async import() {
