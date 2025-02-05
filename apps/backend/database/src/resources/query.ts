@@ -166,15 +166,15 @@ export class QueryManager {
       } else if ((include && include.length > 0) || (keywords && keywords.length > 0)) {
         // 2. 标题匹配
         task = this.getTask({ include, keywords, exclude: dbOptions.exclude });
-      } else if ((fansubs && fansubs.length > 0) || (publishers && publishers.length > 0)) {
-        // 3. 字幕组匹配
-        task = this.getTask({ fansubs, publishers });
+      } else if (subjects && subjects.length > 0) {
+        // 3. subject
+        task = this.getTask({ subjects });
       } else if (types && types.length > 0) {
         // 4. 类型
         task = this.getTask({ types });
-      } else if (subjects && subjects.length > 0) {
-        // 5. subject
-        task = this.getTask({ subjects });
+      } else if ((fansubs && fansubs.length > 0) || (publishers && publishers.length > 0)) {
+        // 5. 字幕组匹配
+        task = this.getTask({ fansubs, publishers });
       } else {
         // 6. 回退到直接缓存数据库
         task = this.getTask(dbOptions);
