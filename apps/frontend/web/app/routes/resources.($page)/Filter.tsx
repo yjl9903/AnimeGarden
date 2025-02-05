@@ -1,5 +1,4 @@
 import { toast } from 'sonner';
-import { format } from 'date-fns';
 import { NavLink, useLocation } from '@remix-run/react';
 import { useCallback } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
@@ -8,7 +7,7 @@ import type { ResolvedFilterOptions } from '@animegarden/client';
 
 import { APP_HOST } from '~build/env';
 
-import { removeQuote, DisplayTypeColor } from '~/utils';
+import { removeQuote, formatChinaTime, DisplayTypeColor } from '~/utils';
 import { Button } from '~/components/ui/button';
 import { SearchTooltip } from '~/components/Help';
 import { isOpenSidebar } from '~/layouts/Sidebar/atom';
@@ -39,15 +38,6 @@ interface Props {
 
   feedURL?: string;
 }
-
-const safeFormat: typeof format = (...args) => {
-  try {
-    return format(...args);
-  } catch (error) {
-    console.log(error);
-    return '';
-  }
-};
 
 export function Filter(props: Props) {
   const { filter, feedURL } = props;
@@ -163,14 +153,16 @@ export function Filter(props: Props) {
       {after && (
         <div className="space-x-2 select-none text-0">
           <span className="text-4 text-base-800 font-bold mr2 keyword">搜索开始于</span>
-          <span className="text-4 select-text">{safeFormat(after, 'yyyy 年 M 月 d 日 hh:mm')}</span>
+          <span className="text-4 select-text">
+            {formatChinaTime(after, 'yyyy 年 M 月 d 日 hh:mm')}
+          </span>
         </div>
       )}
       {before && (
         <div className="space-x-2 select-none text-0">
           <span className="text-4 text-base-800 font-bold mr2 keyword">搜索结束于</span>
           <span className="text-4 select-text">
-            {safeFormat(before, 'yyyy 年 M 月 d 日 hh:mm')}
+            {formatChinaTime(before, 'yyyy 年 M 月 d 日 hh:mm')}
           </span>
         </div>
       )}

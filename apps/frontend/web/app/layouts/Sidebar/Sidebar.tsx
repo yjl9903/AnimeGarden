@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import { toast } from 'sonner';
-import { format } from 'date-fns';
 import { NavLink, useLocation } from '@remix-run/react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
@@ -9,7 +8,7 @@ import { APP_HOST } from '~build/env';
 
 import { generateFeed } from '~/utils/feed';
 import { base64URLencode } from '~/utils/json';
-import { DisplayTypeColor } from '~/utils';
+import { DisplayTypeColor, formatChinaTime } from '~/utils';
 import { getActivePageTab } from '~/utils/routes';
 import { collectionsAtom, type Collection } from '~/states/collection';
 import {
@@ -27,15 +26,6 @@ import { stringifySearch } from '../Search/utils';
 import { isOpenSidebar } from './atom';
 
 type CollectionItem = Collection['items'][0];
-
-const safeFormat: typeof format = (...args) => {
-  try {
-    return format(...args);
-  } catch (error) {
-    console.log(error);
-    return '';
-  }
-};
 
 export const Sidebar = memo(() => {
   const [isOpen] = useAtom(isOpenSidebar);
@@ -483,7 +473,7 @@ const CollectionItemContent = memo(
                   <div>
                     <span className="font-bold mr2 select-none">搜索开始于</span>
                     <span className="select-text">
-                      {safeFormat(display.after, 'yyyy 年 M 月 d 日 hh:mm')}
+                      {formatChinaTime(display.after, 'yyyy 年 M 月 d 日 hh:mm')}
                     </span>
                   </div>
                 )}
@@ -491,7 +481,7 @@ const CollectionItemContent = memo(
                   <div>
                     <span className="font-bold mr2 select-none">搜索结束于</span>
                     <span className="select-text">
-                      {safeFormat(display.before, 'yyyy 年 M 月 d 日 hh:mm')}
+                      {formatChinaTime(display.before, 'yyyy 年 M 月 d 日 hh:mm')}
                     </span>
                   </div>
                 )}
