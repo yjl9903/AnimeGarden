@@ -1,4 +1,4 @@
-import { and, desc, eq, gt, inArray, isNull, lt, sql } from 'drizzle-orm';
+import { and, desc, eq, gt, inArray, isNull, lt, or, sql } from 'drizzle-orm';
 
 import type { ProviderType } from '@animegarden/client';
 
@@ -134,6 +134,7 @@ LIMIT 1)`
             providerId: resourceSchema.providerId,
             title: resourceSchema.title,
             magnet: resourceSchema.magnet,
+            createdAt: resourceSchema.createdAt,
             isDeleted: resourceSchema.isDeleted,
             duplicatedId: resourceSchema.duplicatedId
           }),
@@ -146,6 +147,36 @@ LIMIT 1)`
         map.delete(`${r.provider}:${r.providerId}`);
       }
       conflict.push(...map.values());
+    }
+
+    if (options.updateDuplicatedId) {
+      for (const r of resp) {
+        if (r.isDeleted) continue;
+        if (r.duplicatedId) continue;
+
+        // Update duplicated id which createdAt > r.createdAt
+        await retryFn(
+          () =>
+            this.database
+              .update(resourceSchema)
+              .set({
+                duplicatedId: r.id
+              })
+              .where(
+                and(
+                  eq(resourceSchema.isDeleted, false),
+                  isNull(resourceSchema.duplicatedId),
+                  gt(resourceSchema.createdAt, r.createdAt!),
+                  or(eq(resourceSchema.title, r.title), eq(resourceSchema.magnet, r.magnet))
+                )
+              ),
+          5
+        );
+      }
+    }
+
+    if (options.keepshare) {
+      // TODO: prefetch keepshare
     }
 
     return {

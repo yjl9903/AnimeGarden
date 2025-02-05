@@ -72,6 +72,13 @@ export interface InsertResourcesOptions {
   indexSubject?: boolean;
 
   /**
+   * Whether update duplicated resources after it
+   *
+   * @default false
+   */
+  updateDuplicatedId?: boolean;
+
+  /**
    * @default false
    */
   keepshare?: boolean;

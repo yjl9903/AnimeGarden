@@ -87,7 +87,8 @@ async function fetchResources(sys: System, platform: ProviderType) {
           fetchedAt
         })),
         {
-          indexSubject: true
+          indexSubject: true,
+          updateDuplicatedId: true
         }
       );
 
