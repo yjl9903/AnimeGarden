@@ -26,8 +26,8 @@ export class ResourcesModule extends Module<System['modules']> {
 
   public constructor(sys: System, name?: string) {
     super(sys, name || ResourcesModule.name);
-    this.query = new QueryManager(sys);
-    this.details = new DetailsManager(sys);
+    this.query = new QueryManager(sys, this.logger);
+    this.details = new DetailsManager(sys, this.logger);
   }
 
   public async initialize() {

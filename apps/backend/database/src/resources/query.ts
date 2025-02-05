@@ -80,9 +80,9 @@ export class QueryManager {
 
   private readonly downgrade: Set<string> = new Set();
 
-  public constructor(system: System) {
+  public constructor(system: System, logger: ConsolaInstance) {
     this.system = system;
-    this.logger = system.modules.resources.logger.withTag('query');
+    this.logger = logger.withTag('query');
   }
 
   public async initialize() {

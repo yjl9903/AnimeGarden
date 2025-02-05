@@ -27,9 +27,9 @@ export class DetailsManager {
 
   private readonly logger: ConsolaInstance;
 
-  public constructor(system: System) {
+  public constructor(system: System, logger: ConsolaInstance) {
     this.system = system;
-    this.logger = system.modules.resources.logger.withTag('details');
+    this.logger = logger.withTag('details');
   }
 
   public async initialize() {}
