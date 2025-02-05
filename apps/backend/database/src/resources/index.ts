@@ -255,9 +255,17 @@ LIMIT 1)`
 
       // @ts-ignore
       set.titleSearch = titleSearch;
+    }
 
-      // @ts-ignore
-      set.duplicatedId = sql`(SELECT ${resourceSchema.id}
+    // Do update
+    if (changed) {
+      // Update fetched at
+      set.fetchedAt = fetchedAt ?? new Date();
+    }
+
+    // Force updating duplicated id
+    // @ts-ignore
+    set.duplicatedId = sql`(SELECT ${resourceSchema.id}
 FROM ${resourceSchema}
 WHERE (${eq(resourceSchema.isDeleted, false)})
 AND (${isNull(resourceSchema.duplicatedId)})
@@ -265,23 +273,36 @@ AND (${lt(resourceSchema.createdAt, updated.createdAt!)})
 AND (${eq(resourceSchema.title, updated.title)} OR ${eq(resourceSchema.magnet, updated.magnet)})
 ORDER BY ${resourceSchema.createdAt} asc
 LIMIT 1)`;
-    }
 
-    // Do update
-    if (changed) {
-      set.fetchedAt = fetchedAt ?? new Date();
+    const resp1 = await retryFn(
+      () =>
+        this.database
+          .update(resourceSchema)
+          .set(set)
+          .where(
+            and(
+              eq(resourceSchema.provider, updated.provider),
+              eq(resourceSchema.providerId, updated.providerId)
+            )
+          )
+          .returning({
+            id: resourceSchema.id,
+            provider: resourceSchema.provider,
+            providerId: resourceSchema.providerId,
+            title: resourceSchema.title
+          }),
+      5
+    ).catch(() => undefined);
 
-      const resp1 = await retryFn(
+    const id = resp1?.[0].id;
+    if (resp1 && resp1.length === 1 && id) {
+      // Clearing all the related duplicated item
+      const resp2 = await retryFn(
         () =>
           this.database
             .update(resourceSchema)
-            .set(set)
-            .where(
-              and(
-                eq(resourceSchema.provider, updated.provider),
-                eq(resourceSchema.providerId, updated.providerId)
-              )
-            )
+            .set({ duplicatedId: null })
+            .where(eq(resourceSchema.duplicatedId, id))
             .returning({
               id: resourceSchema.id,
               provider: resourceSchema.provider,
@@ -291,55 +312,38 @@ LIMIT 1)`;
         5
       ).catch(() => undefined);
 
-      const id = resp1?.[0].id;
-      if (resp1 && resp1.length === 1 && id) {
-        // Clearing all the related duplicated item
-        const resp2 = await retryFn(
-          () =>
-            this.database
-              .update(resourceSchema)
-              .set({ duplicatedId: null })
-              .where(eq(resourceSchema.duplicatedId, id))
-              .returning({
-                id: resourceSchema.id,
-                provider: resourceSchema.provider,
-                providerId: resourceSchema.providerId,
-                title: resourceSchema.title
-              }),
-          5
-        ).catch(() => undefined);
-
-        // Update duplicated id which createdAt > r.createdAt
-        const resp3 = await retryFn(
-          () =>
-            this.database
-              .update(resourceSchema)
-              .set({
-                duplicatedId: id
-              })
-              .where(
-                and(
-                  eq(resourceSchema.isDeleted, false),
-                  isNull(resourceSchema.duplicatedId),
-                  gt(resourceSchema.createdAt, resource.createdAt),
-                  or(
-                    eq(resourceSchema.title, resource.title),
-                    eq(resourceSchema.magnet, resource.magnet)
-                  )
+      // Update duplicated id which createdAt > r.createdAt
+      const resp3 = await retryFn(
+        () =>
+          this.database
+            .update(resourceSchema)
+            .set({
+              duplicatedId: id
+            })
+            .where(
+              and(
+                eq(resourceSchema.isDeleted, false),
+                isNull(resourceSchema.duplicatedId),
+                gt(resourceSchema.createdAt, resource.createdAt),
+                or(
+                  eq(resourceSchema.title, resource.title),
+                  eq(resourceSchema.magnet, resource.magnet)
                 )
               )
-              .returning({
-                id: resourceSchema.id,
-                provider: resourceSchema.provider,
-                providerId: resourceSchema.providerId,
-                title: resourceSchema.title
-              }),
-          5
-        );
+            )
+            .returning({
+              id: resourceSchema.id,
+              provider: resourceSchema.provider,
+              providerId: resourceSchema.providerId,
+              title: resourceSchema.title
+            }),
+        5
+      );
 
-        return { updated: resp1[0] };
-      }
+      return { updated: resp1[0] };
     }
+
+    return { updated: undefined };
   }
 
   public async syncResources(platform: ProviderType, resources: NewResource[]) {
