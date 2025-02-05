@@ -213,9 +213,14 @@ LIMIT 1)`
     let changed = false;
     const set: Partial<typeof resourceSchema.$inferInsert> = {};
 
+    if (updated.href !== dbRes.href) {
+      set.href = updated.href;
+    }
+
     if (updated.magnet !== dbRes.magnet) {
       set.magnet = updated.magnet;
     }
+
     if (updated.tracker !== dbRes.tracker) {
       set.tracker = updated.tracker;
     }

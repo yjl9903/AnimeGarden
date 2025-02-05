@@ -86,7 +86,8 @@ for (const provider of SupportProviders) {
         { method: 'POST', headers: { authorization: `Bearer ${options.secret}` } },
         { baseURL: options.url }
       );
-      console.log(resp);
+      // @ts-ignore
+      console.log(resp.resources);
     });
 }
 

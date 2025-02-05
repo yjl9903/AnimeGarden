@@ -123,26 +123,32 @@ export class ProvidersModule extends Module<System['modules']> {
   }
 
   public async notifyRefreshedResources(resources: NotifiedResources[]) {
-    if (this.system.redis && this.system.options.cron) {
-      const { redis } = this.system;
+    if (this.system.options.cron) {
+      if (this.system.redis) {
+        const { redis } = this.system;
 
-      if (this.notifyTimeout) {
-        clearTimeout(this.notifyTimeout);
-      }
-
-      this.notifyTimeout = setTimeout(async () => {
-        this.logger.info(`Publish ${resources.length} new resources to channel ${NOTIFY_CHANNEL}`);
-        try {
-          await redis.publish(
-            NOTIFY_CHANNEL,
-            JSON.stringify({ resources: { inserted: resources } })
-          );
-        } catch (error) {
-          this.logger.error(error);
-        } finally {
-          this.notifyTimeout = undefined;
+        if (this.notifyTimeout) {
+          clearTimeout(this.notifyTimeout);
         }
-      }, 10 * 1000);
+
+        this.notifyTimeout = setTimeout(async () => {
+          this.logger.info(
+            `Publish ${resources.length} new resources to channel ${NOTIFY_CHANNEL}`
+          );
+          try {
+            await redis.publish(
+              NOTIFY_CHANNEL,
+              JSON.stringify({ resources: { inserted: resources } })
+            );
+          } catch (error) {
+            this.logger.error(error);
+          } finally {
+            this.notifyTimeout = undefined;
+          }
+        }, 10 * 1000);
+      }
+    } else {
+      await this.onNotification({ resources: { inserted: resources } });
     }
   }
 }

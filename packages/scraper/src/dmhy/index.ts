@@ -83,7 +83,7 @@ export async function fetchDmhyPage(
       provider: 'dmhy',
       providerId: matchId[1],
       title,
-      href,
+      href: lastHref,
       type,
       magnet,
       tracker,
