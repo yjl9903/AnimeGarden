@@ -7,6 +7,8 @@ export function transformResourceHref(provider: ProviderType, href?: string) {
       return `https://share.dmhy.org/topics/view/${href}`;
     case 'moe':
       return `https://bangumi.moe/torrent/${href}`;
+    case 'ani':
+      return href;
     default:
       return undefined;
   }
