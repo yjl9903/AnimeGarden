@@ -3,6 +3,7 @@ import path from 'path';
 import { breadc } from 'breadc';
 
 import { makeServer, makeExecutor } from '@animegarden/server';
+import { SupportProviders, fetchAPI } from '@animegarden/client';
 import { type SystemOptions, makeSystem } from '@animegarden/database';
 
 import { version } from '../package.json';
@@ -59,6 +60,37 @@ app.command('cron', 'Start Anime Garden cron jobs executor').action(async (optio
 });
 
 // --- Admin ---
+for (const provider of SupportProviders) {
+  app
+    .command(`admin fetch ${provider}`, `Invoke server fetching ${provider} resources`)
+    .option('--url <url>', 'API Base URL')
+    .action(async (options) => {
+      const resp = await fetchAPI(
+        `/admin/resources/${provider}`,
+        { method: 'POST', headers: { authorization: `Bearer ${options.secret}` } },
+        { baseURL: options.url }
+      );
+      console.log(resp);
+    });
+}
+
+for (const provider of SupportProviders) {
+  app
+    .command(`admin sync ${provider}`, `Invoke server syncing ${provider} resources`)
+    .option('--url <url>', 'API Base URL')
+    .option('--start <page>', 'Start page')
+    .option('--end <page>', 'End page')
+    .action(async (options) => {
+      const resp = await fetchAPI(
+        `/admin/resources/${provider}/sync?start=${options.start}&end=${options.end}`,
+        { method: 'POST', headers: { authorization: `Bearer ${options.secret}` } },
+        { baseURL: options.url }
+      );
+      console.log(resp);
+    });
+}
+
+// --- Migration ---
 
 app.command('migrate', 'Migrate Postgres database schema').action(async (options) => {
   const sys = await initialize(options);
