@@ -39,7 +39,7 @@ export class System<M extends Record<string, Module> = {}> {
 
   public constructor(options: SystemOptions = {}) {
     const cron = options.cron ?? false;
-    this.logger = createConsola().withTag(!cron ? 'System' : 'Worker');
+    this.logger = createConsola().withTag(!cron ? 'system' : 'worker');
     this.options = options;
   }
 
@@ -82,6 +82,7 @@ export class System<M extends Record<string, Module> = {}> {
       await this.refreshing;
     }
     const refreshing = new Promise<void>(async (res) => {
+      this.logger.info('Start refreshing modules');
       for (const mod of Object.values(this.modules)) {
         try {
           await mod.refresh(notification);
@@ -89,6 +90,7 @@ export class System<M extends Record<string, Module> = {}> {
           this.logger.error(error);
         }
       }
+      this.logger.success('Refreshed modules OK');
       this.refreshing = undefined;
       res();
     });

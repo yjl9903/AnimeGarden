@@ -20,19 +20,19 @@ export class ProvidersModule extends Module<System['modules']> {
   private notifyTimeout: NodeJS.Timeout | undefined;
 
   public async initialize() {
-    this.system.logger.info('Initializing Providers module');
+    this.logger.info('Initializing Providers module');
     await this.fetchProviders();
     // Only server processes subscribe notification event
     if (!this.system.options.cron) {
       await this.registerNotification();
     }
-    this.system.logger.success('Initialize Providers module OK');
+    this.logger.success('Initialize Providers module OK');
   }
 
   public async refresh() {
-    this.system.logger.info('Refreshing Providers module');
+    this.logger.info('Refreshing Providers module');
     await this.fetchProviders();
-    this.system.logger.success('Refresh Providers module OK');
+    this.logger.success('Refresh Providers module OK');
   }
 
   public async fetchProviders() {

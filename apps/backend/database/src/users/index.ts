@@ -19,15 +19,15 @@ export class UsersModule extends Module<System['modules']> {
   public readonly ids: Map<number, User> = new Map();
 
   public async initialize() {
-    this.system.logger.info('Initializing Users module');
+    this.logger.info('Initializing Users module');
     await this.fetchUsers();
-    this.system.logger.success('Initialize Users module OK');
+    this.logger.success('Initialize Users module OK');
   }
 
   public async refresh() {
-    this.system.logger.info('Refreshing Users module');
+    this.logger.info('Refreshing Users module');
     await this.fetchUsers();
-    this.system.logger.success('Refresh Users module OK');
+    this.logger.success('Refresh Users module OK');
   }
 
   public async fetchUsers() {
@@ -154,15 +154,15 @@ export class TeamsModule extends Module<System['modules']> {
   public ids: Map<number, Team> = new Map();
 
   public async initialize() {
-    this.system.logger.info('Initializing Teams module');
+    this.logger.info('Initializing Teams module');
     await this.fetchTeams();
-    this.system.logger.success('Initialize Teams module OK');
+    this.logger.success('Initialize Teams module OK');
   }
 
   public async refresh() {
-    this.system.logger.info('Refreshing Teams module');
+    this.logger.info('Refreshing Teams module');
     await this.fetchTeams();
-    this.system.logger.success('Refresh Teams module OK');
+    this.logger.success('Refresh Teams module OK');
   }
 
   public async fetchTeams() {

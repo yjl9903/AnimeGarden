@@ -1,4 +1,4 @@
-import type { ConsolaInstance } from 'consola';
+import { type ConsolaInstance, createConsola } from 'consola';
 
 import type { System } from './system';
 import type { Notification } from './types';
@@ -13,7 +13,7 @@ export abstract class Module<M extends Record<string, Module> = {}> {
   public constructor(system: System<M>, name: string) {
     this.system = system;
     this.name = name;
-    this.logger = this.system.logger.create({}).withTag(name);
+    this.logger = createConsola().withTag(name);
   }
 
   public get database() {

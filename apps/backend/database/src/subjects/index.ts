@@ -17,15 +17,15 @@ export class SubjectsModule extends Module<System['modules']> {
   public readonly bgms: Map<number, Subject> = new Map();
 
   public async initialize() {
-    this.system.logger.info('Initializing Subjects module');
+    this.logger.info('Initializing Subjects module');
     await this.fetchSubjects();
-    this.system.logger.success('Initialize Subjects module OK');
+    this.logger.success('Initialize Subjects module OK');
   }
 
   public async refresh() {
-    // this.system.logger.info('Refreshing Subjects module');
+    // this.logger.info('Refreshing Subjects module');
     // await this.fetchSubjects();
-    // this.system.logger.success('Refreshing Subjects module OK');
+    // this.logger.success('Refreshing Subjects module OK');
   }
 
   public async import() {

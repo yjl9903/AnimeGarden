@@ -31,16 +31,16 @@ export class ResourcesModule extends Module<System['modules']> {
   }
 
   public async initialize() {
-    this.system.logger.info('Initializing Resources module');
+    this.logger.info('Initializing Resources module');
     await this.query.initialize();
     await this.details.initialize();
-    this.system.logger.success('Initialize Resources module OK');
+    this.logger.success('Initialize Resources module OK');
   }
 
   public async refresh(notification: Notification) {
-    this.system.logger.info('Refreshing Resources module');
+    this.logger.info('Refreshing Resources module');
     await this.query.onNotifications(notification.resources.inserted);
-    this.system.logger.success('Refresh Resources module OK');
+    this.logger.success('Refresh Resources module OK');
   }
 
   /**
