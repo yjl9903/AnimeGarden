@@ -29,7 +29,7 @@ export class DetailsManager {
 
   public constructor(system: System) {
     this.system = system;
-    this.logger = system.logger.withTag('details');
+    this.logger = system.modules.resources.logger.withTag('details');
   }
 
   public async initialize() {}

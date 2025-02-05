@@ -82,7 +82,7 @@ export class QueryManager {
 
   public constructor(system: System) {
     this.system = system;
-    this.logger = system.logger.withTag('query');
+    this.logger = system.modules.resources.logger.withTag('query');
   }
 
   public async initialize() {
@@ -554,9 +554,13 @@ export class Task {
 
   public prefetchNextPage = memoAsync(async () => {
     if (!this.hasMore) return;
-    
+
     const prevCount = this.prefetchCount;
-    const resp = await this.query.findFromDatabase(this.options, prevCount, TASK_PREFETCH_COUNT + 1);
+    const resp = await this.query.findFromDatabase(
+      this.options,
+      prevCount,
+      TASK_PREFETCH_COUNT + 1
+    );
     this.resources.push(...resp);
     this.prefetchCount += resp.length;
     this.hasMore = resp.length > TASK_PREFETCH_COUNT;

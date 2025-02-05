@@ -1,6 +1,6 @@
 import { version } from '../package.json';
 
-import type { FetchOptions } from './types';
+import type { FetchOptions, ProviderType } from './types';
 
 import { retryFn } from './utils';
 import { DefaultBaseURL } from './constants';
@@ -32,4 +32,19 @@ export async function fetchAPI<T>(
       throw new Error(`Failed fetching ${url.toString()}`, { cause: resp });
     }
   }, retry);
+}
+
+export async function fetchStatus(options: FetchOptions = {}) {
+  const resp = await fetchAPI<{
+    timestamp: string;
+    providers: Record<
+      ProviderType,
+      { id: ProviderType; name: string; refreshedAt: string; isActive: boolean }
+    >;
+  }>('/', undefined, options);
+
+  return {
+    timestamp: resp.timestamp,
+    providers: resp.providers
+  };
 }
