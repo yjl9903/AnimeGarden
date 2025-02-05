@@ -62,7 +62,6 @@ export class System<M extends Record<string, Module> = {}> {
       }
     });
     await this.initializing;
-    this.initializing = undefined;
   }
 
   public async import() {
