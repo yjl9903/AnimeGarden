@@ -196,8 +196,7 @@ LIMIT 1)`
         this.database.query.resources.findFirst({
           where: and(
             eq(resourceSchema.provider, updated.provider),
-            eq(resourceSchema.providerId, updated.providerId),
-            eq(resourceSchema.isDeleted, false)
+            eq(resourceSchema.providerId, updated.providerId)
           )
         }),
       5
@@ -213,23 +212,33 @@ LIMIT 1)`
     let changed = false;
     const set: Partial<typeof resourceSchema.$inferInsert> = {};
 
+    if (updated.isDeleted) {
+      changed = true;
+      set.isDeleted = false;
+    }
+
     if (updated.href !== dbRes.href) {
+      changed = true;
       set.href = updated.href;
     }
 
     if (updated.magnet !== dbRes.magnet) {
+      changed = true;
       set.magnet = updated.magnet;
     }
 
     if (updated.tracker !== dbRes.tracker) {
+      changed = true;
       set.tracker = updated.tracker;
     }
 
     if (updated.subjectId !== dbRes.subjectId) {
+      changed = true;
       set.subjectId = updated.subjectId;
     }
 
     if (updated.title !== dbRes?.title) {
+      changed = true;
       set.title = updated.title;
       set.titleAlt = updated.titleAlt;
 
@@ -256,15 +265,13 @@ AND (${lt(resourceSchema.createdAt, updated.createdAt!)})
 AND (${eq(resourceSchema.title, updated.title)} OR ${eq(resourceSchema.magnet, updated.magnet)})
 ORDER BY ${resourceSchema.createdAt} asc
 LIMIT 1)`;
-
-      changed = true;
     }
 
     // Do update
     if (changed) {
       set.fetchedAt = fetchedAt ?? new Date();
 
-      const resp = await retryFn(
+      const resp1 = await retryFn(
         () =>
           this.database
             .update(resourceSchema)
@@ -283,8 +290,54 @@ LIMIT 1)`;
             }),
         5
       ).catch(() => undefined);
-      if (resp && resp.length === 1) {
-        return { updated: resp[0] };
+
+      const id = resp1?.[0].id;
+      if (resp1 && resp1.length === 1 && id) {
+        // Clearing all the related duplicated item
+        const resp2 = await retryFn(
+          () =>
+            this.database
+              .update(resourceSchema)
+              .set({ duplicatedId: null })
+              .where(eq(resourceSchema.duplicatedId, id))
+              .returning({
+                id: resourceSchema.id,
+                provider: resourceSchema.provider,
+                providerId: resourceSchema.providerId,
+                title: resourceSchema.title
+              }),
+          5
+        ).catch(() => undefined);
+
+        // Update duplicated id which createdAt > r.createdAt
+        const resp3 = await retryFn(
+          () =>
+            this.database
+              .update(resourceSchema)
+              .set({
+                duplicatedId: id
+              })
+              .where(
+                and(
+                  eq(resourceSchema.isDeleted, false),
+                  isNull(resourceSchema.duplicatedId),
+                  gt(resourceSchema.createdAt, resource.createdAt),
+                  or(
+                    eq(resourceSchema.title, resource.title),
+                    eq(resourceSchema.magnet, resource.magnet)
+                  )
+                )
+              )
+              .returning({
+                id: resourceSchema.id,
+                provider: resourceSchema.provider,
+                providerId: resourceSchema.providerId,
+                title: resourceSchema.title
+              }),
+          5
+        );
+
+        return { updated: resp1[0] };
       }
     }
   }
@@ -342,13 +395,36 @@ LIMIT 1)`;
         5
       ).catch(() => []);
 
+      // Clearing related duplicate id
+      const duplicated = await retryFn(
+        () =>
+          this.database
+            .update(resourceSchema)
+            .set({ duplicatedId: null })
+            .where(
+              inArray(
+                resourceSchema.duplicatedId,
+                deleted.map((st) => st.id)
+              )
+            )
+            .returning({
+              id: resourceSchema.id,
+              provider: resourceSchema.provider,
+              providerId: resourceSchema.providerId,
+              title: resourceSchema.title
+            }),
+        5
+      ).catch(() => []);
+
       return {
-        deleted: resp
+        deleted: resp,
+        duplicated
       };
     }
 
     return {
-      deleted: []
+      deleted: [],
+      duplicated: []
     };
   }
 }
