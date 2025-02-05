@@ -204,7 +204,8 @@ LIMIT 1)`
     ).catch(() => undefined);
     if (!dbRes) {
       const { inserted } = await this.insertResources([{ ...resource, fetchedAt }], {
-        indexSubject: true
+        indexSubject: true,
+        updateDuplicatedId: true
       });
       return { updated: inserted[0] };
     }
@@ -283,7 +284,7 @@ LIMIT 1)`;
     }
   }
 
-  public async syncResources(resources: NewResource[]) {
+  public async syncResources(platform: ProviderType, resources: NewResource[]) {
     const visited = new Set(resources.map((r) => r.provider + ':' + r.providerId));
 
     const minCreatedAt = resources.reduce((acc, cur) => {
@@ -304,7 +305,7 @@ LIMIT 1)`;
           .from(resourceSchema)
           .where(
             and(
-              eq(resourceSchema.provider, 'dmhy'),
+              eq(resourceSchema.provider, platform),
               eq(resourceSchema.isDeleted, false),
               gt(resourceSchema.createdAt, new Date(minCreatedAt)),
               lt(resourceSchema.createdAt, new Date(maxCreatedAt))

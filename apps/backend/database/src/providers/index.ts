@@ -123,7 +123,7 @@ export class ProvidersModule extends Module<System['modules']> {
   }
 
   public async notifyRefreshedResources(resources: NotifiedResources[]) {
-    if (this.system.redis) {
+    if (this.system.redis && this.system.options.cron) {
       const { redis } = this.system;
 
       if (this.notifyTimeout) {

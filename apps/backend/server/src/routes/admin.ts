@@ -163,7 +163,7 @@ async function syncResources(sys: System, platform: ProviderType, start: number,
 
       // 2. Delete resources
       const deletedAt = new Date();
-      const sync = await sys.modules.resources.syncResources(newResources);
+      const sync = await sys.modules.resources.syncResources(platform, newResources);
       if (sync.deleted.length > 0) {
         await sys.modules.providers.updateRefreshTimestamp(platform, deletedAt);
 
