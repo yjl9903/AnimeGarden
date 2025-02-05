@@ -62,6 +62,8 @@ export async function fetchMoePage(
         '.mkv',
         '.MKV'
       ]);
+    } else {
+      title = removeExtraSpaces(title);
     }
 
     result.push({

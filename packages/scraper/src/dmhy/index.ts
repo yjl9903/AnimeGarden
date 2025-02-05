@@ -90,6 +90,8 @@ export async function fetchDmhyPage(
         '.mkv',
         '.MKV'
       ]);
+    } else {
+      title = removeExtraSpaces(title);
     }
 
     res.push({
