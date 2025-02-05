@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { redirect, useLoaderData, useLocation } from '@remix-run/react';
+import { redirect, useLoaderData, useLocation, useParams } from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/cloudflare';
 
 import { type Jsonify, type ResolvedFilterOptions, parseURLSearch } from '@animegarden/client';
@@ -54,6 +54,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export default function ResourcesIndex() {
+  const params = useParams();
   const location = useLocation();
   const { ok, resources, complete, filter, page, timestamp } = useLoaderData<typeof loader>();
   const feedURL = useMemo(
@@ -72,7 +73,8 @@ export default function ResourcesIndex() {
               page={page}
               complete={complete}
               timestamp={new Date(timestamp!)}
-              link={(page) => `/resources/${page}${location.search}`}
+              pathname={`/subject/${params.subject}`}
+              link={(page) => `/subject/${params.subject}/${page}${location.search}`}
             ></Resources>
           </>
         ) : (

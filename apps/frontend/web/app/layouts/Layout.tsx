@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { NavLink } from '@remix-run/react';
 import { useAtomValue } from 'jotai';
 
-import { calendar, getSearchURL } from '~/utils/anime';
+import { calendar, getSubjectURL } from '~/utils/anime';
 import {
   Dropdown,
   DropdownMenu,
@@ -93,50 +93,53 @@ const Header = memo((props: { feedURL?: string }) => {
           <NavLink to="/">🌸</NavLink>
         </div>
         <Dropdown
-          className="nav-anime"
+          className="nav-anime [&:hover>a]:bg-zinc-100!"
           trigger={
-            <NavLink to="/resources/1?type=动画" className="rounded-md p-2 hover:(bg-zinc-100)">
+            <NavLink to="/resources/1?type=动画" className="rounded-md p-2">
               动画
             </NavLink>
           }
         >
-          <DropdownMenu className="mt-[-10px] w-[120px] max-h-[600px] lt-sm:max-h-[360px] rounded-md shadow-sm divide-y bg-light-100 leading-normal">
+          <DropdownMenu className="mt-[-10px] w-[120px] max-h-[600px] lt-sm:max-h-[360px] rounded-md shadow-box divide-y bg-light-100 leading-normal">
             <NavLink
               to="/resources/1?type=动画"
-              className="block px2 py1 rounded-t-md hover:bg-basis-50"
+              className="block px2 py1 rounded-t-md hover:bg-basis-100"
             >
               资源列表
             </NavLink>
-            {calendar.map((day) => (
-              <DropdownSubMenuItem
-                key={day.text}
-                trigger={
-                  <div
-                    className={`px2 py1 hover:bg-basis-50 cursor-pointer ${day.index === 7 && 'rounded-b-md'}`}
-                  >
-                    周{day.text}
-                  </div>
-                }
-              >
-                <DropdownSubMenu className="pl-[6px]">
-                  <div className="max-h-[500px] lt-sm:max-h-[360px] rounded-md border shadow-sm divide-y bg-light-100">
-                    {day.bangumis.map((bgm, index) => (
-                      <NavLink
-                        to={getSearchURL(bgm)}
-                        key={bgm.id}
-                        className={clsx(
-                          'block w-[360px] px2 py1 hover:bg-basis-50 whitespace-nowrap overflow-hidden text-ellipsis',
-                          index === 0 && 'rounded-t-md',
-                          index === day.bangumis.length - 1 && 'rounded-b-md'
-                        )}
-                      >
-                        {bgm.bangumi?.name_cn || bgm.name}
-                      </NavLink>
-                    ))}
-                  </div>
-                </DropdownSubMenu>
-              </DropdownSubMenuItem>
-            ))}
+            {calendar
+              .sort((l, r) => l.index - r.index)
+              .map((day) => (
+                <DropdownSubMenuItem
+                  key={day.text}
+                  className="[&:hover>.trigger]:bg-basis-100!"
+                  trigger={
+                    <div
+                      className={`trigger px2 py1 cursor-pointer ${day.index === 7 && 'rounded-b-md'}`}
+                    >
+                      周{day.text}
+                    </div>
+                  }
+                >
+                  <DropdownSubMenu className="pt-[1px] pl-[6px] pb-[2px] pr-[2px]">
+                    <div className="max-h-[500px] lt-sm:max-h-[360px] divide-y rounded-md shadow-box bg-light-100">
+                      {day.bangumis.map((bgm, index) => (
+                        <NavLink
+                          to={getSubjectURL(bgm)}
+                          key={bgm.id}
+                          className={clsx(
+                            'block w-[360px] px2 py1 hover:bg-basis-100 whitespace-nowrap overflow-hidden text-ellipsis',
+                            index === 0 && 'rounded-t-md',
+                            index === day.bangumis.length - 1 && 'rounded-b-md'
+                          )}
+                        >
+                          {bgm.bangumi?.name_cn || bgm.name}
+                        </NavLink>
+                      ))}
+                    </div>
+                  </DropdownSubMenu>
+                </DropdownSubMenuItem>
+              ))}
           </DropdownMenu>
         </Dropdown>
         <div className="nav-fansub">

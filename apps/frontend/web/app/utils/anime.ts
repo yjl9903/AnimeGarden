@@ -44,9 +44,29 @@ export function getDisplayName(bgm: FullBangumi) {
   return bgm.name;
 }
 
-export function getSearchURL(bgm: FullBangumi) {
+export function getSubjectURL(bgm: FullBangumi) {
+  const date = new Date(toShanghai(bgm.air_date).getTime() - 7 * 24 * 60 * 60 * 1000);
   const search = stringifyURLSearch({
-    after: new Date(new Date(bgm.air_date).getTime() - 7 * 24 * 60 * 60 * 1000)
+    after: date
   });
   return `/subject/${bgm.id}?${search.toString()}`;
+}
+
+/**
+ * 将字符串转换为 UTC+8 时间
+ * @param str 形如 2024-01-01 的日期字符串
+ * @returns UTC+8 时区下的 Date
+ */
+function toShanghai(str: string) {
+  // 解析输入的日期字符串
+  const [year, month, day] = str.split('-').map(Number);
+
+  // 创建一个 UTC 时间的 Date 对象an
+  const utcDate = new Date(Date.UTC(year, month - 1, day));
+
+  // 使用上海时区偏移时间，计算对应的 Date 对象
+  const shanghaiOffset = 8 * 60; // UTC+8 的分钟偏移
+  const shanghaiTime = new Date(utcDate.getTime() - shanghaiOffset * 60 * 1000);
+
+  return shanghaiTime;
 }

@@ -56,7 +56,7 @@ export default defineConfig({
         umami: {
           src: UMAMI_HOST,
           id: UMAMI_ID
-        },
+        }
         // plausible: {
         //   domain: PLAUSIBLE_HOST
         // },
