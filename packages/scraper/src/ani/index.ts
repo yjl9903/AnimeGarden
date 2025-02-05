@@ -7,7 +7,7 @@ import { toMagnetURI } from 'parse-torrent';
 import { type ScrapedResource, type ScrapedResourceDetail, retryFn } from '@animegarden/client';
 
 import { NetworkError } from '../error';
-import { parseSize, splitOnce } from '../utils';
+import { parseSize, splitOnce, stripSuffix } from '../utils';
 
 const parser = new Parser();
 
@@ -93,7 +93,7 @@ export async function fetchLastestANi(
     res.push({
       provider: 'ani',
       providerId,
-      title: item.title,
+      title: stripSuffix(item.title, ['.torrent', '.mp3', '.MP3', '.mp4', '.MP4', '.mkv', '.MKV']),
       href: link,
       type: '动画',
       magnet,
