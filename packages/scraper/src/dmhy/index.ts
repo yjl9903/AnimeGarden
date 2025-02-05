@@ -5,7 +5,7 @@ import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client
 import { retryFn } from '@animegarden/client';
 
 import { NetworkError } from '../error';
-import { splitOnce, toShanghai } from '../utils';
+import { removeExtraSpaces, splitOnce, stripSuffix, toShanghai } from '../utils';
 
 export interface FetchDmhyPageOptions {
   page?: number;
@@ -52,10 +52,10 @@ export async function fetchDmhyPage(
     const type = SimpleType[rawType in DisplayType ? DisplayType[rawType] : rawType] ?? '动画';
 
     const titleNode = [...tds[2].children].find((n) => n.tagName === 'A');
-    if (!titleNode) {
-      continue;
-    }
-    const title = titleNode.textContent?.trim() ?? '';
+    if (!titleNode) continue;
+    let title = titleNode.textContent?.trim() ?? '';
+    if (!title) continue;
+
     const href = 'https://share.dmhy.org' + (titleNode.getAttribute('href') ?? '/').trim();
 
     const fansub: HTMLAnchorElement | null = tds[2].querySelector('span.tag a');
@@ -78,6 +78,19 @@ export async function fetchDmhyPage(
     if (!lastHref) continue;
     const matchId = /^(\d+)/.exec(lastHref);
     if (!matchId) continue;
+
+    // @hack
+    if (fansubName === 'ANi') {
+      title = stripSuffix(removeExtraSpaces(title), [
+        '.torrent',
+        '.mp3',
+        '.MP3',
+        '.mp4',
+        '.MP4',
+        '.mkv',
+        '.MKV'
+      ]);
+    }
 
     res.push({
       provider: 'dmhy',

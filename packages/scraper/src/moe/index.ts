@@ -3,6 +3,7 @@ import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client
 import { retryFn } from '@animegarden/client';
 
 import { NetworkError } from '../error';
+import { removeExtraSpaces, stripSuffix } from '../utils';
 
 import { getType } from './tag';
 import { fetchTeam, fetchUser } from './user';
@@ -47,10 +48,26 @@ export async function fetchMoePage(
     const user = await fetchUser(ofetch, torrent.uploader_id);
     const team = torrent.team_id ? await fetchTeam(ofetch, torrent.team_id) : undefined;
 
+    let title = torrent.title;
+
+    // @hack
+    if (team?.name === 'ANi') {
+      // @hack
+      title = stripSuffix(removeExtraSpaces(title), [
+        '.torrent',
+        '.mp3',
+        '.MP3',
+        '.mp4',
+        '.MP4',
+        '.mkv',
+        '.MKV'
+      ]);
+    }
+
     result.push({
       provider: 'moe',
       providerId: torrent._id,
-      title: torrent.title,
+      title,
       href: torrent._id,
       magnet: torrent.magnet,
       tracker: TRACKER,
