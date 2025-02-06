@@ -93,7 +93,8 @@ export async function fetchLastestANi(
     res.push({
       provider: 'ani',
       providerId,
-      title: replaceSuffix(stripSuffix(removeExtraSpaces(item.title), ['.torrent']), {
+      title: replaceSuffix(removeExtraSpaces(item.title), {
+        '.torrent': '[MP4]',
         '.mp4': '[MP4]',
         '.MP4': '[MP4]',
         '.mkv': '[MKV]',
