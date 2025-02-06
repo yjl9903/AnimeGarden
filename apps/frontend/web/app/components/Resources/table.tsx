@@ -62,7 +62,7 @@ export default function ResourcesTable(props: ResourcesTableProps) {
                   <div>资源</div>
                 </div>
               </th>
-              <th className="py3">发布者</th>
+              <th className="py3 min-w-[60px]">发布者</th>
               <th className="py3 px2 text-center w-max">播放</th>
             </tr>
           </thead>

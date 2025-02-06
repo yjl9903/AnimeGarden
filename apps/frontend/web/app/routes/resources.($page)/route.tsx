@@ -8,6 +8,7 @@ import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
 import { generateFeed } from '~/utils/feed';
 import { fetchResources } from '~/utils/fetch';
+import { usePreferFansub } from '~/states';
 
 import { Error } from './Error';
 import { Filter } from './Filter';
@@ -58,6 +59,8 @@ export default function ResourcesIndex() {
     () => `/feed.xml?filter=${generateFeed(new URLSearchParams(location.search))}`,
     [location]
   );
+
+  usePreferFansub(filter?.fansubs);
 
   return (
     <Layout feedURL={feedURL} timestamp={timestamp}>

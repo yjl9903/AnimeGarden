@@ -10,9 +10,3 @@ export const historiesAtom = atomWithStorage(
   [],
   createJSONStorage<string[]>(() => localStorage)
 );
-
-export const preferFansubsAtom = atomWithStorage(
-  'animegarden:fansubs',
-  [],
-  createJSONStorage<string[]>(() => localStorage)
-);
