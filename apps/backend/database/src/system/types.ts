@@ -3,6 +3,14 @@ import type { ProviderType } from '@animegarden/client';
 export interface Notification {
   resources: {
     inserted: NotifiedResources[];
+
+    deleted: number[];
+  };
+
+  duplicated: {
+    inserted: number[];
+
+    duplicated: number[];
   };
 }
 

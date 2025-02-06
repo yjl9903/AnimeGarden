@@ -39,7 +39,7 @@ export class ResourcesModule extends Module<System['modules']> {
 
   public async refresh(notification: Notification) {
     this.logger.info('Refreshing Resources module');
-    await this.query.onNotifications(notification.resources.inserted);
+    await this.query.onNotifications(notification);
     this.logger.success('Refresh Resources module OK');
   }
 
@@ -73,6 +73,8 @@ export class ResourcesModule extends Module<System['modules']> {
     const map = new Map<string, NonNullable<ReturnType<typeof transformNewResources>['result']>>();
     const newResources: NewDbResource[] = [];
     const errors = [];
+    const duplicated: number[] = [];
+
     for (const r of resources) {
       const key = `${r.provider}:${r.providerId}`;
       if (map.has(key)) continue;
@@ -86,7 +88,7 @@ export class ResourcesModule extends Module<System['modules']> {
       }
     }
 
-    if (newResources.length === 0) return { inserted: [], conflict: [], errors: [] };
+    if (newResources.length === 0) return { inserted: [], conflict: [], errors: [], duplicated };
 
     const resp = await retryFn(
       () =>
@@ -155,7 +157,7 @@ LIMIT 1)`
         if (r.duplicatedId) continue;
 
         // Update duplicated id which createdAt > r.createdAt
-        await retryFn(
+        const resp = await retryFn(
           () =>
             this.database
               .update(resourceSchema)
@@ -169,9 +171,11 @@ LIMIT 1)`
                   gt(resourceSchema.createdAt, r.createdAt!),
                   or(eq(resourceSchema.title, r.title), eq(resourceSchema.magnet, r.magnet))
                 )
-              ),
+              )
+              .returning({ id: resourceSchema.id }),
           5
         );
+        duplicated.push(...resp.map((r) => r.id));
       }
     }
 
@@ -182,7 +186,8 @@ LIMIT 1)`
     return {
       inserted: resp,
       conflict,
-      errors
+      errors,
+      duplicated: [...new Set(duplicated)]
     };
   }
 
@@ -202,11 +207,11 @@ LIMIT 1)`
       5
     ).catch(() => undefined);
     if (!dbRes) {
-      const { inserted } = await this.insertResources([{ ...resource, fetchedAt }], {
+      const { inserted, duplicated } = await this.insertResources([{ ...resource, fetchedAt }], {
         indexSubject: true,
         updateDuplicatedId: true
       });
-      return { updated: inserted[0] };
+      return { updated: inserted[0], inserted: [], duplicated };
     }
 
     let changed = false;
@@ -304,10 +309,7 @@ LIMIT 1)`;
             .set({ duplicatedId: null })
             .where(eq(resourceSchema.duplicatedId, id))
             .returning({
-              id: resourceSchema.id,
-              provider: resourceSchema.provider,
-              providerId: resourceSchema.providerId,
-              title: resourceSchema.title
+              id: resourceSchema.id
             }),
         5
       ).catch(() => undefined);
@@ -332,18 +334,22 @@ LIMIT 1)`;
               )
             )
             .returning({
-              id: resourceSchema.id,
-              provider: resourceSchema.provider,
-              providerId: resourceSchema.providerId,
-              title: resourceSchema.title
+              id: resourceSchema.id
             }),
         5
       );
 
-      return { updated: resp1[0] };
+      const removed = new Set(resp2?.map((r) => r.id));
+      const inserted = new Set(resp3?.map((r) => r.id));
+
+      return {
+        updated: resp1[0],
+        inserted: [...removed].filter((id) => !inserted.has(id)),
+        duplicated: [...inserted].filter((id) => !removed.has(id))
+      };
     }
 
-    return { updated: undefined };
+    return { updated: undefined, inserted: [], duplicated: [] };
   }
 
   public async syncResources(platform: ProviderType, resources: NewResource[]) {
@@ -400,7 +406,7 @@ LIMIT 1)`;
       ).catch(() => []);
 
       // Clearing related duplicate id
-      const duplicated = await retryFn(
+      const inserted = await retryFn(
         () =>
           this.database
             .update(resourceSchema)
@@ -412,23 +418,20 @@ LIMIT 1)`;
               )
             )
             .returning({
-              id: resourceSchema.id,
-              provider: resourceSchema.provider,
-              providerId: resourceSchema.providerId,
-              title: resourceSchema.title
+              id: resourceSchema.id
             }),
         5
       ).catch(() => []);
 
       return {
         deleted: resp,
-        duplicated
+        inserted: inserted.map((r) => r.id)
       };
     }
 
     return {
       deleted: [],
-      duplicated: []
+      inserted: []
     };
   }
 }

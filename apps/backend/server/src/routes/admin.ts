@@ -95,7 +95,16 @@ async function fetchResources(sys: System, platform: ProviderType) {
       // Maintain provider status
       if (resources.inserted.length > 0) {
         await sys.modules.providers.updateRefreshTimestamp(platform, fetchedAt);
-        await sys.modules.providers.notifyRefreshedResources(resources.inserted);
+        await sys.modules.providers.notifyRefreshedResources({
+          resources: {
+            inserted: resources.inserted,
+            deleted: []
+          },
+          duplicated: {
+            inserted: [],
+            duplicated: resources.duplicated
+          }
+        });
 
         sys.logger.success(
           `Finish inserting ${resources.inserted.length} new ${platform} resources`
@@ -147,16 +156,32 @@ async function syncResources(sys: System, platform: ProviderType, start: number,
         providerId: string;
         title: string;
       }> = [];
+      const inserted: number[] = [];
+      const duplicated: number[] = [];
+
       for (const r of newResources) {
         const resp = await sys.modules.resources.updateResource(r, updatedAt);
-        if (resp && resp.updated) {
-          updated.push(resp.updated);
+        if (resp) {
+          if (resp.updated) {
+            updated.push(resp.updated);
+          }
+          inserted.push(...resp.inserted);
+          duplicated.push(...resp.duplicated);
         }
       }
 
       if (updated.length > 0) {
         await sys.modules.providers.updateRefreshTimestamp(platform, updatedAt);
-        await sys.modules.providers.notifyRefreshedResources(updated);
+        await sys.modules.providers.notifyRefreshedResources({
+          resources: {
+            inserted: updated,
+            deleted: []
+          },
+          duplicated: {
+            inserted,
+            duplicated
+          }
+        });
 
         sys.logger.success(`Finish updating ${updated.length} new ${platform} resources`);
       }
@@ -166,6 +191,16 @@ async function syncResources(sys: System, platform: ProviderType, start: number,
       const sync = await sys.modules.resources.syncResources(platform, newResources);
       if (sync.deleted.length > 0) {
         await sys.modules.providers.updateRefreshTimestamp(platform, deletedAt);
+        await sys.modules.providers.notifyRefreshedResources({
+          resources: {
+            inserted: [],
+            deleted: sync.deleted.map((r) => r.id)
+          },
+          duplicated: {
+            inserted: sync.inserted,
+            duplicated: []
+          }
+        });
 
         sys.logger.success(`Finish deleting ${updated.length} missing ${platform} resources`);
       }

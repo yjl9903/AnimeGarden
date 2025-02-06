@@ -25,7 +25,7 @@ import {
   transformResourceHref
 } from '@animegarden/client';
 
-import type { System, NotifiedResources } from '../system';
+import type { System, NotifiedResources, Notification } from '../system';
 
 import { resources } from '../schema/resources';
 import { jieba, nextTick, retryFn } from '../utils';
@@ -409,8 +409,18 @@ export class QueryManager {
     return resp;
   }
 
-  public async onNotifications(notified: NotifiedResources[]) {
+  public async onNotifications(notification: Notification) {
     await this.findFromRedis.clear();
+
+    const removed = new Set([
+      ...notification.resources.deleted,
+      ...notification.duplicated.duplicated
+    ]);
+
+    const notified = [
+      ...notification.resources.inserted.map((r) => r.id),
+      ...notification.duplicated.inserted
+    ];
 
     const resp = await retryFn(
       () =>
@@ -420,10 +430,8 @@ export class QueryManager {
           .where(
             and(
               eq(resources.isDeleted, false),
-              inArray(
-                resources.id,
-                notified.map((r) => r.id)
-              )
+              isNull(resources.duplicatedId),
+              inArray(resources.id, notified)
             )
           )
           .orderBy(desc(resources.createdAt)),
@@ -439,8 +447,10 @@ export class QueryManager {
       if (task.options.search) {
         task.clear();
       } else {
+        // Remove resources
+        removed.size > 0 && task.removeResources(removed);
         // Insert resources
-        task.insertResources(resp);
+        resp.length > 0 && task.insertResources(resp);
       }
       await nextTick();
     }
@@ -642,5 +652,10 @@ export class Task {
       this.prefetchCount = this.resources.length;
       this.resources.sort((lhs, rhs) => rhs.createdAt.getTime() - lhs.createdAt.getTime());
     }
+  }
+
+  public removeResources(removed: Set<number>) {
+    this.resources = this.resources.filter((r) => !removed.has(r.id));
+    this.prefetchCount = this.resources.length;
   }
 }
