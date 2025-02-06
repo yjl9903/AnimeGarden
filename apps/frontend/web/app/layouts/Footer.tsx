@@ -35,7 +35,7 @@ export const Footer = memo((props: FooterProps) => {
         'relative',
         'flex',
         'justify-center',
-        'border-t border-t-1 py-6 h-[196px] bg-[#fef8f7]'
+        'border-t border-t-1 py-6 h-[220px] bg-[#fef8f7]'
       )}
     >
       <div className={clsx('main', 'w-full')}>
@@ -43,9 +43,22 @@ export const Footer = memo((props: FooterProps) => {
           <div className="flex">
             <span className="text-main-900 font-bold select-none">状态</span>
             <span className="i-carbon:chevron-right text-xl lt-sm:text-base text-main-900 font-bold select-none relative top-[2px]"></span>
-            <span className="ml-2 lt-sm:ml-2">
+            <span className="ml-2">
               {timestamp ? '数据更新于 ' + formatChinaTime(timestamp) : '服务器错误'}
             </span>
+          </div>
+          <div className="flex mt-2">
+            <span className="text-main-900 font-bold select-none">源站</span>
+            <span className="i-carbon:chevron-right text-xl lt-sm:text-base text-main-900 font-bold select-none relative top-[2px]"></span>
+            <a href="https://share.dmhy.org/" target="_blank" className="ml-2">
+              動漫花園
+            </a>
+            <a href="https://bangumi.moe/" target="_blank" className="ml-4">
+              萌番组
+            </a>
+            <a href="https://open.ani.rip/" target="_blank" className="ml-4">
+              ANi
+            </a>
           </div>
           <div className="flex mt-2">
             <span className="text-main-900 font-bold select-none">关于</span>
@@ -88,7 +101,7 @@ export const Footer = memo((props: FooterProps) => {
               监控
             </a>
           </div>
-          <div className="flex justify-center mt-8">
+          <div className="flex lt-lg:justify-center mt-8">
             <div className="">
               <span>
                 © 2022-2025{' '}
