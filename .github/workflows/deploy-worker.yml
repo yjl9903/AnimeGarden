@@ -67,6 +67,6 @@ jobs:
           SSR_ADAPTER: cloudflare
 
       - name: Deploy
-        run: pnpm -C apps/frontend/web run deploy:worker
+        run: pnpm -C apps/frontend/web run deploy:cloudflare
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
