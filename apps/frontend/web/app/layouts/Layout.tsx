@@ -48,7 +48,7 @@ const Hero = memo((props: { feedURL?: string }) => {
         className="w-full h-$nav-height z-12 flex items-center justify-center pointer-events-none"
         suppressHydrationWarning={true}
       >
-        <div className="vercel relative h-[44.4px] md:w-[600px] lt-md:w-[95vw] max-w-full pointer-events-auto">
+        <div className="vercel relative h-[44.4px] xl:w-[640px] lg:w-[600px] md:w-[500px] lt-md:w-[calc(100vw-116px)] pointer-events-auto">
           <Search></Search>
         </div>
       </search>

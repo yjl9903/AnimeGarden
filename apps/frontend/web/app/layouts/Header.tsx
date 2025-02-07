@@ -19,7 +19,7 @@ export const Header = memo((props: { feedURL?: string }) => {
 
   return (
     <header
-      className="fixed z-13 pt-[1px] flex justify-center items-center w-full h-$nav-height text-base-500"
+      className="fixed z-13 pt-[1px] flex justify-center items-center w-full h-$nav-height pointer-events-none text-base-500"
       suppressHydrationWarning={true}
     >
       <nav className="main flex gap-1 [&>div]:(leading-$nav-height)">
@@ -29,8 +29,8 @@ export const Header = memo((props: { feedURL?: string }) => {
         <AnimeDropdown />
         <FansubsDropdown />
         <TypesDropdown />
-        <div className="flex-auto"></div>
-        <div>
+        <div className="flex-auto pointer-events-none"></div>
+        <div className="lt-md:hidden">
           {feedURL && (
             <a
               href={feedURL}
@@ -42,6 +42,7 @@ export const Header = memo((props: { feedURL?: string }) => {
             </a>
           )}
         </div>
+        <div className="hidden lt-md:block"></div>
       </nav>
     </header>
   );
@@ -50,7 +51,7 @@ export const Header = memo((props: { feedURL?: string }) => {
 const AnimeDropdown = memo(() => {
   return (
     <Dropdown
-      className="nav-anime [&:hover>a]:bg-zinc-100!"
+      className="nav-animes pointer-events-auto [&:hover>a]:bg-zinc-100!"
       trigger={
         <NavLink to="/resources/1?type=动画" className="rounded-md p-2">
           动画
@@ -124,7 +125,7 @@ const FansubsDropdown = memo(() => {
 
   return (
     <Dropdown
-      className="nav-dropdown [&:hover>a]:bg-zinc-100!"
+      className="nav-fansubs pointer-events-auto [&:hover>a]:bg-zinc-100!"
       trigger={
         <NavLink to={`/resources/1?fansub=${fansubs[0]}`} className="rounded-md p-2">
           字幕组
@@ -149,7 +150,7 @@ const FansubsDropdown = memo(() => {
 const TypesDropdown = memo(() => {
   return (
     <Dropdown
-      className="nav-dropdown [&:hover>a]:bg-zinc-100!"
+      className="nav-types pointer-events-auto [&:hover>a]:bg-zinc-100!"
       trigger={
         <NavLink to={`/resources/1`} className="rounded-md p-2">
           资源

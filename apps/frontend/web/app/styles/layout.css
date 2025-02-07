@@ -12,6 +12,15 @@ html {
   @apply: fixed top-[0px];
 }
 
+.hidden-nav-animes .nav-animes,
+.hidden-nav-animes .nav-fansubs,
+.hidden-nav-animes .nav-types,
+.hidden-nav-fansubs .nav-fansubs,
+.hidden-nav-fansubs .nav-types,
+.hidden-nav-types .nav-types {
+  display: none;
+}
+
 #hero-banner {
   @apply: border-bottom [border-bottom:1px_solid_rgb(187_187_187_/_20%)];
 

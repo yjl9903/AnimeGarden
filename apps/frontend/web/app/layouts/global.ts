@@ -7,6 +7,12 @@ let header = document.querySelector('header');
 let heroSearch = document.querySelector('#hero-search');
 let heroPlaceholder = document.querySelector('#hero-placeholder');
 let sidebarRoot: HTMLDivElement | null = document.querySelector('.sidebar-root');
+
+let navAnimes = document.querySelector('.nav-animes');
+let navFansubs = document.querySelector('.nav-fansubs');
+let navTypes = document.querySelector('.nav-types');
+let rects: (DOMRect | undefined)[] = [undefined, undefined, undefined];
+
 function updateHero() {
   const y = document.documentElement.scrollTop;
 
@@ -43,7 +49,43 @@ function updateHero() {
     header?.classList.remove('fix-hero');
   }
 
+  // 碰撞检测
+  const width = document.documentElement.clientWidth;
+  if (width < 1440) {
+    updateHeader();
+  }
+
   handling = false;
+}
+
+function updateHeader() {
+  if (!navAnimes || !navAnimes.isConnected || !rects[0]) {
+    navAnimes = document.querySelector('.nav-animes');
+    rects[0] = navAnimes?.getBoundingClientRect();
+  }
+  if (!navFansubs || !navFansubs.isConnected || !rects[1]) {
+    navFansubs = document.querySelector('.nav-fansubs');
+    rects[1] = navFansubs?.getBoundingClientRect();
+  }
+  if (!navTypes || !navTypes.isConnected || !rects[2]) {
+    navTypes = document.querySelector('.nav-types');
+    rects[2] = navTypes?.getBoundingClientRect();
+  }
+
+  const searchRect = heroSearch?.firstElementChild?.getBoundingClientRect();
+  if (searchRect) {
+    const { left, top } = searchRect;
+    document.body.classList.remove('hidden-nav-animes', 'hidden-nav-fansubs', 'hidden-nav-types');
+    if (top <= 45) {
+      if (rects[0] && left <= rects[0].right) {
+        document.body.classList.add('hidden-nav-animes');
+      } else if (rects[1] && left <= rects[1].right) {
+        document.body.classList.add('hidden-nav-fansubs');
+      } else if (rects[2] && left <= rects[2].right) {
+        document.body.classList.add('hidden-nav-types');
+      }
+    }
+  }
 }
 
 function handleScroll() {
@@ -53,8 +95,14 @@ function handleScroll() {
 }
 
 updateHero();
+
 document.addEventListener('DOMContentLoaded', updateHero);
 document.addEventListener('scroll', handleScroll);
+
+const resizeOb = new ResizeObserver(() => {
+  updateHeader();
+});
+resizeOb.observe(document.body);
 
 // @ts-ignore
 const scrollTo = window.scrollTo;
