@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - remix
     paths:
       - apps/frontend/web/**
       - packages/worker/**
@@ -41,32 +40,32 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
 
-  web:
-    runs-on: ubuntu-latest
+  # web:
+  #   runs-on: ubuntu-latest
 
-    if: github.ref == 'refs/heads/remix'
+  #   if: github.ref == 'refs/heads/remix'
 
-    steps:
-      - uses: actions/checkout@v4
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4.0.0
+  #     - name: Setup pnpm
+  #       uses: pnpm/action-setup@v4.0.0
 
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-          cache: pnpm
+  #     - name: Setup node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20.x
+  #         cache: pnpm
 
-      - name: Install
-        run: pnpm install
+  #     - name: Install
+  #       run: pnpm install
 
-      - name: Build
-        run: pnpm build:web
-        env:
-          SSR_ADAPTER: cloudflare
+  #     - name: Build
+  #       run: pnpm build:web
+  #       env:
+  #         SSR_ADAPTER: cloudflare
 
-      - name: Deploy
-        run: pnpm -C apps/frontend/web run deploy:cloudflare
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+  #     - name: Deploy
+  #       run: pnpm -C apps/frontend/web run deploy:cloudflare
+  #       env:
+  #         CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
