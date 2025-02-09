@@ -175,7 +175,8 @@ const CollectionItemContent = memo(
         ? name.title + (fansub ? ' 字幕组:' + fansub : '')
         : name.text!;
     const [collections, setCollections] = useAtom(collectionsAtom);
-    const display = useMemo(() => resolveFilterOptions(item), [item]);
+    // TODO: fix this
+    const display = useMemo(() => resolveFilterOptions(item as any), [item]);
 
     // --- Open state
     const [tipOpen, setTipOpen] = useState(false);
