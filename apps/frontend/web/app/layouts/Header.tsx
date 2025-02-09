@@ -23,22 +23,24 @@ export const Header = memo((props: { feedURL?: string }) => {
       suppressHydrationWarning={true}
     >
       <nav className="main flex gap-1 [&>div]:(leading-$nav-height)">
-        <div className="box-content w-[32px] pl3 lt-sm:pl1 text-2xl text-center font-quicksand font-bold">
+        <div className="box-content w-[32px] pl3 lt-sm:pl1 text-2xl text-center font-quicksand font-bold pointer-events-auto">
           <NavLink to="/">🌸</NavLink>
         </div>
         <AnimeDropdown />
         <FansubsDropdown />
         <TypesDropdown />
         <div className="flex-auto pointer-events-none"></div>
-        <div className="lt-md:hidden">
+        <div className="lt-md:hidden pointer-events-auto">
           {feedURL && (
             <a
               href={feedURL}
               target="_blank"
-              className="inline cursor-pointer rounded-md p-2 text-[#ee802f] hover:(!text-[#ff7800] !border-b-[#ff7800] bg-zinc-100)"
+              className="inline cursor-pointer rounded-md p-2 text-[#ee802f] [&:hover>span]:(text-[#ff7800]! border-b-2 border-b-[#ff7800]!)"
             >
-              <span className="i-carbon-rss mr1" />
-              <span>RSS</span>
+              <span>
+                <span className="i-carbon-rss text-sm mr1" />
+                <span>RSS</span>
+              </span>
             </a>
           )}
         </div>

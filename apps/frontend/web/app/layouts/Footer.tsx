@@ -106,7 +106,7 @@ export const Footer = memo((props: FooterProps) => {
               <span>
                 © 2022-2025{' '}
                 <a href="https://github.com/animegarden" target="_blank">
-                  Anime Garden
+                  Anime Space
                 </a>
                 .
               </span>
