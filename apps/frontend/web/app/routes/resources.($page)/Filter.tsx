@@ -3,10 +3,12 @@ import { NavLink, useLocation } from '@remix-run/react';
 import { useCallback } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 
-import type { ResolvedFilterOptions } from '@animegarden/client';
+import type { FullBangumi } from 'bgmd/types';
+import type { Jsonify, ResolvedFilterOptions } from '@animegarden/client';
 
 import { APP_HOST } from '~build/env';
 
+import { getSubjectById } from '~/utils/subjects';
 import { removeQuote, formatChinaTime, DisplayTypeColor } from '~/utils';
 import { Button } from '~/components/ui/button';
 import { SearchTooltip } from '~/components/Help';
@@ -15,13 +17,16 @@ import { currentCollectionAtom } from '~/states/collection';
 
 export type DisplayResolvedFilterOptions = ReturnType<typeof resolveFilterOptions>;
 
-export function resolveFilterOptions(filter: Omit<ResolvedFilterOptions, 'page' | 'pageSize'>) {
+export function resolveFilterOptions(
+  filter: Omit<Jsonify<ResolvedFilterOptions>, 'page' | 'pageSize'>
+) {
   const types = [...new Set(filter.types ?? [])];
   const publishers = [...new Set(filter.publishers ?? [])];
   const fansubs = [...new Set(filter.fansubs ?? [])];
 
   return {
     types,
+    subjects: filter.subjects ?? [],
     publishers,
     fansubs,
     before: filter.before ? new Date(filter.before) : undefined,
@@ -34,7 +39,9 @@ export function resolveFilterOptions(filter: Omit<ResolvedFilterOptions, 'page' 
 }
 
 interface Props {
-  filter?: Omit<ResolvedFilterOptions, 'page' | 'pageSize'>;
+  filter?: Omit<Jsonify<ResolvedFilterOptions>, 'page' | 'pageSize'>;
+
+  subject?: Omit<FullBangumi, 'summary'>;
 
   feedURL?: string;
 }
@@ -45,6 +52,20 @@ export function Filter(props: Props) {
   const location = useLocation();
   const [collection, setCollection] = useAtom(currentCollectionAtom);
   const setIsOpen = useSetAtom(isOpenSidebar);
+
+  const resolved = filter ? resolveFilterOptions(filter) : ({} as ResolvedFilterOptions);
+  const {
+    types = [],
+    fansubs = [],
+    publishers = [],
+    subjects = [],
+    after,
+    before,
+    search = [],
+    include = [],
+    keywords = [],
+    exclude = []
+  } = resolved;
 
   const copyRSS = useCallback(
     async (e: React.MouseEvent) => {
@@ -69,7 +90,7 @@ export function Filter(props: Props) {
     if (!collection.items.find((i) => i.searchParams === location.search)) {
       setCollection({
         name: collection.name,
-        items: [{ ...filter, name: '', searchParams: location.search }, ...collection.items]
+        items: [{ ...resolved, name: '', searchParams: location.search }, ...collection.items]
       });
 
       toast.success(`成功添加到 ${collection.name}`, {
@@ -89,14 +110,12 @@ export function Filter(props: Props) {
 
   if (!filter) return;
 
-  const { types, fansubs, publishers, after, before, search, include, keywords, exclude } =
-    resolveFilterOptions(filter);
-
   if (
     !(
+      types.length > 0 ||
+      subjects.length > 0 ||
       fansubs.length > 0 ||
       publishers.length > 0 ||
-      types.length > 0 ||
       search.length > 0 ||
       include.length > 0 ||
       keywords.length > 0 ||
@@ -107,8 +126,21 @@ export function Filter(props: Props) {
     return;
   }
 
+  const realSubject =
+    subjects.length === 1 && props.subject
+      ? [props.subject]
+      : subjects.map((sub) => getSubjectById(sub)).filter(Boolean);
+
   return (
     <div className="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
+      {realSubject.length > 0 && (
+        <div className="space-x-2 text-0">
+          <span className="text-4 text-base-800 font-bold mr2 select-none keyword">动画</span>
+          {realSubject.map((subject) => (
+            <span className={`text-4 select-text text-base-900`}>{subject.bangumi?.name_cn}</span>
+          ))}
+        </div>
+      )}
       {types.length > 0 && (
         <div className="space-x-2 text-0">
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">类型</span>

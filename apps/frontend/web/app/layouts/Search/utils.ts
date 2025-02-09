@@ -58,6 +58,8 @@ export function parseSearch(input: string) {
 
   const splitted = splitWords(input);
 
+  const subjects: string[] = [];
+
   const search: string[] = [];
   const include: string[] = [];
   const keywords: string[] = [];
@@ -70,6 +72,9 @@ export function parseSearch(input: string) {
   const before: Date[] = [];
 
   const handlers: Record<string, (word: string) => void> = {
+    'subject:,动画:': (word) => {
+      subjects.push(word);
+    },
     'title:,标题:,匹配:': (word) => {
       include.push(word);
     },
@@ -91,7 +96,7 @@ export function parseSearch(input: string) {
     'before:,结束:,早于:': (word) => {
       before.push(new Date(word));
     },
-    '类型:,type:': (word) => {
+    'type:,类型:': (word) => {
       types.push(word);
     }
   };

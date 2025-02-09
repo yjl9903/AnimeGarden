@@ -8,17 +8,20 @@ import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
 import { generateFeed } from '~/utils/feed';
 import { fetchResources } from '~/utils/fetch';
+import { getSubjectById } from '~/utils/subjects';
 import { usePreferFansub } from '~/states';
 
 import { Error } from '../resources.($page)/Error';
 import { Filter } from '../resources.($page)/Filter';
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  const title = generateShortFilterTitle(data?.filter ?? {});
+export const meta: MetaFunction<typeof loader> = ({ data, params }) => {
+  const subjectId = +params.subject!;
+  const subject = getSubjectById(subjectId);
+  const title = subject?.bangumi?.name_cn || subject?.name;
 
   return [
-    { title: title + ' | Anime Garden 動漫花園資源網第三方镜像站' },
-    { name: 'description', content: '}Anime Garden 動漫花園資源網第三方镜像站' }
+    { title: (title || '所有资源') + ' | Anime Garden 動漫花園資源網第三方镜像站' },
+    { name: 'description', content: 'Anime Garden 動漫花園資源網第三方镜像站' }
   ];
 };
 
@@ -36,16 +39,18 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   }
 
   const parsed = parseURLSearch(url.searchParams, { pageSize: 80 });
+  const subject = +params.subject!;
   const page = +(params.page ?? '1');
   const { ok, resources, complete, filter, timestamp } = await fetchResources({
     ...parsed,
-    subject: +params.subject!,
+    subject,
     subjects: undefined,
     page: +(params.page ?? '1')
   });
 
   return json({
     ok,
+    subject: getSubjectById(subject),
     resources,
     complete,
     page,
@@ -57,7 +62,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 export default function ResourcesIndex() {
   const params = useParams();
   const location = useLocation();
-  const { ok, resources, complete, filter, page, timestamp } = useLoaderData<typeof loader>();
+  const { ok, subject, resources, complete, filter, page, timestamp } =
+    useLoaderData<typeof loader>();
   const feedURL = useMemo(
     () => `/feed.xml?filter=${generateFeed(new URLSearchParams(location.search))}`,
     [location]
@@ -70,7 +76,7 @@ export default function ResourcesIndex() {
       <div className="w-full pt-12 pb-24">
         {ok ? (
           <>
-            <Filter filter={filter as any} feedURL={feedURL}></Filter>
+            <Filter filter={filter} subject={subject} feedURL={feedURL}></Filter>
             <Resources
               resources={resources}
               page={page}
