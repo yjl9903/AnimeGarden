@@ -1,29 +1,29 @@
-# See https://fly.io/docs/app-guides/continuous-deployment-with-github-actions/
-
 name: Deploy Fly
 
 on:
   workflow_dispatch:
 
 jobs:
-  app:
-    name: Deploy app
+  web:
+    name: Deploy Web
 
     runs-on: ubuntu-latest
 
-    concurrency: deploy-fly-app-group
+    concurrency: deploy-fly-web-group
 
     steps:
       - uses: actions/checkout@v4
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - run: flyctl deploy --config ./packages/app/fly.toml --remote-only --build-secret SERVER_HOST=animegarden-server-production.internal --build-secret APP_HOST=garden.breadio.wiki
+      - run: |
+          flyctl deploy --config ./apps/frontend/web/fly.toml \
+            --app animegarden-web-test --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
   server:
-    name: Deploy server
+    name: Deploy Server
 
     runs-on: ubuntu-latest
 
@@ -34,6 +34,8 @@ jobs:
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - run: flyctl deploy --config ./packages/server/fly.toml --remote-only
+      - run: |
+          flyctl deploy --config ./apps/backend/manager/fly.toml \
+            --app animegarden-server-test --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

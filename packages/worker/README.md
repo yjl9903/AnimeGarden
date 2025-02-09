@@ -17,4 +17,4 @@ Follow [CONTRIBUTING.md](../../CONTRIBUTING.md#cloudflare-worker) to setup the e
 
 ## License
 
-MIT License © 2023 [XLor](https://github.com/yjl9903)
+AGPL-3.0 License © 2023 [XLor](https://github.com/yjl9903)

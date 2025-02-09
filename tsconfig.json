@@ -19,14 +19,23 @@
       "animegarden": [
         "./packages/animegarden/src/index.ts"
       ],
+      "anipar": [
+        "./packages/anipar/src/index.ts"
+      ],
+      "@animegarden/client": [
+        "./packages/client/src/index.ts"
+      ],
       "@animegarden/scraper": [
         "./packages/scraper/src/index.ts"
       ],
       "@animegarden/database": [
-        "./packages/database/src/index.ts"
+        "./apps/backend/database/src/index.ts"
       ],
-      "@animegarden/cli": [
-        "./packages/cli/src/index.ts"
+      "@animegarden/server": [
+        "./apps/backend/server/src/index.ts"
+      ],
+      "@animegarden/manager": [
+        "./apps/backend/manager/src/index.ts"
       ]
     }
   },

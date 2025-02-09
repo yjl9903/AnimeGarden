@@ -3,9 +3,12 @@ node_modules
 
 # Env
 .env
+.env.*
+!.env.local
 
 # Build output
 .turbo
+.wrangler
 .animegarden
 chunk
 output

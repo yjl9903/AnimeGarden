@@ -17,6 +17,19 @@ export function stripSuffix(text: string, suffixes: string[]) {
   return text;
 }
 
+export function replaceSuffix(text: string, suffixes: Record<string, string>) {
+  for (const [suffix, replaced] of Object.entries(suffixes)) {
+    if (text.endsWith(suffix)) {
+      return text.slice(0, text.length - suffix.length) + replaced;
+    }
+  }
+  return text;
+}
+
+export function removeExtraSpaces(str: string): string {
+  return str.replace(/\s+/g, ' ').trim();
+}
+
 export function toShanghai(date: Date) {
   const offset = -480 - new Date().getTimezoneOffset();
   return new Date(date.getTime() + offset * 60 * 1000);

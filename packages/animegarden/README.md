@@ -38,4 +38,4 @@ You can check more filter conditions [FilterOptions](https://github.com/yjl9903/
 
 ## License
 
-MIT License © 2023 [XLor](https://github.com/yjl9903)
+AGPL-3.0 License © 2023 [XLor](https://github.com/yjl9903)

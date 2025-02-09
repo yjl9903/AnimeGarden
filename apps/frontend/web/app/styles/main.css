@@ -1,0 +1,33 @@
+@import '@onekuma/preset.css';
+@import '@onekuma/reset/tailwind.css';
+
+.text-link {
+  /* prettier-ignore */
+  @apply: text-sky-700 hover:text-sky-500;
+}
+
+.text-link-secondary {
+  /* prettier-ignore */
+  @apply: text-sky-700/60 hover:text-sky-500/60;
+}
+
+.text-link-secondary-hover-base {
+  /* prettier-ignore */
+  @apply: hover:text-sky-700/60;
+}
+
+.text-link-secondary-hover-active {
+  /* prettier-ignore */
+  @apply: hover:text-sky-500/60;
+}
+
+.text-link-active {
+  /* prettier-ignore */
+  @apply: hover:text-sky-600;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

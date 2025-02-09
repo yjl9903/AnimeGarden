@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/yjl9903/AnimeGarden.git"
   },
-  "license": "MIT",
+  "license": "AGPL-3.0",
   "author": "XLor",
   "sideEffects": false,
   "type": "module",
@@ -41,8 +41,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "simptrad": "^0.1.0",
-    "zod": "^3.23.8"
+    "@animegarden/client": "workspace:*"
   },
   "engines": {
     "node": ">=v18.16.0"
