@@ -21,3 +21,7 @@ export async function retryFn<T>(fn: () => Promise<T>, count: number): Promise<T
 export function nextTick() {
   return new Promise<void>((resolve) => process.nextTick(resolve));
 }
+
+export function removePunctuations(input: string): string {
+  return input.replace(/[\p{P}\p{S}]/gu, '');
+}

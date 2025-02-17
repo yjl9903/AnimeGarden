@@ -25,10 +25,10 @@ import {
   transformResourceHref
 } from '@animegarden/client';
 
-import type { System, NotifiedResources, Notification } from '../system';
+import type { System, Notification } from '../system';
 
 import { resources } from '../schema/resources';
-import { jieba, nextTick, retryFn } from '../utils';
+import { jieba, nextTick, removePunctuations, retryFn } from '../utils';
 
 import type { DatabaseResource } from './types';
 
@@ -269,10 +269,22 @@ export class QueryManager {
       before: filter.before,
       after: filter.after,
       subjects: filter.subjects,
-      search: filter.search?.map((t) => normalizeTitle(t)),
-      include: filter.include?.map((t) => normalizeTitle(t)),
-      keywords: filter.keywords?.map((t) => normalizeTitle(t)),
-      exclude: filter.exclude?.map((t) => normalizeTitle(t))
+      search: filter.search
+        ?.map((t) => removePunctuations(t.trim()))
+        ?.filter(Boolean)
+        ?.map((t) => normalizeTitle(t)),
+      include: filter.include
+        ?.map((t) => t.trim())
+        ?.filter(Boolean)
+        ?.map((t) => normalizeTitle(t)),
+      keywords: filter.keywords
+        ?.map((t) => t.trim())
+        ?.filter(Boolean)
+        ?.map((t) => normalizeTitle(t)),
+      exclude: filter.exclude
+        ?.map((t) => t.trim())
+        ?.filter(Boolean)
+        ?.map((t) => normalizeTitle(t))
     };
   }
 
@@ -371,7 +383,7 @@ export class QueryManager {
           .filter(Boolean)
       );
       const tsquery = cutted.flat().join(' & ');
-      conds.push(sql`(${resources.titleSearch} @@ to_tsquery(${tsquery}))`);
+      conds.push(sql`(${resources.titleSearch} @@ to_tsquery('simple', ${tsquery}))`);
     } else if ((include && include.length > 0) || (keywords && keywords.length > 0)) {
       if (include) {
         if (include.length === 1) {
