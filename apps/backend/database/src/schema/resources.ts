@@ -54,6 +54,9 @@ export const resources = pgTable(
       titleIndex: index('resources_title_index').on(t.title),
       titleAltIndex: index('resources_title_alt_index').on(t.titleAlt),
       magnetIndex: index('resources_magnet_index').on(t.magnet),
+      publisherIdIndex: index('resources_publisher_id_index').on(t.publisherId),
+      fansubIdIndex: index('resources_fansub_id_index').on(t.fansubId),
+      subjectIdIndex: index('resources_subject_id_index').on(t.subjectId),
       sortByCreatedAt: index('resources_sort_by_created_at').on(t.createdAt.desc()),
       titleSearchIndex: index('resources_title_search_index').using('gin', t.titleSearch)
     };
