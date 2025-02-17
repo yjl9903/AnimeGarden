@@ -59,8 +59,8 @@ export async function fetchDmhyPage(
     const href = 'https://share.dmhy.org' + (titleNode.getAttribute('href') ?? '/').trim();
 
     const fansub: HTMLAnchorElement | null = tds[2].querySelector('span.tag a');
-    const fansubName = fansub?.textContent?.trim();
-    const fansubId = fansub?.getAttribute('href')?.split('/').at(-1);
+    let fansubName = fansub?.textContent?.trim();
+    let fansubId = fansub?.getAttribute('href')?.split('/').at(-1);
 
     const magnetFull = tds[3].querySelector('a')?.getAttribute('href');
     if (!magnetFull) {
@@ -71,8 +71,8 @@ export async function fetchDmhyPage(
     const size = tds[4].textContent?.trim() || '';
 
     const publisher = tds[8].querySelector('a');
-    const publisherName = publisher?.textContent;
-    const publisherId = publisher?.getAttribute('href')!.split('/').at(-1);
+    let publisherName = publisher?.textContent;
+    let publisherId = publisher?.getAttribute('href')!.split('/').at(-1);
 
     const lastHref = href.split('/').at(-1);
     if (!lastHref) continue;
@@ -94,6 +94,24 @@ export async function fetchDmhyPage(
       title = removeExtraSpaces(title);
     }
 
+    // @hack ANiTorrent -> ANi
+    if (publisherName === 'ANiTorrent') {
+      publisherName = 'ANi';
+    }
+
+    // @hack 灼眼のシャナ -> ANi
+    if (
+      publisherName === '灼眼のシャナ' &&
+      publisherId === '110897' &&
+      title.startsWith('[搬運][ANi]')
+    ) {
+      publisherName = 'ANi';
+      publisherId = '747291';
+      fansubName = 'ANi';
+      fansubId = '816';
+      title = title.slice('[搬運]'.length);
+    }
+
     res.push({
       provider: 'dmhy',
       providerId: matchId[1],
@@ -105,10 +123,7 @@ export async function fetchDmhyPage(
       size,
       fansub: fansubId && fansubName ? { id: fansubId, name: fansubName } : undefined,
       publisher:
-        publisherId && publisherName
-          ? // @hack ANiTorrent -> ANi
-            { id: publisherId, name: publisherName === 'ANiTorrent' ? 'ANi' : publisherName }
-          : undefined,
+        publisherId && publisherName ? { id: publisherId, name: publisherName } : undefined,
       createdAt
     });
   }
