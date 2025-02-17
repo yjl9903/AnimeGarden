@@ -159,6 +159,8 @@ async function syncResources(sys: System, platform: ProviderType, start: number,
       const inserted: number[] = [];
       const duplicated: number[] = [];
 
+      sys.logger.info(`Start updating ${platform} resources`);
+
       for (const r of newResources) {
         const resp = await sys.modules.resources.updateResource(r, updatedAt);
         if (resp) {
@@ -167,6 +169,8 @@ async function syncResources(sys: System, platform: ProviderType, start: number,
           }
           inserted.push(...resp.inserted);
           duplicated.push(...resp.duplicated);
+
+          sys.logger.success(`Update resource ${r.provider} ${r.providerId} ${r.title}`);
         }
       }
 
@@ -182,13 +186,16 @@ async function syncResources(sys: System, platform: ProviderType, start: number,
             duplicated
           }
         });
-
-        sys.logger.success(`Finish updating ${updated.length} new ${platform} resources`);
       }
 
+      sys.logger.success(`Finish updating ${updated.length} new ${platform} resources`);
+
       // 2. Delete resources
+      sys.logger.info(`Start deleting missing ${platform} resources`);
+
       const deletedAt = new Date();
       const sync = await sys.modules.resources.syncResources(platform, newResources);
+
       if (sync.deleted.length > 0) {
         await sys.modules.providers.updateRefreshTimestamp(platform, deletedAt);
         await sys.modules.providers.notifyRefreshedResources({
@@ -201,9 +208,9 @@ async function syncResources(sys: System, platform: ProviderType, start: number,
             duplicated: []
           }
         });
-
-        sys.logger.success(`Finish deleting ${updated.length} missing ${platform} resources`);
       }
+
+      sys.logger.success(`Finish deleting ${updated.length} missing ${platform} resources`);
 
       return {
         resources: {
