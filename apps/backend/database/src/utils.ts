@@ -22,6 +22,6 @@ export function nextTick() {
   return new Promise<void>((resolve) => process.nextTick(resolve));
 }
 
-export function removePunctuations(input: string): string {
-  return input.replace(/[\p{P}\p{S}]/gu, '');
+export function removePunctuations(input: string, replaceValue = ' '): string {
+  return input.replace(/[\p{P}\p{S}]/gu, replaceValue);
 }
