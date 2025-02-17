@@ -100,16 +100,15 @@ export async function fetchDmhyPage(
     }
 
     // @hack 灼眼のシャナ -> ANi
-    if (
-      publisherName === '灼眼のシャナ' &&
-      publisherId === '110897' &&
-      title.startsWith('[搬運][ANi]')
-    ) {
+    if (publisherName === '灼眼のシャナ' && publisherId === '110897') {
       publisherName = 'ANi';
       publisherId = '747291';
       fansubName = 'ANi';
       fansubId = '816';
-      title = title.slice('[搬運]'.length);
+
+      if (title.startsWith('[搬運][ANi]')) {
+        title = title.slice('[搬運]'.length);
+      }
     }
 
     res.push({
