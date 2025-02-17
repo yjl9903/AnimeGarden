@@ -11,7 +11,7 @@ primary_region = 'hkg'
 
 [build.args]
   NODE_VERSION = '20.10.0'
-  PNPM_VERSION = '9.15.4'
+  PNPM_VERSION = '10.4.1'
 
 [processes]
   server = 'node apps/backend/manager/cli.mjs start'

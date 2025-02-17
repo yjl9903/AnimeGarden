@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 ARG NODE_VERSION=20.10.0
-ARG PNPM_VERSION=9.15.4
+ARG PNPM_VERSION=10.4.1
 
 ARG APP_HOST=test.animes.garden
 ARG SERVER_URL=https://test-api.animes.garden/

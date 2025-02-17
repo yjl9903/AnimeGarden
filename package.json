@@ -48,13 +48,27 @@
     "vitest": "^2.1.8",
     "wrangler": "^3.78.2"
   },
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@10.4.1",
   "engines": {
     "node": ">=v18.16.0"
   },
   "pnpm": {
     "patchedDependencies": {
       "@remix-run/react@2.12.1": "patches/@remix-run__react@2.12.1.patch"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "bufferutil",
+      "core-js-pure",
+      "esbuild",
+      "fs-native-extensions",
+      "node-datachannel",
+      "sharp",
+      "tree-sitter",
+      "tree-sitter-json",
+      "tree-sitter-yaml",
+      "utf-8-validate",
+      "utp-native",
+      "workerd"
+    ]
   }
 }
