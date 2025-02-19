@@ -51,7 +51,7 @@ export async function fetchMoePage(
     let title = torrent.title;
 
     // @hack
-    if (team?.name === 'ANi') {
+    if (team?.name === 'ANi' || team?.name === '云光字幕组') {
       // @hack
       title = stripSuffix(removeExtraSpaces(title), [
         '.torrent',

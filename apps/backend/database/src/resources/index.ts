@@ -242,6 +242,16 @@ LIMIT 1)`
       set.subjectId = updated.subjectId;
     }
 
+    if (updated.publisherId !== dbRes.publisherId) {
+      changed = true;
+      set.publisherId = dbRes.publisherId;
+    }
+
+    if (updated.fansubId !== dbRes.fansubId) {
+      changed = true;
+      set.fansubId = updated.fansubId;
+    }
+
     if (updated.title !== dbRes?.title) {
       changed = true;
       set.title = updated.title;
