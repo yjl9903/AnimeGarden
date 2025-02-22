@@ -3,9 +3,12 @@ import { hash } from 'ohash';
 
 import { version } from '../package.json';
 
-import type { FetchOptions, Collection, CollectionResult } from './types';
-
-import type { FetchResourcesResult } from './resources';
+import type {
+  FetchOptions,
+  Collection,
+  CollectionResult,
+  CollectionResourcesResult
+} from './types';
 
 import { retryFn } from './utils';
 import { DefaultBaseURL, SupportProviders } from './constants';
@@ -111,12 +114,7 @@ export async function generateCollection(
 export async function fetchCollection(
   hash: string,
   options: FetchOptions = {}
-): Promise<
-  | (CollectionResult<true, false> & {
-      results: FetchResourcesResult<{ tracker: true; metadata: true }>;
-    })
-  | undefined
-> {
+): Promise<CollectionResourcesResult<true, false, { tracker: true }> | undefined> {
   const fetch = options?.fetch ?? global.fetch;
   const { baseURL = DefaultBaseURL, retry = 0 } = options;
 

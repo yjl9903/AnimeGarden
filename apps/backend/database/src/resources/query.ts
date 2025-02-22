@@ -163,7 +163,7 @@ export class QueryManager {
       if (search && search.length > 0) {
         // 1. 搜索
         task = this.getTask({ search, exclude: dbOptions.exclude });
-      } else if ((include && include.length > 0) || (keywords && keywords.length > 0)) {
+      } else if (include && include.length > 0) {
         // 2. 标题匹配
         task = this.getTask({ include, keywords, exclude: dbOptions.exclude });
       } else if (subjects && subjects.length > 0) {

@@ -3,7 +3,7 @@ import { memoAsync } from 'memofunc';
 
 import type { System } from '../system';
 
-import { type Collection, type CollectionFilter, hashCollection } from '@animegarden/client';
+import { type Collection, hashCollection } from '@animegarden/client';
 
 import { Module } from '../system/module';
 import { retryFn } from '../utils';
@@ -62,6 +62,17 @@ export class CollectionsModule extends Module<System['modules']> {
 
     if (resp && resp.length === 1) {
       const collection = resp[0];
+
+      // @hack Date type
+      for (const item of collection.filters) {
+        if (item.before) {
+          item.before = new Date(item.before);
+        }
+        if (item.after) {
+          item.after = new Date(item.after);
+        }
+      }
+
       const results = await Promise.all(
         collection.filters.map((f) =>
           this.system.modules.resources.query.find({ ...f, page: 1, pageSize: 100 })

@@ -381,6 +381,26 @@ export interface CollectionResult<
   filters: CollectionFilter<S, R, T>[];
 }
 
+export interface CollectionResourcesResult<
+  S extends boolean = false,
+  R extends boolean = false,
+  T extends { tracker?: boolean; metadata?: boolean } = {}
+> {
+  hash: string;
+
+  name: string;
+
+  authorization: string;
+
+  filters: CollectionFilter<S, R, T>[];
+
+  results: Array<{
+    resources: Resource<T>[];
+    complete: boolean;
+    filter: Omit<ResolvedFilterOptions, 'page'> | undefined;
+  }>;
+}
+
 export type CollectionFilter<
   S extends boolean = false,
   R extends boolean = true,
