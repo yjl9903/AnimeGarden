@@ -1,10 +1,10 @@
 import { toast } from 'sonner';
-import { NavLink, useLocation } from '@remix-run/react';
+import { NavLink } from '@remix-run/react';
 import { useCallback } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 
 import type { FullBangumi } from 'bgmd/types';
-import type { Jsonify, ResolvedFilterOptions } from '@animegarden/client';
+import { stringifyURLSearch, type Jsonify, type ResolvedFilterOptions } from '@animegarden/client';
 
 import { APP_HOST } from '~build/env';
 
@@ -49,7 +49,6 @@ interface Props {
 export function Filter(props: Props) {
   const { filter, feedURL } = props;
 
-  const location = useLocation();
   const [collection, setCollection] = useAtom(currentCollectionAtom);
   const setIsOpen = useSetAtom(isOpenSidebar);
 
@@ -68,11 +67,10 @@ export function Filter(props: Props) {
   } = resolved;
 
   const copyRSS = useCallback(
-    async (e: React.MouseEvent) => {
+    async (_e: React.MouseEvent) => {
       try {
         if (!feedURL) throw new Error(`RSS URL is empty`);
-        const query = encodeURI(feedURL.slice(`/feed.xml?filter=`.length));
-        await navigator.clipboard.writeText(`https://${APP_HOST}/feed.xml?filter=${query}`);
+        await navigator.clipboard.writeText(`https://${APP_HOST}${feedURL}`);
         toast.success('复制 RSS 订阅成功', {
           dismissible: true,
           duration: 3000,
@@ -90,19 +88,28 @@ export function Filter(props: Props) {
   const addToCollection = useCallback(() => {
     if (!filter) return;
     if (!collection) return;
-    if (!collection.filters.find((i) => i.searchParams === location.search)) {
-      addCollectionItem(collection, { ...resolved, name: '', searchParams: location.search });
+
+    const realFilter = {
+      ...resolved,
+      subjects: props.subject ? [props.subject.id] : resolved.subjects
+    };
+    const searchParams = '?' + stringifyURLSearch(realFilter).toString();
+
+    if (!collection.filters.find((i) => i.searchParams === searchParams)) {
+      addCollectionItem(collection, { ...realFilter, name: '', searchParams });
 
       toast.success(`成功添加到 ${collection.name}`, {
         dismissible: true,
         duration: 3000,
-        closeButton: true
+        closeButton: true,
+        position: 'top-right'
       });
     } else {
       toast.warning(`已添加到 ${collection.name}`, {
         dismissible: true,
         duration: 3000,
-        closeButton: true
+        closeButton: true,
+        position: 'top-right'
       });
     }
     setIsOpen(true);
@@ -137,7 +144,9 @@ export function Filter(props: Props) {
         <div className="space-x-2 text-0">
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">动画</span>
           {realSubjects.map((subject) => (
-            <span className={`text-4 select-text text-base-900`}>{subject.bangumi?.name_cn}</span>
+            <span key={subject.id} className={`text-4 select-text text-base-900`}>
+              {subject.bangumi?.name_cn}
+            </span>
           ))}
         </div>
       )}
@@ -159,8 +168,8 @@ export function Filter(props: Props) {
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">发布者</span>
           {publishers.map((publisher) => (
             <NavLink
-              to={`/resources/1?publisher=${publisher}`}
               key={publisher}
+              to={`/resources/1?publisher=${publisher}`}
               className="text-4 select-text text-link"
             >
               {publisher}
@@ -230,7 +239,11 @@ export function Filter(props: Props) {
           <span className="text-4 text-base-800 font-bold mr2 keyword">包含关键词</span>
           {keywords.map((i, idx) => (
             <>
-              {idx > 0 && <span className="text-base-400 text-4 select-none">&</span>}
+              {idx > 0 && (
+                <span key={i + idx} className="text-base-400 text-4 select-none">
+                  &
+                </span>
+              )}
               {/* prettier-ignore */}
               <span key={i} className="text-4 select-text underline underline-dotted underline-gray-500">{i}</span>
             </>

@@ -49,7 +49,15 @@ export const Search = memo(() => {
 
   useEffect(() => {
     if (location.state?.trigger !== 'search') {
-      const content = stringifySearch(new URLSearchParams(location.search));
+      const search = new URLSearchParams(location.search);
+      // @hack handle route /subject/:id
+      if (location.pathname.startsWith('/subject/')) {
+        const id = location.pathname.split('/')[2];
+        if (/^\d+$/.test(id)) {
+          search.set('subject', id);
+        }
+      }
+      const content = stringifySearch(search);
       setInput(content);
     } else if (location.state?.trigger === 'search' && typeof location.state?.input === 'string') {
       if (location.state.input !== input) {
@@ -168,15 +176,20 @@ export const Search = memo(() => {
           onValueChange={setInput}
           className={`${enable ? 'searched' : ''}`}
         />
+        {input && (
+          <>
+            <span
+              className="absolute right-[20px] top-0 h-[30px] flex items-center cursor-pointer"
+              onMouseDown={() => cleanUp()}
+            >
+              <span className="i-carbon-close text-xl text-base-500 hover:text-base-900"></span>
+            </span>
+            <span className="absolute right-[20px] top-[4px] h-[22px] border-r"></span>
+          </>
+        )}
+
         <span
-          className="absolute right-[20px] top-0 h-[30px] flex items-center cursor-pointer"
-          onMouseDown={() => cleanUp()}
-        >
-          <span className="i-carbon-close text-xl text-base-500 hover:text-base-900"></span>
-        </span>
-        <span className="absolute right-[20px] top-[4px] h-[22px] border-r"></span>
-        <span
-          className="absolute right-0 top-0 h-[30px] flex items-center cursor-pointer"
+          className="absolute right-0 top-[-1px] h-[30px] flex items-center cursor-pointer"
           onMouseDown={() => selectGoToSearch()}
         >
           <span className="i-fluent:arrow-enter-24-filled text-base-500 hover:text-base-900"></span>

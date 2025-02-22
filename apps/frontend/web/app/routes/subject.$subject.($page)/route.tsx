@@ -20,7 +20,7 @@ export const meta: MetaFunction<typeof loader> = ({ data, params }) => {
 
   return [
     { title: (title || '所有资源') + ' | Anime Garden 動漫花園資源網第三方镜像站' },
-    { name: 'description', content: 'Anime Garden 動漫花園資源網第三方镜像站' }
+    { name: 'description', content: `Anime Garden 動漫花園資源網第三方镜像站` }
   ];
 };
 

@@ -1,3 +1,4 @@
+import { getSubjectById } from '@/utils/subjects';
 import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
 
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
@@ -156,6 +157,12 @@ export function stringifySearch(search: URLSearchParams) {
       content.push(...filter.exclude.map((t) => '排除:' + wrap(t)));
     }
   }
+
+  if (filter.subjects && filter.subjects.length === 1) {
+    const bgm = getSubjectById(filter.subjects[0]);
+    content.push('动画:' + (bgm?.bangumi?.name_cn || bgm?.name));
+  }
+
   if (filter.publishers) {
     content.push(...filter.publishers.map((f) => '发布者:' + f));
   }
@@ -178,7 +185,7 @@ export function stringifySearch(search: URLSearchParams) {
 
   function formatDate(d: Date) {
     const t = d.toISOString();
-    if (t.endsWith('T00:00:00.000Z')) return t.replace('T00:00:00.000Z', '');
+    if (t.endsWith('T16:00:00.000Z')) return t.replace('T16:00:00.000Z', '');
     return t;
   }
 
