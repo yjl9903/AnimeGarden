@@ -103,6 +103,7 @@ export async function generateCollection(
 
   if (resp.status === 'OK') {
     return {
+      ok: true,
       ...collection,
       createdAt: resp.createdAt,
       hash: resp.hash,
@@ -143,6 +144,7 @@ export async function fetchCollection(
 
   if (resp.status === 'OK') {
     return {
+      ok: true,
       ...resp,
       timestamp: new Date(resp.timestamp)
     };

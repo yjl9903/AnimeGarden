@@ -372,6 +372,8 @@ export interface CollectionResult<
   R extends boolean = false,
   T extends { tracker?: boolean; metadata?: boolean } = {}
 > {
+  ok: boolean;
+
   hash: string;
 
   name: string;
@@ -388,6 +390,8 @@ export interface CollectionResourcesResult<
   R extends boolean = false,
   T extends { tracker?: boolean; metadata?: boolean } = {}
 > {
+  ok: boolean;
+
   hash: string;
 
   name: string;
