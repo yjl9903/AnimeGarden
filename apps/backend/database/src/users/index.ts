@@ -32,12 +32,25 @@ export class UsersModule extends Module<System['modules']> {
 
   public async fetchUsers() {
     const users = await this.database.query.users.findMany();
-    this.users.clear();
-    this.ids.clear();
     this.getById.clear();
     for (const user of users) {
-      this.users.set(user.name, user);
-      this.ids.set(user.id, user);
+      if (this.users.get(user.name)) {
+        const c = this.users.get(user.name)!;
+        c.avatar = user.avatar;
+        c.name = user.name;
+        c.providers = user.providers;
+      } else {
+        this.users.set(user.name, user);
+      }
+
+      if (this.ids.get(user.id)) {
+        const c = this.ids.get(user.id)!;
+        c.avatar = user.avatar;
+        c.name = user.name;
+        c.providers = user.providers;
+      } else {
+        this.ids.set(user.id, user);
+      }
     }
     return users;
   }
@@ -106,9 +119,11 @@ export class UsersModule extends Module<System['modules']> {
               .values([...insertions.values()])
               .returning({ id: userSchema.id, name: userSchema.name })
           : [];
+
       for (const user of inserted) {
-        this.users.set(user.name, { ...insertions.get(user.name)!, ...user });
-        this.ids.set(user.id, { ...insertions.get(user.name)!, ...user });
+        const newUser = { ...insertions.get(user.name)!, ...user };
+        this.users.set(user.name, Object.assign(this.users.get(user.name) ?? newUser, newUser));
+        this.ids.set(user.id, Object.assign(this.ids.get(user.id) ?? newUser, newUser));
       }
 
       const updated = await Promise.all(
@@ -167,12 +182,25 @@ export class TeamsModule extends Module<System['modules']> {
 
   public async fetchTeams() {
     const teams = await this.database.query.teams.findMany();
-    this.teams.clear();
-    this.ids.clear();
     this.getById.clear();
     for (const team of teams) {
-      this.teams.set(team.name, team);
-      this.ids.set(team.id, team);
+      if (this.teams.get(team.name)) {
+        const c = this.teams.get(team.name)!;
+        c.avatar = team.avatar;
+        c.name = team.name;
+        c.providers = team.providers;
+      } else {
+        this.teams.set(team.name, team);
+      }
+
+      if (this.ids.get(team.id)) {
+        const c = this.ids.get(team.id)!;
+        c.avatar = team.avatar;
+        c.name = team.name;
+        c.providers = team.providers;
+      } else {
+        this.ids.set(team.id, team);
+      }
     }
     return teams;
   }
@@ -242,8 +270,9 @@ export class TeamsModule extends Module<System['modules']> {
               .returning({ id: teamSchema.id, name: teamSchema.name })
           : [];
       for (const team of inserted) {
-        this.teams.set(team.name, { ...insertions.get(team.name)!, ...team });
-        this.ids.set(team.id, { ...insertions.get(team.name)!, ...team });
+        const newTeam = { ...insertions.get(team.name)!, ...team };
+        this.teams.set(team.name, Object.assign(this.teams.get(team.name) ?? newTeam, newTeam));
+        this.ids.set(team.id, Object.assign(this.ids.get(team.id) ?? newTeam, newTeam));
       }
 
       const updated = await Promise.all(
