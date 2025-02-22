@@ -63,7 +63,11 @@ export default function ResourcesIndex() {
   const location = useLocation();
   const { ok, subject, resources, complete, filter, page, timestamp } =
     useLoaderData<typeof loader>();
-  const feedURL = useMemo(() => `/feed.xml${location.search}`, [location]);
+  const feedURL = useMemo(() => {
+    const search = new URLSearchParams(location.search);
+    search.set('subject', params.subject!);
+    return `/feed.xml?${search.toString()}`;
+  }, [location]);
 
   usePreferFansub(filter?.fansubs);
 
