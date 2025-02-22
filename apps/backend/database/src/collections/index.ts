@@ -31,7 +31,8 @@ export class CollectionsModule extends Module<System['modules']> {
         .onConflictDoNothing()
         .returning({
           id: collections.id,
-          hash: collections.hash
+          hash: collections.hash,
+          createdAt: collections.createdAt
         });
 
       if (resp.length === 1) {
@@ -41,7 +42,11 @@ export class CollectionsModule extends Module<System['modules']> {
           await retryFn(
             () =>
               this.database
-                .select({ id: collections.id, hash: collections.hash })
+                .select({
+                  id: collections.id,
+                  hash: collections.hash,
+                  createdAt: collections.createdAt
+                })
                 .from(collections)
                 .where(eq(collections.hash, hsh)),
             5
@@ -80,7 +85,10 @@ export class CollectionsModule extends Module<System['modules']> {
       );
 
       return {
-        ...collection,
+        hash: collection.hash,
+        name: collection.name,
+        createdAt: collection.createdAt,
+        filters: collection.filters,
         results
       };
     }

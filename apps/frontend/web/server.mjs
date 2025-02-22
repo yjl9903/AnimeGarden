@@ -32,6 +32,7 @@ app.use(
 
 app.all('/api/*', api());
 app.all('/feed.xml', feed());
+app.all('/collection/*/feed.xml', feed());
 
 // Static assets
 const ClientRoot = path.join(__dirname, './build/client/');

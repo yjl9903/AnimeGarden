@@ -376,9 +376,11 @@ export interface CollectionResult<
 
   name: string;
 
-  authorization: string;
+  createdAt: string;
 
   filters: CollectionFilter<S, R, T>[];
+
+  timestamp: Date;
 }
 
 export interface CollectionResourcesResult<
@@ -390,15 +392,17 @@ export interface CollectionResourcesResult<
 
   name: string;
 
-  authorization: string;
-
   filters: CollectionFilter<S, R, T>[];
+
+  createdAt: string;
 
   results: Array<{
     resources: Resource<T>[];
     complete: boolean;
     filter: Omit<ResolvedFilterOptions, 'page'> | undefined;
   }>;
+
+  timestamp: Date;
 }
 
 export type CollectionFilter<

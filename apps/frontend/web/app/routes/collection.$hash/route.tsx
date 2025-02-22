@@ -39,7 +39,7 @@ export default function Collections() {
   const results = data.results!;
 
   return (
-    <Layout>
+    <Layout timestamp={data.timestamp} feedURL={`/collection/${data.hash!}/feed.xml`}>
       <div className="w-full pt-12 pb-24">
         <div className="space-y-8">
           {results.map((item, idx) => (

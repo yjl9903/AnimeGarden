@@ -104,7 +104,9 @@ export async function generateCollection(
   if (resp.status === 'OK') {
     return {
       ...collection,
-      hash: resp.hash
+      createdAt: resp.createdAt,
+      hash: resp.hash,
+      timestamp: new Date(resp.timestamp)
     };
   }
 
@@ -141,7 +143,8 @@ export async function fetchCollection(
 
   if (resp.status === 'OK') {
     return {
-      ...resp
+      ...resp,
+      timestamp: new Date(resp.timestamp)
     };
   }
 
