@@ -25,6 +25,9 @@ async function initialize(options: SystemOptions) {
   if (!options.redisUri) {
     options.redisUri = process.env.REDIS_URI;
   }
+  if (!options.site) {
+    options.site = process.env.APP_HOST;
+  }
 
   try {
     return await makeSystem(options);
@@ -38,6 +41,7 @@ async function initialize(options: SystemOptions) {
 
 app
   .command('start', 'Start Anime Garden server')
+  .option('--site <site>', 'Web site host')
   .option('--host <ip>', 'Listen host')
   .option('--port <port>', 'Listen port')
   .action(async (options) => {
@@ -51,13 +55,16 @@ app
     await server.listen({ host, port });
   });
 
-app.command('cron', 'Start Anime Garden cron jobs executor').action(async (options) => {
-  const sys = await initialize({ ...options, cron: true });
-  await sys.initialize();
-  await sys.import();
-  const executor = await makeExecutor(sys, {});
-  await executor.start();
-});
+app
+  .command('cron', 'Start Anime Garden cron jobs executor')
+  .option('--site <site>', 'Web site host')
+  .action(async (options) => {
+    const sys = await initialize({ ...options, cron: true });
+    await sys.initialize();
+    await sys.import();
+    const executor = await makeExecutor(sys, {});
+    await executor.start();
+  });
 
 // --- Admin ---
 for (const provider of SupportProviders) {

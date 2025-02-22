@@ -3,6 +3,8 @@
 ARG NODE_VERSION=20.10.0
 ARG PNPM_VERSION=10.4.1
 
+ARG APP_HOST=test.animes.garden
+
 ARG PORT=3000
 
 # Base Image
@@ -57,8 +59,9 @@ FROM base
 # Copy built application
 COPY --from=build /app /app
 
-# Listen on 3000
-ENV HOST=:: PORT=${PORT}
+# Declare args
+ARG PORT APP_HOST
+ENV HOST=:: PORT=${PORT} APP_HOST=${APP_HOST}
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE ${PORT}

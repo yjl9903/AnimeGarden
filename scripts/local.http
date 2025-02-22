@@ -87,6 +87,9 @@ Content-Type: application/json
 GET http://0.0.0.0:8080/dmhy/detail/660700
 Content-Type: application/json
 
-###
+### Sitemap
 GET http://0.0.0.0:8080/sitemaps/2025/01
 Content-Type: application/json
+
+### Feed
+GET http://0.0.0.0:8080/feed.xml

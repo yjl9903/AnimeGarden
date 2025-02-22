@@ -6,7 +6,6 @@ import { type Jsonify, type ResolvedFilterOptions, parseURLSearch } from '@anime
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import { generateFeed } from '~/utils/feed';
 import { fetchResources } from '~/utils/fetch';
 import { getSubjectById } from '~/utils/subjects';
 import { usePreferFansub } from '~/states';
@@ -64,10 +63,7 @@ export default function ResourcesIndex() {
   const location = useLocation();
   const { ok, subject, resources, complete, filter, page, timestamp } =
     useLoaderData<typeof loader>();
-  const feedURL = useMemo(
-    () => `/feed.xml?filter=${generateFeed(new URLSearchParams(location.search))}`,
-    [location]
-  );
+  const feedURL = useMemo(() => `/feed.xml${location.search}`, [location]);
 
   usePreferFansub(filter?.fansubs);
 

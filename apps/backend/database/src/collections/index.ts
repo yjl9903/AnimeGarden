@@ -66,8 +66,9 @@ export class CollectionsModule extends Module<System['modules']> {
           this.system.modules.resources.query.find({ ...f, page: 1, pageSize: 100 })
         )
       );
-      // TODO
-      return results;
+      return {
+        resources: results.flatMap((result) => result.resources)
+      };
     }
   });
 }

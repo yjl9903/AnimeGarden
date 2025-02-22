@@ -18,6 +18,8 @@ export interface SystemOptions {
   redisUri?: string;
 
   cron?: boolean;
+
+  site?: string;
 }
 
 export class System<M extends Record<string, Module> = {}> {

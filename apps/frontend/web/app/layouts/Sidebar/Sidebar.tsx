@@ -6,7 +6,6 @@ import { memo, useCallback, useMemo, useRef, useState } from 'react';
 
 import { APP_HOST } from '~build/env';
 
-import { generateFeed } from '~/utils/feed';
 import { base64URLencode } from '~/utils/json';
 import { DisplayTypeColor, formatChinaTime } from '~/utils';
 import { getActivePageTab } from '~/utils/routes';
@@ -183,10 +182,9 @@ const CollectionItemContent = memo(
     const [menuOpen, setMenuOpen] = useState(false);
 
     const copyRSS = useCallback(async () => {
-      const feedURL = generateFeed(new URLSearchParams(item.searchParams));
       try {
-        if (!feedURL) throw new Error(`RSS URL is empty`);
-        await navigator.clipboard.writeText(`https://${APP_HOST}/feed.xml?filter=${feedURL}`);
+        const url = `https://${APP_HOST}/feed.xml${item.searchParams}`;
+        await navigator.clipboard.writeText(url);
         toast.success('复制 RSS 订阅成功', {
           dismissible: true,
           duration: 3000,
