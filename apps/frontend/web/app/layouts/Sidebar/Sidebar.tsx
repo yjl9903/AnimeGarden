@@ -2,14 +2,22 @@ import clsx from 'clsx';
 import { toast } from 'sonner';
 import { NavLink, useLocation } from '@remix-run/react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { ClientOnly } from 'remix-utils/client-only';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
+
+import type { Collection } from '@animegarden/client';
 
 import { APP_HOST } from '~build/env';
 
 import { base64URLencode } from '~/utils/json';
 import { DisplayTypeColor, formatChinaTime } from '~/utils';
 import { getActivePageTab } from '~/utils/routes';
-import { collectionsAtom, type Collection } from '~/states/collection';
+import {
+  collectionsAtom,
+  currentCollectionAtom,
+  deleteCollectionItemAtom,
+  updateCollectionItemAtom
+} from '~/states/collection';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,15 +32,21 @@ import { stringifySearch } from '../Search/utils';
 
 import { isOpenSidebar } from './atom';
 
-type CollectionItem = Collection['items'][0];
+type CollectionItem = Collection<true>['filters'][0];
 
 export const Sidebar = memo(() => {
   const [isOpen] = useAtom(isOpenSidebar);
 
   return (
     <div className="sidebar-root" suppressHydrationWarning={true}>
-      {!isOpen && <SidebarTrigger></SidebarTrigger>}
-      {isOpen && <SidebarContent></SidebarContent>}
+      <ClientOnly>
+        {() => (
+          <>
+            {!isOpen && <SidebarTrigger></SidebarTrigger>}
+            {isOpen && <SidebarContent></SidebarContent>}
+          </>
+        )}
+      </ClientOnly>
     </div>
   );
 });
@@ -50,7 +64,7 @@ const SidebarTrigger = memo(() => {
 
 const SidebarContent = memo(() => {
   const setIsOpen = useSetAtom(isOpenSidebar);
-  const collections = useAtomValue(collectionsAtom);
+  const collection = useAtomValue(currentCollectionAtom);
 
   return (
     <div className="sidebar-wrapper space-y-2">
@@ -67,8 +81,12 @@ const SidebarContent = memo(() => {
           <span className="i-fluent:panel-right-expand-16-regular w-[1em]"></span>
         </div>
       </div>
-      <QuickLinks collection={collections[0]}></QuickLinks>
-      <Collection collection={collections[0]}></Collection>
+      {collection && (
+        <>
+          <QuickLinks collection={collection}></QuickLinks>
+          <Collection collection={collection}></Collection>
+        </>
+      )}
     </div>
   );
 });
@@ -111,7 +129,7 @@ const QuickLinks = memo((props: { collection: Collection }) => {
   );
 });
 
-const Collection = memo((props: { collection: Collection }) => {
+const Collection = memo((props: { collection: Collection<true> }) => {
   const location = useLocation();
   const { collection } = props;
   const match = useMemo(() => getActivePageTab(location, collection), [location, collection]);
@@ -136,9 +154,9 @@ const Collection = memo((props: { collection: Collection }) => {
           <span className="i-carbon-share"></span>
         </a>
       </div>
-      {collection.items.length > 0 ? (
+      {collection.filters.length > 0 ? (
         <div className="collection-container py-[1px] pr-[1px] space-y-2 overflow-y-auto">
-          {collection.items.map((item) => (
+          {collection.filters.map((item) => (
             <CollectionItemContent
               key={item.searchParams}
               collection={collection}
@@ -173,7 +191,11 @@ const CollectionItemContent = memo(
       : name.title
         ? name.title + (fansub ? ' 字幕组:' + fansub : '')
         : name.text!;
+
     const [collections, setCollections] = useAtom(collectionsAtom);
+    const updateCollectionItem = useSetAtom(updateCollectionItemAtom);
+    const deleteCollectionItem = useSetAtom(deleteCollectionItemAtom);
+
     // TODO: fix this
     const display = useMemo(() => resolveFilterOptions(item as any), [item]);
 
@@ -195,22 +217,6 @@ const CollectionItemContent = memo(
         toast.error('复制 RSS 订阅失败', { closeButton: true });
       }
     }, [item]);
-
-    const deleteItem = useCallback(() => {
-      const newCollections = collections.map((c) => {
-        if (c.name === collection.name) {
-          const idx = c.items.findIndex((i) => i.searchParams === item.searchParams);
-          if (idx !== -1) {
-            return {
-              ...c,
-              items: [...c.items.slice(0, idx), ...c.items.slice(idx + 1)]
-            };
-          }
-        }
-        return c;
-      });
-      setCollections(newCollections);
-    }, [collection, item, collections, setCollections]);
 
     // --- Rename title
     const titleRef = useRef<HTMLSpanElement>(null);
@@ -243,24 +249,8 @@ const CollectionItemContent = memo(
       const newTitle = dom.textContent || title;
       if (!newTitle) return;
 
-      const newCollections = collections.map((c) => {
-        if (c.name === collection.name) {
-          const idx = c.items.findIndex((i) => i.searchParams === item.searchParams);
-          if (idx !== -1) {
-            return {
-              ...c,
-              items: [
-                ...c.items.slice(0, idx),
-                { ...item, name: newTitle },
-                ...c.items.slice(idx + 1)
-              ]
-            };
-          }
-        }
-        return c;
-      });
+      updateCollectionItem(collection, { ...item, name: newTitle });
       setEditable(false);
-      setCollections(newCollections);
     }, [setEditable, collection, item, title, collections, setCollections]);
     const handleTitleKeydown = useCallback(
       (e: React.KeyboardEvent) => {
@@ -381,7 +371,7 @@ const CollectionItemContent = memo(
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="hover:(text-red-500! bg-red-100!)"
-                    onClick={() => deleteItem()}
+                    onClick={() => deleteCollectionItem(collection, item)}
                   >
                     <span className="i-carbon-trash-can mr1"></span>
                     <span>删除</span>

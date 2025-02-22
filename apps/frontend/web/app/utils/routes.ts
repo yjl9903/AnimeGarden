@@ -1,11 +1,11 @@
 import { Location } from '@remix-run/react';
 
-import { Collection } from '~/states/collection';
+import type { Collection } from '@animegarden/client';
 
 export function getActivePageTab(location: Location, collection: Collection) {
   const pathname = location.pathname;
   if (pathname.startsWith('/resources/')) {
-    for (const item of collection.items) {
+    for (const item of collection.filters) {
       if (location.search === item.searchParams) {
         return item.searchParams;
       }

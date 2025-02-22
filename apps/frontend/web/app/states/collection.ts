@@ -1,21 +1,25 @@
-import type { ResolvedFilterOptions } from '@animegarden/client';
+import type { Collection } from '@animegarden/client';
 
 import { atom } from 'jotai';
+import { MiniDb } from 'jotai-minidb';
 import { atomWithStorage, createJSONStorage } from 'jotai/utils';
 
-export interface Collection {
-  name: string;
-  items: (Omit<ResolvedFilterOptions, 'page' | 'pageSize'> & {
-    name: string;
-    searchParams: string;
-  })[];
-}
+const collectionDb = !import.meta.env.SSR
+  ? new MiniDb<Collection<true>>({
+      name: 'animegarden:collections',
+      version: 0,
+      initialData: {
+        收藏夹: {
+          hash: undefined,
+          name: '收藏夹',
+          authorization: '',
+          filters: []
+        }
+      }
+    })
+  : undefined;
 
-export const collectionsAtom = atomWithStorage(
-  'animegarden:collections',
-  [{ name: '收藏夹', items: [] }],
-  createJSONStorage<Collection[]>(() => localStorage)
-);
+export const collectionsAtom = collectionDb?.items!;
 
 export const currentCollectionNameAtom = atomWithStorage(
   'animegarden:cur_collection_name',
@@ -23,22 +27,54 @@ export const currentCollectionNameAtom = atomWithStorage(
   createJSONStorage<string>(() => localStorage)
 );
 
-export const currentCollectionAtom = atom<Collection, [Collection], void>(
+export const currentCollectionAtom = atom<Collection | undefined, [Collection], void>(
   (get) => {
-    const collections = get(collectionsAtom);
+    get(collectionsAtom!);
     const currentName = get(currentCollectionNameAtom);
-    return collections.find((c) => c.name === currentName) ?? collections[0];
+    const current = get(collectionDb!.item(currentName));
+    return current;
   },
-  (get, set, newCollection: Collection) => {
-    const collections = get(collectionsAtom);
-    const idx = collections.findIndex((c) => c.name === newCollection.name);
+  (_get, set, newCollection: Collection) => {
+    set(currentCollectionNameAtom, newCollection.name);
+    set(collectionDb!.set, newCollection.name, newCollection);
+  }
+);
+
+export const addCollectionItemAtom = atom(
+  null,
+  (get, set, collection: Collection<true>, value: Collection<true>['filters'][0]) => {
+    const idx = collection.filters.findIndex((i) => i.searchParams === value.searchParams);
+    if (idx === -1) {
+      set(collectionDb!.set, collection.name, {
+        ...collection,
+        filters: [value, ...collection.filters]
+      });
+    }
+  }
+);
+
+export const updateCollectionItemAtom = atom(
+  null,
+  (get, set, collection: Collection<true>, value: Collection<true>['filters'][0]) => {
+    const idx = collection.filters.findIndex((i) => i.searchParams === value.searchParams);
     if (idx !== -1) {
-      // Update current collection name
-      set(currentCollectionNameAtom, newCollection.name);
-      // Update collections
-      const newCollections = [...collections];
-      newCollections[idx] = newCollection;
-      set(collectionsAtom, newCollections);
+      set(collectionDb!.set, collection.name, {
+        ...collection,
+        filters: [...collection.filters.slice(0, idx), value, ...collection.filters.slice(idx + 1)]
+      });
+    }
+  }
+);
+
+export const deleteCollectionItemAtom = atom(
+  null,
+  (get, set, collection: Collection<true>, value: Collection<true>['filters'][0]) => {
+    const idx = collection.filters.findIndex((i) => i.searchParams === value.searchParams);
+    if (idx !== -1) {
+      set(collectionDb!.set, collection.name, {
+        ...collection,
+        filters: [...collection.filters.slice(0, idx), ...collection.filters.slice(idx + 1)]
+      });
     }
   }
 );

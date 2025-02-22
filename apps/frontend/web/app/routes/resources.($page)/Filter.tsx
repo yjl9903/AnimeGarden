@@ -13,7 +13,7 @@ import { removeQuote, formatChinaTime, DisplayTypeColor } from '~/utils';
 import { Button } from '~/components/ui/button';
 import { SearchTooltip } from '~/components/Help';
 import { isOpenSidebar } from '~/layouts/Sidebar/atom';
-import { currentCollectionAtom } from '~/states/collection';
+import { addCollectionItemAtom, currentCollectionAtom } from '~/states/collection';
 
 export type DisplayResolvedFilterOptions = ReturnType<typeof resolveFilterOptions>;
 
@@ -85,13 +85,13 @@ export function Filter(props: Props) {
     },
     [feedURL]
   );
+
+  const addCollectionItem = useSetAtom(addCollectionItemAtom);
   const addToCollection = useCallback(() => {
     if (!filter) return;
-    if (!collection.items.find((i) => i.searchParams === location.search)) {
-      setCollection({
-        name: collection.name,
-        items: [{ ...resolved, name: '', searchParams: location.search }, ...collection.items]
-      });
+    if (!collection) return;
+    if (!collection.filters.find((i) => i.searchParams === location.search)) {
+      addCollectionItem(collection, { ...resolved, name: '', searchParams: location.search });
 
       toast.success(`成功添加到 ${collection.name}`, {
         dismissible: true,
@@ -126,17 +126,17 @@ export function Filter(props: Props) {
     return;
   }
 
-  const realSubject =
+  const realSubjects =
     subjects.length === 1 && props.subject
       ? [props.subject]
       : subjects.map((sub) => getSubjectById(sub)).filter(Boolean);
 
   return (
     <div className="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
-      {realSubject.length > 0 && (
+      {realSubjects.length > 0 && (
         <div className="space-x-2 text-0">
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">动画</span>
-          {realSubject.map((subject) => (
+          {realSubjects.map((subject) => (
             <span className={`text-4 select-text text-base-900`}>{subject.bangumi?.name_cn}</span>
           ))}
         </div>
@@ -248,7 +248,10 @@ export function Filter(props: Props) {
           ))}
         </div>
       )}
-      {(search.length !== 0 || include.length !== 0 || keywords.length !== 0) && (
+      {(search.length !== 0 ||
+        include.length !== 0 ||
+        keywords.length !== 0 ||
+        realSubjects.length !== 0) && (
         <div className="flex items-center gap4 pt-4">
           <Button
             variant="outline"
