@@ -67,6 +67,7 @@ export const updateCollectionItemAtom = atom(
     if (idx !== -1) {
       set(collectionDb!.set, collection.name, {
         ...collection,
+        hash: undefined, // mark hash dirty
         filters: [...collection.filters.slice(0, idx), value, ...collection.filters.slice(idx + 1)]
       });
     }
@@ -80,6 +81,7 @@ export const deleteCollectionItemAtom = atom(
     if (idx !== -1) {
       set(collectionDb!.set, collection.name, {
         ...collection,
+        hash: undefined, // mark hash dirty
         filters: [...collection.filters.slice(0, idx), ...collection.filters.slice(idx + 1)]
       });
     }
