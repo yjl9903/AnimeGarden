@@ -1,16 +1,17 @@
 import clsx from 'clsx';
-import { NavLink, useLocation } from '@remix-run/react';
+import { toast } from 'sonner';
+import { NavLink, useLocation, useNavigate } from '@remix-run/react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { ClientOnly } from 'remix-utils/client-only';
-import { memo, useMemo } from 'react';
+import { type MouseEvent, memo, useCallback, useMemo } from 'react';
 
 import type { Collection } from '@animegarden/client';
 
 import { APP_HOST } from '~build/env';
 
-import { base64URLencode } from '~/utils/json';
+import { generateCollection } from '~/utils';
 import { getActivePageTab } from '~/utils/routes';
-import { currentCollectionAtom } from '~/states/collection';
+import { updateCollectionAtom, currentCollectionAtom } from '~/states/collection';
 
 import { isOpenSidebar } from './atom';
 import { CollectionItemContent } from './Collection';
@@ -111,29 +112,92 @@ const QuickLinks = memo((props: { collection: Collection }) => {
 });
 
 const Collection = memo((props: { collection: Collection<true> }) => {
-  const location = useLocation();
   const { collection } = props;
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const updateCollection = useSetAtom(updateCollectionAtom);
+
   const match = useMemo(() => getActivePageTab(location, collection), [location, collection]);
+
+  const createCollection = useCallback(async () => {
+    if (!collection.authorization) {
+      const authorization = crypto.randomUUID();
+      updateCollection(collection, { authorization });
+    }
+
+    const resp = await generateCollection(collection);
+    console.log('创建收藏夹', resp);
+
+    if (resp) {
+      updateCollection(collection, { hash: resp.hash });
+      return resp;
+    }
+  }, [collection]);
+
+  const onClickCollection = useCallback(
+    async (e: MouseEvent) => {
+      e.preventDefault();
+      const resp = await createCollection();
+      if (resp) {
+        navigate(`/collection/${resp.hash}`);
+      }
+    },
+    [createCollection]
+  );
+  const onClickShare = useCallback(
+    async (e: MouseEvent) => {
+      e.preventDefault();
+      // href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`看看动画`)}&url=${encodeURIComponent(`https://${APP_HOST}/collection/${collection.hash}`)}`}
+      const resp = collection.hash ? collection : await createCollection();
+      if (resp) {
+        await navigator.clipboard.writeText(`https://${APP_HOST}/collection/${resp.hash}`);
+        toast.success(`复制 ${collection.name} 分享链接成功`, {
+          dismissible: true,
+          duration: 3000,
+          closeButton: true,
+          position: 'top-right'
+        });
+      } else {
+        toast.warning(`复制 ${collection.name} 分享链接失败`, {
+          dismissible: true,
+          duration: 3000,
+          closeButton: true,
+          position: 'top-right'
+        });
+      }
+    },
+    [collection, createCollection]
+  );
 
   return (
     <div>
       <div className="px2 flex items-center text-sm">
-        <NavLink
-          to={`/collection/filter/${base64URLencode(JSON.stringify(collection))}`}
-          className={'block text-xs text-base-500 text-link-active'}
-        >
-          <span className="select-none">{collection.name}</span>
-        </NavLink>
+        {collection.hash ? (
+          <NavLink
+            to={`/collection/${collection.hash}`}
+            className={'block text-xs text-base-500 text-link-active'}
+          >
+            <span className="select-none">{collection.name}</span>
+          </NavLink>
+        ) : (
+          <a
+            href="/collection/"
+            className={'block text-xs text-base-500 text-link-active'}
+            onClick={onClickCollection}
+          >
+            <span className="select-none">{collection.name}</span>
+          </a>
+        )}
         <div className="flex-auto flex items-center pl-2 pr-1">
           <div className="h-[1px] w-full bg-zinc-200"></div>
         </div>
-        <a
+        <div
           className="h-[26px] w-auto rounded-md px-1 flex items-center cursor-pointer hover:bg-layer-muted"
-          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`看看动画`)}&url=${encodeURIComponent(`https://${APP_HOST}/collection/filter/${base64URLencode(JSON.stringify(collection))}`)}`}
-          target="_blank"
+          onClick={onClickShare}
         >
           <span className="i-carbon-share"></span>
-        </a>
+        </div>
       </div>
       {collection.filters.length > 0 ? (
         <div className="collection-container py-[1px] pr-[1px] space-y-2 overflow-y-auto">

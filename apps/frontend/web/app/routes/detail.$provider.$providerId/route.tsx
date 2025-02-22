@@ -1,14 +1,13 @@
 // @ts-nocheck
 
 import { useLoaderData, useLocation } from '@remix-run/react';
-import { redirect, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare';
+import { redirect, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 
 import { parse } from 'anitomy';
 import { formatInTimeZone } from 'date-fns-tz';
 
 import Layout from '~/layouts/Layout';
-import { fetchResourceDetail } from '~/utils/fetch';
-import { getPikPakUrlChecker } from '~/utils/pikpak';
+import { fetchResourceDetail, getPikPakUrlChecker } from '~/utils';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { provider, providerId } = params;

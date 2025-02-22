@@ -30,7 +30,7 @@ export default function Layout(props: LayoutProps) {
       <Hero feedURL={feedURL}></Hero>
       <div className={clsx('w-full flex', isOpen ? 'main-with-sidebar' : 'main-without-sidebar')}>
         <Sidebar></Sidebar>
-        <div className="flex-auto flex items-center justify-center min-h-[calc(100vh-316px-220px)]">
+        <div className="flex-auto flex items-center justify-center min-h-[calc(100vh-300px-220px)]">
           <main className="main">{props.children}</main>
         </div>
       </div>

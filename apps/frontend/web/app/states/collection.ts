@@ -53,6 +53,13 @@ export const addCollectionItemAtom = atom(
   }
 );
 
+export const updateCollectionAtom = atom(
+  null,
+  (get, set, collection: Collection<true>, value: Partial<Collection<true>>) => {
+    set(collectionDb!.set, collection.name, { ...collection, ...value });
+  }
+);
+
 export const updateCollectionItemAtom = atom(
   null,
   (get, set, collection: Collection<true>, value: Collection<true>['filters'][0]) => {

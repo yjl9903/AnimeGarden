@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { redirect, useLoaderData, useLocation, useParams } from '@remix-run/react';
-import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/cloudflare';
+import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/node';
 
-import { type Jsonify, type ResolvedFilterOptions, parseURLSearch } from '@animegarden/client';
+import { parseURLSearch } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import { fetchResources } from '~/utils/fetch';
+import { fetchResources } from '~/utils';
 import { getSubjectById } from '~/utils/subjects';
 import { usePreferFansub } from '~/states';
 

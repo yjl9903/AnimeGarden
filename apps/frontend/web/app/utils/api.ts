@@ -1,12 +1,15 @@
 import { APP_HOST, SERVER_URL } from '~build/env';
 
 import {
+  type Collection,
   type ProviderType,
   type FilterOptions,
   type FetchResourcesOptions,
   fetchAPI as rawFetchAPI,
   fetchResources as rawFetchResources,
-  fetchResourceDetail as rawFetchResourceDetail
+  fetchResourceDetail as rawFetchResourceDetail,
+  fetchCollection as rawFetchCollection,
+  generateCollection as rawGenerateCollection
 } from '@animegarden/client';
 
 export const baseURL = import.meta.env.SSR
@@ -96,6 +99,30 @@ export async function fetchResources(
 export async function fetchResourceDetail(provider: string, href: string) {
   try {
     return await rawFetchResourceDetail(provider as ProviderType, href, {
+      fetch: ofetch,
+      baseURL
+    });
+  } catch (error) {
+    console.error(error);
+    return undefined;
+  }
+}
+
+export async function fetchCollection(hash: string) {
+  try {
+    return await rawFetchCollection(hash, {
+      fetch: ofetch,
+      baseURL
+    });
+  } catch (error) {
+    console.error(error);
+    return undefined;
+  }
+}
+
+export async function generateCollection(collection: Collection<true>) {
+  try {
+    return await rawGenerateCollection(collection, {
       fetch: ofetch,
       baseURL
     });

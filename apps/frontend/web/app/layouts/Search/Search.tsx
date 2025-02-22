@@ -12,7 +12,7 @@ import {
   useState
 } from 'react';
 
-import { fetchResources } from '@/utils/fetch';
+import { fetchResources } from '~/utils';
 import { inputAtom, historiesAtom } from '@/states/search';
 import { useActiveElement, useDocument, useEventListener } from '@/hooks';
 
