@@ -4,7 +4,7 @@ import { NavLink, useLocation } from '@remix-run/react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 
-import type { Collection } from '@animegarden/client';
+import type { Collection, Jsonify } from '@animegarden/client';
 
 import { APP_HOST } from '~build/env';
 
@@ -348,7 +348,7 @@ const CollectionItemFilter = memo((props: { item: CollectionItem }) => {
   );
 });
 
-function inferCollectionItemName(item: CollectionItem) {
+export function inferCollectionItemName(item: CollectionItem | Jsonify<CollectionItem>) {
   let title;
 
   if (item.search && item.search.length > 0) {
