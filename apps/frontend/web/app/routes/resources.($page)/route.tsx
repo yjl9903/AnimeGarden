@@ -17,7 +17,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
   return [
     { title: title + ' | Anime Garden 動漫花園資源網第三方镜像站' },
-    { name: 'description', content: '}Anime Garden 動漫花園資源網第三方镜像站' }
+    { name: 'description', content: 'Anime Garden 動漫花園資源網第三方镜像站' }
   ];
 };
 
