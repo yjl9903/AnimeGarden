@@ -13,7 +13,7 @@ import { retryFn } from './utils';
 import { DefaultBaseURL } from './constants';
 import { stringifyURLSearch } from './resolver';
 
-interface FetchResourcesResult<T extends FetchResourcesOptions> {
+export interface FetchResourcesResult<T extends FetchResourcesOptions> {
   ok: boolean;
   resources: Resource<T>[];
   complete: boolean;
@@ -21,7 +21,7 @@ interface FetchResourcesResult<T extends FetchResourcesOptions> {
   timestamp: Date | undefined;
 }
 
-interface FetchResourceDetailResult {
+export interface FetchResourceDetailResult {
   ok: boolean;
   resource: ResourceDetail;
   timestamp: Date | undefined;

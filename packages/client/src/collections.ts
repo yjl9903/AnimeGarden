@@ -5,6 +5,8 @@ import { version } from '../package.json';
 
 import type { FetchOptions, Collection, CollectionResult } from './types';
 
+import type { FetchResourcesResult } from './resources';
+
 import { retryFn } from './utils';
 import { DefaultBaseURL, SupportProviders } from './constants';
 
@@ -106,11 +108,20 @@ export async function generateCollection(
   return undefined;
 }
 
-export async function fetchCollection(hash: string, options: FetchOptions = {}) {
+export async function fetchCollection(
+  hash: string,
+  options: FetchOptions = {}
+): Promise<
+  | (CollectionResult<true, false> & {
+      results: FetchResourcesResult<{ tracker: true; metadata: true }>;
+    })
+  | undefined
+> {
   const fetch = options?.fetch ?? global.fetch;
   const { baseURL = DefaultBaseURL, retry = 0 } = options;
 
   const url = new URL(`collection/${hash}`, baseURL);
+
   // @ts-ignore
   const headers = new Headers(options.headers);
   if (!headers.get('user-agent')) {
@@ -130,5 +141,11 @@ export async function fetchCollection(hash: string, options: FetchOptions = {}) 
     throw new Error(`Failed connecting ${url.toString()}`);
   }, retry);
 
-  // TODO
+  if (resp.status === 'OK') {
+    return {
+      ...resp
+    };
+  }
+
+  return undefined;
 }

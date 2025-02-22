@@ -59,6 +59,7 @@ export class CollectionsModule extends Module<System['modules']> {
       () => this.database.select().from(collections).where(eq(collections.hash, hsh)),
       5
     );
+
     if (resp && resp.length === 1) {
       const collection = resp[0];
       const results = await Promise.all(
@@ -66,8 +67,10 @@ export class CollectionsModule extends Module<System['modules']> {
           this.system.modules.resources.query.find({ ...f, page: 1, pageSize: 100 })
         )
       );
+
       return {
-        resources: results.flatMap((result) => result.resources)
+        ...collection,
+        results
       };
     }
   });

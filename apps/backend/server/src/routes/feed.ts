@@ -65,18 +65,20 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
             'Anime Garden 是動漫花園資源網的第三方镜像站, 動漫花園資訊網是一個動漫愛好者交流的平台,提供最及時,最全面的動畫,漫畫,動漫音樂,動漫下載,BT,ED,動漫遊戲,資訊,分享,交流,讨论.',
           site: `https://${sys.options.site ?? 'animes.garden'}`,
           trailingSlash: false,
-          items: resp.resources.map((r) => {
-            return {
-              title: r.title,
-              pubDate: toDate(r.createdAt, { timeZone: 'Asia/Shanghai' }),
-              link: `https://${sys.options.site ?? 'animes.garden'}${getDetailURL(r)}`,
-              enclosure: {
-                url: r.magnet,
-                length: r.size,
-                type: 'application/x-bittorrent'
-              }
-            };
-          })
+          items: resp.results
+            .flatMap((r) => r.resources)
+            .map((r) => {
+              return {
+                title: r.title,
+                pubDate: toDate(r.createdAt, { timeZone: 'Asia/Shanghai' }),
+                link: `https://${sys.options.site ?? 'animes.garden'}${getDetailURL(r)}`,
+                enclosure: {
+                  url: r.magnet,
+                  length: r.size,
+                  type: 'application/x-bittorrent'
+                }
+              };
+            })
         })
       );
     })
