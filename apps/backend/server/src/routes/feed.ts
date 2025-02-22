@@ -19,7 +19,7 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
 
       const resp = await sys.modules.resources.query.find(filter);
 
-      ctx.res.headers.set('Content-Type', 'application/rss+xml; charset=UTF-8');
+      ctx.res.headers.set('Content-Type', 'application/xml; charset=UTF-8');
       ctx.res.headers.set('Cache-Control', `public, max-age=${1 * 60 * 60}`);
 
       return ctx.body(
@@ -55,7 +55,7 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
         return ctx.json({ status: 'ERROR', message: `Unknown collection ${hsh}` }, 400);
       }
 
-      ctx.res.headers.set('Content-Type', 'application/rss+xml; charset=UTF-8');
+      ctx.res.headers.set('Content-Type', 'application/xml; charset=UTF-8');
       ctx.res.headers.set('Cache-Control', `public, max-age=${1 * 60 * 60}`);
 
       return ctx.body(

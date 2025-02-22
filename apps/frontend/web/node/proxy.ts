@@ -82,7 +82,7 @@ export const feed = <E extends { Bindings: Bindings } = { Bindings: Bindings }>(
 
       return new Response(body, {
         headers: {
-          'content-type': response.headers.get('content-type') || 'application/rss+xml',
+          'content-type': response.headers.get('content-type') || 'application/xml',
           'cache-control': response.headers.get('cache-control') || `public, max-age=300`,
           'access-control-allow-origin': '*',
           'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
