@@ -29,9 +29,9 @@ export const currentCollectionNameAtom = atomWithStorage(
 
 export const currentCollectionAtom = atom<Collection | undefined, [Collection], void>(
   (get) => {
-    get(collectionsAtom!);
+    collectionsAtom && get(collectionsAtom!);
     const currentName = get(currentCollectionNameAtom);
-    const current = get(collectionDb!.item(currentName));
+    const current = currentName && collectionDb ? get(collectionDb!.item(currentName)) : undefined;
     return current;
   },
   (_get, set, newCollection: Collection) => {

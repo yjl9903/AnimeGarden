@@ -182,8 +182,8 @@ export function Filter(props: Props) {
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">字幕组</span>
           {fansubs.map((fansub) => (
             <NavLink
-              to={`/resources/1?fansub=${fansub}`}
               key={fansub}
+              to={`/resources/1?fansub=${fansub}`}
               className="text-4 select-text text-link"
             >
               {fansub}
@@ -226,11 +226,11 @@ export function Filter(props: Props) {
           {/* prettier-ignore */}
           <span className="text-4 select-none text-base-800 font-bold mr2 keyword">标题匹配</span>
           {include.map((i, idx) => (
-            <>
+            <span key={idx}>
               {idx > 0 && <span className="text-base-400 text-4 select-none">|</span>}
               {/* prettier-ignore */}
-              <span key={i} className="text-4 select-text underline underline-dotted underline-gray-500">{i}</span>
-            </>
+              <span className="text-4 select-text underline underline-dotted underline-gray-500">{i}</span>
+            </span>
           ))}
         </div>
       )}
@@ -238,15 +238,11 @@ export function Filter(props: Props) {
         <div className="space-x-2 select-none text-0">
           <span className="text-4 text-base-800 font-bold mr2 keyword">包含关键词</span>
           {keywords.map((i, idx) => (
-            <>
-              {idx > 0 && (
-                <span key={i + idx} className="text-base-400 text-4 select-none">
-                  &
-                </span>
-              )}
+            <span key={i}>
+              {idx > 0 && <span className="text-base-400 text-4 select-none">&</span>}
               {/* prettier-ignore */}
-              <span key={i} className="text-4 select-text underline underline-dotted underline-gray-500">{i}</span>
-            </>
+              <span className="text-4 select-text underline underline-dotted underline-gray-500">{i}</span>
+            </span>
           ))}
         </div>
       )}
