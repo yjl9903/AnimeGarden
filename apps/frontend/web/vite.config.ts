@@ -14,11 +14,11 @@ import { env } from './node/env';
 const { APP_HOST, SERVER_URL, KEEPSHARE } = env();
 
 // Analytics Engines
-const UMAMI_HOST = `umami.onekuma.cn`;
-const UMAMI_ID = `ac2c4863-3409-4c64-9ac8-fd94bf937583`;
+const UMAMI_HOST = process.env.UMAMI_HOST || `umami.onekuma.cn`;
+const UMAMI_ID = process.env.UMAMI_ID || `ac2c4863-3409-4c64-9ac8-fd94bf937583`;
 // const PLAUSIBLE_HOST = `garden.breadio.wiki`;
-const CLARITY = `nbvdca15ui`;
-const CF_BEACON = `7307ee3d2d8f4bafac906844704dab10`;
+// const CLARITY = `nbvdca15ui`;
+// const CF_BEACON = `7307ee3d2d8f4bafac906844704dab10`;
 
 export default defineConfig({
   ssr: {

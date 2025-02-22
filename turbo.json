@@ -1,6 +1,8 @@
 {
   "$schema": "https://turborepo.org/schema.json",
   "globalEnv": [
+    "UMAMI_HOST",
+    "UMAMI_ID",
     "APP_HOST",
     "SERVER_URL",
     "KEEPSHARE",
