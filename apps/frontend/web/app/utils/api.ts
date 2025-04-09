@@ -47,7 +47,8 @@ export async function fetchAPI<T>(path: string, request: RequestInit | undefined
     } as const);
     return resp;
   } catch (error) {
-    console.error(error);
+    console.error('[ERROR]', 'fetchAPI', path, error);
+
     return undefined;
   }
 }
@@ -55,15 +56,18 @@ export async function fetchAPI<T>(path: string, request: RequestInit | undefined
 export async function fetchTimestamp() {
   try {
     const resp = await fetchAPI<{ timestamp: string }>('/', undefined);
-    return {
-      timestamp: resp?.timestamp
-    };
+    if (resp) {
+      return {
+        timestamp: resp?.timestamp
+      };
+    }
   } catch (error) {
-    console.error(error);
-    return {
-      timestamp: undefined
-    };
+    console.error('[ERROR]', 'fetchTimestamp', error);
   }
+
+  return {
+    timestamp: undefined
+  };
 }
 
 export async function fetchResources(
@@ -93,7 +97,7 @@ export async function fetchResources(
     );
     return resp;
   } catch (error) {
-    console.error(error);
+    console.error('[ERROR]', 'fetchResources', error);
 
     return {
       ok: false,
@@ -106,7 +110,7 @@ export async function fetchResources(
 }
 
 export async function fetchResourceDetail(provider: string, href: string) {
-  const timeout = 10 * 1000;
+  const timeout = 60 * 1000;
 
   try {
     return await rawFetchResourceDetail(provider as ProviderType, href, {
@@ -116,13 +120,13 @@ export async function fetchResourceDetail(provider: string, href: string) {
       signal: AbortSignal.timeout(timeout)
     });
   } catch (error) {
-    console.error('[FETCH]', 'fetchResourceDetail', error);
-    return undefined;
+    console.error('[ERROR]', 'fetchResourceDetail', error);
+    return null;
   }
 }
 
 export async function fetchCollection(hash: string) {
-  const timeout = 10 * 1000;
+  const timeout = 30 * 1000;
 
   try {
     return await rawFetchCollection(hash, {
@@ -132,13 +136,13 @@ export async function fetchCollection(hash: string) {
       signal: AbortSignal.timeout(timeout)
     });
   } catch (error) {
-    console.error(error);
-    return undefined;
+    console.error('[ERROR]', 'fetchCollection', error);
+    return null;
   }
 }
 
 export async function generateCollection(collection: Collection<true>) {
-  const timeout = 10 * 1000;
+  const timeout = 30 * 1000;
 
   try {
     return await rawGenerateCollection(collection, {
@@ -148,7 +152,7 @@ export async function generateCollection(collection: Collection<true>) {
       signal: AbortSignal.timeout(timeout)
     });
   } catch (error) {
-    console.error(error);
-    return undefined;
+    console.error('[ERROR]', 'generateCollection', error);
+    return null;
   }
 }

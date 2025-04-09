@@ -10,10 +10,14 @@ import Layout from '~/layouts/Layout';
 import { fetchResourceDetail, getPikPakUrlChecker } from '~/utils';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const { provider, providerId } = params;
-  if (provider && providerId && ['dmhy', 'moe', 'ani'].includes(provider)) {
-    const detail = await fetchResourceDetail(provider, providerId);
-    return detail;
+  try {
+    const { provider, providerId } = params;
+    if (provider && providerId && ['dmhy', 'moe', 'ani'].includes(provider)) {
+      const detail = await fetchResourceDetail(provider, providerId);
+      return detail;
+    }
+  } catch (error) {
+    console.error('[ERROR]', error);
   }
   return redirect('/');
 };
