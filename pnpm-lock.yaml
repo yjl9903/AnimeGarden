@@ -96,7 +96,7 @@ importers:
         version: 3.4.0
       drizzle-orm:
         specifier: ^0.33.0
-        version: 0.33.0(@cloudflare/workers-types@4.20240909.0)(@types/react@18.3.18)(postgres@3.4.4)(react@18.3.1)
+        version: 0.33.0(@cloudflare/workers-types@4.20240909.0)(@types/react@18.3.18)(postgres@3.4.5)(react@18.3.1)
       ioredis:
         specifier: ^5.4.1
         version: 5.4.1
@@ -107,8 +107,8 @@ importers:
         specifier: ^1.1.6
         version: 1.1.6
       postgres:
-        specifier: ^3.4.4
-        version: 3.4.4
+        specifier: ^3.4.5
+        version: 3.4.5
       simptrad:
         specifier: ^0.2.0
         version: 0.2.0
@@ -184,7 +184,7 @@ importers:
         version: 16.4.7
       drizzle-orm:
         specifier: ^0.33.0
-        version: 0.33.0(@cloudflare/workers-types@4.20240909.0)(@types/react@18.3.18)(postgres@3.4.4)(react@18.3.1)
+        version: 0.33.0(@cloudflare/workers-types@4.20240909.0)(@types/react@18.3.18)(postgres@3.4.5)(react@18.3.1)
       fast-xml-parser:
         specifier: ^4.5.3
         version: 4.5.3
@@ -6786,8 +6786,8 @@ packages:
     resolution: {integrity: sha512-dle9A3yYxlBSrt8Fu+IpjGT8SY8hN0mlaA6GY8t0P5PjIOZemULz/E2Bnm/2dcUOena75OTNkHI76uZBNUUq3A==}
     engines: {node: ^10 || ^12 || >=14}
 
-  postgres@3.4.4:
-    resolution: {integrity: sha512-IbyN+9KslkqcXa8AO9fxpk97PA4pzewvpi2B3Dwy9u4zpV32QicaEdgmF3eSQUzdRk7ttDHQejNgAEr4XoeH4A==}
+  postgres@3.4.5:
+    resolution: {integrity: sha512-cDWgoah1Gez9rN3H4165peY9qfpEo+SA61oQv65O3cRUE1pOEoJWwddwcqKE8XZYjbblOJlYDlLV4h67HrEVDg==}
     engines: {node: '>=12'}
 
   prebuild-install@7.1.2:
@@ -13072,11 +13072,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.33.0(@cloudflare/workers-types@4.20240909.0)(@types/react@18.3.18)(postgres@3.4.4)(react@18.3.1):
+  drizzle-orm@0.33.0(@cloudflare/workers-types@4.20240909.0)(@types/react@18.3.18)(postgres@3.4.5)(react@18.3.1):
     optionalDependencies:
       '@cloudflare/workers-types': 4.20240909.0
       '@types/react': 18.3.18
-      postgres: 3.4.4
+      postgres: 3.4.5
       react: 18.3.1
 
   duplexer@0.1.2: {}
@@ -15357,7 +15357,7 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postgres@3.4.4: {}
+  postgres@3.4.5: {}
 
   prebuild-install@7.1.2:
     dependencies:
