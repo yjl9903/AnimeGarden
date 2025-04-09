@@ -1,8 +1,8 @@
 # syntax = docker/dockerfile:1
 
 # Adjust NODE_VERSION as desired
-ARG NODE_VERSION=20.10.0
-ARG PNPM_VERSION=9.10.0
+ARG NODE_VERSION=20.19.0
+ARG PNPM_VERSION=10.8.0
 
 
 # Base Image
