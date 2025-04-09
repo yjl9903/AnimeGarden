@@ -233,6 +233,9 @@ importers:
       '@onekuma/preset.css':
         specifier: ^0.1.11
         version: 0.1.11
+      '@onekuma/reset':
+        specifier: ^0.1.11
+        version: 0.1.11
       '@radix-ui/react-dialog':
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.5(@types/react@18.3.18))(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -2748,6 +2751,10 @@ packages:
 
   '@onekuma/preset.css@0.1.11':
     resolution: {integrity: sha512-BMkKJ6jy8jxfuGqAMHtCIVyVvkHpk6ynFlteYhfzPsyfZHCZ7MGoon7CTInNdBSYne49WuVqJBMX2wbG01pjlw==}
+    engines: {node: '>=v18.16.0'}
+
+  '@onekuma/reset@0.1.11':
+    resolution: {integrity: sha512-vaa5BQphXCB4hsyv6PI0N+I/LXo6y+G/xSCtqL87n+m9vR1Bvn3o42gi6Y3j1U6z0evpFqt7io6uJDgwta3GfQ==}
     engines: {node: '>=v18.16.0'}
 
   '@pkgjs/parseargs@0.11.0':
@@ -10478,6 +10485,8 @@ snapshots:
       which: 3.0.1
 
   '@onekuma/preset.css@0.1.11': {}
+
+  '@onekuma/reset@0.1.11': {}
 
   '@pkgjs/parseargs@0.11.0':
     optional: true
