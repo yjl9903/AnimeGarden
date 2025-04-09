@@ -101,8 +101,8 @@ importers:
         specifier: ^0.1.6
         version: 0.1.6
       ohash:
-        specifier: ^1.1.6
-        version: 1.1.6
+        specifier: ^2.0.11
+        version: 2.0.11
       postgres:
         specifier: ^3.4.5
         version: 3.4.5
@@ -195,8 +195,8 @@ importers:
         specifier: ^0.1.6
         version: 0.1.6
       ohash:
-        specifier: ^1.1.6
-        version: 1.1.6
+        specifier: ^2.0.11
+        version: 2.0.11
       sitemap:
         specifier: ^8.0.0
         version: 8.0.0
@@ -430,8 +430,8 @@ importers:
         specifier: workspace:*
         version: link:../anipar
       ohash:
-        specifier: ^1.1.6
-        version: 1.1.6
+        specifier: ^2.0.11
+        version: 2.0.11
       simptrad:
         specifier: ^0.2.0
         version: 0.2.0
@@ -6246,9 +6246,6 @@ packages:
 
   ofetch@1.4.1:
     resolution: {integrity: sha512-QZj2DfGplQAr2oj9KzceK9Hwz6Whxazmn85yYeVuS3u9XTMOGMRx0kO95MQ+vLsj/S/NwBDMMLU5hpxvI6Tklw==}
-
-  ohash@1.1.6:
-    resolution: {integrity: sha512-TBu7PtV8YkAZn0tSxobKY2n2aAQva936lhRrj6957aDaCf9IEtqsKbgMzXE/F/sjqYOwmrukeORHNLe5glk7Cg==}
 
   ohash@2.0.11:
     resolution: {integrity: sha512-RdR9FQrFwNBNXAr4GixM8YaRZRJ5PUWbKYbE5eOsrwAjJW0q2REGcf79oYPsLyskQCZG1PLN+S/K1V00joZAoQ==}
@@ -14743,8 +14740,6 @@ snapshots:
       destr: 2.0.3
       node-fetch-native: 1.6.6
       ufo: 1.5.4
-
-  ohash@1.1.6: {}
 
   ohash@2.0.11: {}
 
