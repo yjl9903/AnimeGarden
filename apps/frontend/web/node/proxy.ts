@@ -23,6 +23,7 @@ export const api = <E extends { Bindings: Bindings } = { Bindings: Bindings }>()
       console.info(`--> ${ctx.req.method} ${url.toString()}`);
 
       const request = ctx.req.raw;
+      // @ts-ignore
       const subRequest = new Request(url, request.clone());
       const subResponse = await fetch(subRequest);
       const response = subResponse.clone();
@@ -71,6 +72,7 @@ export const feed = <E extends { Bindings: Bindings } = { Bindings: Bindings }>(
       console.info(`--> ${ctx.req.method} ${url.toString()}`);
 
       const request = ctx.req.raw;
+      // @ts-ignore
       const subRequest = new Request(url, request.clone());
       const subResponse = await fetch(subRequest);
       const response = subResponse.clone();
