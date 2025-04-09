@@ -24,7 +24,12 @@ export class ANiProvider extends Provider {
     _sys: System,
     id: string
   ): Promise<ScrapedResourceDetail | undefined> {
-    return await fetchANiDetail(fetch, id, { retry: 5 });
+    try {
+      return await fetchANiDetail(fetch, id, { retry: 5 });
+    } catch (error) {
+      console.error(error);
+      return undefined;
+    }
   }
 
   public async getDetailURL(_sys: System, id: string) {
