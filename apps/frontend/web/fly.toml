@@ -1,20 +1,20 @@
-# fly.toml app configuration file generated for animegarden-server-test on 2025-01-04T19:09:46+08:00
+# fly.toml app configuration file generated for animegarden-web-production on 2025-04-09T22:04:26+08:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'animegarden-web-test'
-primary_region = 'hkg'
+app = 'animegarden-web-production'
+primary_region = 'lax'
 
 [build]
 dockerfile = 'Dockerfile'
 
 [build.args]
+APP_HOST = 'animes.garden'
 NODE_VERSION = '20.10.0'
 PNPM_VERSION = '10.4.1'
-APP_HOST = 'test.animes.garden'
+SERVER_URL = 'http://animegarden-server-production.internal:3000/'
 UMAMI_ID = '71499238-1ee8-41c0-adb4-4c359e111a6a'
-SERVER_URL = 'http://animegarden-server-test.internal:3000/'
 
 [processes]
 server = 'node apps/frontend/web/server.mjs'
