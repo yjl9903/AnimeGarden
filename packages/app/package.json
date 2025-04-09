@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "astro": "astro",
-    "build": "astro build && node scripts/postbuild.mjs",
     "dev": "astro dev",
     "generate-pwa-assets": "pwa-assets-generator --preset minimal public/favicon.svg",
     "preview": "astro preview",
@@ -49,6 +48,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@animegarden/client": "workspace:*",
     "@iconify-json/ant-design": "^1.2.5",
     "@iconify-json/carbon": "^1.2.5",
     "@iconify-json/devicon": "^1.2.11",
@@ -59,9 +59,7 @@
     "@types/react-dom": "18.3.5",
     "@types/swagger-ui-react": "^4.18.3",
     "@unocss/reset": "^0.62.3",
-    "@vite-pwa/assets-generator": "^0.2.6",
     "@vite-pwa/astro": "^0.4.3",
-    "animegarden": "workspace:*",
     "anitomy": "0.0.35",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.1",
@@ -70,6 +68,6 @@
     "unocss-preset-animations": "^1.1.0",
     "unocss-preset-shadcn": "^0.3.1",
     "unplugin-analytics": "^0.0.12",
-    "unplugin-info": "^1.1.0"
+    "unplugin-info": "^1.2.1"
   }
 }

@@ -4,20 +4,21 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "animegarden": "tsx packages/cli/src/cli.ts",
     "build": "turbo run build",
-    "build:app": "turbo run build --filter @animegarden/app...",
     "build:cli": "turbo run build --filter @animegarden/cli...",
     "build:server": "turbo run build --filter @animegarden/server...",
+    "build:web": "turbo run build --filter @animegarden/web...",
     "build:worker": "turbo run build --filter @animegarden/worker...",
     "dev": "turbo run dev --parallel",
-    "dev:app": "pnpm -C packages/app dev",
-    "dev:server": "pnpm -C packages/server dev",
+    "dev:cron": "tsx apps/backend/manager/src/cli.ts cron",
+    "dev:server": "tsx apps/backend/manager/src/cli.ts start --port=8080",
+    "dev:web": "pnpm -C apps/frontend/web dev",
     "dev:worker": "pnpm -C packages/worker dev",
     "format": "turbo run format --parallel",
+    "manager": "tsx apps/backend/manager/src/cli.ts",
     "release": "bumpp package.json packages/*/package.json --commit --push --tag && pnpm -r publish --access public",
-    "start:app": "node packages/app/dist/server/entry.mjs",
-    "start:server": "node packages/server/dist/index.mjs",
+    "start:server": "node apps/backend/manager/cli.mjs start",
+    "start:web": "node apps/frontend/web/server.mjs",
     "test:ci": "turbo run test:ci",
     "typecheck": "turbo run typecheck",
     "preversion": "turbo run test:ci",
@@ -29,6 +30,7 @@
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.16.5",
+    "@vite-pwa/assets-generator": "^0.2.6",
     "breadc": "^0.9.7",
     "bumpp": "latest",
     "drizzle-kit": "^0.24.2",
@@ -39,14 +41,34 @@
     "prettier-plugin-astro": "^0.14.1",
     "tsx": "^4.19.2",
     "turbo": "^2.1.2",
-    "typescript": "^5.6.2",
-    "unbuild": "^2.0.0",
+    "typescript": "^5.7.3",
+    "unbuild": "^3.3.1",
     "undici": "^6.19.8",
+    "vite-plugin-pwa": "0.21.1",
     "vitest": "^2.1.8",
     "wrangler": "^3.78.2"
   },
-  "packageManager": "pnpm@9.15.2",
+  "packageManager": "pnpm@10.4.1",
   "engines": {
     "node": ">=v18.16.0"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@remix-run/react@2.12.1": "patches/@remix-run__react@2.12.1.patch"
+    },
+    "onlyBuiltDependencies": [
+      "bufferutil",
+      "core-js-pure",
+      "esbuild",
+      "fs-native-extensions",
+      "node-datachannel",
+      "sharp",
+      "tree-sitter",
+      "tree-sitter-json",
+      "tree-sitter-yaml",
+      "utf-8-validate",
+      "utp-native",
+      "workerd"
+    ]
   }
 }

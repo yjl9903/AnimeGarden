@@ -1,0 +1,52 @@
+{
+  "name": "anipar",
+  "version": "0.3.0",
+  "description": "Anime title Parser built for AnimeGarden.",
+  "keywords": [
+    "dmhy",
+    "scraper",
+    "anitomy",
+    "animegarden",
+    "animespace"
+  ],
+  "homepage": "https://github.com/yjl9903/AnimeGarden#readme",
+  "bugs": {
+    "url": "https://github.com/yjl9903/AnimeGarden/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yjl9903/AnimeGarden.git"
+  },
+  "license": "MIT",
+  "author": "XLor",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "format": "prettier --write src/**/*.ts test/**/*.ts",
+    "test": "vitest",
+    "test:ci": "vitest --run",
+    "start:fetch": "tsx scripts/fetch.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=v18.16.0"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/parse-torrent": "^5.8.7"
+  }
+}

@@ -41,18 +41,17 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "animegarden": "workspace:*",
-    "cheerio": "1.0.0",
-    "jsdom": "^25.0.0",
-    "parse-torrent": "^11.0.17",
+    "@animegarden/client": "workspace:*",
+    "jsdom": "^26.0.0",
+    "parse-torrent": "^11.0.18",
     "rss-parser": "^3.13.0",
     "zod": "^3.23.8"
-  },
-  "engines": {
-    "node": ">=v18.16.0"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
     "@types/parse-torrent": "^5.8.7"
+  },
+  "engines": {
+    "node": ">=v18.16.0"
   }
 }

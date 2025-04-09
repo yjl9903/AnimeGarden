@@ -4,9 +4,10 @@ import parseTorrent from 'parse-torrent';
 import { JSDOM } from 'jsdom';
 import { toMagnetURI } from 'parse-torrent';
 
-import { type FetchedResource, ResourceDetail, retryFn, ANiTeam, ANiUser } from 'animegarden';
+import { type ScrapedResource, type ScrapedResourceDetail, retryFn } from '@animegarden/client';
 
-import { parseSize, splitOnce } from '../utils';
+import { NetworkError } from '../error';
+import { parseSize, removeExtraSpaces, replaceSuffix, splitOnce, stripSuffix } from '../utils';
 
 const parser = new Parser();
 
@@ -18,10 +19,24 @@ export interface FetchANiDetailOptions {
   retry?: number;
 }
 
+const ANiUser = {
+  name: 'ANi',
+  provider: 'ani',
+  providerId: '1',
+  avatar: ''
+} as const;
+
+const ANiTeam = {
+  name: 'ANi',
+  provider: 'ani',
+  providerId: '1',
+  avatar: ''
+} as const;
+
 export async function fetchLastestANi(
   ofetch: (request: string, init?: RequestInit) => Promise<Response>,
   options: FetchANiOptions = {}
-) {
+): Promise<ScrapedResource[]> {
   const { retry = 5 } = options;
 
   const resp = await retryFn(async () => {
@@ -34,17 +49,14 @@ export async function fetchLastestANi(
       ])
     });
     if (!resp.ok) {
-      throw new Error(resp.statusText, { cause: resp });
+      throw new NetworkError('ani', 'https://api.ani.rip/', resp);
     }
     return resp;
   }, retry);
-  if (!resp.ok) {
-    throw new Error('Failed connecting https://api.ani.rip/');
-  }
 
   const feed = await parser.parseString(await resp.text());
 
-  const res: FetchedResource[] = [];
+  const res: ScrapedResource[] = [];
   for (const item of feed.items) {
     if (!item.title || !item.pubDate || !item.enclosure?.length) continue;
 
@@ -61,16 +73,10 @@ export async function fetchLastestANi(
         ])
       });
       if (!resp.ok) {
-        throw new Error(resp.statusText, { cause: resp });
+        throw new NetworkError('ani', link, resp);
       }
       return resp;
     }, retry);
-    if (!resp.ok) {
-      throw new Error('Failed connecting https://api.ani.rip/');
-    }
-
-    const filename = link.split('/').at(-1)!;
-    const providerId = filename.slice(0, filename.indexOf('.'));
 
     const blob = await resp.blob();
     const buffer = Buffer.from(await blob.arrayBuffer());
@@ -79,17 +85,28 @@ export async function fetchLastestANi(
     const [magnet, tracker] = splitOnce(toMagnetURI(torrent), '&');
     const size = parseSize(item.enclosure.length);
 
+    const filename = link.split('/').at(-1)!;
+    const providerId = link.startsWith('https://tds.ani.rip/')
+      ? magnet.slice('magnet:?xt=urn:btih:'.length)
+      : filename.slice(0, filename.indexOf('.'));
+
     res.push({
       provider: 'ani',
       providerId,
-      title: item.title,
+      title: replaceSuffix(removeExtraSpaces(item.title), {
+        '.torrent': '[MP4]',
+        '.mp4': '[MP4]',
+        '.MP4': '[MP4]',
+        '.mkv': '[MKV]',
+        '.MKV': '[MKV]'
+      }),
       href: link,
-      type: '動畫',
+      type: '动画',
       magnet,
       tracker,
       size,
-      fansub: { id: '1', name: 'ANi' },
-      publisher: { id: '1', name: 'ANi' },
+      publisher: { id: ANiUser.providerId, name: ANiUser.name },
+      fansub: { id: ANiTeam.providerId, name: ANiTeam.name },
       createdAt: item.pubDate
     });
   }
@@ -101,7 +118,7 @@ export async function fetchANiDetail(
   ofetch: (request: string, init?: RequestInit) => Promise<Response>,
   id: string,
   options: FetchANiDetailOptions = {}
-): Promise<ResourceDetail | undefined> {
+): Promise<ScrapedResourceDetail | undefined> {
   const { retry = 5 } = options;
 
   const resp = await retryFn(async () => {
@@ -114,13 +131,10 @@ export async function fetchANiDetail(
       ])
     });
     if (!resp.ok) {
-      throw new Error(resp.statusText, { cause: resp });
+      throw new NetworkError('ani', `https://nyaa.si/view/${id}`, resp);
     }
     return resp;
   }, retry);
-  if (!resp.ok) {
-    throw new Error('Failed connecting https://nyaa.si/');
-  }
 
   const html = await resp.text();
   const { document } = new JSDOM(html).window;
@@ -160,15 +174,7 @@ export async function fetchANiDetail(
     title,
     href: `https://nyaa.si/view/${id}`,
     description,
-    magnet: {
-      user: `https://nyaa.si/download/${id}.torrent`,
-      href: fullMagnet,
-      href2: magnet,
-      ddplay: '',
-      files,
-      hasMoreFiles: false
-    },
-    type: '動畫',
+    type: '动画',
     size,
     publisher: {
       id: ANiUser.providerId,
@@ -180,6 +186,18 @@ export async function fetchANiDetail(
       name: ANiTeam.name,
       avatar: ANiTeam.avatar
     },
-    createdAt: createdAt.toISOString()
+    createdAt: createdAt.toISOString(),
+    magnets: [
+      {
+        name: '种子',
+        url: `https://nyaa.si/download/${id}.torrent`
+      },
+      {
+        name: '磁力链接',
+        url: fullMagnet
+      }
+    ],
+    files,
+    hasMoreFiles: false
   };
 }

@@ -1,0 +1,85 @@
+.sidebar-root {
+  --sidebar-pt: var(--hero-height);
+
+  width: 0;
+}
+
+.sidebar-root.fix-hero {
+  --sidebar-pt: var(--nav-height) !important;
+}
+
+.sidebar-wrapper {
+  height: calc(100vh - var(--sidebar-pt));
+  left: 0;
+
+  @apply: w-[200px] lt-lg:w-[300px];
+  @apply: bg-layer-on z-5;
+  @apply: absolute border-r-1 flex-shrink-0 flex-grow-0;
+}
+
+.sidebar-root.fix-hero .sidebar-wrapper {
+  height: calc(100vh - var(--nav-height));
+  top: var(--nav-height);
+
+  @apply: fixed;
+}
+
+.sidebar-trigger {
+  @apply: w-max pl2 pr3 py1;
+  @apply: text-base-700;
+  @apply: border-1 border-l-0  rounded-r-xl;
+  @apply: bg-layer-on z-5 drop-md hover:bg-layer-subtle;
+  @apply: relative top-[8px];
+  @apply: select-none cursor-pointer;
+}
+
+.sidebar-root.fix-hero .sidebar-trigger {
+  top: calc(var(--nav-height) + 8px);
+
+  @apply: fixed;
+}
+
+.collection-container {
+  max-height: calc(100vh - var(--sidebar-pt) - 34px - 36px - 36px - 36px - 32px - 26px - 24px);
+
+  @apply: mr-[8px] overflow-y-auto overscroll-none;
+}
+
+.collection-container .collection-item {
+  @apply: flex items-center ml2 pl2 py1 relative;
+}
+
+.collection-container
+  .collection-item:has(.collection-item-title[contenteditable='plaintext-only']) {
+  @apply: outline outline-1 outline-zinc-300 bg-transparent!;
+}
+
+.collection-container .collection-item-title {
+  @apply: inline-block;
+  @apply: w-full lg:max-w-[167px] lt-lg:max-w-[267px];
+  @apply: outline-none;
+}
+
+.collection-container .collection-item-title[contenteditable='false'] {
+  @apply: truncate;
+}
+
+.collection-container .collection-item-title[contenteditable='plaintext-only'] {
+  @apply: cursor-text;
+}
+
+.collection-container .collection-item:hover .collection-item-title,
+.collection-container .collection-item:has([data-state='open']) .collection-item-title {
+  @apply: lg:max-w-[145px] lt-lg:max-w-[245px];
+}
+
+.collection-container .collection-item:hover .collection-item-op,
+.collection-container .collection-item:has([data-state='open']) .collection-item-op {
+  @apply: flex;
+}
+
+.collection-container
+  .collection-item:has(.collection-item-title[contenteditable='plaintext-only'])
+  .collection-item-op {
+  @apply: hidden!;
+}

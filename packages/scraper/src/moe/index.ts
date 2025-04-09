@@ -1,10 +1,12 @@
-import type { FetchedResource, ResourceDetail } from 'animegarden';
+import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client';
 
-import { retryFn } from 'animegarden';
+import { retryFn } from '@animegarden/client';
+
+import { NetworkError } from '../error';
+import { removeExtraSpaces, stripSuffix } from '../utils';
 
 import { getType } from './tag';
 import { fetchTeam, fetchUser } from './user';
-import { stripSuffix } from '../utils';
 
 export interface FetchMoePageOptions {
   page?: number;
@@ -21,7 +23,7 @@ const TRACKER = `&tr=https%3A%2F%2Ftr.bangumi.moe%3A9696%2Fannounce&tr=http%3A%2
 export async function fetchMoePage(
   ofetch: (request: string, init?: RequestInit) => Promise<Response>,
   options: FetchMoePageOptions = {}
-): Promise<FetchedResource[]> {
+): Promise<ScrapedResource[]> {
   const { page = 1, retry = 5 } = options;
 
   const resp = await retryFn(async () => {
@@ -34,24 +36,40 @@ export async function fetchMoePage(
       ])
     });
     if (!resp.ok) {
-      throw new Error(resp.statusText, { cause: resp });
+      throw new NetworkError('moe', `https://bangumi.moe/api/torrent/page/${page}`, resp);
     }
     return resp;
   }, retry);
-  if (!resp.ok) {
-    throw new Error('Failed connecting https://bangumi.moe/');
-  }
+
   const data = await resp.json();
 
-  const result: FetchedResource[] = [];
+  const result: ScrapedResource[] = [];
   for (const torrent of data?.torrents ?? []) {
     const user = await fetchUser(ofetch, torrent.uploader_id);
     const team = torrent.team_id ? await fetchTeam(ofetch, torrent.team_id) : undefined;
 
+    let title = torrent.title;
+
+    // @hack
+    if (team?.name === 'ANi' || team?.name === '云光字幕组') {
+      // @hack
+      title = stripSuffix(removeExtraSpaces(title), [
+        '.torrent',
+        '.mp3',
+        '.MP3',
+        '.mp4',
+        '.MP4',
+        '.mkv',
+        '.MKV'
+      ]);
+    } else {
+      title = removeExtraSpaces(title);
+    }
+
     result.push({
       provider: 'moe',
       providerId: torrent._id,
-      title: stripSuffix(torrent.title, ['.mp3', '.MP3', '.mp4', '.MP4', '.mkv', '.MKV']),
+      title,
       href: torrent._id,
       magnet: torrent.magnet,
       tracker: TRACKER,
@@ -80,7 +98,7 @@ export async function fetchMoeDetail(
   ofetch: (request: string, init?: RequestInit) => Promise<Response>,
   id: string,
   options: FetchMoeDetailOptions = {}
-): Promise<ResourceDetail | undefined> {
+): Promise<ScrapedResourceDetail> {
   const { retry = 5 } = options;
 
   const resp = await retryFn(async () => {
@@ -89,13 +107,10 @@ export async function fetchMoeDetail(
       body: JSON.stringify({ _id: id })
     });
     if (!resp.ok) {
-      throw new Error(resp.statusText, { cause: resp });
+      throw new NetworkError('moe', `https://bangumi.moe/api/torrent/fetch`, resp);
     }
     return resp;
   }, retry);
-  if (!resp.ok) {
-    throw new Error('Failed connecting https://bangumi.moe/');
-  }
 
   const torrent = await resp.json();
 
@@ -105,17 +120,9 @@ export async function fetchMoeDetail(
   return {
     provider: 'moe',
     providerId: torrent._id,
-    title: stripSuffix(torrent.title, ['.mp3', '.MP3', '.mp4', '.MP4', '.mkv', '.MKV']),
+    title: torrent.title,
     href: `https://bangumi.moe/torrent/${torrent._id}`,
     description: torrent.introduction,
-    magnet: {
-      user: '',
-      href: torrent.magnet + TRACKER,
-      href2: torrent.magnet,
-      ddplay: '',
-      files: torrent.content.map((t: [string, string]) => ({ name: t[0], size: t[1] })),
-      hasMoreFiles: false
-    },
     type: getType(torrent.tag_ids),
     size: torrent.size,
     publisher: {
@@ -128,6 +135,14 @@ export async function fetchMoeDetail(
       name: team.name,
       avatar: team.avatar
     },
-    createdAt: torrent.publish_time
+    magnets: [
+      {
+        name: '磁力链接',
+        url: torrent.magnet
+      }
+    ],
+    createdAt: torrent.publish_time,
+    files: torrent.content.map((t: [string, string]) => ({ name: t[0], size: t[1] })),
+    hasMoreFiles: false
   };
 }

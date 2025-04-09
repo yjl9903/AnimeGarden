@@ -1,4 +1,4 @@
-import type { ResolvedFilterOptions } from 'animegarden';
+import type { ResolvedFilterOptions } from '@animegarden/client';
 
 import { store, preferFansubsAtom } from '@/state';
 import { hydrateNodes } from '@/lib/hydrate';

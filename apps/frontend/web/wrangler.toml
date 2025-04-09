@@ -1,0 +1,23 @@
+name = "animegarden-test"
+compatibility_date = "2024-09-11"
+
+main = "worker.ts"
+
+upload_source_maps = true
+
+kv_namespaces = [
+  { binding = "animegarden", id = "d0bb91899b22468db08020b251d3cef4", preview_id = "0bcc680779d340dfb80a3512a89cb533" },
+  { binding = "ASSETS", id = "4ab440b1ea1e42c18cdd62a454daba24", preview_id = "4ab440b1ea1e42c18cdd62a454daba24" },
+]
+
+[observability]
+enabled = true
+
+[vars]
+APP_HOST = "garden.test.breadio.wiki"
+SERVER_PROTOCOL = "https"
+SERVER_HOST = "test-animegarden.zeabur.app"
+SERVER_BASE = ""
+
+[site]
+bucket = "./build/client"

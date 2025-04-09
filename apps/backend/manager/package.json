@@ -1,0 +1,64 @@
+{
+  "name": "@animegarden/manager",
+  "version": "0.3.0",
+  "description": "Server manager CLI for AnimeGarden.",
+  "keywords": [
+    "dmhy",
+    "scraper",
+    "animegarden",
+    "animespace",
+    "CLI",
+    "breadc"
+  ],
+  "homepage": "https://github.com/yjl9903/AnimeGarden#readme",
+  "bugs": {
+    "url": "https://github.com/yjl9903/AnimeGarden/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yjl9903/AnimeGarden.git"
+  },
+  "license": "AGPL-3.0",
+  "author": "XLor",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "animegarden-manager": "./cli.mjs"
+  },
+  "files": [
+    "*.mjs",
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "format": "prettier --write src/**/*.ts test/**/*.ts",
+    "test": "vitest",
+    "test:ci": "vitest --run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@animegarden/client": "workspace:*",
+    "@animegarden/server": "workspace:*",
+    "@animegarden/database": "workspace:*",
+    "@animegarden/scraper": "workspace:*",
+    "@breadc/color": "^0.9.7",
+    "breadc": "^0.9.7",
+    "dotenv": "^16.4.5",
+    "fs-extra": "^11.2.0",
+    "undici": "^6.19.8",
+    "zod": "^3.23.8"
+  },
+  "engines": {
+    "node": ">=v18.16.0"
+  }
+}
