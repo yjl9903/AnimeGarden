@@ -9,19 +9,19 @@ API client and utils for [AnimeGarden](https://animes.garden/).
 ## Installation
 
 ```bash
-npm i animegarden
+npm i @animegarden/client
 ```
 
 ## Usage
 
 ```ts
-import { fetchResources } from 'animegarden'
+import { fetchResources } from '@animegarden/client'
 
 // Fetch the first page of Anime Garden mirror site
-const resources = await fetchResources(fetch)
+const resources = await fetchResources()
 
 // Fetch all the resources which match some filter conditions
-const sakurato = await fetchResources(fetch, { count: -1, fansub: 619 })
+const sakurato = await fetchResources({ count: -1, fansub: 'ANi' })
 ```
 
 Assume your environment has built-in [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch). If not you can use [undici](https://github.com/nodejs/undici) or [ofetch](https://github.com/unjs/ofetch).

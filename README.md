@@ -35,17 +35,17 @@ curl "https://animes.garden/api/resources?page=1&pageSize=10"
 它是 [AnimeGarden](https://animes.garden) 的 JavaScript / TypeScript 的 API 客户端封装.
 
 ```bash
-npm i animegarden
+npm i @animegarden/client
 ```
 
 ```ts
-import { fetchResources } from 'animegarden'
+import { fetchResources } from '@animegarden/client'
 
 // Fetch the first page of Anime Garden mirror site
-const resources = await fetchResources(fetch)
+const resources = await fetchResources()
 
 // Fetch all the resources which match some filter conditions
-const sakurato = await fetchResources(fetch, { count: -1, fansub: 619 })
+const sakurato = await fetchResources({ count: -1, fansub: 'ANi' })
 ```
 
 使用时, 你需要保证你的程序环境中有内置的 [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) 函数. 如果没有, 你可以安装使用 [undici](https://github.com/nodejs/undici) 或者 [ofetch](https://github.com/unjs/ofetch).
