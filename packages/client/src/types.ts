@@ -71,7 +71,23 @@ export interface Resource<T extends { tracker?: boolean; metadata?: boolean } = 
       : { anipar?: ParseResult } | null | undefined;
 }
 
-export interface ResourceDetail extends Resource<{ tracker: true; metadata: true }> {}
+export interface ResourceDetail {
+  description: string;
+
+  files: Array<{
+    name: string;
+
+    size: string;
+  }>;
+
+  magnets: Array<{
+    name: string;
+
+    url: string;
+  }>;
+
+  hasMoreFiles: boolean;
+}
 
 export interface ScrapedResource {
   provider: string;
@@ -112,23 +128,9 @@ export interface ScrapedResource {
   createdAt: string;
 }
 
-export interface ScrapedResourceDetail extends Omit<ScrapedResource, 'magnet' | 'tracker'> {
-  description: string;
-
-  files: Array<{
-    name: string;
-
-    size: string;
-  }>;
-
-  magnets: Array<{
-    name: string;
-
-    url: string;
-  }>;
-
-  hasMoreFiles: boolean;
-}
+export interface ScrapedResourceDetail
+  extends Omit<ScrapedResource, 'magnet' | 'tracker'>,
+    ResourceDetail {}
 
 export type FetchOptions = {
   /**

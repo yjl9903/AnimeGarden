@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import { useAtomValue } from 'jotai';
-import { memo, useRef } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { NavLink } from '@remix-run/react';
 
-import { formatChinaTime } from '~/utils';
+import { fetchTimestamp, formatChinaTime } from '~/utils';
 
 import { isOpenSidebar } from './Sidebar';
 
@@ -16,16 +16,37 @@ export interface FooterProps {
 export const Footer = memo((props: FooterProps) => {
   const isOpen = useAtomValue(isOpenSidebar);
 
-  const ref = useRef<{ timestamp?: string }>({});
   const { timestamp: timestampStr, feedURL } = props;
+
+  const ref = useRef<{ timestamp?: string }>({});
   if (timestampStr) {
     if (!ref.current) ref.current = {};
     ref.current.timestamp = timestampStr;
   }
-  const timestamp =
+
+  const [timestamp, setTimestamp] = useState(
     (timestampStr ?? ref.current?.timestamp)
       ? new Date(timestampStr ?? ref.current.timestamp!)
-      : undefined;
+      : undefined
+  );
+
+  const [loading, setLoading] = useState(timestamp ? false : true);
+
+  useEffect(() => {
+    if (!timestamp) {
+      fetchTimestamp()
+        .then((t) => {
+          if (t.timestamp) {
+            ref.current.timestamp = t.timestamp;
+            setTimestamp(new Date(t.timestamp));
+          }
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+    }
+  }, [timestamp]);
 
   return (
     <footer
@@ -44,7 +65,11 @@ export const Footer = memo((props: FooterProps) => {
             <span className="text-main-900 font-bold select-none">状态</span>
             <span className="i-carbon:chevron-right text-xl lt-sm:text-base text-main-900 font-bold select-none relative top-[2px]"></span>
             <span className="ml-2">
-              {timestamp ? '数据更新于 ' + formatChinaTime(timestamp) : '服务器错误'}
+              {timestamp
+                ? '数据更新于 ' + formatChinaTime(timestamp)
+                : !loading
+                  ? '服务器错误'
+                  : ' '}
             </span>
           </div>
           <div className="flex mt-2">

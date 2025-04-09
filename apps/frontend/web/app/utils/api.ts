@@ -36,10 +36,14 @@ export const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
 };
 
 export async function fetchAPI<T>(path: string, request: RequestInit | undefined) {
+  const timeout = 10 * 1000;
+
   try {
     const resp = await rawFetchAPI<T>(path, request, {
       fetch: ofetch,
-      baseURL
+      baseURL,
+      retry: 0,
+      signal: AbortSignal.timeout(timeout)
     } as const);
     return resp;
   } catch (error) {
@@ -67,16 +71,21 @@ export async function fetchResources(
   options: {
     fetch?: typeof ofetch;
     signal?: AbortSignal;
+    timeout?: number;
     retry?: number;
   } = {}
 ) {
+  const timeout = options.timeout ?? 10 * 1000;
+
   try {
     const resp = await rawFetchResources<FetchResourcesOptions & { tracker: true; metadata: true }>(
       {
         fetch: options.fetch ?? ofetch,
         baseURL,
-        signal: options.signal,
-        retry: options.retry,
+        signal: options.signal
+          ? AbortSignal.any([options.signal, AbortSignal.timeout(timeout)])
+          : AbortSignal.timeout(timeout),
+        retry: options.retry ?? 1,
         ...filter,
         tracker: true,
         metadata: true
@@ -97,22 +106,30 @@ export async function fetchResources(
 }
 
 export async function fetchResourceDetail(provider: string, href: string) {
+  const timeout = 10 * 1000;
+
   try {
     return await rawFetchResourceDetail(provider as ProviderType, href, {
       fetch: ofetch,
-      baseURL
+      baseURL,
+      retry: 0,
+      signal: AbortSignal.timeout(timeout)
     });
   } catch (error) {
-    console.error(error);
+    console.error('[FETCH]', 'fetchResourceDetail', error);
     return undefined;
   }
 }
 
 export async function fetchCollection(hash: string) {
+  const timeout = 10 * 1000;
+
   try {
     return await rawFetchCollection(hash, {
       fetch: ofetch,
-      baseURL
+      baseURL,
+      retry: 0,
+      signal: AbortSignal.timeout(timeout)
     });
   } catch (error) {
     console.error(error);
@@ -121,10 +138,14 @@ export async function fetchCollection(hash: string) {
 }
 
 export async function generateCollection(collection: Collection<true>) {
+  const timeout = 10 * 1000;
+
   try {
     return await rawGenerateCollection(collection, {
       fetch: ofetch,
-      baseURL
+      baseURL,
+      retry: 0,
+      signal: AbortSignal.timeout(timeout)
     });
   } catch (error) {
     console.error(error);

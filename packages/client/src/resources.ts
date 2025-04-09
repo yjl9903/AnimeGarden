@@ -23,7 +23,8 @@ export interface FetchResourcesResult<T extends FetchResourcesOptions> {
 
 export interface FetchResourceDetailResult {
   ok: boolean;
-  resource: ResourceDetail;
+  resource: Resource<{ tracker: true; metadata: true }> | undefined;
+  detail: ResourceDetail | undefined;
   timestamp: Date | undefined;
 }
 
@@ -215,10 +216,10 @@ export async function fetchResourceDetail(
   provider: ProviderType,
   href: string,
   options: FetchResourceDetailOptions = {}
-): Promise<FetchResourceDetailResult | undefined> {
+): Promise<FetchResourceDetailResult> {
   const { fetch = global.fetch } = options;
   const { baseURL = DefaultBaseURL, retry = 0 } = options;
-  const url = new URL(`${provider}/detail/${href}`, baseURL);
+  const url = new URL(`detail/${provider}/${href}`, baseURL);
 
   const resp = await retryFn(async () => {
     // @ts-ignore
@@ -233,16 +234,16 @@ export async function fetchResourceDetail(
     });
     if (resp.ok) {
       const json = await resp.json();
-      // TODO: merge body
       return json;
     } else {
       throw new Error(`Fetch failed`, { cause: resp });
     }
   }, retry);
 
-  if (resp.id !== undefined && resp.detail !== undefined) {
-    return { id: resp.id, ...resp.detail };
-  } else {
-    return undefined;
-  }
+  return {
+    ok: resp.resource !== undefined && resp.detail !== undefined && resp.timestamp !== undefined,
+    resource: resp.resource,
+    detail: resp.detail,
+    timestamp: resp.timestamp
+  };
 }

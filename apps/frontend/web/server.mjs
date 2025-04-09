@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import { createConsola } from 'consola';
 
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
@@ -30,9 +31,9 @@ app.use(
   })
 );
 
-app.all('/api/*', api());
-app.all('/feed.xml', feed());
-app.all('/collection/*/feed.xml', feed());
+app.all('/api/*', cors(), api());
+app.all('/feed.xml', cors(), feed());
+app.all('/collection/*/feed.xml', cors(), feed());
 
 // Static assets
 const ClientRoot = path.join(__dirname, './build/client/');

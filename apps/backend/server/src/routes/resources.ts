@@ -69,7 +69,8 @@ const findProviderDetail = memoAsync(
 
     return {
       status: 'OK',
-      ...resp
+      ...resp,
+      timestamp: sys.modules.providers.timestamp
     };
   },
   { expirationTtl: 60 * 60 * 1000, serialize: (_sys, provider, path) => [provider, path] }
