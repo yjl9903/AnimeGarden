@@ -340,20 +340,20 @@ importers:
         version: 3.24.2
     devDependencies:
       '@iconify-json/ant-design':
-        specifier: ^1.2.0
+        specifier: ^1.2.5
         version: 1.2.5
       '@iconify-json/carbon':
-        specifier: ^1.2.1
-        version: 1.2.5
+        specifier: ^1.2.8
+        version: 1.2.8
       '@iconify-json/devicon':
-        specifier: ^1.2.0
-        version: 1.2.11
+        specifier: ^1.2.23
+        version: 1.2.23
       '@iconify-json/fluent':
+        specifier: ^1.2.18
+        version: 1.2.18
+      '@iconify-json/solar':
         specifier: ^1.2.2
         version: 1.2.2
-      '@iconify-json/solar':
-        specifier: ^1.2.0
-        version: 1.2.0
       '@remix-run/dev':
         specifier: ^2.12.0
         version: 2.12.0(@remix-run/react@2.12.1(patch_hash=79ffda08cf5f09fe8cbd73eab2a1187520129000ec647d31c813c8e7f52eacec)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.8.3))(@remix-run/serve@2.12.1(typescript@5.8.3))(@types/node@20.16.5)(bufferutil@4.0.8)(terser@5.31.6)(typescript@5.8.3)(utf-8-validate@6.0.4)(vite@5.4.2(@types/node@20.16.5)(terser@5.31.6))(wrangler@3.78.2(@cloudflare/workers-types@4.20240909.0)(bufferutil@4.0.8)(utf-8-validate@6.0.4))
@@ -2327,17 +2327,17 @@ packages:
   '@iconify-json/ant-design@1.2.5':
     resolution: {integrity: sha512-SYxhrx1AFq2MBcXk77AERYz2mPhLQes1F0vtvG64+dJZWyge9studXo7MiR8PPeLjRjZdWRrReRbxiwdRMf70Q==}
 
-  '@iconify-json/carbon@1.2.5':
-    resolution: {integrity: sha512-aI3TEzOrUDGhs74zIT3ym/ZQBUEziyu8JifntX2Hb4siVzsP5sQ/QEfVdmcCUj37kQUYT3TYBSeAw2vTfCJx9w==}
+  '@iconify-json/carbon@1.2.8':
+    resolution: {integrity: sha512-6xh4YiFBz6qoSnB3XMe23WvjTJroDFXB17J1MbiT7nATFe+70+em1acRXr8hgP/gYpwFMHFc4IvjA/IPTPnTzg==}
 
-  '@iconify-json/devicon@1.2.11':
-    resolution: {integrity: sha512-siDWSFqmPKOYiMvgixqsZ/0rbUXae1M7gF14vefBtFuKXJkTvr4WPzbv1ARc7rqQlkU8XZPyH1edCXO4uToTyw==}
+  '@iconify-json/devicon@1.2.23':
+    resolution: {integrity: sha512-JpDWec56q5FKZINnK6iewDIfZulmNw6K2StlxhTLcBAPGRqX/8/o/W3yx0W9Yy0VYt2rtku6sLMqHoIBiNXB7g==}
 
-  '@iconify-json/fluent@1.2.2':
-    resolution: {integrity: sha512-eYPjqGfTDno2VOyRWiEQkiNXb2RtjYsxfnzyEWWZYE9w35Svph4bPsZG3IXf7+D3r1mk9bYreX+h7Ywyy0L5RQ==}
+  '@iconify-json/fluent@1.2.18':
+    resolution: {integrity: sha512-CPSTjs9MI2+U8QXBNw6zyE+jJ7JzTbyWmmgtysjUIGzHln4jdTxSvNttOt73/Bc1BgNQuUiLjj2mh/K0nCfyIg==}
 
-  '@iconify-json/solar@1.2.0':
-    resolution: {integrity: sha512-xMspRoN2S2Op8mgjZHgiMJq2Xqo5oVlBp/1NICTeMByfePpkEKF67Fwh5KdBRF+SBey/cNLhjkTuHmKeSIEkog==}
+  '@iconify-json/solar@1.2.2':
+    resolution: {integrity: sha512-lcTb6DWL4HZObiY1W3fHfuxxuQHUc6CFHFeywKEx7Ry0k+dU6POZCMC7oVLr0F8vuf+KgaQ3oOoGO/yFzOwrNg==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -10178,19 +10178,19 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/carbon@1.2.5':
+  '@iconify-json/carbon@1.2.8':
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/devicon@1.2.11':
+  '@iconify-json/devicon@1.2.23':
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/fluent@1.2.2':
+  '@iconify-json/fluent@1.2.18':
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/solar@1.2.0':
+  '@iconify-json/solar@1.2.2':
     dependencies:
       '@iconify/types': 2.0.0
 
