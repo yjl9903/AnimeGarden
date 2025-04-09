@@ -43,12 +43,12 @@ for (const file of fs.readdirSync(ClientRoot)) {
   if (stat && stat.isFile()) {
     app.all(
       `/${file}`,
-      cache({
-        cacheName: 'assets',
-        cacheControl: 'max-age=86400',
-        wait: true,
-        caches: storage
-      }),
+      // cache({
+      //   cacheName: 'assets',
+      //   cacheControl: 'max-age=86400',
+      //   wait: true,
+      //   caches: storage
+      // }),
       serveStatic({
         root: path.relative(process.cwd(), ClientRoot),
         path: `/${file}`
@@ -59,12 +59,12 @@ for (const file of fs.readdirSync(ClientRoot)) {
 
 app.all(
   '/assets/*',
-  cache({
-    cacheName: 'assets',
-    cacheControl: 'max-age=86400',
-    wait: true,
-    caches: storage
-  }),
+  // cache({
+  //   cacheName: 'assets',
+  //   cacheControl: 'max-age=86400',
+  //   wait: true,
+  //   caches: storage
+  // }),
   serveStatic({ root: path.relative(process.cwd(), ClientRoot) })
 );
 
