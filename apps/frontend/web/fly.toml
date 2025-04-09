@@ -14,7 +14,7 @@ APP_HOST = 'animes.garden'
 NODE_VERSION = '20.19.0'
 PNPM_VERSION = '10.8.0'
 SERVER_URL = 'http://animegarden-server-production.internal:3000/'
-UMAMI_ID = '71499238-1ee8-41c0-adb4-4c359e111a6a'
+UMAMI_ID = 'bcff225d-6590-498e-9b39-3a5fc5c2b4d1'
 
 [processes]
 server = 'node apps/frontend/web/server.mjs'

@@ -1,37 +1,37 @@
 ### List the first page of resources
-GET https://garden.breadio.wiki/api/resources
+GET https://animes.garden/api/resources
 Content-Type: application/json
 
 ### List the first page of resources with its full magnet url with tracker
-GET https://garden.breadio.wiki/api/resources?tracker=true
+GET https://animes.garden/api/resources?tracker=true
 Content-Type: application/json
 
 ### Get the resource detail
-GET https://garden.breadio.wiki/api/resource/dmhy/674983_LoliHouse_Oshi_no_Ko_-_15_WebRip_1080p_HEVC-10bit_AAC.html
+GET https://animes.garden/api/resource/dmhy/674983_LoliHouse_Oshi_no_Ko_-_15_WebRip_1080p_HEVC-10bit_AAC.html
 Content-Type: application/json
 
 ### Get the resource detail by id
-GET https://garden.breadio.wiki/api/resource/dmhy/674983
+GET https://animes.garden/api/resource/dmhy/674983
 Content-Type: application/json
 
 ### List the second page of resources
-GET https://garden.breadio.wiki/api/resources?page=2
+GET https://animes.garden/api/resources?page=2
 Content-Type: application/json
 
 ### List resources from the 21st to 40th
-GET https://garden.breadio.wiki/api/resources?page=2&pageSize=20
+GET https://animes.garden/api/resources?page=2&pageSize=20
 Content-Type: application/json
 
 ### List resources with more filter
-GET https://garden.breadio.wiki/api/resources?type=動畫&fansubId=803&publisherId=727168&after=2023-04-16T13:00:00.000Z&before=1681653600000
+GET https://animes.garden/api/resources?type=動畫&fansubId=803&publisherId=727168&after=2023-04-16T13:00:00.000Z&before=1681653600000
 Content-Type: application/json
 
 ### List resources from specific fansubs
-GET https://garden.breadio.wiki/api/resources?fansubId=[833,619]&fansubName="爱恋字幕社"
+GET https://animes.garden/api/resources?fansubId=[833,619]&fansubName="爱恋字幕社"
 Content-Type: application/json
 
 ### Search resources
-GET https://garden.breadio.wiki/api/resources
+GET https://animes.garden/api/resources
 Content-Type: application/json
 
 {
@@ -39,7 +39,7 @@ Content-Type: application/json
 }
 
 ### Only search 動畫
-GET https://garden.breadio.wiki/api/resources?type=動畫
+GET https://animes.garden/api/resources?type=動畫
 Content-Type: application/json
 
 {
@@ -47,7 +47,7 @@ Content-Type: application/json
 }
 
 ### Search resources with exclude
-GET https://garden.breadio.wiki/api/resources
+GET https://animes.garden/api/resources
 Content-Type: application/json
 
 {
@@ -58,7 +58,7 @@ Content-Type: application/json
 ### Search resources with complicated search
 ### Resource must has type "動畫"
 ### Resource title must contains one of ("机动战士高达" or "水星的魔女") and all the keywords ("第二季" and "ANi")
-GET https://garden.breadio.wiki/api/resources?type=動畫
+GET https://animes.garden/api/resources?type=動畫
 Cache-Control: no-store
 Content-Type: application/json
 
@@ -74,7 +74,7 @@ Content-Type: application/json
 }
 
 ### Search resources with full text index
-GET https://garden.breadio.wiki/api/resources?type=動畫
+GET https://animes.garden/api/resources?type=動畫
 Cache-Control: no-cache
 Content-Type: application/json
 
@@ -86,9 +86,9 @@ Content-Type: application/json
 }
 
 ### List all the users
-GET https://garden.breadio.wiki/api/users
+GET https://animes.garden/api/users
 Content-Type: application/json
 
 ### List all the teams
-GET https://garden.breadio.wiki/api/teams
+GET https://animes.garden/api/teams
 Content-Type: application/json

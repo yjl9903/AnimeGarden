@@ -1,9 +1,9 @@
 # 🌸 AnimeGarden Server
 
-[![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://garden.breadio.wiki)
+[![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://animes.garden)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
-The server implmentation for [AnimeGarden](https://garden.breadio.wiki/).
+The server implmentation for [AnimeGarden](https://animes.garden/).
 
 ## Credits
 

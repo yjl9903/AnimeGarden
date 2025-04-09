@@ -1,9 +1,9 @@
 # 🌸 AnimeGarden Worker
 
-[![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://garden.breadio.wiki)
+[![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://animes.garden)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
-動漫花園 3-rd party [API endpoint](https://garden.breadio.wiki/api/resources).
+動漫花園 3-rd party [API endpoint](https://animes.garden/api/resources).
 
 ## Local Development
 

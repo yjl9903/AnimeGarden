@@ -1,14 +1,14 @@
 # 🌸 AnimeGarden Web Application
 
-[![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://garden.breadio.wiki)
+[![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://animes.garden)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
-動漫花園 3-rd party [mirror site](https://garden.breadio.wiki) and [API endpoint](https://garden.breadio.wiki/api/resources).
+動漫花園 3-rd party [mirror site](https://animes.garden) and [API endpoint](https://animes.garden/api/resources).
 
 ## API Usage
 
 ```bash
-curl https://garden.breadio.wiki/api/resources?page=1&count=1
+curl https://animes.garden/api/resources?page=1&count=1
 ```
 
 ## Deploy

@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "🌸 AnimeGarden - OpenAPI 3.1",
-    "description": "動漫花園 3-rd party [mirror site](https://garden.breadio.wiki).\n\n+ ☁️ Provide [API endpoint](https://garden.breadio.wiki/api/resources)\n+ 🔖 Support Advanced search, i.e. `【我推的孩子】 fansub:桜都字幕组 include:简日内嵌`\n+ 📙 Generate RSS feed, i.e. [【我推的孩子】](https://garden.breadio.wiki/feed.xml?filter=[{%22fansubId%22:[619],%22search%22:[%22%E3%80%90%E6%88%91%E6%8E%A8%E7%9A%84%E5%AD%A9%E5%AD%90%E3%80%91%22],%22include%22:[[%22%E7%AE%80%E6%97%A5%E5%86%85%E5%B5%8C%22]],%22exclude%22:[]}])\n\n![home](https://github.com/yjl9903/AnimeGarden/raw/main/assets/home.png)",
+    "description": "動漫花園 3-rd party [mirror site](https://animes.garden).\n\n+ ☁️ Provide [API endpoint](https://animes.garden/api/resources)\n+ 🔖 Support Advanced search, i.e. `【我推的孩子】 fansub:桜都字幕组 include:简日内嵌`\n+ 📙 Generate RSS feed, i.e. [【我推的孩子】](https://animes.garden/feed.xml?filter=[{%22fansubId%22:[619],%22search%22:[%22%E3%80%90%E6%88%91%E6%8E%A8%E7%9A%84%E5%AD%A9%E5%AD%90%E3%80%91%22],%22include%22:[[%22%E7%AE%80%E6%97%A5%E5%86%85%E5%B5%8C%22]],%22exclude%22:[]}])\n\n![home](https://github.com/yjl9903/AnimeGarden/raw/main/assets/home.png)",
     "version": "1.0.0",
     "license": {
       "name": "MIT",
@@ -15,7 +15,7 @@
   },
   "servers": [
     {
-      "url": "https://garden.breadio.wiki/api/"
+      "url": "https://animes.garden/api/"
     }
   ],
   "tags": [

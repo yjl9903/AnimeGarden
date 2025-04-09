@@ -15,8 +15,8 @@ const { APP_HOST, SERVER_URL, KEEPSHARE } = env();
 
 // Analytics Engines
 const UMAMI_HOST = process.env.UMAMI_HOST || `umami.onekuma.cn`;
-const UMAMI_ID = process.env.UMAMI_ID || `ac2c4863-3409-4c64-9ac8-fd94bf937583`;
-// const PLAUSIBLE_HOST = `garden.breadio.wiki`;
+const UMAMI_ID = process.env.UMAMI_ID || `bcff225d-6590-498e-9b39-3a5fc5c2b4d1`;
+// const PLAUSIBLE_HOST = `animes.garden`;
 // const CLARITY = `nbvdca15ui`;
 // const CF_BEACON = `7307ee3d2d8f4bafac906844704dab10`;
 

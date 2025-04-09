@@ -1,10 +1,10 @@
 # 🌸 Anime Garden Scraper
 
 [![version](https://img.shields.io/npm/v/@animegarden/scraper?label=@animegarden/scraper)](https://www.npmjs.com/package/@animegarden/scraper)
-[![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://garden.breadio.wiki)
+[![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://animes.garden)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
-Scraper for [AnimeGarden](https://garden.breadio.wiki/).
+Scraper for [AnimeGarden](https://animes.garden/).
 
 ## Installation
 
