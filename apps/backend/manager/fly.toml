@@ -3,8 +3,8 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'animegarden-server-test'
-primary_region = 'hkg'
+app = 'animegarden-server-production'
+primary_region = 'lax'
 
 [build]
 dockerfile = 'Dockerfile'
@@ -12,7 +12,7 @@ dockerfile = 'Dockerfile'
 [build.args]
 NODE_VERSION = '20.10.0'
 PNPM_VERSION = '10.4.1'
-APP_HOST = 'test.animes.garden'
+APP_HOST = 'animes.garden'
 
 [processes]
 server = 'node apps/backend/manager/cli.mjs start'
