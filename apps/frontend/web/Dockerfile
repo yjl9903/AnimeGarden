@@ -3,9 +3,9 @@
 ARG NODE_VERSION=20.10.0
 ARG PNPM_VERSION=10.4.1
 
-ARG APP_HOST=test.animes.garden
+ARG APP_HOST=animes.garden
 ARG UMAMI_ID=ac2c4863-3409-4c64-9ac8-fd94bf937583
-ARG SERVER_URL=https://test-api.animes.garden/
+ARG SERVER_URL=https://api.animes.garden/
 
 ARG PORT=3000
 
