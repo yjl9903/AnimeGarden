@@ -21,7 +21,7 @@ server = 'node apps/frontend/web/server.mjs'
 
 [http_service]
 internal_port = 3000
-auto_stop_machines = 'off'
+auto_stop_machines = 'suspend'
 auto_start_machines = true
 min_machines_running = 0
 processes = ['server']
