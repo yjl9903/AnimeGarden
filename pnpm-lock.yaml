@@ -168,8 +168,8 @@ importers:
         specifier: ^0.4.3
         version: 0.4.3(hono@4.7.6)(zod@3.24.2)
       croner:
-        specifier: ^8.1.2
-        version: 8.1.2
+        specifier: ^9.0.0
+        version: 9.0.0
       date-fns:
         specifier: ^2.30.0
         version: 2.30.0
@@ -4428,8 +4428,8 @@ packages:
       typescript:
         optional: true
 
-  croner@8.1.2:
-    resolution: {integrity: sha512-ypfPFcAXHuAZRCzo3vJL6ltENzniTjwe/qsLleH1V2/7SRDjgvRQyrLmumFTLmjFax4IuSxfGXEn79fozXcJog==}
+  croner@9.0.0:
+    resolution: {integrity: sha512-onMB0OkDjkXunhdW9htFjEhqrD54+M94i6ackoUkjHKbRnXdyEyKRelp4nJ1kAz32+s27jP1FsebpJCVl0BsvA==}
     engines: {node: '>=18.0'}
 
   cross-fetch-ponyfill@1.0.3:
@@ -12569,7 +12569,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.8.3
 
-  croner@8.1.2: {}
+  croner@9.0.0: {}
 
   cross-fetch-ponyfill@1.0.3:
     dependencies:
