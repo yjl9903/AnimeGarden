@@ -406,8 +406,8 @@ importers:
         specifier: ^0.0.3
         version: 0.0.3(vite@5.4.2(@types/node@20.17.30)(terser@5.31.6))
       vite-tsconfig-paths:
-        specifier: ^4.3.2
-        version: 4.3.2(typescript@5.8.3)(vite@5.4.2(@types/node@20.17.30)(terser@5.31.6))
+        specifier: ^5.1.4
+        version: 5.1.4(typescript@5.8.3)(vite@5.4.2(@types/node@20.17.30)(terser@5.31.6))
 
   packages/animegarden:
     dependencies:
@@ -8051,8 +8051,8 @@ packages:
       '@vite-pwa/assets-generator':
         optional: true
 
-  vite-tsconfig-paths@4.3.2:
-    resolution: {integrity: sha512-0Vd/a6po6Q+86rPlntHye7F31zA2URZMbH8M3saAZ/xR9QoGN/L21bxEGfXdWmFdNkqPpRdxFT7nmNe12e9/uA==}
+  vite-tsconfig-paths@5.1.4:
+    resolution: {integrity: sha512-cYj0LRuLV2c2sMqhqhGpaO3LretdtMn/BVX4cPLanIZuwwrkVl+lK84E/miEXkCHWXuq65rhNN4rXsBcOB3S4w==}
     peerDependencies:
       vite: '*'
     peerDependenciesMeta:
@@ -16668,7 +16668,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-tsconfig-paths@4.3.2(typescript@5.8.3)(vite@5.4.2(@types/node@20.17.30)(terser@5.31.6)):
+  vite-tsconfig-paths@5.1.4(typescript@5.8.3)(vite@5.4.2(@types/node@20.17.30)(terser@5.31.6)):
     dependencies:
       debug: 4.4.0
       globrex: 0.1.2
