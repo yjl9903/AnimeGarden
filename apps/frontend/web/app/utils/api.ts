@@ -53,7 +53,7 @@ export async function fetchAPI<T>(path: string, request: RequestInit | undefined
   }
 }
 
-export async function fetchTimestamp() {
+export async function fetchTimestamp(): Promise<{ timestamp?: string | undefined }> {
   try {
     const resp = await fetchAPI<{ timestamp: string }>('/', undefined);
     if (resp) {
