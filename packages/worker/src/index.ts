@@ -20,7 +20,7 @@ app.get('/', async (c) => {
 
 app.all('*', (c) =>
   c.json(
-    { message: 'This endpoint has been deprecated, please use https://garden.breadio.wiki/api' },
+    { message: 'This endpoint has been deprecated, please use https://animes.garden/api' },
     404
   )
 );
@@ -38,7 +38,7 @@ app.onError((err, c) => {
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext) {
     const destinationURL = new URL(request.url);
-    destinationURL.host = 'garden.breadio.wiki';
+    destinationURL.host = 'animes.garden';
     const statusCode = 301;
     return Response.redirect(destinationURL.toString(), statusCode);
   }
