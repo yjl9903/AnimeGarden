@@ -95,8 +95,8 @@ importers:
         specifier: 0.0.35
         version: 0.0.35
       bgmd:
-        specifier: ^0.0.60
-        version: 0.0.60
+        specifier: ^0.0.61
+        version: 0.0.61
       consola:
         specifier: ^3.3.0
         version: 3.4.0
@@ -487,8 +487,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       bgmd:
-        specifier: ^0.0.60
-        version: 0.0.60
+        specifier: ^0.0.61
+        version: 0.0.61
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -657,8 +657,8 @@ importers:
         specifier: 0.0.35
         version: 0.0.35
       bgmd:
-        specifier: ^0.0.60
-        version: 0.0.60
+        specifier: ^0.0.61
+        version: 0.0.61
       hono:
         specifier: ^4.5.11
         version: 4.5.11
@@ -4831,8 +4831,8 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
-  bangumi-data@0.3.160:
-    resolution: {integrity: sha512-4ryQ+AxOkmsQyx+5xmSAUsd6aEFIyryp9g33hhqKYsrhdcZQldHK3TJc3fb9iQnqgASpOppqtIvWRw7qWjdUhA==}
+  bangumi-data@0.3.167:
+    resolution: {integrity: sha512-TGz3PASl0ajoFis59OdnESJAyOVv1BMPUV7osSaRO2qc9V3xp9JdWC7S7wIVQb50qOtUgB65aEkCemrAP55MDQ==}
 
   bare-events@2.4.2:
     resolution: {integrity: sha512-qMKFd2qG/36aA4GwvKq8MxnPgCQAmBWmSyLWsJcbn8v03wvIPQ/hG1Ms8bPzndZxMDoHpxez5VOS+gC9Yi24/Q==}
@@ -4879,8 +4879,8 @@ packages:
     engines: {node: '>=v20.8.0'}
     hasBin: true
 
-  bgmd@0.0.60:
-    resolution: {integrity: sha512-eFg1MKxEaWEkmyDXXgMNmpFuqtmCuKh88bDwDGKj7WqKOLi6se14TiE72itV9mEO/tLOMjsKqeSlW6D9HQDR1w==}
+  bgmd@0.0.61:
+    resolution: {integrity: sha512-jOPQm/BrNl7fdrEwG4BialWw2oS4TbYliuTR/KjU291O5O36GpO8DxM9bK2ugzemcaw0UpLPHROmZmPFlicFFg==}
     engines: {node: '>=v20.8.0'}
 
   bgmt@0.1.0:
@@ -9452,12 +9452,12 @@ packages:
     resolution: {integrity: sha512-RAH822pAdBgcNMAfWnCBU3CFZcfZ/i1eZjwFU/dsLKumyuuP3niueg2UAukXYF0E2AAoc82ZSSf9J0WQBinzHA==}
     engines: {node: '>=12.20'}
 
-  type-fest@4.32.0:
-    resolution: {integrity: sha512-rfgpoi08xagF3JSdtJlCwMq9DGNDE0IMh3Mkpc1wUypg9vPi786AiqeBBKcqvIkq42azsBM85N490fyZjeUftw==}
-    engines: {node: '>=16'}
-
   type-fest@4.33.0:
     resolution: {integrity: sha512-s6zVrxuyKbbAsSAD5ZPTB77q4YIdRctkTbJ2/Dqlinwz+8ooH2gd+YA7VA6Pa93KML9GockVvoxjZ2vHP+mu8g==}
+    engines: {node: '>=16'}
+
+  type-fest@4.39.1:
+    resolution: {integrity: sha512-uW9qzd66uyHYxwyVBYiwS4Oi0qZyUqwjU+Oevr6ZogYiXt99EOYtwvzMSLw1c3lYo2HzJsep/NB23iEVEgjG/w==}
     engines: {node: '>=16'}
 
   type-is@1.6.18:
@@ -14827,7 +14827,7 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  bangumi-data@0.3.160: {}
+  bangumi-data@0.3.167: {}
 
   bare-events@2.4.2: {}
 
@@ -14873,13 +14873,13 @@ snapshots:
     dependencies:
       breadc: 0.9.7
 
-  bgmd@0.0.60:
+  bgmd@0.0.61:
     dependencies:
-      bangumi-data: 0.3.160
+      bangumi-data: 0.3.167
       bgmc: 0.0.10
       bgmt: 0.1.0
       tmdbc: 0.0.2
-      type-fest: 4.32.0
+      type-fest: 4.39.1
 
   bgmt@0.1.0:
     dependencies:
@@ -20351,9 +20351,9 @@ snapshots:
 
   type-fest@2.19.0: {}
 
-  type-fest@4.32.0: {}
-
   type-fest@4.33.0: {}
+
+  type-fest@4.39.1: {}
 
   type-is@1.6.18:
     dependencies:
