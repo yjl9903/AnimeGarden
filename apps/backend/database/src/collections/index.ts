@@ -13,6 +13,14 @@ export class CollectionsModule extends Module<System['modules']> {
   public static name = 'collections';
 
   public async initialize() {
+    await this.cleanup();
+  }
+
+  public async refresh() {
+    await this.cleanup();
+  }
+
+  public async cleanup() {
     await this.getCollection.clear();
   }
 
@@ -59,38 +67,44 @@ export class CollectionsModule extends Module<System['modules']> {
     }
   }
 
-  public getCollection = memoAsync(async (hsh: string) => {
-    const resp = await retryFn(
-      () => this.database.select().from(collections).where(eq(collections.hash, hsh)),
-      5
-    );
-
-    if (resp && resp.length === 1) {
-      const collection = resp[0];
-
-      // @hack Date type
-      for (const item of collection.filters) {
-        if (item.before) {
-          item.before = new Date(item.before);
-        }
-        if (item.after) {
-          item.after = new Date(item.after);
-        }
-      }
-
-      const results = await Promise.all(
-        collection.filters.map((f) =>
-          this.system.modules.resources.query.find({ ...f, page: 1, pageSize: 100 })
-        )
+  public getCollection = memoAsync(
+    async (hsh: string) => {
+      const resp = await retryFn(
+        () => this.database.select().from(collections).where(eq(collections.hash, hsh)),
+        5
       );
 
-      return {
-        hash: collection.hash,
-        name: collection.name,
-        createdAt: collection.createdAt,
-        filters: collection.filters,
-        results
-      };
-    }
-  });
+      if (resp && resp.length === 1) {
+        const collection = resp[0];
+
+        // @hack Date type
+        for (const item of collection.filters) {
+          if (item.before) {
+            item.before = new Date(item.before);
+          }
+          if (item.after) {
+            item.after = new Date(item.after);
+          }
+        }
+
+        const updatedAt = new Date();
+
+        const results = await Promise.all(
+          collection.filters.map((f) =>
+            this.system.modules.resources.query.find({ ...f, page: 1, pageSize: 1000 })
+          )
+        );
+
+        return {
+          hash: collection.hash,
+          name: collection.name,
+          createdAt: collection.createdAt,
+          updatedAt,
+          filters: collection.filters,
+          results
+        };
+      }
+    },
+    { expirationTtl: 300 }
+  );
 }
