@@ -79,7 +79,7 @@ export async function fetchResources(
     retry?: number;
   } = {}
 ) {
-  const timeout = options.timeout ?? 10 * 1000;
+  const timeout = options.timeout ?? 30 * 1000;
 
   try {
     const resp = await rawFetchResources<FetchResourcesOptions & { tracker: true; metadata: true }>(
@@ -110,7 +110,7 @@ export async function fetchResources(
 }
 
 export async function fetchResourceDetail(provider: string, href: string) {
-  const timeout = 60 * 1000;
+  const timeout = 30 * 1000;
 
   try {
     return await rawFetchResourceDetail(provider as ProviderType, href, {
