@@ -47,6 +47,7 @@ export const addCollectionItemAtom = atom(
     if (idx === -1) {
       set(collectionDb!.set, collection.name, {
         ...collection,
+        hash: undefined, // mark hash dirty
         filters: [value, ...collection.filters]
       });
     }
