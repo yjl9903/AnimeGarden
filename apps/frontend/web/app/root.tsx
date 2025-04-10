@@ -42,6 +42,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <link rel="mask-icon" color="#FFFFFF" href="/favicon.svg" />
         <meta name="msapplication-TileColor" content="#FFFFFF" />
         <meta name="theme-color" content="#ffffff" />
+        <meta name="yandex-verification" content="ff51c9d16e597b3c" />
         {!import.meta.env.DEV &&
           Tags.map((t) =>
             'src' in t ? (
