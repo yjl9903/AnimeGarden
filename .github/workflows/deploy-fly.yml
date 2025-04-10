@@ -35,7 +35,25 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - run: |
-          flyctl deploy --config ./apps/backend/manager/fly.toml \
+          flyctl deploy --config ./apps/backend/manager/fly.server.toml \
+            --app animegarden-server-production --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+  feed:
+    name: Deploy Feed Server
+
+    runs-on: ubuntu-latest
+
+    concurrency: deploy-fly-feed-group
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - run: |
+          flyctl deploy --config ./apps/backend/manager/fly.feed.toml \
             --app animegarden-server-production --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

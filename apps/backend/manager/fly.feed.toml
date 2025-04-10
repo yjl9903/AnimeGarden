@@ -1,0 +1,37 @@
+# fly.toml app configuration file generated for animegarden-server-test on 2025-01-04T19:09:46+08:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'animegarden-feed-production'
+primary_region = 'lax'
+
+[build]
+dockerfile = 'Dockerfile'
+
+[build.args]
+NODE_VERSION = '20.19.0'
+PNPM_VERSION = '10.8.0'
+APP_HOST = 'animes.garden'
+FEED_HOST = 'api.animes.garden'
+
+[processes]
+server = 'node apps/backend/manager/cli.mjs start'
+
+[http_service]
+internal_port = 3000
+auto_stop_machines = 'suspend'
+auto_start_machines = true
+min_machines_running = 1
+processes = ['server']
+
+# [[restart]]
+#   policy = 'on-failure'
+#   retries = 10
+#   processes = ['server', 'cron']
+
+[[vm]]
+memory = '512mb'
+cpu_kind = 'shared'
+cpus = 1
+processes = ['server', 'cron']
