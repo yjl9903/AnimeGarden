@@ -4,20 +4,18 @@ import type { Bindings } from './types';
 
 import { env } from './env';
 
-const SERVER_URL = new URL(env().SERVER_URL);
-
 const FEED_SERVER_URL = new URL(env().FEED_SERVER_URL);
 
 export const api = <E extends { Bindings: Bindings } = { Bindings: Bindings }>(): Handler<E> => {
   return async (ctx) => {
     const url = new URL(ctx.req.url);
 
-    url.protocol = SERVER_URL.protocol;
-    url.host = SERVER_URL.host;
-    url.port = SERVER_URL.port;
+    url.protocol = FEED_SERVER_URL.protocol;
+    url.host = FEED_SERVER_URL.host;
+    url.port = FEED_SERVER_URL.port;
 
-    url.pathname = SERVER_URL.pathname
-      ? url.pathname.replace(/^\/api\/?/, SERVER_URL.pathname)
+    url.pathname = FEED_SERVER_URL.pathname
+      ? url.pathname.replace(/^\/api\/?/, FEED_SERVER_URL.pathname)
       : url.pathname.replace(/^\/api/, '');
 
     try {
