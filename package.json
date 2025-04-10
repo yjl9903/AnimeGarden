@@ -51,9 +51,6 @@
     "node": ">=v18.16.0"
   },
   "pnpm": {
-    "patchedDependencies": {
-      "@remix-run/react@2.12.1": "patches/@remix-run__react@2.12.1.patch"
-    },
     "onlyBuiltDependencies": [
       "bufferutil",
       "core-js-pure",
