@@ -23,7 +23,7 @@ export class Executor {
     this.system.logger.info('Start registering cron jobs');
 
     const fetching = SupportProviders.map((provider) =>
-      Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
+      new Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
         try {
           const req = new Request(`https://api.animes.garden/admin/resources/${provider}`, {
             method: 'POST',
@@ -40,7 +40,7 @@ export class Executor {
     );
 
     const syncing = SupportProviders.map((provider) =>
-      Cron(`0 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
+      new Cron(`0 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
         try {
           const req = new Request(`https://api.animes.garden/admin/resources/${provider}/sync`, {
             method: 'POST',
