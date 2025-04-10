@@ -593,11 +593,33 @@ export class Task {
   });
 
   public async fetch(options: DatabaseFilterOptions, page: number, pageSize: number) {
-    const { provider, duplicate, publishers, fansubs, types, subjects, before, after } = options;
+    const {
+      provider,
+      include,
+      keywords,
+      exclude,
+      duplicate,
+      publishers,
+      fansubs,
+      types,
+      subjects,
+      before,
+      after
+    } = options;
     const conds: Array<(r: DatabaseResource) => boolean> = [];
 
     if (provider) {
       conds.push((r) => r.provider === provider);
+    }
+    if (include || keywords) {
+      conds.push((r) => {
+        const title = normalizeTitle(r.title);
+        return (
+          (include?.some((i) => title.indexOf(i) !== -1) ?? true) &&
+          (keywords?.every((i) => title.indexOf(i) !== -1) ?? true) &&
+          (exclude?.every((i) => title.indexOf(i) === -1) ?? true)
+        );
+      });
     }
     if (duplicate) {
       conds.push((r) => r.duplicatedId !== null && r.duplicatedId !== undefined);
