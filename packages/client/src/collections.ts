@@ -96,7 +96,7 @@ export async function generateCollection(
     });
     if (resp.ok) {
       const json = await resp.json();
-      return json;
+      return json as any;
     }
     throw new Error(`Failed connecting ${url.toString()}`);
   }, retry);
@@ -137,7 +137,7 @@ export async function fetchCollection(
     });
     if (resp.ok) {
       const json = await resp.json();
-      return json;
+      return json as any;
     }
     throw new Error(`Failed connecting ${url.toString()}`);
   }, retry);

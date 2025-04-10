@@ -169,7 +169,7 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
       });
 
       if (resp.ok) {
-        const r = await resp.json();
+        const r = await resp.json() as any;
         const timestamp = new Date(r.timestamp);
         if (!isNaN(timestamp.getTime())) {
           // --- Fix date type ---
@@ -234,7 +234,7 @@ export async function fetchResourceDetail(
     });
     if (resp.ok) {
       const json = await resp.json();
-      return json;
+      return json as any;
     } else {
       throw new Error(`Fetch failed`, { cause: resp });
     }
