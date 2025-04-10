@@ -44,6 +44,11 @@ export class CollectionsModule extends Module<System['modules']> {
         });
 
       if (resp.length === 1) {
+        this.logger.info(`Generate a new collection ${resp[0].hash}`);
+
+        // async prefetch collection
+        this.getCollection(resp[0].hash);
+
         return resp[0];
       } else {
         return (
@@ -74,23 +79,34 @@ export class CollectionsModule extends Module<System['modules']> {
         5
       );
 
+      this.logger.info(`Get collection detail ${hsh} => ${resp?.length === 1 ? 'ok' : 'fail'}`);
+
       if (resp && resp.length === 1) {
         const collection = resp[0];
-
-        // @hack Date type
-        for (const item of collection.filters) {
+        const filters = collection.filters.map((item) => {
+          const copy = {
+            ...item
+          };
+          for (const [key, value] of Object.entries(copy)) {
+            if (Array.isArray(value) && value.length === 0) {
+              // @ts-ignore
+              delete copy[key];
+            }
+          }
+          // @hack Date type
           if (item.before) {
-            item.before = new Date(item.before);
+            copy.before = new Date(item.before);
           }
           if (item.after) {
-            item.after = new Date(item.after);
+            copy.after = new Date(item.after);
           }
-        }
+          return copy;
+        });
 
         const updatedAt = new Date();
 
         const results = await Promise.all(
-          collection.filters.map((f) =>
+          filters.map((f) =>
             this.system.modules.resources.query.find({ ...f, page: 1, pageSize: 1000 })
           )
         );
