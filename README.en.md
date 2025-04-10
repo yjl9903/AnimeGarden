@@ -21,7 +21,7 @@
 ## API Usage
 
 ```bash
-curl "https://animes.garden/api/resources?page=1&pageSize=10"
+curl "https://api.animes.garden/resources?page=1&pageSize=10"
 ```
 
 You can find the interactive Open API document [here](https://animes.garden/docs/api) and more API usage example in [scripts/api.http](./scripts/api.http).

@@ -23,7 +23,7 @@
 ## API 的使用
 
 ```bash
-curl "https://animes.garden/api/resources?page=1&pageSize=10"
+curl "https://api.animes.garden/resources?page=1&pageSize=10"
 ```
 
 你可以在[这里](https://animes.garden/docs/api)找到交互式的 Open API 文档, 以及在本仓库的 [scripts/api.http](./scripts/api.http) 文件内查看到更多 API 用例.
