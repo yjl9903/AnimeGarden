@@ -148,7 +148,7 @@ export function parseSearch(input: string) {
     fansubs,
     after: after.at(-1),
     before: before.at(-1),
-    types,
+    types
   };
 }
 

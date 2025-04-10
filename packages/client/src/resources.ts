@@ -169,7 +169,7 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
       });
 
       if (resp.ok) {
-        const r = await resp.json() as any;
+        const r = (await resp.json()) as any;
         const timestamp = new Date(r.timestamp);
         if (!isNaN(timestamp.getTime())) {
           // --- Fix date type ---

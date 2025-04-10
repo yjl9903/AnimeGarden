@@ -27,7 +27,7 @@ export async function fetchAPI<T>(
       signal: options.signal
     });
     if (resp.ok) {
-      return await resp.json() as T;
+      return (await resp.json()) as T;
     } else {
       throw new Error(`Failed fetching ${url.toString()}`, { cause: resp });
     }

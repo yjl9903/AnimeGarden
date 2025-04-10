@@ -1,11 +1,7 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ES2022"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": [
       "@remix-run/node",
       "vite/client",
@@ -26,15 +22,9 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./app/*"
-      ],
-      "~/*": [
-        "./app/*"
-      ],
-      "@animegarden/client": [
-        "../../../packages/client/src/index.ts"
-      ]
+      "@/*": ["./app/*"],
+      "~/*": ["./app/*"],
+      "@animegarden/client": ["../../../packages/client/src/index.ts"]
     },
     "noEmit": true
   },
