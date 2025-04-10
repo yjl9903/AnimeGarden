@@ -3,7 +3,7 @@ import { useAtomValue } from 'jotai';
 import { memo, useEffect, useRef, useState } from 'react';
 import { NavLink } from '@remix-run/react';
 
-import { fetchTimestamp, formatChinaTime } from '~/utils';
+import { fetchTimestamp, formatChinaTime, getFeedURL } from '~/utils';
 
 import { isOpenSidebar } from './Sidebar';
 
@@ -137,7 +137,7 @@ export const Footer = memo((props: FooterProps) => {
               </span>
               <span> | </span>
               <span>
-                <a href={feedURL ?? '/feed.xml'}>RSS</a>
+                <a href={feedURL ?? getFeedURL()}>RSS</a>
               </span>
               <span> | </span>
               <span>

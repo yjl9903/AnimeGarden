@@ -6,7 +6,7 @@ import type { Resource } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import { fetchResources } from '~/utils';
+import { fetchResources, getFeedURL } from '~/utils';
 
 import { Error } from '../resources.($page)/Error';
 
@@ -29,7 +29,7 @@ export const meta: MetaFunction = () => {
 export default function Index() {
   const location = useLocation();
   const { ok, resources, timestamp } = useLoaderData<typeof loader>();
-  const feedURL = useMemo(() => `/feed.xml${location.search}`, [location]);
+  const feedURL = useMemo(() => getFeedURL(location.search), [location]);
 
   return (
     <Layout feedURL={feedURL} timestamp={timestamp}>

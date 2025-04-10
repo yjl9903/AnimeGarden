@@ -7,7 +7,7 @@ import { Collection, Jsonify } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import ResourcesTable from '~/components/Resources';
-import { fetchCollection } from '~/utils';
+import { fetchCollection, getCollectionFeedURL } from '~/utils';
 import { inferCollectionItemName } from '~/layouts/Sidebar/Collection';
 
 import { Error } from '../resources.($page)/Error';
@@ -39,7 +39,7 @@ export default function Collections() {
   const results = data.results!;
 
   return (
-    <Layout timestamp={data.timestamp} feedURL={`/collection/${data.hash!}/feed.xml`}>
+    <Layout timestamp={data.timestamp} feedURL={getCollectionFeedURL(data.hash!)}>
       <div className="w-full pt-12 pb-24">
         <div className="space-y-8">
           {results.map((item, idx) => (

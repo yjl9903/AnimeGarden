@@ -6,9 +6,8 @@ import { memo, useCallback, useMemo, useRef, useState } from 'react';
 
 import type { Collection, Jsonify } from '@animegarden/client';
 
-import { APP_HOST } from '~build/env';
-
-import { DisplayTypeColor, formatChinaTime } from '~/utils';
+import { getSubjectById } from '~/utils/subjects';
+import { DisplayTypeColor, formatChinaTime, getFeedURL } from '~/utils';
 import {
   collectionsAtom,
   deleteCollectionItemAtom,
@@ -22,10 +21,9 @@ import {
   DropdownMenuTrigger
 } from '~/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/ui/tooltip';
-import { resolveFilterOptions } from '~/routes/resources.($page)/Filter';
+// import { resolveFilterOptions } from '~/routes/resources.($page)/Filter';
 
 import { stringifySearch } from '../Search/utils';
-import { getSubjectById } from '@/utils/subjects';
 
 type CollectionItem = Collection<true>['filters'][0];
 
@@ -52,7 +50,7 @@ export const CollectionItemContent = memo(
 
     const copyRSS = useCallback(async () => {
       try {
-        const url = `https://${APP_HOST}/feed.xml${item.searchParams}`;
+        const url = getFeedURL(item.searchParams);
         await navigator.clipboard.writeText(url);
         toast.success('复制 RSS 订阅成功', {
           dismissible: true,

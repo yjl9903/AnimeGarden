@@ -2,6 +2,7 @@ export const KNOWN_ENV = {
   NODE_ENV: 'production',
   KEEPSHARE: 'gv78k1oi',
   APP_HOST: 'animes.garden',
+  FEED_HOST: 'api.animes.garden',
   SERVER_URL: 'https://api.animes.garden/'
 };
 

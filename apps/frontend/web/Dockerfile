@@ -4,8 +4,11 @@ ARG NODE_VERSION=20.19.0
 ARG PNPM_VERSION=10.8.0
 
 ARG APP_HOST=animes.garden
-ARG UMAMI_ID=bcff225d-6590-498e-9b39-3a5fc5c2b4d1
+ARG FEED_HOST=api.animes.garden
+
 ARG SERVER_URL=https://api.animes.garden/
+
+ARG UMAMI_ID=bcff225d-6590-498e-9b39-3a5fc5c2b4d1
 
 ARG PORT=3000
 
@@ -18,12 +21,10 @@ LABEL fly_launch_runtime="Node.js"
 WORKDIR /app
 
 # Declare args
-ARG APP_HOST
-ARG UMAMI_ID
-ARG SERVER_URL
+ARG APP_HOST FEED_HOST SERVER_URL UMAMI_ID
 
 # Set production environment or development for test
-ENV NODE_ENV="development" APP_HOST=$APP_HOST UMAMI_ID=$UMAMI_ID SERVER_URL=$SERVER_URL
+ENV NODE_ENV="development" APP_HOST=$APP_HOST FEED_HOST=$FEED_HOST SERVER_URL=$SERVER_URL UMAMI_ID=$UMAMI_ID
 
 # Install pnpm
 RUN npm install -g pnpm@$PNPM_VERSION
@@ -70,10 +71,8 @@ COPY --from=build /app /app
 ENV HOST=:: PORT=${PORT}
 
 # Declare args
-ARG APP_HOST
-ARG UMAMI_ID
-ARG SERVER_URL
-ENV APP_HOST=$APP_HOST UMAMI_ID=$UMAMI_ID SERVER_URL=$SERVER_URL
+ARG APP_HOST FEED_HOST SERVER_URL UMAMI_ID
+ENV APP_HOST=$APP_HOST FEED_HOST=$FEED_HOST SERVER_URL=$SERVER_URL UMAMI_ID=$UMAMI_ID
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE ${PORT}

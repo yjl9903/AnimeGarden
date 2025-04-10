@@ -11,6 +11,8 @@ declare module '~build/env' {
 
   export const APP_HOST: string;
 
+  export const FEED_HOST: string;
+
   export const SERVER_URL: string | undefined;
 }
 

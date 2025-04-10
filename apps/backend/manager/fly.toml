@@ -13,6 +13,7 @@ dockerfile = 'Dockerfile'
 NODE_VERSION = '20.19.0'
 PNPM_VERSION = '10.8.0'
 APP_HOST = 'animes.garden'
+FEED_HOST = 'api.animes.garden'
 
 [processes]
 server = 'node apps/backend/manager/cli.mjs start'

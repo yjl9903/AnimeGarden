@@ -11,7 +11,7 @@ import Inline from 'vite-plugin-inline';
 
 import { env } from './node/env';
 
-const { APP_HOST, SERVER_URL, KEEPSHARE } = env();
+const { APP_HOST, FEED_HOST, SERVER_URL, KEEPSHARE } = env();
 
 // Analytics Engines
 const UMAMI_HOST = process.env.UMAMI_HOST || `umami.onekuma.cn`;
@@ -44,6 +44,10 @@ export default defineConfig({
          * The host of app
          */
         APP_HOST,
+        /**
+         * The host of feed.xml
+         */
+        FEED_HOST,
         /**
          * The URL of API server
          */

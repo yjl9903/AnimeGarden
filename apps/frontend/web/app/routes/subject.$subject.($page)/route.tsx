@@ -6,7 +6,7 @@ import { parseURLSearch } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import { fetchResources } from '~/utils';
+import { fetchResources, getFeedURL } from '~/utils';
 import { getSubjectById } from '~/utils/subjects';
 import { usePreferFansub } from '~/states';
 
@@ -66,7 +66,7 @@ export default function ResourcesIndex() {
   const feedURL = useMemo(() => {
     const search = new URLSearchParams(location.search);
     search.set('subject', params.subject!);
-    return `/feed.xml?${search.toString()}`;
+    return getFeedURL(`?${search.toString()}`);
   }, [location]);
 
   usePreferFansub(filter?.fansubs);

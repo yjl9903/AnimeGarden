@@ -6,7 +6,7 @@ import { generateFilterShortTitle, parseURLSearch } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import { fetchResources } from '~/utils';
+import { fetchResources, getFeedURL } from '~/utils';
 import { usePreferFansub } from '~/states';
 
 import { Error } from './Error';
@@ -54,7 +54,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 export default function ResourcesIndex() {
   const location = useLocation();
   const { ok, resources, complete, filter, page, timestamp } = useLoaderData<typeof loader>();
-  const feedURL = useMemo(() => `/feed.xml${location.search}`, [location]);
+  const feedURL = useMemo(() => getFeedURL(location.search), [location]);
 
   usePreferFansub(filter?.fansubs);
 

@@ -4,6 +4,7 @@ ARG NODE_VERSION=20.19.0
 ARG PNPM_VERSION=10.8.0
 
 ARG APP_HOST=animes.garden
+ARG FEED_HOST=api.animes.garden
 
 ARG PORT=3000
 
@@ -60,8 +61,8 @@ FROM base
 COPY --from=build /app /app
 
 # Declare args
-ARG PORT APP_HOST
-ENV HOST=:: PORT=${PORT} APP_HOST=${APP_HOST}
+ARG PORT APP_HOST FEED_HOST
+ENV HOST=:: PORT=${PORT} APP_HOST=${APP_HOST} FEED_HOST=${FEED_HOST}
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE ${PORT}

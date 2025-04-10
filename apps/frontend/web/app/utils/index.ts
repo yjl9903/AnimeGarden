@@ -4,7 +4,7 @@ export * from './date';
 
 export * from './api';
 
-export * from './pikpak';
+export * from './url';
 
 export * from './string';
 
