@@ -398,8 +398,8 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1(esbuild@0.17.6)(rollup@2.79.1)(vite@5.4.2(@types/node@22.14.0)(terser@5.31.6))
       vite-plugin-inline:
-        specifier: ^0.0.3
-        version: 0.0.3(vite@5.4.2(@types/node@22.14.0)(terser@5.31.6))
+        specifier: ^0.1.0
+        version: 0.1.0(vite@5.4.2(@types/node@22.14.0)(terser@5.31.6))
       vite-tsconfig-paths:
         specifier: ^5.1.4
         version: 5.1.4(typescript@5.8.3)(vite@5.4.2(@types/node@22.14.0)(terser@5.31.6))
@@ -3434,7 +3434,7 @@ packages:
     resolution: {integrity: sha512-nloJUjf6AtKRnBuWmaFkVk7lR7aht9cudXkR/W0ui+feLSJ5rnYy6nyLyGFLZqLnb2cSV8L6bB6tGPJnvc5KzA==}
 
   '@swagger-api/apidom-ns-openapi-3-0@1.0.0-beta.30':
-    resolution: {integrity: sha512-7bz6kCgjStTKGGI4wBP2ho574lyfjH5EDPPuXhkwmAG2mOn9MZezlQhsbdo3B+vbi/58mqQb2XCoB4aeP1F+GQ==, tarball: https://registry.npmmirror.com/@swagger-api/apidom-ns-openapi-3-0/-/apidom-ns-openapi-3-0-1.0.0-beta.30.tgz}
+    resolution: {integrity: sha512-7bz6kCgjStTKGGI4wBP2ho574lyfjH5EDPPuXhkwmAG2mOn9MZezlQhsbdo3B+vbi/58mqQb2XCoB4aeP1F+GQ==}
 
   '@swagger-api/apidom-ns-openapi-3-1@1.0.0-beta.30':
     resolution: {integrity: sha512-pq2jxSp0I6xnGzyAiEXWYMuurp8H7TlOQ6Ijr/XX54gNmaIK+yQ3HXc7S6FZx+B2kQx03Tb8Y8O7L7J7YnmFiA==}
@@ -7096,7 +7096,7 @@ packages:
     resolution: {integrity: sha512-a3jODQl82NPp1d5OYb0wY+oFaPk7AvyxipIowCHk7pBsZCWgbe0yAkU2OOXdoH0ENyANhyOQbs9xkAiRHcF02Q==}
 
   sharp@0.33.5:
-    resolution: {integrity: sha512-haPVm1EkS9pgvHrQ/F3Xy+hgcuMV0Wm9vfIBSiwZ05k+xgb0PkBQpGsAA/oWdDobNaZTH5ppvHtzCFbnSEwHVw==, tarball: https://registry.npmmirror.com/sharp/-/sharp-0.33.5.tgz}
+    resolution: {integrity: sha512-haPVm1EkS9pgvHrQ/F3Xy+hgcuMV0Wm9vfIBSiwZ05k+xgb0PkBQpGsAA/oWdDobNaZTH5ppvHtzCFbnSEwHVw==}
     engines: {node: ^18.17.0 || ^20.3.0 || >=21.0.0}
 
   shebang-command@2.0.0:
@@ -7513,7 +7513,7 @@ packages:
     engines: {node: '>=6'}
 
   tslib@2.7.0:
-    resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==, tarball: https://registry.npmmirror.com/tslib/-/tslib-2.7.0.tgz}
+    resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
 
   tsx@4.19.3:
     resolution: {integrity: sha512-4H8vUNGNjQ4V2EOoGw005+c+dGuPSnhpPBPHBtsZdGZBk/iJb4kguGlPWaZTZ3q5nMtFOEsY0nRDlh9PJyd6SQ==}
@@ -7927,10 +7927,10 @@ packages:
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
 
-  vite-plugin-inline@0.0.3:
-    resolution: {integrity: sha512-2W5PIHrDJwdeLvubn3hYoFmFQKqK8AAMVj0Lgltc6wwpilO2gP/rFfzlmbXgwPLUSnt20rY10omWo9TSh8kOMw==}
+  vite-plugin-inline@0.1.0:
+    resolution: {integrity: sha512-svnB2tnR8MmSwJHZkvThUC8QpAqvW3cdYGNJ5TJtTUiwtftfA8ITsqpEOJOzB7kSbZitepK67JtXNH8p4iq2hQ==}
     peerDependencies:
-      vite: ^6.0.0
+      vite: '>=5.0.0'
 
   vite-plugin-pwa@0.21.2:
     resolution: {integrity: sha512-vFhH6Waw8itNu37hWUJxL50q+CBbNcMVzsKaYHQVrfxTt3ihk3PeLO22SbiP1UNWzcEPaTQv+YVxe4G0KOjAkg==}
@@ -16412,7 +16412,7 @@ snapshots:
       - supports-color
       - terser
 
-  vite-plugin-inline@0.0.3(vite@5.4.2(@types/node@22.14.0)(terser@5.31.6)):
+  vite-plugin-inline@0.1.0(vite@5.4.2(@types/node@22.14.0)(terser@5.31.6)):
     dependencies:
       vite: 5.4.2(@types/node@22.14.0)(terser@5.31.6)
 

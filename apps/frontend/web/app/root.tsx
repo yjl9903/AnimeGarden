@@ -24,7 +24,7 @@ import './styles/layout.css';
 import './styles/sidebar.css';
 import './layouts/Search/cmdk.css';
 
-import scrollHandler from './layouts/global.ts?inline&raw';
+import scrollHandler from './layouts/global.ts?inline-ts';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
