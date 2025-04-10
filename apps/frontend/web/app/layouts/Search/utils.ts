@@ -1,4 +1,4 @@
-import { getSubjectById } from '@/utils/subjects';
+import { getSubjectById, getSubjectByName } from '@/utils/subjects';
 import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
 
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
@@ -127,16 +127,28 @@ export function parseSearch(input: string) {
     search.splice(0, search.length);
   }
 
+  // Map from subject name -> subject id
+  const subjectIds = [];
+  if (subjects.length > 0) {
+    for (const subject of subjects) {
+      const bgm = getSubjectByName(subject);
+      if (bgm) {
+        subjectIds.push(bgm.id);
+      }
+    }
+  }
+
   return {
     search,
     include,
     keywords,
     exclude,
+    subjects: subjectIds,
     publishers,
     fansubs,
     after: after.at(-1),
     before: before.at(-1),
-    types
+    types,
   };
 }
 
