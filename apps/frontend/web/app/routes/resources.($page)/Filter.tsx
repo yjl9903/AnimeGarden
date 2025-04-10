@@ -144,8 +144,10 @@ export function Filter(props: Props) {
         <div className="space-x-2 text-0">
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">动画</span>
           {realSubjects.map((subject) => (
-            <span key={subject.id} className={`text-4 select-text text-base-900`}>
-              {subject.bangumi?.name_cn}
+            <span key={subject.id} className={`text-4 select-text text-base-900 text-link`}>
+              <a href={`https://bgm.tv/subject/${subject.id}`} target="_blank">
+                {subject.bangumi?.name_cn}
+              </a>
             </span>
           ))}
         </div>
