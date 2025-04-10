@@ -7,9 +7,9 @@ import {
   useNavigate,
   useRouteError
 } from '@remix-run/react';
-
 import { Provider } from 'jotai';
 import { kebabCase } from 'scule';
+import { useEffect } from 'react';
 
 import { Toaster } from '~/components/ui/sonner';
 import { NavHeight, SearchTop, HeroHeight } from '~/layouts/Layout';
@@ -25,7 +25,6 @@ import './styles/sidebar.css';
 import './layouts/Search/cmdk.css';
 
 import scrollHandler from './layouts/global.ts?inline&raw';
-import { useEffect } from 'react';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
