@@ -10,6 +10,7 @@ import { type FetchResourceDetailResult, SupportProviders } from '@animegarden/c
 
 import Layout from '~/layouts/Layout';
 import {
+  splitMagnetURL,
   fetchResourceDetail,
   getPikPakUrlChecker,
   getPikPakTrackEvent,
@@ -44,8 +45,8 @@ export default function Resources() {
   const data = useLoaderData<typeof loader>();
   const { timestamp, resource, detail } = data as FetchResourceDetailResult;
 
-  const magnet = resource.magnet || detail?.magnets.find((m) => m.url.startsWith('magnet:'));
-  const pikpakUrl = getPikPakUrlChecker(magnet);
+  const magnet = resource.magnet || detail?.magnets.find((m) => m.url.startsWith('magnet:'))?.url;
+  const pikpakUrl = magnet ? getPikPakUrlChecker(magnet) : '';
 
   const { provider, providerId } = resource;
 
@@ -126,7 +127,7 @@ export default function Resources() {
                     {...getDownloadTrackEvent(provider, providerId)}
                     className="download text-link"
                   >
-                    {magnet.url}
+                    {splitMagnetURL(magnet.url)}
                   </a>
                 </div>
               ))}
