@@ -1,5 +1,6 @@
 import type { FullBangumi } from 'bgmd/types';
-import { bangumis } from 'bgmd';
+
+import { bangumis } from 'bgmd' with { type: 'json' };
 
 const subjectIdMap = new Map(bangumis.map((bgm) => [bgm.id, bgm]));
 
