@@ -22,7 +22,7 @@ export const meta: MetaFunction<typeof loader> = ({ location, data, params }) =>
   return [
     {
       title:
-        (name || generateTitleFromFilter(data?.filter ?? {})) +
+        (name ? name + ' 最新资源' : generateTitleFromFilter(data?.filter ?? {})) +
         ' | Anime Garden 動漫花園資源網第三方镜像站'
     },
     {

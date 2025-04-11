@@ -9,7 +9,12 @@ import { formatInTimeZone } from 'date-fns-tz';
 import { SupportProviders } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
-import { fetchResourceDetail, getPikPakUrlChecker } from '~/utils';
+import {
+  fetchResourceDetail,
+  getPikPakUrlChecker,
+  getPikPakEvent,
+  getDownloadEvent
+} from '~/utils';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   try {
@@ -38,6 +43,8 @@ export default function Resources() {
   const location = useLocation();
   const { timestamp, resource, detail } = useLoaderData<typeof loader>();
   const pikpakUrl = getPikPakUrlChecker(resource.magnet);
+
+  const { provider, providerId } = resource;
 
   // const files = detail.magnet.files.filter(
   //   (f) => f.size !== '種子可能不存在' && f.size !== 'Bytes'
@@ -75,6 +82,7 @@ export default function Resources() {
             <h2 className="text-lg font-bold border-b px4 py2 flex items-center">
               <a
                 href={pikpakUrl}
+                data-umami-event={getPikPakEvent(provider, providerId)}
                 className="play text-link-active underline underline-dotted underline-offset-6"
                 target="_blank"
               >
@@ -91,20 +99,30 @@ export default function Resources() {
                 <span>
                   <a
                     href={pikpakUrl}
-                    target="_blank"
+                    data-umami-event={getPikPakEvent(provider, providerId)}
                     className="play text-link-active underline underline-dotted underline-offset-6"
+                    target="_blank"
                   >
                     在线播放
                   </a>
                 </span>
-                <a href={pikpakUrl} target="_blank" className="play text-link">
+                <a
+                  href={pikpakUrl}
+                  data-umami-event={getPikPakEvent(provider, providerId)}
+                  className="play text-link"
+                  target="_blank"
+                >
                   使用 PikPak 播放
                 </a>
               </div>
               {magnets.map((magnet) => (
                 <div key={magnet.url}>
                   <span>{magnet.name}</span>
-                  <a href={magnet.url} className="download text-link">
+                  <a
+                    href={magnet.url}
+                    data-umami-event={getDownloadEvent(provider, providerId)}
+                    className="download text-link"
+                  >
                     {magnet.url}
                   </a>
                 </div>

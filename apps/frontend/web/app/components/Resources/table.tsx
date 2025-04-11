@@ -10,7 +10,14 @@ import { memo } from 'react';
 import type { Resource, Jsonify } from '@animegarden/client';
 
 import { CarbonTypes, DisplayTypeIcon } from '~/components/Icons';
-import { DisplayTypeColor, getPikPakUrlChecker, formatChinaTime, parseSize } from '~/utils';
+import {
+  DisplayTypeColor,
+  getPikPakUrlChecker,
+  formatChinaTime,
+  parseSize,
+  getPikPakEvent,
+  getDownloadEvent
+} from '~/utils';
 
 import { Tag } from './tag';
 import { Pagination, PaginationProps } from './pagination';
@@ -146,6 +153,7 @@ export const ResourceItem = memo(
                       <>
                         <a
                           href={getPikPakUrlChecker(r.magnet)}
+                          data-umami-event={getPikPakEvent(r.provider, r.providerId)}
                           className="text-link mr1"
                           aria-label={`Go to download resource of ${r.title}`}
                           target="_blank"
@@ -174,6 +182,7 @@ export const ResourceItem = memo(
                 </NavLink>
                 <a
                   href={r.magnet + r.tracker}
+                  data-umami-event={getDownloadEvent(r.provider, r.providerId)}
                   data-resource-title={r.title}
                   className="text-link-secondary-hover-base text-xs text-zinc-400"
                   aria-label="Download resource"
@@ -218,6 +227,7 @@ export const ResourceItem = memo(
           <div className="flex gap1 items-center justify-start">
             <a
               href={getPikPakUrlChecker(r.magnet)}
+              data-umami-event={getPikPakEvent(r.provider, r.providerId)}
               data-resource-title={r.title}
               className="play text-xl text-base-500 hover:text-base-900"
               aria-label="Play resource"
@@ -227,6 +237,7 @@ export const ResourceItem = memo(
             </a>
             <a
               href={r.magnet + r.tracker}
+              data-umami-event={getDownloadEvent(r.provider, r.providerId)}
               data-resource-title={r.title}
               className="download text-xl text-base-500 hover:text-base-900"
               aria-label="Download resource"
