@@ -264,6 +264,9 @@ importers:
       '@remix-run/server-runtime':
         specifier: 2.16.5
         version: 2.16.5(typescript@5.8.3)
+      anipar:
+        specifier: workspace:*
+        version: link:../../../packages/anipar
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
