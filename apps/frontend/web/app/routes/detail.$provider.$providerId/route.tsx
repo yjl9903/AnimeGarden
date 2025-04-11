@@ -69,7 +69,7 @@ export default function Resources() {
           seasonNumber: `${info.season?.number ?? 1}`
         },
         episodeNumber: info.episode?.number !== undefined ? `${info.episode.number}` : undefined,
-        datePublished: resource?.createdAt.toLocaleDateString(),
+        datePublished: resource ? new Date(resource.createdAt).toLocaleDateString() : undefined,
         url: location.toString()
       })
     : undefined;
