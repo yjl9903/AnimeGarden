@@ -17,6 +17,8 @@ import {
   getDownloadTrackEvent
 } from '~/utils';
 
+import { FilesCard } from './FileTree';
+
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   try {
     const { provider, providerId } = params;
@@ -203,24 +205,10 @@ export default function Resources() {
               {formatInTimeZone(new Date(resource.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}
             </span>
           </div>
-          <div className="file-list rounded-md shadow-box">
-            <h2 className="text-lg font-bold border-b px4 py2">文件列表</h2>
-            <div className="mb4 max-h-[80vh] overflow-auto px4">
-              {files.map((f) => (
-                <div
-                  key={f.name + '_' + f.size}
-                  className="py2 flex justify-between items-center gap4"
-                >
-                  <div className="text-sm text-base-600">{f.name}</div>
-                  <div className="text-xs text-base-400 select-none">{f.size}</div>
-                </div>
-              ))}
-              {files.length === 0 ? (
-                <div className="py2 select-none text-center text-red-400">种子信息解析失败</div>
-              ) : undefined}
-              {detail.hasMoreFiles ? <div className="text-base-400">...</div> : undefined}
-            </div>
-          </div>
+          <FilesCard
+            files={detail?.files ?? []}
+            hasMoreFiles={detail?.hasMoreFiles ?? false}
+          ></FilesCard>
         </div>
       </div>
       {/* structure data */}
