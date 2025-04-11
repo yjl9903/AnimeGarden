@@ -11,7 +11,7 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
   app
     .get('/feed.xml', etag(), async (ctx) => {
       const url = new URL(ctx.req.url);
-      sys.logger.info(`Receive feed.xml search params: ${url.search}`);
+      // sys.logger.info(`Receive feed.xml search params: ${url.search}`);
 
       const filter = parseURLSearch(url.searchParams, await ctx.req.json().catch(() => undefined));
       if (!filter) {
@@ -23,11 +23,13 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
       ctx.res.headers.set('Content-Type', 'application/xml; charset=UTF-8');
       ctx.res.headers.set('Cache-Control', `public, max-age=${1 * 60 * 60}`);
 
+      const isTracker = isTrackerEnabled(url.searchParams);
+
       return ctx.body(
         await getRssString({
           title: generateTitleFromFilter(filter),
           description: 'Anime Garden 是動漫花園資源網的第三方镜像站',
-          site: `https://${sys.options.site ?? 'animes.garden'}`,
+          site: `https://${sys.options.site ?? 'animes.garden'}/resources/1${url.search}`,
           trailingSlash: false,
           items: resp.resources.map((r) => {
             return {
@@ -35,7 +37,7 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
               pubDate: toDate(r.createdAt, { timeZone: 'Asia/Shanghai' }),
               link: `https://${sys.options.site ?? 'animes.garden'}${getDetailURL(r)}`,
               enclosure: {
-                url: r.magnet,
+                url: r.magnet + (isTracker ? r.tracker : ''),
                 length: r.size,
                 type: 'application/x-bittorrent'
               }
@@ -45,24 +47,28 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
       );
     })
     .get('/collection/:hash/feed.xml', etag(), async (ctx) => {
+      const url = new URL(ctx.req.url);
+
       const hsh = ctx.req.param('hash');
       if (!hsh) {
-        return ctx.json({ status: 'ERROR', message: 'Request is not valid' }, 400);
+        return ctx.json({ status: 'ERROR', message: 'Missing collection hash' }, 400);
       }
 
       const resp = await sys.modules.collections.getCollection(hsh);
       if (!resp) {
-        return ctx.json({ status: 'ERROR', message: `Unknown collection ${hsh}` }, 400);
+        return ctx.json({ status: 'ERROR', message: `Collection "${hsh}" not found` }, 400);
       }
 
       ctx.res.headers.set('Content-Type', 'application/xml; charset=UTF-8');
       ctx.res.headers.set('Cache-Control', `public, max-age=${1 * 60 * 60}`);
 
+      const isTracker = isTrackerEnabled(url.searchParams);
+
       return ctx.body(
         await getRssString({
-          title: `收藏夹 ${hsh}`,
+          title: `${resp.name || '收藏夹 ' + hsh}`,
           description: 'Anime Garden 是動漫花園資源網的第三方镜像站.',
-          site: `https://${sys.options.site ?? 'animes.garden'}`,
+          site: `https://${sys.options.site ?? 'animes.garden'}/collection/${hsh}`,
           trailingSlash: false,
           items: resp.results
             .flatMap((r) => r.resources)
@@ -72,7 +78,7 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
                 pubDate: toDate(r.createdAt, { timeZone: 'Asia/Shanghai' }),
                 link: `https://${sys.options.site ?? 'animes.garden'}${getDetailURL(r)}`,
                 enclosure: {
-                  url: r.magnet,
+                  url: r.magnet + (isTracker ? r.tracker : ''),
                   length: r.size,
                   type: 'application/x-bittorrent'
                 }
@@ -82,6 +88,11 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
       );
     })
 );
+
+function isTrackerEnabled(searchParams: URLSearchParams) {
+  const value = searchParams.get('trakcer');
+  return value === null ? true : ['no', 'off', 'false'].includes(value) ? false : true;
+}
 
 function getDetailURL(r: { provider: string; providerId: string }) {
   return `/detail/${r.provider}/${r.providerId}`;
