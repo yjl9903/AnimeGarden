@@ -1,10 +1,11 @@
 import { etag } from 'hono/etag';
 import { toDate } from 'date-fns-tz';
 
-import { generateFilterShortTitle, parseURLSearch } from '@animegarden/client';
+import { parseURLSearch } from '@animegarden/client';
 
 import { getRssString } from '../rss';
 import { defineHandler } from '../utils/hono';
+import { generateTitleFromFilter } from '../utils/meta';
 
 export const defineFeedRoutes = defineHandler((sys, app) =>
   app
@@ -24,9 +25,8 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
 
       return ctx.body(
         await getRssString({
-          title: generateFilterShortTitle(filter),
-          description:
-            'Anime Garden 是動漫花園資源網的第三方镜像站, 動漫花園資訊網是一個動漫愛好者交流的平台,提供最及時,最全面的動畫,漫畫,動漫音樂,動漫下載,BT,ED,動漫遊戲,資訊,分享,交流,讨论.',
+          title: generateTitleFromFilter(filter),
+          description: 'Anime Garden 是動漫花園資源網的第三方镜像站',
           site: `https://${sys.options.site ?? 'animes.garden'}`,
           trailingSlash: false,
           items: resp.resources.map((r) => {
@@ -61,8 +61,7 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
       return ctx.body(
         await getRssString({
           title: `收藏夹 ${hsh}`,
-          description:
-            'Anime Garden 是動漫花園資源網的第三方镜像站, 動漫花園資訊網是一個動漫愛好者交流的平台,提供最及時,最全面的動畫,漫畫,動漫音樂,動漫下載,BT,ED,動漫遊戲,資訊,分享,交流,讨论.',
+          description: 'Anime Garden 是動漫花園資源網的第三方镜像站.',
           site: `https://${sys.options.site ?? 'animes.garden'}`,
           trailingSlash: false,
           items: resp.results
