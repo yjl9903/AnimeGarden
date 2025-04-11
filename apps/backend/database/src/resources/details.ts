@@ -7,9 +7,9 @@ import { type ProviderType, type ScrapedResourceDetail } from '@animegarden/clie
 import type { System } from '../system';
 import type { Detail } from '../schema';
 
-import { retryFn } from '../utils';
 import { details } from '../schema/details';
 import { resources } from '../schema/resources';
+import { splitOnce, retryFn, nextTick } from '../utils';
 
 import type { DatabaseResource } from './types';
 
@@ -80,6 +80,27 @@ export class DetailsManager {
 
           if (detail) {
             this.logger.success(`Finish fetching resource detail of ${provider}:${providerId}`);
+
+            // @hack 修复老数据缺失的 magnet
+            if (!resource.magnet) {
+              const magnetFull = detail.magnets.find((m) => m.url.startsWith('magnet:'));
+              const [magnet, tracker] = splitOnce(magnetFull?.url || '', '&');
+              if (magnet && tracker) {
+                const id = resource.id;
+                resource.magnet = magnet;
+                resource.tracker = tracker;
+
+                // 更新 db
+                nextTick().then(async () => {
+                  await retryFn(async () => {
+                    await this.system.database
+                      .update(resources)
+                      .set({ magnet, tracker })
+                      .where(eq(resources.id, id));
+                  }, 5).catch(() => {});
+                });
+              }
+            }
 
             return {
               resource,

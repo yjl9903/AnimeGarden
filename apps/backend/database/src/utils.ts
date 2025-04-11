@@ -18,6 +18,16 @@ export async function retryFn<T>(fn: () => Promise<T>, count: number): Promise<T
   throw e;
 }
 
+export function splitOnce(text: string, separator: string): [string, string] {
+  const found = text.indexOf(separator);
+  if (found === -1) {
+    return [text, ''];
+  }
+  const first = text.slice(0, found);
+  const second = text.slice(found);
+  return [first, second];
+}
+
 export function nextTick() {
   return new Promise<void>((resolve) => process.nextTick(resolve));
 }
