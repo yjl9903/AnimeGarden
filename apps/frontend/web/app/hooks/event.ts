@@ -7,7 +7,7 @@ export function useEventListener<T extends Element | Document>(
   deps: DependencyList = []
 ) {
   if (!import.meta.env.SSR && element) {
-    const saved = useRef<typeof handler>();
+    const saved = useRef<typeof handler>(undefined);
 
     useEffect(() => {
       saved.current = handler;

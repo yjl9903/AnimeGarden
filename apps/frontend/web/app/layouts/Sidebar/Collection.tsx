@@ -65,7 +65,7 @@ export const CollectionItemContent = memo(
 
     // --- Rename title
     const titleRef = useRef<HTMLSpanElement>(null);
-    const focusTime = useRef<number>();
+    const focusTime = useRef<number>(undefined);
     const [editable, setEditable] = useState(false);
     const focusTitle = useCallback(() => {
       focusTime.current = new Date().getTime();
