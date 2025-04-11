@@ -13,7 +13,7 @@ export function generateTitleFromFilter(
       const bgm = getSubjectById(id);
       const name = getSubjectDisplayName(bgm);
       if (name) {
-        names.push(getSubjectByName(name));
+        names.push(name);
       }
     }
     if (names.length > 0) {
