@@ -90,8 +90,8 @@ importers:
         specifier: ^0.41.0
         version: 0.41.0(@cloudflare/workers-types@4.20250410.0)(gel@2.0.2)(postgres@3.4.5)
       ioredis:
-        specifier: ^5.6.0
-        version: 5.6.0
+        specifier: ^5.6.1
+        version: 5.6.1
       memofunc:
         specifier: ^0.1.6
         version: 0.1.6
@@ -187,8 +187,8 @@ importers:
         specifier: ^4.7.6
         version: 4.7.6
       ioredis:
-        specifier: ^5.6.0
-        version: 5.6.0
+        specifier: ^5.6.1
+        version: 5.6.1
       memofunc:
         specifier: ^0.1.6
         version: 0.1.6
@@ -5004,8 +5004,8 @@ packages:
   invariant@2.2.4:
     resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
 
-  ioredis@5.6.0:
-    resolution: {integrity: sha512-tBZlIIWbndeWBWCXWZiqtOF/yxf6yZX3tAlTJ7nfo5jhd6dctNxF7QnYlZLZ1a0o0pDoen7CgZqO+zjNaFbJAg==}
+  ioredis@5.6.1:
+    resolution: {integrity: sha512-UxC0Yv1Y4WRJiGQxQkP0hfdL0/5/6YvdfOOClRgJ0qppSarkhneSa6UvkMkms0AkdGimSH3Ikqm+6mkMmX7vGA==}
     engines: {node: '>=12.22.0'}
 
   ipaddr.js@1.9.1:
@@ -12942,7 +12942,7 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
 
-  ioredis@5.6.0:
+  ioredis@5.6.1:
     dependencies:
       '@ioredis/commands': 1.2.0
       cluster-key-slot: 1.1.2
