@@ -1,13 +1,13 @@
 export const getDownloadTrackEvent = (provider: string, providerId: string) => ({
   'data-umami-event': 'download',
-  'data-umami-provider': provider,
-  'data-umami-provider-id': providerId
+  'data-umami-event-provider': provider,
+  'data-umami-event-provider-id': providerId
 });
 
 export const getPikPakTrackEvent = (provider: string, providerId: string) => ({
   'data-umami-event': 'pikpak',
-  'data-umami-provider': provider,
-  'data-umami-provider-id': providerId
+  'data-umami-event-provider': provider,
+  'data-umami-event-provider-id': providerId
 });
 
 export const getOpenFeedTrackEvent = () => ({
