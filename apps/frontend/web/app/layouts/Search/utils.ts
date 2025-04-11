@@ -1,5 +1,6 @@
-import { getSubjectById, getSubjectByName } from '@/utils/subjects';
 import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
+
+import { getSubjectById, getSubjectByName, getSubjectDisplayName } from '~/utils/subjects';
 
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
 
@@ -156,6 +157,14 @@ export function stringifySearch(search: URLSearchParams) {
   const filter = parseURLSearch(search, { pageSize: 80 });
   const content: string[] = [];
 
+  if (filter.subjects && filter.subjects.length === 1) {
+    const bgm = getSubjectById(filter.subjects[0]);
+    const name = getSubjectDisplayName(bgm);
+    if (name) {
+      content.push('动画:' + (name.indexOf(' ') === -1 ? name : `"${name}"`));
+    }
+  }
+
   if (filter.search) {
     content.push(...filter.search.map((f) => wrap(f)));
   } else {
@@ -168,11 +177,6 @@ export function stringifySearch(search: URLSearchParams) {
     if (filter.exclude) {
       content.push(...filter.exclude.map((t) => '排除:' + wrap(t)));
     }
-  }
-
-  if (filter.subjects && filter.subjects.length === 1) {
-    const bgm = getSubjectById(filter.subjects[0]);
-    content.push('动画:' + (bgm?.bangumi?.name_cn || bgm?.name));
   }
 
   if (filter.publishers) {

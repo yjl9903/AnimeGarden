@@ -349,17 +349,15 @@ const CollectionItemFilter = memo((props: { item: CollectionItem }) => {
 export function inferCollectionItemName(item: CollectionItem | Jsonify<CollectionItem>) {
   let title;
 
-  if (item.search && item.search.length > 0) {
-    title = item.search.join(' ');
-  } else if (item.include && item.include.length > 0) {
-    title = item.include.join(' ');
-  } else if (item.keywords && item.keywords.length > 0) {
-    title = item.keywords.join(' ');
-  } else if (item.subjects && item.subjects.length === 1) {
+  if (item.subjects && item.subjects.length === 1) {
     const bgm = getSubjectById(item.subjects[0]);
     if (bgm) {
       title = bgm.bangumi?.name_cn || bgm.name;
     }
+  } else if (item.search && item.search.length > 0) {
+    title = item.search.join(' ');
+  } else if (item.include && item.include.length > 0) {
+    title = item.include.join(' ');
   }
 
   if (title) {

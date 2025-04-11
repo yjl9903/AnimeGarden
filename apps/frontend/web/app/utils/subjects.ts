@@ -1,3 +1,4 @@
+import type { FullBangumi } from 'bgmd/types';
 import { bangumis } from 'bgmd';
 
 const subjectIdMap = new Map(bangumis.map((bgm) => [bgm.id, bgm]));
@@ -16,4 +17,8 @@ export function getSubjectById(id: number) {
 
 export function getSubjectByName(name: string) {
   return subjectNameMap.get(name);
+}
+
+export function getSubjectDisplayName(bgm?: Pick<FullBangumi, 'name' | 'bangumi'>) {
+  return bgm?.bangumi?.name_cn || bgm?.name || '';
 }

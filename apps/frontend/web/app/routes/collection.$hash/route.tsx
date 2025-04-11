@@ -12,15 +12,6 @@ import { inferCollectionItemName } from '~/layouts/Sidebar/Collection';
 
 import { Error } from '../resources.($page)/Error';
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  const title = data?.name;
-
-  return [
-    { title: (title ? title + ' 最新资源 | ' : '') + 'Anime Garden 動漫花園資源網第三方镜像站' },
-    { name: 'description', content: 'Anime Garden 動漫花園資源網第三方镜像站' }
-  ];
-};
-
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const hash = params.hash!;
   if (!hash) return redirect('/');
@@ -28,6 +19,15 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const resp = await fetchCollection(hash);
 
   return json({ ...resp });
+};
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  const title = data?.name;
+
+  return [
+    { title: (title ? title + ' | ' : '') + 'Anime Garden 動漫花園資源網第三方镜像站' },
+    { name: 'description', content: 'Anime Garden 動漫花園資源網第三方镜像站' }
+  ];
 };
 
 export default function Collections() {

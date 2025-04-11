@@ -6,21 +6,29 @@ import { parseURLSearch } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import { fetchResources, getFeedURL } from '~/utils';
-import { getSubjectById } from '~/utils/subjects';
+import { stringifySearch } from '~/layouts/Search/utils';
 import { usePreferFansub } from '~/states';
+import { getSubjectById, getSubjectDisplayName } from '~/utils/subjects';
+import { fetchResources, generateTitleFromFilter, getFeedURL } from '~/utils';
 
 import { Error } from '../resources.($page)/Error';
 import { Filter } from '../resources.($page)/Filter';
 
-export const meta: MetaFunction<typeof loader> = ({ data, params }) => {
+export const meta: MetaFunction<typeof loader> = ({ location, data, params }) => {
   const subjectId = +params.subject!;
   const subject = getSubjectById(subjectId);
-  const title = subject?.bangumi?.name_cn || subject?.name;
+  const name = getSubjectDisplayName(subject);
 
   return [
-    { title: (title || '所有资源') + ' | Anime Garden 動漫花園資源網第三方镜像站' },
-    { name: 'description', content: `Anime Garden 動漫花園資源網第三方镜像站` }
+    {
+      title:
+        (name || generateTitleFromFilter(data?.filter ?? {})) +
+        ' | Anime Garden 動漫花園資源網第三方镜像站'
+    },
+    {
+      name: 'description',
+      content: `最新资源 ${stringifySearch(new URLSearchParams(location.search))}`
+    }
   ];
 };
 

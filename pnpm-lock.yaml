@@ -261,9 +261,6 @@ importers:
       '@remix-run/server-runtime':
         specifier: 2.16.5
         version: 2.16.5(typescript@5.8.3)
-      anitomy:
-        specifier: 0.0.35
-        version: 0.0.35
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -3563,10 +3560,6 @@ packages:
 
   ajv@8.17.1:
     resolution: {integrity: sha512-B/gBuNg5SiMTrPkC+A2+cW0RszwxYmn6VYxB/inlBStS5nx6xHIt/ehKRhIMhqusl7a8LjQoZnjCs5vhwxOQ1g==}
-
-  anitomy@0.0.35:
-    resolution: {integrity: sha512-lwTWQAWKrgvQhlTssPDqz+1BVYJ7EqNVo7OTsqyND0SoVehOgdIdDZKeaAXI+D8z7xAV/fABWBZsVpbURF1MBg==}
-    engines: {node: '>=v18.16.0'}
 
   ansi-escapes@4.3.2:
     resolution: {integrity: sha512-gKXj5ALrKWQLsYG9jlTRmR/xKluxHV+Z9QEwNIgCfM1/uwPMCuzVVnh5mwTd+OuBZcwSIMbqssNWRm1lE51QaQ==}
@@ -11316,8 +11309,6 @@ snapshots:
       fast-uri: 3.0.6
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
-
-  anitomy@0.0.35: {}
 
   ansi-escapes@4.3.2:
     dependencies:

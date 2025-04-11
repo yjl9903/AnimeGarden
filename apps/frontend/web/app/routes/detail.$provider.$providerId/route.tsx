@@ -3,8 +3,10 @@
 import { useLoaderData, useLocation } from '@remix-run/react';
 import { redirect, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 
-import { parse } from 'anitomy';
+import { parse } from 'anipar';
 import { formatInTimeZone } from 'date-fns-tz';
+
+import { SupportProviders } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import { fetchResourceDetail, getPikPakUrlChecker } from '~/utils';
@@ -12,20 +14,23 @@ import { fetchResourceDetail, getPikPakUrlChecker } from '~/utils';
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   try {
     const { provider, providerId } = params;
-    if (provider && providerId && ['dmhy', 'moe', 'ani'].includes(provider)) {
+    if (provider && providerId && SupportProviders.includes(provider)) {
       const detail = await fetchResourceDetail(provider, providerId);
       return detail;
     }
   } catch (error) {
     console.error('[ERROR]', error);
   }
+
   return redirect('/');
 };
 
-export const meta: MetaFunction<typeof loader> = () => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  const title = data?.resource?.title ?? '';
+
   return [
-    { title: 'Anime Garden 動漫花園資源網第三方镜像站' },
-    { name: 'description', content: 'Anime Garden 動漫花園資源網第三方镜像站' }
+    { title: (title ? title + ' | ' : '') + 'Anime Garden 動漫花園資源網第三方镜像站' },
+    { name: 'description', content: `${title}` }
   ];
 };
 

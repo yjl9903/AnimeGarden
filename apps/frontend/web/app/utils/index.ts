@@ -10,4 +10,6 @@ export * from './string';
 
 export * from './string';
 
+export * from './meta';
+
 export * from './routes';

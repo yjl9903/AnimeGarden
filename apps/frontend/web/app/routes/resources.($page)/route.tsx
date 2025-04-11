@@ -2,22 +2,26 @@ import { useMemo } from 'react';
 import { redirect, useLoaderData, useLocation } from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/node';
 
-import { generateFilterShortTitle, parseURLSearch } from '@animegarden/client';
+import { parseURLSearch } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import { fetchResources, getFeedURL } from '~/utils';
+import { stringifySearch } from '~/layouts/Search/utils';
 import { usePreferFansub } from '~/states';
+import { fetchResources, getFeedURL, generateTitleFromFilter } from '~/utils';
 
 import { Error } from './Error';
 import { Filter } from './Filter';
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  const title = generateFilterShortTitle(data?.filter ?? {});
+export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
+  const title = generateTitleFromFilter(data?.filter ?? {});
 
   return [
     { title: title + ' | Anime Garden 動漫花園資源網第三方镜像站' },
-    { name: 'description', content: 'Anime Garden 動漫花園資源網第三方镜像站' }
+    {
+      name: 'description',
+      content: `最新资源 ${stringifySearch(new URLSearchParams(location.search))}`
+    }
   ];
 };
 
