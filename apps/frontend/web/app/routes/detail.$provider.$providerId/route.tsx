@@ -12,8 +12,8 @@ import Layout from '~/layouts/Layout';
 import {
   fetchResourceDetail,
   getPikPakUrlChecker,
-  getPikPakEvent,
-  getDownloadEvent
+  getPikPakTrackEvent,
+  getDownloadTrackEvent
 } from '~/utils';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
@@ -82,7 +82,7 @@ export default function Resources() {
             <h2 className="text-lg font-bold border-b px4 py2 flex items-center">
               <a
                 href={pikpakUrl}
-                data-umami-event={getPikPakEvent(provider, providerId)}
+                {...getPikPakTrackEvent(provider, providerId)}
                 className="play text-link-active underline underline-dotted underline-offset-6"
                 target="_blank"
               >
@@ -99,7 +99,7 @@ export default function Resources() {
                 <span>
                   <a
                     href={pikpakUrl}
-                    data-umami-event={getPikPakEvent(provider, providerId)}
+                    {...getPikPakTrackEvent(provider, providerId)}
                     className="play text-link-active underline underline-dotted underline-offset-6"
                     target="_blank"
                   >
@@ -108,7 +108,7 @@ export default function Resources() {
                 </span>
                 <a
                   href={pikpakUrl}
-                  data-umami-event={getPikPakEvent(provider, providerId)}
+                  {...getPikPakTrackEvent(provider, providerId)}
                   className="play text-link"
                   target="_blank"
                 >
@@ -120,7 +120,7 @@ export default function Resources() {
                   <span>{magnet.name}</span>
                   <a
                     href={magnet.url}
-                    data-umami-event={getDownloadEvent(provider, providerId)}
+                    {...getDownloadTrackEvent(provider, providerId)}
                     className="download text-link"
                   >
                     {magnet.url}

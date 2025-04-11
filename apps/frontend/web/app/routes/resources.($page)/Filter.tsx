@@ -9,7 +9,13 @@ import { stringifyURLSearch, type Jsonify, type ResolvedFilterOptions } from '@a
 import { APP_HOST } from '~build/env';
 
 import { getSubjectById } from '~/utils/subjects';
-import { removeQuote, formatChinaTime, DisplayTypeColor } from '~/utils';
+import {
+  removeQuote,
+  formatChinaTime,
+  DisplayTypeColor,
+  trackAddCollection,
+  trackCopyFeed
+} from '~/utils';
 import { Button } from '~/components/ui/button';
 import { SearchTooltip } from '~/components/Help';
 import { isOpenSidebar } from '~/layouts/Sidebar/atom';
@@ -80,6 +86,8 @@ export function Filter(props: Props) {
         console.error(error);
         toast.error('复制 RSS 订阅失败', { closeButton: true });
       }
+
+      trackCopyFeed();
     },
     [feedURL]
   );
@@ -113,6 +121,8 @@ export function Filter(props: Props) {
       });
     }
     setIsOpen(true);
+
+    trackAddCollection();
   }, [filter, collection, setCollection]);
 
   if (!filter) return;

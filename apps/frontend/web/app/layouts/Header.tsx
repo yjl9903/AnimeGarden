@@ -5,6 +5,7 @@ import { memo, useEffect, useState } from 'react';
 
 import { calendar, getSubjectURL } from '~/utils/anime';
 import { fansubs as AllFansubs, types, DisplayTypeColor } from '~/utils/constants';
+import { getOpenFeedTrackEvent } from '~/utils/umami';
 import {
   Dropdown,
   DropdownMenu,
@@ -34,8 +35,9 @@ export const Header = memo((props: { feedURL?: string }) => {
           {feedURL && (
             <a
               href={feedURL}
-              target="_blank"
+              {...getOpenFeedTrackEvent()}
               className="inline cursor-pointer rounded-md p-2 text-[#ee802f] [&:hover>span]:(text-[#ff7800]! border-b-2 border-b-[#ff7800]!)"
+              target="_blank"
             >
               <span>
                 <span className="i-carbon-rss text-sm mr1" />
