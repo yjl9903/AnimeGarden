@@ -6,7 +6,7 @@ import { redirect, type LoaderFunctionArgs, type MetaFunction } from '@remix-run
 import { parse } from 'anipar';
 import { formatInTimeZone } from 'date-fns-tz';
 
-import { SupportProviders } from '@animegarden/client';
+import { type FetchResourceDetailResult, SupportProviders } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import {
@@ -41,8 +41,11 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export default function Resources() {
   const location = useLocation();
-  const { timestamp, resource, detail } = useLoaderData<typeof loader>();
-  const pikpakUrl = getPikPakUrlChecker(resource.magnet);
+  const data = useLoaderData<typeof loader>();
+  const { timestamp, resource, detail } = data as FetchResourceDetailResult;
+
+  const magnet = resource.magnet || detail?.magnets.find((m) => m.url.startsWith('magnet:'));
+  const pikpakUrl = getPikPakUrlChecker(magnet);
 
   const { provider, providerId } = resource;
 
@@ -66,7 +69,7 @@ export default function Resources() {
           seasonNumber: `${info.season?.number ?? 1}`
         },
         episodeNumber: info.episode?.number !== undefined ? `${info.episode.number}` : undefined,
-        datePublished: detail.createdAt,
+        datePublished: resource?.createdAt.toLocaleDateString(),
         url: location.toString()
       })
     : undefined;
@@ -153,11 +156,13 @@ export default function Resources() {
             <div className="flex gap8">
               <div>
                 <a
-                  href={`/resources/1?publisherId=${resource.publisher.id}`}
+                  href={`/resources/1?publisher=${resource.publisher.name}`}
                   className="block text-left"
                 >
                   <img
-                    src={resource.publisher.avatar ?? '/favicon.svg'}
+                    src={
+                      resource.publisher.avatar ?? 'https://share.dmhy.org/images/defaultUser.png'
+                    }
                     alt="Publisher Avatar"
                     className="inline-block w-[100px] h-[100px] rounded"
                     onError={(ev) => {
@@ -171,11 +176,13 @@ export default function Resources() {
               {resource.fansub && (
                 <div>
                   <a
-                    href={`/resources/1?fansubId=${resource.fansub.id}`}
+                    href={`/resources/1?fansub=${resource.fansub.name}`}
                     className="block w-auto text-left"
                   >
                     <img
-                      src={resource.fansub.avatar ?? '/favicon.svg'}
+                      src={
+                        resource.fansub.avatar ?? 'https://share.dmhy.org/images/defaultUser.png'
+                      }
                       alt="Fansub Avatar"
                       className="inline-block w-[100px] h-[100px] rounded"
                       onError={(ev) => {
