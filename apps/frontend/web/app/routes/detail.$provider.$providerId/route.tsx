@@ -63,9 +63,9 @@ export default function Resources() {
         },
         partOfSeason: {
           '@type': 'TVSeason',
-          seasonNumber: `${info.season ?? 1}`
+          seasonNumber: `${info.season?.number ?? 1}`
         },
-        episodeNumber: info?.episode?.number !== undefined ? `${info.episode.number}` : undefined,
+        episodeNumber: info.episode?.number !== undefined ? `${info.episode.number}` : undefined,
         datePublished: detail.createdAt,
         url: location.toString()
       })
