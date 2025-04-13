@@ -439,6 +439,10 @@ importers:
       zod:
         specifier: ^3.24.2
         version: 3.24.2
+    devDependencies:
+      '@animegarden/shared':
+        specifier: workspace:*
+        version: link:../shared
 
   packages/scraper:
     dependencies:
@@ -458,12 +462,30 @@ importers:
         specifier: ^3.24.2
         version: 3.24.2
     devDependencies:
+      '@animegarden/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@types/jsdom':
         specifier: ^21.1.7
         version: 21.1.7
       '@types/parse-torrent':
         specifier: ^5.8.7
         version: 5.8.7
+
+  packages/shared:
+    dependencies:
+      anipar:
+        specifier: workspace:*
+        version: link:../anipar
+      ohash:
+        specifier: ^2.0.11
+        version: 2.0.11
+      simptrad:
+        specifier: ^0.2.0
+        version: 0.2.0
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
 
   packages/worker:
     dependencies:

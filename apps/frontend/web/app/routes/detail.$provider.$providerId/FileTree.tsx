@@ -42,11 +42,11 @@ function Tree({ tree, className }: { tree: TreeItem; className?: any }) {
   return (
     <div className={clsx(className)}>
       <div className="flex items-center gap4">
-        <div className='flex items-center gap-1'>
+        <div className="flex items-center gap-1">
           <span className={clsx(getIcon(tree))}></span>
           <div className="text-sm text-base-600">{tree.name}</div>
         </div>
-        <div className='flex-auto'></div>
+        <div className="flex-auto"></div>
         {!tree.directory && <div className="text-xs text-base-400 select-none">{tree.size}</div>}
       </div>
       {tree.directory && tree.children.length > 0 && (
@@ -62,7 +62,7 @@ function Tree({ tree, className }: { tree: TreeItem; className?: any }) {
 
 function getIcon(tree: TreeItem) {
   if (tree.directory) {
-    return 'i-ant-design-folder-outlined'
+    return 'i-ant-design-folder-outlined';
   } else {
     const ext = tree.name.split('.').at(-1);
     switch (ext) {
@@ -76,7 +76,7 @@ function getIcon(tree: TreeItem) {
       case 'zip':
         return 'i-ant-design-file-zip-outlined';
       default:
-        return 'i-ant-design-file-outlined'
+        return 'i-ant-design-file-outlined';
     }
   }
 }

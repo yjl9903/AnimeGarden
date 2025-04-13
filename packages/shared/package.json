@@ -1,7 +1,8 @@
 {
-  "name": "@animegarden/client",
+  "name": "@animegarden/shared",
+  "private": true,
   "version": "0.4.0",
-  "description": "Anime Garden API client and utils",
+  "description": "Anime Garden shared utils",
   "keywords": [
     "dmhy",
     "moe",
@@ -42,13 +43,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "anipar": "workspace:*",
-    "ohash": "^2.0.11",
-    "simptrad": "^0.2.0",
-    "zod": "^3.24.2"
-  },
-  "devDependencies": {
-    "@animegarden/shared": "workspace:*"
+    "simptrad": "^0.2.0"
   },
   "engines": {
     "node": ">=v18.16.0"

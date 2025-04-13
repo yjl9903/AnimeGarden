@@ -1,6 +1,6 @@
 import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client';
 
-import { retryFn } from '@animegarden/client';
+import { retryFn } from '@animegarden/shared';
 
 import { NetworkError } from '../error';
 import { removeExtraSpaces, stripSuffix } from '../utils';

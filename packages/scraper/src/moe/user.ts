@@ -1,4 +1,4 @@
-import { retryFn } from '@animegarden/client';
+import { retryFn } from '@animegarden/shared';
 
 import { NetworkError } from '../error';
 

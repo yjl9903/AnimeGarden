@@ -2,7 +2,7 @@ import { eq } from 'drizzle-orm';
 
 import type { ProviderType } from '@animegarden/client';
 
-import type { System, Notification, NotifiedResources } from '../system';
+import type { System, Notification } from '../system';
 
 import { retryFn } from '../utils';
 import { Module } from '../system/module';

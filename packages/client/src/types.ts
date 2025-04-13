@@ -147,11 +147,18 @@ export type FetchOptions = {
 
   /**
    * The number of retry times
+   *
+   * @default 0
    */
   retry?: number;
 
   /**
-   * Abort fetch
+   * Timeout for single request
+   */
+  timeout?: number;
+
+  /**
+   * Abort fetch signal
    */
   signal?: AbortSignal;
 
@@ -159,6 +166,15 @@ export type FetchOptions = {
    * Extra request headers
    */
   headers?: Record<string, string | ReadonlyArray<string>>;
+
+  /**
+   * Hooks
+   */
+  hooks?: {
+    prefetch?: (path: string, init: RequestInit) => Promise<void> | void;
+
+    postfetch?: (path: string, init: RequestInit, response: Response) => Promise<void> | void;
+  };
 };
 
 export type FetchResourcesOptions = FilterOptions &
@@ -186,7 +202,10 @@ export type FetchResourcesOptions = FilterOptions &
     /**
      * Progress callback when querying multiple pages
      */
-    progress?: (delta: Resource[], payload: { url: string; page: number }) => void | Promise<void>;
+    progress?: (
+      delta: Resource[],
+      payload: { url: string; searchParams: URLSearchParams; page: number }
+    ) => void | Promise<void>;
   };
 
 export type FetchResourceDetailOptions = FetchOptions & {};

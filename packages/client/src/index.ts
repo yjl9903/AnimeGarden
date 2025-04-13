@@ -1,9 +1,5 @@
 export * from './collections';
 
-export * from './fetch';
-
-export * from './resources';
-
 export * from './constants';
 
 export * from './filter';
@@ -15,3 +11,11 @@ export * from './href';
 export * from './utils';
 
 export * from './types';
+
+export * from './api/base';
+
+export * from './api/status';
+
+export * from './api/collection';
+
+export * from './api/resources';

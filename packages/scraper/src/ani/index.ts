@@ -4,10 +4,12 @@ import parseTorrent from 'parse-torrent';
 import { JSDOM } from 'jsdom';
 import { toMagnetURI } from 'parse-torrent';
 
-import { type ScrapedResource, type ScrapedResourceDetail, retryFn } from '@animegarden/client';
+import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client';
+
+import { retryFn } from '@animegarden/shared';
 
 import { NetworkError } from '../error';
-import { parseSize, removeExtraSpaces, replaceSuffix, splitOnce, stripSuffix } from '../utils';
+import { parseSize, removeExtraSpaces, replaceSuffix, splitOnce } from '../utils';
 
 const parser = new Parser();
 
