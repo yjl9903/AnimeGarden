@@ -9,7 +9,7 @@ import { MemoryCacheStorage, cache as honoCache } from './caches';
 
 const app = new Hono();
 const storage = new MemoryCacheStorage();
-const { APP_HOST, SERVER_URL } = env();
+const { APP_HOST, FEED_SERVER_URL } = env();
 
 const SITE = `https://${APP_HOST}`;
 
@@ -59,7 +59,7 @@ const items = sitemap({
         ];
       } else if (url.pathname === '/sitemap-fansubs.xml') {
         const data = await fetchAPI<any>('teams', undefined, {
-          baseURL: SERVER_URL,
+          baseURL: FEED_SERVER_URL,
           retry: 5
         });
         return data.teams.map((r: any) => ({
@@ -67,7 +67,7 @@ const items = sitemap({
         }));
       } else if (url.pathname === '/sitemap-subjects.xml') {
         const data = await fetchAPI<any>('sitemaps/subjects', undefined, {
-          baseURL: SERVER_URL,
+          baseURL: FEED_SERVER_URL,
           retry: 5
         });
         return data.subjects.map((r: any) => ({
@@ -82,7 +82,7 @@ const items = sitemap({
           if (2020 <= year && year <= now.getFullYear()) {
             if (1 <= month && month <= (year < now.getFullYear() ? 12 : now.getMonth() + 1)) {
               const data: any = await fetchAPI(`sitemaps/${year}/${month}`, undefined, {
-                baseURL: SERVER_URL,
+                baseURL: FEED_SERVER_URL,
                 retry: 5
               });
               return data.resources.map((r: any) => ({
