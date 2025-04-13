@@ -105,6 +105,9 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
     devDependencies:
+      '@animegarden/shared':
+        specifier: workspace:*
+        version: link:../../../packages/shared
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
@@ -204,6 +207,10 @@ importers:
       zod:
         specifier: ^3.24.2
         version: 3.24.2
+    devDependencies:
+      '@animegarden/shared':
+        specifier: workspace:*
+        version: link:../../../packages/shared
 
   apps/frontend/web:
     dependencies:

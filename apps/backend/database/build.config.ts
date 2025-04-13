@@ -6,6 +6,7 @@ export default defineBuildConfig({
   sourcemap: true,
   clean: true,
   rollup: {
-    emitCJS: true
+    emitCJS: true,
+    inlineDependencies: ['@animegarden/shared']
   }
 });

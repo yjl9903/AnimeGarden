@@ -4,5 +4,8 @@ export default defineBuildConfig({
   entries: ['src/index'],
   declaration: true,
   sourcemap: true,
-  clean: true
+  clean: true,
+  rollup: {
+    inlineDependencies: ['@animegarden/shared']
+  }
 });
