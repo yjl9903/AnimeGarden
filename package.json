@@ -16,7 +16,7 @@
     "dev:worker": "pnpm -C packages/worker dev",
     "format": "turbo run format --parallel",
     "manager": "tsx apps/backend/manager/src/cli.ts",
-    "release": "bumpp package.json packages/*/package.json --commit --push --tag && pnpm -r publish --access public",
+    "release": "bumpp package.json packages/*/package.json apps/backend/*/package.json apps/frontend/*/package.json --commit --push --tag && pnpm -r publish --access public",
     "start:server": "node apps/backend/manager/cli.mjs start",
     "start:web": "node apps/frontend/web/server.mjs",
     "test:ci": "turbo run test:ci",
