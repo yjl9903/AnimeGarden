@@ -21,15 +21,16 @@ cron = 'node apps/backend/manager/cli.mjs cron'
 
 [http_service]
 internal_port = 3000
-auto_stop_machines = 'off'
+force_https = false
+auto_stop_machines = 'suspend'
 auto_start_machines = true
 min_machines_running = 2
 processes = ['server']
 
-# [[restart]]
-#   policy = 'on-failure'
-#   retries = 10
-#   processes = ['server', 'cron']
+[[restart]]
+policy = 'on-failure'
+retries = 10
+processes = ['server', 'cron']
 
 [[vm]]
 memory = '512mb'
