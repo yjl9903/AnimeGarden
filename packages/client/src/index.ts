@@ -18,4 +18,6 @@ export * from './api/status';
 
 export * from './api/collection';
 
+export * from './api/detail';
+
 export * from './api/resources';
