@@ -16,7 +16,7 @@ const SITE = `https://${APP_HOST}`;
 const index = sitemapIndex({
   getUrls: async () => {
     // 1. static pages
-    const pages = ['sitemap-0.xml', 'sitemap-subjects.xml'];
+    const pages = ['sitemap-0.xml', 'sitemap-fansubs.xml', 'sitemap-subjects.xml'];
 
     // 2. monthly detail
     const months: string[] = [];
@@ -45,9 +45,28 @@ const items = sitemap({
 
     try {
       if (url.pathname === '/sitemap-0.xml') {
-        return [{ url: `${SITE}/` }, { url: `${SITE}/anime` }];
+        return [
+          { url: `${SITE}/` },
+          { url: `${SITE}/resources/1?type=动画` },
+          { url: `${SITE}/resources/1?type=合集` },
+          { url: `${SITE}/resources/1?type=音乐` },
+          { url: `${SITE}/resources/1?type=日剧` },
+          { url: `${SITE}/resources/1?type=RAW` },
+          { url: `${SITE}/resources/1?type=漫画` },
+          { url: `${SITE}/resources/1?type=游戏` },
+          { url: `${SITE}/resources/1?type=特摄` },
+          { url: `${SITE}/resources/1?type=其他` }
+        ];
+      } else if (url.pathname === '/sitemap-fansubs.xml') {
+        const data = await fetchAPI<any>('teams', undefined, {
+          baseURL: SERVER_URL,
+          retry: 5
+        });
+        return data.teams.map((r: any) => ({
+          url: `${SITE}/resources/1?fansub=${r.name}`
+        }));
       } else if (url.pathname === '/sitemap-subjects.xml') {
-        const data: any = await fetchAPI('sitemaps/subjects', undefined, {
+        const data = await fetchAPI<any>('sitemaps/subjects', undefined, {
           baseURL: SERVER_URL,
           retry: 5
         });
