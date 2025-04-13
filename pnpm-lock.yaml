@@ -474,18 +474,9 @@ importers:
 
   packages/shared:
     dependencies:
-      anipar:
-        specifier: workspace:*
-        version: link:../anipar
-      ohash:
-        specifier: ^2.0.11
-        version: 2.0.11
       simptrad:
         specifier: ^0.2.0
         version: 0.2.0
-      zod:
-        specifier: ^3.24.2
-        version: 3.24.2
 
   packages/worker:
     dependencies:
