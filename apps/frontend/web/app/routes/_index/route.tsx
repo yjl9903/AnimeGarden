@@ -11,12 +11,18 @@ import { fetchResources, getFeedURL } from '~/utils';
 import { Error } from '../resources.($page)/Error';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const { ok, resources, timestamp } = await fetchResources({
-    page: 1,
-    pageSize: 80,
-    type: '动画'
-  });
-  return json({ ok, resources: resources as Resource<{ tracker: true }>[], timestamp });
+  try {
+    const { ok, resources, timestamp } = await fetchResources({
+      page: 1,
+      pageSize: 80,
+      type: '动画'
+    });
+    return json({ ok, resources: resources as Resource<{ tracker: true }>[], timestamp });
+  } catch (error) {
+    console.error(error);
+
+    return json({ ok: false, resources: [], timestamp: undefined });
+  }
 };
 
 export const meta: MetaFunction = () => {
