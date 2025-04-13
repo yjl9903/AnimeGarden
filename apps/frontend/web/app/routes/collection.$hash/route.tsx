@@ -13,12 +13,18 @@ import { inferCollectionItemName } from '~/layouts/Sidebar/Collection';
 import { Error } from '../resources.($page)/Error';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  const hash = params.hash!;
-  if (!hash) return redirect('/');
+  try {
+    const hash = params.hash!;
+    if (!hash) return redirect('/');
+  
+    const resp = await fetchCollection(hash);
+  
+    return json({ ...resp });
+  } catch (error) {
+    console.error('[ERROR]', error);
 
-  const resp = await fetchCollection(hash);
-
-  return json({ ...resp });
+    return redirect('/');
+  }
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {

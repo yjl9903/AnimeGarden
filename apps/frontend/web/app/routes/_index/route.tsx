@@ -19,7 +19,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     });
     return json({ ok, resources: resources as Resource<{ tracker: true }>[], timestamp });
   } catch (error) {
-    console.error(error);
+    console.error('[ERROR]', error);
 
     return json({ ok: false, resources: [], timestamp: undefined });
   }
