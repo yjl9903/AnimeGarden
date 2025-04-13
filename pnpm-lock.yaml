@@ -301,8 +301,8 @@ importers:
         specifier: ^0.0.8
         version: 0.0.8(jotai@2.12.2(@types/react@18.3.20)(react@18.3.1))
       lucide-react:
-        specifier: ^0.487.0
-        version: 0.487.0(react@18.3.1)
+        specifier: ^0.488.0
+        version: 0.488.0(react@18.3.1)
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -474,18 +474,9 @@ importers:
 
   packages/shared:
     dependencies:
-      anipar:
-        specifier: workspace:*
-        version: link:../anipar
-      ohash:
-        specifier: ^2.0.11
-        version: 2.0.11
       simptrad:
         specifier: ^0.2.0
         version: 0.2.0
-      zod:
-        specifier: ^3.24.2
-        version: 3.24.2
 
   packages/worker:
     dependencies:
@@ -5421,8 +5412,8 @@ packages:
     resolution: {integrity: sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==}
     engines: {node: '>=12'}
 
-  lucide-react@0.487.0:
-    resolution: {integrity: sha512-aKqhOQ+YmFnwq8dWgGjOuLc8V1R9/c/yOd+zDY4+ohsR2Jo05lSGc3WsstYPIzcTpeosN7LoCkLReUUITvaIvw==}
+  lucide-react@0.488.0:
+    resolution: {integrity: sha512-ronlL0MyKut4CEzBY/ai2ZpKPxyWO4jUqdAkm2GNK5Zn3Rj+swDz+3lvyAUXN0PNqPKIX6XM9Xadwz/skLs/pQ==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -13332,7 +13323,7 @@ snapshots:
 
   lru-cache@7.18.3: {}
 
-  lucide-react@0.487.0(react@18.3.1):
+  lucide-react@0.488.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 
