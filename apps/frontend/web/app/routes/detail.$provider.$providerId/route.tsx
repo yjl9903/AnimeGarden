@@ -145,7 +145,7 @@ export default function Resources() {
           <div
             className="description"
             dangerouslySetInnerHTML={{
-              __html: detail.description.replace(
+              __html: (detail?.description ?? '').replace(
                 /簡介:(&nbsp;)?/,
                 '<h2 className="text-lg font-bold">简介</h2>'
               )
