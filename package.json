@@ -25,7 +25,7 @@
     "postversion": "turbo run build"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250414.0",
+    "@cloudflare/workers-types": "^4.20250416.0",
     "@flydotio/dockerfile": "^0.7.10",
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/fs-extra": "^11.0.4",
@@ -44,7 +44,7 @@
     "unbuild": "^3.5.0",
     "undici": "^7.8.0",
     "vitest": "^3.1.1",
-    "wrangler": "^4.10.0"
+    "wrangler": "^4.11.1"
   },
   "packageManager": "pnpm@10.8.1",
   "engines": {
