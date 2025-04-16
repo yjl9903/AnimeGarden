@@ -14,8 +14,6 @@ interface Props {
 export function FilesCard({ files, hasMoreFiles }: Props) {
   const tree = useMemo(() => getDirTree(files), [files]);
 
-  console.log(tree);
-
   return (
     <div className="file-list rounded-md shadow-box">
       <h2 className="text-lg font-bold border-b px4 py2">文件列表</h2>
