@@ -2,14 +2,15 @@ name: Deploy Fly
 
 on:
   workflow_dispatch:
-    environment:
-      description: 'Deploy target'
-      required: false
-      default: 'production'
-      type: choice
-      options:
-        - production
-        - test
+    inputs:
+      environment:
+        description: 'Deploy target'
+        required: false
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - test
 
 jobs:
   web:
