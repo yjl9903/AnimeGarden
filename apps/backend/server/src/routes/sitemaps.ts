@@ -1,6 +1,4 @@
-import { memoAsync } from 'memofunc';
-
-import type { System } from '@animegarden/database';
+import { type System, memo } from '@animegarden/database';
 
 import { defineHandler } from '../utils/hono';
 
@@ -39,7 +37,7 @@ export const defineSitemapsRoutes = defineHandler((sys, app) =>
     })
 );
 
-const fetchMonth = memoAsync(
+const fetchMonth = memo(
   async (sys: System, year: number, month: number) => {
     return await sys.database.query.resources.findMany({
       columns: {
@@ -61,8 +59,9 @@ const fetchMonth = memoAsync(
     });
   },
   {
-    serialize: (_, year, month) => [year, month],
-    expirationTtl: 60 * 60 * 1000
+    getKey: (_, year, month) => year + ':' + month,
+    expirationTtl: 60 * 60 * 1000,
+    maxSize: 100
   }
 );
 

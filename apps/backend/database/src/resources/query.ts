@@ -27,6 +27,7 @@ import {
 
 import type { System, Notification } from '../system';
 
+import { memo } from '../system/cache';
 import { resources } from '../schema/resources';
 import { jieba, nextTick, removePunctuations, retryFn } from '../utils';
 
@@ -288,16 +289,18 @@ export class QueryManager {
     };
   }
 
-  public findFromRedis = memoAsync(
+  public findFromRedis = memo(
     async (filter: DatabaseFilterOptions, offset: number, limit: number) => {
       // TODO: read redis here
       const resp = await this.findFromDatabase(filter, offset, limit);
       return resp;
     },
     {
-      serialize: (filter, offset, limit) => {
-        return [hash(filter), offset, limit];
-      }
+      getKey: (filter, offset, limit) => {
+        return hash(filter) + ':' + offset + ':' + limit;
+      },
+      expirationTtl: 5 * 60 * 1000,
+      maxSize: 10_000
     }
   );
 

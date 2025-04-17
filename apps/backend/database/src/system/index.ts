@@ -16,6 +16,8 @@ export * from './types';
 
 export * from './module';
 
+export * from './cache';
+
 export { type SystemOptions } from './system';
 
 export type System = ISystem<{

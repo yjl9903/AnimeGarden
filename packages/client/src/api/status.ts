@@ -22,6 +22,6 @@ export async function fetchStatus(options: FetchOptions = {}) {
       ok: false,
       timestamp: undefined,
       providers: undefined
-    }
+    };
   }
 }

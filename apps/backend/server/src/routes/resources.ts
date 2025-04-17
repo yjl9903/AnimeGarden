@@ -1,9 +1,8 @@
 import type { Context } from 'hono';
 
 import { etag } from 'hono/etag';
-import { memoAsync } from 'memofunc';
 
-import type { System } from '@animegarden/database';
+import { type System, memo } from '@animegarden/database';
 import { type ProviderType, SupportProviders, parseURLSearch } from '@animegarden/client';
 
 import { defineHandler } from '../utils/hono';
@@ -50,7 +49,7 @@ async function listResources(ctx: Context, sys: System, provider?: ProviderType)
   return ctx.json({ status: 'OK', ...resp, timestamp: sys.modules.providers.timestamp });
 }
 
-const findProviderDetail = memoAsync(
+const findProviderDetail = memo(
   async (sys: System, provider: Provider, path: string) => {
     const detailURL = await provider.getDetailURL(sys, path);
     if (!detailURL) {
@@ -73,7 +72,11 @@ const findProviderDetail = memoAsync(
       timestamp: sys.modules.providers.timestamp
     };
   },
-  { expirationTtl: 60 * 60 * 1000, serialize: (_sys, provider, path) => [provider, path] }
+  {
+    getKey: (_sys, provider, path) => provider + ':' + path,
+    expirationTtl: 60 * 60 * 1000,
+    maxSize: 10_000
+  }
 );
 
 export const defineResourcesRoutes = defineHandler((sys, app) => {

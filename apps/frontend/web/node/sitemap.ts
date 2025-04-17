@@ -5,10 +5,9 @@ import { fetchAPI } from '@animegarden/client';
 import { sitemap, sitemapIndex } from '@animegarden/server';
 
 import { env } from './env';
-// import { MemoryCacheStorage, cache as honoCache } from './caches';
 
 const app = new Hono();
-// const storage = new MemoryCacheStorage();
+
 const { APP_HOST, FEED_SERVER_URL } = env();
 
 const SITE = `https://${APP_HOST}`;
@@ -101,13 +100,6 @@ const items = sitemap({
 });
 
 const etag = honoEtag();
-
-// const cache = honoCache({
-//   cacheName: 'sitemaps',
-//   cacheControl: 'max-age=86400',
-//   wait: true,
-//   caches: storage
-// });
 
 app.get('/sitemap-index.xml', etag, index);
 

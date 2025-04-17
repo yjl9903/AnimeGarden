@@ -1,10 +1,10 @@
 import { eq } from 'drizzle-orm';
-import { memoAsync } from 'memofunc';
 
 import type { System } from '../system';
 
 import { type Collection, hashCollection } from '@animegarden/client';
 
+import { memo } from '../system/cache';
 import { Module } from '../system/module';
 import { retryFn } from '../utils';
 import { collections } from '../schema/collections';
@@ -21,7 +21,7 @@ export class CollectionsModule extends Module<System['modules']> {
   }
 
   public async cleanup() {
-    await this.getCollection.clear();
+    this.getCollection.clear();
   }
 
   public async generateCollection(collection: Collection<true>) {
@@ -72,7 +72,7 @@ export class CollectionsModule extends Module<System['modules']> {
     }
   }
 
-  public getCollection = memoAsync(
+  public getCollection = memo(
     async (hsh: string) => {
       const resp = await retryFn(
         () => this.database.select().from(collections).where(eq(collections.hash, hsh)),
@@ -121,6 +121,6 @@ export class CollectionsModule extends Module<System['modules']> {
         };
       }
     },
-    { expirationTtl: 300 }
+    { getKey: (hsh) => hsh, expirationTtl: 300 * 1000, maxSize: 10_000 }
   );
 }
