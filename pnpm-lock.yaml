@@ -142,8 +142,8 @@ importers:
         specifier: ^7.8.0
         version: 7.8.0
       zod:
-        specifier: ^3.24.2
-        version: 3.24.2
+        specifier: ^3.24.3
+        version: 3.24.3
 
   apps/backend/server:
     dependencies:
@@ -164,7 +164,7 @@ importers:
         version: 1.14.1(hono@4.7.7)
       '@hono/zod-validator':
         specifier: ^0.4.3
-        version: 0.4.3(hono@4.7.7)(zod@3.24.2)
+        version: 0.4.3(hono@4.7.7)(zod@3.24.3)
       bgmd:
         specifier: ^0.0.61
         version: 0.0.61
@@ -205,8 +205,8 @@ importers:
         specifier: ^7.2.0
         version: 7.2.0
       zod:
-        specifier: ^3.24.2
-        version: 3.24.2
+        specifier: ^3.24.3
+        version: 3.24.3
     devDependencies:
       '@animegarden/shared':
         specifier: workspace:*
@@ -318,7 +318,7 @@ importers:
         version: 18.3.1(react@18.3.1)
       remix-utils:
         specifier: ^8.5.0
-        version: 8.5.0(react@18.3.1)(zod@3.24.2)
+        version: 8.5.0(react@18.3.1)(zod@3.24.3)
       scule:
         specifier: ^1.3.0
         version: 1.3.0
@@ -338,8 +338,8 @@ importers:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.17)
       zod:
-        specifier: ^3.24.2
-        version: 3.24.2
+        specifier: ^3.24.3
+        version: 3.24.3
     devDependencies:
       '@iconify-json/ant-design':
         specifier: ^1.2.5
@@ -444,8 +444,8 @@ importers:
         specifier: ^0.2.0
         version: 0.2.0
       zod:
-        specifier: ^3.24.2
-        version: 3.24.2
+        specifier: ^3.24.3
+        version: 3.24.3
     devDependencies:
       '@animegarden/shared':
         specifier: workspace:*
@@ -466,8 +466,8 @@ importers:
         specifier: ^3.13.0
         version: 3.13.0
       zod:
-        specifier: ^3.24.2
-        version: 3.24.2
+        specifier: ^3.24.3
+        version: 3.24.3
     devDependencies:
       '@animegarden/shared':
         specifier: workspace:*
@@ -7917,8 +7917,8 @@ packages:
   zod@3.22.3:
     resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
 
-  zod@3.24.2:
-    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
+  zod@3.24.3:
+    resolution: {integrity: sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -9115,10 +9115,10 @@ snapshots:
     dependencies:
       hono: 4.7.7
 
-  '@hono/zod-validator@0.4.3(hono@4.7.7)(zod@3.24.2)':
+  '@hono/zod-validator@0.4.3(hono@4.7.7)(zod@3.24.3)':
     dependencies:
       hono: 4.7.7
-      zod: 3.24.2
+      zod: 3.24.3
 
   '@iconify-json/ant-design@1.2.5':
     dependencies:
@@ -14459,12 +14459,12 @@ snapshots:
       argparse: 1.0.10
       autolinker: 3.16.2
 
-  remix-utils@8.5.0(react@18.3.1)(zod@3.24.2):
+  remix-utils@8.5.0(react@18.3.1)(zod@3.24.3):
     dependencies:
       type-fest: 4.39.1
     optionalDependencies:
       react: 18.3.1
-      zod: 3.24.2
+      zod: 3.24.3
 
   repeat-string@1.6.1: {}
 
@@ -16135,6 +16135,6 @@ snapshots:
 
   zod@3.22.3: {}
 
-  zod@3.24.2: {}
+  zod@3.24.3: {}
 
   zwitch@2.0.4: {}
