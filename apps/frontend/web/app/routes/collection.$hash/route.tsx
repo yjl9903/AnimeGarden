@@ -16,9 +16,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   try {
     const hash = params.hash!;
     if (!hash) return redirect('/');
-  
+
     const resp = await fetchCollection(hash);
-  
+
     return json({ ...resp });
   } catch (error) {
     console.error('[ERROR]', error);

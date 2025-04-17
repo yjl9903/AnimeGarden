@@ -1,8 +1,5 @@
-import { retryFn } from '@animegarden/shared';
-
 import type { ProviderType, FetchResourceDetailOptions, Resource, ResourceDetail } from '../types';
 
-import { DefaultBaseURL } from '../constants';
 import { fetchAPI } from './base';
 
 export interface FetchResourceDetailResult {
@@ -27,9 +24,13 @@ export async function fetchResourceDetail(
   );
 
   return {
-    ok: resp.resource !== undefined && resp.detail !== undefined && resp.timestamp !== undefined,
-    resource: resp.resource,
-    detail: resp.detail,
-    timestamp: resp.timestamp
+    ok:
+      resp &&
+      resp.resource !== undefined &&
+      resp.detail !== undefined &&
+      resp.timestamp !== undefined,
+    resource: resp?.resource,
+    detail: resp?.detail,
+    timestamp: resp?.timestamp ? new Date(resp.timestamp) : undefined
   };
 }

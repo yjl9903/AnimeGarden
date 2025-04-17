@@ -1,13 +1,7 @@
-import { retryFn } from '@animegarden/shared';
+import type { Resource, ResolvedFilterOptions, FetchResourcesOptions } from '../types';
 
-import { version } from '../../package.json';
-
-import type { Resource } from '../types';
-
-import type { ResolvedFilterOptions, FetchResourcesOptions } from '../types';
-
-import { DefaultBaseURL } from '../constants';
 import { stringifyURLSearch } from '../resolver';
+
 import { fetchAPI } from './base';
 
 export interface FetchResourcesResult<T extends FetchResourcesOptions> {

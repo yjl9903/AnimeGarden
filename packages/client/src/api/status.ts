@@ -9,11 +9,19 @@ export async function fetchStatus(options: FetchOptions = {}) {
       ProviderType,
       { id: ProviderType; name: string; refreshedAt: string; isActive: boolean }
     >;
-  }>('/', undefined, options);
+  }>('/', undefined, options).catch(() => undefined);
 
-  return {
-    ok: true,
-    timestamp: resp.timestamp,
-    providers: resp.providers
-  };
+  if (resp) {
+    return {
+      ok: true,
+      timestamp: resp.timestamp,
+      providers: resp.providers
+    };
+  } else {
+    return {
+      ok: false,
+      timestamp: undefined,
+      providers: undefined
+    }
+  }
 }
