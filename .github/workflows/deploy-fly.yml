@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Deploy target'
+        description: 'Deploy Environment'
         required: false
         default: 'production'
         type: choice
