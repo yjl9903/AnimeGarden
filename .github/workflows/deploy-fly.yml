@@ -2,14 +2,22 @@ name: Deploy Fly
 
 on:
   workflow_dispatch:
+    environment:
+      description: 'Deploy target'
+      required: false
+      default: 'production'
+      type: choice
+      options:
+        - production
+        - test
 
 jobs:
   web:
-    name: Deploy Web
+    name: Deploy Web ${{ github.event.inputs.environment }}
 
     runs-on: ubuntu-latest
 
-    concurrency: deploy-fly-web-group
+    concurrency: deploy-fly-web-${{ github.event.inputs.environment }}-group
 
     steps:
       - uses: actions/checkout@v4
@@ -18,7 +26,8 @@ jobs:
 
       - run: |
           flyctl deploy --config ./apps/frontend/web/fly.toml \
-            --app animegarden-web-production --remote-only
+            --app animegarden-web-${{ github.event.inputs.environment }} \
+            --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
@@ -27,7 +36,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    concurrency: deploy-fly-server-group
+    concurrency: deploy-fly-server-production-group
 
     steps:
       - uses: actions/checkout@v4
@@ -45,7 +54,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    concurrency: deploy-fly-feed-group
+    concurrency: deploy-fly-feed-production-group
 
     steps:
       - uses: actions/checkout@v4
