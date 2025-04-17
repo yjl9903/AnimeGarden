@@ -11,6 +11,7 @@ import { type FetchResourceDetailResult, SupportProviders } from '@animegarden/c
 import Layout from '~/layouts/Layout';
 import {
   splitMagnetURL,
+  fetchTimestamp,
   fetchResourceDetail,
   getPikPakUrlChecker,
   getPikPakTrackEvent,
@@ -25,6 +26,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     if (provider && providerId && SupportProviders.includes(provider)) {
       const detail = await fetchResourceDetail(provider, providerId);
       return detail;
+    } else {
+      return await fetchTimestamp();
     }
   } catch (error) {
     console.error('[ERROR]', error);
@@ -45,7 +48,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export default function Resources() {
   const location = useLocation();
   const data = useLoaderData<typeof loader>();
-  const { timestamp, resource, detail } = data as FetchResourceDetailResult;
+  const { timestamp, resource, detail } = (data ?? {}) as FetchResourceDetailResult;
 
   const magnet = resource.magnet || detail?.magnets.find((m) => m.url.startsWith('magnet:'))?.url;
   const pikpakUrl = magnet ? getPikPakUrlChecker(magnet) : '';
