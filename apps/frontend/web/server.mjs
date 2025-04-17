@@ -15,14 +15,13 @@ import { serveStatic } from '@hono/node-server/serve-static';
 // @ts-ignore This file won’t exist if it hasn’t yet been built
 import * as build from './build/server/index.js'; // eslint-disable-line import/no-unresolved
 
-import { api, feed, remix, cache, sitemaps, MemoryCacheStorage } from './dist/node/index.mjs';
+import { api, feed, remix, sitemaps } from './dist/node/index.mjs';
 
 createConsola().withTag('Web').wrapConsole();
 
 const __dirname = fileURLToPath(new URL('./', import.meta.url));
 
 const app = new Hono();
-const storage = new MemoryCacheStorage();
 
 app.use(
   '*',
