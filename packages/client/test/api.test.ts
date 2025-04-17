@@ -32,12 +32,16 @@ describe('API', () => {
   });
 
   it('should handle timeout', { timeout }, async () => {
-    await expect(() =>
-      fetchStatus({
+    expect(
+      await fetchStatus({
         timeout: 1
       })
-    ).rejects.toThrowErrorMatchingInlineSnapshot(
-      `[TimeoutError: The operation was aborted due to timeout]`
-    );
+    ).toMatchInlineSnapshot(`
+      {
+        "ok": false,
+        "providers": undefined,
+        "timestamp": undefined,
+      }
+    `);
   });
 });
