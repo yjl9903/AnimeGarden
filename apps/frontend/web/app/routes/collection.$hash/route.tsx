@@ -18,13 +18,14 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     if (!hash) return redirect('/');
 
     const resp = await fetchCollection(hash);
-
-    return json({ ...resp });
+    if (resp?.ok) {
+      return json(resp);
+    }
   } catch (error) {
     console.error('[ERROR]', error);
-
-    return redirect('/');
   }
+
+  return redirect('/');
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {

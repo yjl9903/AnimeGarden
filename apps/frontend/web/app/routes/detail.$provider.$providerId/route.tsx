@@ -25,7 +25,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     const { provider, providerId } = params;
     if (provider && providerId && SupportProviders.includes(provider)) {
       const detail = await fetchResourceDetail(provider, providerId);
-      return detail;
+      if (detail?.ok) {
+        return detail;
+      }
     } else {
       return await fetchTimestamp();
     }

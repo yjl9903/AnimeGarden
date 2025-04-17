@@ -53,12 +53,16 @@ export async function fetchAPI<T>(path: string, request: RequestInit | undefined
   }
 }
 
+let lastTimestamp!: Date;
+
 export async function fetchTimestamp(): Promise<{ timestamp?: string | undefined }> {
   try {
     const resp = await fetchAPI<{ timestamp: string }>('/', undefined);
-    if (resp) {
+    if (resp && resp.timestamp) {
+      lastTimestamp = new Date(resp.timestamp);
+
       return {
-        timestamp: resp?.timestamp
+        timestamp: resp.timestamp
       };
     }
   } catch (error) {
@@ -66,7 +70,7 @@ export async function fetchTimestamp(): Promise<{ timestamp?: string | undefined
   }
 
   return {
-    timestamp: undefined
+    timestamp: lastTimestamp.toISOString()
   };
 }
 
@@ -95,6 +99,13 @@ export async function fetchResources(
         metadata: true
       } as const
     );
+
+    if (resp?.timestamp) {
+      lastTimestamp = resp.timestamp;
+    } else if (resp) {
+      resp.timestamp = lastTimestamp;
+    }
+
     return resp;
   } catch (error) {
     console.error('[ERROR]', 'fetchResources', error);
@@ -104,7 +115,7 @@ export async function fetchResources(
       resources: [],
       complete: false,
       filter: undefined,
-      timestamp: undefined
+      timestamp: lastTimestamp
     };
   }
 }
@@ -113,15 +124,29 @@ export async function fetchResourceDetail(provider: string, href: string) {
   const timeout = 30 * 1000;
 
   try {
-    return await rawFetchResourceDetail(provider as ProviderType, href, {
+    const resp = await rawFetchResourceDetail(provider as ProviderType, href, {
       fetch: ofetch,
       baseURL,
       retry: 0,
       signal: AbortSignal.timeout(timeout)
     });
+
+    if (resp?.timestamp) {
+      lastTimestamp = resp.timestamp;
+    } else if (resp) {
+      resp.timestamp = lastTimestamp;
+    }
+
+    return resp;
   } catch (error) {
     console.error('[ERROR]', 'fetchResourceDetail', error);
-    return null;
+
+    return {
+      ok: false,
+      resource: undefined,
+      detail: undefined,
+      timestamp: lastTimestamp
+    };
   }
 }
 
@@ -129,15 +154,24 @@ export async function fetchCollection(hash: string) {
   const timeout = 30 * 1000;
 
   try {
-    return await rawFetchCollection(hash, {
+    const resp = await rawFetchCollection(hash, {
       fetch: ofetch,
       baseURL,
       retry: 0,
       signal: AbortSignal.timeout(timeout)
     });
+
+    if (resp?.timestamp) {
+      lastTimestamp = resp.timestamp;
+    } else if (resp) {
+      resp.timestamp = lastTimestamp;
+    }
+
+    return resp;
   } catch (error) {
     console.error('[ERROR]', 'fetchCollection', error);
-    return null;
+
+    return undefined;
   }
 }
 
@@ -153,6 +187,7 @@ export async function generateCollection(collection: Collection<true>) {
     });
   } catch (error) {
     console.error('[ERROR]', 'generateCollection', error);
+
     return null;
   }
 }

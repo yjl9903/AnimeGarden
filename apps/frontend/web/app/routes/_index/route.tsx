@@ -17,6 +17,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       pageSize: 80,
       type: '动画'
     });
+
     return json({ ok, resources: resources as Resource<{ tracker: true }>[], timestamp });
   } catch (error) {
     console.error('[ERROR]', error);
