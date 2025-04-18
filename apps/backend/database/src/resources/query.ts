@@ -108,6 +108,12 @@ export class QueryManager {
     };
     ev = setTimeout(handler, TIMEOUT);
     this.system.disposables.push(() => clearTimeout(ev));
+
+    // 垃圾回收
+    this.findFromRedis.startGC();
+    this.system.disposables.push(() => {
+      this.findFromRedis.stopGC();
+    });
   }
 
   public async find(filter: ResolvedFilterOptions) {
@@ -300,7 +306,8 @@ export class QueryManager {
         return hash(filter) + ':' + offset + ':' + limit;
       },
       expirationTtl: 5 * 60 * 1000,
-      maxSize: 1000
+      maxSize: 1000,
+      autoStartGC: false
     }
   );
 

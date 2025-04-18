@@ -90,6 +90,13 @@ export function memo<F extends AsyncFn>(fn: F, options: MemoOptions<F>): MemoFun
       };
       caches.set(key, item);
 
+      // 缓存容量过大, 提前清空
+      if (caches.size > options.maxSize * 1.5) {
+        setTimeout(() => {
+          memoFunc.clear();
+        });
+      }
+
       try {
         const value = await fn(...args);
 

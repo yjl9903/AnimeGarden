@@ -14,6 +14,11 @@ export class CollectionsModule extends Module<System['modules']> {
 
   public async initialize() {
     await this.cleanup();
+
+    this.getCollection.startGC();
+    this.system.disposables.push(() => {
+      this.getCollection.stopGC();
+    });
   }
 
   public async refresh() {
@@ -121,6 +126,6 @@ export class CollectionsModule extends Module<System['modules']> {
         };
       }
     },
-    { getKey: (hsh) => hsh, expirationTtl: 300 * 1000, maxSize: 1000 }
+    { getKey: (hsh) => hsh, expirationTtl: 300 * 1000, maxSize: 1000, autoStartGC: false }
   );
 }

@@ -2,8 +2,36 @@ import { type System, memo } from '@animegarden/database';
 
 import { defineHandler } from '../utils/hono';
 
-export const defineSitemapsRoutes = defineHandler((sys, app) =>
-  app
+export const defineSitemapsRoutes = defineHandler((sys, app) => {
+  const fetchMonth = memo(
+    async (sys: System, year: number, month: number) => {
+      return await sys.database.query.resources.findMany({
+        columns: {
+          id: true,
+          provider: true,
+          providerId: true,
+          fetchedAt: true
+        },
+        where: (resources, { and, eq, isNull, gte, lt }) =>
+          and(
+            eq(resources.isDeleted, false),
+            isNull(resources.duplicatedId),
+            gte(resources.createdAt, getShanghai(year, month, 1)),
+            lt(
+              resources.createdAt,
+              getShanghai(month === 12 ? year + 1 : year, month === 12 ? 1 : month + 1, 1)
+            )
+          )
+      });
+    },
+    {
+      getKey: (_, year, month) => year + ':' + month,
+      expirationTtl: 60 * 60 * 1000,
+      maxSize: 100
+    }
+  );
+
+  return app
     .get('/sitemaps/subjects', async (c) => {
       return c.json({
         status: 'OK',
@@ -34,36 +62,8 @@ export const defineSitemapsRoutes = defineHandler((sys, app) =>
       }
 
       return c.json({ status: 'ERROR', resources: [] });
-    })
-);
-
-const fetchMonth = memo(
-  async (sys: System, year: number, month: number) => {
-    return await sys.database.query.resources.findMany({
-      columns: {
-        id: true,
-        provider: true,
-        providerId: true,
-        fetchedAt: true
-      },
-      where: (resources, { and, eq, isNull, gte, lt }) =>
-        and(
-          eq(resources.isDeleted, false),
-          isNull(resources.duplicatedId),
-          gte(resources.createdAt, getShanghai(year, month, 1)),
-          lt(
-            resources.createdAt,
-            getShanghai(month === 12 ? year + 1 : year, month === 12 ? 1 : month + 1, 1)
-          )
-        )
     });
-  },
-  {
-    getKey: (_, year, month) => year + ':' + month,
-    expirationTtl: 60 * 60 * 1000,
-    maxSize: 100
-  }
-);
+});
 
 function getShanghai(year: number, month: number, day: number) {
   // 创建一个 UTC 时间的 Date 对象
