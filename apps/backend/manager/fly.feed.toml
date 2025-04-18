@@ -34,4 +34,4 @@ processes = ['server']
 memory = '512mb'
 cpu_kind = 'shared'
 cpus = 1
-processes = ['server', 'cron']
+processes = ['server']
