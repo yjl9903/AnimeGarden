@@ -115,7 +115,7 @@ export async function fetchMoeDetail(
   const torrent = await resp.json();
 
   const user = await fetchUser(ofetch, torrent.uploader_id);
-  const team = await fetchTeam(ofetch, torrent.team_id);
+  const team = torrent.team_id ? await fetchTeam(ofetch, torrent.team_id) : undefined;
 
   return {
     provider: 'moe',
@@ -128,13 +128,15 @@ export async function fetchMoeDetail(
     publisher: {
       id: torrent.uploader_id,
       name: user.name,
-      avatar: team.avatar
+      avatar: team?.avatar
     },
-    fansub: {
-      id: torrent.team_id,
-      name: team.name,
-      avatar: team.avatar
-    },
+    fansub: team
+      ? {
+          id: torrent.team_id,
+          name: team.name,
+          avatar: team.avatar
+        }
+      : undefined,
     magnets: [
       {
         name: '磁力链接',
