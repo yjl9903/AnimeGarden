@@ -98,6 +98,10 @@ GET http://0.0.0.0:8080/feed.xml
 GET http://0.0.0.0:8080/collection/RUi8lloFMts8DjeI97lIGfFE5zz6MM9a-Qek7xaEY78
 Content-Type: application/json
 
-### 
+### Filter subject with exclude
 GET http://0.0.0.0:8080/resources?after=1743724800000&exclude=mononoke&fansub=ANi&subject=485936
+Content-Type: application/json
+
+### Filter with fansub and publisher
+GET http://0.0.0.0:8080/resources?after=1743206400000&fansub=S1百综字幕组&publisher=三日月万事屋&subject=509297
 Content-Type: application/json

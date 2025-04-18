@@ -57,7 +57,7 @@ export function makeResourcesFilter(
   if ((publishers && publishers.length > 0) || (fansubs && fansubs.length > 0)) {
     conds.push(
       (r) =>
-        (publishers?.some((p) => r.publisher.name === p) ?? true) &&
+        (publishers?.some((p) => r.publisher.name === p) ?? true) ||
         (fansubs?.some((p) => r.fansub?.name === p) ?? true)
     );
   }

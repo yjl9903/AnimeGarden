@@ -86,16 +86,16 @@ export function parseSearch(input: string) {
     '!,！,-,exclude:,排除:': (word) => {
       exclude.push(word);
     },
-    'publisher:,发布:,发布者:发布人:': (word) => {
+    'user:,publisher:,发布:,发布者:,发布人:': (word) => {
       publishers.push(word);
     },
-    'fansub:,字幕:,字幕组:': (word) => {
+    'team:,fansub:,字幕:,字幕组:': (word) => {
       fansubs.push(word);
     },
-    'after:,开始:,晚于:': (word) => {
+    '>=,>,after:,开始:,晚于:': (word) => {
       after.push(new Date(word));
     },
-    'before:,结束:,早于:': (word) => {
+    '<=,<,before:,结束:,早于:': (word) => {
       before.push(new Date(word));
     },
     'type:,类型:': (word) => {

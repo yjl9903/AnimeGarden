@@ -565,7 +565,7 @@ export class Task {
     if ((publishers && publishers.length > 0) || (fansubs && fansubs.length > 0)) {
       conds.push(
         (r) =>
-          (publishers?.some((p) => r.publisherId === p) ?? true) &&
+          (publishers?.some((p) => r.publisherId === p) ?? true) ||
           (fansubs?.some((p) => r.fansubId === p) ?? true)
       );
     }
@@ -666,7 +666,7 @@ export class Task {
     if ((publishers && publishers.length > 0) || (fansubs && fansubs.length > 0)) {
       conds.push(
         (r) =>
-          (publishers?.some((p) => r.publisherId === p) ?? true) &&
+          (publishers?.some((p) => r.publisherId === p) ?? true) ||
           (fansubs?.some((p) => r.fansubId === p) ?? true)
       );
     }
@@ -685,6 +685,7 @@ export class Task {
     let cursor = 0;
     let matched = 0;
     const slice: DatabaseResource[] = [];
+
     for (; cursor < this.resources.length; cursor++) {
       const res = this.resources[cursor];
       const ok = conds.every((c) => c(res));

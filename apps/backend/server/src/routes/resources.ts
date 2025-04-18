@@ -11,7 +11,7 @@ import { type Provider, ScraperProviders } from '../providers';
 export const defineResourcesRoutes = defineHandler((sys, app) => {
   async function listResources(ctx: Context, sys: System, provider?: ProviderType) {
     const url = new URL(ctx.req.url);
-    sys.logger.info(`Receive search params: ${url.search}`);
+    // sys.logger.info(`Receive search params: ${url.search}`);
 
     const filter = parseURLSearch(url.searchParams, await ctx.req.json().catch(() => undefined));
     if (!filter) {
