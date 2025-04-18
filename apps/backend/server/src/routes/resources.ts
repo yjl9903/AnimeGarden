@@ -76,7 +76,7 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
     {
       getKey: (_sys, provider, path) => provider + ':' + path,
       expirationTtl: 60 * 60 * 1000,
-      maxSize: 1000
+      maxSize: 10_000
     }
   );
 

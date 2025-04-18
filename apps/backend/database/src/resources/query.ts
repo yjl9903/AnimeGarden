@@ -46,7 +46,7 @@ type DatabaseFilterOptions = Omit<
 /**
  * 最大同时存活缓存个数
  */
-const MAX_TASK = 1000;
+const MAX_TASK = 10_000;
 
 /**
  * 单个缓存预取数量
@@ -318,7 +318,7 @@ export class QueryManager {
         return hash(filter) + ':' + offset + ':' + limit;
       },
       expirationTtl: 5 * 60 * 1000,
-      maxSize: 1000,
+      maxSize: Math.round(MAX_TASK * 1.5),
       autoStartGC: false
     }
   );
