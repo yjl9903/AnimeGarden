@@ -6,8 +6,6 @@ import { useAtom, useSetAtom } from 'jotai';
 import type { FullBangumi } from 'bgmd/types';
 import { stringifyURLSearch, type Jsonify, type ResolvedFilterOptions } from '@animegarden/client';
 
-import { APP_HOST } from '~build/env';
-
 import { getSubjectById } from '~/utils/subjects';
 import {
   removeQuote,
@@ -76,7 +74,7 @@ export function Filter(props: Props) {
     async (_e: React.MouseEvent) => {
       try {
         if (!feedURL) throw new Error(`RSS URL is empty`);
-        await navigator.clipboard.writeText(`https://${APP_HOST}${feedURL}`);
+        await navigator.clipboard.writeText(feedURL);
         toast.success('复制 RSS 订阅成功', {
           dismissible: true,
           duration: 3000,

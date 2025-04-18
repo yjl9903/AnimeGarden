@@ -13,7 +13,7 @@ declare module '~build/env' {
 
   export const FEED_HOST: string;
 
-  export const SERVER_URL: string | undefined;
+  export const SERVER_URL: string;
 }
 
 declare module 'csstype' {

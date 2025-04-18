@@ -7,8 +7,6 @@ import { type MouseEvent, memo, useCallback, useMemo } from 'react';
 
 import type { Collection } from '@animegarden/client';
 
-import { APP_HOST } from '~build/env';
-
 import { generateCollection } from '~/utils';
 import { getActivePageTab } from '~/utils/routes';
 import { updateCollectionAtom, currentCollectionAtom } from '~/states/collection';
@@ -148,10 +146,11 @@ const Collection = memo((props: { collection: Collection<true> }) => {
   const onClickShare = useCallback(
     async (e: MouseEvent) => {
       e.preventDefault();
-      // href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`看看动画`)}&url=${encodeURIComponent(`https://${APP_HOST}/collection/${collection.hash}`)}`}
+
       const resp = collection.hash ? collection : await createCollection();
       if (resp) {
-        await navigator.clipboard.writeText(`https://${APP_HOST}/collection/${resp.hash}`);
+        const url = new URL(`/collection/${resp.hash}`);
+        await navigator.clipboard.writeText(url.toString());
         toast.success(`复制 ${collection.name} 分享链接成功`, {
           dismissible: true,
           duration: 3000,
