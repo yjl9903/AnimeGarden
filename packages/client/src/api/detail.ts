@@ -24,11 +24,7 @@ export async function fetchResourceDetail(
   );
 
   return {
-    ok:
-      resp &&
-      resp.resource !== undefined &&
-      resp.detail !== undefined &&
-      resp.timestamp !== undefined,
+    ok: resp && resp.resource !== undefined && resp.timestamp !== undefined,
     resource: resp?.resource,
     detail: resp?.detail,
     timestamp: resp?.timestamp ? new Date(resp.timestamp) : undefined
