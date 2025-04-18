@@ -405,8 +405,8 @@ importers:
         specifier: ^22.1.0
         version: 22.1.0(@svgr/core@8.1.0(typescript@5.8.3))(@vue/compiler-sfc@3.5.13)
       unplugin-info:
-        specifier: ^1.2.1
-        version: 1.2.1(esbuild@0.17.6)(rollup@2.79.2)(vite@6.2.6(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))
+        specifier: ^1.2.2
+        version: 1.2.2(esbuild@0.17.6)(rollup@2.79.2)(vite@6.2.6(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))
       vite-plugin-inline:
         specifier: ^0.1.0
         version: 0.1.0(vite@6.2.6(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))
@@ -3178,6 +3178,9 @@ packages:
   '@types/node@22.14.1':
     resolution: {integrity: sha512-u0HuPQwe/dHrItgHHpmw3N2fYCR6x4ivMNbPHRkBVP4CvN+kiRrKHWk3i8tXiO/joPwXLMYvF9TTF0eqgHIuOw==}
 
+  '@types/parse-path@7.0.3':
+    resolution: {integrity: sha512-LriObC2+KYZD3FzCrgWGv/qufdUy4eXrxcLgQMfYXgPbLIecKIsVBaQgUPmxSSLcjmYbDTQbMgr6qr6l/eb7Bg==}
+
   '@types/parse-torrent-file@4.0.6':
     resolution: {integrity: sha512-SxqVth0Iv0WuEkqWS5MaY4S4Tlyi+QHkElQREvsUPw2xHcPgKyQ2dkJRRv5vAxmLzH+tnMdOj1Nws/wsenbzUw==}
 
@@ -4670,11 +4673,11 @@ packages:
     resolution: {integrity: sha512-L5bGsVkxJbJgdnwyuheIunkGatUF/zssUoxxjACCseZYAVbaqdh9Tsmmlkl8vYan09H7sbvKt4pS8GqKLBrEzA==}
     hasBin: true
 
-  git-up@7.0.0:
-    resolution: {integrity: sha512-ONdIrbBCFusq1Oy0sC71F5azx8bVkvtZtMJAsv+a6lz5YAmbNnLD6HAB4gptHZVLPR8S2/kVN6Gab7lryq5+lQ==}
+  git-up@8.1.1:
+    resolution: {integrity: sha512-FDenSF3fVqBYSaJoYy1KSc2wosx0gCvKP+c+PRBht7cAaiCeQlBtfBDX9vgnNOHmdePlSFITVcn4pFfcgNvx3g==}
 
-  git-url-parse@15.0.0:
-    resolution: {integrity: sha512-5reeBufLi+i4QD3ZFftcJs9jC26aULFLBU23FeKM/b1rI0K6ofIeAblmDVO7Ht22zTDE9+CkJ3ZVb0CgJmz3UQ==}
+  git-url-parse@16.1.0:
+    resolution: {integrity: sha512-cPLz4HuK86wClEW7iDdeAKcCVlWXmrLpb2L+G9goW0Z1dtpNS6BXXSOckUTlJT/LDQViE1QZKstNORzHsLnobw==}
 
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -5805,8 +5808,9 @@ packages:
     engines: {node: '>=12.20.0'}
     hasBin: true
 
-  parse-url@8.1.0:
-    resolution: {integrity: sha512-xDvOoLU5XRrcOZvnI6b8zA6n9O9ejNk/GExuz1yBuWUGn9KA97GI6HTs6u02wKara1CeVmZhH+0TZFdWScR89w==}
+  parse-url@9.2.0:
+    resolution: {integrity: sha512-bCgsFI+GeGWPAvAiUv63ZorMeif3/U0zaXABGJbOWt5OH2KCaPHF6S+0ok4aqM9RuIPGyZdx9tR9l13PsW4AYQ==}
+    engines: {node: '>=14.13.0'}
 
   parse5@7.2.1:
     resolution: {integrity: sha512-BuBYQYlv1ckiPdQi/ohiivi9Sagc9JG+Ozs0r7b/0iK3sKmrb0b9FdWdBbOdx6hBCM/F9Ir82ofnBhtZOjCRPQ==}
@@ -7387,8 +7391,8 @@ packages:
       vue-template-es2015-compiler:
         optional: true
 
-  unplugin-info@1.2.1:
-    resolution: {integrity: sha512-NwssEGmXCBYnGE3i9UhhK1nva1GF8EU21mBGmGZQVOYZwmNHOs+wcwgGnHsmc1nX4PkVQTLiawaLQBeP6HJKkA==}
+  unplugin-info@1.2.2:
+    resolution: {integrity: sha512-GiDA/pC+qRerudmIZ9TM7eEwdg4GA0DMdNHfRDP00QWV6XEQeiKckhibubehrqJkrOZlyALBVCF7DqQvaYgC4w==}
     peerDependencies:
       '@nuxt/kit': ^3
       '@nuxt/schema': ^3
@@ -10716,6 +10720,8 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/parse-path@7.0.3': {}
+
   '@types/parse-torrent-file@4.0.6':
     dependencies:
       '@types/node': 22.14.1
@@ -12483,14 +12489,14 @@ snapshots:
       nypm: 0.6.0
       pathe: 2.0.3
 
-  git-up@7.0.0:
+  git-up@8.1.1:
     dependencies:
       is-ssh: 1.4.1
-      parse-url: 8.1.0
+      parse-url: 9.2.0
 
-  git-url-parse@15.0.0:
+  git-url-parse@16.1.0:
     dependencies:
-      git-up: 7.0.0
+      git-up: 8.1.1
 
   glob-parent@5.1.2:
     dependencies:
@@ -13803,8 +13809,9 @@ snapshots:
       queue-microtask: 1.2.3
       uint8-util: 2.2.5
 
-  parse-url@8.1.0:
+  parse-url@9.2.0:
     dependencies:
+      '@types/parse-path': 7.0.3
       parse-path: 7.0.2
 
   parse5@7.2.1:
@@ -15537,12 +15544,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  unplugin-info@1.2.1(esbuild@0.17.6)(rollup@2.79.2)(vite@6.2.6(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1)):
+  unplugin-info@1.2.2(esbuild@0.17.6)(rollup@2.79.2)(vite@6.2.6(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1)):
     dependencies:
       ci-info: 4.2.0
-      git-url-parse: 15.0.0
+      git-url-parse: 16.1.0
       simple-git: 3.27.0
-      unplugin: 1.16.1
+      unplugin: 2.3.2
     optionalDependencies:
       esbuild: 0.17.6
       rollup: 2.79.2
