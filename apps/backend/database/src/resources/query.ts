@@ -276,22 +276,34 @@ export class QueryManager {
       before: filter.before,
       after: filter.after,
       subjects: filter.subjects,
-      search: filter.search
-        ?.map((t) => removePunctuations(t.trim()))
-        ?.filter(Boolean)
-        ?.map((t) => normalizeTitle(t)),
-      include: filter.include
-        ?.map((t) => t.trim())
-        ?.filter(Boolean)
-        ?.map((t) => normalizeTitle(t)),
-      keywords: filter.keywords
-        ?.map((t) => t.trim())
-        ?.filter(Boolean)
-        ?.map((t) => normalizeTitle(t)),
-      exclude: filter.exclude
-        ?.map((t) => t.trim())
-        ?.filter(Boolean)
-        ?.map((t) => normalizeTitle(t))
+      search:
+        filter.search && filter.search.length > 0
+          ? filter.search
+              ?.map((t) => removePunctuations(t.trim()))
+              ?.filter(Boolean)
+              ?.map((t) => normalizeTitle(t).toLowerCase())
+          : undefined,
+      include:
+        filter.include && filter.include.length > 0
+          ? filter.include
+              ?.map((t) => t.trim())
+              ?.filter(Boolean)
+              ?.map((t) => normalizeTitle(t).toLowerCase())
+          : undefined,
+      keywords:
+        filter.keywords && filter.keywords.length > 0
+          ? filter.keywords
+              ?.map((t) => t.trim())
+              ?.filter(Boolean)
+              ?.map((t) => normalizeTitle(t).toLowerCase())
+          : filter.keywords,
+      exclude:
+        filter.exclude && filter.exclude.length > 0
+          ? filter.exclude
+              ?.map((t) => t.trim())
+              ?.filter(Boolean)
+              ?.map((t) => normalizeTitle(t).toLowerCase())
+          : undefined
     };
   }
 
@@ -539,7 +551,7 @@ export class Task {
       (exclude && exclude.length > 0)
     ) {
       conds.push((r) => {
-        const title = normalizeTitle(r.title);
+        const title = normalizeTitle(r.title).toLowerCase();
         return (
           (include?.some((i) => title.indexOf(i) !== -1) ?? true) &&
           (keywords?.every((i) => title.indexOf(i) !== -1) ?? true) &&
@@ -638,12 +650,15 @@ export class Task {
     }
     if ((keywords && keywords.length > 0) || (exclude && exclude.length > 0)) {
       conds.push((r) => {
-        const title = normalizeTitle(r.title);
+        const title = normalizeTitle(r.title).toLowerCase();
         return (
           (keywords?.every((i) => title.indexOf(i) !== -1) ?? true) &&
           (exclude?.every((i) => title.indexOf(i) === -1) ?? true)
         );
       });
+    }
+    if (subjects && subjects.length > 0) {
+      conds.push((r) => subjects.some((s) => r.subjectId === s));
     }
     if (duplicate) {
       conds.push((r) => r.duplicatedId !== null && r.duplicatedId !== undefined);
@@ -657,9 +672,6 @@ export class Task {
     }
     if (types && types.length > 0) {
       conds.push((r) => types.some((t) => r.type === t));
-    }
-    if (subjects && subjects.length > 0) {
-      conds.push((r) => subjects.some((s) => r.subjectId === s));
     }
     if (before) {
       const t = before.getTime();

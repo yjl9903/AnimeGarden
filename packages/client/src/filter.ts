@@ -30,11 +30,20 @@ export function makeResourcesFilter(
     (exclude && exclude.length > 0)
   ) {
     conds.push((r) => {
-      const title = normalizeTitle(r.title);
+      const title = normalizeTitle(r.title).toLowerCase();
       return (
-        (include?.some((i) => title.indexOf(i) !== -1) ?? true) &&
-        (keywords?.every((i) => title.indexOf(i) !== -1) ?? true) &&
-        (exclude?.every((i) => title.indexOf(i) === -1) ?? true)
+        (include
+          ?.map((i) => normalizeTitle(i).toLocaleLowerCase())
+          .some((i) => title.indexOf(i.toLocaleLowerCase()) !== -1) ??
+          true) &&
+        (keywords
+          ?.map((i) => normalizeTitle(i).toLocaleLowerCase())
+          .every((i) => title.indexOf(i) !== -1) ??
+          true) &&
+        (exclude
+          ?.map((i) => normalizeTitle(i).toLocaleLowerCase())
+          .every((i) => title.indexOf(i) === -1) ??
+          true)
       );
     });
   }
