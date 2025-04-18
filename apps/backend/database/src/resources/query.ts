@@ -522,7 +522,11 @@ export class Task {
     if (provider) {
       conds.push((r) => r.provider === provider);
     }
-    if (include || keywords) {
+    if (
+      (include && include.length > 0) ||
+      (keywords && keywords.length > 0) ||
+      (exclude && exclude.length > 0)
+    ) {
       conds.push((r) => {
         const title = normalizeTitle(r.title);
         return (

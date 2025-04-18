@@ -251,6 +251,14 @@ export function stringifyURLSearch(options: FilterOptions) {
       params.append('subject', '' + subject);
     }
   }
+  if (subject || subjects?.length) {
+    for (const word of keywords ?? []) {
+      params.append('keyword', word);
+    }
+    for (const word of exclude ?? []) {
+      params.append('exclude', word);
+    }
+  }
 
   const { type, types } = options;
   if (type) {

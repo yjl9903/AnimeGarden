@@ -61,7 +61,10 @@ export default function Resources() {
   //   (f) => f.size !== '種子可能不存在' && f.size !== 'Bytes'
   // );
   const files = detail?.files ?? [];
-  const magnets = detail?.magnets ?? resource ? [{ name: '磁力链接', url: resource.magnet + resource?.tracker }] : [];
+  const magnets =
+    (detail?.magnets ?? resource)
+      ? [{ name: '磁力链接', url: resource.magnet + resource?.tracker }]
+      : [];
 
   const info = parse(resource.title);
   const schema = info
