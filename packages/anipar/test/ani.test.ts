@@ -27,7 +27,7 @@ describe('ANi', () => {
 
   for (const title of feed) {
     it(title, () => {
-      expect(parse(title)).toMatchSnapshot();
+      expect(parse(title, { fansub: 'ANi' })).toMatchSnapshot();
     });
   }
 });
