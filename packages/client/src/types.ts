@@ -60,6 +60,8 @@ export interface Resource<T extends { tracker?: boolean; metadata?: boolean } = 
     avatar?: string;
   };
 
+  subjectId?: number;
+
   createdAt: Date;
 
   fetchedAt: Date;

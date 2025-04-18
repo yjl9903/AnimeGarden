@@ -333,7 +333,7 @@ export class QueryManager {
       exclude
     } = filter;
 
-    const conds: SQLWrapper[] = [eq(resources.isDeleted, false)];
+    const conds: (SQLWrapper | undefined)[] = [eq(resources.isDeleted, false)];
 
     if (provider) {
       conds.push(eq(resources.provider, provider));
@@ -345,19 +345,29 @@ export class QueryManager {
       conds.push(isNull(resources.duplicatedId));
     }
 
-    if (fansubs && fansubs.length > 0) {
-      if (fansubs.length === 1) {
-        conds.push(eq(resources.fansubId, fansubs[0]));
-      } else {
-        conds.push(inArray(resources.fansubId, fansubs));
-      }
-    }
+    if ((fansubs && fansubs.length > 0) || (publishers && publishers.length > 0)) {
+      const subConds: SQLWrapper[] = [];
 
-    if (publishers && publishers.length > 0) {
-      if (publishers.length === 1) {
-        conds.push(eq(resources.publisherId, publishers[0]));
-      } else {
-        conds.push(inArray(resources.publisherId, publishers));
+      if (fansubs) {
+        if (fansubs.length === 1) {
+          subConds.push(eq(resources.fansubId, fansubs[0]));
+        } else {
+          subConds.push(inArray(resources.fansubId, fansubs));
+        }
+      }
+
+      if (publishers) {
+        if (publishers.length === 1) {
+          subConds.push(eq(resources.publisherId, publishers[0]));
+        } else {
+          subConds.push(inArray(resources.publisherId, publishers));
+        }
+      }
+
+      if (subConds.length === 1) {
+        conds.push(subConds[0]);
+      } else if (subConds.length > 1) {
+        conds.push(or(...subConds)!);
       }
     }
 
@@ -519,6 +529,7 @@ export class Task {
       keywords,
       exclude
     } = options;
+
     if (provider) {
       conds.push((r) => r.provider === provider);
     }
@@ -539,11 +550,12 @@ export class Task {
     if (duplicate) {
       conds.push((r) => r.duplicatedId !== null && r.duplicatedId !== undefined);
     }
-    if (publishers && publishers.length > 0) {
-      conds.push((r) => publishers.some((p) => r.publisherId === p));
-    }
-    if (fansubs && fansubs.length > 0) {
-      conds.push((r) => fansubs.some((p) => r.fansubId === p));
+    if ((publishers && publishers.length > 0) || (fansubs && fansubs.length > 0)) {
+      conds.push(
+        (r) =>
+          (publishers?.some((p) => r.publisherId === p) ?? true) &&
+          (fansubs?.some((p) => r.fansubId === p) ?? true)
+      );
     }
     if (types && types.length > 0) {
       conds.push((r) => types.some((t) => r.type === t));
@@ -609,7 +621,6 @@ export class Task {
   public async fetch(options: DatabaseFilterOptions, page: number, pageSize: number) {
     const {
       provider,
-      include,
       keywords,
       exclude,
       duplicate,
@@ -625,11 +636,10 @@ export class Task {
     if (provider) {
       conds.push((r) => r.provider === provider);
     }
-    if (include || keywords) {
+    if ((keywords && keywords.length > 0) || (exclude && exclude.length > 0)) {
       conds.push((r) => {
         const title = normalizeTitle(r.title);
         return (
-          (include?.some((i) => title.indexOf(i) !== -1) ?? true) &&
           (keywords?.every((i) => title.indexOf(i) !== -1) ?? true) &&
           (exclude?.every((i) => title.indexOf(i) === -1) ?? true)
         );
@@ -638,11 +648,12 @@ export class Task {
     if (duplicate) {
       conds.push((r) => r.duplicatedId !== null && r.duplicatedId !== undefined);
     }
-    if (publishers && publishers.length > 0) {
-      conds.push((r) => publishers.some((p) => r.publisherId === p));
-    }
-    if (fansubs && fansubs.length > 0) {
-      conds.push((r) => fansubs.some((p) => r.fansubId === p));
+    if ((publishers && publishers.length > 0) || (fansubs && fansubs.length > 0)) {
+      conds.push(
+        (r) =>
+          (publishers?.some((p) => r.publisherId === p) ?? true) &&
+          (fansubs?.some((p) => r.fansubId === p) ?? true)
+      );
     }
     if (types && types.length > 0) {
       conds.push((r) => types.some((t) => r.type === t));
