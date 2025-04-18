@@ -11,6 +11,11 @@ on:
         options:
           - production
           - test
+      server:
+        description: 'Deploy Server'
+        type: boolean
+        required: true
+        default: false
 
 jobs:
   web:
@@ -37,7 +42,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    if: ${{ github.event.inputs.environment == 'production' }}
+    if: ${{ github.event.inputs.environment == 'production' && github.event.inputs.server }}
 
     concurrency: deploy-fly-server-production-group
 
@@ -57,7 +62,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    if: ${{ github.event.inputs.environment == 'production' }}
+    if: ${{ github.event.inputs.environment == 'production' && github.event.inputs.server }}
 
     concurrency: deploy-fly-feed-production-group
 
