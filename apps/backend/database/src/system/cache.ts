@@ -163,9 +163,9 @@ export function memo<F extends AsyncFn>(fn: F, options: MemoOptions<F>): MemoFun
     const cleaup = () => {
       memoFunc.clear();
 
-      timeout = setTimeout(cleaup, options.expirationTtl * 2);
+      timeout = setTimeout(cleaup, options.expirationTtl);
     };
-    timeout = setTimeout(cleaup, options.expirationTtl * 2);
+    timeout = setTimeout(cleaup, options.expirationTtl);
   };
   memoFunc.stopGC = () => {
     if (timeout) {

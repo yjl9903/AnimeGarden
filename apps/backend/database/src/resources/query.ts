@@ -300,7 +300,7 @@ export class QueryManager {
         return hash(filter) + ':' + offset + ':' + limit;
       },
       expirationTtl: 5 * 60 * 1000,
-      maxSize: 10_000
+      maxSize: 1000
     }
   );
 

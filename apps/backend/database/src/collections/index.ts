@@ -121,6 +121,6 @@ export class CollectionsModule extends Module<System['modules']> {
         };
       }
     },
-    { getKey: (hsh) => hsh, expirationTtl: 300 * 1000, maxSize: 10_000 }
+    { getKey: (hsh) => hsh, expirationTtl: 300 * 1000, maxSize: 1000 }
   );
 }
