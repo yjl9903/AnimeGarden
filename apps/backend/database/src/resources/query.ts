@@ -565,8 +565,8 @@ export class Task {
     if ((publishers && publishers.length > 0) || (fansubs && fansubs.length > 0)) {
       conds.push(
         (r) =>
-          (publishers?.some((p) => r.publisherId === p) ?? true) ||
-          (fansubs?.some((p) => r.fansubId === p) ?? true)
+          (publishers?.some((p) => r.publisherId === p) ?? false) ||
+          (fansubs?.some((p) => r.fansubId === p) ?? false)
       );
     }
     if (types && types.length > 0) {
@@ -666,8 +666,8 @@ export class Task {
     if ((publishers && publishers.length > 0) || (fansubs && fansubs.length > 0)) {
       conds.push(
         (r) =>
-          (publishers?.some((p) => r.publisherId === p) ?? true) ||
-          (fansubs?.some((p) => r.fansubId === p) ?? true)
+          (publishers?.some((p) => r.publisherId === p) ?? false) ||
+          (fansubs?.some((p) => r.fansubId === p) ?? false)
       );
     }
     if (types && types.length > 0) {
