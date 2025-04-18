@@ -6,6 +6,7 @@ import { toMagnetURI } from 'parse-torrent';
 
 import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client';
 
+import { parse } from 'anipar';
 import { retryFn } from '@animegarden/shared';
 
 import { NetworkError } from '../error';
@@ -92,16 +93,67 @@ export async function fetchLastestANi(
       ? magnet.slice('magnet:?xt=urn:btih:'.length)
       : filename.slice(0, filename.indexOf('.'));
 
+    const rawTitle = replaceSuffix(removeExtraSpaces(item.title), {
+      '.torrent': '[MP4]',
+      '.mp4': '[MP4]',
+      '.MP4': '[MP4]',
+      '.mkv': '[MKV]',
+      '.MKV': '[MKV]'
+    });
+
+    function transformAlias(title: string) {
+      const info = parse(title, { fansub: 'ANi' });
+
+      if (info && info.title) {
+        if (info.titles?.length === 1) {
+          {
+            const exist = info.titles[0] + ' - ' + info.title;
+            if (title.indexOf(exist) !== -1) {
+              return title.replace(exist, info.titles[0] + ' / ' + info.title);
+            }
+          }
+
+          if (info.season?.number) {
+            const exist =
+              info.titles[0] +
+              ' ' +
+              `S${String(info.season.number).padStart(2, '0')}` +
+              ' - ' +
+              info.title;
+            if (title.indexOf(exist) !== -1) {
+              return title.replace(
+                exist,
+                info.titles[0] +
+                  ' ' +
+                  `S${String(info.season.number).padStart(2, '0')}` +
+                  ' / ' +
+                  info.title
+              );
+            }
+          }
+
+          {
+            const exist = info.title + ' - ' + info.titles[0];
+            if (title.indexOf(exist) !== -1) {
+              return title.replace(exist, info.title + ' / ' + info.titles[0]);
+            }
+          }
+        } else {
+          {
+            const exist = info.title + ' - ' + info.title;
+            if (title.indexOf(exist) !== -1) {
+              return title.replace(exist, info.title + ' / ' + info.title);
+            }
+          }
+        }
+      }
+      return title;
+    }
+
     res.push({
       provider: 'ani',
       providerId,
-      title: replaceSuffix(removeExtraSpaces(item.title), {
-        '.torrent': '[MP4]',
-        '.mp4': '[MP4]',
-        '.MP4': '[MP4]',
-        '.mkv': '[MKV]',
-        '.MKV': '[MKV]'
-      }),
+      title: transformAlias(rawTitle),
       href: link,
       type: '动画',
       magnet,

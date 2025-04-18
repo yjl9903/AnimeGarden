@@ -136,7 +136,7 @@ const Source = new Set([
   'WEB-MKV'
 ]);
 
-const Platfrom = new Set(['Baha', 'B-Global', 'ABEMA', 'CR', 'ViuTV', 'AMZN', 'ADN']);
+const Platfrom = new Set(['Baha', 'Bilibili', 'B-Global', 'ABEMA', 'CR', 'ViuTV', 'AMZN', 'ADN']);
 
 const Type = new Set([
   'GEKIJOUBAN',

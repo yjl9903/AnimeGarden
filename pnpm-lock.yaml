@@ -456,6 +456,9 @@ importers:
       '@animegarden/client':
         specifier: workspace:*
         version: link:../client
+      anipar:
+        specifier: workspace:*
+        version: link:../anipar
       jsdom:
         specifier: ^26.1.0
         version: 26.1.0

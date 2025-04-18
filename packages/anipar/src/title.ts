@@ -52,7 +52,7 @@ export function parseTitle(ctx: Context) {
 
   // 2.1. Try split multiple titles
   let found = false;
-  const separators = ['/', '\\'];
+
   const matchParts = (parts: string[]) => {
     const [title, ...other] = parts;
 
@@ -77,6 +77,8 @@ export function parseTitle(ctx: Context) {
   if (!found) {
     const text = rest.length === 1 ? rest[0].text : rest.map((t) => t.toString()).join('');
 
+    const separators = ['/', '\\'];
+
     for (const sep of separators) {
       const parts = splitText(text, sep)
         .map((t) => t.trim())
@@ -85,6 +87,17 @@ export function parseTitle(ctx: Context) {
         matchParts(parts);
         found = true;
         break;
+      }
+    }
+
+    // @hack ANi
+    if (!found && ctx.options.fansub === 'ANi') {
+      const parts = splitOnce(text, ' - ')
+        .map((t) => t.trim())
+        .filter((t) => !!t);
+      if (parts.length > 1) {
+        matchParts(parts);
+        found = true;
       }
     }
 
@@ -114,4 +127,14 @@ function splitText(text: string, sep: string) {
     }
   }
   return ans;
+}
+
+function splitOnce(text: string, separator: string): [string, string] {
+  const found = text.indexOf(separator);
+  if (found === -1) {
+    return [text, ''];
+  }
+  const first = text.slice(0, found);
+  const second = text.slice(found + separator.length);
+  return [first, second];
 }
