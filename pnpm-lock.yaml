@@ -390,14 +390,14 @@ importers:
         specifier: ^66.0.0
         version: 66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))
       unocss-preset-animations:
-        specifier: ^1.1.1
-        version: 1.1.1(@unocss/preset-wind@66.0.0)(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3)))
+        specifier: ^1.2.1
+        version: 1.2.1(@unocss/preset-wind3@66.0.0)(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3)))
       unocss-preset-flowind:
         specifier: ^0.0.5
         version: 0.0.5(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3)))
       unocss-preset-shadcn:
         specifier: ^0.5.0
-        version: 0.5.0(unocss-preset-animations@1.1.1(@unocss/preset-wind@66.0.0)(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))))(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3)))
+        version: 0.5.0(unocss-preset-animations@1.2.1(@unocss/preset-wind3@66.0.0)(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))))(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3)))
       unplugin-analytics:
         specifier: ^0.0.12
         version: 0.0.12(esbuild@0.17.6)(rollup@2.79.2)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))
@@ -7162,11 +7162,14 @@ packages:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
 
-  unocss-preset-animations@1.1.1:
-    resolution: {integrity: sha512-YBttRSHWH0r8OABPzXNcxDhRV67LNIsA0ZrWoYTMHUc/SzVYZBU79IXLtOneLk1NCpzlfkyxm+8DWLJnmG1R6g==}
+  unocss-preset-animations@1.2.1:
+    resolution: {integrity: sha512-HFdYPSLZ8SaAgTLfTNoiV5+1xAdcttOtFSPsZyHbA0qSis7Sansf90pz7a2yhs9Yq6Nos9P4onDttfdO8dwKPA==}
     peerDependencies:
-      '@unocss/preset-wind': '>=0.56.0 < 101'
+      '@unocss/preset-wind3': '>=0.56.0 < 101'
       unocss: '>=0.56.0 < 101'
+    peerDependenciesMeta:
+      '@unocss/preset-wind3':
+        optional: true
 
   unocss-preset-flowind@0.0.5:
     resolution: {integrity: sha512-jpNqArWBBN7FlchX1CUOTmt34FjC+fuRXIrqeu9yCEzcOd4tsyVASuNDPQrWSq+Fqinan2b1Xv4hteJgoHOkwA==}
@@ -15209,19 +15212,20 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unocss-preset-animations@1.1.1(@unocss/preset-wind@66.0.0)(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))):
+  unocss-preset-animations@1.2.1(@unocss/preset-wind3@66.0.0)(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))):
     dependencies:
-      '@unocss/preset-wind': 66.0.0
       unocss: 66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))
+    optionalDependencies:
+      '@unocss/preset-wind3': 66.0.0
 
   unocss-preset-flowind@0.0.5(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))):
     dependencies:
       unocss: 66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))
 
-  unocss-preset-shadcn@0.5.0(unocss-preset-animations@1.1.1(@unocss/preset-wind@66.0.0)(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))))(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))):
+  unocss-preset-shadcn@0.5.0(unocss-preset-animations@1.2.1(@unocss/preset-wind3@66.0.0)(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))))(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))):
     dependencies:
       unocss: 66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3))
-      unocss-preset-animations: 1.1.1(@unocss/preset-wind@66.0.0)(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3)))
+      unocss-preset-animations: 1.2.1(@unocss/preset-wind3@66.0.0)(unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3)))
 
   unocss@66.0.0(postcss@8.5.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))(vue@3.5.13(typescript@5.8.3)):
     dependencies:
