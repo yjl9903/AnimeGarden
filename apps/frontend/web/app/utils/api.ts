@@ -179,7 +179,7 @@ export async function generateCollection(collection: Collection<true>) {
     return await rawGenerateCollection(collection, {
       fetch: ofetch,
       baseURL,
-      retry: 0,
+      retry: 0
     });
   } catch (error) {
     console.error('[API]', 'generateCollection', collection, error);

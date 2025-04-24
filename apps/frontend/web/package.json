@@ -11,7 +11,7 @@
     "deploy:cloudflare": "wrangler deploy",
     "dev": "VIRTUAL_PWA_MODULE=true remix vite:dev",
     "dev:node": "unbuild --stub",
-    "format": "prettier . **/*.{mjs,ts,tsx} --write",
+    "format": "prettier --write **/*.{mjs,ts,tsx}",
     "preview": "remix-serve ./build/server/index.js",
     "start:node": "node server.mjs",
     "typecheck": "tsc",

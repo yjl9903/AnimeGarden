@@ -48,6 +48,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             'src' in t ? (
               <script
                 suppressHydrationWarning={true}
+                defer={true}
                 key={t.src}
                 src={t.src}
                 {...Object.fromEntries(
