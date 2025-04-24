@@ -46,7 +46,7 @@ export async function makeSystem(options: SystemOptions) {
   try {
     const { connection, database } = connectDatabase(options.postgresUri, {
       /* 连接池相关 */
-      max: 10, // 最大连接数，默认10
+      max: 5, // 最大连接数，默认10
       idle_timeout: 60, // 空闲超时(秒)，0 表示无限制
       max_lifetime: 60 * 30 // 连接最大存活时间(毫秒)，0 表示无限制
 
