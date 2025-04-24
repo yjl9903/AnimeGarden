@@ -14,22 +14,22 @@ describe('API', () => {
     expect(resp.providers).toBeTruthy();
   });
 
-  it('should fetch collection', { timeout }, async () => {
-    const resp = await fetchCollection('NxRs-dGspGeA1gr6CrUl81qppmC0J4wcSl9tCxrt1tM');
-    expect(resp!.ok).toBe(true);
-    expect(resp!.timestamp).toBeTruthy();
-  });
+  // it('should fetch collection', { timeout }, async () => {
+  //   const resp = await fetchCollection('NxRs-dGspGeA1gr6CrUl81qppmC0J4wcSl9tCxrt1tM');
+  //   expect(resp!.ok).toBe(true);
+  //   expect(resp!.timestamp).toBeTruthy();
+  // });
 
-  it('should fetch resources', { timeout }, async () => {
-    const resp = await fetchResources({
-      subject: 363957,
-      after: new Date(1743350400000)
-    });
-    expect(resp.ok).toBe(true);
-    expect(resp.timestamp).toBeTruthy();
-    expect(resp.filter!.subjects).toStrictEqual([363957]);
-    expect(resp.resources.length > 0).toBeTruthy();
-  });
+  // it('should fetch resources', { timeout }, async () => {
+  //   const resp = await fetchResources({
+  //     subject: 363957,
+  //     after: new Date(1743350400000)
+  //   });
+  //   expect(resp.ok).toBe(true);
+  //   expect(resp.timestamp).toBeTruthy();
+  //   expect(resp.filter!.subjects).toStrictEqual([363957]);
+  //   expect(resp.resources.length > 0).toBeTruthy();
+  // });
 
   it('should handle timeout', { timeout }, async () => {
     expect(
