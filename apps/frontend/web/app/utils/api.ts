@@ -47,7 +47,7 @@ export async function fetchAPI<T>(path: string, request: RequestInit | undefined
     } as const);
     return resp;
   } catch (error) {
-    console.error('[ERROR]', 'fetchAPI', path, error);
+    console.error('[API]', 'fetchAPI', path, error);
 
     return undefined;
   }
@@ -66,7 +66,7 @@ export async function fetchTimestamp(): Promise<{ timestamp?: string | undefined
       };
     }
   } catch (error) {
-    console.error('[ERROR]', 'fetchTimestamp', error);
+    console.error('[API]', 'fetchTimestamp', error);
   }
 
   return {
@@ -108,7 +108,7 @@ export async function fetchResources(
 
     return resp;
   } catch (error) {
-    console.error('[ERROR]', 'fetchResources', error);
+    console.error('[API]', 'fetchResources', filter, error);
 
     return {
       ok: false,
@@ -139,7 +139,7 @@ export async function fetchResourceDetail(provider: string, href: string) {
 
     return resp;
   } catch (error) {
-    console.error('[ERROR]', 'fetchResourceDetail', error);
+    console.error('[API]', 'fetchResourceDetail', provider, href, error);
 
     return {
       ok: false,
@@ -169,7 +169,7 @@ export async function fetchCollection(hash: string) {
 
     return resp;
   } catch (error) {
-    console.error('[ERROR]', 'fetchCollection', error);
+    console.error('[API]', 'fetchCollection', hash, error);
 
     return undefined;
   }
@@ -186,7 +186,7 @@ export async function generateCollection(collection: Collection<true>) {
       signal: AbortSignal.timeout(timeout)
     });
   } catch (error) {
-    console.error('[ERROR]', 'generateCollection', error);
+    console.error('[API]', 'generateCollection', collection, error);
 
     return null;
   }
