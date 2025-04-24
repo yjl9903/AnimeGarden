@@ -81,7 +81,10 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
           page
         });
       } catch (error) {
-        if (error instanceof Error && error.name === 'AbortError') {
+        if (
+          error instanceof Error &&
+          (error.name === 'AbortError' || error.name === 'TimeoutError')
+        ) {
           aborted = true;
           break;
         } else {

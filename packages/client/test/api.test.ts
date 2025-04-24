@@ -32,6 +32,8 @@ describe('API', () => {
   // });
 
   it('should handle timeout', { timeout }, async () => {
+    const now = new Date();
+
     expect(
       await fetchStatus({
         retry: 5,
@@ -44,5 +46,28 @@ describe('API', () => {
         "timestamp": undefined,
       }
     `);
+
+    expect(new Date().getTime() - now.getTime()).greaterThanOrEqual(500);
+  });
+
+  it('should handle abort', { timeout }, async () => {
+    const now = new Date();
+    const abort = new AbortController();
+    setTimeout(() => abort.abort());
+
+    expect(
+      await fetchStatus({
+        retry: 5,
+        signal: abort.signal
+      })
+    ).toMatchInlineSnapshot(`
+      {
+        "ok": false,
+        "providers": undefined,
+        "timestamp": undefined,
+      }
+    `);
+
+    expect(new Date().getTime() - now.getTime()).lessThanOrEqual(100);
   });
 });

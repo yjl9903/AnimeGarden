@@ -21,51 +21,62 @@ export async function fetchAPI<T>(
     headers.set(`user-agent`, `animegarden@${version}`);
   }
 
-  return await retryFn<T>(async () => {
-    const signal =
-      options.timeout && options.timeout > 0
-        ? options.signal
-          ? AbortSignal.any([AbortSignal.timeout(options.timeout), options.signal])
-          : AbortSignal.timeout(options.timeout)
-        : options.signal;
+  return await retryFn<T>(
+    async () => {
+      const signal =
+        options.timeout && options.timeout > 0
+          ? options.signal
+            ? AbortSignal.any([AbortSignal.timeout(options.timeout), options.signal])
+            : AbortSignal.timeout(options.timeout)
+          : options.signal;
 
-    const payload = {
-      ...init,
-      headers,
-      signal
-    };
+      const payload = {
+        ...init,
+        headers,
+        signal
+      };
 
-    if (options?.hooks?.prefetch) {
-      await options.hooks.prefetch(url.toString(), payload);
-    }
-
-    let error: any;
-    const resp = await fetch(url.toString(), payload).catch(_error => {
-      error = _error;
-      return undefined;
-    });
-
-    if (resp) {
-      if (options?.hooks?.postfetch) {
-        await options.hooks.postfetch(url.toString(), payload, resp);
+      if (options?.hooks?.prefetch) {
+        await options.hooks.prefetch(url.toString(), payload);
       }
 
-      if (resp.ok) {
-        return (await resp.json()) as T;
-      } else {
-        // 429 TOO MANY REQUEST
-        if (resp.status === 429) {
-          await sleep(16 * 1000);
+      let error: any;
+      const resp = await fetch(url.toString(), payload).catch((_error) => {
+        error = _error;
+        return undefined;
+      });
+
+      if (resp) {
+        if (options?.hooks?.postfetch) {
+          await options.hooks.postfetch(url.toString(), payload, resp);
         }
-        throw new Error(`${resp.status} ${resp.statusText} ${url.toString()}`, { cause: resp });
-      }
-    } else {
-      if (error?.name === 'TimeoutError') {
-        await (options.hooks?.timeout ? options.hooks?.timeout() : sleep(100));
-        throw error;
-      }
 
-      throw new Error(error);
-    }
-  }, retry);
+        if (resp.ok) {
+          return (await resp.json()) as T;
+        } else {
+          // 429 TOO MANY REQUEST
+          if (resp.status === 429) {
+            await sleep(16 * 1000);
+          }
+          throw new Error(`${resp.status} ${resp.statusText} ${url.toString()}`, { cause: resp });
+        }
+      } else {
+        if (error?.name === 'AbortError') {
+          throw error;
+        }
+        if (error?.name === 'TimeoutError') {
+          await (options.hooks?.timeout ? options.hooks?.timeout() : sleep(100));
+          throw error;
+        }
+
+        if (error instanceof Error) {
+          throw error;
+        } else {
+          throw new Error(error);
+        }
+      }
+    },
+    retry,
+    options.signal
+  );
 }

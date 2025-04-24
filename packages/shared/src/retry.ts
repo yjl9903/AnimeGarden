@@ -1,4 +1,8 @@
-export async function retryFn<T>(fn: () => Promise<T>, count: number): Promise<T> {
+export async function retryFn<T>(
+  fn: () => Promise<T>,
+  count: number,
+  signal?: AbortSignal
+): Promise<T> {
   if (count < 0) {
     count = Number.MAX_SAFE_INTEGER;
   }
@@ -8,6 +12,9 @@ export async function retryFn<T>(fn: () => Promise<T>, count: number): Promise<T
       return await fn();
     } catch (err) {
       e = err;
+      if (signal?.aborted) {
+        break;
+      }
     }
   }
   throw e;

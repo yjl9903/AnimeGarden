@@ -177,6 +177,9 @@ export type FetchOptions = {
 
     postfetch?: (path: string, init: RequestInit, response: Response) => Promise<void> | void;
 
+    /**
+     * Sleep 100ms by default
+     */
     timeout?: () => Promise<void> | void;
   };
 };
