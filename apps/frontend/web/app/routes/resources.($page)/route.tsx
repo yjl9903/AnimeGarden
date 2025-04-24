@@ -38,8 +38,13 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     return redirect(url.toString());
   }
 
+  const page = Math.floor(+(params.page ?? '1'));
+  if (page <= 0) {
+    url.pathname = url.pathname.replace(/\/-?\d+(\.\d*)?$/, '/1');
+    return redirect(url.toString());
+  }
+
   const parsed = parseURLSearch(url.searchParams, { pageSize: 80 });
-  const page = +(params.page ?? '1');
   const { ok, resources, complete, filter, timestamp } = await fetchResources({
     ...parsed,
     page: +(params.page ?? '1')
