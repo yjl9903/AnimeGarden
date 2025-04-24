@@ -124,6 +124,30 @@ export default {
       }
     } else {
       destinationURL.host = 'animes.garden';
+
+      if (destinationURL.searchParams.has('fansubId')) {
+        const all = await getFansubs();
+        const name = all.get(destinationURL.searchParams.get('fansubId') ?? '')?.name;
+        if (name) {
+          destinationURL.searchParams.set('fansub', name);
+        }
+        destinationURL.searchParams.delete('fansubId');
+      }
+      if (destinationURL.searchParams.has('fansubName')) {
+        const name = destinationURL.searchParams.get('fansubName') ?? '';
+        if (name) {
+          destinationURL.searchParams.set('fansub', name);
+        }
+        destinationURL.searchParams.delete('fansubName');
+      }
+      if (destinationURL.searchParams.has('publisherId')) {
+        const all = await getPublishers();
+        const name = all.get(destinationURL.searchParams.get('publisherId') ?? '')?.name;
+        if (name) {
+          destinationURL.searchParams.set('publisher', name);
+        }
+        destinationURL.searchParams.delete('publisherId');
+      }
     }
 
     console.log(`Redirect ${request.url} -> ${destinationURL.toString()}`);
