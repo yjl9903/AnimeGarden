@@ -176,6 +176,8 @@ export type FetchOptions = {
     prefetch?: (path: string, init: RequestInit) => Promise<void> | void;
 
     postfetch?: (path: string, init: RequestInit, response: Response) => Promise<void> | void;
+
+    timeout?: () => Promise<void> | void;
   };
 };
 

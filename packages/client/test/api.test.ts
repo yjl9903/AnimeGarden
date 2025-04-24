@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
 
 import { fetchStatus } from '../src/api/status';
-import { fetchResources } from '../src/api/resources';
-import { fetchCollection } from '../src/api/collection';
+// import { fetchResources } from '../src/api/resources';
+// import { fetchCollection } from '../src/api/collection';
 
 const timeout = 30 * 1000;
 
@@ -34,6 +34,7 @@ describe('API', () => {
   it('should handle timeout', { timeout }, async () => {
     expect(
       await fetchStatus({
+        retry: 5,
         timeout: 1
       })
     ).toMatchInlineSnapshot(`

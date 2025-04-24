@@ -39,21 +39,33 @@ export async function fetchAPI<T>(
       await options.hooks.prefetch(url.toString(), payload);
     }
 
-    const resp = await fetch(url.toString(), payload);
+    let error: any;
+    const resp = await fetch(url.toString(), payload).catch(_error => {
+      error = _error;
+      return undefined;
+    });
 
-    if (options?.hooks?.postfetch) {
-      await options.hooks.postfetch(url.toString(), payload, resp);
-    }
-
-    if (resp.ok) {
-      return (await resp.json()) as T;
-    } else {
-      // 429 TOO MANY REQUEST
-      if (resp.status === 429) {
-        await sleep(16 * 1000);
+    if (resp) {
+      if (options?.hooks?.postfetch) {
+        await options.hooks.postfetch(url.toString(), payload, resp);
       }
 
-      throw new Error(`${resp.status} ${resp.statusText} ${url.toString()}`, { cause: resp });
+      if (resp.ok) {
+        return (await resp.json()) as T;
+      } else {
+        // 429 TOO MANY REQUEST
+        if (resp.status === 429) {
+          await sleep(16 * 1000);
+        }
+        throw new Error(`${resp.status} ${resp.statusText} ${url.toString()}`, { cause: resp });
+      }
+    } else {
+      if (error?.name === 'TimeoutError') {
+        await (options.hooks?.timeout ? options.hooks?.timeout() : sleep(100));
+        throw error;
+      }
+
+      throw new Error(error);
     }
   }, retry);
 }

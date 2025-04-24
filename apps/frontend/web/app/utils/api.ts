@@ -90,9 +90,8 @@ export async function fetchResources(
       {
         fetch: options.fetch ?? ofetch,
         baseURL,
-        signal: options.signal
-          ? AbortSignal.any([options.signal, AbortSignal.timeout(timeout)])
-          : AbortSignal.timeout(timeout),
+        timeout,
+        signal: options.signal,
         retry: options.retry ?? 1,
         ...filter,
         tracker: true,
@@ -128,7 +127,7 @@ export async function fetchResourceDetail(provider: string, href: string) {
       fetch: ofetch,
       baseURL,
       retry: 0,
-      signal: AbortSignal.timeout(timeout)
+      timeout
     });
 
     if (resp?.timestamp) {
@@ -158,7 +157,7 @@ export async function fetchCollection(hash: string) {
       fetch: ofetch,
       baseURL,
       retry: 0,
-      signal: AbortSignal.timeout(timeout)
+      timeout
     });
 
     if (resp?.timestamp) {
@@ -176,14 +175,11 @@ export async function fetchCollection(hash: string) {
 }
 
 export async function generateCollection(collection: Collection<true>) {
-  const timeout = 30 * 1000;
-
   try {
     return await rawGenerateCollection(collection, {
       fetch: ofetch,
       baseURL,
       retry: 0,
-      signal: AbortSignal.timeout(timeout)
     });
   } catch (error) {
     console.error('[API]', 'generateCollection', collection, error);
