@@ -31,7 +31,7 @@ export default defineConfig({
     alias: { '@': path.resolve(__dirname, './app') }
   },
   build: {
-    minify: false,
+    minify: true,
     target: 'es2022'
   },
   plugins: [
