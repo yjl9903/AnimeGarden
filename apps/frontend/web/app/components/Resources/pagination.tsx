@@ -25,7 +25,7 @@ export const Pagination = (props: PaginationProps) => {
   return (
     <div className="mt-4 flex lt-md:flex-col font-sm">
       <div className="flex-auto"></div>
-      {(page !== 1 || !complete) && (
+      {(page > 1 || !complete) && (
         <div className="flex lt-md:(mt-4 justify-center) items-center gap-2 text-base-500">
           <PageItem
             page={page - 1}
@@ -92,6 +92,8 @@ const PageItem = (
         {props.children}
       </div>
     );
+  } else if (page <= 0) {
+    return <div className={clsx(className, props.className)}></div>;
   } else {
     return <div className={clsx(className, props.className)}>{props.children}</div>;
   }

@@ -91,13 +91,13 @@ export default function ResourcesTable(props: ResourcesTableProps) {
             <span>没有搜索到匹配的资源</span>
           </div>
           <div className="flex items-center justify-center">
-            <span className="">返回&nbsp;</span>
+            {/* <span className="">返回&nbsp;</span> */}
             {!location.pathname.endsWith('/1') && link && (
               <>
                 <NavLink to={link(1)} className="text-link">
                   第 1 页
                 </NavLink>
-                <span>&nbsp;</span>
+                <span>&nbsp;/&nbsp;</span>
               </>
             )}
             <NavLink to="/" className="text-link">
