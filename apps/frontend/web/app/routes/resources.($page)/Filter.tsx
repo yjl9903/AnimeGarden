@@ -1,5 +1,5 @@
 import { toast } from 'sonner';
-import { NavLink } from '@remix-run/react';
+import { Link, NavLink } from '@remix-run/react';
 import { useCallback } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 
@@ -153,9 +153,7 @@ export function Filter(props: Props) {
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">动画</span>
           {realSubjects.map((subject) => (
             <span key={subject.id} className={`text-4 select-text text-base-900 text-link`}>
-              <a href={`https://bgm.tv/subject/${subject.id}`} target="_blank">
-                {subject.bangumi?.name_cn}
-              </a>
+              <Link to={`/subject/${subject.id}/1`}>{subject.bangumi?.name_cn}</Link>
             </span>
           ))}
         </div>

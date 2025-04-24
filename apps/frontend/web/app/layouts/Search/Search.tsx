@@ -13,8 +13,9 @@ import {
 } from 'react';
 
 import { fetchResources } from '~/utils';
-import { inputAtom, historiesAtom } from '@/states/search';
-import { useActiveElement, useDocument, useEventListener } from '@/hooks';
+import { waitForSubjectsLoaded } from '~/utils/subjects';
+import { inputAtom, historiesAtom } from '~/states/search';
+import { useActiveElement, useDocument, useEventListener } from '~/hooks';
 
 import { DMHY_RE, debounce, parseSearch, resolveSearchURL, stringifySearch } from './utils';
 
@@ -123,7 +124,7 @@ export const Search = memo(() => {
   }, []);
 
   const selectGoToSearch = useCallback(
-    (text?: string) => {
+    async (text?: string) => {
       const target = text ?? input;
       if (target) {
         setInput(target);
@@ -137,6 +138,7 @@ export const Search = memo(() => {
         }
 
         stopFetch();
+        await waitForSubjectsLoaded();
         goTo(resolveSearchURL(target));
         disable();
       }
