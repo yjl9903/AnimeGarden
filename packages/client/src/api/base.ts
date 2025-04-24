@@ -11,7 +11,7 @@ export async function fetchAPI<T>(
   init: RequestInit | undefined = undefined,
   options: FetchOptions = {}
 ): Promise<T> {
-  const { fetch = global.fetch, baseURL = DefaultBaseURL, retry = 0 } = options;
+  const { fetch = globalThis.fetch, baseURL = DefaultBaseURL, retry = 0 } = options;
 
   const url = new URL(path.replace(/^\/+/g, ''), baseURL);
 
