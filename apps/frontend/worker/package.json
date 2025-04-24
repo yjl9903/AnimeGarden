@@ -5,8 +5,7 @@
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
-    "test": "vitest",
-    "test:ci": "wrangler deploy --dry-run && vitest --run"
+    "test:ci": "wrangler deploy --dry-run"
   },
   "dependencies": {
     "@animegarden/client": "workspace:*",

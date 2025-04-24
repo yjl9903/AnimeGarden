@@ -36,10 +36,17 @@ app.onError((err, c) => {
 });
 
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext) {
+  async fetch(request: Request, _env: Env, _ctx: ExecutionContext) {
     const destinationURL = new URL(request.url);
-    destinationURL.host = 'animes.garden';
+
+    if (destinationURL.pathname.startsWith('/api') || destinationURL.pathname.startsWith('/feed.xml')) {
+      destinationURL.host = 'api.animes.garden';
+    } else {
+      destinationURL.host = 'animes.garden';
+    }
+
     const statusCode = 301;
+
     return Response.redirect(destinationURL.toString(), statusCode);
   }
 };

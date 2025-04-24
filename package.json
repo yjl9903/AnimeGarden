@@ -13,7 +13,7 @@
     "dev:cron": "tsx apps/backend/manager/src/cli.ts cron",
     "dev:server": "tsx apps/backend/manager/src/cli.ts start --port=8080",
     "dev:web": "pnpm -C apps/frontend/web dev",
-    "dev:worker": "pnpm -C packages/worker dev",
+    "dev:worker": "pnpm -C apps/frontend/worker dev",
     "format": "turbo run format --parallel",
     "manager": "tsx apps/backend/manager/src/cli.ts",
     "release": "bumpp package.json packages/*/package.json apps/backend/*/package.json apps/frontend/*/package.json --commit --push --tag && pnpm -r publish --access public",

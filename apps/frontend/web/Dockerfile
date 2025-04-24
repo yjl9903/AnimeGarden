@@ -42,13 +42,16 @@ RUN apt-get update -qq && \
 COPY --link package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json .npmrc .node-version ./
 COPY ./patches/ ./patches/
 COPY ./packages/animegarden/package.json ./packages/animegarden/
+COPY ./packages/anipar/package.json ./packages/anipar/
 COPY ./packages/app/package.json ./packages/app/
+COPY ./packages/client/package.json ./packages/client/
 COPY ./packages/scraper/package.json ./packages/scraper/
-COPY ./packages/worker/package.json ./packages/worker/
+COPY ./packages/shared/package.json ./packages/shared/
 COPY ./apps/backend/database/package.json ./apps/backend/database/
 COPY ./apps/backend/server/package.json ./apps/backend/server/
 COPY ./apps/backend/manager/package.json ./apps/backend/manager/
 COPY ./apps/frontend/web/package.json ./apps/frontend/web/
+COPY ./apps/frontend/worker/package.json ./apps/frontend/worker/
 
 RUN pnpm install --frozen-lockfile --prod=false
 

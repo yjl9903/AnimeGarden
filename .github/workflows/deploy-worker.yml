@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - packages/worker/**
+      - apps/frontend/worker/**
 
 jobs:
   worker:
@@ -33,7 +33,7 @@ jobs:
         run: pnpm build
 
       - name: Deploy
-        run: pnpm -C packages/worker run deploy
+        run: pnpm -C apps/frontend/worker run deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
 

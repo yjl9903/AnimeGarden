@@ -417,6 +417,22 @@ importers:
         specifier: ^5.1.4
         version: 5.1.4(typescript@5.8.3)(vite@6.3.2(@types/node@22.14.1)(jiti@2.4.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))
 
+  apps/frontend/worker:
+    dependencies:
+      '@animegarden/client':
+        specifier: workspace:*
+        version: link:../../../packages/client
+      '@animegarden/scraper':
+        specifier: workspace:*
+        version: link:../../../packages/scraper
+      hono:
+        specifier: ^4.7.7
+        version: 4.7.7
+    devDependencies:
+      '@total-typescript/ts-reset':
+        specifier: ^0.6.1
+        version: 0.6.1
+
   packages/animegarden:
     dependencies:
       '@animegarden/client':
@@ -487,22 +503,6 @@ importers:
       simptrad:
         specifier: ^0.2.0
         version: 0.2.0
-
-  packages/worker:
-    dependencies:
-      '@animegarden/client':
-        specifier: workspace:*
-        version: link:../client
-      '@animegarden/scraper':
-        specifier: workspace:*
-        version: link:../scraper
-      hono:
-        specifier: ^4.7.7
-        version: 4.7.7
-    devDependencies:
-      '@total-typescript/ts-reset':
-        specifier: ^0.6.1
-        version: 0.6.1
 
 packages:
 
