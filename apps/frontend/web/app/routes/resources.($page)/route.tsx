@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { redirect, useLoaderData, useLocation } from '@remix-run/react';
+import { ClientLoaderFunctionArgs, redirect, useLoaderData, useLocation } from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/node';
 
 import { parseURLSearch } from '@animegarden/client';
@@ -8,6 +8,7 @@ import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
 import { stringifySearch } from '~/layouts/Search/utils';
 import { usePreferFansub } from '~/states';
+import { waitForSubjectsLoaded } from '~/utils/subjects';
 import { fetchResources, getFeedURL, generateTitleFromFilter } from '~/utils';
 
 import { Error } from './Error';
@@ -58,6 +59,14 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     filter,
     timestamp
   });
+};
+
+export const clientLoader = async ({ serverLoader }: ClientLoaderFunctionArgs) => {
+  const serverData = await serverLoader<typeof loader>();
+  if (serverData?.filter?.subjects) {
+    await waitForSubjectsLoaded();
+  }
+  return serverData;
 };
 
 export default function ResourcesIndex() {

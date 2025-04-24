@@ -1,5 +1,11 @@
 import { useMemo } from 'react';
-import { redirect, useLoaderData, useLocation, useParams } from '@remix-run/react';
+import {
+  ClientLoaderFunctionArgs,
+  redirect,
+  useLoaderData,
+  useLocation,
+  useParams
+} from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/node';
 
 import { parseURLSearch } from '@animegarden/client';
@@ -8,29 +14,11 @@ import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
 import { stringifySearch } from '~/layouts/Search/utils';
 import { usePreferFansub } from '~/states';
-import { getSubjectById, getSubjectDisplayName } from '~/utils/subjects';
 import { fetchResources, generateTitleFromFilter, getFeedURL } from '~/utils';
+import { getSubjectById, getSubjectDisplayName, waitForSubjectsLoaded } from '~/utils/subjects';
 
 import { Error } from '../resources.($page)/Error';
 import { Filter } from '../resources.($page)/Filter';
-
-export const meta: MetaFunction<typeof loader> = ({ location, data, params }) => {
-  const subjectId = +params.subject!;
-  const subject = getSubjectById(subjectId);
-  const name = getSubjectDisplayName(subject);
-
-  return [
-    {
-      title:
-        (name ? name + ' 最新资源' : generateTitleFromFilter(data?.filter ?? {})) +
-        ' | Anime Garden 動漫花園資源網第三方镜像站'
-    },
-    {
-      name: 'description',
-      content: `最新资源 ${stringifySearch(new URLSearchParams(location.search))}`
-    }
-  ];
-};
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -70,6 +58,32 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     filter,
     timestamp
   });
+};
+
+export const clientLoader = async ({ serverLoader }: ClientLoaderFunctionArgs) => {
+  const serverData = await serverLoader<typeof loader>();
+  if (serverData?.filter?.subjects) {
+    await waitForSubjectsLoaded();
+  }
+  return serverData;
+};
+
+export const meta: MetaFunction<typeof loader> = ({ location, data, params }) => {
+  const subjectId = +params.subject!;
+  const subject = getSubjectById(subjectId);
+  const name = getSubjectDisplayName(subject);
+
+  return [
+    {
+      title:
+        (name ? name + ' 最新资源' : generateTitleFromFilter(data?.filter ?? {})) +
+        ' | Anime Garden 動漫花園資源網第三方镜像站'
+    },
+    {
+      name: 'description',
+      content: `最新资源 ${stringifySearch(new URLSearchParams(location.search))}`
+    }
+  ];
 };
 
 export default function ResourcesIndex() {
