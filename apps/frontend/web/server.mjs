@@ -72,7 +72,7 @@ app.route('/', sitemaps);
 app.all('*', remix({ build, mode: process.env.NODE_ENV }));
 
 app.onError((err, c) => {
-  console.error(err);
+  console.error('[HONO]', err);
   return c.text('Internal Error', 500);
 });
 

@@ -20,6 +20,7 @@ export const remix = <E extends Env = any>(options: RemixHandlerOptions): Handle
       const loadContext = env(process.env);
       return await handleRemixRequest(request, loadContext);
     } catch (error) {
+      console.error('[REMIX]', error);
       throw error;
     }
   };
