@@ -8,11 +8,11 @@ import type { Env } from './types';
 import { FilterSchema } from './legacy';
 
 type User = {
-  id: string;
+  id: string | number;
 
   name: string;
 
-  avatar?: string;
+  avatar?: string | null;
 
   providers: Record<string, { providerId: string }>;
 };
@@ -20,11 +20,9 @@ type User = {
 const ManyFilterSchema = z.union([z.array(FilterSchema), FilterSchema.transform((f) => [f])]);
 
 const getPublishers = memoAsync(async () => {
-  const resp = await fetchAPI<{ users: User[] }>('/teams').catch((err) => {
-    console.error(err);
-    return undefined;
-  });
-  const users = resp?.users ?? [];
+  const resp = (await import('./users.json')).default;
+  const users = (resp?.users ?? []) as User[];
+
   const map = new Map<string, User>();
   for (const team of users) {
     if (team.providers.dmhy) {
@@ -38,11 +36,13 @@ const getPublishers = memoAsync(async () => {
 });
 
 const getFansubs = memoAsync(async () => {
-  const resp = await fetchAPI<{ teams: User[] }>('/teams').catch((err) => {
-    console.error(err);
-    return undefined;
-  });
-  const teams = resp?.teams ?? [];
+  // const resp = await fetchAPI<{ teams: User[] }>('/teams').catch((err) => {
+  //   console.error(err);
+  //   return undefined;
+  // });
+  const resp = (await import('./teams.json')).default;
+  const teams = (resp?.teams ?? []) as User[];
+
   const map = new Map<string, User>();
   for (const team of teams) {
     if (team.providers.dmhy) {
