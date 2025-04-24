@@ -5,12 +5,14 @@
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
+    "format": "prettier --write **/*.ts",
     "test:ci": "wrangler deploy --dry-run"
   },
   "dependencies": {
     "@animegarden/client": "workspace:*",
     "@animegarden/scraper": "workspace:*",
-    "hono": "^4.7.7"
+    "memofunc": "^0.1.6",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@total-typescript/ts-reset": "^0.6.1"

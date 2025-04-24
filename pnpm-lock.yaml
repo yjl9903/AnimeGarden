@@ -425,9 +425,12 @@ importers:
       '@animegarden/scraper':
         specifier: workspace:*
         version: link:../../../packages/scraper
-      hono:
-        specifier: ^4.7.7
-        version: 4.7.7
+      memofunc:
+        specifier: ^0.1.6
+        version: 0.1.6
+      zod:
+        specifier: ^3.24.3
+        version: 3.24.3
     devDependencies:
       '@total-typescript/ts-reset':
         specifier: ^0.6.1

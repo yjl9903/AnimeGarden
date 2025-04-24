@@ -1,49 +1,132 @@
-import { Hono } from 'hono';
-import { cors } from 'hono/cors';
-import { cache } from 'hono/cache';
-import { logger } from 'hono/logger';
-import { prettyJSON } from 'hono/pretty-json';
+import { z } from 'zod';
+import { memoAsync } from 'memofunc';
+
+import { type FilterOptions, stringifyURLSearch, fetchAPI } from '@animegarden/client';
 
 import type { Env } from './types';
 
-const app = new Hono<{ Bindings: Env }>();
+import { FilterSchema } from './legacy';
 
-app.use('*', cors());
-app.use('*', logger());
-app.use('*', prettyJSON());
+type User = {
+  id: string;
 
-app.get('/', async (c) => {
-  return c.json({
-    message: 'AnimeGarden - 動漫花園 3-rd party mirror site'
+  name: string;
+
+  avatar?: string;
+
+  providers: Record<string, { providerId: string }>;
+};
+
+const ManyFilterSchema = z.union([z.array(FilterSchema), FilterSchema.transform((f) => [f])]);
+
+const getPublishers = memoAsync(async () => {
+  const resp = await fetchAPI<{ users: User[] }>('/teams').catch((err) => {
+    console.error(err);
+    return undefined;
   });
+  const users = resp?.users ?? [];
+  const map = new Map<string, User>();
+  for (const team of users) {
+    if (team.providers.dmhy) {
+      map.set(team.providers.dmhy.providerId, team);
+    }
+    if (team.providers.moe) {
+      map.set(team.providers.moe.providerId, team);
+    }
+  }
+  return map;
 });
 
-app.all('*', (c) =>
-  c.json(
-    { message: 'This endpoint has been deprecated, please use https://animes.garden/api' },
-    404
-  )
-);
-
-app.onError((err, c) => {
-  if (err.message) {
-    console.log(...err.message.trim().split('\n'));
+const getFansubs = memoAsync(async () => {
+  const resp = await fetchAPI<{ teams: User[] }>('/teams').catch((err) => {
+    console.error(err);
+    return undefined;
+  });
+  const teams = resp?.teams ?? [];
+  const map = new Map<string, User>();
+  for (const team of teams) {
+    if (team.providers.dmhy) {
+      map.set(team.providers.dmhy.providerId, team);
+    }
+    if (team.providers.moe) {
+      map.set(team.providers.moe.providerId, team);
+    }
   }
-  if (err.stack) {
-    console.log(...err.stack.trim().split('\n'));
-  }
-  return c.json({ status: 500, messsage: err?.message ?? 'Internal Error' }, 500);
+  return map;
 });
 
 export default {
   async fetch(request: Request, _env: Env, _ctx: ExecutionContext) {
     const destinationURL = new URL(request.url);
+    destinationURL.port = '';
 
-    if (destinationURL.pathname.startsWith('/api') || destinationURL.pathname.startsWith('/feed.xml')) {
+    if (destinationURL.pathname.startsWith('/api')) {
       destinationURL.host = 'api.animes.garden';
+    } else if (destinationURL.pathname.startsWith('/feed.xml')) {
+      destinationURL.host = 'api.animes.garden';
+
+      const getFilter = (url: URL) => {
+        const filterString = decodeURIComponent(url.searchParams.get('filter') ?? '');
+        try {
+          const rawFilter = filterString ? JSON.parse(filterString) : { page: 1, pageSize: 1000 };
+          return { ok: true, filter: rawFilter } as const;
+        } catch (error) {
+          console.error('Parse filter JSON', url.toString(), filterString);
+          console.error(error);
+          // @ts-ignore
+          return { ok: false, input: filterString, error: error?.message } as const;
+        }
+      };
+
+      // Handle JSON parse error
+      const rawFilter = getFilter(destinationURL);
+      if (!rawFilter.ok) {
+        return new Response(
+          JSON.stringify({
+            status: 400,
+            detail: {
+              url: destinationURL.toString(),
+              filter: rawFilter.input,
+              message: rawFilter.error
+            }
+          }),
+          { status: 400 }
+        );
+      }
+
+      const filter = ManyFilterSchema.safeParse(rawFilter.filter);
+      if (filter.success && filter.data.length > 0) {
+        const options = { ...filter.data[0] };
+        console.log('Filter:', options);
+
+        if (options.fansubName) {
+          (options as FilterOptions).fansubs = options.fansubName;
+          delete options.fansubName;
+        }
+        if (options.fansubId) {
+          const all = await getFansubs();
+          (options as FilterOptions).fansubs = options.fansubId
+            .map((id) => all.get(id)?.name)
+            .filter(Boolean);
+          delete options.fansubId;
+        }
+        if (options.publisherId) {
+          const all = await getPublishers();
+          (options as FilterOptions).publishers = options.publisherId
+            .map((id) => all.get(id)?.name)
+            .filter(Boolean);
+          delete options.publisherId;
+        }
+
+        destinationURL.search = stringifyURLSearch(options as any).toString();
+      } else {
+        destinationURL.search = '';
+      }
     } else {
       destinationURL.host = 'animes.garden';
     }
+
+    console.log(`Redirect ${request.url} -> ${destinationURL.toString()}`);
 
     const statusCode = 301;
 
