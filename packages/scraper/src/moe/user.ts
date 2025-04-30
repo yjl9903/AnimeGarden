@@ -2,7 +2,10 @@ import { retryFn } from '@animegarden/shared';
 
 import { NetworkError } from '../error';
 
-const Users = new Map<string, { provider: 'moe'; providerId: string; name: string }>();
+const Users = new Map<
+  string,
+  { provider: 'moe'; providerId: string; name: string; emailHash: string | undefined }
+>();
 
 const Teams = new Map<
   string,
@@ -39,7 +42,8 @@ export async function fetchUser(
   const user = {
     provider: 'moe',
     providerId: id,
-    name: data[0].username
+    name: data[0].username as string,
+    emailHash: data[0].emailHash as string
   } as const;
 
   Users.set(id, user);

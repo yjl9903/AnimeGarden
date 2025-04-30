@@ -78,7 +78,9 @@ export async function fetchMoePage(
       publisher: {
         id: torrent.uploader_id,
         name: user.name,
-        avatar: team?.avatar
+        avatar:
+          team?.avatar ||
+          (user.emailHash ? `https://static.bangumi.moe/avatar/${user.emailHash}` : undefined)
       },
       fansub: team
         ? {
@@ -128,7 +130,9 @@ export async function fetchMoeDetail(
     publisher: {
       id: torrent.uploader_id,
       name: user.name,
-      avatar: team?.avatar
+      avatar:
+        team?.avatar ||
+        (user.emailHash ? `https://static.bangumi.moe/avatar/${user.emailHash}` : undefined)
     },
     fansub: team
       ? {
