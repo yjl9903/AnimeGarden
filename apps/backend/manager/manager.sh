@@ -16,7 +16,8 @@ if [ $EXIT_CODE -ne 0 ]; then
   fi
   
   for HEAPDUMP_FILE in $HEAPDUMP_FILES; do
-    node upload.mjs "$HEAPDUMP_FILE"
+    echo "Uploading: $HEAPDUMP_FILE"
+    node "$SCRIPT_DIR/upload.mjs" "$HEAPDUMP_FILE"
   done
 
   exit $EXIT_CODE
