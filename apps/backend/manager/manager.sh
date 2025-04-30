@@ -2,7 +2,7 @@
 
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 
-node --max-old-space-size=512 --heapsnapshot-near-heap-limit=10 "$SCRIPT_DIR/cli.mjs" "$@"
+node --max-old-space-size=256 --heap-prof --heapsnapshot-near-heap-limit=10 "$SCRIPT_DIR/cli.mjs" "$@"
 
 EXIT_CODE=$?
 
