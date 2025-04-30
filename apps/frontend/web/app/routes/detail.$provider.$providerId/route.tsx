@@ -52,7 +52,7 @@ export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
         },
         episodeNumber: info.episode?.number !== undefined ? `${info.episode.number}` : undefined,
         datePublished: resource ? new Date(resource.createdAt).toLocaleDateString() : undefined,
-        url: location.toString()
+        url: location.pathname
       })
     : undefined;
 
