@@ -16,8 +16,8 @@ APP_HOST = 'animes.garden'
 FEED_HOST = 'api.animes.garden'
 
 [processes]
-server = 'node apps/backend/manager/cli.mjs start'
 cron = 'node apps/backend/manager/cli.mjs cron'
+server = './apps/backend/manager/manager.sh start'
 
 [http_service]
 internal_port = 3000
