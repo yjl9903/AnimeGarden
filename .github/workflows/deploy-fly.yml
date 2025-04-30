@@ -42,7 +42,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    if: ${{ github.event.inputs.environment == 'production' && github.event.inputs.server }}
+    if: ${{ github.event.inputs.environment == 'production' && github.event.inputs.server == 'true' }}
 
     concurrency: deploy-fly-server-production-group
 
@@ -62,7 +62,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    if: ${{ github.event.inputs.environment == 'production' && github.event.inputs.server }}
+    if: ${{ github.event.inputs.environment == 'production' && github.event.inputs.server == 'true' }}
 
     concurrency: deploy-fly-feed-production-group
 
