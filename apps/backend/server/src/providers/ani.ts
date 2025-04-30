@@ -15,10 +15,12 @@ export class ANiProvider extends Provider {
   public async fetchLatestResources(sys: System): Promise<ScrapedResource[]> {
     const newRes = await fetchLastestANi(fetch, { retry: 5 });
 
-    const existed = await sys.modules.resources.getResourcesByProviderId(
-      ANiProvider.name,
-      newRes.map((r) => r.providerId)
-    );
+    const existed = await sys.modules.resources
+      .getResourcesByProviderId(
+        ANiProvider.name,
+        newRes.map((r) => r.providerId)
+      )
+      .catch(() => []);
     const set = new Set(existed.map((r) => r.providerId));
 
     const realNewRes = newRes.filter((r) => !set.has(r.providerId));
@@ -30,7 +32,7 @@ export class ANiProvider extends Provider {
   }
 
   public async fetchResourceDetail(
-    _sys: System,
+    sys: System,
     id: string
   ): Promise<ScrapedResourceDetail | undefined> {
     try {
@@ -39,7 +41,7 @@ export class ANiProvider extends Provider {
         return resp;
       }
     } catch (error) {
-      console.error(error);
+      sys.logger.error(error);
     }
 
     return undefined;
