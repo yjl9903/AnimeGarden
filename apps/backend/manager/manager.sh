@@ -8,16 +8,13 @@ EXIT_CODE=$?
 
 if [ $EXIT_CODE -ne 0 ]; then
   HEAPDUMP_FILES=$(find . -type f -name "*.heapsnapshot")
-
-  # ensure .heapsnapshot files
-  if [ -z "$HEAPDUMP_FILES" ]; then
-    echo ".heapsnapshot NOT FOUND"
-    exit $EXIT_CODE
-  fi
-  
   for HEAPDUMP_FILE in $HEAPDUMP_FILES; do
-    echo "Uploading: $HEAPDUMP_FILE"
-    node "$SCRIPT_DIR/upload.mjs" "$HEAPDUMP_FILE"
+    node "$SCRIPT_DIR/upload.mjs" "$HEAPDUMP_FILE" || true
+  done
+
+  HEAPDUMP_FILES=$(find . -type f -name "*.heapprofile")
+  for HEAPDUMP_FILE in $HEAPDUMP_FILES; do
+    node "$SCRIPT_DIR/upload.mjs" "$HEAPDUMP_FILE" || true
   done
 
   exit $EXIT_CODE

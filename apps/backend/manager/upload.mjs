@@ -27,6 +27,11 @@ async function uploadFile(bucketName, filePath, targetKey) {
   console.log('Uploading:', filePath);
   const fileContent = fs.readFileSync(filePath);
 
+  if (fileContent.length === 0) {
+    console.error('Uploaded Failed:', targetKey,'empty file');
+    throw new Error('empty file')
+  }
+
   const params = {
     Bucket: bucketName,
     Key: targetKey,
@@ -41,7 +46,7 @@ async function uploadFile(bucketName, filePath, targetKey) {
     console.log(data);
     return `https://${bucketName}.${R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${targetKey}`;
   } catch (err) {
-    console.error('Uploaded Failed:', err);
+    console.error('Uploaded Failed:', targetKey, err);
     throw err;
   }
 }
