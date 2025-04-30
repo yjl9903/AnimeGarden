@@ -12,8 +12,17 @@ export class ANiProvider extends Provider {
     return ANiProvider.name;
   }
 
-  public async fetchLatestResources(): Promise<ScrapedResource[]> {
-    return await fetchLastestANi(fetch, { retry: 5 });
+  public async fetchLatestResources(sys: System): Promise<ScrapedResource[]> {
+    const newRes = await fetchLastestANi(fetch, { retry: 5 });
+
+    const existed = await sys.modules.resources.getResourcesByProviderId(
+      ANiProvider.name,
+      newRes.map((r) => r.providerId)
+    );
+    const set = new Set(existed.map((r) => r.providerId));
+
+    const realNewRes = newRes.filter((r) => !set.has(r.providerId));
+    return realNewRes;
   }
 
   public async fetchResourcePages(): Promise<ScrapedResource[]> {

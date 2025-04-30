@@ -116,7 +116,9 @@ export class UsersModule extends Module<System['modules']> {
       return [];
     }
 
-    this.logger.info(`There are ${insertions.size} users to be inserted and ${updations.size} users to be updated`);
+    this.logger.info(
+      `There are ${insertions.size} users to be inserted and ${updations.size} users to be updated`
+    );
 
     return await this.system.database.transaction(async (tx) => {
       const inserted =
@@ -273,7 +275,9 @@ export class TeamsModule extends Module<System['modules']> {
       return [];
     }
 
-    this.logger.info(`There are ${insertions.size} teams to be inserted and ${updations.size} teams to be updated`);
+    this.logger.info(
+      `There are ${insertions.size} teams to be inserted and ${updations.size} teams to be updated`
+    );
 
     return await this.system.database.transaction(async (tx) => {
       const inserted =
