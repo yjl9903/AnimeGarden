@@ -102,6 +102,34 @@ export class DetailsManager {
               }
             }
 
+            // @hack 修复缺失的字幕组头像
+            if (resource.publisher && !resource.publisher?.avatar && scraped.publisher?.avatar) {
+              const publisher = scraped.publisher;
+              nextTick().then(async () => {
+                await this.system.modules.users.insertUsers([
+                  {
+                    provider: provider,
+                    providerId: publisher.id,
+                    name: publisher.name,
+                    avatar: publisher.avatar
+                  }
+                ]);
+              });
+            }
+            if (resource.fansub && !resource.fansub?.avatar && scraped.fansub?.avatar) {
+              const fansub = scraped.fansub;
+              nextTick().then(async () => {
+                await this.system.modules.teams.insertTeams([
+                  {
+                    provider: provider,
+                    providerId: fansub.id,
+                    name: fansub.name,
+                    avatar: fansub.avatar
+                  }
+                ]);
+              });
+            }
+
             return {
               resource,
               detail
