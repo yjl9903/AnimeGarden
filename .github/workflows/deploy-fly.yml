@@ -4,15 +4,20 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Deploy Environment'
+        description: 'Deploy environment'
         required: false
         default: 'production'
         type: choice
         options:
           - production
           - test
+      web:
+        description: 'Deploy web'
+        type: boolean
+        required: true
+        default: true
       server:
-        description: 'Deploy Server'
+        description: 'Deploy server'
         type: boolean
         required: true
         default: false
@@ -22,6 +27,8 @@ jobs:
     name: Deploy Web ${{ github.event.inputs.environment }}
 
     runs-on: ubuntu-latest
+
+    if: ${{ github.event.inputs.web == 'true' }}
 
     concurrency: deploy-fly-web-${{ github.event.inputs.environment }}-group
 
