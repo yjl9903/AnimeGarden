@@ -1,17 +1,14 @@
-// @ts-nocheck
-
-import { useLoaderData, useLocation } from '@remix-run/react';
+import { Link, useLoaderData } from '@remix-run/react';
 import { redirect, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 
 import { parse } from 'anipar';
 import { formatInTimeZone } from 'date-fns-tz';
 
-import { type FetchResourceDetailResult, SupportProviders } from '@animegarden/client';
+import { SupportProviders } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import {
   splitMagnetURL,
-  fetchTimestamp,
   fetchResourceDetail,
   getPikPakUrlChecker,
   getPikPakTrackEvent,
@@ -20,16 +17,14 @@ import {
 
 import { FilesCard } from './FileTree';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   try {
     const { provider, providerId } = params;
     if (provider && providerId && SupportProviders.includes(provider)) {
       const detail = await fetchResourceDetail(provider, providerId);
-      if (detail?.ok) {
+      if (detail?.ok && detail?.resource) {
         return detail;
       }
-    } else {
-      return await fetchTimestamp();
     }
   } catch (error) {
     console.error('[ERROR]', error);
@@ -38,35 +33,11 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return redirect('/');
 };
 
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  const title = data?.resource?.title ?? '';
+export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
+  const resource = data?.resource;
+  const title = resource?.title;
 
-  return [
-    { title: (title ? title + ' | ' : '') + 'Anime Garden 動漫花園資源網第三方镜像站' },
-    { name: 'description', content: `${title}` }
-  ];
-};
-
-export default function Resources() {
-  const location = useLocation();
-  const data = useLoaderData<typeof loader>();
-  const { timestamp, resource, detail } = (data ?? {}) as FetchResourceDetailResult;
-
-  const magnet = resource.magnet || detail?.magnets.find((m) => m.url.startsWith('magnet:'))?.url;
-  const pikpakUrl = magnet ? getPikPakUrlChecker(magnet) : '';
-
-  const { provider, providerId } = resource;
-
-  // const files = detail.magnet.files.filter(
-  //   (f) => f.size !== '種子可能不存在' && f.size !== 'Bytes'
-  // );
-  const files = detail?.files ?? [];
-  const magnets =
-    (detail?.magnets ?? resource)
-      ? [{ name: '磁力链接', url: resource.magnet + resource?.tracker }]
-      : [];
-
-  const info = parse(resource.title);
+  const info = resource ? parse(resource.title) : undefined;
   const schema = info
     ? JSON.stringify({
         '@context': 'http://schema.org',
@@ -85,12 +56,35 @@ export default function Resources() {
       })
     : undefined;
 
+  return [
+    { title: (title ? title + ' | ' : '') + 'Anime Garden 動漫花園資源網第三方镜像站' },
+    { name: 'description', content: `${data?.detail?.description ?? title}` },
+    {
+      'script:ld+json': schema
+    }
+  ];
+};
+
+export default function Resources() {
+  const data = useLoaderData<typeof loader>();
+  const { timestamp, resource, detail } = data ?? {};
+
+  const magnet = resource?.magnet || detail?.magnets.find((m) => m.url.startsWith('magnet:'))?.url;
+  const pikpakUrl = magnet ? getPikPakUrlChecker(magnet) : '';
+
+  const { provider, providerId } = resource!;
+
+  const magnets =
+    (detail?.magnets ?? resource)
+      ? [{ name: '磁力链接', url: resource!.magnet + resource?.tracker }]
+      : [];
+
   return (
     <Layout timestamp={timestamp}>
       <div className="w-full pt-12 pb-24">
         <div className="detail mt-4vh w-full space-y-4">
           <h1 className="text-xl font-bold resource-title">
-            <span>{resource.title}</span>
+            <span>{resource?.title}</span>
           </h1>
           <div className="download-link rounded-md shadow-box">
             <h2 className="text-lg font-bold border-b px4 py2 flex items-center">
@@ -143,8 +137,8 @@ export default function Resources() {
               ))}
               <div>
                 <span>原链接</span>
-                <a href={resource.href} target="_blank" className="text-link">
-                  {resource.href}
+                <a href={resource!.href} target="_blank" className="text-link">
+                  {resource!.href}
                 </a>
               </div>
             </div>
@@ -162,17 +156,17 @@ export default function Resources() {
 
           <div className="publisher">
             <h2 className="text-lg font-bold pb4">
-              {resource.fansub ? '发布者 / 字幕组' : '发布者'}
+              {resource?.fansub ? '发布者 / 字幕组' : '发布者'}
             </h2>
             <div className="flex gap8">
               <div>
-                <a
-                  href={`/resources/1?publisher=${resource.publisher.name}`}
+                <Link
+                  to={`/resources/1?publisher=${resource?.publisher.name}`}
                   className="block text-left"
                 >
                   <img
                     src={
-                      resource.publisher.avatar ?? 'https://share.dmhy.org/images/defaultUser.png'
+                      resource?.publisher.avatar ?? 'https://share.dmhy.org/images/defaultUser.png'
                     }
                     alt="Publisher Avatar"
                     className="inline-block w-[100px] h-[100px] rounded"
@@ -181,10 +175,10 @@ export default function Resources() {
                         `https://share.dmhy.org/images/defaultUser.png`;
                     }}
                   />
-                  <span className="text-link block mt2">{resource.publisher.name}</span>
-                </a>
+                  <span className="text-link block mt2">{resource?.publisher.name}</span>
+                </Link>
               </div>
-              {resource.fansub && (
+              {resource?.fansub && (
                 <div>
                   <a
                     href={`/resources/1?fansub=${resource.fansub.name}`}
@@ -210,7 +204,11 @@ export default function Resources() {
           <div>
             <span className="font-bold">发布于&nbsp;</span>
             <span>
-              {formatInTimeZone(new Date(resource.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}
+              {formatInTimeZone(
+                new Date(resource?.createdAt ?? 0),
+                'Asia/Shanghai',
+                'yyyy-MM-dd HH:mm'
+              )}
             </span>
           </div>
           <FilesCard
@@ -219,13 +217,6 @@ export default function Resources() {
           ></FilesCard>
         </div>
       </div>
-      {/* structure data */}
-      {info && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        />
-      )}
     </Layout>
   );
 }
