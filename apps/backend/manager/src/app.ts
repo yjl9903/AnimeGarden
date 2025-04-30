@@ -44,6 +44,7 @@ app
   .option('--site <site>', 'Web site host')
   .option('--host <ip>', 'Listen host')
   .option('--port <port>', 'Listen port')
+  .option('--import', 'Import bangumi data', { default: false })
   .action(async (options) => {
     const sys = await initialize({ ...options, cron: false });
     sys.initialize(); // async initializing system
@@ -58,10 +59,13 @@ app
 app
   .command('cron', 'Start Anime Garden cron jobs executor')
   .option('--site <site>', 'Web site host')
+  .option('--import', 'Import bangumi data', { default: true })
   .action(async (options) => {
     const sys = await initialize({ ...options, cron: true });
     await sys.initialize();
-    await sys.import();
+    if (options.import) {
+      await sys.import();
+    }
     const executor = await makeExecutor(sys, {});
     await executor.start();
   });

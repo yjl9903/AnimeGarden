@@ -56,6 +56,8 @@ export class UsersModule extends Module<System['modules']> {
   }
 
   public async insertUsers(users: UserInfo[]) {
+    this.logger.info(`Start inserting ${users.length} users`);
+
     const dbUsers = [...this.users.values()];
     const map = new Map<string, (typeof dbUsers)[0]>();
     for (const user of dbUsers) {
@@ -109,7 +111,12 @@ export class UsersModule extends Module<System['modules']> {
       }
     }
 
-    if (insertions.size === 0 && updations.size === 0) return [];
+    if (insertions.size === 0 && updations.size === 0) {
+      this.logger.info(`There are no changes to users`);
+      return [];
+    }
+
+    this.logger.info(`There are ${insertions.size} users to be inserted and ${updations.size} users to be updated`);
 
     return await this.system.database.transaction(async (tx) => {
       const inserted =
@@ -206,6 +213,8 @@ export class TeamsModule extends Module<System['modules']> {
   }
 
   public async insertTeams(teams: TeamInfo[]) {
+    this.logger.info(`Start inserting ${teams.length} teams`);
+
     const dbTeams = [...this.teams.values()];
     const map = new Map<string, (typeof dbTeams)[0]>();
     for (const team of dbTeams) {
@@ -259,7 +268,12 @@ export class TeamsModule extends Module<System['modules']> {
       }
     }
 
-    if (insertions.size === 0 && updations.size === 0) return [];
+    if (insertions.size === 0 && updations.size === 0) {
+      this.logger.info(`There are no changes to teams`);
+      return [];
+    }
+
+    this.logger.info(`There are ${insertions.size} teams to be inserted and ${updations.size} teams to be updated`);
 
     return await this.system.database.transaction(async (tx) => {
       const inserted =
