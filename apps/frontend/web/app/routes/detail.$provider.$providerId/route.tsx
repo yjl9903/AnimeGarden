@@ -6,6 +6,8 @@ import { formatInTimeZone } from 'date-fns-tz';
 
 import { SupportProviders } from '@animegarden/client';
 
+import { APP_HOST } from '~build/env';
+
 import Layout from '~/layouts/Layout';
 import {
   splitMagnetURL,
@@ -52,7 +54,7 @@ export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
         },
         episodeNumber: info.episode?.number !== undefined ? `${info.episode.number}` : undefined,
         datePublished: resource ? new Date(resource.createdAt).toLocaleDateString() : undefined,
-        url: location.pathname
+        url: `https://${APP_HOST}${location.pathname}${location.search}`
       })
     : undefined;
 
