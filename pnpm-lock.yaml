@@ -127,8 +127,8 @@ importers:
         specifier: workspace:*
         version: link:../server
       '@aws-sdk/client-s3':
-        specifier: ^3.800.0
-        version: 3.800.0
+        specifier: ^3.802.0
+        version: 3.802.0
       '@breadc/color':
         specifier: ^0.9.7
         version: 0.9.7
@@ -561,8 +561,8 @@ packages:
   '@aws-crypto/util@5.2.0':
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
 
-  '@aws-sdk/client-s3@3.800.0':
-    resolution: {integrity: sha512-SE33Y1kbeErd5h7KlmgWs1iJ0kKi+/t9XilI6NPIb5J5TmPKVUT5gf3ywa9ZSaq1x7LiAbICm0IPEz6k0WEBbQ==}
+  '@aws-sdk/client-s3@3.802.0':
+    resolution: {integrity: sha512-YIwLLiqRZArEmRI94X8MOpWuXlmxI3NnxYv+3kk6HIc2YWPaOAf0YN7vWlnQFWo6Yi1gBRtP0HM8WzK4Bn5ORQ==}
     engines: {node: '>=18.0.0'}
 
   '@aws-sdk/client-sso@3.799.0':
@@ -8243,7 +8243,7 @@ snapshots:
       '@smithy/util-utf8': 2.3.0
       tslib: 2.8.1
 
-  '@aws-sdk/client-s3@3.800.0':
+  '@aws-sdk/client-s3@3.802.0':
     dependencies:
       '@aws-crypto/sha1-browser': 5.2.0
       '@aws-crypto/sha256-browser': 5.2.0
