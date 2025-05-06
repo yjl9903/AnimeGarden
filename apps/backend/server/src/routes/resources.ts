@@ -6,6 +6,7 @@ import { type System, memo } from '@animegarden/database';
 import { type ProviderType, SupportProviders, parseURLSearch } from '@animegarden/client';
 
 import { defineHandler } from '../utils/hono';
+import { MAX_DETAIL_CACHE_COUNT } from '../constants';
 import { type Provider, ScraperProviders } from '../providers';
 
 export const defineResourcesRoutes = defineHandler((sys, app) => {
@@ -76,7 +77,8 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
     {
       getKey: (_sys, provider, path) => provider + ':' + path,
       expirationTtl: 60 * 60 * 1000,
-      maxSize: 10_000
+      maxSize: MAX_DETAIL_CACHE_COUNT,
+      autoStartGC: true
     }
   );
 

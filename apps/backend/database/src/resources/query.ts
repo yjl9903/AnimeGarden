@@ -30,6 +30,7 @@ import type { System, Notification } from '../system';
 import { memo } from '../system/cache';
 import { resources } from '../schema/resources';
 import { jieba, nextTick, removePunctuations, retryFn } from '../utils';
+import { MAX_RESOURCES_TASK_COUNT, RESOURCES_TASK_PREFETCH_COUNT } from '../constants';
 
 import type { DatabaseResource } from './types';
 
@@ -42,16 +43,6 @@ type DatabaseFilterOptions = Omit<
   publishers?: number[];
   fansubs?: number[];
 };
-
-/**
- * 最大同时存活缓存个数
- */
-const MAX_TASK = 10_000;
-
-/**
- * 单个缓存预取数量
- */
-const TASK_PREFETCH_COUNT = 1000;
 
 export const RESOURCE_SELECTOR = {
   id: resources.id,
@@ -244,7 +235,7 @@ export class QueryManager {
     }
 
     // 2. 清理多余的缓存
-    if (tasks.length > MAX_TASK) {
+    if (tasks.length > MAX_RESOURCES_TASK_COUNT) {
       tasks.sort((lhs, rhs) => {
         if (lhs.visited.count !== rhs.visited.count) {
           return rhs.visited.count - lhs.visited.count;
@@ -252,7 +243,7 @@ export class QueryManager {
           return rhs.visited.last.getTime() - lhs.visited.last.getTime();
         }
       });
-      for (let i = MAX_TASK; i < tasks.length; i++) {
+      for (let i = MAX_RESOURCES_TASK_COUNT; i < tasks.length; i++) {
         const task = tasks[i];
         if (this.tasks.has(task.key)) {
           this.tasks.delete(task.key);
@@ -318,7 +309,7 @@ export class QueryManager {
         return hash(filter) + ':' + offset + ':' + limit;
       },
       expirationTtl: 5 * 60 * 1000,
-      maxSize: Math.round(MAX_TASK * 1.5),
+      maxSize: Math.round(MAX_RESOURCES_TASK_COUNT * 1.5),
       autoStartGC: false
     }
   );
@@ -454,7 +445,7 @@ export class QueryManager {
   }
 
   public async onNotifications(notification: Notification) {
-    await this.findFromRedis.clear();
+    this.findFromRedis.clear();
 
     const removed = new Set([
       ...notification.resources.deleted,
@@ -603,10 +594,14 @@ export class Task {
 
   public prefetch = memoAsync(async () => {
     const count = this.prefetchCount;
-    const resp = await this.query.findFromDatabase(this.options, count, TASK_PREFETCH_COUNT + 1);
+    const resp = await this.query.findFromDatabase(
+      this.options,
+      count,
+      RESOURCES_TASK_PREFETCH_COUNT + 1
+    );
     this.resources = resp;
     this.prefetchCount += resp.length;
-    this.hasMore = resp.length > TASK_PREFETCH_COUNT;
+    this.hasMore = resp.length > RESOURCES_TASK_PREFETCH_COUNT;
     this.fetchedAt = new Date();
     this.ok = true;
     return;
@@ -619,11 +614,11 @@ export class Task {
     const resp = await this.query.findFromDatabase(
       this.options,
       prevCount,
-      TASK_PREFETCH_COUNT + 1
+      RESOURCES_TASK_PREFETCH_COUNT + 1
     );
     this.resources.push(...resp);
     this.prefetchCount += resp.length;
-    this.hasMore = resp.length > TASK_PREFETCH_COUNT;
+    this.hasMore = resp.length > RESOURCES_TASK_PREFETCH_COUNT;
     this.fetchedAt = new Date();
     this.ok = true;
     this.prefetchNextPage.clear();

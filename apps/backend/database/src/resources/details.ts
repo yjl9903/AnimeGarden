@@ -9,6 +9,7 @@ import type { Detail } from '../schema';
 
 import { details } from '../schema/details';
 import { resources } from '../schema/resources';
+import { DETAIL_EXPIRE } from '../constants';
 import { splitOnce, retryFn, nextTick } from '../utils';
 
 import type { DatabaseResource } from './types';
@@ -19,8 +20,6 @@ type RedisCache = {
   resource: DatabaseResource;
   detail: Detail;
 };
-
-const DETAIL_EXPIRE = 7 * 24 * 60 * 60;
 
 export class DetailsManager {
   private readonly system: System;

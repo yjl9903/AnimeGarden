@@ -8,6 +8,7 @@ import { memo } from '../system/cache';
 import { Module } from '../system/module';
 import { retryFn } from '../utils';
 import { collections } from '../schema/collections';
+import { MAX_COLLECTION_COUNT } from '../constants';
 
 export class CollectionsModule extends Module<System['modules']> {
   public static name = 'collections';
@@ -126,6 +127,11 @@ export class CollectionsModule extends Module<System['modules']> {
         };
       }
     },
-    { getKey: (hsh) => hsh, expirationTtl: 300 * 1000, maxSize: 1000, autoStartGC: false }
+    {
+      getKey: (hsh) => hsh,
+      expirationTtl: 300 * 1000,
+      maxSize: MAX_COLLECTION_COUNT,
+      autoStartGC: false
+    }
   );
 }
