@@ -9,27 +9,30 @@ const CollectionSchema = z.object({
   hash: z.string().optional(),
   name: z.coerce.string().default(''),
   authorization: z.string(),
-  filters: z.array(
-    z
-      .object({
-        name: z.coerce.string().default(''),
-        searchParams: z.string(),
-        // filters
-        provider: z.enum(SupportProviders).optional(),
-        duplicate: z.boolean().optional(),
-        types: z.array(z.string()).optional(),
-        after: z.coerce.date().optional(),
-        before: z.coerce.date().optional(),
-        fansubs: z.array(z.string()).optional(),
-        publishers: z.array(z.string()).optional(),
-        subjects: z.array(z.number()).optional(),
-        search: z.array(z.string()).optional(),
-        include: z.array(z.string()).optional(),
-        keywords: z.array(z.string()).optional(),
-        exclude: z.array(z.string()).optional()
-      })
-      .passthrough()
-  )
+  filters: z
+    .array(
+      z
+        .object({
+          name: z.coerce.string().default(''),
+          searchParams: z.string(),
+          // filters
+          provider: z.enum(SupportProviders).optional(),
+          duplicate: z.boolean().optional(),
+          types: z.array(z.string()).optional(),
+          after: z.coerce.date().optional(),
+          before: z.coerce.date().optional(),
+          fansubs: z.array(z.string()).optional(),
+          publishers: z.array(z.string()).optional(),
+          subjects: z.array(z.number()).optional(),
+          search: z.array(z.string()).optional(),
+          include: z.array(z.string()).optional(),
+          keywords: z.array(z.string()).optional(),
+          exclude: z.array(z.string()).optional()
+        })
+        .passthrough()
+    )
+    .min(1)
+    .max(50)
 });
 
 export function parseCollection(collection: unknown): Collection<true> | undefined {
