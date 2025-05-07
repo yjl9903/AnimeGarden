@@ -130,6 +130,9 @@ export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
   } else if (res1?.fansub && res1.fansub.length > 0) {
     filter.fansubs = res1.fansub;
   }
+  if (filter.fansubs) {
+    filter.fansubs = [...new Set(filter.fansubs)];
+  }
 
   if (res2?.publisher) {
     filter.publishers = [res2.publisher];
@@ -145,6 +148,9 @@ export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
     filter.types = res2.types;
   } else if (res1?.type && res1.type.length > 0) {
     filter.types = res1.type;
+  }
+  if (filter.types) {
+    filter.types = [...new Set(filter.types)];
   }
 
   if (res2?.before || res1?.before) {
@@ -167,11 +173,17 @@ export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
   } else if (res1?.search && res1.search.length > 0) {
     filter.search = res1.search;
   }
+  if (filter.search) {
+    filter.search = [...new Set(filter.search)];
+  }
 
   if (res2?.include && res2.include.length > 0) {
     filter.include = res2.include;
   } else if (res1?.include && res1.include.length > 0) {
     filter.include = res1.include;
+  }
+  if (filter.include) {
+    filter.include = [...new Set(filter.include)];
   }
 
   if (res2?.keywords && res2.keywords.length > 0) {
@@ -179,11 +191,17 @@ export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
   } else if (res1?.keyword && res1.keyword.length > 0) {
     filter.keywords = res1.keyword;
   }
+  if (filter.keywords) {
+    filter.keywords = [...new Set(filter.keywords)];
+  }
 
   if (res2?.exclude && res2.exclude.length > 0) {
     filter.exclude = res2.exclude;
   } else if (res1?.exclude && res1.exclude.length > 0) {
     filter.exclude = res1.exclude;
+  }
+  if (filter.exclude) {
+    filter.exclude = [...new Set(filter.exclude)];
   }
 
   if (filter.search) {
@@ -219,21 +237,21 @@ export function stringifyURLSearch(options: FilterOptions) {
 
   if (search && search.length > 0) {
     // 模糊搜索模式
-    for (const word of search) {
+    for (const word of new Set(search)) {
       params.append('search', word);
     }
-    for (const word of exclude ?? []) {
+    for (const word of exclude ? new Set(exclude) : []) {
       params.append('exclude', word);
     }
   } else if ((include && include.length > 0) || (keywords && keywords.length > 0)) {
     // 标题匹配模式
-    for (const word of include ?? []) {
+    for (const word of include ? new Set(include) : []) {
       params.append('include', word);
     }
-    for (const word of keywords ?? []) {
+    for (const word of keywords ? new Set(keywords) : []) {
       params.append('keyword', word);
     }
-    for (const word of exclude ?? []) {
+    for (const word of exclude ? new Set(exclude) : []) {
       params.append('exclude', word);
     }
   }
@@ -247,15 +265,15 @@ export function stringifyURLSearch(options: FilterOptions) {
   if (subject) {
     params.set('subject', '' + subject);
   } else if (subjects) {
-    for (const subject of subjects) {
+    for (const subject of new Set(subjects)) {
       params.append('subject', '' + subject);
     }
   }
   if (subject || subjects?.length) {
-    for (const word of keywords ?? []) {
+    for (const word of keywords ? new Set(keywords) : []) {
       params.append('keyword', word);
     }
-    for (const word of exclude ?? []) {
+    for (const word of exclude ? new Set(exclude) : []) {
       params.append('exclude', word);
     }
   }
@@ -264,7 +282,7 @@ export function stringifyURLSearch(options: FilterOptions) {
   if (type) {
     params.set('type', type);
   } else if (types) {
-    for (const type of types) {
+    for (const type of new Set(types)) {
       params.append('type', type);
     }
   }
@@ -273,7 +291,7 @@ export function stringifyURLSearch(options: FilterOptions) {
   if (fansub) {
     params.set('fansub', fansub);
   } else if (fansubs) {
-    for (const fansub of fansubs) {
+    for (const fansub of new Set(fansubs)) {
       params.set('fansub', fansub);
     }
   }
@@ -282,7 +300,7 @@ export function stringifyURLSearch(options: FilterOptions) {
   if (publisher) {
     params.set('publisher', publisher);
   } else if (publishers) {
-    for (const publisher of publishers) {
+    for (const publisher of new Set(publishers)) {
       params.set('publisher', publisher);
     }
   }
