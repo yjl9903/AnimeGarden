@@ -14,7 +14,8 @@ import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
 import { stringifySearch } from '~/layouts/Search/utils';
 import { usePreferFansub } from '~/states';
-import { fetchResources, generateTitleFromFilter, getFeedURL } from '~/utils';
+import { fetchResources, getFeedURL } from '~/utils';
+import { generateTitleFromFilter } from '~/utils/server/meta';
 import { getSubjectById, getSubjectDisplayName, waitForSubjectsLoaded } from '~/utils/subjects';
 
 import { Error } from '../resources.($page)/Error';
@@ -61,8 +62,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 };
 
 export const meta: MetaFunction<typeof loader> = ({ location, data, params }) => {
-  const subjectId = +params.subject!;
-  const subject = getSubjectById(subjectId);
+  const subject = data?.subject;
   const name = getSubjectDisplayName(subject);
 
   return [

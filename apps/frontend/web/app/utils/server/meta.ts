@@ -1,6 +1,8 @@
 import type { Jsonify, ResolvedFilterOptions } from '@animegarden/client';
 
-import { getSubjectById, getSubjectByName, getSubjectDisplayName } from './subjects';
+import { getSubjectById, getSubjectDisplayName, waitForSubjectsLoaded } from '../subjects';
+
+await waitForSubjectsLoaded();
 
 export function generateTitleFromFilter(
   filter:

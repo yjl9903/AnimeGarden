@@ -58,8 +58,10 @@ export const Search = memo(() => {
           search.set('subject', id);
         }
       }
-      const content = stringifySearch(search);
-      setInput(content);
+      waitForSubjectsLoaded().then(() => {
+        const content = stringifySearch(search);
+        setInput(content);
+      });
     } else if (location.state?.trigger === 'search' && typeof location.state?.input === 'string') {
       if (location.state.input !== input) {
         setInput(location.state.input);
