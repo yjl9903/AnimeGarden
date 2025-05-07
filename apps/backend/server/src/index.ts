@@ -26,7 +26,13 @@ export * from './rss';
 export * from './sitemap';
 
 function registerHono(sys: System, app: Hono) {
-  app.use('*', cors());
+  app.use(
+    '*',
+    cors({
+      origin: '*',
+      allowMethods: ['GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'PATCH', 'OPTIONS']
+    })
+  );
   app.use('*', prettyJSON());
   app.use(
     '*',
