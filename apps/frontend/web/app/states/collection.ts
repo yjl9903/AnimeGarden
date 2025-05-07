@@ -32,7 +32,17 @@ export const currentCollectionAtom = atom<Collection | undefined, [Collection], 
     collectionsAtom && get(collectionsAtom!);
     const currentName = get(currentCollectionNameAtom);
     const current = currentName && collectionDb ? get(collectionDb!.item(currentName)) : undefined;
-    return current;
+
+    if (current) {
+      return current;
+    } else {
+      return {
+        hash: undefined,
+        name: currentName,
+        authorization: '',
+        filters: []
+      }
+    }
   },
   (_get, set, newCollection: Collection) => {
     set(currentCollectionNameAtom, newCollection.name);
