@@ -32,6 +32,7 @@ const AudioTerm = new Set([
   'FLAC×4',
   'LOSSLESS',
   'MP3',
+  'WAV',
   'OGG',
   'VORBIS',
   // Audio language
