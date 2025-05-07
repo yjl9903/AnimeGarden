@@ -34,8 +34,8 @@ import { MAX_RESOURCES_TASK_COUNT, RESOURCES_TASK_PREFETCH_COUNT } from '../cons
 
 import type { DatabaseResource } from './types';
 
-import { StringPool } from './pool';
 import { transformDatabaseUser } from './transform';
+import { TitlePool, MagnetPool, TrackerPool } from './pool';
 
 type DatabaseFilterOptions = Omit<
   Partial<ResolvedFilterOptions>,
@@ -44,10 +44,6 @@ type DatabaseFilterOptions = Omit<
   publishers?: number[];
   fansubs?: number[];
 };
-
-const TitlePool = StringPool();
-const MagnetPool = StringPool();
-const TrackerPool = StringPool();
 
 export const RESOURCE_SELECTOR = {
   id: resources.id,
@@ -165,11 +161,11 @@ export class QueryManager {
       id: r.id,
       provider: r.provider,
       providerId: r.providerId,
-      title: r.title,
+      title: TitlePool.get(r.title),
       href: transformResourceHref(r.provider as ProviderType, r.href),
       type: r.type,
-      magnet: r.magnet,
-      tracker: r.tracker,
+      magnet: MagnetPool.get(r.magnet),
+      tracker: TrackerPool.get(r.tracker),
       size: r.size,
       createdAt: r.createdAt.toISOString(),
       fetchedAt: r.fetchedAt.toISOString(),

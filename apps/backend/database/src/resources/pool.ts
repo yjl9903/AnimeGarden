@@ -13,3 +13,9 @@ export function StringPool() {
     }
   };
 }
+
+export const TitlePool = StringPool();
+
+export const MagnetPool = StringPool();
+
+export const TrackerPool = StringPool();
