@@ -19,7 +19,7 @@ export async function generateCollection(
   const resp = await fetchAPI<any>(
     'collection',
     {
-      method: 'POST',
+      method: 'PUT',
       body
     },
     options

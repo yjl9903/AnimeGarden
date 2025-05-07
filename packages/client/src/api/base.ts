@@ -17,6 +17,7 @@ export async function fetchAPI<T>(
 
   // @ts-ignore
   const headers = new Headers(options.headers);
+  headers.set(`x-trace-id`, crypto.randomUUID());
   if (!headers.get('user-agent')) {
     headers.set(`user-agent`, `animegarden@${version}`);
   }
