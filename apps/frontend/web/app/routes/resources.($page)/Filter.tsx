@@ -29,16 +29,16 @@ export function resolveFilterOptions(
   const fansubs = [...new Set(filter.fansubs ?? [])];
 
   return {
-    types,
+    types: types.length > 0 ? types : undefined,
     subjects: filter.subjects ?? [],
-    publishers,
-    fansubs,
+    publishers: publishers.length > 0 ? publishers : undefined,
+    fansubs: fansubs.length > 0 ? fansubs : undefined,
     before: filter.before ? new Date(filter.before) : undefined,
     after: filter.after ? new Date(filter.after) : undefined,
-    search: filter.search ? removeQuote(filter.search) : [],
-    include: filter.include ?? [],
-    keywords: filter.keywords ?? [],
-    exclude: filter.exclude ?? []
+    search: filter.search ? removeQuote(filter.search) : undefined,
+    include: filter.include ?? undefined,
+    keywords: filter.keywords ?? undefined,
+    exclude: filter.exclude ?? undefined
   };
 }
 
