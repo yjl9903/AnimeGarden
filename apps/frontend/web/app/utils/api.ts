@@ -1,4 +1,4 @@
-import { APP_HOST, SERVER_URL } from '~build/env';
+import { APP_HOST, FEED_HOST, SERVER_URL } from '~build/env';
 
 import {
   type Collection,
@@ -15,8 +15,8 @@ import {
 export const baseURL = import.meta.env.SSR
   ? SERVER_URL
     ? SERVER_URL
-    : `https://${APP_HOST}/api/`
-  : `https://${APP_HOST}/api/`;
+    : `https://${FEED_HOST}/`
+  : `https://${FEED_HOST}/`;
 
 export const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
   if (import.meta.env.DEV && import.meta.env.HTTPS_PROXY) {

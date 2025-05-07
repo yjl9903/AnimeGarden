@@ -15,7 +15,7 @@ export const getOpenFeedTrackEvent = () => ({
 const track = (event: string) => {
   try {
     // @ts-ignore
-    if (!umami) return;
+    if (!window.umami) return;
     // @ts-ignore
     umami.track(event);
   } catch (error) {
