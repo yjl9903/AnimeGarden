@@ -9,6 +9,11 @@ const R2_ACCOUNT_ID = '7cbfb60ad7052f0d8cf590a51e024987';
 const R2_ACCESS_KEY_ID = 'dca9a1c53946b3316761d65ce887d19f';
 const R2_SECRET_ACCESS_KEY = process.env.S3_SECRET_KEY;
 
+if (!R2_SECRET_ACCESS_KEY) {
+  console.log('Need env S3_SECRET_KEY')
+  process.exit(0);
+}
+
 // 配置 R2 客户端
 const r2Client = new S3Client({
   region: 'auto',

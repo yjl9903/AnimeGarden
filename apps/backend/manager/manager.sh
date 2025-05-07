@@ -2,26 +2,26 @@
 
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 
-node --max-old-space-size=256 --heap-prof "$SCRIPT_DIR/cli.mjs" "$@"
+node --max-old-space-size=384 --heap-prof --heapsnapshot-near-heap-limit=10 "$SCRIPT_DIR/cli.mjs" "$@"
 
 EXIT_CODE=$?
 
 if [ $EXIT_CODE -ne 0 ]; then
-  echo 'Start uploading heap dump file'
+  echo 'Start uploading heap dump files'
 
   HEAPDUMP_FILES=$(find . -type f -name "*.heapprofile")
   for HEAPDUMP_FILE in $HEAPDUMP_FILES; do
-    echo 'Uploading $HEAPDUMP_FILE'
+    echo "Uploading $HEAPDUMP_FILE"
     node "$SCRIPT_DIR/upload.mjs" "$HEAPDUMP_FILE" || true
   done
 
   HEAPDUMP_FILES=$(find . -type f -name "*.heapsnapshot")
   for HEAPDUMP_FILE in $HEAPDUMP_FILES; do
-    echo 'Uploading $HEAPDUMP_FILE'
+    echo "Uploading $HEAPDUMP_FILE"
     node "$SCRIPT_DIR/upload.mjs" "$HEAPDUMP_FILE" || true
   done
 
-  echo 'Finish uploading heap dump file'
+  echo 'Finish uploading heap dump files'
 
   exit $EXIT_CODE
 fi
