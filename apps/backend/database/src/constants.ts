@@ -3,10 +3,10 @@ export const anonymous = 'anonymous';
 /**
  * 最大同时存活缓存任务个数
  */
-export const MAX_RESOURCES_TASK_COUNT = 1_000;
+export const MAX_RESOURCES_TASK_COUNT = 300;
 
 /**
- * 最大同时存活缓存个数
+ * 最大同时存活收藏夹个数
  */
 export const MAX_COLLECTION_COUNT = 100;
 
