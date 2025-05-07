@@ -233,7 +233,12 @@ export function stringifyURLSearch(options: FilterOptions) {
     params.set('before', '' + before.getTime());
   }
 
-  const { search, include, keywords, exclude } = options;
+  const { provider } = options;
+  if (provider) {
+    params.set('provider', provider);
+  }
+
+  const { search, include, keywords, exclude, subject, subjects } = options;
 
   if (search && search.length > 0) {
     // 模糊搜索模式
@@ -243,7 +248,7 @@ export function stringifyURLSearch(options: FilterOptions) {
     for (const word of exclude ? new Set(exclude) : []) {
       params.append('exclude', word);
     }
-  } else if ((include && include.length > 0) || (keywords && keywords.length > 0)) {
+  } else if (include && include.length > 0) {
     // 标题匹配模式
     for (const word of include ? new Set(include) : []) {
       params.append('include', word);
@@ -254,22 +259,16 @@ export function stringifyURLSearch(options: FilterOptions) {
     for (const word of exclude ? new Set(exclude) : []) {
       params.append('exclude', word);
     }
-  }
-
-  const { provider } = options;
-  if (provider) {
-    params.set('provider', provider);
-  }
-
-  const { subject, subjects } = options;
-  if (subject) {
-    params.set('subject', '' + subject);
-  } else if (subjects) {
-    for (const subject of new Set(subjects)) {
-      params.append('subject', '' + subject);
+  } else {
+    // subject 默认模式
+    if (subject) {
+      params.set('subject', '' + subject);
+    } else if (subjects) {
+      for (const subject of new Set(subjects)) {
+        params.append('subject', '' + subject);
+      }
     }
-  }
-  if (subject || subjects?.length) {
+    // keywords
     for (const word of keywords ? new Set(keywords) : []) {
       params.append('keyword', word);
     }
