@@ -34,6 +34,7 @@ import { MAX_RESOURCES_TASK_COUNT, RESOURCES_TASK_PREFETCH_COUNT } from '../cons
 
 import type { DatabaseResource } from './types';
 
+import { StringPool } from './pool';
 import { transformDatabaseUser } from './transform';
 
 type DatabaseFilterOptions = Omit<
@@ -43,6 +44,10 @@ type DatabaseFilterOptions = Omit<
   publishers?: number[];
   fansubs?: number[];
 };
+
+const TitlePool = StringPool();
+const MagnetPool = StringPool();
+const TrackerPool = StringPool();
 
 export const RESOURCE_SELECTOR = {
   id: resources.id,
@@ -72,6 +77,8 @@ export class QueryManager {
 
   private readonly downgrade: Set<string> = new Set();
 
+  private readonly resources: Map<ProviderType, Map<string, DatabaseResource>> = new Map();
+
   public constructor(system: System, logger: ConsolaInstance) {
     this.system = system;
     this.logger = logger.withTag('query');
@@ -87,24 +94,46 @@ export class QueryManager {
     }
 
     // LRU 垃圾回收, 每小时 1 次
-    let ev: NodeJS.Timeout;
-    const TIMEOUT = 60 * 60 * 1000;
-    const handler = async () => {
-      try {
-        await this.clearDeadTasks();
-        ev = setTimeout(handler, TIMEOUT);
-      } catch (error) {
-        this.logger.error(error);
-      }
-    };
-    ev = setTimeout(handler, TIMEOUT);
-    this.system.disposables.push(() => clearTimeout(ev));
+    {
+      let ev: NodeJS.Timeout;
+      const TIMEOUT = 60 * 60 * 1000;
+      const handler = async () => {
+        try {
+          await this.clearDeadTasks();
+          ev = setTimeout(handler, TIMEOUT);
+        } catch (error) {
+          this.logger.error(error);
+        }
+      };
+      ev = setTimeout(handler, TIMEOUT);
+      this.system.disposables.push(() => clearTimeout(ev));
+    }
 
     // 垃圾回收
-    this.findFromRedis.startGC();
-    this.system.disposables.push(() => {
-      this.findFromRedis.stopGC();
-    });
+    {
+      this.findFromRedis.startGC();
+      this.system.disposables.push(() => {
+        this.findFromRedis.stopGC();
+      });
+    }
+
+    // 清空字符串常量池
+    {
+      let ev: NodeJS.Timeout;
+      const TIMEOUT = 24 * 60 * 60 * 1000;
+      const handler = async () => {
+        try {
+          TitlePool.clear();
+          MagnetPool.clear();
+          TrackerPool.clear();
+          ev = setTimeout(handler, TIMEOUT);
+        } catch (error) {
+          this.logger.error(error);
+        }
+      };
+      ev = setTimeout(handler, TIMEOUT);
+      this.system.disposables.push(() => clearTimeout(ev));
+    }
   }
 
   public async find(filter: ResolvedFilterOptions) {
@@ -247,6 +276,10 @@ export class QueryManager {
         const task = tasks[i];
         if (this.tasks.has(task.key)) {
           this.tasks.delete(task.key);
+          for (const r of task.resources) {
+            // 清除 intern resource object 缓存
+            this.resources.get(r.provider as ProviderType)?.delete(r.providerId);
+          }
           task.clear();
         }
       }
@@ -317,6 +350,7 @@ export class QueryManager {
   public async findFromDatabase(filter: DatabaseFilterOptions, offset: number, limit: number) {
     const now = performance.now();
     const payload = JSON.stringify(filter);
+
     this.logger.info(
       `Start executing resources query on database: ${payload} (offset: ${offset}, limit: ${limit})`
     );
@@ -436,12 +470,36 @@ export class QueryManager {
       5
     );
 
+    // 1. Intern resource.tracker
+    for (const resource of resp) {
+      resource.title = TitlePool.get(resource.title);
+      resource.magnet = MagnetPool.get(resource.magnet);
+      resource.tracker = TrackerPool.get(resource.tracker);
+    }
+
+    // 2. Intern resource object
+    const cacheResources = this.resources;
+    const internedResp = resp.map((resource) => {
+      const { provider, providerId } = resource;
+      const cache = cacheResources.get(provider)?.get(providerId);
+      if (cache) {
+        return cache;
+      }
+      if (!cacheResources.has(provider)) {
+        cacheResources.set(provider, new Map());
+      }
+      cacheResources.get(provider)?.set(providerId, resource);
+      return resource;
+    });
+    // -------------------------
+
     const end = performance.now();
+
     this.logger.info(
-      `Finish selecting ${resp.length} resources in ${Math.floor(end - now)} ms from database: ${payload} (offset: ${offset}, limit: ${limit})`
+      `Finish selecting ${internedResp.length} resources in ${Math.floor(end - now)} ms from database: ${payload} (offset: ${offset}, limit: ${limit})`
     );
 
-    return resp;
+    return internedResp;
   }
 
   public async onNotifications(notification: Notification) {
@@ -483,7 +541,11 @@ export class QueryManager {
         task.clear();
       } else {
         // Remove resources
-        removed.size > 0 && task.removeResources(removed);
+        const realRemoved = removed.size > 0 ? task.removeResources(removed) : [];
+        for (const r of realRemoved) {
+          this.resources.get(r.provider as ProviderType)?.delete(r.providerId);
+        }
+
         // Insert resources
         resp.length > 0 && task.insertResources(resp);
       }
@@ -722,7 +784,16 @@ export class Task {
   }
 
   public removeResources(removed: Set<number>) {
-    this.resources = this.resources.filter((r) => !removed.has(r.id));
+    const realRemoved: DatabaseResource[] = [];
+    this.resources = this.resources.filter((r) => {
+      if (removed.has(r.id)) {
+        realRemoved.push(r);
+        return false;
+      } else {
+        return true;
+      }
+    });
     this.prefetchCount = this.resources.length;
+    return realRemoved;
   }
 }
