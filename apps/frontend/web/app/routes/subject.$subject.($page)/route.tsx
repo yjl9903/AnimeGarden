@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import {
-  ClientLoaderFunctionArgs,
+  type ClientLoaderFunction,
   redirect,
   useLoaderData,
   useLocation,
@@ -60,14 +60,6 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   });
 };
 
-export const clientLoader = async ({ serverLoader }: ClientLoaderFunctionArgs) => {
-  const serverData = await serverLoader<typeof loader>();
-  if (serverData?.filter?.subjects) {
-    await waitForSubjectsLoaded();
-  }
-  return serverData;
-};
-
 export const meta: MetaFunction<typeof loader> = ({ location, data, params }) => {
   const subjectId = +params.subject!;
   const subject = getSubjectById(subjectId);
@@ -85,6 +77,21 @@ export const meta: MetaFunction<typeof loader> = ({ location, data, params }) =>
     }
   ];
 };
+
+export const clientLoader: ClientLoaderFunction = async ({
+  serverLoader
+}) => {
+  const serverData = await serverLoader<typeof loader>();
+  if (serverData?.filter?.subjects) {
+    await waitForSubjectsLoaded();
+  }
+  return serverData;
+};
+clientLoader.hydrate = true;
+
+export function HydrateFallback() {
+  return <div></div>;
+}
 
 export default function ResourcesIndex() {
   const params = useParams();
