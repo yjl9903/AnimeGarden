@@ -3,7 +3,7 @@ GET http://0.0.0.0:8080/users
 Content-Type: application/json
 
 ### Fetch all teams
-GET http://0.0.0.0:8080/users
+GET http://0.0.0.0:8080/teams
 Content-Type: application/json
 
 ### Fetch all subjects
@@ -105,3 +105,25 @@ Content-Type: application/json
 ### Filter with fansub and publisher
 GET http://0.0.0.0:8080/resources?after=1743206400000&fansub=S1百综字幕组&publisher=三日月万事屋&subject=509297
 Content-Type: application/json
+
+### Create collection
+POST http://0.0.0.0:8080/collection
+Content-Type: application/json
+
+{
+  "name": "收藏夹",
+  "authorization": "b7f69b00-57c2-408b-a623-ee2c46d24db2",
+  "filters": [
+    {
+      "subjects": [
+        513018
+      ],
+      "fansubs": [
+        "ANi"
+      ],
+      "after": "2025-03-24T16:00:00.000Z",
+      "name": "",
+      "searchParams": "?after=1742832000000&fansub=ANi&subject=513018"
+    }
+  ]
+}

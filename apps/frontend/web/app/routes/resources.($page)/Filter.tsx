@@ -247,7 +247,7 @@ export function Filter(props: Props) {
           <span className="text-4 text-base-800 font-bold mr2 keyword">包含关键词</span>
           {keywords.map((i, idx) => (
             <span key={i}>
-              {idx > 0 && <span className="text-base-400 text-4 select-none">&</span>}
+              {idx > 0 && <span className="text-base-400 text-4 select-none mr2">&</span>}
               {/* prettier-ignore */}
               <span className="text-4 select-text underline underline-dotted underline-gray-500">{i}</span>
             </span>
