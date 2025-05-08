@@ -1,8 +1,8 @@
 # 🌸 Anime Garden
 
 [![Group](https://img.shields.io/badge/Telegram-2CA5E0?style=flat-squeare&logo=telegram&logoColor=white)](https://t.me/+QLdRRqoDt1gxMWZl)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/yjl9903/AnimeGarden)
 [![version](https://img.shields.io/npm/v/animegarden?label=animegarden)](https://www.npmjs.com/package/animegarden)
-[![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://animes.garden)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
 [English](/README.en.md) | [简体中文](/README.md)
@@ -16,6 +16,8 @@
 + ⭐ 搜索条件收藏夹和生成聚合的 RSS 订阅链接
 + 👷‍♂️ 支持与 [AutoBangumi](https://www.autobangumi.org/) 和 [AnimeSpace](https://github.com/yjl9903/AnimeSpace) 集成
 
+> 文档: [由 DeepWiki 生成](https://deepwiki.com/yjl9903/AnimeGarden)
+>
 > 讨论群: [Telegram](https://t.me/+QLdRRqoDt1gxMWZl)
 
 ![home](./assets/home.png)
