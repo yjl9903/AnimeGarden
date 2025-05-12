@@ -3,8 +3,8 @@ import { type ConsolaInstance, createConsola } from 'consola';
 
 import type { Database } from '../connect/database';
 
+import { NOTIFY_CHANNEL, RPC_INVOKE_CHANNEL } from '../constants';
 import { makeChannelMessageBus, subscribeRedisChannel } from '../connect/redis';
-import { NOTIFY_CHANNEL, RPC_INVOKE_CHANNEL, RPC_REPLY_CHANNEL } from '../constants';
 
 import type { Notification } from './types';
 
@@ -91,14 +91,14 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
 
     this.rpcSender.send = this.options.cron
       ? async (event) => {
-          const { type, gid, payload } = event;
+          const { channel, type, gid, payload } = event;
           this.rpc.run(type, payload).then((resp) => {
-            this.rpcSender.reply({ type, gid, payload: resp });
+            this.rpcSender.reply({ channel, type, gid, payload: resp });
           });
           return true;
         }
-      : async (payload) => {
-          await redis.publish(RPC_INVOKE_CHANNEL, JSON.stringify(payload));
+      : async (event) => {
+          await redis.publish(RPC_INVOKE_CHANNEL, JSON.stringify(event));
           return true;
         };
 
@@ -112,11 +112,12 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
       this.channelMessageBus.addListener<RpcPayload>(RPC_INVOKE_CHANNEL, async (notification) => {
         this.channelMessageBus.logger.info(`Recive rpc invoke: ${notification}`);
 
-        const { type, gid, payload } = notification;
+        const { channel, type, gid, payload } = notification;
         const resp = await this.rpc.run(type, payload);
         await redis.publish(
-          RPC_REPLY_CHANNEL,
+          channel,
           JSON.stringify({
+            channel,
             type,
             gid,
             payload: resp
@@ -129,14 +130,14 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
       // Only server processes subscribe notification event
       const subs = [
         subscribeRedisChannel(redis, NOTIFY_CHANNEL),
-        subscribeRedisChannel(redis, RPC_REPLY_CHANNEL)
+        subscribeRedisChannel(redis, this.rpcSender.channel)
       ];
 
       this.channelMessageBus.addListener<Notification>(NOTIFY_CHANNEL, async (notification) => {
         await this.onNotification(notification);
       });
 
-      this.channelMessageBus.addListener<RpcPayload>(RPC_REPLY_CHANNEL, async (notification) => {
+      this.channelMessageBus.addListener<RpcPayload>(this.rpcSender.channel, async (notification) => {
         this.channelMessageBus.logger.info(`Recive rpc reply: ${notification}`);
 
         this.rpcSender.reply(notification);
