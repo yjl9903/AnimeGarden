@@ -16,7 +16,7 @@ export interface NewResource {
   tracker: string;
 
   // x KB, y MB, ...
-  size: string;
+  size: string | number;
 
   createdAt: Date;
 

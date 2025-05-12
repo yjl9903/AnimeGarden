@@ -90,7 +90,7 @@ export class DetailsManager {
             this.logger.success(`Finish fetching resource detail of ${provider}:${providerId}`);
 
             // Fix resource
-            this.fixResourceWithDetail(provider, resource, scraped);
+            this.fixResourceWithDetail(provider, found, resource, scraped);
 
             return {
               resource,
@@ -123,6 +123,7 @@ export class DetailsManager {
 
   private async fixResourceWithDetail(
     provider: ProviderType,
+    found: DatabaseResource,
     resource: Jsonify<Resource>,
     scraped: ScrapedResourceDetail
   ) {
@@ -174,6 +175,22 @@ export class DetailsManager {
         ]);
       });
     }
+
+    // 更新资源信息
+    await this.system.modules.resources.updateResource({
+      provider: found.provider,
+      providerId: found.providerId,
+      title: found.title,
+      href: found.href,
+      type: found.type,
+      magnet: found.magnet,
+      tracker: found.tracker,
+      size: found.size,
+      createdAt: new Date(found.createdAt),
+      publisher: resource.publisher.name,
+      fansub: resource.fansub?.name,
+      isDeleted: false
+    });
   }
 
   public async insertDetail(resource: DatabaseResource, scraped: ScrapedResourceDetail) {
