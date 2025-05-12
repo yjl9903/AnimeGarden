@@ -6,10 +6,21 @@ async function main() {
   const proxy = getProxy();
   if (proxy) setGlobalDispatcher(new ProxyAgent(proxy));
   const r = await fetchResources({
-    search: ['葬送的芙莉蓮'],
-    pageSize: 1
+    // include: ['喵萌奶茶屋'],
+    search: ['水星的魔女'],
+    // provider: 'dmhy',
+    // keywords: ['间谍过家家'],
+    // type: '合集',
+    // fansubs: ['喵萌奶茶屋'],
+    hooks: {
+      prefetch(path, init) {
+        console.log('Request:', path)
+        console.log('Headers:', init.headers)
+      },
+    },
+    baseURL: 'http://0.0.0.0:8080'
   });
-  console.log(r.resources);
+  console.log(r.resources.length, r.filter);
 }
 
 function getProxy() {

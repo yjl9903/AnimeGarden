@@ -595,6 +595,10 @@ export class Task {
     if (provider) {
       conds.push((r) => r.provider === provider);
     }
+    if (!duplicate) {
+      conds.push((r) => r.duplicatedId === null || r.duplicatedId === undefined);
+    }
+
     if (
       (include && include.length > 0) ||
       (keywords && keywords.length > 0) ||
@@ -608,9 +612,6 @@ export class Task {
           (exclude?.every((i) => title.indexOf(i) === -1) ?? true)
         );
       });
-    }
-    if (duplicate) {
-      conds.push((r) => r.duplicatedId !== null && r.duplicatedId !== undefined);
     }
     if ((publishers && publishers.length > 0) || (fansubs && fansubs.length > 0)) {
       conds.push(
@@ -702,6 +703,10 @@ export class Task {
     if (provider) {
       conds.push((r) => r.provider === provider);
     }
+    if (!duplicate) {
+      conds.push((r) => r.duplicatedId === null || r.duplicatedId === undefined);
+    }
+
     if ((keywords && keywords.length > 0) || (exclude && exclude.length > 0)) {
       conds.push((r) => {
         const title = normalizeTitle(r.title).toLowerCase();
@@ -713,9 +718,6 @@ export class Task {
     }
     if (subjects && subjects.length > 0) {
       conds.push((r) => subjects.some((s) => r.subjectId === s));
-    }
-    if (duplicate) {
-      conds.push((r) => r.duplicatedId !== null && r.duplicatedId !== undefined);
     }
     if ((publishers && publishers.length > 0) || (fansubs && fansubs.length > 0)) {
       conds.push(

@@ -24,6 +24,7 @@ export function makeResourcesFilter(
   if (provider) {
     conds.push((r) => r.provider === provider);
   }
+
   if (
     (include && include.length > 0) ||
     (keywords && keywords.length > 0) ||
