@@ -6,7 +6,7 @@ const logger = createConsola().withTag('rpc');
 
 export interface RpcPayload<T = any> {
   channel: string;
-  
+
   type: string;
 
   gid: string;
@@ -40,7 +40,7 @@ export interface RpcSender {
 
 export function makeRpcBus<E extends RpcEventMap>(): { sender: RpcSender; rpc: RpcBus<E> } {
   const channel = `${RPC_REPLY_CHANNEL}:${crypto.randomUUID()}`;
-  
+
   const cbs = new Map<string, Function>();
   const tasks = new Map<string, (payload: RpcPayload) => void>();
 

@@ -137,11 +137,14 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
         await this.onNotification(notification);
       });
 
-      this.channelMessageBus.addListener<RpcPayload>(this.rpcSender.channel, async (notification) => {
-        this.channelMessageBus.logger.info(`Recive rpc reply: ${notification}`);
+      this.channelMessageBus.addListener<RpcPayload>(
+        this.rpcSender.channel,
+        async (notification) => {
+          this.channelMessageBus.logger.info(`Recive rpc reply: ${notification}`);
 
-        this.rpcSender.reply(notification);
-      });
+          this.rpcSender.reply(notification);
+        }
+      );
 
       await Promise.all(subs);
     }
