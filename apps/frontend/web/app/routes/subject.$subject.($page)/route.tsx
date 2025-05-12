@@ -78,9 +78,7 @@ export const meta: MetaFunction<typeof loader> = ({ location, data, params }) =>
   ];
 };
 
-export const clientLoader: ClientLoaderFunction = async ({
-  serverLoader
-}) => {
+export const clientLoader: ClientLoaderFunction = async ({ serverLoader }) => {
   const serverData = await serverLoader<typeof loader>();
   if (serverData?.filter?.subjects) {
     await waitForSubjectsLoaded();

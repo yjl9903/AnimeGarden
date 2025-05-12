@@ -88,6 +88,9 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
     })
     .all('/resources/', etag(), (c) => {
       return listResources(c, sys);
+    })
+    .all('/resources/:page', etag(), (c) => {
+      return listResources(c, sys);
     });
 
   for (const provider of SupportProviders) {
@@ -96,6 +99,9 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
         return listResources(c, sys, provider);
       })
       .all(`/resources/${provider}/`, etag(), (c) => {
+        return listResources(c, sys, provider);
+      })
+      .all(`/resources/${provider}/:page`, etag(), (c) => {
         return listResources(c, sys, provider);
       })
       .get(`/resource/${provider}/:id`, etag(), async (c) => {

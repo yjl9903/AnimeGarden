@@ -41,7 +41,7 @@ export const currentCollectionAtom = atom<Collection | undefined, [Collection], 
         name: currentName,
         authorization: '',
         filters: []
-      }
+      };
     }
   },
   (_get, set, newCollection: Collection) => {

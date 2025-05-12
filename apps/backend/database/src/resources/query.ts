@@ -60,6 +60,7 @@ export const RESOURCE_SELECTOR = {
   publisherId: resources.publisherId,
   fansubId: resources.fansubId,
   subjectId: resources.subjectId,
+  isDeleted: resources.isDeleted,
   duplicatedId: resources.duplicatedId,
   metadata: resources.metadata
 };
@@ -162,16 +163,16 @@ export class QueryManager {
       provider: r.provider,
       providerId: r.providerId,
       title: TitlePool.get(r.title),
-      href: transformResourceHref(r.provider as ProviderType, r.href),
+      href: transformResourceHref(r.provider as ProviderType, r.href) ?? '',
       type: r.type,
       magnet: MagnetPool.get(r.magnet),
       tracker: TrackerPool.get(r.tracker),
       size: r.size,
       createdAt: r.createdAt.toISOString(),
       fetchedAt: r.fetchedAt.toISOString(),
-      publisher: transformDatabaseUser(await users.getById(r.publisherId)),
+      publisher: transformDatabaseUser(await users.getById(r.publisherId))!,
       fansub: r.fansubId ? transformDatabaseUser(await teams.getById(r.fansubId)) : undefined,
-      subjectId: r.subjectId,
+      subjectId: r.subjectId ?? undefined,
       metadata: r.metadata
     };
   }

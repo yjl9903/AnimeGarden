@@ -137,6 +137,6 @@ export function transformDatabaseUser(user?: User | Team) {
   return {
     id: user.id,
     name: user.name,
-    avatar: user.avatar
+    avatar: user.avatar ?? undefined
   };
 }

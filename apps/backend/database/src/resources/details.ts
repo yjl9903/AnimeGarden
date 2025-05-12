@@ -2,7 +2,12 @@ import type { ConsolaInstance } from 'consola';
 
 import { and, eq } from 'drizzle-orm';
 
-import { type ProviderType, type ScrapedResourceDetail } from '@animegarden/client';
+import {
+  type ProviderType,
+  type ScrapedResourceDetail,
+  type Jsonify,
+  type Resource
+} from '@animegarden/client';
 
 import type { System } from '../system';
 import type { Detail } from '../schema';
@@ -19,6 +24,8 @@ import { RESOURCE_SELECTOR } from './query';
 type RedisCache = {
   resource: DatabaseResource;
   detail: Detail;
+  isDeleted: boolean;
+  duplicatedId: number | undefined;
 };
 
 export class DetailsManager {
@@ -59,7 +66,9 @@ export class DetailsManager {
     if (!found) {
       return {
         resource: undefined,
-        detail: undefined
+        detail: undefined,
+        isDeleted: false,
+        duplicatedId: undefined
       };
     }
     const resource = await query.transform(found);
@@ -80,58 +89,14 @@ export class DetailsManager {
           if (detail) {
             this.logger.success(`Finish fetching resource detail of ${provider}:${providerId}`);
 
-            // @hack 修复老数据缺失的 magnet
-            if (!resource.magnet) {
-              const magnetFull = detail.magnets.find((m) => m.url.startsWith('magnet:'));
-              const [magnet, tracker] = splitOnce(magnetFull?.url || '', '&');
-              if (magnet && tracker) {
-                const id = resource.id;
-                resource.magnet = magnet;
-                resource.tracker = tracker;
-
-                // 更新 db
-                nextTick().then(async () => {
-                  await retryFn(async () => {
-                    await this.system.database
-                      .update(resources)
-                      .set({ magnet, tracker })
-                      .where(eq(resources.id, id));
-                  }, 5).catch(() => {});
-                });
-              }
-            }
-
-            // @hack 修复缺失的字幕组头像
-            if (resource.publisher && !resource.publisher?.avatar && scraped.publisher?.avatar) {
-              const publisher = scraped.publisher;
-              nextTick().then(async () => {
-                await this.system.modules.users.insertUsers([
-                  {
-                    provider: provider,
-                    providerId: publisher.id,
-                    name: publisher.name,
-                    avatar: publisher.avatar
-                  }
-                ]);
-              });
-            }
-            if (resource.fansub && !resource.fansub?.avatar && scraped.fansub?.avatar) {
-              const fansub = scraped.fansub;
-              nextTick().then(async () => {
-                await this.system.modules.teams.insertTeams([
-                  {
-                    provider: provider,
-                    providerId: fansub.id,
-                    name: fansub.name,
-                    avatar: fansub.avatar
-                  }
-                ]);
-              });
-            }
+            // Fix resource
+            this.fixResourceWithDetail(provider, resource, scraped);
 
             return {
               resource,
-              detail
+              detail,
+              isDeleted: found.isDeleted,
+              duplicatedId: found.duplicatedId
             };
           }
         }
@@ -142,13 +107,72 @@ export class DetailsManager {
 
       return {
         resource,
-        detail: undefined
+        detail: undefined,
+        isDeleted: found.isDeleted,
+        duplicatedId: found.duplicatedId
       };
     } else {
       return {
         resource,
-        detail
+        detail,
+        isDeleted: found.isDeleted,
+        duplicatedId: found.duplicatedId
       };
+    }
+  }
+
+  private async fixResourceWithDetail(
+    provider: ProviderType,
+    resource: Jsonify<Resource>,
+    scraped: ScrapedResourceDetail
+  ) {
+    // @hack 修复老数据缺失的 magnet
+    if (!resource.magnet) {
+      const magnetFull = scraped.magnets.find((m) => m.url.startsWith('magnet:'));
+      const [magnet, tracker] = splitOnce(magnetFull?.url || '', '&');
+      if (magnet && tracker) {
+        const id = resource.id;
+        resource.magnet = magnet;
+        resource.tracker = tracker;
+
+        // 更新 db
+        nextTick().then(async () => {
+          await retryFn(async () => {
+            await this.system.database
+              .update(resources)
+              .set({ magnet, tracker })
+              .where(eq(resources.id, id));
+          }, 5).catch(() => {});
+        });
+      }
+    }
+
+    // @hack 修复缺失的字幕组头像
+    if (resource.publisher && !resource.publisher?.avatar && scraped.publisher?.avatar) {
+      const publisher = scraped.publisher;
+      nextTick().then(async () => {
+        await this.system.modules.users.insertUsers([
+          {
+            provider: provider,
+            providerId: publisher.id,
+            name: publisher.name,
+            avatar: publisher.avatar
+          }
+        ]);
+      });
+    }
+    if (resource.fansub && !resource.fansub?.avatar && scraped.fansub?.avatar) {
+      const fansub = scraped.fansub;
+      nextTick().then(async () => {
+        await this.system.modules.teams.insertTeams([
+          {
+            provider: provider,
+            providerId: fansub.id,
+            name: fansub.name,
+            avatar: fansub.avatar
+          }
+        ]);
+      });
     }
   }
 
@@ -193,7 +217,12 @@ export class DetailsManager {
       await this.updateRedisCache(
         resource.provider as ProviderType,
         resource.providerId,
-        { resource, detail },
+        {
+          resource,
+          detail,
+          isDeleted: resource.isDeleted ?? false,
+          duplicatedId: resource.duplicatedId ?? undefined
+        },
         DETAIL_EXPIRE
       );
 

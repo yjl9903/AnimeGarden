@@ -58,6 +58,8 @@ export interface DatabaseResource {
 
   subjectId: number | null;
 
+  isDeleted: boolean | null;
+
   duplicatedId: number | null;
 
   metadata: { anipar?: ParseResult } | null;
