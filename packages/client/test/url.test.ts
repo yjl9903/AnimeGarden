@@ -189,7 +189,7 @@ describe('stringify url', () => {
     expect(
       stringifyURLSearch(parseURLSearch(new URLSearchParams(params.join('&')))).toString()
     ).toMatchInlineSnapshot(
-      `"after=1686355200000&before=1686614400000&exclude=h1&fansub=def&page=2&pageSize=100&publisher=456&search=hello&search=world&type=%E5%8A%A8%E7%94%BB"`
+      `"after=1686355200000&before=1686614400000&exclude=h1&fansub=abc&fansub=def&page=2&pageSize=100&publisher=456&search=hello&search=world&type=%E5%8A%A8%E7%94%BB"`
     );
   });
 });
