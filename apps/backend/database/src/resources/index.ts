@@ -217,9 +217,9 @@ LIMIT 1)`
     let changed = false;
     const set: Partial<typeof resourceSchema.$inferInsert> = {};
 
-    if (updated.isDeleted) {
+    if ((updated.isDeleted ?? false) !== dbRes.isDeleted) {
       changed = true;
-      set.isDeleted = false;
+      set.isDeleted = updated.isDeleted ?? false;
     }
 
     if (updated.href !== dbRes.href) {
@@ -395,6 +395,8 @@ LIMIT 1)`;
 
     const deleted = stored.filter((st) => !visited.has(st.provider + ':' + st.providerId));
     if (deleted.length > 0) {
+      this.logger.info('Mark resources as deleted', deleted);
+
       const resp = await retryFn(
         () =>
           this.database

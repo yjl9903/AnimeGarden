@@ -52,7 +52,9 @@ export class DetailsManager {
     if (cache) {
       return {
         resource: await query.transform(cache.resource),
-        detail: cache.detail
+        detail: cache.detail,
+        isDeleted: cache.isDeleted,
+        duplicatedId: cache.duplicatedId
       };
     }
 
@@ -71,12 +73,17 @@ export class DetailsManager {
         duplicatedId: undefined
       };
     }
+
     const resource = await query.transform(found);
 
     // 3. Get detail from database
     const resp2 = await this.system.database.select().from(details).where(eq(details.id, found.id));
     const detail = resp2[0];
-    if (!detail || new Date().getTime() - detail.fetchedAt.getTime() > DETAIL_EXPIRE * 1000) {
+    if (
+      found.isDeleted ||
+      !detail ||
+      new Date().getTime() - detail.fetchedAt.getTime() > DETAIL_EXPIRE * 1000
+    ) {
       this.logger.info(`Start fetching resource detail of ${provider}:${providerId}`);
 
       // 4. Fetch detail
