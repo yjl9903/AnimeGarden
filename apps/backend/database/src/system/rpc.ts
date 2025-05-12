@@ -1,5 +1,5 @@
-import { channel } from 'diagnostics_channel';
 import { createConsola } from 'consola';
+
 import { RPC_REPLY_CHANNEL } from '../constants';
 
 const logger = createConsola().withTag('rpc');
