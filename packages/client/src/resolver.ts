@@ -206,7 +206,6 @@ export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
 
   if (filter.search) {
     delete filter.include;
-    delete filter.keywords;
   }
 
   return filter;
@@ -240,10 +239,22 @@ export function stringifyURLSearch(options: FilterOptions) {
 
   const { search, include, keywords, exclude, subject, subjects } = options;
 
+  // subject
+  if (subject) {
+    params.set('subject', '' + subject);
+  } else if (subjects) {
+    for (const subject of new Set(subjects)) {
+      params.append('subject', '' + subject);
+    }
+  }
+
   if (search && search.length > 0) {
     // 模糊搜索模式
     for (const word of new Set(search)) {
       params.append('search', word);
+    }
+    for (const word of keywords ? new Set(keywords) : []) {
+      params.append('keyword', word);
     }
     for (const word of exclude ? new Set(exclude) : []) {
       params.append('exclude', word);
@@ -260,15 +271,7 @@ export function stringifyURLSearch(options: FilterOptions) {
       params.append('exclude', word);
     }
   } else {
-    // subject 默认模式
-    if (subject) {
-      params.set('subject', '' + subject);
-    } else if (subjects) {
-      for (const subject of new Set(subjects)) {
-        params.append('subject', '' + subject);
-      }
-    }
-    // keywords
+    // 关键词和禁用词
     for (const word of keywords ? new Set(keywords) : []) {
       params.append('keyword', word);
     }

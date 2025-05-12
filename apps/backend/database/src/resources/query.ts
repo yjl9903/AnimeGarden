@@ -373,9 +373,7 @@ export class QueryManager {
       conds.push(eq(resources.provider, provider));
     }
 
-    if (duplicate) {
-      conds.push(isNotNull(resources.duplicatedId));
-    } else {
+    if (!duplicate) {
       conds.push(isNull(resources.duplicatedId));
     }
 
@@ -438,21 +436,23 @@ export class QueryManager {
       );
       const tsquery = cutted.flat().join(' & ');
       conds.push(sql`(${resources.titleSearch} @@ to_tsquery('simple', ${tsquery}))`);
-    } else if ((include && include.length > 0) || (keywords && keywords.length > 0)) {
-      if (include) {
-        if (include.length === 1) {
-          conds.push(ilike(resources.titleAlt, `%${include[0]}%`));
-        } else {
-          const ic = or(...include.map((i) => ilike(resources.titleAlt, `%${i}%`)));
-          ic && conds.push(ic);
-        }
+    }
+
+    if (include && include.length > 0) {
+      if (include.length === 1) {
+        conds.push(ilike(resources.titleAlt, `%${include[0]}%`));
+      } else {
+        const ic = or(...include.map((i) => ilike(resources.titleAlt, `%${i}%`)));
+        ic && conds.push(ic);
       }
-      if (keywords) {
-        conds.push(...keywords.map((i) => ilike(resources.titleAlt, `%${i}%`)));
-      }
-      if (exclude) {
-        conds.push(...exclude.map((i) => notIlike(resources.titleAlt, `%${i}%`)));
-      }
+    }
+
+    if (keywords && keywords.length > 0) {
+      conds.push(...keywords.map((i) => ilike(resources.titleAlt, `%${i}%`)));
+    }
+
+    if (exclude && exclude.length > 0) {
+      conds.push(...exclude.map((i) => notIlike(resources.titleAlt, `%${i}%`)));
     }
 
     const resp = await retryFn(
@@ -688,6 +688,7 @@ export class Task {
   public async fetch(options: DatabaseFilterOptions, page: number, pageSize: number) {
     const {
       provider,
+      include,
       keywords,
       exclude,
       duplicate,
@@ -707,10 +708,15 @@ export class Task {
       conds.push((r) => r.duplicatedId === null || r.duplicatedId === undefined);
     }
 
-    if ((keywords && keywords.length > 0) || (exclude && exclude.length > 0)) {
+    if (
+      (include && include.length > 0) ||
+      (keywords && keywords.length > 0) ||
+      (exclude && exclude.length > 0)
+    ) {
       conds.push((r) => {
         const title = normalizeTitle(r.title).toLowerCase();
         return (
+          (include?.some((i) => title.indexOf(i) !== -1) ?? true) &&
           (keywords?.every((i) => title.indexOf(i) !== -1) ?? true) &&
           (exclude?.every((i) => title.indexOf(i) === -1) ?? true)
         );
