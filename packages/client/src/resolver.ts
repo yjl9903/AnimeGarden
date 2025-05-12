@@ -291,7 +291,7 @@ export function stringifyURLSearch(options: FilterOptions) {
     params.set('fansub', fansub);
   } else if (fansubs) {
     for (const fansub of new Set(fansubs)) {
-      params.set('fansub', fansub);
+      params.append('fansub', fansub);
     }
   }
 
@@ -300,7 +300,7 @@ export function stringifyURLSearch(options: FilterOptions) {
     params.set('publisher', publisher);
   } else if (publishers) {
     for (const publisher of new Set(publishers)) {
-      params.set('publisher', publisher);
+      params.append('publisher', publisher);
     }
   }
 
