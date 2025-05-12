@@ -20,15 +20,18 @@ export * from './cache';
 
 export { type SystemOptions } from './system';
 
-export type System = ISystem<{
-  providers: ProvidersModule;
-  resources: ResourcesModule;
-  tags: TagsModule;
-  subjects: SubjectsModule;
-  users: UsersModule;
-  teams: TeamsModule;
-  collections: CollectionsModule;
-}>;
+export type System = ISystem<
+  {
+    providers: ProvidersModule;
+    resources: ResourcesModule;
+    tags: TagsModule;
+    subjects: SubjectsModule;
+    users: UsersModule;
+    teams: TeamsModule;
+    collections: CollectionsModule;
+  },
+  {}
+>;
 
 export async function makeSystem(options: SystemOptions) {
   const system: System = new ISystem(options);

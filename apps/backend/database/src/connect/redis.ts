@@ -1,6 +1,5 @@
-import { createConsola } from 'consola';
-
 import { Redis } from 'ioredis';
+import { createConsola } from 'consola';
 
 const logger = createConsola().withTag('Redis');
 
@@ -13,20 +12,20 @@ export async function subscribeRedisChannel(redis: Redis, sub: string) {
   return await new Promise<void>((res, rej) => {
     redis.subscribe(sub, (err) => {
       if (err) {
-        logger.error(`Failed to subscribe ${sub}: ${err.message}`);
+        logger.error(`Failed to subscribe '${sub}': ${err.message}`);
         rej();
       } else {
-        logger.success(`Subscribe to ${sub} OK`);
+        logger.success(`Subscribe to '${sub}' OK`);
         res();
       }
     });
   });
 }
 
-export function makeChannelMessageBus(redis: Redis) {
+export function makeChannelMessageBus() {
   const listeners = new Map<string, Set<(payload: unknown) => void | Promise<void>>>();
 
-  redis.on('message', async (channel, message) => {
+  const handler = async (channel: string, message: string) => {
     const cbs = listeners.get(channel);
     if (cbs) {
       try {
@@ -45,9 +44,18 @@ export function makeChannelMessageBus(redis: Redis) {
       logger.warn(`Receive message from ${channel}`);
       logger.warn(message);
     }
-  });
+  };
 
-  return {
+  const instance = {
+    logger,
+    listen: (redis: Redis) => {
+      redis.on('message', handler);
+      return instance;
+    },
+    unlisten: (redis: Redis) => {
+      redis.off('message', handler);
+      return instance;
+    },
     addListener: <T>(channel: string, fn: (payload: T) => void | Promise<void>) => {
       if (!listeners.has(channel)) listeners.set(channel, new Set());
       const set = listeners.get(channel)!;
@@ -59,4 +67,6 @@ export function makeChannelMessageBus(redis: Redis) {
       set.delete(fn as any);
     }
   };
+
+  return instance;
 }

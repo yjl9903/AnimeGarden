@@ -95,7 +95,7 @@ async function fetchResources(sys: System, platform: ProviderType) {
       // Maintain provider status
       if (resources.inserted.length > 0) {
         await sys.modules.providers.updateRefreshTimestamp(platform, fetchedAt);
-        await sys.modules.providers.notifyRefreshedResources({
+        await sys.notifyRefreshedResources({
           resources: {
             inserted: resources.inserted,
             deleted: []
@@ -176,7 +176,7 @@ async function syncResources(sys: System, platform: ProviderType, start: number,
 
       if (updated.length > 0) {
         await sys.modules.providers.updateRefreshTimestamp(platform, updatedAt);
-        await sys.modules.providers.notifyRefreshedResources({
+        await sys.notifyRefreshedResources({
           resources: {
             inserted: updated,
             deleted: []
@@ -198,7 +198,7 @@ async function syncResources(sys: System, platform: ProviderType, start: number,
 
       if (sync.deleted.length > 0) {
         await sys.modules.providers.updateRefreshTimestamp(platform, deletedAt);
-        await sys.modules.providers.notifyRefreshedResources({
+        await sys.notifyRefreshedResources({
           resources: {
             inserted: [],
             deleted: sync.deleted.map((r) => r.id)
