@@ -320,8 +320,8 @@ importers:
         specifier: ^19.1.0
         version: 19.1.0(react@19.1.0)
       remix-utils:
-        specifier: ^8.5.0
-        version: 8.5.0(react@19.1.0)(zod@3.24.4)
+        specifier: ^8.7.0
+        version: 8.7.0(react@19.1.0)(zod@3.24.4)
       scule:
         specifier: ^1.3.0
         version: 1.3.0
@@ -6894,8 +6894,8 @@ packages:
     engines: {node: '>= 6.0.0'}
     hasBin: true
 
-  remix-utils@8.5.0:
-    resolution: {integrity: sha512-Wf9OGSJveBaVHKptbEgxc+DwKRUUGOH+aiaBlsrAA2b4F+gNtCkvaZzA7Tp+1esBElRcRvMZQq/0aSSWFMP18A==}
+  remix-utils@8.7.0:
+    resolution: {integrity: sha512-oRumofsYFaxHyPtqLuYe3g2nQi4SMYjCoebaeed0gYHIOKBiPPYdNP6cgmQbFjQQ5pwXV+uQiKLqO6pM9ep3VA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@edgefirst-dev/batcher': ^1.0.0
@@ -15699,7 +15699,7 @@ snapshots:
       argparse: 1.0.10
       autolinker: 3.16.2
 
-  remix-utils@8.5.0(react@19.1.0)(zod@3.24.4):
+  remix-utils@8.7.0(react@19.1.0)(zod@3.24.4):
     dependencies:
       type-fest: 4.40.1
     optionalDependencies:
