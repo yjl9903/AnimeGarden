@@ -43,7 +43,6 @@ COPY --link package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json .npmrc
 COPY ./patches/ ./patches/
 COPY ./packages/animegarden/package.json ./packages/animegarden/
 COPY ./packages/anipar/package.json ./packages/anipar/
-COPY ./packages/app/package.json ./packages/app/
 COPY ./packages/client/package.json ./packages/client/
 COPY ./packages/scraper/package.json ./packages/scraper/
 COPY ./packages/shared/package.json ./packages/shared/
