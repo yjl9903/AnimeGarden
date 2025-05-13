@@ -5,14 +5,15 @@ import type { ProviderType } from '@animegarden/client';
 import type { System, Notification } from '../system';
 import type { NewResource as NewDbResource } from '../schema';
 
-import { retryFn } from '../utils';
 import { Module } from '../system/module';
+import { retryFn } from '../utils';
 import { resources as resourceSchema } from '../schema/resources';
 
 import type { InsertResourcesOptions, NewResource } from './types';
 
 import { QueryManager } from './query';
 import { DetailsManager } from './details';
+import { prefetchKeepShare } from './keepshare';
 import { transformNewResources } from './transform';
 
 export * from './types';
@@ -179,8 +180,9 @@ LIMIT 1)`
       }
     }
 
+    // prefetch keepshare
     if (options.keepshare) {
-      // TODO: prefetch keepshare
+      prefetchKeepShare(resp)
     }
 
     return {
