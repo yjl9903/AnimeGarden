@@ -182,7 +182,7 @@ LIMIT 1)`
 
     // prefetch keepshare
     if (options.keepshare) {
-      prefetchKeepShare(resp)
+      prefetchKeepShare(resp);
     }
 
     return {

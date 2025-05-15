@@ -31,7 +31,7 @@ export class CollectionsModule extends Module<System['modules']> {
   }
 
   public async generateCollection(collection: Collection<true>) {
-    const hsh = hashCollection(collection);
+    const hsh = await hashCollection(collection);
 
     try {
       const resp = await this.database

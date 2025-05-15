@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { hash } from 'ohash';
+import { serialize } from 'ohash';
 
 import type { Collection } from './types';
 
@@ -45,7 +45,7 @@ export function parseCollection(collection: unknown): Collection<true> | undefin
   }
 }
 
-export function hashCollection(collection: Collection<true>) {
+export async function hashCollection(collection: Collection<true>) {
   const sorted = [...collection.filters];
   sorted.sort((lhs, rhs) => lhs.searchParams.localeCompare(rhs.searchParams));
   const filters = sorted.map((f) => {
@@ -60,5 +60,13 @@ export function hashCollection(collection: Collection<true>) {
     delete r.complete;
     return r;
   });
-  return hash(filters);
+
+  const body = serialize(filters);
+  const encoder = new TextEncoder();
+  const data = encoder.encode(body);
+  const digest = await crypto.subtle.digest('SHA-1', data);
+  const hashArray = Array.from(new Uint8Array(digest));
+  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+
+  return hashHex;
 }
