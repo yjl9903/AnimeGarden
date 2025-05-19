@@ -163,8 +163,8 @@ importers:
         specifier: ^0.9.7
         version: 0.9.7
       '@hono/node-server':
-        specifier: ^1.14.1
-        version: 1.14.1(hono@4.7.10)
+        specifier: ^1.14.2
+        version: 1.14.2(hono@4.7.10)
       '@hono/zod-validator':
         specifier: ^0.5.0
         version: 0.5.0(hono@4.7.10)(zod@3.24.4)
@@ -190,7 +190,7 @@ importers:
         specifier: ^5.2.3
         version: 5.2.3
       hono:
-        specifier: ^4.7.9
+        specifier: ^4.7.10
         version: 4.7.10
       ioredis:
         specifier: ^5.6.1
@@ -299,7 +299,7 @@ importers:
         specifier: ^5.2.3
         version: 5.2.3
       hono:
-        specifier: ^4.7.9
+        specifier: ^4.7.10
         version: 4.7.10
       isbot:
         specifier: ^5.1.28
@@ -1903,8 +1903,8 @@ packages:
   '@formkit/auto-animate@0.8.2':
     resolution: {integrity: sha512-SwPWfeRa5veb1hOIBMdzI+73te5puUBHmqqaF1Bu7FjvxlYSz/kJcZKSa9Cg60zL0uRNeJL2SbRxV6Jp6Q1nFQ==}
 
-  '@hono/node-server@1.14.1':
-    resolution: {integrity: sha512-vmbuM+HPinjWzPe7FFPWMMQMsbKE9gDPhaH0FFdqbGpkT5lp++tcWDTxwBl5EgS5y6JVgIaCdjeHRfQ4XRBRjQ==}
+  '@hono/node-server@1.14.2':
+    resolution: {integrity: sha512-GHjpOeHYbr9d1vkID2sNUYkl5IxumyhDrUJB7wBp7jvqYwPFt+oNKsAPBRcdSbV7kIrXhouLE199ks1QcK4r7A==}
     engines: {node: '>=18.14.1'}
     peerDependencies:
       hono: ^4
@@ -9739,7 +9739,7 @@ snapshots:
 
   '@formkit/auto-animate@0.8.2': {}
 
-  '@hono/node-server@1.14.1(hono@4.7.10)':
+  '@hono/node-server@1.14.2(hono@4.7.10)':
     dependencies:
       hono: 4.7.10
 
