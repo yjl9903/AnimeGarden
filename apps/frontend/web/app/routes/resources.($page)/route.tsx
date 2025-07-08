@@ -38,7 +38,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { ok, resources, complete, filter, timestamp } = await fetchResources({
     ...parsed,
     page: +(params.page ?? '1'),
-    pageSize: 40
+    pageSize: 30
   });
 
   return json({

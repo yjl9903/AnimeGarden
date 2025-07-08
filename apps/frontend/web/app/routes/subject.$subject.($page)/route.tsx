@@ -48,7 +48,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     subject,
     subjects: undefined,
     page: +(params.page ?? '1'),
-    pageSize: 40
+    pageSize: 30
   });
 
   return json({

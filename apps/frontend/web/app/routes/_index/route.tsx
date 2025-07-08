@@ -14,7 +14,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   try {
     const { ok, resources, timestamp } = await fetchResources({
       page: 1,
-      pageSize: 40,
+      pageSize: 30,
       type: '动画'
     });
 
