@@ -379,7 +379,7 @@ importers:
         version: 5.18.0
       '@vite-pwa/remix':
         specifier: ^0.2.0
-        version: 0.2.0(@remix-run/dev@2.16.7(@remix-run/react@2.16.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.7(typescript@5.8.3))(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(wrangler@4.17.0(@cloudflare/workers-types@4.20250528.0))(yaml@2.8.0))(@vite-pwa/assets-generator@1.0.0)(vite-plugin-pwa@1.0.0(@vite-pwa/assets-generator@1.0.0)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0))
+        version: 0.2.0(@remix-run/dev@2.16.7(@remix-run/react@2.16.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.7(typescript@5.8.3))(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(wrangler@4.17.0(@cloudflare/workers-types@4.20250528.0))(yaml@2.8.0))(@vite-pwa/assets-generator@1.0.0)(vite-plugin-pwa@1.0.1(@vite-pwa/assets-generator@1.0.0)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0))
       autoprefixer:
         specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.6)
@@ -414,8 +414,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))
       vite-plugin-pwa:
-        specifier: ^1.0.0
-        version: 1.0.0(@vite-pwa/assets-generator@1.0.0)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0)
+        specifier: ^1.0.1
+        version: 1.0.1(@vite-pwa/assets-generator@1.0.0)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0)
       vite-tsconfig-paths:
         specifier: ^5.1.4
         version: 5.1.4(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))
@@ -7780,12 +7780,12 @@ packages:
     peerDependencies:
       vite: '>=5.0.0'
 
-  vite-plugin-pwa@1.0.0:
-    resolution: {integrity: sha512-X77jo0AOd5OcxmWj3WnVti8n7Kw2tBgV1c8MCXFclrSlDV23ePzv2eTDIALXI2Qo6nJ5pZJeZAuX0AawvRfoeA==}
+  vite-plugin-pwa@1.0.1:
+    resolution: {integrity: sha512-STyUomQbydj7vGamtgQYIJI0YsUZ3T4pJLGBQDQPhzMse6aGSncmEN21OV35PrFsmCvmtiH+Nu1JS1ke4RqBjQ==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       '@vite-pwa/assets-generator': ^1.0.0
-      vite: ^3.1.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+      vite: ^3.1.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
       workbox-build: ^7.3.0
       workbox-window: ^7.3.0
     peerDependenciesMeta:
@@ -11961,9 +11961,9 @@ snapshots:
       sharp-ico: 0.1.5
       unconfig: 7.3.2
 
-  '@vite-pwa/remix@0.2.0(@remix-run/dev@2.16.7(@remix-run/react@2.16.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.7(typescript@5.8.3))(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(wrangler@4.17.0(@cloudflare/workers-types@4.20250528.0))(yaml@2.8.0))(@vite-pwa/assets-generator@1.0.0)(vite-plugin-pwa@1.0.0(@vite-pwa/assets-generator@1.0.0)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0))':
+  '@vite-pwa/remix@0.2.0(@remix-run/dev@2.16.7(@remix-run/react@2.16.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.7(typescript@5.8.3))(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(wrangler@4.17.0(@cloudflare/workers-types@4.20250528.0))(yaml@2.8.0))(@vite-pwa/assets-generator@1.0.0)(vite-plugin-pwa@1.0.1(@vite-pwa/assets-generator@1.0.0)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0))':
     dependencies:
-      vite-plugin-pwa: 1.0.0(@vite-pwa/assets-generator@1.0.0)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0)
+      vite-plugin-pwa: 1.0.1(@vite-pwa/assets-generator@1.0.0)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0)
     optionalDependencies:
       '@remix-run/dev': 2.16.7(@remix-run/react@2.16.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.7(typescript@5.8.3))(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(wrangler@4.17.0(@cloudflare/workers-types@4.20250528.0))(yaml@2.8.0)
       '@vite-pwa/assets-generator': 1.0.0
@@ -16647,7 +16647,7 @@ snapshots:
     dependencies:
       vite: 6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0)
 
-  vite-plugin-pwa@1.0.0(@vite-pwa/assets-generator@1.0.0)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0):
+  vite-plugin-pwa@1.0.1(@vite-pwa/assets-generator@1.0.0)(vite@6.3.5(@types/node@22.15.30)(jiti@2.4.2)(terser@5.39.2)(tsx@4.19.4)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0):
     dependencies:
       debug: 4.4.1
       pretty-bytes: 6.1.1
