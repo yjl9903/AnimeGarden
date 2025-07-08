@@ -5,7 +5,7 @@
   "scripts": {
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
-    "format": "prettier --write **/*.ts",
+    "format": "prettier --write '**/*.ts'",
     "test:ci": "wrangler deploy --dry-run"
   },
   "dependencies": {
