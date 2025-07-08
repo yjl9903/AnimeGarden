@@ -51,7 +51,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     pageSize: 30
   });
 
-  return json({
+  return {
     ok,
     subject: getSubjectById(subject),
     resources,
@@ -59,7 +59,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     page,
     filter,
     timestamp
-  });
+  };
 };
 
 export const meta: MetaFunction<typeof loader> = ({ location, data, params }) => {

@@ -41,14 +41,14 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     pageSize: 30
   });
 
-  return json({
+  return {
     ok,
     resources,
     complete,
     page,
     filter,
     timestamp
-  });
+  };
 };
 
 export const meta: MetaFunction<typeof loader> = ({ location, data }) => {

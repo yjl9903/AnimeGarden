@@ -19,7 +19,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
     const resp = await fetchCollection(hash);
     if (resp?.ok) {
-      return json(resp);
+      return resp;
     }
   } catch (error) {
     console.error('[ERROR]', error);

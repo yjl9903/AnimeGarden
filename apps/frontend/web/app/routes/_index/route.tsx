@@ -18,11 +18,11 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       type: '动画'
     });
 
-    return json({ ok, resources: resources as Resource<{ tracker: true }>[], timestamp });
+    return { ok, resources: resources as Resource<{ tracker: true }>[], timestamp };
   } catch (error) {
     console.error('[ERROR]', error);
 
-    return json({ ok: false, resources: [], timestamp: undefined });
+    return { ok: false, resources: [], timestamp: undefined };
   }
 };
 

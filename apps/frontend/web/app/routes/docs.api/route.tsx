@@ -12,7 +12,7 @@ export const meta: MetaFunction = () => {
 };
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
-  return json(await fetchTimestamp());
+  return await fetchTimestamp();
 };
 
 export default function About() {
