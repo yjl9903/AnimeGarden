@@ -81,8 +81,8 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/anipar
       bgmd:
-        specifier: ^0.0.61
-        version: 0.0.61
+        specifier: ^0.0.63
+        version: 0.0.63
       consola:
         specifier: ^3.4.2
         version: 3.4.2
@@ -169,8 +169,8 @@ importers:
         specifier: ^0.7.0
         version: 0.7.0(hono@4.8.4)(zod@3.25.76)
       bgmd:
-        specifier: ^0.0.61
-        version: 0.0.61
+        specifier: ^0.0.63
+        version: 0.0.63
       croner:
         specifier: ^9.0.0
         version: 9.0.0
@@ -3818,8 +3818,8 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
-  bangumi-data@0.3.172:
-    resolution: {integrity: sha512-aTRyXrf+tp9VYH8Bdm6buOiT1UJC1AnHKAxeKZ6LioQlTVHwh0pST0VFU8MRRfzFVCML/K4Xx5ZC/TTFvrmh1w==}
+  bangumi-data@0.3.176:
+    resolution: {integrity: sha512-nccCQ+Io63VoFT33+SDPegWOH1bgjYNK/pSmBM/Duh6y6TL2PEugNz3SiTwzsVrqQrIMllWyxTc+nINAFRx+Hg==}
 
   base64-arraybuffer@1.0.2:
     resolution: {integrity: sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==}
@@ -3845,8 +3845,13 @@ packages:
     engines: {node: '>=v20.8.0'}
     hasBin: true
 
-  bgmd@0.0.61:
-    resolution: {integrity: sha512-jOPQm/BrNl7fdrEwG4BialWw2oS4TbYliuTR/KjU291O5O36GpO8DxM9bK2ugzemcaw0UpLPHROmZmPFlicFFg==}
+  bgmc@0.0.12:
+    resolution: {integrity: sha512-jfQHXcaznbnbeGpWQQXOo17DMD+iMgM7cFgjq6VCXzwbL2ri9LydT2TDQKl7MHdCSxTILQFaWqbk1BvTi+Qeyw==}
+    engines: {node: '>=v20.8.0'}
+    hasBin: true
+
+  bgmd@0.0.63:
+    resolution: {integrity: sha512-7nN2f7k2zkkjzZ/3Tt+/UegE50HHybHISdhBb22F7Z+00ZB3MgHbSySF626RdOVXnKU5F0YkqRG79CBlzrHY6g==}
     engines: {node: '>=v20.8.0'}
 
   bgmt@0.1.0:
@@ -12220,7 +12225,7 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  bangumi-data@0.3.172: {}
+  bangumi-data@0.3.176: {}
 
   base64-arraybuffer@1.0.2: {}
 
@@ -12240,10 +12245,14 @@ snapshots:
     dependencies:
       breadc: 0.9.7
 
-  bgmd@0.0.61:
+  bgmc@0.0.12:
     dependencies:
-      bangumi-data: 0.3.172
-      bgmc: 0.0.10
+      breadc: 0.9.7
+
+  bgmd@0.0.63:
+    dependencies:
+      bangumi-data: 0.3.176
+      bgmc: 0.0.12
       bgmt: 0.1.0
       tmdbc: 0.0.2
       type-fest: 4.41.0
