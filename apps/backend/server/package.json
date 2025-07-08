@@ -35,7 +35,7 @@
   "scripts": {
     "build": "unbuild",
     "dev": "unbuild --stub",
-    "format": "prettier --write src/**/*.ts test/**/*.ts",
+    "format": "prettier --write 'src/**/*.ts' 'test/**/*.ts'",
     "test": "vitest",
     "test:ci": "vitest --run",
     "typecheck": "tsc --noEmit"
