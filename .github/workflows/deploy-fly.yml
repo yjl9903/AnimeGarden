@@ -30,7 +30,9 @@ jobs:
 
     if: ${{ github.event.inputs.web == 'true' }}
 
-    concurrency: deploy-fly-web-${{ github.event.inputs.environment }}-group
+    concurrency:
+      group: deploy-fly-web-${{ github.event.inputs.environment }}-group
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +53,9 @@ jobs:
 
     if: ${{ github.event.inputs.environment == 'production' && github.event.inputs.server == 'true' }}
 
-    concurrency: deploy-fly-server-production-group
+    concurrency:
+      group: deploy-fly-server-production-group
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@v4
@@ -71,7 +75,9 @@ jobs:
 
     if: ${{ github.event.inputs.environment == 'production' && github.event.inputs.server == 'true' }}
 
-    concurrency: deploy-fly-feed-production-group
+    concurrency:
+      group: deploy-fly-feed-production-group
+      cancel-in-progress: true
 
     steps:
       - uses: actions/checkout@v4
