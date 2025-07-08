@@ -31,7 +31,7 @@ importers:
         version: 0.9.7
       bumpp:
         specifier: latest
-        version: 10.1.1
+        version: 10.2.0
       drizzle-kit:
         specifier: ^0.31.1
         version: 0.31.1
@@ -163,11 +163,11 @@ importers:
         specifier: ^0.9.7
         version: 0.9.7
       '@hono/node-server':
-        specifier: ^1.14.3
-        version: 1.14.3(hono@4.7.11)
+        specifier: ^1.15.0
+        version: 1.15.0(hono@4.8.4)
       '@hono/zod-validator':
         specifier: ^0.7.0
-        version: 0.7.0(hono@4.7.11)(zod@3.25.55)
+        version: 0.7.0(hono@4.8.4)(zod@3.25.55)
       bgmd:
         specifier: ^0.0.61
         version: 0.0.61
@@ -190,8 +190,8 @@ importers:
         specifier: ^5.2.3
         version: 5.2.3
       hono:
-        specifier: ^4.7.11
-        version: 4.7.11
+        specifier: ^4.8.4
+        version: 4.8.4
       ioredis:
         specifier: ^5.6.1
         version: 5.6.1
@@ -299,8 +299,8 @@ importers:
         specifier: ^5.2.3
         version: 5.2.3
       hono:
-        specifier: ^4.7.11
-        version: 4.7.11
+        specifier: ^4.8.4
+        version: 4.8.4
       isbot:
         specifier: ^5.1.28
         version: 5.1.28
@@ -1909,8 +1909,8 @@ packages:
   '@formkit/auto-animate@0.8.2':
     resolution: {integrity: sha512-SwPWfeRa5veb1hOIBMdzI+73te5puUBHmqqaF1Bu7FjvxlYSz/kJcZKSa9Cg60zL0uRNeJL2SbRxV6Jp6Q1nFQ==}
 
-  '@hono/node-server@1.14.3':
-    resolution: {integrity: sha512-KuDMwwghtFYSmIpr4WrKs1VpelTrptvJ+6x6mbUcZnFcc213cumTF5BdqfHyW93B19TNI4Vaev14vOI2a0Ie3w==}
+  '@hono/node-server@1.15.0':
+    resolution: {integrity: sha512-MjmK4l5N4dQpZ9OSWN0tCj7ejuc7WvuWMzSKtc89bnknJykAeHxzRigXBTYZk85H6Awrii6RM59iUiUluApu2A==}
     engines: {node: '>=18.14.1'}
     peerDependencies:
       hono: ^4
@@ -3714,8 +3714,8 @@ packages:
     resolution: {integrity: sha512-bN798gFfQX+viw3R7yrGWRqnrN2oRkEkUjjl4JNn4E8GxxbjtG3FbrEIIY3l8/hrwUwIeCZvi4QuOTP4MErVug==}
     engines: {node: '>=12'}
 
-  ansis@4.0.0:
-    resolution: {integrity: sha512-P8nrHI1EyW9OfBt1X7hMSwGN2vwRuqHSKJAT1gbLWZRzDa24oHjYwGHvEgHeBepupzk878yS/HBZ0NMPYtbolw==}
+  ansis@4.1.0:
+    resolution: {integrity: sha512-BGcItUBWSMRgOCe+SVZJ+S7yTRG0eGt9cXAHev72yuGcY23hnLA7Bky5L/xLyPINoSN95geovfBkqoTlNZYa7w==}
     engines: {node: '>=14'}
 
   any-promise@1.3.0:
@@ -3900,8 +3900,8 @@ packages:
   buffer@5.7.1:
     resolution: {integrity: sha512-EHcyIPBQ4BSGlvjB16k5KgAJ27CIsHY/2JBmCRReo48y9rQ3MaUzWX3KVlBa4U7MyX02HdVj0K7C3WaB3ju7FQ==}
 
-  bumpp@10.1.1:
-    resolution: {integrity: sha512-69ejE1J5O5qDN3oRu2jRas1nQmi5zEYepjzbYPpi1znuDnp+zZ9Yezsf/nYauWeoMNALQ5toniNGET05Txj2cQ==}
+  bumpp@10.2.0:
+    resolution: {integrity: sha512-1EJ2NG3M3WYJj4m+GtcxNH6Y7zMQ8q68USMoUGKjM6qFTVXSXCnTxcQSUDV7j4KjLVbk2uK6345Z+6RKOv0w5A==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -5024,8 +5024,8 @@ packages:
   highlightjs-vue@1.0.0:
     resolution: {integrity: sha512-PDEfEF102G23vHmPhLyPboFCD+BkMGu+GuJe2d9/eH4FsCwvgBpnc9n0pGE+ffKdph38s6foEZiEjdgHdzp+IA==}
 
-  hono@4.7.11:
-    resolution: {integrity: sha512-rv0JMwC0KALbbmwJDEnxvQCeJh+xbS3KEWW5PC9cMJ08Ur9xgatI0HmtgYZfOdOSOeYsp5LO2cOhdI8cLEbDEQ==}
+  hono@4.8.4:
+    resolution: {integrity: sha512-KOIBp1+iUs0HrKztM4EHiB2UtzZDTBihDtOF5K6+WaJjCPeaW4Q92R8j63jOhvJI5+tZSMuKD9REVEXXY9illg==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -9747,13 +9747,13 @@ snapshots:
 
   '@formkit/auto-animate@0.8.2': {}
 
-  '@hono/node-server@1.14.3(hono@4.7.11)':
+  '@hono/node-server@1.15.0(hono@4.8.4)':
     dependencies:
-      hono: 4.7.11
+      hono: 4.8.4
 
-  '@hono/zod-validator@0.7.0(hono@4.7.11)(zod@3.25.55)':
+  '@hono/zod-validator@0.7.0(hono@4.8.4)(zod@3.25.55)':
     dependencies:
-      hono: 4.7.11
+      hono: 4.8.4
       zod: 3.25.55
 
   '@iconify-json/ant-design@1.2.5':
@@ -12108,7 +12108,7 @@ snapshots:
 
   ansi-styles@6.2.1: {}
 
-  ansis@4.0.0: {}
+  ansis@4.1.0: {}
 
   any-promise@1.3.0: {}
 
@@ -12319,9 +12319,9 @@ snapshots:
       base64-js: 1.5.1
       ieee754: 1.2.1
 
-  bumpp@10.1.1:
+  bumpp@10.2.0:
     dependencies:
-      ansis: 4.0.0
+      ansis: 4.1.0
       args-tokenizer: 0.3.0
       c12: 3.0.4
       cac: 6.7.14
@@ -13561,7 +13561,7 @@ snapshots:
 
   highlightjs-vue@1.0.0: {}
 
-  hono@4.7.11: {}
+  hono@4.8.4: {}
 
   hookable@5.5.3: {}
 
