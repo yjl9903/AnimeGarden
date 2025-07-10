@@ -109,8 +109,8 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/shared
       dotenv:
-        specifier: ^17.1.0
-        version: 17.1.0
+        specifier: ^17.2.0
+        version: 17.2.0
 
   apps/backend/manager:
     dependencies:
@@ -136,8 +136,8 @@ importers:
         specifier: ^0.9.7
         version: 0.9.7
       dotenv:
-        specifier: ^17.1.0
-        version: 17.1.0
+        specifier: ^17.2.0
+        version: 17.2.0
       fs-extra:
         specifier: ^11.3.0
         version: 11.3.0
@@ -181,8 +181,8 @@ importers:
         specifier: ^2.0.1
         version: 2.0.1(date-fns@2.30.0)
       dotenv:
-        specifier: ^17.1.0
-        version: 17.1.0
+        specifier: ^17.2.0
+        version: 17.2.0
       drizzle-orm:
         specifier: ^0.44.2
         version: 0.44.2(@cloudflare/workers-types@4.20250710.0)(postgres@3.4.7)
@@ -4451,8 +4451,8 @@ packages:
     resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
     engines: {node: '>=12'}
 
-  dotenv@17.1.0:
-    resolution: {integrity: sha512-tG9VUTJTuju6GcXgbdsOuRhupE8cb4mRgY5JLRCh4MtGoVo3/gfGUtOMwmProM6d0ba2mCFvv+WrpYJV6qgJXQ==}
+  dotenv@17.2.0:
+    resolution: {integrity: sha512-Q4sgBT60gzd0BB0lSyYD3xM4YxrXA9y4uBDof1JNYGzOXrQdQ6yX+7XIAqoFOGQFOTK1D3Hts5OllpxMDZFONQ==}
     engines: {node: '>=12'}
 
   drange@1.1.1:
@@ -12917,7 +12917,7 @@ snapshots:
 
   dotenv@16.5.0: {}
 
-  dotenv@17.1.0: {}
+  dotenv@17.2.0: {}
 
   drange@1.1.1: {}
 
