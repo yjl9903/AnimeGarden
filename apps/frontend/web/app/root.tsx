@@ -96,14 +96,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export function ErrorBoundary() {
   const error = useRouteError();
-  const navigate = useNavigate();
-
-  console.error(error);
 
   useEffect(() => {
+    console.error('[Route Error]', error);
+
     const timer = setTimeout(() => {
-      return navigate('/');
-    }, 1000);
+      if (!sessionStorage.getItem('script_error_reloaded')) {
+        sessionStorage.setItem('script_error_reloaded', 'true');
+        location.reload();
+      }
+    }, 3000);
 
     return () => {
       clearTimeout(timer);
