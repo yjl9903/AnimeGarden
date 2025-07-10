@@ -60,8 +60,8 @@ importers:
         specifier: ^3.5.0
         version: 3.5.0(typescript@5.8.3)(vue@3.5.14(typescript@5.8.3))
       undici:
-        specifier: ^7.10.0
-        version: 7.10.0
+        specifier: ^7.11.0
+        version: 7.11.0
       vitest:
         specifier: ^3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.16.2)(jiti@2.4.2)(jsdom@26.1.0)(terser@5.39.2)(tsx@4.20.3)(yaml@2.8.0)
@@ -142,8 +142,8 @@ importers:
         specifier: ^11.3.0
         version: 11.3.0
       undici:
-        specifier: ^7.10.0
-        version: 7.10.0
+        specifier: ^7.11.0
+        version: 7.11.0
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -7519,8 +7519,8 @@ packages:
     resolution: {integrity: sha512-gBLkYIlEnSp8pFbT64yFgGE6UIB9tAkhukC23PmMDCe5Nd+cRqKxSjw5y54MK2AZMgZfJWMaNE4nYUHgi1XEOw==}
     engines: {node: '>=18.17'}
 
-  undici@7.10.0:
-    resolution: {integrity: sha512-u5otvFBOBZvmdjWLVW+5DAc9Nkq8f24g0O9oY7qw2JVIF1VocIFoyz9JFkuVOS2j41AufeO0xnlweJ2RLT8nGw==}
+  undici@7.11.0:
+    resolution: {integrity: sha512-heTSIac3iLhsmZhUCjyS3JQEkZELateufzZuBaVM5RHXdSBMb1LPMQf5x+FH7qjsZYDP0ttAc3nnVpUB+wYbOg==}
     engines: {node: '>=20.18.1'}
 
   unenv@2.0.0-rc.17:
@@ -16403,7 +16403,7 @@ snapshots:
 
   undici@6.21.3: {}
 
-  undici@7.10.0: {}
+  undici@7.11.0: {}
 
   unenv@2.0.0-rc.17:
     dependencies:
