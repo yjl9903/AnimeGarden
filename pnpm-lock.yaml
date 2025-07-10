@@ -396,8 +396,8 @@ importers:
         specifier: ^1.2.1
         version: 1.2.1(@unocss/preset-wind3@66.3.3)(unocss@66.3.3(postcss@8.5.6)(vite@6.3.5(@types/node@22.16.2)(jiti@2.4.2)(terser@5.39.2)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.14(typescript@5.8.3)))
       unocss-preset-flowind:
-        specifier: ^0.0.5
-        version: 0.0.5(unocss@66.3.3(postcss@8.5.6)(vite@6.3.5(@types/node@22.16.2)(jiti@2.4.2)(terser@5.39.2)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.14(typescript@5.8.3)))
+        specifier: ^0.0.6
+        version: 0.0.6(unocss@66.3.3(postcss@8.5.6)(vite@6.3.5(@types/node@22.16.2)(jiti@2.4.2)(terser@5.39.2)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.14(typescript@5.8.3)))
       unocss-preset-shadcn:
         specifier: ^0.5.0
         version: 0.5.0(unocss-preset-animations@1.2.1(@unocss/preset-wind3@66.3.3)(unocss@66.3.3(postcss@8.5.6)(vite@6.3.5(@types/node@22.16.2)(jiti@2.4.2)(terser@5.39.2)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.14(typescript@5.8.3))))(unocss@66.3.3(postcss@8.5.6)(vite@6.3.5(@types/node@22.16.2)(jiti@2.4.2)(terser@5.39.2)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.14(typescript@5.8.3)))
@@ -7598,10 +7598,10 @@ packages:
       '@unocss/preset-wind3':
         optional: true
 
-  unocss-preset-flowind@0.0.5:
-    resolution: {integrity: sha512-jpNqArWBBN7FlchX1CUOTmt34FjC+fuRXIrqeu9yCEzcOd4tsyVASuNDPQrWSq+Fqinan2b1Xv4hteJgoHOkwA==}
+  unocss-preset-flowind@0.0.6:
+    resolution: {integrity: sha512-7zE/dXc0eA+TNkCrx2uQjz1Mjk/oMkEfn1uoJiwKQBoScBkFeIzwxnPxvvDTAyWmnQrVfJR89SAy+ect660wlw==}
     peerDependencies:
-      unocss: ^0.61.9
+      unocss: '>=66.0.0'
 
   unocss-preset-shadcn@0.5.0:
     resolution: {integrity: sha512-e/bF/+b5adcolHio3kst3WVF+f09+BiDkyTshUVqcWXB0RabQ0T8lzqfM3KAegTTi1iJo1jjCZoE88cUzaVDmQ==}
@@ -16488,7 +16488,7 @@ snapshots:
     optionalDependencies:
       '@unocss/preset-wind3': 66.3.3
 
-  unocss-preset-flowind@0.0.5(unocss@66.3.3(postcss@8.5.6)(vite@6.3.5(@types/node@22.16.2)(jiti@2.4.2)(terser@5.39.2)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.14(typescript@5.8.3))):
+  unocss-preset-flowind@0.0.6(unocss@66.3.3(postcss@8.5.6)(vite@6.3.5(@types/node@22.16.2)(jiti@2.4.2)(terser@5.39.2)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.14(typescript@5.8.3))):
     dependencies:
       unocss: 66.3.3(postcss@8.5.6)(vite@6.3.5(@types/node@22.16.2)(jiti@2.4.2)(terser@5.39.2)(tsx@4.20.3)(yaml@2.8.0))(vue@3.5.14(typescript@5.8.3))
 
