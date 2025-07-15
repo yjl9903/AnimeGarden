@@ -11,6 +11,14 @@ export const defineAdminRoutes = defineHandler((sys, app) => {
   const auth = bearerAuth({ token: sys.secret });
   app.use('/admin/', auth);
 
+  app.post('/admin/providers', async (c) => {
+    const resp = await sys.modules.providers.fetchProviders();
+    return c.json({
+      status: 'OK',
+      providers: Object.fromEntries([...resp.values()].map((p) => [p.id, p]))
+    } as const);
+  });
+
   for (const provider of SupportProviders) {
     app
       .post(`/admin/resources/${provider}`, async (c) => {

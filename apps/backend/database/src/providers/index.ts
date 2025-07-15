@@ -60,6 +60,8 @@ export class ProvidersModule extends Module<System['modules']> {
         5
       );
 
+      this.fetchProviders();
+
       return resp[0];
     } catch (error) {
       this.logger.error(error);
@@ -83,6 +85,8 @@ export class ProvidersModule extends Module<System['modules']> {
             .returning(),
         5
       );
+
+      this.fetchProviders();
 
       return resp[0];
     } catch (error) {
