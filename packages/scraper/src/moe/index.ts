@@ -1,9 +1,8 @@
 import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client';
 
-import { retryFn } from '@animegarden/shared';
+import { retryFn, removeExtraSpaces, stripSuffix } from '@animegarden/shared';
 
 import { NetworkError } from '../error';
-import { removeExtraSpaces, stripSuffix } from '../utils';
 
 import { getType } from './tag';
 import { fetchTeam, fetchUser } from './user';
