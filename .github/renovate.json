@@ -2,6 +2,7 @@
   "extends": [
     "github>yjl9903/renovate-config"
   ],
+  "baseBranchPatterns": ["renovate/main"],
   "packageRules": [
     {
       "matchPackageNames": ["bgmd", "swagger-ui-react", "lucide-react"],
