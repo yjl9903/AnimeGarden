@@ -186,6 +186,26 @@ app
   });
 
 app
+  .command('fetch mikan', 'Fetch resources from mikan')
+  .option('--start <number>', 'Fetch resources start from page', { cast: (v) => (v ? +v : 1) })
+  .option('--end <number>', 'Fetch resources end before page')
+  .option('--retry <count>', 'Request retry times', { cast: (v) => (v ? +v : 5) })
+  .option('--out-dir <dir>', 'Fetched output dir')
+  .action(async (options) => {
+    const outDir = path.join(options.outDir ?? './output/', 'mikan');
+    await fs.ensureDir(outDir);
+
+    const { fetchMikanPage } = await import('@animegarden/scraper');
+    const start = options.start;
+    const end = options.end ? +options.end : start + 1;
+    for (let i = start; i < end; i++) {
+      const resp = await fetchMikanPage(fetch, { page: i, retry: options.retry });
+      if (resp.length === 0) break;
+      fs.writeFileSync(path.join(outDir, i + '.json'), JSON.stringify(resp, null, 2), 'utf-8');
+    }
+  });
+
+app
   .command('import [dir]', 'Import subjects, tags, and local resources data (WIP)')
   .action(async (dir, options) => {
     const sys = await initialize(options);
@@ -247,6 +267,15 @@ app
   .action(async (id, options) => {
     const { fetchANiDetail } = await import('@animegarden/scraper');
     const resp = await fetchANiDetail(fetch, id, { retry: options.retry });
+    console.log(resp);
+    return resp;
+  });
+
+app.command('detail mikan <id>', 'Fetch resource detail from mikan')
+  .option('--retry <count>', 'Request retry times', { cast: (v) => (v ? +v : 5) })
+  .action(async (id, options) => {
+    const { fetchMikanDetail } = await import('@animegarden/scraper');
+    const resp = await fetchMikanDetail(fetch, id, { retry: options.retry });
     console.log(resp);
     return resp;
   });

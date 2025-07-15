@@ -1,0 +1,1 @@
+ALTER TYPE "public"."resources_provider" ADD VALUE 'mikan';
