@@ -35,7 +35,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   }
 
   const parsed = parseURLSearch(url.searchParams, { pageSize: 80 });
-  const { ok, resources, complete, filter, timestamp } = await fetchResources({
+  const { ok, resources, pagination, filter, timestamp } = await fetchResources({
     ...parsed,
     page: +(params.page ?? '1'),
     pageSize: 30
@@ -44,7 +44,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   return {
     ok,
     resources,
-    complete,
+    pagination,
     page,
     filter,
     timestamp
@@ -74,7 +74,7 @@ clientLoader.hydrate = true;
 
 export default function ResourcesIndex() {
   const location = useLocation();
-  const { ok, resources, complete, filter, page, timestamp } = useLoaderData<typeof loader>();
+  const { ok, resources, pagination, filter, page, timestamp } = useLoaderData<typeof loader>();
   const feedURL = useMemo(() => getFeedURL(location.search), [location]);
 
   usePreferFansub(filter?.fansubs);
@@ -88,7 +88,7 @@ export default function ResourcesIndex() {
             <Resources
               resources={resources}
               page={page}
-              complete={complete}
+              complete={pagination?.complete ?? false}
               timestamp={new Date(timestamp!)}
               link={(page) => `/resources/${page}${location.search}`}
             ></Resources>

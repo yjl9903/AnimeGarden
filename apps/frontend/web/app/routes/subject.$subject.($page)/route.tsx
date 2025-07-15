@@ -43,7 +43,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const parsed = parseURLSearch(url.searchParams, { pageSize: 80 });
   const subject = +params.subject!;
 
-  const { ok, resources, complete, filter, timestamp } = await fetchResources({
+  const { ok, resources, pagination, filter, timestamp } = await fetchResources({
     ...parsed,
     subject,
     subjects: undefined,
@@ -55,7 +55,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     ok,
     subject: getSubjectById(subject),
     resources,
-    complete,
+    pagination,
     page,
     filter,
     timestamp
@@ -95,7 +95,7 @@ export function HydrateFallback() {
 export default function ResourcesIndex() {
   const params = useParams();
   const location = useLocation();
-  const { ok, subject, resources, complete, filter, page, timestamp } =
+  const { ok, subject, resources, pagination, filter, page, timestamp } =
     useLoaderData<typeof loader>();
   const feedURL = useMemo(() => {
     const search = new URLSearchParams(location.search);
@@ -114,7 +114,7 @@ export default function ResourcesIndex() {
             <Resources
               resources={resources}
               page={page}
-              complete={complete}
+              complete={pagination?.complete ?? false}
               timestamp={new Date(timestamp!)}
               pathname={`/subject/${params.subject}`}
               link={(page) => `/subject/${params.subject}/${page}${location.search}`}

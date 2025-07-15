@@ -4,6 +4,7 @@ import {
   type Collection,
   type ProviderType,
   type FilterOptions,
+  type PaginationOptions,
   type FetchResourcesOptions,
   fetchAPI as rawFetchAPI,
   fetchResources as rawFetchResources,
@@ -75,7 +76,7 @@ export async function fetchTimestamp(): Promise<{ timestamp?: string | undefined
 }
 
 export async function fetchResources(
-  filter: FilterOptions = {},
+  filter: FilterOptions & PaginationOptions = {},
   options: {
     fetch?: typeof ofetch;
     signal?: AbortSignal;
@@ -85,38 +86,24 @@ export async function fetchResources(
 ) {
   const timeout = options.timeout ?? 30 * 1000;
 
-  try {
-    const resp = await rawFetchResources<FetchResourcesOptions & { tracker: true; metadata: true }>(
-      {
-        fetch: options.fetch ?? ofetch,
-        baseURL,
-        timeout,
-        signal: options.signal,
-        retry: options.retry ?? 1,
-        ...filter,
-        tracker: true,
-        metadata: true
-      } as const
-    );
+  const resp = await rawFetchResources<FetchResourcesOptions & { tracker: true; metadata: true }>({
+    fetch: options.fetch ?? ofetch,
+    baseURL,
+    timeout,
+    signal: options.signal,
+    retry: options.retry ?? 1,
+    ...filter,
+    tracker: true,
+    metadata: true
+  } as const);
 
-    if (resp?.timestamp) {
-      lastTimestamp = resp.timestamp;
-    } else if (resp) {
-      resp.timestamp = lastTimestamp;
-    }
-
-    return resp;
-  } catch (error) {
-    console.error('[API]', 'fetchResources', filter, error);
-
-    return {
-      ok: false,
-      resources: [],
-      complete: false,
-      filter: undefined,
-      timestamp: lastTimestamp
-    };
+  if (resp?.timestamp) {
+    lastTimestamp = resp.timestamp;
+  } else {
+    resp.timestamp = lastTimestamp;
   }
+
+  return resp;
 }
 
 export async function fetchResourceDetail(provider: string, href: string) {
