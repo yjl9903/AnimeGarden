@@ -1,8 +1,14 @@
 import { z } from 'zod';
 
-import type { FilterOptions, ResolvedFilterOptions } from './types';
+import type {
+  PaginationOptions,
+  FilterOptions,
+  PresetOptions,
+  ResolvedFilterOptions,
+  ResolvedPaginationOptions
+} from './types';
 
-import { SupportProviders } from './constants';
+import { DefaultPageSize, MaxRequestPageSize, SupportPresets, SupportProviders } from './constants';
 
 const dateLike = z.union([
   z.null(),
@@ -14,6 +20,8 @@ const dateLike = z.union([
 const stringArray = z.union([z.string().transform((s) => [s]), z.array(z.string())]);
 
 const providerEnum = z.enum(SupportProviders);
+
+const presetEnum = z.enum(SupportPresets);
 
 const UrlSearchSchema = {
   provider: providerEnum.optional(),
@@ -29,7 +37,8 @@ const UrlSearchSchema = {
   search: z.string().array().optional(),
   include: z.string().array().optional(),
   keyword: z.string().array().optional(),
-  exclude: z.string().array().optional()
+  exclude: z.string().array().optional(),
+  preset: presetEnum.optional()
 };
 
 const BodySchema = {
@@ -50,10 +59,14 @@ const BodySchema = {
   search: stringArray.optional(),
   include: stringArray.optional(),
   keywords: stringArray.optional(),
-  exclude: stringArray.optional()
+  exclude: stringArray.optional(),
+  preset: presetEnum.optional()
 };
 
-export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
+export function parseURLSearch(
+  params?: URLSearchParams,
+  body?: PaginationOptions & FilterOptions & PresetOptions
+) {
   const res1 = params
     ? {
         provider: UrlSearchSchema.provider.safeParse(params.get('provider')).data,
@@ -69,7 +82,8 @@ export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
         search: UrlSearchSchema.search.safeParse(params.getAll('search')).data,
         include: UrlSearchSchema.include.safeParse(params.getAll('include')).data,
         keyword: UrlSearchSchema.keyword.safeParse(params.getAll('keyword')).data,
-        exclude: UrlSearchSchema.exclude.safeParse(params.getAll('exclude')).data
+        exclude: UrlSearchSchema.exclude.safeParse(params.getAll('exclude')).data,
+        preset: UrlSearchSchema.preset.safeParse(params.get('preset')).data
       }
     : undefined;
 
@@ -92,27 +106,39 @@ export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
         search: BodySchema.search.safeParse(body.search).data,
         include: BodySchema.include.safeParse(body.include).data,
         keywords: BodySchema.keywords.safeParse(body.keywords).data,
-        exclude: BodySchema.exclude.safeParse(body.exclude).data
+        exclude: BodySchema.exclude.safeParse(body.exclude).data,
+        preset: BodySchema.preset.safeParse(body.preset).data
       }
     : undefined;
 
-  const filter: ResolvedFilterOptions = {
+  const pagination: ResolvedPaginationOptions = {
     page: res1?.page ?? res2?.page ?? 1,
-    pageSize: res1?.pageSize ?? res2?.pageSize ?? 100
+    pageSize: res1?.pageSize ?? res2?.pageSize ?? DefaultPageSize
   };
+  const filter: ResolvedFilterOptions = {};
 
   const isNaN = (d: unknown): boolean => d === undefined || d === null || Number.isNaN(d);
 
-  if (isNaN(filter.page) || filter.page < 1) {
-    filter.page = 1;
+  if (isNaN(pagination.page) || pagination.page < 1) {
+    pagination.page = 1;
   } else {
-    filter.page = Math.round(filter.page);
+    pagination.page = Math.round(pagination.page);
   }
 
-  if (isNaN(filter.pageSize) || filter.pageSize < 1 || filter.pageSize > 1000) {
-    filter.pageSize = 100;
+  if (
+    isNaN(pagination.pageSize) ||
+    pagination.pageSize < 1 ||
+    pagination.pageSize > MaxRequestPageSize
+  ) {
+    pagination.pageSize = DefaultPageSize;
   } else {
-    filter.pageSize = Math.round(filter.pageSize);
+    pagination.pageSize = Math.round(pagination.pageSize);
+  }
+
+  if (res2?.preset) {
+    filter.preset = res2.preset;
+  } else if (res1?.preset) {
+    filter.preset = res1.preset;
   }
 
   if (res2?.provider) {
@@ -208,13 +234,17 @@ export function parseURLSearch(params?: URLSearchParams, body?: FilterOptions) {
     delete filter.include;
   }
 
-  return filter;
+  return { pagination, filter };
 }
 
-export function stringifyURLSearch(options: FilterOptions) {
+export function stringifyURLSearch(options: PaginationOptions & FilterOptions & PresetOptions) {
   const params = new URLSearchParams();
 
-  const { page, pageSize, duplicate, after, before } = options;
+  const { page, pageSize, duplicate, after, before, preset } = options;
+
+  if (preset) {
+    params.set('preset', preset);
+  }
 
   if (page) {
     params.set('page', '' + page);

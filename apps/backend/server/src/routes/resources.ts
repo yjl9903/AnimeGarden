@@ -14,16 +14,16 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
     const url = new URL(ctx.req.url);
     // sys.logger.info(`Receive search params: ${url.search}`);
 
-    const filter = parseURLSearch(url.searchParams, await ctx.req.json().catch(() => undefined));
-    if (!filter) {
-      return ctx.json({ status: 'ERROR', message: 'Request is not valid' }, 400);
-    }
+    const { pagination, filter } = parseURLSearch(
+      url.searchParams,
+      await ctx.req.json().catch(() => undefined)
+    );
 
     if (provider) {
       filter.provider = provider;
     }
 
-    const resp = await sys.modules.resources.query.find(filter);
+    const resp = await sys.modules.resources.query.find(filter, pagination);
 
     // Remove tracker the response body
     const isEnable = (key: string) => {
@@ -48,7 +48,13 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
 
     ctx.res.headers.set('Cache-Control', `public, max-age=${5 * 60}`);
 
-    return ctx.json({ status: 'OK', ...resp, timestamp: sys.modules.providers.timestamp });
+    return ctx.json({
+      status: 'OK',
+      // For legacy compatibility
+      complete: resp.pagination.complete,
+      ...resp,
+      timestamp: sys.modules.providers.timestamp
+    });
   }
 
   const findProviderDetail = memo(

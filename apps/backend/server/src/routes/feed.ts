@@ -13,12 +13,12 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
       const url = new URL(ctx.req.url);
       // sys.logger.info(`Receive feed.xml search params: ${url.search}`);
 
-      const filter = parseURLSearch(url.searchParams, await ctx.req.json().catch(() => undefined));
-      if (!filter) {
-        return ctx.json({ status: 'ERROR', message: 'Request is not valid' }, 400);
-      }
+      const { pagination, filter } = parseURLSearch(
+        url.searchParams,
+        await ctx.req.json().catch(() => undefined)
+      );
 
-      const resp = await sys.modules.resources.query.find(filter);
+      const resp = await sys.modules.resources.query.find(filter, pagination);
 
       ctx.res.headers.set('Content-Type', 'application/xml; charset=UTF-8');
       ctx.res.headers.set('Cache-Control', `public, max-age=${1 * 60 * 60}`);
