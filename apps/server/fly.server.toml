@@ -10,8 +10,8 @@ primary_region = 'lax'
 dockerfile = 'Dockerfile'
 
 [build.args]
-NODE_VERSION = '24.0.2'
-PNPM_VERSION = '10.11.0'
+NODE_VERSION = '24.3.0'
+PNPM_VERSION = '10.13.1'
 APP_HOST = 'animes.garden'
 FEED_HOST = 'api.animes.garden'
 
