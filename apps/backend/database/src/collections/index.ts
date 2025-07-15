@@ -113,7 +113,7 @@ export class CollectionsModule extends Module<System['modules']> {
 
         const results = await Promise.all(
           filters.map((f) =>
-            this.system.modules.resources.query.find({ ...f, page: 1, pageSize: 1000 })
+            this.system.modules.resources.query.find(f, { page: 1, pageSize: 1000 })
           )
         );
 
