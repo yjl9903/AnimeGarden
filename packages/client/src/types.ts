@@ -1,8 +1,10 @@
 import type { ParseResult } from 'anipar';
 
-import type { SupportProviders } from './constants';
+import type { SupportPresets, SupportProviders } from './constants';
 
 export type ProviderType = (typeof SupportProviders)[number];
+
+export type PresetType = (typeof SupportPresets)[number];
 
 /**
  * Transform type to corresponding JSON.parse(JSON.stringify(...))
@@ -184,7 +186,9 @@ export type FetchOptions = {
   };
 };
 
-export type FetchResourcesOptions = FilterOptions &
+export type FetchResourcesOptions = PaginationOptions &
+  FilterOptions &
+  PresetOptions &
   FetchOptions & {
     /**
      * Query count resources
@@ -217,7 +221,7 @@ export type FetchResourcesOptions = FilterOptions &
 
 export type FetchResourceDetailOptions = FetchOptions & {};
 
-export type FilterOptions = {
+export type PaginationOptions = {
   /**
    * Query the specified page
    *
@@ -231,7 +235,18 @@ export type FilterOptions = {
    * @default 100
    */
   pageSize?: number;
+};
 
+export type ResolvedPaginationOptions = Required<PaginationOptions>;
+
+export type PresetOptions = {
+  /**
+   * Predefined filter preset options
+   */
+  preset?: PresetType;
+};
+
+export type FilterOptions = {
   /**
    * Only filter resources in the specific provider
    */
@@ -355,10 +370,8 @@ export type FilterOptions = {
       }
   );
 
-export interface ResolvedFilterOptions {
-  page: number;
-
-  pageSize: number;
+export type ResolvedFilterOptions = {
+  preset?: PresetType;
 
   provider?: ProviderType;
 
@@ -383,7 +396,7 @@ export interface ResolvedFilterOptions {
   keywords?: string[];
 
   exclude?: string[];
-}
+};
 
 export interface Collection<S extends boolean = boolean> {
   hash?: string;
@@ -431,7 +444,7 @@ export interface CollectionResourcesResult<
   results: Array<{
     resources: Resource<T>[];
     complete: boolean;
-    filter: Omit<ResolvedFilterOptions, 'page'> | undefined;
+    filter: ResolvedFilterOptions | undefined;
   }>;
 
   timestamp: Date;
@@ -441,7 +454,7 @@ export type CollectionFilter<
   S extends boolean = false,
   R extends boolean = true,
   T extends { tracker?: boolean; metadata?: boolean } = {}
-> = Omit<ResolvedFilterOptions, 'page' | 'pageSize'> & {
+> = ResolvedFilterOptions & {
   name: string;
 
   searchParams: S extends true ? string : S extends false ? undefined : string | undefined;

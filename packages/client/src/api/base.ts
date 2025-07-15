@@ -1,10 +1,8 @@
 import { retryFn, sleep } from '@animegarden/shared';
 
-import { version } from '../../package.json';
-
 import type { FetchOptions } from '../types';
 
-import { DefaultBaseURL } from '../constants';
+import { version, DefaultBaseURL } from '../constants';
 
 export async function fetchAPI<T>(
   path: string,

@@ -11,7 +11,6 @@ import {
   ilike,
   notIlike,
   inArray,
-  isNotNull,
   isNull,
   lte,
   or,
@@ -21,6 +20,7 @@ import {
 import {
   type ProviderType,
   type ResolvedFilterOptions,
+  ResolvedPaginationOptions,
   normalizeTitle,
   transformResourceHref
 } from '@animegarden/client';
@@ -83,11 +83,13 @@ export class QueryManager {
 
   public async initialize() {
     if (!this.system.options.cron) {
-      this.find({
-        page: 1,
-        pageSize: 100,
-        types: ['动画']
-      });
+      this.find(
+        {
+          preset: 'bangumi',
+          types: ['动画']
+        },
+        { page: 1, pageSize: 100 }
+      );
     }
 
     // LRU 垃圾回收, 每小时 1 次
@@ -133,18 +135,24 @@ export class QueryManager {
     }
   }
 
-  public async find(filter: ResolvedFilterOptions) {
+  public async find(filter: ResolvedFilterOptions, pagination: ResolvedPaginationOptions) {
     const dbOptions = this.normalizeDatabaseFilterOptions(filter);
-    const { resources, hasMore } = await this.findFromTask(dbOptions, filter.page, filter.pageSize);
+    const { resources, hasMore } = await this.findFromTask(
+      dbOptions,
+      pagination.page,
+      pagination.pageSize
+    );
 
     const { users, teams } = this.system.modules;
 
     return {
       resources: await Promise.all(resources.map(async (r) => this.transform(r))),
-      complete: !hasMore,
+      pagination: {
+        page: pagination.page,
+        pageSize: pagination.pageSize,
+        complete: !hasMore
+      },
       filter: {
-        page: filter.page,
-        pageSize: filter.pageSize,
         ...dbOptions,
         publishers: dbOptions.publishers?.map((p) => users.ids.get(p)?.name!),
         fansubs: dbOptions.fansubs?.map((p) => teams.ids.get(p)?.name!),
