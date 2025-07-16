@@ -115,6 +115,9 @@ export const Footer = memo((props: FooterProps) => {
             >
               问题反馈
             </a>
+            <NavLink to="/docs/api" className="ml-4 lt-sm:ml-2">
+              API 文档
+            </NavLink>
             <a
               href="https://animespace.onekuma.cn/animegarden/search"
               target="_blank"

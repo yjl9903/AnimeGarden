@@ -1,8 +1,17 @@
 import { useLoaderData } from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 
+import 'swagger-ui-react/swagger-ui.css';
+import SwaggerUI from 'swagger-ui-react';
+
 import Layout from '~/layouts/Layout';
+import { version, license } from '~build/package';
 import { fetchTimestamp } from '~/utils';
+
+import spec from './spec.json';
+
+spec.info.version = version;
+spec.info.license.name = license;
 
 export const meta: MetaFunction = () => {
   return [
@@ -21,7 +30,7 @@ export default function About() {
   return (
     <Layout timestamp={timestamp}>
       <div className="w-full pt-12 pb-24">
-        <div className="h-[1000px]">建设中...</div>
+        <SwaggerUI spec={spec} />
       </div>
     </Layout>
   );

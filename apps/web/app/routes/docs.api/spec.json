@@ -1,0 +1,1858 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "🌸 Anime Garden API",
+    "description": "🌸 Anime Garden 是 [动漫花园](https://share.dmhy.org/) 第三方镜像站以及动画 BT 资源聚合站。\n\n+ ☁️ 为开发者准备的开放 API 接口\n+ 📺 查看动画放送时间表来找到你喜欢的动画\n+ 🔖 支持丰富的高级搜索，例如：`葬送的芙莉莲 +简体内嵌 字幕组:桜都字幕组 类型:动画`\n+ 📙 自定义 RSS 订阅链接，例如：[葬送的芙莉莲](https://animes.garden/feed.xml?filter=%5B%7B%22fansubId%22:%5B%22619%22%5D,%22type%22:%22%E5%8B%95%E7%95%AB%22,%22include%22:%5B%22%E8%91%AC%E9%80%81%E7%9A%84%E8%8A%99%E8%8E%89%E8%8E%B2%22%5D,%22keywords%22:%5B%22%E7%AE%80%E4%BD%93%E5%86%85%E5%B5%8C%22%5D%7D%5D)\n+ ⭐ 搜索条件收藏夹和生成聚合的 RSS 订阅链接\n+ 👷‍♂️ 支持与 AutoBangumi 和 AnimeSpace 集成\n",
+    "version": "0.0.0",
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/yjl9903/AnimeGarden/blob/main/LICENSE"
+    }
+  },
+  "externalDocs": {
+    "description": "GitHub Repository",
+    "url": "https://github.com/yjl9903/AnimeGarden"
+  },
+  "servers": [
+    {
+      "url": "https://api.animes.garden",
+      "description": "API 服务器"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "获取API状态信息",
+        "description": "获取API基础信息、时间戳和提供商状态",
+        "operationId": "getStatus",
+        "tags": ["Status"],
+        "responses": {
+          "200": {
+            "description": "成功获取状态信息",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Anime Garden 動漫花園 镜像站 / 动画 BT 资源聚合站"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "最后更新时间戳"
+                    },
+                    "providers": {
+                      "type": "object",
+                      "properties": {
+                        "dmhy": { "$ref": "#/components/schemas/Provider" },
+                        "moe": { "$ref": "#/components/schemas/Provider" },
+                        "ani": { "$ref": "#/components/schemas/Provider" }
+                      },
+                      "required": ["dmhy", "moe", "ani"],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": ["message", "timestamp", "providers"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "获取用户列表",
+        "description": "获取所有发布者用户信息",
+        "operationId": "getUsers",
+        "tags": ["Users"],
+        "responses": {
+          "200": {
+            "description": "成功获取用户列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["OK"]
+                    },
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  },
+                  "required": ["status", "users"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/teams": {
+      "get": {
+        "summary": "获取字幕组列表",
+        "description": "获取所有字幕组信息",
+        "operationId": "getTeams",
+        "tags": ["Users"],
+        "responses": {
+          "200": {
+            "description": "成功获取字幕组列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["OK"]
+                    },
+                    "teams": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Team"
+                      }
+                    }
+                  },
+                  "required": ["status", "teams"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subjects": {
+      "get": {
+        "summary": "获取主题列表",
+        "description": "获取所有番剧主题信息",
+        "operationId": "getSubjects",
+        "tags": ["Subjects"],
+        "responses": {
+          "200": {
+            "description": "成功获取主题列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["OK"]
+                    },
+                    "subjects": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Subject"
+                      }
+                    }
+                  },
+                  "required": ["status", "subjects"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources": {
+      "get": {
+        "summary": "获取资源列表",
+        "description": "获取所有提供商的资源列表，支持分页和过滤",
+        "operationId": "getResources",
+        "tags": ["Resources"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PageSizeParam"
+          },
+          {
+            "$ref": "#/components/parameters/ProviderParam"
+          },
+          {
+            "$ref": "#/components/parameters/SearchParam"
+          },
+          {
+            "$ref": "#/components/parameters/IncludeParam"
+          },
+          {
+            "$ref": "#/components/parameters/KeywordsParam"
+          },
+          {
+            "$ref": "#/components/parameters/ExcludeParam"
+          },
+          {
+            "$ref": "#/components/parameters/TypeParam"
+          },
+          {
+            "$ref": "#/components/parameters/SubjectParam"
+          },
+          {
+            "$ref": "#/components/parameters/FansubParam"
+          },
+          {
+            "$ref": "#/components/parameters/PublisherParam"
+          },
+          {
+            "$ref": "#/components/parameters/AfterParam"
+          },
+          {
+            "$ref": "#/components/parameters/BeforeParam"
+          },
+          {
+            "$ref": "#/components/parameters/DuplicateParam"
+          },
+          {
+            "$ref": "#/components/parameters/TrackerParam"
+          },
+          {
+            "$ref": "#/components/parameters/MetadataParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功获取资源列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourcesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "获取资源列表 (POST)",
+        "description": "使用POST方法获取资源列表，支持复杂的过滤条件",
+        "operationId": "postResources",
+        "tags": ["Resources"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/TrackerParam"
+          },
+          {
+            "$ref": "#/components/parameters/MetadataParam"
+          }
+        ],
+        "requestBody": {
+          "description": "过滤和分页参数",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResourcesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功获取资源列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourcesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources/{provider}": {
+      "get": {
+        "summary": "获取指定提供商的资源列表",
+        "description": "获取指定提供商的资源列表",
+        "operationId": "getProviderResources",
+        "tags": ["Resources"],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "description": "提供商名称",
+            "schema": {
+              "type": "string",
+              "enum": ["dmhy", "moe", "ani"]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PageSizeParam"
+          },
+          {
+            "$ref": "#/components/parameters/SearchParam"
+          },
+          {
+            "$ref": "#/components/parameters/IncludeParam"
+          },
+          {
+            "$ref": "#/components/parameters/KeywordsParam"
+          },
+          {
+            "$ref": "#/components/parameters/ExcludeParam"
+          },
+          {
+            "$ref": "#/components/parameters/TypeParam"
+          },
+          {
+            "$ref": "#/components/parameters/SubjectParam"
+          },
+          {
+            "$ref": "#/components/parameters/FansubParam"
+          },
+          {
+            "$ref": "#/components/parameters/PublisherParam"
+          },
+          {
+            "$ref": "#/components/parameters/AfterParam"
+          },
+          {
+            "$ref": "#/components/parameters/BeforeParam"
+          },
+          {
+            "$ref": "#/components/parameters/DuplicateParam"
+          },
+          {
+            "$ref": "#/components/parameters/TrackerParam"
+          },
+          {
+            "$ref": "#/components/parameters/MetadataParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功获取资源列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourcesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "获取指定提供商的资源列表 (POST)",
+        "description": "使用POST方法获取指定提供商的资源列表",
+        "operationId": "postProviderResources",
+        "tags": ["Resources"],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "description": "提供商名称",
+            "schema": {
+              "type": "string",
+              "enum": ["dmhy", "moe", "ani"]
+            }
+          },
+          {
+            "$ref": "#/components/parameters/TrackerParam"
+          },
+          {
+            "$ref": "#/components/parameters/MetadataParam"
+          }
+        ],
+        "requestBody": {
+          "description": "过滤和分页参数",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResourcesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功获取资源列表",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourcesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/detail/{provider}/{id}": {
+      "get": {
+        "summary": "获取资源详情 (别名)",
+        "description": "获取指定资源的详细信息（与/resource/{provider}/{id}相同）",
+        "operationId": "getDetailAlias",
+        "tags": ["Resources"],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "description": "提供商名称",
+            "schema": {
+              "type": "string",
+              "enum": ["dmhy", "moe", "ani"]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "资源ID",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功获取资源详情",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["OK"]
+                    },
+                    "detail": {
+                      "$ref": "#/components/schemas/ResourceDetail"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": ["status", "detail", "timestamp"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "资源不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/collection": {
+      "post": {
+        "summary": "创建收藏夹",
+        "description": "创建新的收藏夹",
+        "operationId": "createCollection",
+        "tags": ["Collections"],
+        "requestBody": {
+          "required": true,
+          "description": "收藏夹信息",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功创建收藏夹",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["OK"]
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "收藏夹ID"
+                    },
+                    "hash": {
+                      "type": "string",
+                      "description": "收藏夹哈希值"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": ["status", "id", "hash", "createdAt", "timestamp"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "收藏夹格式错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "创建或更新收藏夹",
+        "description": "创建或更新收藏夹（与POST相同）",
+        "operationId": "upsertCollection",
+        "tags": ["Collections"],
+        "requestBody": {
+          "required": true,
+          "description": "收藏夹信息",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CollectionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "成功创建收藏夹",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["OK"]
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "收藏夹ID"
+                    },
+                    "hash": {
+                      "type": "string",
+                      "description": "收藏夹哈希值"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": ["status", "id", "hash", "createdAt", "timestamp"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "收藏夹格式错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/collection/{hash}": {
+      "get": {
+        "summary": "获取收藏夹内容",
+        "description": "根据哈希值获取收藏夹及其包含的资源",
+        "operationId": "getCollection",
+        "tags": ["Collections"],
+        "parameters": [
+          {
+            "name": "hash",
+            "in": "path",
+            "required": true,
+            "description": "收藏夹哈希值",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功获取收藏夹",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["OK"]
+                    },
+                    "hash": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "results": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "resources": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/Resource"
+                            }
+                          },
+                          "complete": {
+                            "type": "boolean"
+                          },
+                          "filter": {
+                            "$ref": "#/components/schemas/FilterOptions"
+                          }
+                        },
+                        "required": ["resources", "complete"]
+                      }
+                    },
+                    "timestamp": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  },
+                  "required": ["status", "hash", "name", "createdAt", "results", "timestamp"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "收藏夹不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feed.xml": {
+      "get": {
+        "summary": "获取RSS订阅源",
+        "description": "获取资源的RSS订阅源",
+        "operationId": "getRSSFeed",
+        "tags": ["Feed"],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/SearchParam"
+          },
+          {
+            "$ref": "#/components/parameters/IncludeParam"
+          },
+          {
+            "$ref": "#/components/parameters/KeywordsParam"
+          },
+          {
+            "$ref": "#/components/parameters/ExcludeParam"
+          },
+          {
+            "$ref": "#/components/parameters/TypeParam"
+          },
+          {
+            "$ref": "#/components/parameters/SubjectParam"
+          },
+          {
+            "$ref": "#/components/parameters/FansubParam"
+          },
+          {
+            "$ref": "#/components/parameters/PublisherParam"
+          },
+          {
+            "$ref": "#/components/parameters/AfterParam"
+          },
+          {
+            "$ref": "#/components/parameters/BeforeParam"
+          },
+          {
+            "name": "tracker",
+            "in": "query",
+            "description": "是否包含Tracker信息",
+            "schema": {
+              "type": "string",
+              "enum": ["true", "false", "on", "off", "yes", "no"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "RSS XML内容",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "description": "RSS XML格式的订阅源"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/collection/{hash}/feed.xml": {
+      "get": {
+        "summary": "获取收藏夹RSS订阅源",
+        "description": "获取指定收藏夹的RSS订阅源",
+        "operationId": "getCollectionRSSFeed",
+        "tags": ["Feed"],
+        "parameters": [
+          {
+            "name": "hash",
+            "in": "path",
+            "required": true,
+            "description": "收藏夹哈希值",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tracker",
+            "in": "query",
+            "description": "是否包含Tracker信息",
+            "schema": {
+              "type": "string",
+              "enum": ["true", "false", "on", "off", "yes", "no"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "RSS XML内容",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "description": "RSS XML格式的订阅源"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "收藏夹不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sitemaps/subjects": {
+      "get": {
+        "summary": "获取主题站点地图",
+        "description": "获取所有主题的站点地图信息",
+        "operationId": "getSubjectsSitemap",
+        "tags": ["Sitemap"],
+        "responses": {
+          "200": {
+            "description": "成功获取主题站点地图",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["OK"]
+                    },
+                    "subjects": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "activedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "isArchived": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": ["id", "activedAt", "isArchived"]
+                      }
+                    }
+                  },
+                  "required": ["status", "subjects"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sitemaps/{year}/{month}": {
+      "get": {
+        "summary": "获取指定月份的资源站点地图",
+        "description": "获取指定年月的资源站点地图信息",
+        "operationId": "getResourcesSitemap",
+        "tags": ["Sitemap"],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "path",
+            "required": true,
+            "description": "年份",
+            "schema": {
+              "type": "integer",
+              "minimum": 2020
+            }
+          },
+          {
+            "name": "month",
+            "in": "path",
+            "required": true,
+            "description": "月份",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 12
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功获取资源站点地图",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["OK"]
+                    },
+                    "count": {
+                      "type": "integer"
+                    },
+                    "resources": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "provider": {
+                            "type": "string"
+                          },
+                          "providerId": {
+                            "type": "string"
+                          },
+                          "fetchedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "required": ["id", "provider", "providerId", "fetchedAt"]
+                      }
+                    }
+                  },
+                  "required": ["status", "count", "resources"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["ERROR"]
+                    },
+                    "resources": {
+                      "type": "array",
+                      "items": {}
+                    }
+                  },
+                  "required": ["status", "resources"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/providers": {
+      "post": {
+        "summary": "获取提供商状态（管理员）",
+        "description": "获取所有提供商的详细状态信息",
+        "operationId": "getProvidersStatus",
+        "tags": ["Admin"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功获取提供商状态",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["OK"]
+                    },
+                    "providers": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "$ref": "#/components/schemas/Provider"
+                      }
+                    }
+                  },
+                  "required": ["status", "providers"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未授权",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/resources/{provider}": {
+      "post": {
+        "summary": "抓取指定提供商的资源（管理员）",
+        "description": "从指定提供商抓取最新资源",
+        "operationId": "fetchProviderResources",
+        "tags": ["Admin"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "description": "提供商名称",
+            "schema": {
+              "type": "string",
+              "enum": ["dmhy", "moe", "ani"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功抓取资源",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["OK"]
+                    },
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    },
+                    "teams": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Team"
+                      }
+                    },
+                    "resources": {
+                      "type": "object",
+                      "properties": {
+                        "inserted": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer"
+                          }
+                        },
+                        "duplicated": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "required": ["inserted", "duplicated"]
+                    }
+                  },
+                  "required": ["status"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未授权",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/resources/{provider}/sync": {
+      "post": {
+        "summary": "同步指定提供商的资源（管理员）",
+        "description": "同步指定提供商指定页面范围的资源",
+        "operationId": "syncProviderResources",
+        "tags": ["Admin"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "provider",
+            "in": "path",
+            "required": true,
+            "description": "提供商名称",
+            "schema": {
+              "type": "string",
+              "enum": ["dmhy", "moe", "ani"]
+            }
+          },
+          {
+            "name": "start",
+            "in": "query",
+            "description": "起始页面",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "end",
+            "in": "query",
+            "description": "结束页面",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功同步资源",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": ["OK"]
+                    },
+                    "resources": {
+                      "type": "object",
+                      "properties": {
+                        "updated": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "provider": {
+                                "type": "string"
+                              },
+                              "providerId": {
+                                "type": "string"
+                              },
+                              "title": {
+                                "type": "string"
+                              }
+                            },
+                            "required": ["id", "provider", "providerId", "title"]
+                          }
+                        },
+                        "deleted": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              }
+                            },
+                            "required": ["id"]
+                          }
+                        }
+                      },
+                      "required": ["updated", "deleted"]
+                    }
+                  },
+                  "required": ["status"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "未授权",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiTokenAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "authorization",
+        "description": "管理员 API 需要在 header 中直接配置 secret token"
+      }
+    },
+    "parameters": {
+      "PageParam": {
+        "name": "page",
+        "in": "query",
+        "description": "页码",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        }
+      },
+      "PageSizeParam": {
+        "name": "pageSize",
+        "in": "query",
+        "description": "每页数量",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 100
+        }
+      },
+      "ProviderParam": {
+        "name": "provider",
+        "in": "query",
+        "description": "提供商过滤",
+        "schema": {
+          "type": "string",
+          "enum": ["dmhy", "moe", "ani"]
+        }
+      },
+      "SearchParam": {
+        "name": "search",
+        "in": "query",
+        "description": "搜索关键词（多个用逗号分隔）",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "IncludeParam": {
+        "name": "include",
+        "in": "query",
+        "description": "包含关键词（至少包含其中一个，多个用逗号分隔）",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "KeywordsParam": {
+        "name": "keywords",
+        "in": "query",
+        "description": "必须包含的关键词（必须包含全部，多个用逗号分隔）",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "ExcludeParam": {
+        "name": "exclude",
+        "in": "query",
+        "description": "排除关键词（多个用逗号分隔）",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "TypeParam": {
+        "name": "type",
+        "in": "query",
+        "description": "资源类型过滤",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "SubjectParam": {
+        "name": "subject",
+        "in": "query",
+        "description": "番剧主题ID过滤",
+        "schema": {
+          "type": "integer"
+        }
+      },
+      "FansubParam": {
+        "name": "fansub",
+        "in": "query",
+        "description": "字幕组过滤",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "PublisherParam": {
+        "name": "publisher",
+        "in": "query",
+        "description": "发布者过滤",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "AfterParam": {
+        "name": "after",
+        "in": "query",
+        "description": "起始时间过滤（ISO 8601格式）",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "BeforeParam": {
+        "name": "before",
+        "in": "query",
+        "description": "结束时间过滤（ISO 8601格式）",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "DuplicateParam": {
+        "name": "duplicate",
+        "in": "query",
+        "description": "是否包含重复资源",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "TrackerParam": {
+        "name": "tracker",
+        "in": "query",
+        "description": "是否返回tracker信息",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "MetadataParam": {
+        "name": "metadata",
+        "in": "query",
+        "description": "是否返回metadata信息",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "schemas": {
+      "Provider": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": ["dmhy", "moe", "ani"]
+          },
+          "name": {
+            "type": "string"
+          },
+          "refreshedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": ["id", "name", "refreshedAt", "isActive"]
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "providerId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["id", "provider", "providerId", "name"]
+      },
+      "Team": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "providerId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": ["id", "provider", "providerId", "name"]
+      },
+      "Subject": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Bangumi subject ID"
+          },
+          "name": {
+            "type": "string"
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "activedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isArchived": {
+            "type": "boolean"
+          }
+        },
+        "required": ["id", "name", "keywords", "activedAt", "isArchived"]
+      },
+      "Resource": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "providerId": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "href": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "magnet": {
+            "type": "string"
+          },
+          "tracker": {
+            "type": "string",
+            "nullable": true,
+            "description": "当tracker参数为true时返回"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "fansub": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "avatar": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": ["id", "name"]
+          },
+          "publisher": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "avatar": {
+                "type": "string",
+                "nullable": true
+              }
+            },
+            "required": ["id", "name"]
+          },
+          "subjectId": {
+            "type": "integer",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fetchedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "description": "当metadata参数为true时返回",
+            "properties": {
+              "anipar": {
+                "type": "object",
+                "description": "Anipar解析结果"
+              }
+            }
+          }
+        },
+        "required": ["id", "provider", "providerId", "title", "href", "type", "magnet", "size", "publisher", "createdAt", "fetchedAt"]
+      },
+      "ResourceDetail": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "string"
+                }
+              },
+              "required": ["name", "size"]
+            }
+          },
+          "magnets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                }
+              },
+              "required": ["name", "url"]
+            }
+          },
+          "hasMoreFiles": {
+            "type": "boolean"
+          }
+        },
+        "required": ["description", "files", "magnets", "hasMoreFiles"]
+      },
+      "FilterOptions": {
+        "type": "object",
+        "properties": {
+          "preset": {
+            "type": "string",
+            "enum": ["bangumi"]
+          },
+          "provider": {
+            "type": "string",
+            "enum": ["dmhy", "moe", "ani"]
+          },
+          "duplicate": {
+            "type": "boolean"
+          },
+          "types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "after": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "before": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fansubs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "publishers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "search": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "include": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exclude": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PaginationInfo": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer"
+          },
+          "pageSize": {
+            "type": "integer"
+          },
+          "complete": {
+            "type": "boolean"
+          }
+        },
+        "required": ["page", "pageSize", "complete"]
+      },
+      "ResourcesRequest": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1
+          },
+          "pageSize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000,
+            "default": 100
+          },
+          "provider": {
+            "type": "string",
+            "enum": ["dmhy", "moe", "ani"]
+          },
+          "duplicate": {
+            "type": "boolean",
+            "default": false
+          },
+          "after": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "before": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "search": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "include": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "keywords": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "exclude": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "type": {
+            "type": "string"
+          },
+          "types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "subject": {
+            "type": "integer"
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "fansub": {
+            "type": "string"
+          },
+          "fansubs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "publishers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "preset": {
+            "type": "string",
+            "enum": ["bangumi"]
+          }
+        }
+      },
+      "ResourcesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["OK"]
+          },
+          "complete": {
+            "type": "boolean",
+            "description": "为了兼容性保留，与pagination.complete相同"
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Resource"
+            }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationInfo"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/FilterOptions"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": ["status", "complete", "resources", "pagination", "filter", "timestamp"]
+      },
+      "CollectionRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "authorization": {
+            "type": "string"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "searchParams": {
+                  "type": "string"
+                }
+              },
+              "required": ["name"],
+              "additionalProperties": true
+            }
+          }
+        },
+        "required": ["name", "authorization", "filters"]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["ERROR"]
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["status", "message"]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Status",
+      "description": "API状态和基础信息"
+    },
+    {
+      "name": "Resources",
+      "description": "资源相关接口，包括搜索、过滤和详情查询"
+    },
+    {
+      "name": "Users",
+      "description": "用户和字幕组相关接口"
+    },
+    {
+      "name": "Subjects",
+      "description": "番剧主题相关接口"
+    },
+    {
+      "name": "Collections",
+      "description": "收藏夹相关接口，支持创建和查询"
+    },
+    {
+      "name": "Feed",
+      "description": "RSS订阅源相关接口"
+    },
+    {
+      "name": "Sitemap",
+      "description": "站点地图相关接口，用于SEO优化"
+    },
+    {
+      "name": "Admin",
+      "description": "管理员接口（需要Bearer Token认证）"
+    }
+  ]
+}
