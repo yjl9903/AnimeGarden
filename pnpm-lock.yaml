@@ -351,8 +351,8 @@ importers:
         specifier: ^1.2.10
         version: 1.2.10
       '@iconify-json/devicon':
-        specifier: ^1.2.30
-        version: 1.2.30
+        specifier: ^1.2.31
+        version: 1.2.31
       '@iconify-json/fluent':
         specifier: ^1.2.27
         version: 1.2.27
@@ -2087,8 +2087,8 @@ packages:
   '@iconify-json/carbon@1.2.10':
     resolution: {integrity: sha512-Z+psKjwGZ9wZu+mVOStmIqHux1OWc8AtDiJ4eHmOkbcW5SMoGVtsQ6LWGJcYguT+9q9YgGihUTvHEnQSPWKGiQ==}
 
-  '@iconify-json/devicon@1.2.30':
-    resolution: {integrity: sha512-dDrBnR46w6sbdcviviFCyFJvWVv4bBXQ6GBvHLEcw0QpT6BbJRaBeHYquHPBpDrBoOnIPXzQfxcdH07fjKAlBA==}
+  '@iconify-json/devicon@1.2.31':
+    resolution: {integrity: sha512-rJKKYzPgO5aYrUPY4DZpcNJ3QxmnO8PwM4kSGuPMygPhDvl94iAoKiQtt3jE+uOM4mQOxxW1Jtspz3rGjJyxYg==}
 
   '@iconify-json/fluent@1.2.27':
     resolution: {integrity: sha512-ZEjiHPloDLo0EsDEIUfjPOyPEife6PSPO33215eFPj5vn+3e2m23Y0JhjqmM2YwQNZ+0Dh78sWTwWslc4ylwlw==}
@@ -3268,6 +3268,7 @@ packages:
   '@smithy/middleware-endpoint@4.1.14':
     resolution: {integrity: sha512-+BGLpK5D93gCcSEceaaYhUD/+OCGXM1IDaq/jKUQ+ujB0PTWlWN85noodKw/IPFZhIKFCNEe19PGd/reUMeLSQ==}
     engines: {node: '>=18.0.0'}
+    deprecated: Please upgrade to @smithy/middleware-endpoint@4.1.15 or higher to fix a bug preventing the resolution of ENV and config file custom endpoints https://github.com/smithy-lang/smithy-typescript/issues/1645
 
   '@smithy/middleware-retry@4.1.15':
     resolution: {integrity: sha512-iKYUJpiyTQ33U2KlOZeUb0GwtzWR3C0soYcKuCnTmJrvt6XwTPQZhMfsjJZNw7PpQ3TU4Ati1qLSrkSJxnnSMQ==}
@@ -10105,7 +10106,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/devicon@1.2.30':
+  '@iconify-json/devicon@1.2.31':
     dependencies:
       '@iconify/types': 2.0.0
 
