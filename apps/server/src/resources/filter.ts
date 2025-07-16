@@ -7,7 +7,10 @@ import type { DatabaseFilterOptions, DatabaseResource } from './types';
 export const BANGUMI_BANNED_FANSUBS = [
   'Kirara Fantasia', // RAWs 搬运组, 刷屏
   '沸班亚马制作组', //
-  'GMTeam', // 国漫
+  'GMTeam' // 国漫
+];
+
+export const BANGUMI_BANNED_PUBLISHERS = [
   'Lanborey' // 国漫
 ];
 
@@ -73,6 +76,13 @@ export function buildFilterConds(system: System, filter: DatabaseFilterOptions) 
 
   switch (preset) {
     case 'bangumi': {
+      const bannedPublishers = BANGUMI_BANNED_PUBLISHERS.map(
+        (name) => system.modules.users.getByName(name)?.id
+      ).filter((id) => id !== undefined);
+      if (bannedPublishers.length > 0) {
+        conds.push((r) => !r.publisherId || !bannedPublishers.includes(r.publisherId));
+      }
+
       const bannedFansubs = BANGUMI_BANNED_FANSUBS.map(
         (name) => system.modules.teams.getByName(name)?.id
       ).filter((id) => id !== undefined);

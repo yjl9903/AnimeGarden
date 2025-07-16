@@ -1,5 +1,6 @@
-import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
+import { type PresetType, parseURLSearch, stringifyURLSearch } from '@animegarden/client';
 
+import { PRESET_DISPLAY_NAME } from '~/utils/constants';
 import { getSubjectById, getSubjectByName, getSubjectDisplayName } from '~/utils/subjects';
 
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
@@ -72,6 +73,7 @@ export function parseSearch(input: string) {
   const types: string[] = [];
   const after: Date[] = [];
   const before: Date[] = [];
+  const presets: PresetType[] = [];
 
   const handlers: Record<string, (word: string) => void> = {
     'subject:,动画:': (word) => {
@@ -100,6 +102,14 @@ export function parseSearch(input: string) {
     },
     'type:,类型:': (word) => {
       types.push(word);
+    },
+    'preset:,预设:': (word) => {
+      for (const [key, name] of Object.entries(PRESET_DISPLAY_NAME)) {
+        if (name === word || name === key) {
+          presets.push(key as PresetType);
+          break;
+        }
+      }
     }
   };
 
@@ -149,7 +159,8 @@ export function parseSearch(input: string) {
     fansubs,
     after: after.at(-1),
     before: before.at(-1),
-    types
+    types,
+    preset: presets.at(-1)
   };
 }
 
@@ -195,6 +206,9 @@ export function stringifySearch(search: URLSearchParams) {
   }
   if (filter.before) {
     content.push('结束:' + formatDate(filter.before));
+  }
+  if (filter.preset) {
+    content.push('预设:' + (PRESET_DISPLAY_NAME[filter.preset] ?? filter.preset));
   }
 
   return content.map((c) => c).join(' ');

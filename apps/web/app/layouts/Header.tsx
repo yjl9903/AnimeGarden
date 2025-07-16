@@ -57,14 +57,14 @@ const AnimeDropdown = memo(() => {
     <Dropdown
       className="nav-animes pointer-events-auto [&:hover>a]:bg-zinc-100!"
       trigger={
-        <NavLink to="/resources/1?type=动画" className="rounded-md p-2">
+        <NavLink to="/resources/1?type=动画&preset=bangumi" className="rounded-md p-2">
           动画
         </NavLink>
       }
     >
       <DropdownMenu className="mt-[-10px] w-[120px] max-h-[600px] lt-sm:max-h-[360px] rounded-md shadow-box divide-y bg-light-100 leading-normal">
         <NavLink
-          to="/resources/1?type=动画"
+          to="/resources/1?type=动画&preset=bangumi"
           className="block px2 py1 rounded-t-md hover:bg-basis-100"
         >
           资源列表
@@ -165,7 +165,7 @@ const TypesDropdown = memo(() => {
         {types.map((type) => (
           <NavLink
             key={type}
-            to={`/resources/1?type=${type}`}
+            to={type === '动画' ? `/resources/1?type=动画&preset=bangumi` : `/resources/1?type=${type}`}
             className={clsx(
               'flex items-center gap-2 px2 py1 hover:bg-basis-100',
               DisplayTypeColor[type]

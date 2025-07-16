@@ -37,7 +37,7 @@ import type { DatabaseResource, DatabaseFilterOptions } from './types';
 
 import { transformDatabaseUser } from './transform';
 import { TitlePool, MagnetPool, TrackerPool } from './pool';
-import { BANGUMI_BANNED_FANSUBS, buildFilterConds } from './filter';
+import { BANGUMI_BANNED_FANSUBS, BANGUMI_BANNED_PUBLISHERS, buildFilterConds } from './filter';
 
 export const RESOURCE_SELECTOR = {
   id: resources.id,
@@ -461,7 +461,14 @@ export class QueryManager {
 
     // 支持 preset
     switch (preset) {
-      case 'bangumi':
+      case 'bangumi': {
+        const bannedPublishers = BANGUMI_BANNED_PUBLISHERS.map(
+          (name) => this.system.modules.users.getByName(name)?.id
+        ).filter((id) => id !== undefined);
+        if (bannedPublishers.length > 0) {
+          conds.push(notInArray(resources.publisherId, bannedPublishers));
+        }
+
         const bannedFansubs = BANGUMI_BANNED_FANSUBS.map(
           (name) => this.system.modules.teams.getByName(name)?.id
         ).filter((id) => id !== undefined);
@@ -469,6 +476,7 @@ export class QueryManager {
           conds.push(notInArray(resources.fansubId, bannedFansubs));
         }
         break;
+      }
     }
 
     const resp = await retryFn(
