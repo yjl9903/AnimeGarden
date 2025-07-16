@@ -48,7 +48,7 @@ export default function Index() {
             page={1}
             timestamp={new Date(timestamp!)}
             complete={false}
-            link={(page) => `/resources/${page}?type=动画`}
+            link={(page) => `/resources/${page}?type=动画&preset=bangumi`}
           ></Resources>
         ) : (
           <Error></Error>

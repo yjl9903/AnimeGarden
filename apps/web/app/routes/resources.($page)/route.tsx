@@ -34,9 +34,12 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     return redirect(url.toString());
   }
 
-  const parsed = parseURLSearch(url.searchParams, { pageSize: 80 });
+  const { filter: parsedFilter, pagination: parsedPagination } = parseURLSearch(url.searchParams, {
+    pageSize: 80
+  });
   const { ok, resources, pagination, filter, timestamp } = await fetchResources({
-    ...parsed,
+    ...parsedFilter,
+    ...parsedPagination,
     page: +(params.page ?? '1'),
     pageSize: 30
   });

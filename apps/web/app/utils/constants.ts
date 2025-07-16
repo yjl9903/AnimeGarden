@@ -1,3 +1,9 @@
+import type { PresetType } from '@animegarden/client';
+
+export const PRESET_DISPLAY_NAME: Record<PresetType, string> = {
+  bangumi: '番剧'
+};
+
 export const types = ['动画', '合集', '音乐', '日剧', 'RAW', '漫画', '游戏', '特摄', '其他'];
 
 // @unocss-include

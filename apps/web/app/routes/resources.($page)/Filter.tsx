@@ -4,7 +4,8 @@ import { useCallback } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 
 import type { FullBangumi } from 'bgmd/types';
-import { stringifyURLSearch, type Jsonify, type ResolvedFilterOptions } from '@animegarden/client';
+
+import { type PresetOptions, type Jsonify, type ResolvedFilterOptions, stringifyURLSearch } from '@animegarden/client';
 
 import { getSubjectById } from '~/utils/subjects';
 import {
@@ -12,7 +13,8 @@ import {
   formatChinaTime,
   DisplayTypeColor,
   trackAddCollection,
-  trackCopyFeed
+  trackCopyFeed,
+  PRESET_DISPLAY_NAME
 } from '~/utils';
 import { Button } from '~/components/ui/button';
 import { SearchTooltip } from '~/components/Help';
@@ -29,6 +31,7 @@ export function resolveFilterOptions(
   const fansubs = [...new Set(filter.fansubs ?? [])];
 
   return {
+    preset: filter.preset ?? undefined,
     types: types.length > 0 ? types : undefined,
     subjects: filter.subjects ?? [],
     publishers: publishers.length > 0 ? publishers : undefined,
@@ -43,7 +46,7 @@ export function resolveFilterOptions(
 }
 
 interface Props {
-  filter?: Jsonify<ResolvedFilterOptions>;
+  filter?: Jsonify<ResolvedFilterOptions & PresetOptions>;
 
   subject?: Omit<FullBangumi, 'summary'>;
 
@@ -59,6 +62,7 @@ export function Filter(props: Props) {
   const resolved = filter ? resolveFilterOptions(filter) : ({} as ResolvedFilterOptions);
 
   const {
+    preset,
     types = [],
     fansubs = [],
     publishers = [],
@@ -149,6 +153,14 @@ export function Filter(props: Props) {
 
   return (
     <div className="mb4 p4 w-full bg-gray-100 rounded-md space-y-2">
+      {
+        preset && (
+          <div className="space-x-2 text-0">
+            <span className="text-4 text-base-800 font-bold mr2 select-none keyword">预设</span>
+            <span className="text-4 select-text">{PRESET_DISPLAY_NAME[preset]}</span>
+          </div>
+        )
+      }
       {realSubjects.length > 0 && (
         <div className="space-x-2 text-0">
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">动画</span>
@@ -236,7 +248,7 @@ export function Filter(props: Props) {
           <span className="text-4 select-none text-base-800 font-bold mr2 keyword">标题匹配</span>
           {include.map((i, idx) => (
             <span key={idx}>
-              {idx > 0 && <span className="text-base-400 text-4 select-none">|</span>}
+              {idx > 0 && <span className="text-base-400 text-4 select-none mr2">|</span>}
               {/* prettier-ignore */}
               <span className="text-4 select-text underline underline-dotted underline-gray-500">{i}</span>
             </span>

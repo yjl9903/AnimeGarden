@@ -11,7 +11,7 @@ import {
   fetchResources as rawFetchResources,
   fetchResourceDetail as rawFetchResourceDetail,
   fetchCollection as rawFetchCollection,
-  generateCollection as rawGenerateCollection,
+  generateCollection as rawGenerateCollection
 } from '@animegarden/client';
 
 export const baseURL = import.meta.env.SSR

@@ -40,17 +40,19 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     return redirect(url.toString());
   }
 
-  const parsed = parseURLSearch(url.searchParams, { pageSize: 80 });
+  const { filter: parsedFilter, pagination: parsedPagination } = parseURLSearch(url.searchParams, {
+    pageSize: 80
+  });
   const subject = +params.subject!;
 
   const { ok, resources, pagination, filter, timestamp } = await fetchResources({
-    ...parsed,
+    ...parsedFilter,
+    ...parsedPagination,
     subject,
     subjects: undefined,
     page: +(params.page ?? '1'),
     pageSize: 100,
-    types: ['动画', '合集'],
-    preset: 'bangumi'
+    types: ['动画', '合集']
   });
 
   return {
