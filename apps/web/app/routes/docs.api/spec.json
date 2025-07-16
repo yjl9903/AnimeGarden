@@ -1206,66 +1206,106 @@
       "SearchParam": {
         "name": "search",
         "in": "query",
-        "description": "搜索关键词（多个用逗号分隔）",
+        "description": "搜索关键词（可重复传递多个参数，例如 ?search=foo&search=bar，或在Swagger页面中以逗号分隔输入：foo,bar）",
         "schema": {
-          "type": "string"
-        }
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "style": "form",
+        "explode": true
       },
       "IncludeParam": {
         "name": "include",
         "in": "query",
-        "description": "包含关键词（至少包含其中一个，多个用逗号分隔）",
+        "description": "包含关键词（可重复传递多个参数，例如 ?include=foo&include=bar，或在Swagger页面中以逗号分隔输入：foo,bar）",
         "schema": {
-          "type": "string"
-        }
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "style": "form",
+        "explode": true
       },
       "KeywordsParam": {
         "name": "keywords",
         "in": "query",
-        "description": "必须包含的关键词（必须包含全部，多个用逗号分隔）",
+        "description": "必须包含的关键词",
         "schema": {
-          "type": "string"
-        }
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "style": "form",
+        "explode": true
       },
       "ExcludeParam": {
         "name": "exclude",
         "in": "query",
-        "description": "排除关键词（多个用逗号分隔）",
+        "description": "排除关键词",
         "schema": {
-          "type": "string"
-        }
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "style": "form",
+        "explode": true
       },
       "TypeParam": {
         "name": "type",
         "in": "query",
         "description": "资源类型过滤",
         "schema": {
-          "type": "string"
-        }
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "style": "form",
+        "explode": true
       },
       "SubjectParam": {
         "name": "subject",
         "in": "query",
-        "description": "番剧主题ID过滤",
+        "description": "Bangumi ID 过滤",
         "schema": {
-          "type": "integer"
-        }
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "style": "form",
+        "explode": true
       },
       "FansubParam": {
         "name": "fansub",
         "in": "query",
         "description": "字幕组过滤",
         "schema": {
-          "type": "string"
-        }
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "style": "form",
+        "explode": true
       },
       "PublisherParam": {
         "name": "publisher",
         "in": "query",
         "description": "发布者过滤",
         "schema": {
-          "type": "string"
-        }
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "style": "form",
+        "explode": true
       },
       "AfterParam": {
         "name": "after",
