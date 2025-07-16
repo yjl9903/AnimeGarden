@@ -69,96 +69,17 @@ importers:
         specifier: ^4.24.3
         version: 4.24.3(@cloudflare/workers-types@4.20250715.0)
 
-  apps/backend/database:
+  apps/server:
     dependencies:
       '@animegarden/client':
         specifier: workspace:*
-        version: link:../../../packages/client
-      '@node-rs/jieba':
-        specifier: ^2.0.1
-        version: 2.0.1
-      anipar:
-        specifier: workspace:*
-        version: link:../../../packages/anipar
-      bgmd:
-        specifier: ^0.0.63
-        version: 0.0.63
-      consola:
-        specifier: ^3.4.2
-        version: 3.4.2
-      drizzle-orm:
-        specifier: ^0.44.2
-        version: 0.44.2(@cloudflare/workers-types@4.20250715.0)(postgres@3.4.7)
-      ioredis:
-        specifier: ^5.6.1
-        version: 5.6.1
-      memofunc:
-        specifier: ^0.1.6
-        version: 0.1.6
-      ohash:
-        specifier: ^2.0.11
-        version: 2.0.11
-      postgres:
-        specifier: ^3.4.7
-        version: 3.4.7
-      simptrad:
-        specifier: ^0.2.0
-        version: 0.2.0
-    devDependencies:
-      '@animegarden/shared':
-        specifier: workspace:*
-        version: link:../../../packages/shared
-      dotenv:
-        specifier: ^17.2.0
-        version: 17.2.0
-
-  apps/backend/manager:
-    dependencies:
-      '@animegarden/client':
-        specifier: workspace:*
-        version: link:../../../packages/client
-      '@animegarden/database':
-        specifier: workspace:*
-        version: link:../database
+        version: link:../../packages/client
       '@animegarden/scraper':
         specifier: workspace:*
-        version: link:../../../packages/scraper
-      '@animegarden/server':
-        specifier: workspace:*
-        version: link:../server
+        version: link:../../packages/scraper
       '@aws-sdk/client-s3':
         specifier: ^3.844.0
         version: 3.844.0
-      '@breadc/color':
-        specifier: ^0.9.7
-        version: 0.9.7
-      breadc:
-        specifier: ^0.9.7
-        version: 0.9.7
-      dotenv:
-        specifier: ^17.2.0
-        version: 17.2.0
-      fs-extra:
-        specifier: ^11.3.0
-        version: 11.3.0
-      undici:
-        specifier: ^7.11.0
-        version: 7.11.0
-      zod:
-        specifier: ^3.25.76
-        version: 3.25.76
-
-  apps/backend/server:
-    dependencies:
-      '@animegarden/client':
-        specifier: workspace:*
-        version: link:../../../packages/client
-      '@animegarden/database':
-        specifier: workspace:*
-        version: link:../database
-      '@animegarden/scraper':
-        specifier: workspace:*
-        version: link:../../../packages/scraper
       '@breadc/color':
         specifier: ^0.9.7
         version: 0.9.7
@@ -168,9 +89,21 @@ importers:
       '@hono/zod-validator':
         specifier: ^0.7.1
         version: 0.7.1(hono@4.8.5)(zod@3.25.76)
+      '@node-rs/jieba':
+        specifier: ^2.0.1
+        version: 2.0.1
+      anipar:
+        specifier: workspace:*
+        version: link:../../packages/anipar
       bgmd:
         specifier: ^0.0.63
         version: 0.0.63
+      breadc:
+        specifier: ^0.9.7
+        version: 0.9.7
+      consola:
+        specifier: ^3.4.2
+        version: 3.4.2
       croner:
         specifier: ^9.1.0
         version: 9.1.0
@@ -189,6 +122,9 @@ importers:
       fast-xml-parser:
         specifier: ^5.2.5
         version: 5.2.5
+      fs-extra:
+        specifier: ^11.3.0
+        version: 11.3.0
       hono:
         specifier: ^4.8.5
         version: 4.8.5
@@ -201,31 +137,37 @@ importers:
       ohash:
         specifier: ^2.0.11
         version: 2.0.11
+      postgres:
+        specifier: ^3.4.7
+        version: 3.4.7
+      simptrad:
+        specifier: ^0.2.0
+        version: 0.2.0
       sitemap:
         specifier: ^8.0.0
         version: 8.0.0
       string-width:
         specifier: ^7.2.0
         version: 7.2.0
+      undici:
+        specifier: ^7.11.0
+        version: 7.11.0
       zod:
         specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
       '@animegarden/shared':
         specifier: workspace:*
-        version: link:../../../packages/shared
+        version: link:../../packages/shared
 
-  apps/frontend/web:
+  apps/web:
     dependencies:
       '@animegarden/client':
         specifier: workspace:*
-        version: link:../../../packages/client
-      '@animegarden/database':
-        specifier: workspace:*
-        version: link:../../backend/database
+        version: link:../../packages/client
       '@animegarden/server':
         specifier: workspace:*
-        version: link:../../backend/server
+        version: link:../server
       '@cloudflare/kv-asset-handler':
         specifier: ^0.4.0
         version: 0.4.0
@@ -276,7 +218,7 @@ importers:
         version: 2.16.8(typescript@5.8.3)
       anipar:
         specifier: workspace:*
-        version: link:../../../packages/anipar
+        version: link:../../packages/anipar
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -420,14 +362,14 @@ importers:
         specifier: ^5.1.4
         version: 5.1.4(typescript@5.8.3)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))
 
-  apps/frontend/worker:
+  apps/worker:
     dependencies:
       '@animegarden/client':
         specifier: workspace:*
-        version: link:../../../packages/client
+        version: link:../../packages/client
       '@animegarden/scraper':
         specifier: workspace:*
-        version: link:../../../packages/scraper
+        version: link:../../packages/scraper
       memofunc:
         specifier: ^0.1.6
         version: 0.1.6
