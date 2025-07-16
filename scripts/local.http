@@ -32,7 +32,8 @@ Content-Type: application/json
 {
   "page": 1,
   "pageSize": 80,
-  "type": "动画"
+  "types": ["动画", "合集"],
+  "preset": "bangumi"
 }
 
 ### Fetch ANi

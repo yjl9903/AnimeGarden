@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/node';
+import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 import { type ClientLoaderFunction, redirect, useLoaderData, useLocation } from '@remix-run/react';
 
 import { parseURLSearch } from '@animegarden/client';

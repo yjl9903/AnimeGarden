@@ -22,7 +22,7 @@ import { addCollectionItemAtom, currentCollectionAtom } from '~/states/collectio
 export type DisplayResolvedFilterOptions = ReturnType<typeof resolveFilterOptions>;
 
 export function resolveFilterOptions(
-  filter: Omit<Jsonify<ResolvedFilterOptions>, 'page' | 'pageSize'>
+  filter: Jsonify<ResolvedFilterOptions> | ResolvedFilterOptions
 ) {
   const types = [...new Set(filter.types ?? [])];
   const publishers = [...new Set(filter.publishers ?? [])];
@@ -43,7 +43,7 @@ export function resolveFilterOptions(
 }
 
 interface Props {
-  filter?: Omit<Jsonify<ResolvedFilterOptions>, 'page' | 'pageSize'>;
+  filter?: Jsonify<ResolvedFilterOptions>;
 
   subject?: Omit<FullBangumi, 'summary'>;
 
@@ -57,6 +57,7 @@ export function Filter(props: Props) {
   const setIsOpen = useSetAtom(isOpenSidebar);
 
   const resolved = filter ? resolveFilterOptions(filter) : ({} as ResolvedFilterOptions);
+
   const {
     types = [],
     fansubs = [],

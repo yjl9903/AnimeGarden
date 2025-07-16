@@ -6,7 +6,7 @@ import {
   useLocation,
   useParams
 } from '@remix-run/react';
-import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/node';
+import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 
 import { parseURLSearch } from '@animegarden/client';
 
@@ -48,7 +48,9 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     subject,
     subjects: undefined,
     page: +(params.page ?? '1'),
-    pageSize: 30
+    pageSize: 100,
+    types: ['动画', '合集'],
+    preset: 'bangumi'
   });
 
   return {

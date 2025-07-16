@@ -3,9 +3,7 @@ import type { Jsonify, ResolvedFilterOptions } from '@animegarden/client';
 import { getSubjectById, getSubjectDisplayName } from './subjects';
 
 export function generateTitleFromFilter(
-  filter:
-    | Jsonify<Omit<ResolvedFilterOptions, 'page' | 'pageSize'>>
-    | Omit<ResolvedFilterOptions, 'page' | 'pageSize'>
+  filter: Jsonify<ResolvedFilterOptions> | ResolvedFilterOptions
 ) {
   if (filter.subjects) {
     const names = [];

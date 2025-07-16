@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useLoaderData, useLocation } from '@remix-run/react';
-import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/cloudflare';
+import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare';
 
 import type { Resource } from '@animegarden/client';
 
@@ -15,7 +15,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     const { ok, resources, timestamp } = await fetchResources({
       page: 1,
       pageSize: 30,
-      type: '动画'
+      types: ['动画', '合集'],
+      preset: 'bangumi'
     });
 
     return { ok, resources: resources as Resource<{ tracker: true }>[], timestamp };

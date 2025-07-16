@@ -4,13 +4,14 @@ import {
   type Collection,
   type ProviderType,
   type FilterOptions,
+  type PresetOptions,
   type PaginationOptions,
   type FetchResourcesOptions,
   fetchAPI as rawFetchAPI,
   fetchResources as rawFetchResources,
   fetchResourceDetail as rawFetchResourceDetail,
   fetchCollection as rawFetchCollection,
-  generateCollection as rawGenerateCollection
+  generateCollection as rawGenerateCollection,
 } from '@animegarden/client';
 
 export const baseURL = import.meta.env.SSR
@@ -76,7 +77,7 @@ export async function fetchTimestamp(): Promise<{ timestamp?: string | undefined
 }
 
 export async function fetchResources(
-  filter: FilterOptions & PaginationOptions = {},
+  filter: FilterOptions & PaginationOptions & PresetOptions = {},
   options: {
     fetch?: typeof ofetch;
     signal?: AbortSignal;

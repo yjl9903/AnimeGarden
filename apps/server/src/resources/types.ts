@@ -1,4 +1,5 @@
 import type { ParseResult } from 'anipar';
+import type { ResolvedFilterOptions } from '@animegarden/client';
 
 export interface NewResource {
   provider: string;
@@ -85,3 +86,11 @@ export interface InsertResourcesOptions {
    */
   keepshare?: boolean;
 }
+
+export type DatabaseFilterOptions = Omit<
+  Partial<ResolvedFilterOptions>,
+  'publishers' | 'fansubs'
+> & {
+  publishers?: number[];
+  fansubs?: number[];
+};

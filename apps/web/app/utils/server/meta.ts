@@ -5,9 +5,7 @@ import { getSubjectById, getSubjectDisplayName, waitForSubjectsLoaded } from '..
 await waitForSubjectsLoaded();
 
 export function generateTitleFromFilter(
-  filter:
-    | Jsonify<Omit<ResolvedFilterOptions, 'page' | 'pageSize'>>
-    | Omit<ResolvedFilterOptions, 'page' | 'pageSize'>
+  filter: Jsonify<ResolvedFilterOptions> | ResolvedFilterOptions
 ) {
   if (filter.subjects) {
     const names = [];

@@ -1,5 +1,5 @@
 import { useLoaderData } from '@remix-run/react';
-import { type LoaderFunctionArgs, type MetaFunction, json } from '@remix-run/node';
+import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 
 import Layout from '~/layouts/Layout';
 import { fetchTimestamp } from '~/utils';

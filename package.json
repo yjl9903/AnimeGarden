@@ -17,6 +17,7 @@
     "format": "turbo run format --parallel",
     "manager": "tsx apps/server/src/cli.ts",
     "release": "bumpp package.json packages/*/package.json apps/*/package.json --commit --push --tag && pnpm -r publish --access public",
+    "start:cron": "node apps/server/cli.mjs cron",
     "start:server": "node apps/server/cli.mjs start",
     "start:web": "node apps/web/server.mjs",
     "test:ci": "turbo run test:ci",

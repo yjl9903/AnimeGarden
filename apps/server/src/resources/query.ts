@@ -4,23 +4,24 @@ import { hash } from 'ohash';
 import { memoAsync } from 'memofunc';
 import {
   type SQLWrapper,
+  sql,
   and,
-  desc,
+  or,
   eq,
   gte,
+  lte,
+  isNull,
+  desc,
   ilike,
   notIlike,
   inArray,
-  isNull,
-  lte,
-  or,
-  sql
+  notInArray
 } from 'drizzle-orm';
 
 import {
   type ProviderType,
   type ResolvedFilterOptions,
-  ResolvedPaginationOptions,
+  type ResolvedPaginationOptions,
   normalizeTitle,
   transformResourceHref
 } from '@animegarden/client';
@@ -32,18 +33,11 @@ import { resources } from '../schema/resources';
 import { memo, jieba, nextTick } from '../utils';
 import { MAX_RESOURCES_TASK_COUNT, RESOURCES_TASK_PREFETCH_COUNT } from '../constants';
 
-import type { DatabaseResource } from './types';
+import type { DatabaseResource, DatabaseFilterOptions } from './types';
 
 import { transformDatabaseUser } from './transform';
 import { TitlePool, MagnetPool, TrackerPool } from './pool';
-
-type DatabaseFilterOptions = Omit<
-  Partial<ResolvedFilterOptions>,
-  'page' | 'pageSize' | 'publishers' | 'fansubs'
-> & {
-  publishers?: number[];
-  fansubs?: number[];
-};
+import { BANGUMI_BANNED_FANSUBS, buildFilterConds } from './filter';
 
 export const RESOURCE_SELECTOR = {
   id: resources.id,
@@ -66,7 +60,7 @@ export const RESOURCE_SELECTOR = {
 };
 
 export class QueryManager {
-  private readonly system: System;
+  public readonly system: System;
 
   private readonly logger: ConsolaInstance;
 
@@ -295,6 +289,7 @@ export class QueryManager {
     const { users, teams } = this.system.modules;
 
     return {
+      preset: filter.preset,
       provider: filter.provider,
       duplicate: filter.duplicate,
       publishers: filter.publishers
@@ -361,6 +356,7 @@ export class QueryManager {
     );
 
     const {
+      preset,
       provider,
       duplicate,
       fansubs,
@@ -463,6 +459,18 @@ export class QueryManager {
       conds.push(...exclude.map((i) => notIlike(resources.titleAlt, `%${i}%`)));
     }
 
+    // 支持 preset
+    switch (preset) {
+      case 'bangumi':
+        const bannedFansubs = BANGUMI_BANNED_FANSUBS.map(
+          (name) => this.system.modules.teams.getByName(name)?.id
+        ).filter((id) => id !== undefined);
+        if (bannedFansubs.length > 0) {
+          conds.push(notInArray(resources.fansubId, bannedFansubs));
+        }
+        break;
+    }
+
     const resp = await retryFn(
       () =>
         this.system.database
@@ -542,7 +550,9 @@ export class QueryManager {
     for (const task of tasks) {
       if (!task.ok) continue;
       if (!this.tasks.has(task.key)) continue;
+
       if (task.options.search) {
+        // 搜索任务不缓存, 强制清除
         task.clear();
       } else {
         // Remove resources
@@ -566,7 +576,7 @@ export class Task {
 
   public readonly options: DatabaseFilterOptions;
 
-  public readonly conds: Array<(r: DatabaseResource) => boolean> = [];
+  public readonly conds: Array<(r: DatabaseResource) => boolean>;
 
   public readonly visited = { count: 0, last: new Date() };
 
@@ -584,64 +594,7 @@ export class Task {
     this.query = query;
     this.key = key;
     this.options = options;
-
-    const conds = this.conds;
-    const {
-      provider,
-      duplicate,
-      publishers,
-      fansubs,
-      types,
-      subjects,
-      before,
-      after,
-      include,
-      keywords,
-      exclude
-    } = options;
-
-    if (provider) {
-      conds.push((r) => r.provider === provider);
-    }
-    if (!duplicate) {
-      conds.push((r) => r.duplicatedId === null || r.duplicatedId === undefined);
-    }
-
-    if (
-      (include && include.length > 0) ||
-      (keywords && keywords.length > 0) ||
-      (exclude && exclude.length > 0)
-    ) {
-      conds.push((r) => {
-        const title = normalizeTitle(r.title).toLowerCase();
-        return (
-          (include?.some((i) => title.indexOf(i) !== -1) ?? true) &&
-          (keywords?.every((i) => title.indexOf(i) !== -1) ?? true) &&
-          (exclude?.every((i) => title.indexOf(i) === -1) ?? true)
-        );
-      });
-    }
-    if ((publishers && publishers.length > 0) || (fansubs && fansubs.length > 0)) {
-      conds.push(
-        (r) =>
-          (publishers?.some((p) => r.publisherId === p) ?? false) ||
-          (fansubs?.some((p) => r.fansubId === p) ?? false)
-      );
-    }
-    if (types && types.length > 0) {
-      conds.push((r) => types.some((t) => r.type === t));
-    }
-    if (subjects && subjects.length > 0) {
-      conds.push((r) => subjects.some((s) => r.subjectId === s));
-    }
-    if (before) {
-      const t = before.getTime();
-      conds.push((r) => r.createdAt.getTime() <= t);
-    }
-    if (after) {
-      const t = after.getTime();
-      conds.push((r) => r.createdAt.getTime() >= t);
-    }
+    this.conds = buildFilterConds(query.system, options);
   }
 
   public visit() {
@@ -694,63 +647,7 @@ export class Task {
   });
 
   public async fetch(options: DatabaseFilterOptions, page: number, pageSize: number) {
-    const {
-      provider,
-      include,
-      keywords,
-      exclude,
-      duplicate,
-      publishers,
-      fansubs,
-      types,
-      subjects,
-      before,
-      after
-    } = options;
-    const conds: Array<(r: DatabaseResource) => boolean> = [];
-
-    if (provider) {
-      conds.push((r) => r.provider === provider);
-    }
-    if (!duplicate) {
-      conds.push((r) => r.duplicatedId === null || r.duplicatedId === undefined);
-    }
-
-    if (
-      (include && include.length > 0) ||
-      (keywords && keywords.length > 0) ||
-      (exclude && exclude.length > 0)
-    ) {
-      conds.push((r) => {
-        const title = normalizeTitle(r.title).toLowerCase();
-        return (
-          (include?.some((i) => title.indexOf(i) !== -1) ?? true) &&
-          (keywords?.every((i) => title.indexOf(i) !== -1) ?? true) &&
-          (exclude?.every((i) => title.indexOf(i) === -1) ?? true)
-        );
-      });
-    }
-    if (subjects && subjects.length > 0) {
-      conds.push((r) => subjects.some((s) => r.subjectId === s));
-    }
-    if ((publishers && publishers.length > 0) || (fansubs && fansubs.length > 0)) {
-      conds.push(
-        (r) =>
-          (publishers?.some((p) => r.publisherId === p) ?? false) ||
-          (fansubs?.some((p) => r.fansubId === p) ?? false)
-      );
-    }
-    if (types && types.length > 0) {
-      conds.push((r) => types.some((t) => r.type === t));
-    }
-    if (before) {
-      const t = before.getTime();
-      conds.push((r) => r.createdAt.getTime() <= t);
-    }
-    if (after) {
-      const t = after.getTime();
-      conds.push((r) => r.createdAt.getTime() >= t);
-    }
+    const conds = buildFilterConds(this.query.system, options);
 
     let cursor = 0;
     let matched = 0;

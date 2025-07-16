@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { memo } from 'react';
 import { NavLink, useLoaderData } from '@remix-run/react';
-import { json, redirect, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
+import { redirect, type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 
 import { Collection, Jsonify } from '@animegarden/client';
 
