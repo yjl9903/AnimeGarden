@@ -19,6 +19,8 @@ import {
 } from '~/utils';
 import { getSubjectById } from '~/utils/subjects';
 
+import './detail.css';
+
 import { FilesCard } from './FileTree';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
@@ -107,7 +109,10 @@ export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
   }
 
   return [
-    { title: (resourceTitle ? resourceTitle + ' | ' : '') + 'Anime Garden 動漫花園資源網第三方镜像站' },
+    {
+      title:
+        (resourceTitle ? resourceTitle + ' | ' : '') + 'Anime Garden 動漫花園資源網第三方镜像站'
+    },
     {
       name: 'description',
       content: descriptionText
@@ -202,8 +207,8 @@ export default function Resources() {
             className="description"
             dangerouslySetInnerHTML={{
               __html: (detail?.description ?? '').replace(
-                /簡介:(&nbsp;)?/,
-                '<h2 className="text-lg font-bold">简介</h2>'
+                /(<strong>)?簡介:(&nbsp;)*(<\/strong>)?(<br>)?(<hr>)?/,
+                '<h2 className="text-xl font-bold">简介</h2>'
               )
             }}
           />
