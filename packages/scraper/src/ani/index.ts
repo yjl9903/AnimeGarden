@@ -7,10 +7,15 @@ import { toMagnetURI } from 'parse-torrent';
 import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client';
 
 import { parse } from 'anipar';
-import { retryFn } from '@animegarden/shared';
+import {
+  retryFn,
+  parseSize,
+  removeExtraSpaces,
+  replaceSuffix,
+  splitOnce
+} from '@animegarden/shared';
 
 import { NetworkError } from '../error';
-import { parseSize, removeExtraSpaces, replaceSuffix, splitOnce } from '../utils';
 
 const parser = new Parser();
 

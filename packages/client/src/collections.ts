@@ -3,7 +3,7 @@ import { serialize } from 'ohash';
 
 import type { Collection } from './types';
 
-import { SupportProviders } from './constants';
+import { SupportPresets, SupportProviders } from './constants';
 
 const CollectionSchema = z.object({
   hash: z.string().optional(),
@@ -16,6 +16,7 @@ const CollectionSchema = z.object({
           name: z.coerce.string().default(''),
           searchParams: z.string(),
           // filters
+          preset: z.enum(SupportPresets).optional(),
           provider: z.enum(SupportProviders).optional(),
           duplicate: z.boolean().optional(),
           types: z.array(z.string()).optional(),
@@ -38,7 +39,6 @@ const CollectionSchema = z.object({
 export function parseCollection(collection: unknown): Collection<true> | undefined {
   const parsed = CollectionSchema.safeParse(collection);
   if (parsed.success) {
-    // @ts-ignore
     return parsed.data;
   } else {
     return undefined;

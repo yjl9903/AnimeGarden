@@ -1,0 +1,24 @@
+.description h1,
+.description h2,
+.description h3,
+.description h4,
+.description h5,
+.description h6 {
+  /* prettier-ignore */
+  @apply: font-bold;
+}
+
+.description p {
+  /* prettier-ignore */
+  @apply: my-2;
+}
+
+.description hr {
+  /* prettier-ignore */
+  @apply: my-2;
+}
+
+.description a {
+  /* prettier-ignore */
+  @apply: text-sky-700 hover:text-sky-500;
+}

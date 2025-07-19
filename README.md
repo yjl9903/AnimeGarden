@@ -22,17 +22,19 @@
 
 ![home](./assets/home.png)
 
-## API 的使用
+## 使用开放 API
 
 ```bash
 curl "https://api.animes.garden/resources?page=1&pageSize=10"
 ```
 
-你可以在[这里](https://animes.garden/docs/api)找到交互式的 Open API 文档, 以及在本仓库的 [scripts/api.http](./scripts/api.http) 文件内查看到更多 API 用例.
+你可以在[这里](https://animes.garden/docs/api)找到交互式的 Open API 文档, 以及在本仓库的 [examples/api.http](./examples/api.http) 文件内查看到更多 API 用例.
 
-如果你正在使用 JavaScript 和 TypeScript 进行开发, 那么你可以直接使用 npm 包 [animegarden](https://www.npmjs.com/package/animegarden), 它是对这些 API 请求的上层封装.
+你也可以直接使用网站, 在资源列表页 (例如 [明天，美食广场见。 最新资源](https://animes.garden/resources/1?after=1751155200000&fansub=%E6%A1%9C%E9%83%BD%E5%AD%97%E5%B9%95%E7%BB%84&keyword=%E7%AE%80%E4%BD%93&subject=528438)) 直接复制生成的 cURL、JavaScript 和 Python 的 API 请求代码.
 
-## npm 包的使用
+如果你正在使用 JavaScript 和 TypeScript 进行开发, 那么你可以直接使用 npm 包 [@animegarden/client](https://www.npmjs.com/package/animegarden), 它是对这些 API 请求的上层封装.
+
+## 使用 npm 包
 
 它是 [AnimeGarden](https://animes.garden) 的 JavaScript / TypeScript 的 API 客户端封装.
 
@@ -50,9 +52,9 @@ const resources = await fetchResources()
 const sakurato = await fetchResources({ count: -1, fansub: 'ANi' })
 ```
 
-使用时, 你需要保证你的程序环境中有内置的 [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) 函数. 如果没有, 你可以安装使用 [undici](https://github.com/nodejs/undici) 或者 [ofetch](https://github.com/unjs/ofetch).
+使用时, 你需要保证你的程序环境中有内置的 [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) 函数. 如果没有, 你可以安装使用 [undici](https://github.com/nodejs/undici) 或者 [ofetch](https://github.com/unjs/ofetch) 进行 polyfill.
 
-你可以在[这里](https://github.com/yjl9903/AnimeGarden/blob/main/packages/animegarden/src/garden/types.ts)查看更多过滤条件 `FilterOptions`, 也可以在 [./scripts/](https://github.com/yjl9903/AnimeGarden/blob/main/scripts/) 目录下找到更多程序示例.
+你可以在[这里](https://github.com/yjl9903/AnimeGarden/blob/32bc3843084367338f41be7d4af47c80b639f828/packages/client/src/types.ts#L220)查看更多过滤条件 `FilterOptions`, 也可以在 [./examples/](https://github.com/yjl9903/AnimeGarden/blob/main/examples/) 目录下找到更多程序示例.
 
 ## 本地开发
 
@@ -67,6 +69,7 @@ const sakurato = await fetchResources({ count: -1, fansub: 'ANi' })
 ## 鸣谢
 
 + [動漫花園](https://share.dmhy.org/)
++ [萌番组](https://bangumi.moe/)
 + [Bangumi 番组计划](https://bgm.tv/)
 + [bangumi-data](https://github.com/bangumi-data/bangumi-data)
 + [erengy/anitomy](https://github.com/erengy/anitomy)

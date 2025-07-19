@@ -2,10 +2,14 @@ import { JSDOM } from 'jsdom';
 
 import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client';
 
-import { retryFn } from '@animegarden/shared';
+import { retryFn, removeExtraSpaces, splitOnce, stripSuffix } from '@animegarden/shared';
 
 import { NetworkError } from '../error';
-import { removeExtraSpaces, splitOnce, stripSuffix, toShanghai } from '../utils';
+
+function toShanghai(date: Date) {
+  const offset = -480 - new Date().getTimezoneOffset();
+  return new Date(date.getTime() + offset * 60 * 1000);
+}
 
 export interface FetchDmhyPageOptions {
   page?: number;

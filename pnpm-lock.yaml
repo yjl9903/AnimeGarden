@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: ^4.20250712.0
-        version: 4.20250712.0
+        specifier: ^4.20250715.0
+        version: 4.20250715.0
       '@flydotio/dockerfile':
         specifier: ^0.7.10
         version: 0.7.10(@types/node@22.16.3)
@@ -67,28 +67,67 @@ importers:
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.16.3)(jiti@2.4.2)(jsdom@26.1.0)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
       wrangler:
         specifier: ^4.24.3
-        version: 4.24.3(@cloudflare/workers-types@4.20250712.0)
+        version: 4.24.3(@cloudflare/workers-types@4.20250715.0)
 
-  apps/backend/database:
+  apps/server:
     dependencies:
       '@animegarden/client':
         specifier: workspace:*
-        version: link:../../../packages/client
+        version: link:../../packages/client
+      '@animegarden/scraper':
+        specifier: workspace:*
+        version: link:../../packages/scraper
+      '@aws-sdk/client-s3':
+        specifier: ^3.844.0
+        version: 3.844.0
+      '@breadc/color':
+        specifier: ^0.9.7
+        version: 0.9.7
+      '@hono/node-server':
+        specifier: ^1.16.0
+        version: 1.16.0(hono@4.8.5)
+      '@hono/zod-validator':
+        specifier: ^0.7.1
+        version: 0.7.1(hono@4.8.5)(zod@3.25.76)
       '@node-rs/jieba':
         specifier: ^2.0.1
         version: 2.0.1
       anipar:
         specifier: workspace:*
-        version: link:../../../packages/anipar
+        version: link:../../packages/anipar
       bgmd:
         specifier: ^0.0.63
         version: 0.0.63
+      breadc:
+        specifier: ^0.9.7
+        version: 0.9.7
       consola:
         specifier: ^3.4.2
         version: 3.4.2
+      croner:
+        specifier: ^9.1.0
+        version: 9.1.0
+      date-fns:
+        specifier: ^2.30.0
+        version: 2.30.0
+      date-fns-tz:
+        specifier: ^2.0.1
+        version: 2.0.1(date-fns@2.30.0)
+      dotenv:
+        specifier: ^17.2.0
+        version: 17.2.0
       drizzle-orm:
         specifier: ^0.44.2
-        version: 0.44.2(@cloudflare/workers-types@4.20250712.0)(postgres@3.4.7)
+        version: 0.44.2(@cloudflare/workers-types@4.20250715.0)(postgres@3.4.7)
+      fast-xml-parser:
+        specifier: ^5.2.5
+        version: 5.2.5
+      fs-extra:
+        specifier: ^11.3.0
+        version: 11.3.0
+      hono:
+        specifier: ^4.8.5
+        version: 4.8.5
       ioredis:
         specifier: ^5.6.1
         version: 5.6.1
@@ -104,128 +143,34 @@ importers:
       simptrad:
         specifier: ^0.2.0
         version: 0.2.0
-    devDependencies:
-      '@animegarden/shared':
-        specifier: workspace:*
-        version: link:../../../packages/shared
-      dotenv:
-        specifier: ^17.2.0
-        version: 17.2.0
-
-  apps/backend/manager:
-    dependencies:
-      '@animegarden/client':
-        specifier: workspace:*
-        version: link:../../../packages/client
-      '@animegarden/database':
-        specifier: workspace:*
-        version: link:../database
-      '@animegarden/scraper':
-        specifier: workspace:*
-        version: link:../../../packages/scraper
-      '@animegarden/server':
-        specifier: workspace:*
-        version: link:../server
-      '@aws-sdk/client-s3':
-        specifier: ^3.844.0
-        version: 3.844.0
-      '@breadc/color':
-        specifier: ^0.9.7
-        version: 0.9.7
-      breadc:
-        specifier: ^0.9.7
-        version: 0.9.7
-      dotenv:
-        specifier: ^17.2.0
-        version: 17.2.0
-      fs-extra:
-        specifier: ^11.3.0
-        version: 11.3.0
-      undici:
-        specifier: ^7.11.0
-        version: 7.11.0
-      zod:
-        specifier: ^3.25.76
-        version: 3.25.76
-
-  apps/backend/server:
-    dependencies:
-      '@animegarden/client':
-        specifier: workspace:*
-        version: link:../../../packages/client
-      '@animegarden/database':
-        specifier: workspace:*
-        version: link:../database
-      '@animegarden/scraper':
-        specifier: workspace:*
-        version: link:../../../packages/scraper
-      '@breadc/color':
-        specifier: ^0.9.7
-        version: 0.9.7
-      '@hono/node-server':
-        specifier: ^1.16.0
-        version: 1.16.0(hono@4.8.5)
-      '@hono/zod-validator':
-        specifier: ^0.7.1
-        version: 0.7.1(hono@4.8.5)(zod@3.25.76)
-      bgmd:
-        specifier: ^0.0.63
-        version: 0.0.63
-      croner:
-        specifier: ^9.1.0
-        version: 9.1.0
-      date-fns:
-        specifier: ^2.30.0
-        version: 2.30.0
-      date-fns-tz:
-        specifier: ^2.0.1
-        version: 2.0.1(date-fns@2.30.0)
-      dotenv:
-        specifier: ^17.2.0
-        version: 17.2.0
-      drizzle-orm:
-        specifier: ^0.44.2
-        version: 0.44.2(@cloudflare/workers-types@4.20250712.0)(postgres@3.4.7)
-      fast-xml-parser:
-        specifier: ^5.2.5
-        version: 5.2.5
-      hono:
-        specifier: ^4.8.5
-        version: 4.8.5
-      ioredis:
-        specifier: ^5.6.1
-        version: 5.6.1
-      memofunc:
-        specifier: ^0.1.6
-        version: 0.1.6
-      ohash:
-        specifier: ^2.0.11
-        version: 2.0.11
       sitemap:
         specifier: ^8.0.0
         version: 8.0.0
       string-width:
         specifier: ^7.2.0
         version: 7.2.0
+      undici:
+        specifier: ^7.11.0
+        version: 7.11.0
       zod:
         specifier: ^3.25.76
         version: 3.25.76
     devDependencies:
       '@animegarden/shared':
         specifier: workspace:*
-        version: link:../../../packages/shared
+        version: link:../../packages/shared
 
-  apps/frontend/web:
+  apps/web:
     dependencies:
       '@animegarden/client':
         specifier: workspace:*
-        version: link:../../../packages/client
-      '@animegarden/database':
+        version: link:../../packages/client
+      '@animegarden/scraper':
         specifier: workspace:*
-        version: link:../../backend/database
+        version: link:../../packages/scraper
       '@animegarden/server':
         specifier: workspace:*
-        version: link:../../backend/server
+        version: link:../server
       '@cloudflare/kv-asset-handler':
         specifier: ^0.4.0
         version: 0.4.0
@@ -261,7 +206,7 @@ importers:
         version: 1.2.7(@types/react-dom@19.1.6(@types/react@19.1.8))(@types/react@19.1.8)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@remix-run/cloudflare':
         specifier: 2.16.8
-        version: 2.16.8(@cloudflare/workers-types@4.20250712.0)(typescript@5.8.3)
+        version: 2.16.8(@cloudflare/workers-types@4.20250715.0)(typescript@5.8.3)
       '@remix-run/node':
         specifier: 2.16.8
         version: 2.16.8(typescript@5.8.3)
@@ -276,7 +221,7 @@ importers:
         version: 2.16.8(typescript@5.8.3)
       anipar:
         specifier: workspace:*
-        version: link:../../../packages/anipar
+        version: link:../../packages/anipar
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -356,12 +301,21 @@ importers:
       '@iconify-json/fluent':
         specifier: ^1.2.27
         version: 1.2.27
+      '@iconify-json/mage':
+        specifier: ^1.2.2
+        version: 1.2.2
+      '@iconify-json/mdi':
+        specifier: ^1.2.3
+        version: 1.2.3
+      '@iconify-json/proicons':
+        specifier: ^1.2.16
+        version: 1.2.16
       '@iconify-json/solar':
         specifier: ^1.2.2
         version: 1.2.2
       '@remix-run/dev':
         specifier: ^2.16.8
-        version: 2.16.8(@remix-run/react@2.16.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(wrangler@4.24.3(@cloudflare/workers-types@4.20250712.0))(yaml@2.8.0)
+        version: 2.16.8(@remix-run/react@2.16.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(wrangler@4.24.3(@cloudflare/workers-types@4.20250715.0))(yaml@2.8.0)
       '@svgr/core':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.8.3)
@@ -379,7 +333,7 @@ importers:
         version: 5.18.0
       '@vite-pwa/remix':
         specifier: ^0.2.0
-        version: 0.2.0(@remix-run/dev@2.16.8(@remix-run/react@2.16.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(wrangler@4.24.3(@cloudflare/workers-types@4.20250712.0))(yaml@2.8.0))(@vite-pwa/assets-generator@1.0.0)(vite-plugin-pwa@1.0.1(@vite-pwa/assets-generator@1.0.0)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0))
+        version: 0.2.0(@remix-run/dev@2.16.8(@remix-run/react@2.16.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(wrangler@4.24.3(@cloudflare/workers-types@4.20250715.0))(yaml@2.8.0))(@vite-pwa/assets-generator@1.0.0)(vite-plugin-pwa@1.0.1(@vite-pwa/assets-generator@1.0.0)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0))
       autoprefixer:
         specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.6)
@@ -420,14 +374,14 @@ importers:
         specifier: ^5.1.4
         version: 5.1.4(typescript@5.8.3)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))
 
-  apps/frontend/worker:
+  apps/worker:
     dependencies:
       '@animegarden/client':
         specifier: workspace:*
-        version: link:../../../packages/client
+        version: link:../../packages/client
       '@animegarden/scraper':
         specifier: workspace:*
-        version: link:../../../packages/scraper
+        version: link:../../packages/scraper
       memofunc:
         specifier: ^0.1.6
         version: 0.1.6
@@ -1270,8 +1224,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@cloudflare/workers-types@4.20250712.0':
-    resolution: {integrity: sha512-TW8csCl77NYejcdNNRejZxt+zkitQwtJVntD0ykk1Uw3fh6HgiKGnIHxqZedAqlkgdjcHR8rePWBVJIOwFXfaQ==}
+  '@cloudflare/workers-types@4.20250715.0':
+    resolution: {integrity: sha512-uMp+ClvvhNlk3ojIgWuIB5Zteq4YVmZcyX16hpJ8eCeCX3izagfEZwXe/vETlv4cc5vtM3xAOMdV//0BD0E98g==}
 
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
@@ -2092,6 +2046,15 @@ packages:
 
   '@iconify-json/fluent@1.2.27':
     resolution: {integrity: sha512-ZEjiHPloDLo0EsDEIUfjPOyPEife6PSPO33215eFPj5vn+3e2m23Y0JhjqmM2YwQNZ+0Dh78sWTwWslc4ylwlw==}
+
+  '@iconify-json/mage@1.2.2':
+    resolution: {integrity: sha512-sCn5NRf4MrKjGzElJ7LtZHCNcyTEc/+szCAgpuOujaL7Qhht+cMNwmKXJmlcCcezxiOmL0TDjwdzQZ5xkSkJhw==}
+
+  '@iconify-json/mdi@1.2.3':
+    resolution: {integrity: sha512-O3cLwbDOK7NNDf2ihaQOH5F9JglnulNDFV7WprU2dSoZu3h3cWH//h74uQAB87brHmvFVxIOkuBX2sZSzYhScg==}
+
+  '@iconify-json/proicons@1.2.16':
+    resolution: {integrity: sha512-WzcdNidbPLA3iN7/NfM9vqc7ycE8wW2+d+kVf7CtkVERhs6EcUF8NKwnW8vuuT/oZnenE5rT1ZrNDzt5TJZ2Mw==}
 
   '@iconify-json/solar@1.2.2':
     resolution: {integrity: sha512-lcTb6DWL4HZObiY1W3fHfuxxuQHUc6CFHFeywKEx7Ry0k+dU6POZCMC7oVLr0F8vuf+KgaQ3oOoGO/yFzOwrNg==}
@@ -9638,7 +9601,7 @@ snapshots:
   '@cloudflare/workerd-windows-64@1.20250709.0':
     optional: true
 
-  '@cloudflare/workers-types@4.20250712.0': {}
+  '@cloudflare/workers-types@4.20250715.0': {}
 
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
@@ -10110,6 +10073,18 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/fluent@1.2.27':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/mage@1.2.2':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/mdi@1.2.3':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/proicons@1.2.16':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -10885,15 +10860,15 @@ snapshots:
 
   '@radix-ui/rect@1.1.1': {}
 
-  '@remix-run/cloudflare@2.16.8(@cloudflare/workers-types@4.20250712.0)(typescript@5.8.3)':
+  '@remix-run/cloudflare@2.16.8(@cloudflare/workers-types@4.20250715.0)(typescript@5.8.3)':
     dependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
-      '@cloudflare/workers-types': 4.20250712.0
+      '@cloudflare/workers-types': 4.20250715.0
       '@remix-run/server-runtime': 2.16.8(typescript@5.8.3)
     optionalDependencies:
       typescript: 5.8.3
 
-  '@remix-run/dev@2.16.8(@remix-run/react@2.16.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(wrangler@4.24.3(@cloudflare/workers-types@4.20250712.0))(yaml@2.8.0)':
+  '@remix-run/dev@2.16.8(@remix-run/react@2.16.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(wrangler@4.24.3(@cloudflare/workers-types@4.20250715.0))(yaml@2.8.0)':
     dependencies:
       '@babel/core': 7.28.0
       '@babel/generator': 7.28.0
@@ -10956,7 +10931,7 @@ snapshots:
       '@remix-run/serve': 2.16.8(typescript@5.8.3)
       typescript: 5.8.3
       vite: 7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0)
-      wrangler: 4.24.3(@cloudflare/workers-types@4.20250712.0)
+      wrangler: 4.24.3(@cloudflare/workers-types@4.20250715.0)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -12338,11 +12313,11 @@ snapshots:
       sharp-ico: 0.1.5
       unconfig: 7.3.2
 
-  '@vite-pwa/remix@0.2.0(@remix-run/dev@2.16.8(@remix-run/react@2.16.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(wrangler@4.24.3(@cloudflare/workers-types@4.20250712.0))(yaml@2.8.0))(@vite-pwa/assets-generator@1.0.0)(vite-plugin-pwa@1.0.1(@vite-pwa/assets-generator@1.0.0)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0))':
+  '@vite-pwa/remix@0.2.0(@remix-run/dev@2.16.8(@remix-run/react@2.16.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(wrangler@4.24.3(@cloudflare/workers-types@4.20250715.0))(yaml@2.8.0))(@vite-pwa/assets-generator@1.0.0)(vite-plugin-pwa@1.0.1(@vite-pwa/assets-generator@1.0.0)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0))':
     dependencies:
       vite-plugin-pwa: 1.0.1(@vite-pwa/assets-generator@1.0.0)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(workbox-build@7.3.0)(workbox-window@7.3.0)
     optionalDependencies:
-      '@remix-run/dev': 2.16.8(@remix-run/react@2.16.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(wrangler@4.24.3(@cloudflare/workers-types@4.20250712.0))(yaml@2.8.0)
+      '@remix-run/dev': 2.16.8(@remix-run/react@2.16.8(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@7.0.4(@types/node@22.16.3)(jiti@2.4.2)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(wrangler@4.24.3(@cloudflare/workers-types@4.20250715.0))(yaml@2.8.0)
       '@vite-pwa/assets-generator': 1.0.0
 
   '@vitest/expect@3.2.4':
@@ -13245,9 +13220,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.44.2(@cloudflare/workers-types@4.20250712.0)(postgres@3.4.7):
+  drizzle-orm@0.44.2(@cloudflare/workers-types@4.20250715.0)(postgres@3.4.7):
     optionalDependencies:
-      '@cloudflare/workers-types': 4.20250712.0
+      '@cloudflare/workers-types': 4.20250715.0
       postgres: 3.4.7
 
   dunder-proto@1.0.1:
@@ -17403,7 +17378,7 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20250709.0
       '@cloudflare/workerd-windows-64': 1.20250709.0
 
-  wrangler@4.24.3(@cloudflare/workers-types@4.20250712.0):
+  wrangler@4.24.3(@cloudflare/workers-types@4.20250715.0):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.4.0
       '@cloudflare/unenv-preset': 2.3.3(unenv@2.0.0-rc.17)(workerd@1.20250709.0)
@@ -17414,7 +17389,7 @@ snapshots:
       unenv: 2.0.0-rc.17
       workerd: 1.20250709.0
     optionalDependencies:
-      '@cloudflare/workers-types': 4.20250712.0
+      '@cloudflare/workers-types': 4.20250715.0
       fsevents: 2.3.3
     transitivePeerDependencies:
       - bufferutil

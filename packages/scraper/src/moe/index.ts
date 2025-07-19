@@ -1,9 +1,8 @@
 import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client';
 
-import { retryFn } from '@animegarden/shared';
+import { retryFn, removeExtraSpaces, stripSuffix } from '@animegarden/shared';
 
 import { NetworkError } from '../error';
-import { removeExtraSpaces, stripSuffix } from '../utils';
 
 import { getType } from './tag';
 import { fetchTeam, fetchUser } from './user';
@@ -41,7 +40,7 @@ export async function fetchMoePage(
     return resp;
   }, retry);
 
-  const data = await resp.json();
+  const data = (await resp.json()) as any;
 
   const result: ScrapedResource[] = [];
   for (const torrent of data?.torrents ?? []) {
@@ -114,7 +113,7 @@ export async function fetchMoeDetail(
     return resp;
   }, retry);
 
-  const torrent = await resp.json();
+  const torrent = (await resp.json()) as any;
 
   const user = await fetchUser(ofetch, torrent.uploader_id);
   const team = torrent.team_id ? await fetchTeam(ofetch, torrent.team_id) : undefined;

@@ -22,17 +22,17 @@
 
 ![home](./assets/home.png)
 
-## API Usage
+## Open API Usage
 
 ```bash
 curl "https://api.animes.garden/resources?page=1&pageSize=10"
 ```
 
-You can find the interactive Open API document [here](https://animes.garden/docs/api) and more API usage example in [scripts/api.http](./scripts/api.http).
+You can find the interactive Open API document [here](https://animes.garden/docs/api) and more API usage example in [examples/api.http](./examples/api.http).
 
 If you are using JavaScript / TypeScript, you can just use the API wrapper `fetchResources` and `fetchResourceDetail` in package [animegarden](https://www.npmjs.com/package/animegarden).
 
-## Package Usage
+## NPM Package Usage
 
 [AnimeGarden](https://animes.garden) API client and utils for JavaScript / TypeScript.
 
@@ -50,9 +50,9 @@ const resources = await fetchResources()
 const sakurato = await fetchResources({ count: -1, fansub: 'ANi' })
 ```
 
-Assume your environment has built-in [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch). If not you can use [undici](https://github.com/nodejs/undici) or [ofetch](https://github.com/unjs/ofetch).
+Assume your environment has built-in [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch). If not you can use [undici](https://github.com/nodejs/undici) or [ofetch](https://github.com/unjs/ofetch) to polyfill.
 
-You can check more filter conditions [FilterOptions](https://github.com/yjl9903/AnimeGarden/blob/main/packages/animegarden/src/garden/types.ts) and usage examples in [./scripts/](https://github.com/yjl9903/AnimeGarden/blob/main/scripts/) directory.
+You can check more filter conditions [FilterOptions](https://github.com/yjl9903/AnimeGarden/blob/32bc3843084367338f41be7d4af47c80b639f828/packages/client/src/types.ts#L220) and usage examples in [./examples/](https://github.com/yjl9903/AnimeGarden/blob/main/examples/) directory.
 
 ## Local Development
 
@@ -67,6 +67,7 @@ Follow [CONTRIBUTING.md](./CONTRIBUTING.md) to setup the environment and start d
 ## Credits
 
 + [動漫花園](https://share.dmhy.org/)
++ [萌番组](https://bangumi.moe/)
 + [Bangumi 番组计划](https://bgm.tv/)
 + [bangumi-data](https://github.com/bangumi-data/bangumi-data)
 + [erengy/anitomy](https://github.com/erengy/anitomy)

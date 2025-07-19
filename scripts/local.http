@@ -32,7 +32,8 @@ Content-Type: application/json
 {
   "page": 1,
   "pageSize": 80,
-  "type": "动画"
+  "types": ["动画", "合集"],
+  "preset": "bangumi"
 }
 
 ### Fetch ANi
@@ -68,6 +69,10 @@ Content-Type: application/json
     "Era"
   ]
 }
+
+### Types
+POST http://0.0.0.0:8080/resources?type=动画&type=合集
+Content-Type: application/json
 
 ### Subjects
 POST http://0.0.0.0:8080/resources?subject=504591

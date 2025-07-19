@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - apps/frontend/worker/**
+      - apps/worker/**
 
 jobs:
   worker:
@@ -33,7 +33,7 @@ jobs:
         run: pnpm build
 
       - name: Deploy
-        run: pnpm -C apps/frontend/worker run deploy
+        run: pnpm -C apps/worker run deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
 
@@ -63,6 +63,6 @@ jobs:
   #         SSR_ADAPTER: cloudflare
 
   #     - name: Deploy
-  #       run: pnpm -C apps/frontend/web run deploy:cloudflare
+  #       run: pnpm -C apps/web run deploy:cloudflare
   #       env:
   #         CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}

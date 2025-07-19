@@ -37,7 +37,7 @@ export async function fetchUser(
     return resp;
   }, 10);
 
-  const data = await resp.json();
+  const data = (await resp.json()) as any;
 
   const user = {
     provider: 'moe',
@@ -76,7 +76,7 @@ export async function fetchTeam(
     return resp;
   }, 10);
 
-  const data = await resp.json();
+  const data = (await resp.json()) as any;
 
   const team = {
     provider: 'moe',

@@ -40,7 +40,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - run: |
-          flyctl deploy --config ./apps/frontend/web/fly.toml \
+          flyctl deploy --config ./apps/web/fly.toml \
             --app animegarden-web-${{ github.event.inputs.environment }} \
             --remote-only
         env:
@@ -63,7 +63,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - run: |
-          flyctl deploy --config ./apps/backend/manager/fly.server.toml \
+          flyctl deploy --config ./apps/server/fly.server.toml \
             --app animegarden-server-production --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -85,7 +85,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - run: |
-          flyctl deploy --config ./apps/backend/manager/fly.feed.toml \
+          flyctl deploy --config ./apps/server/fly.feed.toml \
             --app animegarden-feed-production --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
