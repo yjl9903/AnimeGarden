@@ -385,7 +385,7 @@ const CopyResourcesDropdown = (props: Props) => {
         onClick={copyRSS}
       >
         <span className="i-carbon-copy mr1"></span>
-        <span>复制 RSS 订阅</span>
+        <span>复制 RSS 订阅链接</span>
       </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -477,7 +477,7 @@ export function FilterOperations(props: Props) {
         <span>添加到收藏夹</span>
       </Button>
       <CopyResourcesDropdown {...props} />
-      <SearchTooltip />
+      <SearchTooltip className="lt-sm:hidden" />
     </div>
   );
 }

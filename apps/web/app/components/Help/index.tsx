@@ -32,12 +32,12 @@ export function TorrentTooltip() {
   );
 }
 
-export function SearchTooltip() {
+export function SearchTooltip(props: { className?: string }) {
   return (
     <a
       href="https://animespace.onekuma.cn/animegarden/search.html"
       target="_blank"
-      className="i-carbon-help text-2xl text-link-active"
+      className={`i-carbon-help text-2xl text-link-active ${props.className}`}
     ></a>
   );
 }
