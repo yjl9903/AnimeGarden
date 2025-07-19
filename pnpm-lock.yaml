@@ -165,6 +165,9 @@ importers:
       '@animegarden/client':
         specifier: workspace:*
         version: link:../../packages/client
+      '@animegarden/scraper':
+        specifier: workspace:*
+        version: link:../../packages/scraper
       '@animegarden/server':
         specifier: workspace:*
         version: link:../server

@@ -8,6 +8,15 @@ export function splitOnce(text: string, separator: string): [string, string] {
   return [first, second];
 }
 
+export function stripPrefix(text: string, prefixes: string[]) {
+  for (const prefix of prefixes) {
+    if (text.startsWith(prefix)) {
+      return text.slice(prefix.length);
+    }
+  }
+  return text;
+}
+
 export function stripSuffix(text: string, suffixes: string[]) {
   for (const suffix of suffixes) {
     if (text.endsWith(suffix)) {
@@ -24,6 +33,12 @@ export function replaceSuffix(text: string, suffixes: Record<string, string>) {
     }
   }
   return text;
+}
+
+export function truncate(text: string, maxLength: number, ellipsis = '...') {
+  return text.length >= maxLength - ellipsis.length
+    ? text.slice(0, maxLength - ellipsis.length) + ellipsis
+    : text;
 }
 
 export function removeExtraSpaces(str: string): string {

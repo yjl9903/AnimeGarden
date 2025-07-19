@@ -5,6 +5,7 @@ import { parse } from 'anipar';
 import { formatInTimeZone } from 'date-fns-tz';
 
 import { SupportProviders } from '@animegarden/client';
+import { normalizeDescription } from '@animegarden/scraper';
 
 import { APP_HOST } from '~build/env';
 
@@ -19,7 +20,6 @@ import {
 import { getSubjectById } from '~/utils/subjects';
 
 import { FilesCard } from './FileTree';
-import { extractCover } from './cover';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   try {
@@ -39,7 +39,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
   const resource = data?.resource;
-  const title = resource?.title;
+  const resourceTitle = resource?.title;
 
   const info = resource ? parse(resource.title) : undefined;
   const schema = info
@@ -60,11 +60,22 @@ export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
       })
     : undefined;
 
+  const title = info?.title ?? resourceTitle;
+  const description = data?.detail?.description
+    ? normalizeDescription(data?.detail?.description ?? '')
+    : undefined;
+  const descriptionText =
+    description && title
+      ? description.summary.startsWith(title)
+        ? description.summary
+        : `${title}: ${description.summary}`
+      : `${title}: ${description?.summary ?? data?.detail?.description}`;
+
   const og = resource
     ? [
         {
           name: 'og:title',
-          content: info?.title ?? title
+          content: title
         },
         {
           name: 'og:url',
@@ -85,7 +96,7 @@ export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
       ]
     : [];
 
-  const cover = extractCover(data?.detail?.description ?? '');
+  const cover = description?.images[0]?.src;
   const subject = resource?.subjectId ? getSubjectById(resource.subjectId) : undefined;
   const subjectImage = subject?.bangumi?.images.large;
   if (cover || subjectImage) {
@@ -96,8 +107,11 @@ export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
   }
 
   return [
-    { title: (title ? title + ' | ' : '') + 'Anime Garden 動漫花園資源網第三方镜像站' },
-    { name: 'description', content: `${data?.detail?.description ?? title}` },
+    { title: (resourceTitle ? resourceTitle + ' | ' : '') + 'Anime Garden 動漫花園資源網第三方镜像站' },
+    {
+      name: 'description',
+      content: descriptionText
+    },
     ...og,
     {
       'script:ld+json': schema
