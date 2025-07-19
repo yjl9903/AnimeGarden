@@ -20,7 +20,7 @@ export const Header = memo((props: { feedURL?: string }) => {
 
   return (
     <header
-      className="fixed z-13 pt-[1px] flex justify-center items-center w-full h-$nav-height pointer-events-none text-base-500"
+      className="fixed z-13 pt-[1px] flex justify-center items-center w-[calc(100%-var(--removed-body-scroll-bar-size,0px))] h-$nav-height pointer-events-none text-base-500"
       suppressHydrationWarning={true}
     >
       <nav className="main flex gap-1 [&>div]:(leading-$nav-height)">
@@ -165,7 +165,11 @@ const TypesDropdown = memo(() => {
         {types.map((type) => (
           <NavLink
             key={type}
-            to={type === '动画' ? `/resources/1?type=动画&preset=bangumi` : `/resources/1?type=${type}`}
+            to={
+              type === '动画'
+                ? `/resources/1?type=动画&preset=bangumi`
+                : `/resources/1?type=${type}`
+            }
             className={clsx(
               'flex items-center gap-2 px2 py1 hover:bg-basis-100',
               DisplayTypeColor[type]

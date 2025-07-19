@@ -1,12 +1,4 @@
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useNavigate,
-  useRouteError
-} from '@remix-run/react';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteError } from '@remix-run/react';
 import { Provider } from 'jotai';
 import { kebabCase } from 'scule';
 import { useEffect } from 'react';
@@ -16,6 +8,8 @@ import { NavHeight, SearchTop, HeroHeight } from '~/layouts/Layout';
 
 import Tags from '~analytics/scripts';
 
+import '@onekuma/preset.css';
+import '@onekuma/reset/tailwind.css';
 import 'virtual:uno.css';
 
 import './styles/main.css';

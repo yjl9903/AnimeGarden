@@ -37,9 +37,10 @@
       ]
     },
     "format": {
+      "cache": false,
       "inputs": [
-        "src/**/*.ts",
-        "test/**/*.ts"
+        "src/**/*.{js,mjs,ts,tsx}",
+        "test/**/*.{js,mjs,ts,tsx}"
       ]
     },
     "dev": {

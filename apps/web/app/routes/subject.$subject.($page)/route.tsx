@@ -19,7 +19,7 @@ import { generateTitleFromFilter } from '~/utils/server/meta';
 import { getSubjectById, getSubjectDisplayName, waitForSubjectsLoaded } from '~/utils/subjects';
 
 import { Error } from '../resources.($page)/Error';
-import { Filter } from '../resources.($page)/Filter';
+import { FilterCard } from '../resources.($page)/Filter';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -114,7 +114,13 @@ export default function ResourcesIndex() {
       <div className="w-full pt-12 pb-24">
         {ok ? (
           <>
-            <Filter filter={filter} subject={subject} feedURL={feedURL}></Filter>
+            <FilterCard
+              filter={filter}
+              subject={subject}
+              feedURL={feedURL}
+              resources={resources}
+              complete={pagination?.complete ?? false}
+            ></FilterCard>
             <Resources
               resources={resources}
               page={page}
