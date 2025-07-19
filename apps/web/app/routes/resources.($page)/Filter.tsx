@@ -403,15 +403,15 @@ const CopyResourcesDropdown = (props: Props) => {
             <span>复制 JSON 数据</span>
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={copyFetchCurl}>
-            <span className="i-carbon-code mr1"></span>
+            <span className="i-fluent-key-command-20-filled mr1"></span>
             <span>复制为 cURL 命令</span>
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={copyFetchJS}>
-            <span className="i-carbon-code mr1"></span>
+            <span className="i-proicons-javascript mr1"></span>
             <span>复制为 JavaScript 代码</span>
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={copyFetchPython}>
-            <span className="i-carbon-code mr1"></span>
+            <span className="i-proicons-python mr1"></span>
             <span>复制为 Python 代码</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
