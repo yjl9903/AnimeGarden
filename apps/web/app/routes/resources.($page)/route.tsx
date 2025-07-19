@@ -13,7 +13,7 @@ import { generateTitleFromFilter } from '~/utils/server/meta';
 import { fetchResources, getFeedURL } from '~/utils';
 
 import { Error } from './Error';
-import { Filter } from './Filter';
+import { FilterCard } from './Filter';
 
 export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -87,7 +87,12 @@ export default function ResourcesIndex() {
       <div className="w-full pt-12 pb-24">
         {ok ? (
           <>
-            <Filter filter={filter as any} feedURL={feedURL}></Filter>
+            <FilterCard
+              filter={filter as any}
+              feedURL={feedURL}
+              resources={resources}
+              complete={pagination?.complete ?? false}
+            ></FilterCard>
             <Resources
               resources={resources}
               page={page}

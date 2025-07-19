@@ -298,6 +298,12 @@ importers:
       '@iconify-json/fluent':
         specifier: ^1.2.27
         version: 1.2.27
+      '@iconify-json/mage':
+        specifier: ^1.2.2
+        version: 1.2.2
+      '@iconify-json/mdi':
+        specifier: ^1.2.3
+        version: 1.2.3
       '@iconify-json/solar':
         specifier: ^1.2.2
         version: 1.2.2
@@ -2034,6 +2040,12 @@ packages:
 
   '@iconify-json/fluent@1.2.27':
     resolution: {integrity: sha512-ZEjiHPloDLo0EsDEIUfjPOyPEife6PSPO33215eFPj5vn+3e2m23Y0JhjqmM2YwQNZ+0Dh78sWTwWslc4ylwlw==}
+
+  '@iconify-json/mage@1.2.2':
+    resolution: {integrity: sha512-sCn5NRf4MrKjGzElJ7LtZHCNcyTEc/+szCAgpuOujaL7Qhht+cMNwmKXJmlcCcezxiOmL0TDjwdzQZ5xkSkJhw==}
+
+  '@iconify-json/mdi@1.2.3':
+    resolution: {integrity: sha512-O3cLwbDOK7NNDf2ihaQOH5F9JglnulNDFV7WprU2dSoZu3h3cWH//h74uQAB87brHmvFVxIOkuBX2sZSzYhScg==}
 
   '@iconify-json/solar@1.2.2':
     resolution: {integrity: sha512-lcTb6DWL4HZObiY1W3fHfuxxuQHUc6CFHFeywKEx7Ry0k+dU6POZCMC7oVLr0F8vuf+KgaQ3oOoGO/yFzOwrNg==}
@@ -10052,6 +10064,14 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/fluent@1.2.27':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/mage@1.2.2':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/mdi@1.2.3':
     dependencies:
       '@iconify/types': 2.0.0
 
