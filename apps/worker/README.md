@@ -12,6 +12,7 @@ Follow [CONTRIBUTING.md](../../CONTRIBUTING.md#cloudflare-worker) to setup the e
 ## Credits
 
 + [動漫花園](https://share.dmhy.org/)
++ [萌番组](https://bangumi.moe/)
 + [erengy/anitomy](https://github.com/erengy/anitomy)
 + [tabratton/AnitomySharp](https://github.com/tabratton/AnitomySharp)
 

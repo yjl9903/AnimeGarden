@@ -12,12 +12,12 @@ export const getOpenFeedTrackEvent = () => ({
   'data-umami-event': 'open-feed'
 });
 
-const track = (event: string) => {
+const track = (event: string, payload?: Record<string, string>) => {
   try {
     // @ts-ignore
     if (!window.umami) return;
     // @ts-ignore
-    umami.track(event);
+    umami.track(event, payload);
   } catch (error) {
     console.error(error);
   }
@@ -29,4 +29,24 @@ export const trackAddCollection = () => {
 
 export const trackCopyFeed = () => {
   track('copy-feed');
+};
+
+export const trackCopyMagnetLinks = () => {
+  track('copy-magnet-links');
+};
+
+export const trackCopyJSONData = () => {
+  track('copy-json-data');
+};
+
+export const trackCopyFetchCurl = () => {
+  track('copy-fetch-code', { language: 'curl' });
+};
+
+export const trackCopyFetchJS = () => {
+  track('copy-fetch-code', { language: 'javascript' });
+};
+
+export const trackCopyFetchPython = () => {
+  track('copy-fetch-code', { language: 'python' });
 };
