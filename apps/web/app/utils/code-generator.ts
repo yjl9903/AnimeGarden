@@ -6,7 +6,7 @@ import type { FullBangumi } from 'bgmd/types';
 import { resolveFilterOptions } from '~/routes/resources.($page)/Filter';
 
 export interface CodeGeneratorOptions {
-  filter?: Jsonify<ResolvedFilterOptions & PresetOptions> | ResolvedFilterOptions & PresetOptions;
+  filter?: Jsonify<ResolvedFilterOptions & PresetOptions> | (ResolvedFilterOptions & PresetOptions);
   subject?: Omit<FullBangumi, 'summary'>;
 }
 

@@ -14,7 +14,11 @@ import {
 } from '@animegarden/client';
 
 import { getSubjectById } from '~/utils/subjects';
-import { generateCurlCode, generateJavaScriptCode, generatePythonCode } from '~/utils/code-generator';
+import {
+  generateCurlCode,
+  generateJavaScriptCode,
+  generatePythonCode
+} from '~/utils/code-generator';
 import {
   removeQuote,
   formatChinaTime,

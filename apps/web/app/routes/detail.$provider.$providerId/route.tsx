@@ -16,8 +16,10 @@ import {
   getPikPakTrackEvent,
   getDownloadTrackEvent
 } from '~/utils';
+import { getSubjectById } from '~/utils/subjects';
 
 import { FilesCard } from './FileTree';
+import { extractCover } from './cover';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   try {
@@ -58,9 +60,45 @@ export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
       })
     : undefined;
 
+  const og = resource
+    ? [
+        {
+          name: 'og:title',
+          content: info?.title ?? title
+        },
+        {
+          name: 'og:url',
+          content: `https://${APP_HOST}/detail/${resource.provider}/${resource.providerId}`
+        },
+        {
+          name: 'og:type',
+          content: ['动画', '合集', '日剧', '特摄'].includes(resource.type)
+            ? 'video.episode'
+            : ['音乐'].includes(resource.type)
+              ? 'music.song'
+              : 'website'
+        },
+        {
+          name: 'og:logo',
+          content: '/favicon.svg'
+        }
+      ]
+    : [];
+
+  const cover = extractCover(data?.detail?.description ?? '');
+  const subject = resource?.subjectId ? getSubjectById(resource.subjectId) : undefined;
+  const subjectImage = subject?.bangumi?.images.large;
+  if (cover || subjectImage) {
+    og.push({
+      name: 'og:image',
+      content: cover ?? subjectImage
+    });
+  }
+
   return [
     { title: (title ? title + ' | ' : '') + 'Anime Garden 動漫花園資源網第三方镜像站' },
     { name: 'description', content: `${data?.detail?.description ?? title}` },
+    ...og,
     {
       'script:ld+json': schema
     }
