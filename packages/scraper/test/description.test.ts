@@ -64,24 +64,24 @@ describe('description', () => {
           },
         ],
         "plain": "简介:
-      保龄球少女!
+      保龄球少女！
       Turkey!
-      ターキー!
-      字幕:巴哈姆特动画疯
-      脚本&压制:hchsoon
-      本片简体字幕经过繁化姬处理后生成,请自行判断下载;如有措辞不当,概不负责.
-      本组作品首发于:nyaa.si
-      另备份发布于:acg.rip|dmhy.org|bangumi.moe|acgnx.se
-      备份发布情况取决于各站点可用性,如有缺失烦请移步其他站点下载.
-      其余站点系自发抓取非我组正式发布.
-      为了顺利地观看我们的作品,推荐大家使用以下播放器:
-      Windows:mpv(教程)
-      macOS:IINA
-      iOS/Android:VLC media player
-      点击查看 LoliHouse 五周年纪念公告(附往年全部礼包)
+      ターキー！
+      字幕：巴哈姆特动画疯
+      脚本&压制：hchsoon
+      本片简体字幕经过繁化姬处理后生成，请自行判断下载；如有措辞不当，概不负责。
+      本组作品首发于：nyaa.si
+      另备份发布于：acg.rip|dmhy.org|bangumi.moe|acgnx.se
+      备份发布情况取决于各站点可用性，如有缺失烦请移步其他站点下载。
+      其余站点系自发抓取非我组正式发布。
+      为了顺利地观看我们的作品，推荐大家使用以下播放器：
+      Windows：mpv（教程）
+      macOS：IINA
+      iOS/Android：VLC media player
+      点击查看 LoliHouse 五周年纪念公告（附往年全部礼包）
       点击查看 One-Key-Publish 一键发布工具包
-      人人为我,我为人人,为了各位观众能快速下载,请使用 uTorrent / qBittorrent 等正规 BT 软件下载,并保持开机上传,谢谢~",
-        "summary": "保龄球少女! Turkey! ターキー! 字幕:巴哈姆特动画疯 脚本&压制:hchsoon 本片简体字幕经过繁化姬处理后生...",
+      人人为我，我为人人，为了各位观众能快速下载，请使用 uTorrent / qBittorrent 等正规 BT 软件下载，并保持开机上传，谢谢~",
+        "summary": "保龄球少女！ Turkey! ターキー！ 字幕：巴哈姆特动画疯 脚本&压制：hchsoon 本片简体字幕经过繁化姬处理后生...",
       }
     `);
   });
