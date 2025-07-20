@@ -1,5 +1,5 @@
 import { toast } from 'sonner';
-import { Link, NavLink } from '@remix-run/react';
+import { NavLink } from '@remix-run/react';
 import { useCallback } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 
@@ -13,7 +13,6 @@ import {
   stringifyURLSearch
 } from '@animegarden/client';
 
-import { getSubjectById } from '~/utils/subjects';
 import {
   generateCurlCode,
   generateJavaScriptCode,
@@ -32,6 +31,8 @@ import {
   trackCopyFetchJS,
   trackCopyFetchPython
 } from '~/utils';
+import { getSubjectURL } from '~/utils/anime';
+import { getSubjectById, getSubjectDisplayName } from '~/utils/subjects';
 import { Button } from '~/components/ui/button';
 import { SearchTooltip } from '~/components/Help';
 import {
@@ -122,7 +123,7 @@ export function FilterCard(props: Props) {
       : subjects.map((sub) => getSubjectById(sub)).filter(Boolean);
 
   return (
-    <div className="mb4 p-4 lt-sm:px-3 w-full bg-gray-100 rounded-md space-y-2">
+    <div className="mb4 p-4 lt-sm:px-3 w-full bg-zinc-50 drop-shadow rounded-md space-y-2">
       {preset && (
         <div className="space-x-2 text-0">
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">预设</span>
@@ -134,7 +135,7 @@ export function FilterCard(props: Props) {
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">动画</span>
           {realSubjects.map((subject) => (
             <span key={subject.id} className={`text-4 select-text text-base-900 text-link`}>
-              <Link to={`/subject/${subject.id}/1`}>{subject.bangumi?.name_cn}</Link>
+              <NavLink to={getSubjectURL(subject)}>{getSubjectDisplayName(subject)}</NavLink>
             </span>
           ))}
         </div>

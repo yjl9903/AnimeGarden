@@ -84,7 +84,7 @@ export default function ResourcesIndex() {
 
   return (
     <Layout feedURL={feedURL} timestamp={timestamp}>
-      <div className="w-full pt-12 pb-24">
+      <div className="w-full pt-13 pb-24">
         {ok ? (
           <>
             <FilterCard

@@ -140,7 +140,7 @@ export default function Resources() {
 
   return (
     <Layout timestamp={timestamp}>
-      <div className="w-full pt-12 pb-24">
+      <div className="w-full pt-13 pb-24">
         <div className="detail mt-4vh w-full space-y-4">
           <h1 className="text-xl font-bold resource-title">
             <span>{resource?.title}</span>

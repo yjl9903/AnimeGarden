@@ -44,12 +44,8 @@ export function getDisplayName(bgm: FullBangumi) {
   return bgm.name;
 }
 
-export function getSubjectURL(bgm: FullBangumi) {
-  const date = new Date(toShanghai(bgm.air_date).getTime() - 7 * 24 * 60 * 60 * 1000);
-  const search = stringifyURLSearch({
-    after: date
-  });
-  return `/subject/${bgm.id}?${search.toString()}`;
+export function getSubjectURL(bgm: Pick<FullBangumi, 'id'>) {
+  return `/subject/${bgm.id}`;
 }
 
 /**

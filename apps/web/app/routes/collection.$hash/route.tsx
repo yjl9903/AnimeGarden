@@ -47,7 +47,7 @@ export default function Collections() {
 
   return (
     <Layout timestamp={data.timestamp} feedURL={getCollectionFeedURL(data.hash!)}>
-      <div className="w-full pt-12 pb-24">
+      <div className="w-full pt-13 pb-24">
         <div className="space-y-8">
           {results.map((item, idx) => (
             <div key={filters[idx].searchParams} className={clsx('py-4 rounded-md border drop-md')}>

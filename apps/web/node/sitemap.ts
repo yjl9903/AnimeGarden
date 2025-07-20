@@ -70,7 +70,7 @@ const items = sitemap({
           retry: 5
         });
         return data.subjects.map((r: any) => ({
-          url: `${SITE}/subject/${r.id}/1`
+          url: `${SITE}/subject/${r.id}`
         }));
       } else {
         const match = /\/sitemap-(\d{4})-(\d{1,2}).xml$/.exec(url.pathname);

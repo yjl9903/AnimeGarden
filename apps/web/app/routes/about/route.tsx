@@ -20,7 +20,7 @@ export default function About() {
 
   return (
     <Layout timestamp={timestamp}>
-      <div className="w-full pt-12 pb-24">
+      <div className="w-full pt-13 pb-24">
         <div className="h-[1000px]"></div>
       </div>
     </Layout>
