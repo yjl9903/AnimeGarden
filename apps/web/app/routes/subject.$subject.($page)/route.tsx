@@ -28,7 +28,7 @@ import { Error } from '../resources.($page)/Error';
 import { SubjectCard } from './subject';
 import { groupResourcesByFansub } from './utils';
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ params }: LoaderFunctionArgs) => {
   // Redirect to the main page
   if (params.page !== undefined) {
     return redirect(`/subject/${params.subject}`);
@@ -54,7 +54,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   };
 };
 
-export const meta: MetaFunction<typeof loader> = ({ location, data, params }) => {
+export const meta: MetaFunction<typeof loader> = (props) => {
+  const { data } = props;
   const subject = data?.subject;
   const name = getSubjectDisplayName(subject);
 
@@ -95,7 +96,9 @@ export const meta: MetaFunction<typeof loader> = ({ location, data, params }) =>
     },
     {
       name: 'description',
-      content: `${name}: ${subject?.summary ?? '...'}`
+      content: name
+        ? `${name}: ${subject?.summary ?? '...'}`
+        : 'Anime Garden 動漫花園資源網第三方镜像站'
     },
     ...og
   ];
@@ -108,7 +111,6 @@ export const clientLoader: ClientLoaderFunction = async ({ serverLoader }) => {
   }
   return serverData;
 };
-clientLoader.hydrate = true;
 
 export function HydrateFallback() {
   return <div></div>;
