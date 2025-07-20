@@ -46,6 +46,7 @@ const items = sitemap({
       if (url.pathname === '/sitemap-0.xml') {
         return [
           { url: `${SITE}/` },
+          { url: `${SITE}/anime` },
           { url: `${SITE}/resources/1?type=动画` },
           { url: `${SITE}/resources/1?type=合集` },
           { url: `${SITE}/resources/1?type=音乐` },
