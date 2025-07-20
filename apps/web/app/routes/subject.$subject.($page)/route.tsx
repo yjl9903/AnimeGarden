@@ -189,7 +189,7 @@ function FansubGroupResources({
           <span>RSS</span>
         </a>
       </h3>
-      <Resources resources={group.resources as any}></Resources>
+      <Resources resources={group.resources as any} columns={{ fansub: false }}></Resources>
       {!complete && (
         <div className="py-4 px-8 lt-xl:px-2 text-right border-b">
           <NavLink
