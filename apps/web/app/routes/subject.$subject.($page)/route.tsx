@@ -9,9 +9,10 @@ import {
 } from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 
+import { APP_HOST } from '~build/env';
+
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import { stringifySearch } from '~/layouts/Search/utils';
 import { usePreferFansub } from '~/states';
 import { fetchResources, getFeedURL } from '~/utils';
 import { generateTitleFromFilter } from '~/utils/server/meta';
@@ -57,6 +58,35 @@ export const meta: MetaFunction<typeof loader> = ({ location, data, params }) =>
   const subject = data?.subject;
   const name = getSubjectDisplayName(subject);
 
+  const og = subject
+    ? [
+        {
+          name: 'og:title',
+          content: name + ' 最新资源'
+        },
+        {
+          name: 'og:url',
+          content: `https://${APP_HOST}/subject/${subject.id}`
+        },
+        {
+          name: 'og:type',
+          content: 'video.episode'
+        },
+        {
+          name: 'og:logo',
+          content: '/favicon.svg'
+        }
+      ]
+    : [];
+
+  const subjectImage = subject?.bangumi?.images.large;
+  if (subjectImage) {
+    og.push({
+      name: 'og:image',
+      content: subjectImage
+    });
+  }
+
   return [
     {
       title:
@@ -65,8 +95,9 @@ export const meta: MetaFunction<typeof loader> = ({ location, data, params }) =>
     },
     {
       name: 'description',
-      content: `最新资源 ${stringifySearch(new URLSearchParams(location.search))}`
-    }
+      content: `${name}: ${subject?.summary ?? '...'}`
+    },
+    ...og
   ];
 };
 
