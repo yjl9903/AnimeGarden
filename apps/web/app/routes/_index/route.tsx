@@ -6,7 +6,7 @@ import type { Resource } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import { fetchResources, getFeedURL } from '~/utils';
+import { fetchResources, getFeedURL, getCanonicalURL } from '~/utils';
 
 import { Error } from '../resources.($page)/Error';
 
@@ -30,7 +30,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export const meta: MetaFunction = () => {
   return [
     { title: 'Anime Garden 動漫花園資源網第三方镜像站' },
-    { name: 'description', content: 'Anime Garden 動漫花園資源網第三方镜像站' }
+    { name: 'description', content: 'Anime Garden 動漫花園資源網第三方镜像站' },
+    { tagName: 'link', rel: 'canonical', href: getCanonicalURL('/') }
   ];
 };
 

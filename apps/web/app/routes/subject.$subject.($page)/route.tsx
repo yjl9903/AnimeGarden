@@ -14,7 +14,7 @@ import { APP_HOST } from '~build/env';
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
 import { usePreferFansub } from '~/states';
-import { fetchResources, getFeedURL } from '~/utils';
+import { fetchResources, getFeedURL, getCanonicalURL } from '~/utils';
 import { generateTitleFromFilter } from '~/utils/server/meta';
 import {
   type FullBangumiItem,
@@ -54,8 +54,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   };
 };
 
-export const meta: MetaFunction<typeof loader> = (props) => {
-  const { data } = props;
+export const meta: MetaFunction<typeof loader> = ({ location, data, params }) => {
   const subject = data?.subject;
   const name = getSubjectDisplayName(subject);
 
@@ -99,6 +98,11 @@ export const meta: MetaFunction<typeof loader> = (props) => {
       content: name
         ? `${name}: ${subject?.summary ?? '...'}`
         : 'Anime Garden 動漫花園資源網第三方镜像站'
+    },
+    {
+      tagName: 'link',
+      rel: 'canonical',
+      href: getCanonicalURL(`/subject/${params.subject}`)
     },
     ...og
   ];

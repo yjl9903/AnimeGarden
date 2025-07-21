@@ -6,17 +6,18 @@ import SwaggerUI from 'swagger-ui-react';
 
 import Layout from '~/layouts/Layout';
 import { version, license } from '~build/package';
-import { fetchTimestamp } from '~/utils';
+import { fetchTimestamp, getCanonicalURL } from '~/utils';
 
 import spec from './spec.json';
 
 spec.info.version = version;
 spec.info.license.name = license;
 
-export const meta: MetaFunction = () => {
+export const meta: MetaFunction = ({ location }) => {
   return [
     { title: 'API 文档 | Anime Garden 動漫花園镜像站 动画 BT 资源聚合站' },
-    { name: 'description', content: 'Anime Garden 動漫花園镜像站 动画 BT 资源聚合站' }
+    { name: 'description', content: 'Anime Garden 動漫花園镜像站 动画 BT 资源聚合站' },
+    { tagName: 'link', rel: 'canonical', href: getCanonicalURL('/docs/api') }
   ];
 };
 

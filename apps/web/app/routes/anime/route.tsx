@@ -2,7 +2,7 @@ import { useLoaderData } from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare';
 
 import Layout from '~/layouts/Layout';
-import { fetchTimestamp } from '~/utils';
+import { fetchTimestamp, getCanonicalURL } from '~/utils';
 import { getPosterImage, getDisplayName, getSubjectURL, getCalendar } from '~/utils/anime';
 
 import './anime.css';
@@ -17,7 +17,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export const meta: MetaFunction = () => {
   return [
     { title: '动画周历 | Anime Garden 動漫花園資源網第三方镜像站' },
-    { name: 'description', content: '动画周历 | Anime Garden 動漫花園資源網第三方镜像站' }
+    { name: 'description', content: '动画周历 | Anime Garden 動漫花園資源網第三方镜像站' },
+    { tagName: 'link', rel: 'canonical', href: getCanonicalURL('/anime') }
   ];
 };
 

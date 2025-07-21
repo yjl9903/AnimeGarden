@@ -13,6 +13,7 @@ import Layout from '~/layouts/Layout';
 import {
   splitMagnetURL,
   fetchResourceDetail,
+  getCanonicalURL,
   getPikPakUrlChecker,
   getPikPakTrackEvent,
   getDownloadTrackEvent
@@ -39,7 +40,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   return redirect('/');
 };
 
-export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
+export const meta: MetaFunction<typeof loader> = ({ location, data, params }) => {
   const resource = data?.resource;
   const resourceTitle = resource?.title;
 
@@ -116,6 +117,11 @@ export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
     {
       name: 'description',
       content: descriptionText
+    },
+    {
+      tagName: 'link',
+      rel: 'canonical',
+      href: getCanonicalURL(`/detail/${params.provider}/${params.providerId}`)
     },
     ...og,
     {
