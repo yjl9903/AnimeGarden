@@ -19,21 +19,21 @@ export function SubjectCard({ subject }: { subject: Jsonify<FullBangumiItem> }) 
         </div>
       )}
       <div className="space-y-8">
-        <h2 className="text-2xl font-bold flex items-center gap-2 pr-2">
+        <h1 className="text-2xl font-bold flex items-center gap-2 pr-2">
           <NavLink to={getSubjectURL(subject)} className="text-link-active">
             {getSubjectDisplayName(subject)}
           </NavLink>
-        </h2>
+        </h1>
         <div className="grid grid-cols-1 gap-2">
-          <div className="space-x-2">
+          <p className="space-x-2">
             <span className="font-bold mr-3">放送日期</span>
             <span>{getWeekday(subject.air_date)}</span>
-          </div>
-          <div className="space-x-2">
+          </p>
+          <p className="space-x-2">
             <span className="font-bold mr-3">放送开始</span>
             <span>{subject.air_date}</span>
-          </div>
-          <div className="flex items-center gap-2">
+          </p>
+          <p className="flex items-center gap-2">
             <span className="font-bold mr-3">外部链接</span>
             <a
               href={`https://bgm.tv/subject/${subject.id}`}
@@ -53,7 +53,7 @@ export function SubjectCard({ subject }: { subject: Jsonify<FullBangumiItem> }) 
                 <span>TMDB</span>
               </a>
             )}
-          </div>
+          </p>
         </div>
         <SubjectSummary summary={subject.summary} tags={subject.bangumi?.tags}></SubjectSummary>
       </div>
@@ -70,11 +70,11 @@ function SubjectSummary({ summary, tags }: { summary: string; tags?: string[] })
         <p key={idx}>{line}</p>
       ))}
       {tags && tags.length > 0 && (
-        <div className="mt-4">
+        <p className="mt-4">
           {tags.map((tag) => (
             <Tag key={tag} tag={tag} className="mr-2 mt-2 cursor-default hover:bg-zinc-200!"></Tag>
           ))}
-        </div>
+        </p>
       )}
     </div>
   );
