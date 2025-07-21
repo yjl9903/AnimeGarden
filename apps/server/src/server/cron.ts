@@ -40,24 +40,23 @@ export class Executor {
         })
     );
 
-    // const syncing = SupportProviders.map(
-    //   (provider) =>
-    //     new Cron(`0 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
-    //       try {
-    //         const req = new Request(`https://api.animes.garden/admin/resources/${provider}/sync`, {
-    //           method: 'POST',
-    //           headers: {
-    //             authorization: `Bearer ${this.system.secret}`
-    //           }
-    //         });
-    //         const res = await this.hono.fetch(req);
-    //         await res.json();
-    //       } catch (error) {
-    //         this.system.logger.error(error);
-    //       }
-    //     })
-    // );
-    const syncing: any[] = [];
+    const syncing = SupportProviders.map(
+      (provider) =>
+        new Cron(`0 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
+          try {
+            const req = new Request(`https://api.animes.garden/admin/resources/${provider}/sync`, {
+              method: 'POST',
+              headers: {
+                authorization: `Bearer ${this.system.secret}`
+              }
+            });
+            const res = await this.hono.fetch(req);
+            await res.json();
+          } catch (error) {
+            this.system.logger.error(error);
+          }
+        })
+    );
 
     this.disposables.push(() => {
       fetching.forEach((f) => f.stop());
