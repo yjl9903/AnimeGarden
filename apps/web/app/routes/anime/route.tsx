@@ -18,7 +18,10 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export const meta: MetaFunction = () => {
   return [
     { title: '动画周历 | Anime Garden 動漫花園資源網第三方镜像站' },
-    { name: 'description', content: '动画周历 | Anime Garden 動漫花園資源網第三方镜像站' },
+    {
+      name: 'description',
+      content: '动画每周播出时间表, 动画周历, Anime Garden 動漫花園資源網第三方镜像站'
+    },
     { tagName: 'link', rel: 'canonical', href: getCanonicalURL('/anime') }
   ];
 };
@@ -105,12 +108,10 @@ export default function Index() {
             id={`星期${cal.text}`}
             key={cal.index}
           >
-            <a
-              className="block px-6 text-xl font-bold mb-4 select-none border-l-[4px] border-[#0ca]"
-              href={`#星期${cal.text}`}
-            >
-              星期{cal.text}
-            </a>
+            <h2 className="block px-6 text-xl font-bold mb-4 select-none border-l-[4px] border-[#0ca]">
+              <a href={`#星期${cal.text}`}>星期{cal.text}</a>
+              <span className="hidden">放送动画</span>
+            </h2>
             <div
               className={`relative bgm-list-wrapper ${wrapperClassName[cal.index - 1].join(' ')}`}
             >
@@ -123,7 +124,7 @@ export default function Index() {
                     <div className="w-150px h-225px flex items-center select-none">
                       <img
                         src={getPosterImage(bgm)}
-                        alt=""
+                        alt={`${getSubjectDisplayName(bgm)} poster`}
                         className="rounded-md max-h-225px hover:shadow-box"
                       />
                     </div>

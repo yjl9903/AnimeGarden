@@ -134,7 +134,7 @@ export default function SubjectIndex() {
   usePreferFansub(filter?.fansubs);
 
   return (
-    <Layout feedURL={feedURL} timestamp={timestamp}>
+    <Layout feedURL={feedURL} timestamp={timestamp} heading={false}>
       <div className="w-full pt-13 pb-24">
         {ok ? (
           <>

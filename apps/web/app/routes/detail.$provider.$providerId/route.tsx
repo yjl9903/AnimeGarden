@@ -145,7 +145,7 @@ export default function Resources() {
       : [];
 
   return (
-    <Layout timestamp={timestamp}>
+    <Layout timestamp={timestamp} heading={false}>
       <div className="w-full pt-13 pb-24">
         <div className="detail mt-4vh w-full space-y-4">
           <h1 className="text-xl font-bold resource-title">
@@ -233,7 +233,7 @@ export default function Resources() {
                     src={
                       resource?.publisher.avatar ?? 'https://share.dmhy.org/images/defaultUser.png'
                     }
-                    alt="Publisher Avatar"
+                    alt={`${resource?.publisher.name} avatar`}
                     className="inline-block w-[100px] h-[100px] rounded"
                     onError={(ev) => {
                       (ev.target as HTMLImageElement).src =
@@ -253,7 +253,7 @@ export default function Resources() {
                       src={
                         resource.fansub.avatar ?? 'https://share.dmhy.org/images/defaultUser.png'
                       }
-                      alt="Fansub Avatar"
+                      alt={`${resource.fansub.name} avatar`}
                       className="inline-block w-[100px] h-[100px] rounded"
                       onError={(ev) => {
                         (ev.target as HTMLImageElement).src =
