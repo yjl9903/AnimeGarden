@@ -45,8 +45,9 @@ const items = sitemap({
     try {
       if (url.pathname === '/sitemap-0.xml') {
         return [
-          { url: `${SITE}/` },
+          { url: `${SITE}` },
           { url: `${SITE}/anime` },
+          { url: `${SITE}/resources/1?preset=bangumi&type=动画` },
           { url: `${SITE}/resources/1?type=动画` },
           { url: `${SITE}/resources/1?type=合集` },
           { url: `${SITE}/resources/1?type=音乐` },
@@ -55,7 +56,8 @@ const items = sitemap({
           { url: `${SITE}/resources/1?type=漫画` },
           { url: `${SITE}/resources/1?type=游戏` },
           { url: `${SITE}/resources/1?type=特摄` },
-          { url: `${SITE}/resources/1?type=其他` }
+          { url: `${SITE}/resources/1?type=其他` },
+          { url: `${SITE}/docs/api` }
         ];
       } else if (url.pathname === '/sitemap-fansubs.xml') {
         const data = await fetchAPI<any>('teams', undefined, {
