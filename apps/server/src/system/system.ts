@@ -166,7 +166,7 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
       if (!this.publisherRedis) return;
 
       this.channelMessageBus.logger.info(
-        `Publish notification to channel ${NOTIFY_CHANNEL}: ${notification.resources.inserted} new resources, ${notification.resources.deleted} deleted resources, ${notification.duplicated.inserted} unique resources, ${notification.duplicated.duplicated} duplicated resources`
+        `Publish notification to channel ${NOTIFY_CHANNEL}: ${notification.resources.inserted.length} new resources, ${notification.resources.deleted.length} deleted resources, ${notification.duplicated.inserted} unique resources, ${notification.duplicated.duplicated.length} duplicated resources`
       );
 
       try {
