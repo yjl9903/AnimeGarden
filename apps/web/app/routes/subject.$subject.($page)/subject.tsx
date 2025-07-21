@@ -18,13 +18,13 @@ export function SubjectCard({ subject }: { subject: Jsonify<FullBangumiItem> }) 
           />
         </div>
       )}
-      <div className="space-y-8">
+      <div className="info-box space-y-8">
         <h1 className="text-2xl font-bold flex items-center gap-2 pr-2">
           <NavLink to={getSubjectURL(subject)} className="text-link-active">
             {getSubjectDisplayName(subject)}
           </NavLink>
         </h1>
-        <div className="grid grid-cols-1 gap-2">
+        <article className="grid grid-cols-1 gap-2">
           <p className="space-x-2">
             <span className="font-bold mr-3">放送日期</span>
             <span>{getWeekday(subject.air_date)}</span>
@@ -54,18 +54,30 @@ export function SubjectCard({ subject }: { subject: Jsonify<FullBangumiItem> }) 
               </a>
             )}
           </p>
-        </div>
-        <SubjectSummary summary={subject.summary} tags={subject.bangumi?.tags}></SubjectSummary>
+        </article>
+        <SubjectSummary
+          className="summary-box"
+          summary={subject.summary}
+          tags={subject.bangumi?.tags}
+        ></SubjectSummary>
       </div>
     </div>
   );
 }
 
-function SubjectSummary({ summary, tags }: { summary: string; tags?: string[] }) {
+function SubjectSummary({
+  className,
+  summary,
+  tags
+}: {
+  className?: any;
+  summary: string;
+  tags?: string[];
+}) {
   const lines = summary.split('\n');
 
   return (
-    <div className="leading-relaxed space-y-2 text-base text-base-600">
+    <article className={`leading-relaxed space-y-2 text-base text-base-600 ${className}`}>
       {lines.map((line, idx) => (
         <p key={idx}>{line}</p>
       ))}
@@ -76,7 +88,7 @@ function SubjectSummary({ summary, tags }: { summary: string; tags?: string[] })
           ))}
         </p>
       )}
-    </div>
+    </article>
   );
 }
 

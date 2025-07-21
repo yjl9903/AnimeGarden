@@ -176,14 +176,14 @@ function FansubGroupResources({
 }) {
   return (
     <>
-      <h3 className="text-2xl font-bold flex items-center gap-2 pr-2">
+      <h2 className="text-2xl font-bold flex items-center gap-2 pr-2">
         <NavLink
           to={`/resources/1?subject=${subject}&${group.fansub ? `fansub=${group.fansub.name}` : `publisher=${group.publisher.name}`}`}
           className="text-link-active"
         >
           {group.fansub?.name ?? group.publisher.name}
         </NavLink>
-        <div className="flex-auto"></div>
+        <span className="block flex-auto"></span>
         <a
           href={getFeedURL(
             `?subject=${subject}&${group.fansub ? `fansub=${group.fansub.name}` : `publisher=${group.publisher.name}`}`
@@ -194,7 +194,7 @@ function FansubGroupResources({
           <span className="i-mdi-rss text-sm mr-1"></span>
           <span>RSS</span>
         </a>
-      </h3>
+      </h2>
       <Resources resources={group.resources as any} columns={{ fansub: false }}></Resources>
       {!complete && (
         <div className="py-4 px-8 lt-xl:px-2 text-right border-b">
