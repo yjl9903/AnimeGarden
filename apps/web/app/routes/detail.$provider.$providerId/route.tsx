@@ -4,6 +4,7 @@ import { redirect, type LoaderFunctionArgs, type MetaFunction } from '@remix-run
 import { parse } from 'anipar';
 import { formatInTimeZone } from 'date-fns-tz';
 
+import { truncate } from '@animegarden/shared';
 import { SupportProviders } from '@animegarden/client';
 import { normalizeDescription } from '@animegarden/scraper';
 
@@ -111,8 +112,9 @@ export const meta: MetaFunction<typeof loader> = ({ location, data, params }) =>
 
   return [
     {
-      title:
-        (resourceTitle ? resourceTitle + ' | ' : '') + 'Anime Garden 動漫花園資源網第三方镜像站'
+      title: resourceTitle
+        ? truncate(resourceTitle, 70)
+        : '资源 | Anime Garden 動漫花園資源網第三方镜像站'
     },
     {
       name: 'description',
