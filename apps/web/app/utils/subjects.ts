@@ -46,8 +46,26 @@ export function getSubjectByName(name: string) {
   return subjectNameMap.get(name);
 }
 
+export function searchSubjects(keywords: string[]) {
+  return Array.from(subjectIdMap.values())
+    .reverse()
+    .filter((bgm) => {
+      return keywords.some((keyword) => {
+        return (
+          bgm.name.includes(keyword) ||
+          bgm.bangumi?.name_cn?.includes(keyword) ||
+          bgm.alias?.some((alias) => alias.includes(keyword))
+        );
+      });
+    });
+}
+
 export function getSubjectDisplayName(
   bgm?: Pick<FullBangumi | BangumiItem | Jsonify<BangumiItem>, 'name' | 'bangumi'>
 ) {
   return bgm?.bangumi?.name_cn || bgm?.name || '';
+}
+
+export function getSubjectURL(bgm: Pick<FullBangumi, 'id'>) {
+  return `/subject/${bgm.id}`;
 }

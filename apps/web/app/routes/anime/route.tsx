@@ -3,7 +3,8 @@ import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflar
 
 import Layout from '~/layouts/Layout';
 import { fetchTimestamp, getCanonicalURL } from '~/utils';
-import { getPosterImage, getDisplayName, getSubjectURL, getCalendar } from '~/utils/anime';
+import { getPosterImage, getCalendar } from '~/utils/anime';
+import { getSubjectDisplayName, getSubjectURL } from '~/utils/subjects';
 
 import './anime.css';
 import { useEffect, useState } from 'react';
@@ -128,7 +129,7 @@ export default function Index() {
                     </div>
                     <div className="w-150px truncate py-2">
                       <span className="font-bold text-sm text-link-active">
-                        {getDisplayName(bgm)}
+                        {getSubjectDisplayName(bgm)}
                       </span>
                     </div>
                   </a>

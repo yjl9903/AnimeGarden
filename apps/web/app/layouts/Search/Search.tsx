@@ -8,16 +8,22 @@ import {
   memo,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState
 } from 'react';
 
 import { fetchResources } from '~/utils';
-import { waitForSubjectsLoaded } from '~/utils/subjects';
+import {
+  getSubjectDisplayName,
+  getSubjectURL,
+  searchSubjects,
+  waitForSubjectsLoaded
+} from '~/utils/subjects';
 import { inputAtom, historiesAtom } from '~/states/search';
 import { useActiveElement, useDocument, useEventListener } from '~/hooks';
 
-import { DMHY_RE, debounce, parseSearch, resolveSearchURL, stringifySearch } from './utils';
+import { DMHY_RE, debounce, parseSearchInput, resolveSearchURL, stringifySearch } from './utils';
 
 const SEARCH_HELP_URL = `https://animespace.onekuma.cn/animegarden/search.html`;
 
@@ -46,7 +52,8 @@ export const Search = memo(() => {
   const [input, setInput] = useAtom(inputAtom);
   const [search, setSearch] = useState(input);
 
-  const goTo = (url: string) => navigate(url, { state: { trigger: 'search', input } });
+  const goTo = (url: string, text = input) =>
+    navigate(url, { state: { trigger: 'search', input: text } });
 
   useEffect(() => {
     if (location.state?.trigger !== 'search') {
@@ -66,6 +73,11 @@ export const Search = memo(() => {
       if (location.state.input !== input) {
         setInput(location.state.input);
       }
+    }
+
+    // 清除 location.state
+    if (location.state?.state?.trigger === 'search') {
+      history.replaceState(null, '');
     }
   }, [location]);
 
@@ -148,9 +160,10 @@ export const Search = memo(() => {
     [histories, input]
   );
 
-  const selectStatic = useCallback((key: string) => {
-    goTo(key);
-    cleanUp();
+  const selectStatic = useCallback((key: string, text = input, isCleanUp = true) => {
+    goTo(key, text);
+    disable();
+    isCleanUp && cleanUp();
   }, []);
 
   return (
@@ -209,6 +222,13 @@ export const Search = memo(() => {
             {DMHY_RE.test(input) ? `前往 ${input}` : `在本页列出 ${input} 的搜索结果...`}
           </Command.Item>
         )}
+        {enable && input.trim() && (
+          <SearchSubject
+            search={search}
+            onInputChange={onInputChange}
+            onSelect={selectStatic}
+          ></SearchSubject>
+        )}
         {enable && input && (
           <SearchResult
             search={search}
@@ -231,88 +251,126 @@ export const Search = memo(() => {
   );
 });
 
+function SearchSubject(props: {
+  search: string;
+  onInputChange: (text: string) => void;
+  onSelect: (key: string, text?: string, isCleanUp?: boolean) => void;
+}) {
+  const { search, onInputChange, onSelect } = props;
+
+  const bangumis = useMemo(() => {
+    const filter = parseSearchInput(search);
+    const keywors = [...filter.search, ...filter.include];
+    return searchSubjects(keywors).slice(0, 3);
+  }, [search]);
+
+  return (
+    bangumis.length > 0 && (
+      <Command.Group heading="动画">
+        {bangumis.map((bgm) => (
+          <Command.Item
+            key={bgm.id}
+            onMouseDown={() => {
+              onInputChange('动画:' + getSubjectDisplayName(bgm));
+              onSelect(getSubjectURL(bgm), '动画:' + getSubjectDisplayName(bgm), false);
+            }}
+            onSelect={() => {
+              onInputChange('动画:' + getSubjectDisplayName(bgm));
+              onSelect(getSubjectURL(bgm), '动画:' + getSubjectDisplayName(bgm), false);
+            }}
+          >
+            {getSubjectDisplayName(bgm)}
+          </Command.Item>
+        ))}
+      </Command.Group>
+    )
+  );
+}
+
 function SearchCompletion(props: { input: string; onInputChange: (text: string) => void }) {
   const { input, onInputChange } = props;
 
   return (
-    <Command.Group heading="高级搜索">
-      <Command.Item
-        onMouseDown={() => {
-          onInputChange(input + ' 标题:');
-        }}
-        onSelect={() => {
-          onInputChange(input + ' 标题:');
-        }}
-      >
-        匹配标题
-      </Command.Item>
-      <Command.Item
-        onMouseDown={() => {
-          onInputChange(input + ' 包含:');
-        }}
-        onSelect={() => {
-          onInputChange(input + ' 包含:');
-        }}
-      >
-        包含关键词
-      </Command.Item>
-      <Command.Item
-        onMouseDown={() => {
-          onInputChange(input + ' 排除:');
-        }}
-        onSelect={() => {
-          onInputChange(input + ' 排除:');
-        }}
-      >
-        排除关键词
-      </Command.Item>
-      <Command.Item
-        onMouseDown={() => {
-          onInputChange(input + ' 字幕组:');
-        }}
-        onSelect={() => {
-          onInputChange(input + ' 字幕组:');
-        }}
-      >
-        筛选字幕组
-      </Command.Item>
-      <Command.Item
-        onMouseDown={() => {
-          onInputChange(input + ' 类型:');
-        }}
-        onSelect={() => {
-          onInputChange(input + ' 类型:');
-        }}
-      >
-        筛选资源类型
-      </Command.Item>
-      <Command.Item
-        onMouseDown={() => {
-          onInputChange(input + ' 晚于:');
-        }}
-        onSelect={() => {
-          onInputChange(input + ' 晚于:');
-        }}
-      >
-        上传时间晚于
-      </Command.Item>
-      <Command.Item
-        onMouseDown={() => {
-          onInputChange(input + ' 早于:');
-        }}
-        onSelect={() => {
-          onInputChange(input + ' 早于:');
-        }}
-      >
-        上传时间早于
-      </Command.Item>
-      <Command.Item
-        onMouseDown={() => window.open(SEARCH_HELP_URL)}
-        onSelect={() => window.open(SEARCH_HELP_URL)}
-      >
-        高级搜索帮助
-      </Command.Item>
-    </Command.Group>
+    <>
+      <Command.Group heading="高级搜索">
+        <Command.Item
+          onMouseDown={() => {
+            onInputChange(input + ' 包含:');
+          }}
+          onSelect={() => {
+            onInputChange(input + ' 包含:');
+          }}
+        >
+          包含关键词
+        </Command.Item>
+        <Command.Item
+          onMouseDown={() => {
+            onInputChange(input + ' 排除:');
+          }}
+          onSelect={() => {
+            onInputChange(input + ' 排除:');
+          }}
+        >
+          排除关键词
+        </Command.Item>
+        <Command.Item
+          onMouseDown={() => {
+            onInputChange(input + ' 字幕组:');
+          }}
+          onSelect={() => {
+            onInputChange(input + ' 字幕组:');
+          }}
+        >
+          筛选字幕组
+        </Command.Item>
+        <Command.Item
+          onMouseDown={() => {
+            onInputChange(input + ' 标题:');
+          }}
+          onSelect={() => {
+            onInputChange(input + ' 标题:');
+          }}
+        >
+          匹配标题
+        </Command.Item>
+        <Command.Item
+          onMouseDown={() => {
+            onInputChange(input + ' 晚于:');
+          }}
+          onSelect={() => {
+            onInputChange(input + ' 晚于:');
+          }}
+        >
+          上传时间晚于
+        </Command.Item>
+        <Command.Item
+          onMouseDown={() => {
+            onInputChange(input + ' 早于:');
+          }}
+          onSelect={() => {
+            onInputChange(input + ' 早于:');
+          }}
+        >
+          上传时间早于
+        </Command.Item>
+        <Command.Item
+          onMouseDown={() => {
+            onInputChange(input + ' 类型:');
+          }}
+          onSelect={() => {
+            onInputChange(input + ' 类型:');
+          }}
+        >
+          筛选资源类型
+        </Command.Item>
+        <Command.Item
+          onMouseDown={() => window.open(SEARCH_HELP_URL)}
+          onSelect={() => window.open(SEARCH_HELP_URL)}
+        >
+          高级搜索帮助
+        </Command.Item>
+      </Command.Group>
+    </>
   );
 }
 
@@ -329,12 +387,14 @@ function SearchResult(props: {
       if (!search) return null;
       if (DMHY_RE.test(search)) return null;
 
-      const filter = parseSearch(search);
+      const filter = parseSearchInput(search);
+
       // Disable search without any keywords
       if (
         filter.include.length === 0 &&
         filter.keywords.length === 0 &&
-        filter.search.length === 0
+        filter.search.length === 0 &&
+        filter.subjects.length === 0
       ) {
         return null;
       }
@@ -346,7 +406,7 @@ function SearchResult(props: {
       signals.add(abort);
       try {
         const res = await fetchResources(
-          { ...filter, page: 1, pageSize: 10 },
+          { ...filter, page: 1, pageSize: 5 },
           {
             signal: abort.signal
           }
@@ -478,7 +538,3 @@ function SearchHistory(props: {
     </Command.Group>
   );
 }
-
-// export default function Search() {
-//   return <div className="rounded-md h-full w-full border bg-white"></div>
-// }

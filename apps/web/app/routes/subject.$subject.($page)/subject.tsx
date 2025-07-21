@@ -4,8 +4,7 @@ import { NavLink } from '@remix-run/react';
 import type { Jsonify } from '@animegarden/client';
 
 import { getWeekday } from '~/utils/date';
-import { getSubjectURL } from '~/utils/anime';
-import { type FullBangumiItem, getSubjectDisplayName } from '~/utils/subjects';
+import { type FullBangumiItem, getSubjectDisplayName, getSubjectURL } from '~/utils/subjects';
 
 export function SubjectCard({ subject }: { subject: Jsonify<FullBangumiItem> }) {
   return (

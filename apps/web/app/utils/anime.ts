@@ -36,14 +36,3 @@ export function getPosterImage(bgm: FullBangumi) {
     return bgm.bangumi.images.large;
   }
 }
-
-export function getDisplayName(bgm: FullBangumi) {
-  if (bgm.bangumi) {
-    return bgm.bangumi.name_cn || bgm.name;
-  }
-  return bgm.name;
-}
-
-export function getSubjectURL(bgm: Pick<FullBangumi, 'id'>) {
-  return `/subject/${bgm.id}`;
-}

@@ -3,9 +3,10 @@ import { NavLink } from '@remix-run/react';
 import { useAtomValue } from 'jotai';
 import { memo, useEffect, useMemo, useState } from 'react';
 
-import { getCalendar, getSubjectURL } from '~/utils/anime';
-import { fansubs as AllFansubs, types, DisplayTypeColor } from '~/utils/constants';
+import { getCalendar } from '~/utils/anime';
+import { getSubjectURL } from '~/utils/subjects';
 import { getOpenFeedTrackEvent } from '~/utils/umami';
+import { fansubs as AllFansubs, types, DisplayTypeColor } from '~/utils/constants';
 import {
   Dropdown,
   DropdownMenu,

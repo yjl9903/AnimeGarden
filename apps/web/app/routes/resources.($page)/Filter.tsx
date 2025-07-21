@@ -31,8 +31,7 @@ import {
   trackCopyFetchJS,
   trackCopyFetchPython
 } from '~/utils';
-import { getSubjectURL } from '~/utils/anime';
-import { getSubjectById, getSubjectDisplayName } from '~/utils/subjects';
+import { getSubjectById, getSubjectDisplayName, getSubjectURL } from '~/utils/subjects';
 import { Button } from '~/components/ui/button';
 import { SearchTooltip } from '~/components/Help';
 import {
