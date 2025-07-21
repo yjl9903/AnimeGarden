@@ -9,6 +9,8 @@ import {
 } from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 
+import { truncate } from '@animegarden/shared';
+
 import { APP_HOST } from '~build/env';
 
 import Layout from '~/layouts/Layout';
@@ -95,9 +97,12 @@ export const meta: MetaFunction<typeof loader> = ({ location, data, params }) =>
     },
     {
       name: 'description',
-      content: name
-        ? `${name}: ${subject?.summary ?? '...'}`
-        : 'Anime Garden 動漫花園資源網第三方镜像站'
+      content:
+        name && subject?.summary
+          ? `${name}: ${truncate(subject.summary.replace(/\n/g, ' '), 120)}`
+          : name
+            ? `${name} | Anime Garden 動漫花園資源網第三方镜像站`
+            : `最新动画资源 | Anime Garden 動漫花園資源網第三方镜像站`
     },
     {
       tagName: 'link',
