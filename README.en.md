@@ -20,7 +20,7 @@
 >
 > Discussion: [Telegram](https://t.me/+QLdRRqoDt1gxMWZl)
 
-![home](./assets/home.png)
+[![home](./assets/home.jpeg)](https://animes.garden/resources/1?subject=477825)
 
 ## Open API Usage
 

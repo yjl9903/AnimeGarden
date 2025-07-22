@@ -20,7 +20,7 @@
 >
 > 讨论群: [Telegram](https://t.me/+QLdRRqoDt1gxMWZl)
 
-[![home](./assets/home.png)](https://animes.garden)
+[![home](./assets/home.jpeg)](https://animes.garden/resources/1?subject=477825)
 
 ## 使用开放 API
 
