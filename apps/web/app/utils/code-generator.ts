@@ -163,5 +163,5 @@ export function generateIframeCode(options: CodeGeneratorOptions): string {
   const searchParams = stringifyURLSearch(realFilter);
   const url = `//${APP_HOST}/iframe?${searchParams.toString()}`;
 
-  return `<iframe src="${url}" width="100%" height="600" frameborder="0" style="box-sizing:border-box;padding:12px;border-radius:8px;"></iframe>`;
+  return `<iframe src="${url}" width="100%" height="600" frameborder="0" style="box-sizing:border-box;"></iframe>`;
 }
