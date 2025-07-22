@@ -16,7 +16,8 @@ import {
 import {
   generateCurlCode,
   generateJavaScriptCode,
-  generatePythonCode
+  generatePythonCode,
+  generateIframeCode
 } from '~/utils/code-generator';
 import {
   removeQuote,
@@ -29,7 +30,8 @@ import {
   trackCopyJSONData,
   trackCopyFetchCurl,
   trackCopyFetchJS,
-  trackCopyFetchPython
+  trackCopyFetchPython,
+  trackCopyIframe
 } from '~/utils';
 import { getSubjectById, getSubjectDisplayName, getSubjectURL } from '~/utils/subjects';
 import { Button } from '~/components/ui/button';
@@ -376,6 +378,19 @@ const CopyResourcesDropdown = (props: Props) => {
     [filter, props.subject]
   );
 
+  const copyIframe = useToastCallback(
+    async () => {
+      const code = generateIframeCode({ filter, subject: props.subject });
+      await navigator.clipboard.writeText(code);
+    },
+    {
+      success: '复制网页嵌入代码成功',
+      error: '复制网页嵌入代码失败',
+      onFinally: () => trackCopyIframe()
+    },
+    [filter, props.subject]
+  );
+
   return (
     <div className="inline-flex w-fit divide-x rounded-md">
       <Button
@@ -417,6 +432,10 @@ const CopyResourcesDropdown = (props: Props) => {
           <DropdownMenuItem onSelect={copyFetchPython}>
             <span className="i-proicons-python mr1"></span>
             <span>复制为 Python 代码</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem onSelect={copyIframe}>
+            <span className="i-solar-code-bold mr1"></span>
+            <span>复制为网页嵌入代码</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
