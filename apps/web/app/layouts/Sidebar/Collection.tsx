@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import { toast } from 'sonner';
-import { NavLink, useLocation } from '@remix-run/react';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { NavLink } from '@remix-run/react';
+import { useAtom, useSetAtom } from 'jotai';
+import { memo, useCallback, useRef, useState } from 'react';
 
 import type { Collection, Jsonify } from '@animegarden/client';
 
@@ -21,7 +21,6 @@ import {
   DropdownMenuTrigger
 } from '~/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/ui/tooltip';
-// import { resolveFilterOptions } from '~/routes/resources.($page)/Filter';
 
 import { stringifySearch } from '../Search/utils';
 

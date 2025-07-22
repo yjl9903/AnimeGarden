@@ -21,6 +21,7 @@ declare module 'csstype' {
     '--nav-height'?: string;
     '--search-top'?: string;
     '--hero-height'?: string;
+    '--offset'?: string;
   }
 }
 

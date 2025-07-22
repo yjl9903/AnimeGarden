@@ -13,3 +13,5 @@ export * from './string';
 export * from './routes';
 
 export * from './umami';
+
+export * from './canonical';

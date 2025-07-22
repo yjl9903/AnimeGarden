@@ -1,0 +1,14 @@
+.bgm-list-wrapper.scroll-begin .scroll-left {
+  display: none;
+}
+
+.bgm-list-wrapper.scroll-end .scroll-right {
+  display: none;
+}
+
+@media (hover: none) {
+  .scroll-left,
+  .scroll-right {
+    display: none;
+  }
+}

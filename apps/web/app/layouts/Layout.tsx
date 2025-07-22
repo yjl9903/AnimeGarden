@@ -17,17 +17,24 @@ export const HeroHeight = 300;
 
 export interface LayoutProps {
   children?: React.ReactNode;
+
   timestamp?: string;
+
   feedURL?: string;
+
+  /**
+   * @default true
+   */
+  heading?: boolean;
 }
 
 export default function Layout(props: LayoutProps) {
-  const { timestamp, feedURL } = props;
+  const { timestamp, feedURL, heading } = props;
   const isOpen = useAtomValue(isOpenSidebar);
 
   return (
     <>
-      <Hero feedURL={feedURL}></Hero>
+      <Hero feedURL={feedURL} heading={heading}></Hero>
       <div className={clsx('w-full flex', isOpen ? 'main-with-sidebar' : 'main-without-sidebar')}>
         <Sidebar></Sidebar>
         <div className="flex-auto flex items-center justify-center min-h-[calc(100vh-300px-220px)]">
@@ -40,7 +47,7 @@ export default function Layout(props: LayoutProps) {
   );
 }
 
-const Hero = memo((props: { feedURL?: string }) => {
+const Hero = memo((props: { feedURL?: string; heading?: boolean }) => {
   return (
     <>
       <search
@@ -58,11 +65,19 @@ const Hero = memo((props: { feedURL?: string }) => {
         className="w-full h-$hero-height bg-[#fef8f7]"
         suppressHydrationWarning={true}
       >
-        <div className="lg:z-12 lt-lg:z-10 w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none">
-          <NavLink to="/" className="pointer-events-auto cursor-pointer">
-            <span>🌸 Anime Garden</span>
-          </NavLink>
-        </div>
+        {props.heading === false ? (
+          <div className="lg:z-12 lt-lg:z-10 w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none">
+            <NavLink to="/" className="pointer-events-auto cursor-pointer">
+              <span>🌸 Anime Garden</span>
+            </NavLink>
+          </div>
+        ) : (
+          <h1 className="lg:z-12 lt-lg:z-10 w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none">
+            <NavLink to="/" className="pointer-events-auto cursor-pointer">
+              <span>🌸 Anime Garden</span>
+            </NavLink>
+          </h1>
+        )}
       </div>
       <div
         id="hero-placeholder"

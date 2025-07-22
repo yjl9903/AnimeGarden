@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import type {
+  Jsonify,
   PaginationOptions,
   FilterOptions,
   PresetOptions,
@@ -237,7 +238,9 @@ export function parseURLSearch(
   return { pagination, filter };
 }
 
-export function stringifyURLSearch(options: PaginationOptions & FilterOptions & PresetOptions) {
+export function stringifyURLSearch(
+  options: PaginationOptions & (FilterOptions | Jsonify<FilterOptions>) & PresetOptions
+) {
   const params = new URLSearchParams();
 
   const { page, pageSize, duplicate, after, before, preset } = options;
@@ -256,10 +259,12 @@ export function stringifyURLSearch(options: PaginationOptions & FilterOptions & 
     params.set('duplicate', 'true');
   }
   if (after) {
-    params.set('after', '' + after.getTime());
+    const time = after instanceof Date ? after.getTime() : new Date(after).getTime();
+    params.set('after', '' + time);
   }
   if (before) {
-    params.set('before', '' + before.getTime());
+    const time = before instanceof Date ? before.getTime() : new Date(before).getTime();
+    params.set('before', '' + time);
   }
 
   const { provider } = options;

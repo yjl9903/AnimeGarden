@@ -4,6 +4,7 @@ import { redirect, type LoaderFunctionArgs, type MetaFunction } from '@remix-run
 import { parse } from 'anipar';
 import { formatInTimeZone } from 'date-fns-tz';
 
+import { truncate } from '@animegarden/shared';
 import { SupportProviders } from '@animegarden/client';
 import { normalizeDescription } from '@animegarden/scraper';
 
@@ -13,6 +14,7 @@ import Layout from '~/layouts/Layout';
 import {
   splitMagnetURL,
   fetchResourceDetail,
+  getCanonicalURL,
   getPikPakUrlChecker,
   getPikPakTrackEvent,
   getDownloadTrackEvent
@@ -39,7 +41,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   return redirect('/');
 };
 
-export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
+export const meta: MetaFunction<typeof loader> = ({ location, data, params }) => {
   const resource = data?.resource;
   const resourceTitle = resource?.title;
 
@@ -110,12 +112,18 @@ export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
 
   return [
     {
-      title:
-        (resourceTitle ? resourceTitle + ' | ' : '') + 'Anime Garden 動漫花園資源網第三方镜像站'
+      title: resourceTitle
+        ? truncate(resourceTitle, 70)
+        : '资源 | Anime Garden 動漫花園資源網第三方镜像站'
     },
     {
       name: 'description',
       content: descriptionText
+    },
+    {
+      tagName: 'link',
+      rel: 'canonical',
+      href: getCanonicalURL(`/detail/${params.provider}/${params.providerId}`)
     },
     ...og,
     {
@@ -139,8 +147,8 @@ export default function Resources() {
       : [];
 
   return (
-    <Layout timestamp={timestamp}>
-      <div className="w-full pt-12 pb-24">
+    <Layout timestamp={timestamp} heading={false}>
+      <div className="w-full pt-13 pb-24">
         <div className="detail mt-4vh w-full space-y-4">
           <h1 className="text-xl font-bold resource-title">
             <span>{resource?.title}</span>
@@ -227,7 +235,7 @@ export default function Resources() {
                     src={
                       resource?.publisher.avatar ?? 'https://share.dmhy.org/images/defaultUser.png'
                     }
-                    alt="Publisher Avatar"
+                    alt={`${resource?.publisher.name} avatar`}
                     className="inline-block w-[100px] h-[100px] rounded"
                     onError={(ev) => {
                       (ev.target as HTMLImageElement).src =
@@ -247,7 +255,7 @@ export default function Resources() {
                       src={
                         resource.fansub.avatar ?? 'https://share.dmhy.org/images/defaultUser.png'
                       }
-                      alt="Fansub Avatar"
+                      alt={`${resource.fansub.name} avatar`}
                       className="inline-block w-[100px] h-[100px] rounded"
                       onError={(ev) => {
                         (ev.target as HTMLImageElement).src =

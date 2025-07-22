@@ -103,6 +103,12 @@ export async function fetchDmhyPage(
       publisherName = 'ANi';
     }
 
+    // @hack 悠哈C9字幕社 -> 悠哈璃羽字幕社
+    if (fansubName === '悠哈C9字幕社') {
+      publisherName = '悠哈璃羽字幕社';
+      fansubName = '悠哈璃羽字幕社';
+    }
+
     // @hack 灼眼のシャナ -> ANi
     if (publisherName === '灼眼のシャナ' && publisherId === '110897') {
       publisherName = 'ANi';

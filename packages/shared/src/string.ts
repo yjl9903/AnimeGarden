@@ -36,9 +36,7 @@ export function replaceSuffix(text: string, suffixes: Record<string, string>) {
 }
 
 export function truncate(text: string, maxLength: number, ellipsis = '...') {
-  return text.length >= maxLength - ellipsis.length
-    ? text.slice(0, maxLength - ellipsis.length) + ellipsis
-    : text;
+  return text.length >= maxLength ? text.slice(0, maxLength - ellipsis.length) + ellipsis : text;
 }
 
 export function removeExtraSpaces(str: string): string {

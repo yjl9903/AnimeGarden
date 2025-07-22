@@ -33,6 +33,8 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
 
   public redis?: RedisStorage;
 
+  public publisherRedis?: RedisStorage;
+
   public readonly options: SystemOptions;
 
   public readonly modules: M = {} as M;
@@ -87,7 +89,9 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
   }
 
   private async initializeRedis() {
-    if (!this.redis) return;
+    const { redis, publisherRedis } = this;
+
+    if (!redis || !publisherRedis) return;
 
     this.rpcSender.send = this.options.cron
       ? async (event) => {
@@ -102,7 +106,6 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
           return true;
         };
 
-    const { redis } = this;
     this.channelMessageBus.listen(redis);
 
     if (this.options.cron) {
@@ -114,7 +117,7 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
 
         const { channel, type, gid, payload } = notification;
         const resp = await this.rpc.run(type, payload);
-        await redis.publish(
+        await publisherRedis.publish(
           channel,
           JSON.stringify({
             channel,
@@ -160,15 +163,14 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
 
   public async notifyRefreshedResources(notification: Notification) {
     if (this.options.cron) {
-      if (!this.redis) return;
-
-      const { redis } = this;
+      if (!this.publisherRedis) return;
 
       this.channelMessageBus.logger.info(
-        `Publish notification to channel ${NOTIFY_CHANNEL}: ${notification.resources.inserted} new resources, ${notification.resources.deleted} deleted resources, ${notification.duplicated.inserted} unique resources, ${notification.duplicated.duplicated} duplicated resources`
+        `Publish notification to channel ${NOTIFY_CHANNEL}: ${notification.resources.inserted.length} new resources, ${notification.resources.deleted.length} deleted resources, ${notification.duplicated.inserted} unique resources, ${notification.duplicated.duplicated.length} duplicated resources`
       );
+
       try {
-        await redis.publish(NOTIFY_CHANNEL, JSON.stringify(notification));
+        await this.publisherRedis.publish(NOTIFY_CHANNEL, JSON.stringify(notification));
       } catch (error) {
         this.channelMessageBus.logger.error(`Publish to ${NOTIFY_CHANNEL} failed`, error);
       }
