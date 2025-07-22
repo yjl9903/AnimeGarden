@@ -28,6 +28,15 @@ export interface ResourcesTableProps extends Partial<PaginationProps> {
   pathname?: string;
 
   resources: Jsonify<Resource<{ tracker: true }>>[];
+
+  columns?: {
+    /**
+     * 是否显示发布者
+     *
+     * @default true
+     */
+    fansub?: boolean;
+  };
 }
 
 function getDetailHref(r: Jsonify<Resource>) {
@@ -44,7 +53,9 @@ function followSearch(location: Location, params: Record<string, string>) {
 
 export default function ResourcesTable(props: ResourcesTableProps) {
   const location = useLocation();
-  const { className, pathname, resources, link } = props;
+  const { className, pathname, resources, link, columns } = props;
+
+  const { fansub: isDisplayFansub = true } = columns ?? {};
 
   return (
     <div>
@@ -69,8 +80,8 @@ export default function ResourcesTable(props: ResourcesTableProps) {
                   <div>资源</div>
                 </div>
               </th>
-              <th className="py3 min-w-[60px]">发布者</th>
-              <th className="py3 px2 text-center w-max">播放</th>
+              {isDisplayFansub && <th className="py3 min-w-[60px]">发布者</th>}
+              <th className="py3 px2 text-center w-[72px]">播放</th>
             </tr>
           </thead>
           <tbody className="resources-table-body divide-y border-b text-base lt-lg:text-sm">
@@ -79,6 +90,7 @@ export default function ResourcesTable(props: ResourcesTableProps) {
                 key={`${r.provider}/${r.providerId}`}
                 pathname={pathname}
                 resource={r}
+                columns={columns}
               ></ResourceItem>
             ))}
           </tbody>
@@ -120,9 +132,14 @@ export default function ResourcesTable(props: ResourcesTableProps) {
 }
 
 export const ResourceItem = memo(
-  (props: { pathname?: string; resource: Jsonify<Resource<{ tracker: true }>> }) => {
+  (props: {
+    pathname?: string;
+    resource: Jsonify<Resource<{ tracker: true }>>;
+    columns?: ResourcesTableProps['columns'];
+  }) => {
     const location = useLocation();
     const { pathname, resource: r } = props;
+    const { fansub: isDisplayFansub = true } = props.columns ?? {};
 
     return (
       <tr className="">
@@ -202,28 +219,30 @@ export const ResourceItem = memo(
             </div>
           </div>
         </td>
-        <td className="py2 px2 lt-sm:px0">
-          <div className="flex justify-center items-center">
-            {r.fansub ? (
-              <NavLink
-                to={`${pathname ?? '/resources'}/1?${followSearch(location, { fansub: r.fansub.name })}`}
-                className="block w-max"
-                aria-label={`Go to resources list of fansub ${r.fansub.name}`}
-              >
-                <Tag text={r.fansub.name} className={`text-xs hover:bg-gray-300`} />
-              </NavLink>
-            ) : r.publisher ? (
-              <NavLink
-                to={`${pathname ?? '/resources'}/1?${followSearch(location, { publisher: r.publisher.name })}`}
-                className="block w-max"
-                aria-label={`Go to resources list of publisher ${r.publisher.name}`}
-              >
-                <Tag text={r.publisher.name} className={`text-xs hover:bg-gray-300`} />
-              </NavLink>
-            ) : null}
-          </div>
-        </td>
-        <td className="py2 px2">
+        {isDisplayFansub && (
+          <td className="py2 px2 lt-sm:px0">
+            <div className="flex justify-center items-center">
+              {r.fansub ? (
+                <NavLink
+                  to={`${pathname ?? '/resources'}/1?${followSearch(location, { fansub: r.fansub.name })}`}
+                  className="block w-max"
+                  aria-label={`Go to resources list of fansub ${r.fansub.name}`}
+                >
+                  <Tag text={r.fansub.name} className={`text-xs hover:bg-gray-300`} />
+                </NavLink>
+              ) : r.publisher ? (
+                <NavLink
+                  to={`${pathname ?? '/resources'}/1?${followSearch(location, { publisher: r.publisher.name })}`}
+                  className="block w-max"
+                  aria-label={`Go to resources list of publisher ${r.publisher.name}`}
+                >
+                  <Tag text={r.publisher.name} className={`text-xs hover:bg-gray-300`} />
+                </NavLink>
+              ) : null}
+            </div>
+          </td>
+        )}
+        <td className="py2 px2 w-[72px]">
           <div className="flex gap1 items-center justify-start">
             <a
               href={getPikPakUrlChecker(r.magnet)}

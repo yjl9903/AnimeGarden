@@ -5,7 +5,7 @@ import { getSubjectById, getSubjectByName, getSubjectDisplayName } from '~/utils
 
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
 
-export function parseSearch(input: string) {
+export function parseSearchInput(input: string) {
   function splitWords(search: string) {
     const matchQuotes = {
       '"': ['"'],
@@ -243,8 +243,13 @@ export function resolveSearchURL(search: string) {
     if (match) {
       return `/detail/dmhy/${match[1]}`;
     } else {
-      const searchParams = stringifyURLSearch(parseSearch(search));
-      return `/resources/1?${searchParams.toString()}`;
+      const filter = parseSearchInput(search);
+      const searchParams = stringifyURLSearch(filter);
+      if (searchParams.size === 1 && searchParams.get('subject')) {
+        return `/subject/${searchParams.get('subject')}`;
+      } else {
+        return `/resources/1?${searchParams.toString()}`;
+      }
     }
   }
 }

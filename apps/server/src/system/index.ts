@@ -65,8 +65,10 @@ export async function makeSystem(options: SystemOptions) {
 
   if (options.redisUri) {
     try {
-      const redis = connectRedis(options.redisUri);
-      system.redis = redis;
+      system.redis = connectRedis(options.redisUri);
+      system.publisherRedis = connectRedis(options.redisUri);
+      system.disposables.push(() => system.redis?.disconnect());
+      system.disposables.push(() => system.publisherRedis?.disconnect());
       system.logger.success('Connect to Redis');
     } catch (error) {
       throw error;

@@ -1,11 +1,12 @@
 import clsx from 'clsx';
 import { NavLink } from '@remix-run/react';
 import { useAtomValue } from 'jotai';
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 
-import { calendar, getSubjectURL } from '~/utils/anime';
-import { fansubs as AllFansubs, types, DisplayTypeColor } from '~/utils/constants';
+import { getCalendar } from '~/utils/anime';
+import { getSubjectURL } from '~/utils/subjects';
 import { getOpenFeedTrackEvent } from '~/utils/umami';
+import { fansubs as AllFansubs, types, DisplayTypeColor } from '~/utils/constants';
 import {
   Dropdown,
   DropdownMenu,
@@ -40,7 +41,7 @@ export const Header = memo((props: { feedURL?: string }) => {
               target="_blank"
             >
               <span>
-                <span className="i-carbon-rss text-sm mr1" />
+                <span className="i-mdi-rss text-sm mr1" />
                 <span>RSS</span>
               </span>
             </a>
@@ -53,25 +54,24 @@ export const Header = memo((props: { feedURL?: string }) => {
 });
 
 const AnimeDropdown = memo(() => {
+  const calendar = useMemo(() => getCalendar(), []);
+
   return (
     <Dropdown
       className="nav-animes pointer-events-auto [&:hover>a]:bg-zinc-100!"
       trigger={
-        <NavLink to="/resources/1?type=动画&preset=bangumi" className="rounded-md p-2">
+        <NavLink to="/anime" className="rounded-md p-2">
           动画
         </NavLink>
       }
     >
-      <DropdownMenu className="mt-[-10px] w-[120px] max-h-[600px] lt-sm:max-h-[360px] rounded-md shadow-box divide-y bg-light-100 leading-normal">
-        <NavLink
-          to="/resources/1?type=动画&preset=bangumi"
-          className="block px2 py1 rounded-t-md hover:bg-basis-100"
-        >
-          资源列表
+      <DropdownMenu className="mt-[-10px] w-[80px] max-h-[600px] lt-sm:max-h-[360px] rounded-md shadow-box divide-y bg-light-100 leading-normal">
+        <NavLink to="/anime" className="block px2 py1 rounded-t-md hover:bg-basis-100">
+          周历
         </NavLink>
         {calendar
           .sort((l, r) => l.index - r.index)
-          .map((day) => (
+          .map((day, index) => (
             <DropdownSubMenuItem
               key={day.text}
               className="[&:hover>.trigger]:bg-basis-100!"
@@ -84,7 +84,10 @@ const AnimeDropdown = memo(() => {
               }
             >
               <DropdownSubMenu className="pt-[1px] pl-[6px] pb-[2px] pr-[2px]">
-                <div className="max-h-[500px] lt-sm:max-h-[360px] divide-y rounded-md shadow-box bg-light-100">
+                <div
+                  className={`min-h-[100px] max-h-[min(500px,calc(100vh-120px-var(--offset)))] lt-sm:max-h-[360px] rounded-md shadow-box bg-light-100 divide-y overflow-y-auto overscroll-none`}
+                  style={{ '--offset': `${index * 33}px` }}
+                >
                   {day.bangumis.map((bgm, index) => (
                     <NavLink
                       to={getSubjectURL(bgm)}

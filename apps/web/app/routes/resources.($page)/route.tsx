@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 import { type ClientLoaderFunction, redirect, useLoaderData, useLocation } from '@remix-run/react';
 
-import { parseURLSearch } from '@animegarden/client';
+import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
@@ -10,7 +10,7 @@ import { stringifySearch } from '~/layouts/Search/utils';
 import { usePreferFansub } from '~/states';
 import { waitForSubjectsLoaded } from '~/utils/subjects';
 import { generateTitleFromFilter } from '~/utils/server/meta';
-import { fetchResources, getFeedURL } from '~/utils';
+import { fetchResources, getFeedURL, getCanonicalURL } from '~/utils';
 
 import { Error } from './Error';
 import { FilterCard } from './Filter';
@@ -56,12 +56,18 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 
 export const meta: MetaFunction<typeof loader> = ({ location, data }) => {
   const title = generateTitleFromFilter(data?.filter ?? {});
+  const search = stringifyURLSearch(data?.filter ?? {});
 
   return [
     { title: title + ' | Anime Garden 動漫花園資源網第三方镜像站' },
     {
       name: 'description',
       content: `最新资源 ${stringifySearch(new URLSearchParams(location.search))}`
+    },
+    {
+      tagName: 'link',
+      rel: 'canonical',
+      href: getCanonicalURL(`/resources/${data?.page ?? 1}`, search.toString())
     }
   ];
 };
@@ -84,7 +90,7 @@ export default function ResourcesIndex() {
 
   return (
     <Layout feedURL={feedURL} timestamp={timestamp}>
-      <div className="w-full pt-12 pb-24">
+      <div className="w-full pt-13 pb-24">
         {ok ? (
           <>
             <FilterCard

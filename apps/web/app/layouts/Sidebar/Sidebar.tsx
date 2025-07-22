@@ -82,7 +82,7 @@ const QuickLinks = memo((props: { collection: Collection }) => {
   return (
     <>
       <NavLink
-        to="/"
+        to="/anime"
         className={clsx(className, match === 'index' && activeClassName)}
         preventScrollReset={true}
       >
