@@ -1,4 +1,4 @@
-import { FEED_HOST } from '~build/env';
+import { FEED_HOST, APP_HOST } from '~build/env';
 import { stringifyURLSearch } from '@animegarden/client';
 import type { ResolvedFilterOptions, PresetOptions, Jsonify } from '@animegarden/client';
 import type { FullBangumi } from 'bgmd/types';
@@ -145,4 +145,23 @@ ${params.join(',\n')}
 
 response = requests.get(url, params=params)
 resources = response.json()`;
+}
+
+export function generateIframeCode(options: CodeGeneratorOptions): string {
+  const { filter, subject } = options;
+
+  if (!filter) {
+    throw new Error('没有筛选条件');
+  }
+
+  const resolved = resolveFilterOptions(filter);
+  const realFilter = {
+    ...resolved,
+    subjects: subject ? [subject.id] : resolved.subjects
+  };
+
+  const searchParams = stringifyURLSearch(realFilter);
+  const url = `//${APP_HOST}/iframe?${searchParams.toString()}`;
+
+  return `<iframe src="${url}" width="100%" height="600" frameborder="0" style="box-sizing:border-box;padding:12px;border-radius:8px;"></iframe>`;
 }

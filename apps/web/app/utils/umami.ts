@@ -50,3 +50,7 @@ export const trackCopyFetchJS = () => {
 export const trackCopyFetchPython = () => {
   track('copy-fetch-code', { language: 'python' });
 };
+
+export const trackCopyIframe = () => {
+  track('copy-iframe-code');
+};
