@@ -56,6 +56,14 @@ const sakurato = await fetchResources({ count: -1, fansub: 'ANi' })
 
 你可以在[这里](https://github.com/yjl9903/AnimeGarden/blob/32bc3843084367338f41be7d4af47c80b639f828/packages/client/src/types.ts#L220)查看更多过滤条件 `FilterOptions`, 也可以在 [./examples/](https://github.com/yjl9903/AnimeGarden/blob/main/examples/) 目录下找到更多程序示例.
 
+## 使用内嵌代码
+
+你可以从资源搜索页复制出网页嵌入代码，放到你的博客等各种页面中.
+
+```html
+<iframe src="//animes.garden/iframe?subject=477825" width="100%" height="600" frameborder="0"></iframe>
+```
+
 ## 本地开发
 
 参考 [CONTRIBUTING.md](./CONTRIBUTING.md) 中的描述配置环境和开始开发.

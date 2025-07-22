@@ -54,6 +54,14 @@ Assume your environment has built-in [Fetch](https://developer.mozilla.org/en-US
 
 You can check more filter conditions [FilterOptions](https://github.com/yjl9903/AnimeGarden/blob/32bc3843084367338f41be7d4af47c80b639f828/packages/client/src/types.ts#L220) and usage examples in [./examples/](https://github.com/yjl9903/AnimeGarden/blob/main/examples/) directory.
 
+## Iframe Usage
+
+You can easily copy the iframe HTML code from the resources page and embed the resource list into your blog or any other website.
+
+```html
+<iframe src="//animes.garden/iframe?subject=477825" width="100%" height="600" frameborder="0"></iframe>
+```
+
 ## Local Development
 
 Follow [CONTRIBUTING.md](./CONTRIBUTING.md) to setup the environment and start developing.
