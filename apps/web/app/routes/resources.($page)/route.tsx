@@ -79,7 +79,6 @@ export const clientLoader: ClientLoaderFunction = async ({ serverLoader }) => {
   }
   return serverData;
 };
-clientLoader.hydrate = true;
 
 export default function ResourcesIndex() {
   const location = useLocation();
