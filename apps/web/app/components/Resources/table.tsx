@@ -118,7 +118,7 @@ export default function ResourcesTable(props: ResourcesTableProps) {
           </div>
         </div>
       )}
-      {props.page !== undefined && resources.length > 0 && (
+      {props.page !== undefined && !props.complete && resources.length > 0 && (
         <Pagination
           timestamp={props.timestamp}
           page={props.page}
