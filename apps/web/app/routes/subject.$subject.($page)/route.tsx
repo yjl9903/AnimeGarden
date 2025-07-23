@@ -10,16 +10,17 @@ import {
 import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 
 import { truncate } from '@animegarden/shared';
+import { stringifyURLSearch } from '@animegarden/client';
 
 import { APP_HOST } from '~build/env';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import { usePreferFansub } from '~/states';
-import { fetchResources, getFeedURL, getCanonicalURL } from '~/utils';
 import { generateTitleFromFilter } from '~/utils/server/meta';
+import { fetchResources, getFeedURL, getCanonicalURL, track } from '~/utils';
 import {
   type FullBangumiItem,
+  getAllSubjectNames,
   getSubjectById,
   getSubjectDisplayName,
   waitForSubjectsLoaded
@@ -128,15 +129,25 @@ export function HydrateFallback() {
 export default function SubjectIndex() {
   const params = useParams();
   const location = useLocation();
-  const { ok, subject, resources, pagination, filter, timestamp } = useLoaderData<typeof loader>();
+
+  const { ok, subject, resources, pagination, timestamp } = useLoaderData<typeof loader>();
+
   const feedURL = useMemo(() => {
     const search = new URLSearchParams(location.search);
     search.set('subject', params.subject!);
     search.sort();
     return getFeedURL(`?${search.toString()}`);
   }, [location]);
-
-  usePreferFansub(filter?.fansubs);
+  const fallbackSearchURL = useMemo(() => {
+    if (!subject) return '/resources/1';
+    const search = stringifyURLSearch({
+      include: getAllSubjectNames(subject!)
+    });
+    track('fallback-subject-search', {
+      subject: 'subject:' + subject.id
+    });
+    return `/resources/1?${search.toString()}`;
+  }, [subject, location]);
 
   return (
     <Layout feedURL={feedURL} timestamp={timestamp} heading={false}>
@@ -161,6 +172,15 @@ export default function SubjectIndex() {
                 </div>
               ))}
             </div>
+            {resources.length === 0 && (
+              <div className="h-20 text-2xl text-orange-700/80 flex items-center justify-center">
+                <span className="mr2 i-carbon-search" />
+                <span className="mr2">暂时未索引到相应资源</span>
+                <NavLink to={fallbackSearchURL} className="text-link">
+                  前往搜索
+                </NavLink>
+              </div>
+            )}
           </>
         ) : (
           <Error></Error>

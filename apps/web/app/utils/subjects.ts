@@ -66,6 +66,11 @@ export function getSubjectDisplayName(
   return bgm?.bangumi?.name_cn || bgm?.name || '';
 }
 
+export function getAllSubjectNames(bgm?: Pick<FullBangumi, 'name' | 'bangumi' | 'alias'>) {
+  if (!bgm) return [];
+  return [...new Set([bgm.name, bgm.bangumi?.name_cn, ...bgm.alias].filter(Boolean))];
+}
+
 export function getSubjectURL(bgm: Pick<FullBangumi, 'id'>) {
   return `/subject/${bgm.id}`;
 }

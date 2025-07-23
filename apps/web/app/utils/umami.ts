@@ -12,7 +12,7 @@ export const getOpenFeedTrackEvent = () => ({
   'data-umami-event': 'open-feed'
 });
 
-const track = (event: string, payload?: Record<string, string>) => {
+export const track = (event: string, payload?: Record<string, string>) => {
   try {
     // @ts-ignore
     if (!window.umami) return;
