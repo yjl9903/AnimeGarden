@@ -143,9 +143,6 @@ export default function SubjectIndex() {
     const search = stringifyURLSearch({
       include: getAllSubjectNames(subject!)
     });
-    track('fallback-subject-search', {
-      subject: 'subject:' + subject.id
-    });
     return `/resources/1?${search.toString()}`;
   }, [subject, location]);
 
@@ -176,7 +173,11 @@ export default function SubjectIndex() {
               <div className="h-20 text-2xl text-orange-700/80 flex items-center justify-center">
                 <span className="mr2 i-carbon-search" />
                 <span className="mr2">暂时未索引到相应资源</span>
-                <NavLink to={fallbackSearchURL} className="text-link">
+                <NavLink to={fallbackSearchURL} className="text-link" onClick={() => {
+                  track('fallback-subject-search', {
+                    subject: 'subject:' + subject.id
+                  });
+                }}>
                   前往搜索
                 </NavLink>
               </div>
