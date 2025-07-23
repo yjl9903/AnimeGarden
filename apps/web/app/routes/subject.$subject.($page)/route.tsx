@@ -37,10 +37,11 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     return redirect(`/subject/${params.subject}`);
   }
 
-  const subject = +params.subject!;
+  const subjectId = +params.subject!;
+  const subject = getSubjectById(subjectId) as FullBangumiItem;
 
   const { ok, resources, pagination, filter, timestamp } = await fetchResources({
-    subject,
+    subject: subjectId,
     subjects: undefined,
     page: 1,
     pageSize: 1000,
@@ -49,7 +50,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
   return {
     ok,
-    subject: getSubjectById(subject) as FullBangumiItem,
+    subjectId,
+    subject,
     resources: groupResourcesByFansub(resources),
     pagination,
     filter,
@@ -130,7 +132,8 @@ export default function SubjectIndex() {
   const params = useParams();
   const location = useLocation();
 
-  const { ok, subject, resources, pagination, timestamp } = useLoaderData<typeof loader>();
+  const { ok, subjectId, subject, resources, pagination, timestamp } =
+    useLoaderData<typeof loader>();
 
   const feedURL = useMemo(() => {
     const search = new URLSearchParams(location.search);
@@ -149,7 +152,7 @@ export default function SubjectIndex() {
   return (
     <Layout feedURL={feedURL} timestamp={timestamp} heading={false}>
       <div className="w-full pt-13 pb-24">
-        {ok ? (
+        {ok && subject ? (
           <>
             <SubjectCard subject={subject!}></SubjectCard>
             <div className="flex flex-col gap-12">
@@ -173,18 +176,37 @@ export default function SubjectIndex() {
               <div className="h-20 text-2xl text-orange-700/80 flex items-center justify-center">
                 <span className="mr2 i-carbon-search" />
                 <span className="mr2">暂时未索引到相应资源</span>
-                <NavLink to={fallbackSearchURL} className="text-link" onClick={() => {
-                  track('fallback-subject-search', {
-                    subject: 'subject:' + subject.id
-                  });
-                }}>
+                <NavLink
+                  to={fallbackSearchURL}
+                  className="text-link"
+                  onClick={() => {
+                    track('fallback-subject-search', {
+                      subject: 'subject:' + subject.id
+                    });
+                  }}
+                >
                   前往搜索
                 </NavLink>
               </div>
             )}
           </>
         ) : (
-          <Error></Error>
+          <Error
+            message={
+              !subject ? (
+                <span>
+                  未找到{' '}
+                  <a
+                    href={`https://bgm.tv/subject/${subjectId}`}
+                    target="_blank"
+                    className="text-link"
+                  >
+                    番剧 {subjectId}
+                  </a>
+                </span>
+              ) : undefined
+            }
+          ></Error>
         )}
       </div>
     </Layout>
