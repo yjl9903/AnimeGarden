@@ -6,7 +6,6 @@ import { formatInTimeZone } from 'date-fns-tz';
 
 import { truncate } from '@animegarden/shared';
 import { SupportProviders } from '@animegarden/client';
-import { normalizeDescription } from '@animegarden/scraper';
 
 import { APP_HOST } from '~build/env';
 
@@ -29,9 +28,18 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   try {
     const { provider, providerId } = params;
     if (provider && providerId && SupportProviders.includes(provider)) {
-      const detail = await fetchResourceDetail(provider, providerId);
-      if (detail?.ok && detail?.resource) {
-        return detail;
+      const data = await fetchResourceDetail(provider, providerId);
+      if (data?.ok && data?.resource) {
+        const { normalizeDescription } = await import('@animegarden/scraper');
+
+        const description = data?.detail?.description
+          ? normalizeDescription(data?.detail?.description ?? '')
+          : undefined;
+
+        return {
+          ...data,
+          description
+        };
       }
     }
   } catch (error) {
@@ -65,9 +73,7 @@ export const meta: MetaFunction<typeof loader> = ({ location, data, params }) =>
     : undefined;
 
   const title = info?.title ?? resourceTitle;
-  const description = data?.detail?.description
-    ? normalizeDescription(data?.detail?.description ?? '')
-    : undefined;
+  const description = data?.description;
   const descriptionText =
     description && title
       ? description.summary.startsWith(title)
