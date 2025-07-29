@@ -27,6 +27,10 @@ auto_start_machines = true
 min_machines_running = 1
 processes = ['server']
 
+[http_service.concurrency]
+type = 'requests'
+soft_limit = 4
+
 [[restart]]
 policy = 'on-failure'
 retries = 10
