@@ -27,7 +27,7 @@ processes = ['server']
 
 [http_service.concurrency]
 type = 'requests'
-soft_limit = 4
+soft_limit = 10
 
 [[restart]]
 policy = 'on-failure'
