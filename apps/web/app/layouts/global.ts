@@ -1,3 +1,12 @@
+function updateColorMode() {
+  try {
+    const mode = JSON.parse(localStorage.getItem('animegarden:theme-mode') ?? 'null');
+    if (mode === 'light' || mode === 'dark') {
+      document.documentElement.classList.add(mode);
+    }
+  } catch {}
+}
+
 const NavHeight = 66;
 const SearchTop = 128;
 const HeroHeight = 300;
@@ -94,6 +103,7 @@ function handleScroll() {
   requestAnimationFrame(updateHero);
 }
 
+updateColorMode();
 updateHero();
 
 document.addEventListener('DOMContentLoaded', updateHero);
