@@ -157,7 +157,7 @@ export const ResourceItem = memo(
             <div className="flex-shrink-0 mr3 flex justify-center items-center">
               <NavLink
                 to={`${pathname ?? '/resources'}/1?${followSearch(location, { type: r.type })}`}
-                className={`flex items-center justify-center h-[32px] w-[32px] rounded-full bg-gray-100 hover:bg-gray-200 ${DisplayTypeColor[r.type]}`}
+                className={`flex items-center justify-center h-[32px] w-[32px] rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 ${DisplayTypeColor[r.type]}`}
               >
                 {DisplayTypeIcon[r.type]({})}
               </NavLink>
@@ -228,7 +228,10 @@ export const ResourceItem = memo(
                   className="block w-max"
                   aria-label={`Go to resources list of fansub ${r.fansub.name}`}
                 >
-                  <Tag text={r.fansub.name} className={`text-xs hover:bg-gray-300`} />
+                  <Tag
+                    text={r.fansub.name}
+                    className={`text-xs hover:bg-gray-300 dark:hover:bg-gray-700`}
+                  />
                 </NavLink>
               ) : r.publisher ? (
                 <NavLink
@@ -236,7 +239,10 @@ export const ResourceItem = memo(
                   className="block w-max"
                   aria-label={`Go to resources list of publisher ${r.publisher.name}`}
                 >
-                  <Tag text={r.publisher.name} className={`text-xs hover:bg-gray-300`} />
+                  <Tag
+                    text={r.publisher.name}
+                    className={`text-xs hover:bg-gray-300 dark:hover:bg-gray-700`}
+                  />
                 </NavLink>
               ) : null}
             </div>

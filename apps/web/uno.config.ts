@@ -1,6 +1,6 @@
 import {
   defineConfig,
-  presetUno,
+  presetWind4,
   presetIcons,
   presetWebFonts,
   presetTypography,
@@ -25,7 +25,12 @@ export default defineConfig({
     }
   },
   presets: [
-    presetUno(),
+    presetWind4({
+      dark: 'class',
+      preflights: {
+        reset: true
+      }
+    }),
     presetAttributify(),
     presetIcons({
       scale: 1.1,

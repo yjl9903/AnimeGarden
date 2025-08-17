@@ -124,7 +124,7 @@ export function FilterCard(props: Props) {
       : subjects.map((sub) => getSubjectById(sub)).filter(Boolean);
 
   return (
-    <div className="mb4 p-4 lt-sm:px-3 w-full bg-zinc-50 drop-shadow rounded-md space-y-2">
+    <div className="mb4 p-4 lt-sm:px-3 w-full bg-zinc-50 dark:bg-zinc-800 drop-shadow rounded-md space-y-2">
       {preset && (
         <div className="space-x-2 text-0">
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">预设</span>

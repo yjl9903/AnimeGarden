@@ -1,30 +1,31 @@
+import clsx from 'clsx';
 import { memo } from 'react';
 import { useAtom } from 'jotai';
-import clsx from 'clsx';
 
 import { themeModeAtom, type ThemeMode } from '~/states';
 
 export const ThemeToggle = memo(() => {
-  const [currentMode, setCurrentMode] = useAtom(themeModeAtom);
+  const [mode, setMode] = useAtom(themeModeAtom);
 
   const handleModeChange = (mode: ThemeMode) => {
-    setCurrentMode(mode);
-    // TODO: 这里将来会添加实际的暗色模式切换逻辑
+    setMode(mode);
   };
 
   return (
     <div className="flex items-center">
-      <div className="relative bg-gray-200 rounded-full p-1 flex items-center">
+      <div className="relative bg-gray-200 dark:bg-dark-800 rounded-full p-1 flex items-center">
         {/* 亮色模式按钮 */}
         <button
           onClick={() => handleModeChange('light')}
           className={clsx(
-            'w-5 h-5 rounded-full flex items-center justify-center transition-all duration-200',
-            currentMode === 'light' ? 'bg-white shadow-sm transform scale-105' : 'hover:bg-gray-100'
+            'w-5 h-5 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer',
+            mode === 'light'
+              ? 'bg-white shadow-sm transform scale-105'
+              : 'hover:bg-gray-100 dark:hover:bg-dark-300'
           )}
         >
           <svg
-            className="w-3 h-3 text-gray-800"
+            className="w-3 h-3 text-gray-800 dark:text-light-50"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -38,14 +39,14 @@ export const ThemeToggle = memo(() => {
         <button
           onClick={() => handleModeChange('system')}
           className={clsx(
-            'w-5 h-5 rounded-full flex items-center justify-center transition-all duration-200 mx-1',
-            currentMode === 'system'
+            'w-5 h-5 rounded-full flex items-center justify-center transition-all duration-200 mx-1 cursor-pointer',
+            mode === 'system'
               ? 'bg-white shadow-sm transform scale-105'
-              : 'hover:bg-gray-100'
+              : 'hover:bg-gray-100 dark:hover:bg-dark-300'
           )}
         >
           <svg
-            className="w-3 h-3 text-gray-800"
+            className="w-3 h-3 text-gray-800 dark:text-light-50"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -60,12 +61,14 @@ export const ThemeToggle = memo(() => {
         <button
           onClick={() => handleModeChange('dark')}
           className={clsx(
-            'w-5 h-5 rounded-full flex items-center justify-center transition-all duration-200',
-            currentMode === 'dark' ? 'bg-white shadow-sm transform scale-105' : 'hover:bg-gray-100'
+            'w-5 h-5 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer',
+            mode === 'dark'
+              ? 'bg-dark-100 shadow-sm transform scale-105'
+              : 'hover:bg-gray-100 dark:hover:bg-dark-300'
           )}
         >
           <svg
-            className="w-3 h-3 text-gray-800"
+            className="w-3 h-3 text-gray-800 dark:text-light-50"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

@@ -1,7 +1,7 @@
 import { memo } from 'react';
 
 export const Tag = memo((props: { text: string; color?: string; className?: string }) => {
-  const { text, className = '', color = 'bg-gray-200' } = props;
+  const { text, className = '', color = 'bg-gray-200 dark:bg-gray-800' } = props;
 
   return (
     <span

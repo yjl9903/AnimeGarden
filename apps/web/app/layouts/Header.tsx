@@ -58,15 +58,18 @@ const AnimeDropdown = memo(() => {
 
   return (
     <Dropdown
-      className="nav-animes pointer-events-auto [&:hover>a]:bg-zinc-100!"
+      className="nav-animes pointer-events-auto [&:hover>a]:bg-zinc-100! dark:[&:hover>a]:bg-zinc-800!"
       trigger={
         <NavLink to="/anime" className="rounded-md p-2">
           动画
         </NavLink>
       }
     >
-      <DropdownMenu className="mt-[-10px] w-[80px] max-h-[600px] lt-sm:max-h-[360px] rounded-md shadow-box divide-y bg-light-100 leading-normal">
-        <NavLink to="/anime" className="block px2 py1 rounded-t-md hover:bg-basis-100">
+      <DropdownMenu className="mt-[-10px] w-[80px] max-h-[600px] lt-sm:max-h-[360px] rounded-md shadow-box divide-y bg-light-100 dark:bg-dark-100 leading-normal">
+        <NavLink
+          to="/anime"
+          className="block px2 py1 rounded-t-md hover:bg-basis-100 dark:hover:bg-basis-800"
+        >
           周历
         </NavLink>
         {calendar
@@ -74,7 +77,7 @@ const AnimeDropdown = memo(() => {
           .map((day, index) => (
             <DropdownSubMenuItem
               key={day.text}
-              className="[&:hover>.trigger]:bg-basis-100!"
+              className="[&:hover>.trigger]:bg-basis-100! dark:[&:hover>.trigger]:bg-basis-800!"
               trigger={
                 <div
                   className={`trigger px2 py1 cursor-pointer ${day.index === 7 && 'rounded-b-md'}`}
@@ -85,7 +88,7 @@ const AnimeDropdown = memo(() => {
             >
               <DropdownSubMenu className="pt-[1px] pl-[6px] pb-[2px] pr-[2px]">
                 <div
-                  className={`min-h-[100px] max-h-[min(500px,calc(100vh-120px-var(--offset)))] lt-sm:max-h-[360px] rounded-md shadow-box bg-light-100 divide-y overflow-y-auto overscroll-none`}
+                  className={`min-h-[100px] max-h-[min(500px,calc(100vh-120px-var(--offset)))] lt-sm:max-h-[360px] rounded-md shadow-box bg-light-100 dark:bg-dark-100 divide-y overflow-y-auto overscroll-none`}
                   style={{ '--offset': `${index * 33}px` }}
                 >
                   {day.bangumis.map((bgm, index) => (
@@ -93,7 +96,7 @@ const AnimeDropdown = memo(() => {
                       to={getSubjectURL(bgm)}
                       key={bgm.id}
                       className={clsx(
-                        'block w-[360px] px2 py1 hover:bg-basis-100 whitespace-nowrap overflow-hidden text-ellipsis',
+                        'block w-[360px] max-w-[calc(100vw-144px)] px2 py1 hover:bg-basis-100 dark:hover:bg-basis-800 whitespace-nowrap overflow-hidden text-ellipsis',
                         index === 0 && 'rounded-t-md',
                         index === day.bangumis.length - 1 && 'rounded-b-md'
                       )}
@@ -132,19 +135,19 @@ const FansubsDropdown = memo(() => {
 
   return (
     <Dropdown
-      className="nav-fansubs pointer-events-auto [&:hover>a]:bg-zinc-100!"
+      className="nav-fansubs pointer-events-auto [&:hover>a]:bg-zinc-100! dark:[&:hover>a]:bg-zinc-800!"
       trigger={
         <NavLink to={`/resources/1?fansub=${fansubs[0]}`} className="rounded-md p-2">
           字幕组
         </NavLink>
       }
     >
-      <DropdownMenu className="mt-[-10px] w-[160px] max-h-[494px] overflow-y-auto rounded-md shadow-box divide-y bg-light-100 leading-normal">
+      <DropdownMenu className="mt-[-10px] w-[160px] max-h-[494px] overflow-y-auto rounded-md shadow-box divide-y bg-light-100 dark:bg-dark-100 leading-normal">
         {fansubs.map((fansub) => (
           <NavLink
             key={fansub}
             to={`/resources/1?fansub=${fansub}`}
-            className="block px2 py1 hover:bg-basis-100 whitespace-nowrap overflow-hidden text-ellipsis"
+            className="block px2 py1 hover:bg-basis-100 dark:hover:bg-basis-800 whitespace-nowrap overflow-hidden text-ellipsis"
           >
             {fansub}
           </NavLink>
@@ -157,14 +160,14 @@ const FansubsDropdown = memo(() => {
 const TypesDropdown = memo(() => {
   return (
     <Dropdown
-      className="nav-types pointer-events-auto [&:hover>a]:bg-zinc-100!"
+      className="nav-types pointer-events-auto [&:hover>a]:bg-zinc-100! dark:[&:hover>a]:bg-zinc-800!"
       trigger={
         <NavLink to={`/resources/1`} className="rounded-md p-2">
           资源
         </NavLink>
       }
     >
-      <DropdownMenu className="mt-[-10px] w-max overflow-y-auto rounded-md shadow-box divide-y bg-light-100 leading-normal">
+      <DropdownMenu className="mt-[-10px] w-max overflow-y-auto rounded-md shadow-box divide-y bg-light-100 dark:bg-dark-100 leading-normal">
         {types.map((type) => (
           <NavLink
             key={type}
@@ -174,7 +177,7 @@ const TypesDropdown = memo(() => {
                 : `/resources/1?type=${type}`
             }
             className={clsx(
-              'flex items-center gap-2 px2 py1 hover:bg-basis-100',
+              'flex items-center gap-2 px2 py1 hover:bg-basis-100 dark:hover:bg-basis-800',
               DisplayTypeColor[type]
             )}
           >

@@ -8,7 +8,7 @@ import { type FullBangumiItem, getSubjectDisplayName, getSubjectURL } from '~/ut
 
 export function SubjectCard({ subject }: { subject: Jsonify<FullBangumiItem> }) {
   return (
-    <div className="mb-12 p-4 w-full bg-zinc-50 drop-shadow rounded-md flex gap-8 lt-md:flex-col">
+    <div className="mb-12 p-4 w-full bg-zinc-50 dark:bg-zinc-800 drop-shadow rounded-md flex gap-8 lt-md:flex-col">
       {subject.bangumi?.images && (
         <div className="w-[300px] flex-shrink-0 lt-md:w-full">
           <img
@@ -106,7 +106,7 @@ function Tag({
   return (
     <span
       className={clsx(
-        'text-sm bg-zinc-200 hover:bg-zinc-300 text-base-800 px-2 py-1 rounded-md inline-flex items-center',
+        'text-sm bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-600 text-base-800 px-2 py-1 rounded-md inline-flex items-center',
         className
       )}
     >

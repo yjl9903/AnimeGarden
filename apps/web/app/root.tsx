@@ -1,7 +1,7 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteError } from '@remix-run/react';
-import { Provider } from 'jotai';
 import { kebabCase } from 'scule';
 import { useEffect } from 'react';
+import { Provider, useAtom, useAtomValue } from 'jotai';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteError } from '@remix-run/react';
 
 import { Toaster } from '~/components/ui/sonner';
 import { NavHeight, SearchTop, HeroHeight } from '~/layouts/Layout';
@@ -9,7 +9,6 @@ import { NavHeight, SearchTop, HeroHeight } from '~/layouts/Layout';
 import Tags from '~analytics/scripts';
 
 import '@onekuma/preset.css';
-import '@onekuma/reset/tailwind.css';
 import 'virtual:uno.css';
 
 import './styles/main.css';
@@ -65,7 +64,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body
-        className="font-sans relative"
+        className={`font-sans relative`}
         style={{
           '--nav-height': `${NavHeight}px`,
           '--search-top': `${SearchTop}px`,

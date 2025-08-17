@@ -1,7 +1,7 @@
 /* Background */
-/* html {
-  @apply: bg-[#fef8f7];
-} */
+.bg-hero {
+  @apply: bg-[#fef8f7] dark:bg-[#090201];
+}
 
 /* Hero */
 #hero-search {
@@ -32,7 +32,7 @@
 
 #hero-placeholder.fix-hero {
   @apply: block! fixed top-0 inset-0
-  @apply: transform-gpu [-webkit-backdrop-filter:saturate(180%)_blur(20px)] [backdrop-filter:saturate(180%)_blur(20px)] [backface-visibility:hidden] bg-[#fef8f7]/80 [border-bottom:1px_solid_rgb(187_187_187_/_20%)];
+  @apply: transform-gpu [-webkit-backdrop-filter:saturate(180%)_blur(20px)] [backdrop-filter:saturate(180%)_blur(20px)] [backface-visibility:hidden] bg-[#fef8f7]/80 dark:bg-[#090201]/80 [border-bottom:1px_solid_rgb(187_187_187_/_20%)];
   @apply: transition-all;
 }
 

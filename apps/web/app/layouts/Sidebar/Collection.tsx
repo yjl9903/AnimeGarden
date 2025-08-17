@@ -298,7 +298,7 @@ const CollectionItemFilter = memo((props: { item: CollectionItem }) => {
         <div>
           <span className="font-bold mr2 select-none">包含关键词</span>
           {display.keywords.map((text, idx) => (
-            <span key={text}>
+            <span key={idx}>
               {idx > 0 && <span className="ml2 mr2 text-base-400 select-none">&</span>}
               <span className="">{text}</span>
             </span>
@@ -308,8 +308,8 @@ const CollectionItemFilter = memo((props: { item: CollectionItem }) => {
       {display.exclude && display.exclude.length > 0 && (
         <div>
           <span className="font-bold mr2 select-none">排除关键词</span>
-          {display.exclude.map((text) => (
-            <span key={text}>{text}</span>
+          {display.exclude.map((text, idx) => (
+            <span key={idx}>{text}</span>
           ))}
         </div>
       )}

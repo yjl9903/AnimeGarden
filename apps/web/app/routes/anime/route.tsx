@@ -1,4 +1,4 @@
-import { useLoaderData } from '@remix-run/react';
+import { NavLink, useLoaderData } from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare';
 
 import Layout from '~/layouts/Layout';
@@ -78,7 +78,9 @@ export default function Index() {
   }, []);
 
   const scrollLeftHandler = (ev: React.MouseEvent<HTMLDivElement>) => {
-    const container = ev.currentTarget.closest('.bgm-list') as HTMLDivElement;
+    const container = ev.currentTarget
+      .closest('.bgm-list-wrapper')
+      ?.querySelector('.bgm-list') as HTMLDivElement;
     if (!container) return;
     if (container.scrollLeft - 500 < 51) {
       container.scrollBy({ left: -550, behavior: 'smooth' });
@@ -88,7 +90,9 @@ export default function Index() {
   };
 
   const scrollRightHandler = (ev: React.MouseEvent<HTMLDivElement>) => {
-    const container = ev.currentTarget.closest('.bgm-list') as HTMLDivElement;
+    const container = ev.currentTarget
+      .closest('.bgm-list-wrapper')
+      ?.querySelector('.bgm-list') as HTMLDivElement;
     if (!container) return;
     if (
       Math.abs(container.scrollWidth - container.clientWidth - (container.scrollLeft + 500)) < 50
@@ -104,7 +108,7 @@ export default function Index() {
       <div className="w-full pt-13 pb-24 space-y-8">
         {calendar.map((cal) => (
           <div
-            className="bgm-weekday w-full pt-4 bg-gray-100 rounded-md"
+            className="bgm-weekday w-full pt-4 bg-gray-100 dark:bg-gray-800 rounded-md"
             id={`星期${cal.text}`}
             key={cal.index}
           >
@@ -120,7 +124,7 @@ export default function Index() {
                 onScroll={scrollHandler[cal.index - 1]}
               >
                 {cal.bangumis.map((bgm: any) => (
-                  <a href={getSubjectURL(bgm)} className="block w-max" key={bgm.id}>
+                  <NavLink to={getSubjectURL(bgm)} className="block w-max" key={bgm.id}>
                     <div className="w-150px h-225px flex items-center select-none">
                       <img
                         src={getPosterImage(bgm)}
@@ -133,7 +137,7 @@ export default function Index() {
                         {getSubjectDisplayName(bgm)}
                       </span>
                     </div>
-                  </a>
+                  </NavLink>
                 ))}
               </div>
 
@@ -141,7 +145,7 @@ export default function Index() {
                 className="scroll-left absolute top-[50%] translate-y-[-100%] left-7 select-none cursor-pointer"
                 onClick={scrollLeftHandler}
               >
-                <div className="h-[40px] w-[40px] rounded-full bg-gray-300 op-90 flex items-center justify-center">
+                <div className="h-[40px] w-[40px] rounded-full bg-gray-300 dark:bg-gray-700 op-90 flex items-center justify-center">
                   <i className="i-carbon-arrow-left text-2xl font-bold" />
                 </div>
               </div>
@@ -149,7 +153,7 @@ export default function Index() {
                 className="scroll-right absolute top-[50%] translate-y-[-100%] right-7 select-none cursor-pointer"
                 onClick={scrollRightHandler}
               >
-                <div className="h-[40px] w-[40px] rounded-full bg-gray-300 op-90 flex items-center justify-center">
+                <div className="h-[40px] w-[40px] rounded-full bg-gray-300 dark:bg-gray-700 op-90 flex items-center justify-center">
                   <i className="i-carbon-arrow-right text-2xl font-bold" />
                 </div>
               </div>

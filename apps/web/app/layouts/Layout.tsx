@@ -1,7 +1,9 @@
 import clsx from 'clsx';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { NavLink } from '@remix-run/react';
 import { useAtomValue } from 'jotai';
+
+import { currentThemeAtom } from '~/states';
 
 import Search from './Search';
 import { Footer } from './Footer';
@@ -31,6 +33,11 @@ export interface LayoutProps {
 export default function Layout(props: LayoutProps) {
   const { timestamp, feedURL, heading } = props;
   const isOpen = useAtomValue(isOpenSidebar);
+  const theme = useAtomValue(currentThemeAtom);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+  }, [theme]);
 
   return (
     <>
@@ -62,7 +69,7 @@ const Hero = memo((props: { feedURL?: string; heading?: boolean }) => {
       <Header feedURL={props.feedURL}></Header>
       <div
         id="hero-banner"
-        className="w-full h-$hero-height bg-[#fef8f7]"
+        className="w-full h-$hero-height bg-hero"
         suppressHydrationWarning={true}
       >
         {props.heading === false ? (
