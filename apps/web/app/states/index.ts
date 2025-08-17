@@ -1,3 +1,5 @@
+export * from './theme';
+
 export * from './fansubs';
 
 export * from './search';

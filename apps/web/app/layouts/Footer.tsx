@@ -5,6 +5,7 @@ import { NavLink } from '@remix-run/react';
 
 import { fetchTimestamp, formatChinaTime, getFeedURL, getOpenFeedTrackEvent } from '~/utils';
 
+import { ThemeToggle } from './ThemeToggle';
 import { isOpenSidebar } from './Sidebar';
 
 export interface FooterProps {
@@ -129,10 +130,10 @@ export const Footer = memo((props: FooterProps) => {
               监控
             </a>
           </div>
-          <div className="flex lt-lg:justify-center mt-8">
-            <div className="">
+          <div className="flex justify-between items-center mt-8">
+            <div>
               <span>
-                © 2022-2025{' '}
+                © 2022{' '}
                 <a href="https://github.com/animegarden" target="_blank">
                   Anime Space
                 </a>
@@ -149,6 +150,7 @@ export const Footer = memo((props: FooterProps) => {
                 <a href="/sitemap-index.xml">站点地图</a>
               </span>
             </div>
+            <ThemeToggle />
           </div>
         </div>
       </div>
