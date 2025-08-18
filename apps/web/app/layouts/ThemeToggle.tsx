@@ -3,6 +3,7 @@ import { memo } from 'react';
 import { useAtom } from 'jotai';
 import { ClientOnly } from 'remix-utils/client-only';
 
+import { track } from '~/utils';
 import { themeModeAtom, type ThemeMode } from '~/states';
 
 export const ThemeToggle = memo(() => {
@@ -10,6 +11,7 @@ export const ThemeToggle = memo(() => {
 
   const handleModeChange = (mode: ThemeMode) => {
     setMode(mode);
+    track(`switch-color-mode-${mode}`);
   };
 
   return (
