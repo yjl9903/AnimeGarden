@@ -7,11 +7,11 @@ GET https://api.animes.garden/resources?tracker=true
 Content-Type: application/json
 
 ### Get the resource detail
-GET https://api.animes.garden/resource/dmhy/674983_LoliHouse_Oshi_no_Ko_-_15_WebRip_1080p_HEVC-10bit_AAC.html
+GET https://api.animes.garden/detail/dmhy/674983
 Content-Type: application/json
 
 ### Get the resource detail by id
-GET https://api.animes.garden/resource/dmhy/674983
+GET https://api.animes.garden/detail/dmhy/674983
 Content-Type: application/json
 
 ### List the second page of resources
@@ -23,11 +23,11 @@ GET https://api.animes.garden/resources?page=2&pageSize=20
 Content-Type: application/json
 
 ### List resources with more filter
-GET https://api.animes.garden/resources?type=動畫&fansubId=803&publisherId=727168&after=2023-04-16T13:00:00.000Z&before=1681653600000
+GET https://api.animes.garden/resources?type=动画&fansub=LoliHouse&publisher=LoliHouse&after=2023-04-16T13:00:00.000Z&before=1681653600000
 Content-Type: application/json
 
 ### List resources from specific fansubs
-GET https://api.animes.garden/resources?fansubId=[833,619]&fansubName="爱恋字幕社"
+GET https://api.animes.garden/resources?fansub=ANi&fansub=爱恋字幕社
 Content-Type: application/json
 
 ### Search resources
@@ -38,8 +38,8 @@ Content-Type: application/json
   "include": ["機動戰士鋼彈 水星的魔女"]
 }
 
-### Only search 動畫
-GET https://api.animes.garden/resources?type=動畫
+### Only search type 动画
+GET https://api.animes.garden/resources?type=动画
 Content-Type: application/json
 
 {
@@ -56,9 +56,9 @@ Content-Type: application/json
 }
 
 ### Search resources with complicated search
-### Resource must has type "動畫"
+### Resource must has type "动画"
 ### Resource title must contains one of ("机动战士高达" or "水星的魔女") and all the keywords ("第二季" and "ANi")
-GET https://api.animes.garden/resources?type=動畫
+GET https://api.animes.garden/resources?type=动画
 Cache-Control: no-store
 Content-Type: application/json
 
@@ -74,7 +74,7 @@ Content-Type: application/json
 }
 
 ### Search resources with full text index
-GET https://api.animes.garden/resources?type=動畫
+GET https://api.animes.garden/resources?type=动画
 Cache-Control: no-cache
 Content-Type: application/json
 
