@@ -1,5 +1,3 @@
-
-
 # /// script
 # dependencies = [
 #   "requests",
