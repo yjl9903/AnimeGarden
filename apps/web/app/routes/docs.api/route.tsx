@@ -15,8 +15,8 @@ spec.info.license.name = license;
 
 export const meta: MetaFunction = ({ location }) => {
   return [
-    { title: 'API 文档 | Anime Garden 動漫花園镜像站 动画 BT 资源聚合站' },
-    { name: 'description', content: 'Anime Garden 動漫花園镜像站 动画 BT 资源聚合站' },
+    { title: 'API 文档 | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站' },
+    { name: 'description', content: 'Anime Garden 动画 BT 资源开放接口文档' },
     { tagName: 'link', rel: 'canonical', href: getCanonicalURL('/docs/api') }
   ];
 };

@@ -120,7 +120,7 @@ export const meta: MetaFunction<typeof loader> = ({ location, data, params }) =>
     {
       title: resourceTitle
         ? truncate(resourceTitle, 70)
-        : '资源 | Anime Garden 動漫花園資源網第三方镜像站'
+        : '资源详情 | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站'
     },
     {
       name: 'description',

@@ -17,10 +17,10 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 
 export const meta: MetaFunction = () => {
   return [
-    { title: '动画周历 | Anime Garden 動漫花園資源網第三方镜像站' },
+    { title: '动画周历 | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站' },
     {
       name: 'description',
-      content: '动画每周播出时间表, 动画周历, Anime Garden 動漫花園資源網第三方镜像站'
+      content: '动画每周播出时间表, 动画周历, Anime Garden 動漫花園資源網镜像站, 动漫花园动画 BT 资源聚合站'
     },
     { tagName: 'link', rel: 'canonical', href: getCanonicalURL('/anime') }
   ];

@@ -100,7 +100,7 @@ export const meta: MetaFunction<typeof loader> = ({ location, data, params }) =>
     {
       title:
         (name ? name + ' 最新资源' : generateTitleFromFilter(data?.filter ?? {})) +
-        ' | Anime Garden 動漫花園資源網第三方镜像站'
+        ' | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站'
     },
     {
       name: 'description',
@@ -108,8 +108,8 @@ export const meta: MetaFunction<typeof loader> = ({ location, data, params }) =>
         name && subject?.summary
           ? `${name}: ${truncate(subject.summary.replace(/\n/g, ' '), 120)}`
           : name
-            ? `${name} | Anime Garden 動漫花園資源網第三方镜像站`
-            : `最新动画资源 | Anime Garden 動漫花園資源網第三方镜像站`
+            ? `${name} | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站`
+            : `最新动画资源 | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站`
     },
     {
       tagName: 'link',

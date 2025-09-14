@@ -6,8 +6,8 @@ import { fetchTimestamp, getCanonicalURL } from '~/utils';
 
 export const meta: MetaFunction = () => {
   return [
-    { title: '关于 | Anime Garden 動漫花園镜像站 动画 BT 资源聚合站' },
-    { name: 'description', content: 'Anime Garden 動漫花園镜像站 动画 BT 资源聚合站' },
+    { title: '关于 | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站' },
+    { name: 'description', content: 'Anime Garden 動漫花園資源網镜像站, 动漫花园动画 BT 资源聚合站' },
     { tagName: 'link', rel: 'canonical', href: getCanonicalURL('/about') }
   ];
 };
