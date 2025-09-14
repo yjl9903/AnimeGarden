@@ -30,6 +30,9 @@ app.use(
   })
 );
 
+app.all('/health', cors(), (c) => {
+  return c.json({ status: 'OK' });
+});
 app.all('/api/*', cors(), api());
 app.all('/feed.xml', cors(), feed());
 app.all('/collection/*/feed.xml', cors(), feed());

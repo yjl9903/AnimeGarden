@@ -41,15 +41,28 @@ function registerHono(sys: System, app: Hono) {
     })
   );
 
-  app.use('*', async (_ctx, next) => {
-    await sys.initialize();
-    await next();
+  app.use('*', async (ctx, next) => {
+    if (ctx.req.url === '/health') {
+      await next();
+    } else {
+      await sys.initialize();
+      await next();
+    }
   });
 
   app.get('/', async (c) => {
     const timestamp = sys.modules.providers.timestamp;
     return c.json({
-      message: 'Anime Garden 動漫花園 镜像站 / 动画 BT 资源聚合站',
+      status: 'OK',
+      timestamp: new Date(timestamp).toISOString(),
+      providers: Object.fromEntries(sys.modules.providers.providers)
+    });
+  });
+
+  app.get('/health', async (c) => {
+    const timestamp = sys.modules.providers.timestamp;
+    return c.json({
+      status: 'OK',
       timestamp: new Date(timestamp).toISOString(),
       providers: Object.fromEntries(sys.modules.providers.providers)
     });

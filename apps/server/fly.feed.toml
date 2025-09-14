@@ -29,6 +29,13 @@ processes = ['server']
 type = 'requests'
 soft_limit = 10
 
+[[http_service.checks]]
+grace_period = "30s"
+interval = "60s"
+timeout = "10s"
+method = "GET"
+path = "/health"
+
 [[restart]]
 policy = 'on-failure'
 retries = 10
