@@ -37,12 +37,16 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const { filter: parsedFilter, pagination: parsedPagination } = parseURLSearch(url.searchParams, {
     pageSize: 80
   });
-  const { ok, resources, pagination, filter, timestamp } = await fetchResources({
+  const { ok, resources, pagination, filter, timestamp, error } = await fetchResources({
     ...parsedFilter,
     ...parsedPagination,
     page: +(params.page ?? '1'),
     pageSize: 30
   });
+
+  if (error) {
+    console.error('[ERROR]', error);
+  }
 
   return {
     ok,

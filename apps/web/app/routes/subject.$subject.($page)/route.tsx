@@ -40,13 +40,17 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   const subjectId = +params.subject!;
   const subject = getSubjectById(subjectId) as FullBangumiItem;
 
-  const { ok, resources, pagination, filter, timestamp } = await fetchResources({
+  const { ok, resources, pagination, filter, timestamp, error } = await fetchResources({
     subject: subjectId,
     subjects: undefined,
     page: 1,
     pageSize: 1000,
     types: ['动画', '合集']
   });
+
+  if (error) {
+    console.error('[ERROR]', error);
+  }
 
   return {
     ok,

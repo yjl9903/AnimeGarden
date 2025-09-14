@@ -6,6 +6,7 @@ import CarbonPlay from '~icons/carbon/play';
 import CarbonDownload from '~icons/carbon/download';
 
 import { memo } from 'react';
+import { useHydrated } from 'remix-utils/use-hydrated';
 
 import type { Resource, Jsonify } from '@animegarden/client';
 
@@ -137,6 +138,8 @@ export const ResourceItem = memo(
     resource: Jsonify<Resource<{ tracker: true }>>;
     columns?: ResourcesTableProps['columns'];
   }) => {
+    const hydrated = useHydrated();
+
     const location = useLocation();
     const { pathname, resource: r } = props;
     const { fansub: isDisplayFansub = true } = props.columns ?? {};
@@ -198,7 +201,7 @@ export const ResourceItem = memo(
                   发布于 {formatChinaTime(new Date(r.createdAt))}
                 </NavLink>
                 <a
-                  href={r.magnet + r.tracker}
+                  href={r.magnet + (hydrated ? r.tracker : '')}
                   {...getDownloadTrackEvent(r.provider, r.providerId)}
                   data-resource-title={r.title}
                   className="text-link-secondary-hover-base text-xs text-zinc-400"
@@ -261,7 +264,7 @@ export const ResourceItem = memo(
               <CarbonPlay />
             </a>
             <a
-              href={r.magnet + r.tracker}
+              href={r.magnet + (hydrated ? r.tracker : '')}
               {...getPikPakTrackEvent(r.provider, r.providerId)}
               data-resource-title={r.title}
               className="download text-xl text-base-500 hover:text-base-900"

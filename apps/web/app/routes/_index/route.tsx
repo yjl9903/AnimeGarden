@@ -12,12 +12,16 @@ import { Error } from '../resources.($page)/Error';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   try {
-    const { ok, resources, timestamp } = await fetchResources({
+    const { ok, resources, timestamp, error } = await fetchResources({
       page: 1,
       pageSize: 30,
       types: ['动画', '合集'],
       preset: 'bangumi'
     });
+
+    if (error) {
+      console.error('[ERROR]', error);
+    }
 
     return { ok, resources: resources as Resource<{ tracker: true }>[], timestamp };
   } catch (error) {

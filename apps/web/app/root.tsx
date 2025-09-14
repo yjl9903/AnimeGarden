@@ -21,7 +21,7 @@ import scrollHandler from './layouts/global.ts?inline-ts';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" suppressHydrationWarning={true}>
       <head>
         <meta charSet="utf-8" />
         <meta
