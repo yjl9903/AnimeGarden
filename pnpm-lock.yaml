@@ -51,11 +51,11 @@ importers:
         specifier: 2.5.6
         version: 2.5.6
       typescript:
-        specifier: 5.8.3
-        version: 5.8.3
+        specifier: 5.9.2
+        version: 5.9.2
       unbuild:
         specifier: 3.6.1
-        version: 3.6.1(typescript@5.8.3)(vue@3.5.17(typescript@5.8.3))
+        version: 3.6.1(typescript@5.9.2)(vue@3.5.17(typescript@5.9.2))
       undici:
         specifier: 7.12.0
         version: 7.12.0
@@ -203,19 +203,19 @@ importers:
         version: 1.2.8(@types/react-dom@19.1.9(@types/react@19.1.13))(@types/react@19.1.13)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@remix-run/cloudflare':
         specifier: 2.16.8
-        version: 2.16.8(@cloudflare/workers-types@4.20250722.0)(typescript@5.8.3)
+        version: 2.16.8(@cloudflare/workers-types@4.20250722.0)(typescript@5.9.2)
       '@remix-run/node':
         specifier: 2.16.8
-        version: 2.16.8(typescript@5.8.3)
+        version: 2.16.8(typescript@5.9.2)
       '@remix-run/react':
         specifier: 2.16.8
-        version: 2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)
+        version: 2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
       '@remix-run/serve':
         specifier: 2.16.8
-        version: 2.16.8(typescript@5.8.3)
+        version: 2.16.8(typescript@5.9.2)
       '@remix-run/server-runtime':
         specifier: 2.16.8
-        version: 2.16.8(typescript@5.8.3)
+        version: 2.16.8(typescript@5.9.2)
       anipar:
         specifier: workspace:*
         version: link:../../packages/anipar
@@ -324,13 +324,13 @@ importers:
         version: 1.2.4
       '@remix-run/dev':
         specifier: 2.16.8
-        version: 2.16.8(@remix-run/react@2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.8.3)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.26.0(@cloudflare/workers-types@4.20250722.0))(yaml@2.8.1)
+        version: 2.16.8(@remix-run/react@2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.16.8(typescript@5.9.2))(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.26.0(@cloudflare/workers-types@4.20250722.0))(yaml@2.8.1)
       '@svgr/core':
         specifier: 8.1.0
-        version: 8.1.0(typescript@5.8.3)
+        version: 8.1.0(typescript@5.9.2)
       '@svgr/plugin-jsx':
         specifier: 8.1.0
-        version: 8.1.0(@svgr/core@8.1.0(typescript@5.8.3))
+        version: 8.1.0(@svgr/core@8.1.0(typescript@5.9.2))
       '@types/react':
         specifier: 19.1.13
         version: 19.1.13
@@ -342,7 +342,7 @@ importers:
         version: 5.18.0
       '@vite-pwa/remix':
         specifier: 0.2.0
-        version: 0.2.0(@remix-run/dev@2.16.8(@remix-run/react@2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.8.3)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.26.0(@cloudflare/workers-types@4.20250722.0))(yaml@2.8.1))(@vite-pwa/assets-generator@1.0.1)(vite-plugin-pwa@1.0.3(@vite-pwa/assets-generator@1.0.1)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(workbox-build@7.3.0)(workbox-window@7.3.0))
+        version: 0.2.0(@remix-run/dev@2.16.8(@remix-run/react@2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.16.8(typescript@5.9.2))(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.26.0(@cloudflare/workers-types@4.20250722.0))(yaml@2.8.1))(@vite-pwa/assets-generator@1.0.1)(vite-plugin-pwa@1.0.3(@vite-pwa/assets-generator@1.0.1)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(workbox-build@7.3.0)(workbox-window@7.3.0))
       autoprefixer:
         specifier: 10.4.21
         version: 10.4.21(postcss@8.5.6)
@@ -354,22 +354,22 @@ importers:
         version: 3.4.17
       unocss:
         specifier: 66.3.3
-        version: 66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3))
+        version: 66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2))
       unocss-preset-animations:
         specifier: 1.2.1
-        version: 1.2.1(@unocss/preset-wind3@66.3.3)(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3)))
+        version: 1.2.1(@unocss/preset-wind3@66.3.3)(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2)))
       unocss-preset-flowind:
         specifier: 0.0.6
-        version: 0.0.6(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3)))
+        version: 0.0.6(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2)))
       unocss-preset-shadcn:
         specifier: 0.5.0
-        version: 0.5.0(unocss-preset-animations@1.2.1(@unocss/preset-wind3@66.3.3)(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3))))(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3)))
+        version: 0.5.0(unocss-preset-animations@1.2.1(@unocss/preset-wind3@66.3.3)(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2))))(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2)))
       unplugin-analytics:
         specifier: 0.0.12
         version: 0.0.12(esbuild@0.17.6)(rollup@2.79.2)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))
       unplugin-icons:
         specifier: 22.1.0
-        version: 22.1.0(@svgr/core@8.1.0(typescript@5.8.3))(@vue/compiler-sfc@3.5.17)
+        version: 22.1.0(@svgr/core@8.1.0(typescript@5.9.2))(@vue/compiler-sfc@3.5.17)
       unplugin-info:
         specifier: 1.2.4
         version: 1.2.4(esbuild@0.17.6)(rollup@2.79.2)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))
@@ -381,7 +381,7 @@ importers:
         version: 1.0.3(@vite-pwa/assets-generator@1.0.1)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(workbox-build@7.3.0)(workbox-window@7.3.0)
       vite-tsconfig-paths:
         specifier: 5.1.4
-        version: 5.1.4(typescript@5.8.3)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))
+        version: 5.1.4(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))
 
   apps/worker:
     dependencies:
@@ -8204,8 +8204,8 @@ packages:
   types-ramda@0.30.1:
     resolution: {integrity: sha512-1HTsf5/QVRmLzcGfldPFvkVsAdi1db1BBKzi7iW3KBUlOICg/nKnFS+jGqDJS3YD8VsWbAh7JiHeBvbsw8RPxA==}
 
-  typescript@5.8.3:
-    resolution: {integrity: sha512-p1diW6TqL9L07nNxvRMM7hMMw4c5XOo/1ibL4aAIGmSAt9slTE1Xgw5KWuof2uTOvCg9BY7ZRi+GaF+7sfgPeQ==}
+  typescript@5.9.2:
+    resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
     engines: {node: '>=14.17'}
     hasBin: true
 
@@ -11574,15 +11574,15 @@ snapshots:
 
   '@radix-ui/rect@1.1.1': {}
 
-  '@remix-run/cloudflare@2.16.8(@cloudflare/workers-types@4.20250722.0)(typescript@5.8.3)':
+  '@remix-run/cloudflare@2.16.8(@cloudflare/workers-types@4.20250722.0)(typescript@5.9.2)':
     dependencies:
       '@cloudflare/kv-asset-handler': 0.1.3
       '@cloudflare/workers-types': 4.20250722.0
-      '@remix-run/server-runtime': 2.16.8(typescript@5.8.3)
+      '@remix-run/server-runtime': 2.16.8(typescript@5.9.2)
     optionalDependencies:
-      typescript: 5.8.3
+      typescript: 5.9.2
 
-  '@remix-run/dev@2.16.8(@remix-run/react@2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.8.3)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.26.0(@cloudflare/workers-types@4.20250722.0))(yaml@2.8.1)':
+  '@remix-run/dev@2.16.8(@remix-run/react@2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.16.8(typescript@5.9.2))(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.26.0(@cloudflare/workers-types@4.20250722.0))(yaml@2.8.1)':
     dependencies:
       '@babel/core': 7.28.0
       '@babel/generator': 7.28.0
@@ -11594,10 +11594,10 @@ snapshots:
       '@babel/types': 7.28.1
       '@mdx-js/mdx': 2.3.0
       '@npmcli/package-json': 4.0.1
-      '@remix-run/node': 2.16.8(typescript@5.8.3)
-      '@remix-run/react': 2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)
+      '@remix-run/node': 2.16.8(typescript@5.9.2)
+      '@remix-run/react': 2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
       '@remix-run/router': 1.23.0
-      '@remix-run/server-runtime': 2.16.8(typescript@5.8.3)
+      '@remix-run/server-runtime': 2.16.8(typescript@5.9.2)
       '@types/mdx': 2.0.13
       '@vanilla-extract/integration': 6.5.0(@types/node@24.5.0)(terser@5.43.1)
       arg: 5.0.2
@@ -11638,12 +11638,12 @@ snapshots:
       set-cookie-parser: 2.7.1
       tar-fs: 2.1.3
       tsconfig-paths: 4.2.0
-      valibot: 0.41.0(typescript@5.8.3)
+      valibot: 0.41.0(typescript@5.9.2)
       vite-node: 3.2.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)
       ws: 7.5.10
     optionalDependencies:
-      '@remix-run/serve': 2.16.8(typescript@5.8.3)
-      typescript: 5.8.3
+      '@remix-run/serve': 2.16.8(typescript@5.9.2)
+      typescript: 5.9.2
       vite: 7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)
       wrangler: 4.26.0(@cloudflare/workers-types@4.20250722.0)
     transitivePeerDependencies:
@@ -11665,16 +11665,16 @@ snapshots:
       - utf-8-validate
       - yaml
 
-  '@remix-run/express@2.16.8(express@4.21.2)(typescript@5.8.3)':
+  '@remix-run/express@2.16.8(express@4.21.2)(typescript@5.9.2)':
     dependencies:
-      '@remix-run/node': 2.16.8(typescript@5.8.3)
+      '@remix-run/node': 2.16.8(typescript@5.9.2)
       express: 4.21.2
     optionalDependencies:
-      typescript: 5.8.3
+      typescript: 5.9.2
 
-  '@remix-run/node@2.16.8(typescript@5.8.3)':
+  '@remix-run/node@2.16.8(typescript@5.9.2)':
     dependencies:
-      '@remix-run/server-runtime': 2.16.8(typescript@5.8.3)
+      '@remix-run/server-runtime': 2.16.8(typescript@5.9.2)
       '@remix-run/web-fetch': 4.4.2
       '@web3-storage/multipart-parser': 1.0.0
       cookie-signature: 1.2.2
@@ -11682,26 +11682,26 @@ snapshots:
       stream-slice: 0.1.2
       undici: 6.21.3
     optionalDependencies:
-      typescript: 5.8.3
+      typescript: 5.9.2
 
-  '@remix-run/react@2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)':
+  '@remix-run/react@2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)':
     dependencies:
       '@remix-run/router': 1.23.0
-      '@remix-run/server-runtime': 2.16.8(typescript@5.8.3)
+      '@remix-run/server-runtime': 2.16.8(typescript@5.9.2)
       react: 19.1.1
       react-dom: 19.1.1(react@19.1.1)
       react-router: 6.30.0(react@19.1.1)
       react-router-dom: 6.30.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       turbo-stream: 2.4.1
     optionalDependencies:
-      typescript: 5.8.3
+      typescript: 5.9.2
 
   '@remix-run/router@1.23.0': {}
 
-  '@remix-run/serve@2.16.8(typescript@5.8.3)':
+  '@remix-run/serve@2.16.8(typescript@5.9.2)':
     dependencies:
-      '@remix-run/express': 2.16.8(express@4.21.2)(typescript@5.8.3)
-      '@remix-run/node': 2.16.8(typescript@5.8.3)
+      '@remix-run/express': 2.16.8(express@4.21.2)(typescript@5.9.2)
+      '@remix-run/node': 2.16.8(typescript@5.9.2)
       chokidar: 3.6.0
       compression: 1.8.0
       express: 4.21.2
@@ -11712,7 +11712,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@remix-run/server-runtime@2.16.8(typescript@5.8.3)':
+  '@remix-run/server-runtime@2.16.8(typescript@5.9.2)':
     dependencies:
       '@remix-run/router': 1.23.0
       '@types/cookie': 0.6.0
@@ -11722,7 +11722,7 @@ snapshots:
       source-map: 0.7.4
       turbo-stream: 2.4.1
     optionalDependencies:
-      typescript: 5.8.3
+      typescript: 5.9.2
 
   '@remix-run/web-blob@3.1.0':
     dependencies:
@@ -12434,12 +12434,12 @@ snapshots:
       '@svgr/babel-plugin-transform-react-native-svg': 8.1.0(@babel/core@7.28.0)
       '@svgr/babel-plugin-transform-svg-component': 8.0.0(@babel/core@7.28.0)
 
-  '@svgr/core@8.1.0(typescript@5.8.3)':
+  '@svgr/core@8.1.0(typescript@5.9.2)':
     dependencies:
       '@babel/core': 7.28.0
       '@svgr/babel-preset': 8.1.0(@babel/core@7.28.0)
       camelcase: 6.3.0
-      cosmiconfig: 8.3.6(typescript@5.8.3)
+      cosmiconfig: 8.3.6(typescript@5.9.2)
       snake-case: 3.0.4
     transitivePeerDependencies:
       - supports-color
@@ -12450,11 +12450,11 @@ snapshots:
       '@babel/types': 7.28.1
       entities: 4.5.0
 
-  '@svgr/plugin-jsx@8.1.0(@svgr/core@8.1.0(typescript@5.8.3))':
+  '@svgr/plugin-jsx@8.1.0(@svgr/core@8.1.0(typescript@5.9.2))':
     dependencies:
       '@babel/core': 7.28.0
       '@svgr/babel-preset': 8.1.0(@babel/core@7.28.0)
-      '@svgr/core': 8.1.0(typescript@5.8.3)
+      '@svgr/core': 8.1.0(typescript@5.9.2)
       '@svgr/hast-util-to-babel-ast': 8.0.0
       svg-parser: 2.0.4
     transitivePeerDependencies:
@@ -12951,11 +12951,11 @@ snapshots:
 
   '@types/uuid@9.0.8': {}
 
-  '@unocss/astro@66.3.3(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3))':
+  '@unocss/astro@66.3.3(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2))':
     dependencies:
       '@unocss/core': 66.3.3
       '@unocss/reset': 66.3.3
-      '@unocss/vite': 66.3.3(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3))
+      '@unocss/vite': 66.3.3(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2))
     optionalDependencies:
       vite: 7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)
     transitivePeerDependencies:
@@ -12988,14 +12988,14 @@ snapshots:
     dependencies:
       '@unocss/core': 66.3.3
 
-  '@unocss/inspector@66.3.3(vue@3.5.17(typescript@5.8.3))':
+  '@unocss/inspector@66.3.3(vue@3.5.17(typescript@5.9.2))':
     dependencies:
       '@unocss/core': 66.3.3
       '@unocss/rule-utils': 66.3.3
       colorette: 2.0.20
       gzip-size: 6.0.0
       sirv: 3.0.1
-      vue-flow-layout: 0.1.1(vue@3.5.17(typescript@5.8.3))
+      vue-flow-layout: 0.1.1(vue@3.5.17(typescript@5.9.2))
     transitivePeerDependencies:
       - vue
 
@@ -13088,12 +13088,12 @@ snapshots:
     dependencies:
       '@unocss/core': 66.3.3
 
-  '@unocss/vite@66.3.3(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3))':
+  '@unocss/vite@66.3.3(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@unocss/config': 66.3.3
       '@unocss/core': 66.3.3
-      '@unocss/inspector': 66.3.3(vue@3.5.17(typescript@5.8.3))
+      '@unocss/inspector': 66.3.3(vue@3.5.17(typescript@5.9.2))
       chokidar: 3.6.0
       magic-string: 0.30.17
       pathe: 2.0.3
@@ -13166,11 +13166,11 @@ snapshots:
       sharp-ico: 0.1.5
       unconfig: 7.3.2
 
-  '@vite-pwa/remix@0.2.0(@remix-run/dev@2.16.8(@remix-run/react@2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.8.3)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.26.0(@cloudflare/workers-types@4.20250722.0))(yaml@2.8.1))(@vite-pwa/assets-generator@1.0.1)(vite-plugin-pwa@1.0.3(@vite-pwa/assets-generator@1.0.1)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(workbox-build@7.3.0)(workbox-window@7.3.0))':
+  '@vite-pwa/remix@0.2.0(@remix-run/dev@2.16.8(@remix-run/react@2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.16.8(typescript@5.9.2))(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.26.0(@cloudflare/workers-types@4.20250722.0))(yaml@2.8.1))(@vite-pwa/assets-generator@1.0.1)(vite-plugin-pwa@1.0.3(@vite-pwa/assets-generator@1.0.1)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(workbox-build@7.3.0)(workbox-window@7.3.0))':
     dependencies:
       vite-plugin-pwa: 1.0.3(@vite-pwa/assets-generator@1.0.1)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(workbox-build@7.3.0)(workbox-window@7.3.0)
     optionalDependencies:
-      '@remix-run/dev': 2.16.8(@remix-run/react@2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3))(@remix-run/serve@2.16.8(typescript@5.8.3))(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.8.3)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.26.0(@cloudflare/workers-types@4.20250722.0))(yaml@2.8.1)
+      '@remix-run/dev': 2.16.8(@remix-run/react@2.16.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.16.8(typescript@5.9.2))(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.26.0(@cloudflare/workers-types@4.20250722.0))(yaml@2.8.1)
       '@vite-pwa/assets-generator': 1.0.1
 
   '@vitest/expect@3.2.4':
@@ -13261,11 +13261,11 @@ snapshots:
       '@vue/shared': 3.5.17
       csstype: 3.1.3
 
-  '@vue/server-renderer@3.5.17(vue@3.5.17(typescript@5.8.3))':
+  '@vue/server-renderer@3.5.17(vue@3.5.17(typescript@5.9.2))':
     dependencies:
       '@vue/compiler-ssr': 3.5.17
       '@vue/shared': 3.5.17
-      vue: 3.5.17(typescript@5.8.3)
+      vue: 3.5.17(typescript@5.9.2)
 
   '@vue/shared@3.5.17': {}
 
@@ -13807,14 +13807,14 @@ snapshots:
 
   core-util-is@1.0.3: {}
 
-  cosmiconfig@8.3.6(typescript@5.8.3):
+  cosmiconfig@8.3.6(typescript@5.9.2):
     dependencies:
       import-fresh: 3.3.1
       js-yaml: 4.1.0
       parse-json: 5.2.0
       path-type: 4.0.0
     optionalDependencies:
-      typescript: 5.8.3
+      typescript: 5.9.2
 
   croner@9.1.0: {}
 
@@ -15775,7 +15775,7 @@ snapshots:
 
   mkdirp@1.0.4: {}
 
-  mkdist@2.3.0(typescript@5.8.3)(vue@3.5.17(typescript@5.8.3)):
+  mkdist@2.3.0(typescript@5.9.2)(vue@3.5.17(typescript@5.9.2)):
     dependencies:
       autoprefixer: 10.4.21(postcss@8.5.6)
       citty: 0.1.6
@@ -15791,8 +15791,8 @@ snapshots:
       semver: 7.7.2
       tinyglobby: 0.2.14
     optionalDependencies:
-      typescript: 5.8.3
-      vue: 3.5.17(typescript@5.8.3)
+      typescript: 5.9.2
+      vue: 3.5.17(typescript@5.9.2)
 
   mlly@1.7.4:
     dependencies:
@@ -16749,11 +16749,11 @@ snapshots:
 
   reusify@1.1.0: {}
 
-  rollup-plugin-dts@6.2.1(rollup@4.50.1)(typescript@5.8.3):
+  rollup-plugin-dts@6.2.1(rollup@4.50.1)(typescript@5.9.2):
     dependencies:
       magic-string: 0.30.17
       rollup: 4.50.1
-      typescript: 5.8.3
+      typescript: 5.9.2
     optionalDependencies:
       '@babel/code-frame': 7.27.1
 
@@ -17540,9 +17540,9 @@ snapshots:
 
   ts-toolbelt@9.6.0: {}
 
-  tsconfck@3.1.6(typescript@5.8.3):
+  tsconfck@3.1.6(typescript@5.9.2):
     optionalDependencies:
-      typescript: 5.8.3
+      typescript: 5.9.2
 
   tsconfig-paths@4.2.0:
     dependencies:
@@ -17638,7 +17638,7 @@ snapshots:
     dependencies:
       ts-toolbelt: 9.6.0
 
-  typescript@5.8.3: {}
+  typescript@5.9.2: {}
 
   ufo@1.6.1: {}
 
@@ -17653,7 +17653,7 @@ snapshots:
       has-symbols: 1.1.0
       which-boxed-primitive: 1.1.1
 
-  unbuild@3.6.1(typescript@5.8.3)(vue@3.5.17(typescript@5.8.3)):
+  unbuild@3.6.1(typescript@5.9.2)(vue@3.5.17(typescript@5.9.2)):
     dependencies:
       '@rollup/plugin-alias': 5.1.1(rollup@4.50.1)
       '@rollup/plugin-commonjs': 28.0.6(rollup@4.50.1)
@@ -17669,18 +17669,18 @@ snapshots:
       hookable: 5.5.3
       jiti: 2.5.1
       magic-string: 0.30.17
-      mkdist: 2.3.0(typescript@5.8.3)(vue@3.5.17(typescript@5.8.3))
+      mkdist: 2.3.0(typescript@5.9.2)(vue@3.5.17(typescript@5.9.2))
       mlly: 1.7.4
       pathe: 2.0.3
       pkg-types: 2.2.0
       pretty-bytes: 7.0.1
       rollup: 4.50.1
-      rollup-plugin-dts: 6.2.1(rollup@4.50.1)(typescript@5.8.3)
+      rollup-plugin-dts: 6.2.1(rollup@4.50.1)(typescript@5.9.2)
       scule: 1.3.0
       tinyglobby: 0.2.14
       untyped: 2.0.0
     optionalDependencies:
-      typescript: 5.8.3
+      typescript: 5.9.2
     transitivePeerDependencies:
       - sass
       - vue
@@ -17779,24 +17779,24 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unocss-preset-animations@1.2.1(@unocss/preset-wind3@66.3.3)(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3))):
+  unocss-preset-animations@1.2.1(@unocss/preset-wind3@66.3.3)(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2))):
     dependencies:
-      unocss: 66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3))
+      unocss: 66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2))
     optionalDependencies:
       '@unocss/preset-wind3': 66.3.3
 
-  unocss-preset-flowind@0.0.6(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3))):
+  unocss-preset-flowind@0.0.6(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2))):
     dependencies:
-      unocss: 66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3))
+      unocss: 66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2))
 
-  unocss-preset-shadcn@0.5.0(unocss-preset-animations@1.2.1(@unocss/preset-wind3@66.3.3)(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3))))(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3))):
+  unocss-preset-shadcn@0.5.0(unocss-preset-animations@1.2.1(@unocss/preset-wind3@66.3.3)(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2))))(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2))):
     dependencies:
-      unocss: 66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3))
-      unocss-preset-animations: 1.2.1(@unocss/preset-wind3@66.3.3)(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3)))
+      unocss: 66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2))
+      unocss-preset-animations: 1.2.1(@unocss/preset-wind3@66.3.3)(unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2)))
 
-  unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3)):
+  unocss@66.3.3(postcss@8.5.6)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2)):
     dependencies:
-      '@unocss/astro': 66.3.3(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3))
+      '@unocss/astro': 66.3.3(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2))
       '@unocss/cli': 66.3.3
       '@unocss/core': 66.3.3
       '@unocss/postcss': 66.3.3(postcss@8.5.6)
@@ -17814,7 +17814,7 @@ snapshots:
       '@unocss/transformer-compile-class': 66.3.3
       '@unocss/transformer-directives': 66.3.3
       '@unocss/transformer-variant-group': 66.3.3
-      '@unocss/vite': 66.3.3(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.8.3))
+      '@unocss/vite': 66.3.3(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(vue@3.5.17(typescript@5.9.2))
     optionalDependencies:
       vite: 7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)
     transitivePeerDependencies:
@@ -17835,7 +17835,7 @@ snapshots:
       rollup: 2.79.2
       vite: 7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)
 
-  unplugin-icons@22.1.0(@svgr/core@8.1.0(typescript@5.8.3))(@vue/compiler-sfc@3.5.17):
+  unplugin-icons@22.1.0(@svgr/core@8.1.0(typescript@5.9.2))(@vue/compiler-sfc@3.5.17):
     dependencies:
       '@antfu/install-pkg': 1.1.0
       '@iconify/utils': 2.3.0
@@ -17843,7 +17843,7 @@ snapshots:
       local-pkg: 1.1.1
       unplugin: 2.3.5
     optionalDependencies:
-      '@svgr/core': 8.1.0(typescript@5.8.3)
+      '@svgr/core': 8.1.0(typescript@5.9.2)
       '@vue/compiler-sfc': 3.5.17
     transitivePeerDependencies:
       - supports-color
@@ -17940,9 +17940,9 @@ snapshots:
       kleur: 4.1.5
       sade: 1.8.1
 
-  valibot@0.41.0(typescript@5.8.3):
+  valibot@0.41.0(typescript@5.9.2):
     optionalDependencies:
-      typescript: 5.8.3
+      typescript: 5.9.2
 
   validate-npm-package-license@3.0.4:
     dependencies:
@@ -18021,11 +18021,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-tsconfig-paths@5.1.4(typescript@5.8.3)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)):
+  vite-tsconfig-paths@5.1.4(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)):
     dependencies:
       debug: 4.4.1
       globrex: 0.1.2
-      tsconfck: 3.1.6(typescript@5.8.3)
+      tsconfck: 3.1.6(typescript@5.9.2)
     optionalDependencies:
       vite: 7.0.4(@types/node@24.5.0)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)
     transitivePeerDependencies:
@@ -18101,19 +18101,19 @@ snapshots:
       - tsx
       - yaml
 
-  vue-flow-layout@0.1.1(vue@3.5.17(typescript@5.8.3)):
+  vue-flow-layout@0.1.1(vue@3.5.17(typescript@5.9.2)):
     dependencies:
-      vue: 3.5.17(typescript@5.8.3)
+      vue: 3.5.17(typescript@5.9.2)
 
-  vue@3.5.17(typescript@5.8.3):
+  vue@3.5.17(typescript@5.9.2):
     dependencies:
       '@vue/compiler-dom': 3.5.17
       '@vue/compiler-sfc': 3.5.17
       '@vue/runtime-dom': 3.5.17
-      '@vue/server-renderer': 3.5.17(vue@3.5.17(typescript@5.8.3))
+      '@vue/server-renderer': 3.5.17(vue@3.5.17(typescript@5.9.2))
       '@vue/shared': 3.5.17
     optionalDependencies:
-      typescript: 5.8.3
+      typescript: 5.9.2
 
   w3c-xmlserializer@5.0.0:
     dependencies:
