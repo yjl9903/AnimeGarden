@@ -1,12 +1,31 @@
 import clsx from 'clsx';
+import { useCallback } from 'react';
 import { NavLink } from '@remix-run/react';
 
 import type { Jsonify } from '@animegarden/client';
 
 import { getWeekday } from '~/utils/date';
 import { type FullBangumiItem, getSubjectDisplayName, getSubjectURL } from '~/utils/subjects';
+import { toast } from 'sonner';
 
 export function SubjectCard({ subject }: { subject: Jsonify<FullBangumiItem> }) {
+  const onClickShare = useCallback(
+    async (e: React.MouseEvent) => {
+      e.preventDefault();
+
+      const url = new URL(`/subject/${subject.id}`, location.origin);
+      await navigator.clipboard.writeText(url.toString());
+
+      toast.success(`复制 ${getSubjectDisplayName(subject)} 链接成功`, {
+        dismissible: true,
+        duration: 3000,
+        closeButton: true,
+        position: 'top-right'
+      });
+    },
+    [subject]
+  );
+  
   return (
     <div className="mb-12 p-4 w-full bg-zinc-50 dark:bg-zinc-800 drop-shadow rounded-md flex gap-8 lt-md:flex-col">
       {subject.bangumi?.images && (
@@ -23,6 +42,9 @@ export function SubjectCard({ subject }: { subject: Jsonify<FullBangumiItem> }) 
           <NavLink to={getSubjectURL(subject)} className="text-link-active">
             {getSubjectDisplayName(subject)}
           </NavLink>
+          <span className="h-[30px] px-1.5 py-1.5 w-auto rounded-md flex items-center cursor-pointer hover:bg-layer-muted" onClick={onClickShare}>
+            <span className="i-carbon-share text-sm"></span>
+          </span>
         </h1>
         <article className="grid grid-cols-1 gap-2">
           <p className="space-x-2">
@@ -33,7 +55,7 @@ export function SubjectCard({ subject }: { subject: Jsonify<FullBangumiItem> }) 
             <span className="font-bold mr-3">放送开始</span>
             <span>{subject.air_date}</span>
           </p>
-          <p className="flex items-center gap-2">
+          <p className="flex items-center space-x-2">
             <span className="font-bold mr-3">外部链接</span>
             <a
               href={`https://bgm.tv/subject/${subject.id}`}

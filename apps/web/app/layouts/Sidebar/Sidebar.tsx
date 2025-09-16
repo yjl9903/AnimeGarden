@@ -49,7 +49,7 @@ const SidebarContent = memo(() => {
   return (
     <div className="sidebar-wrapper space-y-2">
       <div className="mt-[8px] px2 py1 text-base-700 select-none font-500 font-quicksand flex items-center">
-        <div className="block">
+        <div className="block pt-[9px]">
           <span className="i-carbon:bookmark text-sm relative top-[2px] mr1"></span>
           <span className="text-sm font-bold">收藏夹</span>
         </div>
@@ -83,7 +83,7 @@ const QuickLinks = memo((props: { collection: Collection }) => {
     <>
       <NavLink
         to="/anime"
-        className={clsx(className, match === 'index' && activeClassName)}
+        className={clsx(className, match === 'anime' && activeClassName)}
         preventScrollReset={true}
       >
         <span className="i-carbon-calendar mr1"></span>
@@ -148,8 +148,9 @@ const Collection = memo((props: { collection: Collection<true> }) => {
       e.preventDefault();
 
       const resp = collection.hash ? collection : await createCollection();
+
       if (resp) {
-        const url = new URL(`/collection/${resp.hash}`);
+        const url = new URL(`/collection/${resp.hash}`, window.location.origin);
         await navigator.clipboard.writeText(url.toString());
         toast.success(`复制 ${collection.name} 分享链接成功`, {
           dismissible: true,

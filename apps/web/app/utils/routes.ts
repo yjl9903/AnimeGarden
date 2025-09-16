@@ -12,6 +12,9 @@ export function getActivePageTab(location: Location, collection: Collection) {
     }
     return 'resources';
   }
+  if (pathname.startsWith('/anime/')) {
+    return 'anime';
+  }
   if (pathname === '/' || pathname === '') {
     return 'index';
   }
