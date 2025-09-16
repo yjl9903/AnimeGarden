@@ -14,33 +14,59 @@ To set the repository up:
 
 ## Packages
 
-### animegarden
+### API Client
 
-Package is located at `packages/animegarden`.
+API client package is located at `packages/client`.
 
 ```bash
 # Build project
-pnpm -C packages/animegarden build
+pnpm -C packages/client build
 
 # Run test
-pnpm -C packages/animegarden test
+pnpm -C packages/client test
 ```
+
+### anipar
+
+It is located at `packages/anipar`.
+
+```bash
+# Build project
+pnpm -C packages/anipar build
+
+# Run test
+pnpm -C packages/anipar test
+```
+
+## Applications
 
 ### Web Application
 
-Package is located at `packages/app`.
+It is located at `apps/web`.
 
-This package is built on the [Astro](https://astro.build/).
+This package is built on the [Remix](https://remix.run/).
 
 ```bash
-# Build app
-pnpm -C packages/app build
+# Build web app
+pnpm build:web
 
 # Start dev server
-pnpm -C packages/app dev
+pnpm dev:web
 ```
 
-## Deploy your own AnimeGarden
+### Server Application
+
+It is located at `apps/server`.
+
+```bash
+# Build server app
+pnpm build:server
+
+# Run server app locally
+pnpm dev:server
+```
+
+## Deploy your own Anime Garden
 
 Make sure you have setup the environment.
 
@@ -66,7 +92,7 @@ docker compose --file=docker-compose.dev.yml up
 Then migrate the dev postgres database.
 
 ```bash
-pnpm animegarden db migrate --uri "postgres://root:example@0.0.0.0:5432/animegarden"
+pnpm manager db migrate --uri "postgres://root:example@0.0.0.0:5432/animegarden"
 ```
 
-Work in progress.
+Work in progress...
