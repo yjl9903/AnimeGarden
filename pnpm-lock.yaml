@@ -250,11 +250,11 @@ importers:
         specifier: 5.1.30
         version: 5.1.30
       jotai:
-        specifier: 2.12.5
-        version: 2.12.5(@types/react@19.1.13)(react@19.1.1)
+        specifier: 2.14.0
+        version: 2.14.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.13)(react@19.1.1)
       jotai-minidb:
         specifier: 0.0.8
-        version: 0.0.8(jotai@2.12.5(@types/react@19.1.13)(react@19.1.1))
+        version: 0.0.8(jotai@2.14.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.13)(react@19.1.1))
       lucide-react:
         specifier: 0.525.0
         version: 0.525.0(react@19.1.1)
@@ -6126,13 +6126,19 @@ packages:
     peerDependencies:
       jotai: '>=1.10.0'
 
-  jotai@2.12.5:
-    resolution: {integrity: sha512-G8m32HW3lSmcz/4mbqx0hgJIQ0ekndKWiYP7kWVKi0p6saLXdSoye+FZiOFyonnd7Q482LCzm8sMDl7Ar1NWDw==}
+  jotai@2.14.0:
+    resolution: {integrity: sha512-JQkNkTnqjk1BlSUjHfXi+pGG/573bVN104gp6CymhrWDseZGDReTNniWrLhJ+zXbM6pH+82+UNJ2vwYQUkQMWQ==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
+      '@babel/core': '>=7.0.0'
+      '@babel/template': '>=7.0.0'
       '@types/react': '>=17.0.0'
       react: '>=17.0.0'
     peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@babel/template':
+        optional: true
       '@types/react':
         optional: true
       react:
@@ -15274,14 +15280,16 @@ snapshots:
 
   jiti@2.5.1: {}
 
-  jotai-minidb@0.0.8(jotai@2.12.5(@types/react@19.1.13)(react@19.1.1)):
+  jotai-minidb@0.0.8(jotai@2.14.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.13)(react@19.1.1)):
     dependencies:
       '@rocicorp/resolver': 1.0.2
       idb-keyval: 6.2.2
-      jotai: 2.12.5(@types/react@19.1.13)(react@19.1.1)
+      jotai: 2.14.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.13)(react@19.1.1)
 
-  jotai@2.12.5(@types/react@19.1.13)(react@19.1.1):
+  jotai@2.14.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.13)(react@19.1.1):
     optionalDependencies:
+      '@babel/core': 7.28.0
+      '@babel/template': 7.27.2
       '@types/react': 19.1.13
       react: 19.1.1
 
