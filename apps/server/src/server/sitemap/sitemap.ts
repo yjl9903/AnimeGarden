@@ -25,6 +25,8 @@ export function sitemap(options: SitemapOptions): MiddlewareHandler {
         sms.end();
 
         const sitemapBuffer = await streamToPromise(sms);
+
+        // @ts-ignore
         return new Response(sitemapBuffer, {
           headers: {
             'content-type': 'application/xml'

@@ -20,6 +20,8 @@ export function sitemapIndex(options: SitemapIndexOptions): MiddlewareHandler {
         smis.end();
 
         const sitemapBuffer = await streamToPromise(smis);
+
+        // @ts-ignore
         return new Response(sitemapBuffer, {
           headers: {
             'content-type': 'application/xml'
