@@ -265,8 +265,8 @@ importers:
         specifier: 19.1.1
         version: 19.1.1(react@19.1.1)
       remix-utils:
-        specifier: 8.8.0
-        version: 8.8.0(react@19.1.1)(zod@3.25.76)
+        specifier: 9.0.0
+        version: 9.0.0(react@19.1.1)
       scule:
         specifier: 1.3.0
         version: 1.3.0
@@ -7411,8 +7411,8 @@ packages:
     engines: {node: '>= 6.0.0'}
     hasBin: true
 
-  remix-utils@8.8.0:
-    resolution: {integrity: sha512-5CR4a3YwPaCoPUHg+O69UMek05tnFMrtQsoXTU4KzsyU7heDO94IFTjKVzEFhi+s+SSo+ebRMxWvjf/QiPpqiQ==}
+  remix-utils@9.0.0:
+    resolution: {integrity: sha512-xpDnw6hIjYbHR9/noE4lKNPRzfxvGai3XBQcjOjcwIwZVW9O1bdsnYAl+aqJ2fMXSQTNMjNuR8Cetn76HqwXCg==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@edgefirst-dev/batcher': ^1.0.0
@@ -7425,7 +7425,6 @@ packages:
       is-ip: ^5.0.1
       react: ^18.0.0 || ^19.0.0
       react-router: ^7.0.0
-      zod: ^3.22.4
     peerDependenciesMeta:
       '@edgefirst-dev/batcher':
         optional: true
@@ -7446,8 +7445,6 @@ packages:
       react:
         optional: true
       react-router:
-        optional: true
-      zod:
         optional: true
 
   repeat-string@1.6.1:
@@ -16680,12 +16677,11 @@ snapshots:
       argparse: 1.0.10
       autolinker: 3.16.2
 
-  remix-utils@8.8.0(react@19.1.1)(zod@3.25.76):
+  remix-utils@9.0.0(react@19.1.1):
     dependencies:
       type-fest: 4.41.0
     optionalDependencies:
       react: 19.1.1
-      zod: 3.25.76
 
   repeat-string@1.6.1: {}
 
