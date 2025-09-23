@@ -11,7 +11,7 @@ dockerfile = 'Dockerfile'
 
 [build.args]
 NODE_VERSION = '24.8.0'
-PNPM_VERSION = '10.17.0'
+PNPM_VERSION = '10.17.1'
 APP_HOST = 'animes.garden'
 FEED_HOST = 'api.animes.garden'
 SERVER_URL = 'http://animegarden-server-production.flycast/'

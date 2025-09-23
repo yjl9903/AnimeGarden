@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 ARG NODE_VERSION=24.8.0
-ARG PNPM_VERSION=10.17.0
+ARG PNPM_VERSION=10.17.1
 
 ARG APP_HOST=animes.garden
 ARG FEED_HOST=api.animes.garden
@@ -46,6 +46,9 @@ RUN pnpm install --frozen-lockfile --prod=false
 
 # Copy application code
 COPY --link . .
+
+# Setup CI environment
+ENV CI=true
 
 # Setup environment and Build application
 RUN pnpm run build && pnpm run build:server
