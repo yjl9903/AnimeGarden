@@ -126,8 +126,8 @@ importers:
         specifier: 4.9.8
         version: 4.9.8
       ioredis:
-        specifier: 5.7.0
-        version: 5.7.0
+        specifier: 5.8.0
+        version: 5.8.0
       memofunc:
         specifier: 0.1.6
         version: 0.1.6
@@ -5792,8 +5792,8 @@ packages:
   invariant@2.2.4:
     resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
 
-  ioredis@5.7.0:
-    resolution: {integrity: sha512-NUcA93i1lukyXU+riqEyPtSEkyFq8tX90uL659J+qpCZ3rEdViB/APC58oAhIh3+bJln2hzdlZbBZsGNrlsR8g==}
+  ioredis@5.8.0:
+    resolution: {integrity: sha512-AUXbKn9gvo9hHKvk6LbZJQSKn/qIfkWXrnsyL9Yrf+oeXmla9Nmf6XEumOddyhM8neynpK5oAV6r9r99KBuwzA==}
     engines: {node: '>=12.22.0'}
 
   ipaddr.js@1.9.1:
@@ -14914,7 +14914,7 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
 
-  ioredis@5.7.0:
+  ioredis@5.8.0:
     dependencies:
       '@ioredis/commands': 1.4.0
       cluster-key-slot: 1.1.2
