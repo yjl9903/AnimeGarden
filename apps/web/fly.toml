@@ -25,8 +25,12 @@ server = 'node apps/web/server.mjs'
 internal_port = 3000
 auto_stop_machines = 'suspend'
 auto_start_machines = true
-min_machines_running = 1
+min_machines_running = 2
 processes = ['server']
+
+[http_service.concurrency]
+type = 'requests'
+soft_limit = 4
 
 [[http_service.checks]]
 grace_period = "30s"
