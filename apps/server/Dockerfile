@@ -65,7 +65,7 @@ COPY --from=build /app /app
 
 # Declare args
 ARG PORT APP_HOST FEED_HOST
-ENV HOST=:: PORT=${PORT} APP_HOST=${APP_HOST} FEED_HOST=${FEED_HOST}
+ENV HOST=0.0.0.0 PORT=${PORT} APP_HOST=${APP_HOST} FEED_HOST=${FEED_HOST}
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE ${PORT}
