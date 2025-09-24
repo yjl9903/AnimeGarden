@@ -50,8 +50,8 @@ COPY --link . .
 # Setup CI environment
 ENV CI=true
 
-# Setup environment and Build application
-RUN pnpm run build && pnpm run build:server
+# Build application
+RUN pnpm run build:server
 
 # Remove development dependencies
 RUN pnpm prune --prod
