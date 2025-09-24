@@ -31,7 +31,7 @@ processes = ['server']
 type = 'requests'
 soft_limit = 4
 
-[[http_service.checks]]
+[[services.http_checks]]
 grace_period = "30s"
 interval = "60s"
 timeout = "10s"
