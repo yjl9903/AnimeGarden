@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 ARG NODE_VERSION=24.8.0
-ARG PNPM_VERSION=10.17.0
+ARG PNPM_VERSION=10.17.1
 
 ARG APP_HOST=animes.garden
 ARG FEED_HOST=api.animes.garden
@@ -47,8 +47,11 @@ RUN pnpm install --frozen-lockfile --prod=false
 # Copy application code
 COPY --link . .
 
-# Setup environment and Build application
-RUN pnpm run build && pnpm run build:server
+# Setup CI environment
+ENV CI=true
+
+# Build application
+RUN pnpm run build:server
 
 # Remove development dependencies
 RUN pnpm prune --prod
@@ -62,7 +65,7 @@ COPY --from=build /app /app
 
 # Declare args
 ARG PORT APP_HOST FEED_HOST
-ENV HOST=:: PORT=${PORT} APP_HOST=${APP_HOST} FEED_HOST=${FEED_HOST}
+ENV HOST=0.0.0.0 PORT=${PORT} APP_HOST=${APP_HOST} FEED_HOST=${FEED_HOST}
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE ${PORT}

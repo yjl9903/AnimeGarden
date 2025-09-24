@@ -61,15 +61,31 @@ app
 app
   .command('cron', 'Start Anime Garden cron jobs executor')
   .option('--site <site>', 'Web site host')
+  .option('--host <ip>', 'Listen host')
+  .option('--port <port>', 'Listen port')
+  .option('--listen', 'Enable server listening', { default: true })
   .option('--import', 'Import bangumi data', { default: true })
   .action(async (options) => {
     const sys = await initialize({ ...options, cron: true });
-    await sys.initialize();
+    const executor = await makeExecutor(sys, {});
+
+    const initializing = sys.initialize();
+
+    let listening: Promise<void> | undefined = undefined;
+    if (options.listen) {
+      const host = options.host ?? process.env.HOST;
+      const port = options.port ?? process.env.PORT;
+      listening = executor.listen({ host, port });
+    }
+
     if (options.import) {
+      await initializing;
       await sys.import();
     }
-    const executor = await makeExecutor(sys, {});
+
     await executor.start();
+
+    await listening;
   });
 
 // --- Admin ---

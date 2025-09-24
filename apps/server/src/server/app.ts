@@ -40,6 +40,7 @@ export class Server {
       server.addListener('close', () => res());
       server.addListener('error', (err) => {
         this.system.logger.error(err);
+        process.exit(1);
       });
     });
   }

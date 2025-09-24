@@ -1,22 +1,18 @@
-import { Hono } from 'hono';
 import { Cron } from 'croner';
 
 import { SupportProviders } from '@animegarden/client';
 
 import type { System } from '../system';
 
+import { Server } from './app';
+
 export interface ExecutorOptions {}
 
-export class Executor {
-  public readonly system: System;
-
-  public readonly hono: Hono;
-
+export class Executor extends Server {
   private readonly disposables: Array<() => void> = [];
 
   public constructor(system: System) {
-    this.system = system;
-    this.hono = new Hono();
+    super(system);
   }
 
   public async start() {
