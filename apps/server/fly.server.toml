@@ -37,6 +37,7 @@ interval = "60s"
 timeout = "10s"
 method = "GET"
 path = "/health"
+processes = ['server', 'cron']
 
 [[restart]]
 policy = 'on-failure'
