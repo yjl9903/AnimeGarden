@@ -25,13 +25,13 @@ force_https = false
 auto_stop_machines = 'suspend'
 auto_start_machines = true
 min_machines_running = 1
-processes = ['server']
+processes = ['server', 'cron']
 
 [http_service.concurrency]
 type = 'requests'
 soft_limit = 4
 
-[[services.http_checks]]
+[[http_service.checks]]
 grace_period = "30s"
 interval = "60s"
 timeout = "10s"
