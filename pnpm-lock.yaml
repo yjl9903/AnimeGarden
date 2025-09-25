@@ -51,8 +51,8 @@ importers:
         specifier: 3.2.4
         version: 3.2.4(@types/debug@4.1.12)(@types/node@24.5.2)(jiti@2.5.1)(jsdom@27.0.0(postcss@8.5.6))(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)
       wrangler:
-        specifier: 4.40.0
-        version: 4.40.0(@cloudflare/workers-types@4.20250924.0)
+        specifier: 4.40.1
+        version: 4.40.1(@cloudflare/workers-types@4.20250924.0)
 
   apps/server:
     dependencies:
@@ -312,7 +312,7 @@ importers:
         version: 1.2.4
       '@remix-run/dev':
         specifier: 2.17.1
-        version: 2.17.1(@remix-run/react@2.17.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.17.1(typescript@5.9.2))(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.40.0(@cloudflare/workers-types@4.20250924.0))(yaml@2.8.1)
+        version: 2.17.1(@remix-run/react@2.17.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.17.1(typescript@5.9.2))(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.40.1(@cloudflare/workers-types@4.20250924.0))(yaml@2.8.1)
       '@svgr/core':
         specifier: 8.1.0
         version: 8.1.0(typescript@5.9.2)
@@ -330,7 +330,7 @@ importers:
         version: 5.18.0
       '@vite-pwa/remix':
         specifier: 0.2.0
-        version: 0.2.0(@remix-run/dev@2.17.1(@remix-run/react@2.17.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.17.1(typescript@5.9.2))(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.40.0(@cloudflare/workers-types@4.20250924.0))(yaml@2.8.1))(@vite-pwa/assets-generator@1.0.1)(vite-plugin-pwa@1.0.3(@vite-pwa/assets-generator@1.0.1)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(workbox-build@7.3.0)(workbox-window@7.3.0))
+        version: 0.2.0(@remix-run/dev@2.17.1(@remix-run/react@2.17.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.17.1(typescript@5.9.2))(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.40.1(@cloudflare/workers-types@4.20250924.0))(yaml@2.8.1))(@vite-pwa/assets-generator@1.0.1)(vite-plugin-pwa@1.0.3(@vite-pwa/assets-generator@1.0.1)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(workbox-build@7.3.0)(workbox-window@7.3.0))
       autoprefixer:
         specifier: 10.4.21
         version: 10.4.21(postcss@8.5.6)
@@ -8737,8 +8737,8 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
-  wrangler@4.40.0:
-    resolution: {integrity: sha512-HCPNUz599h9emi6qjppn92kxS6E12QvD0A3K087CZFEysw6lO1saZUdJ8azk0LsYGYDnrkBs5TzUOEfpuccwWA==}
+  wrangler@4.40.1:
+    resolution: {integrity: sha512-XQEHOW6g1zW2xnBq1dmhDbEiVBbPGh7mX1tQAUMqKETa61XXvxHCJSzVI3is5xuo9HzZ8ITzg4VnhB/91cg9DQ==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     peerDependencies:
@@ -11568,7 +11568,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.2
 
-  '@remix-run/dev@2.17.1(@remix-run/react@2.17.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.17.1(typescript@5.9.2))(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.40.0(@cloudflare/workers-types@4.20250924.0))(yaml@2.8.1)':
+  '@remix-run/dev@2.17.1(@remix-run/react@2.17.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.17.1(typescript@5.9.2))(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.40.1(@cloudflare/workers-types@4.20250924.0))(yaml@2.8.1)':
     dependencies:
       '@babel/core': 7.28.0
       '@babel/generator': 7.28.0
@@ -11631,7 +11631,7 @@ snapshots:
       '@remix-run/serve': 2.17.1(typescript@5.9.2)
       typescript: 5.9.2
       vite: 7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1)
-      wrangler: 4.40.0(@cloudflare/workers-types@4.20250924.0)
+      wrangler: 4.40.1(@cloudflare/workers-types@4.20250924.0)
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -13080,11 +13080,11 @@ snapshots:
       sharp-ico: 0.1.5
       unconfig: 7.3.2
 
-  '@vite-pwa/remix@0.2.0(@remix-run/dev@2.17.1(@remix-run/react@2.17.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.17.1(typescript@5.9.2))(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.40.0(@cloudflare/workers-types@4.20250924.0))(yaml@2.8.1))(@vite-pwa/assets-generator@1.0.1)(vite-plugin-pwa@1.0.3(@vite-pwa/assets-generator@1.0.1)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(workbox-build@7.3.0)(workbox-window@7.3.0))':
+  '@vite-pwa/remix@0.2.0(@remix-run/dev@2.17.1(@remix-run/react@2.17.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.17.1(typescript@5.9.2))(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.40.1(@cloudflare/workers-types@4.20250924.0))(yaml@2.8.1))(@vite-pwa/assets-generator@1.0.1)(vite-plugin-pwa@1.0.3(@vite-pwa/assets-generator@1.0.1)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(workbox-build@7.3.0)(workbox-window@7.3.0))':
     dependencies:
       vite-plugin-pwa: 1.0.3(@vite-pwa/assets-generator@1.0.1)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(workbox-build@7.3.0)(workbox-window@7.3.0)
     optionalDependencies:
-      '@remix-run/dev': 2.17.1(@remix-run/react@2.17.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.17.1(typescript@5.9.2))(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.40.0(@cloudflare/workers-types@4.20250924.0))(yaml@2.8.1)
+      '@remix-run/dev': 2.17.1(@remix-run/react@2.17.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2))(@remix-run/serve@2.17.1(typescript@5.9.2))(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(typescript@5.9.2)(vite@7.0.4(@types/node@24.5.2)(jiti@2.5.1)(terser@5.43.1)(tsx@4.20.5)(yaml@2.8.1))(wrangler@4.40.1(@cloudflare/workers-types@4.20250924.0))(yaml@2.8.1)
       '@vite-pwa/assets-generator': 1.0.1
 
   '@vitest/expect@3.2.4':
@@ -18274,7 +18274,7 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20250924.0
       '@cloudflare/workerd-windows-64': 1.20250924.0
 
-  wrangler@4.40.0(@cloudflare/workers-types@4.20250924.0):
+  wrangler@4.40.1(@cloudflare/workers-types@4.20250924.0):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.4.0
       '@cloudflare/unenv-preset': 2.7.4(unenv@2.0.0-rc.21)(workerd@1.20250924.0)
