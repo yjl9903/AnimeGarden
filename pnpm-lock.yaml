@@ -238,11 +238,11 @@ importers:
         specifier: 5.1.31
         version: 5.1.31
       jotai:
-        specifier: 2.14.0
-        version: 2.14.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.14)(react@19.1.1)
+        specifier: 2.15.0
+        version: 2.15.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.14)(react@19.1.1)
       jotai-minidb:
         specifier: 0.0.8
-        version: 0.0.8(jotai@2.14.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.14)(react@19.1.1))
+        version: 0.0.8(jotai@2.15.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.14)(react@19.1.1))
       lucide-react:
         specifier: 0.544.0
         version: 0.544.0(react@19.1.1)
@@ -5721,8 +5721,8 @@ packages:
     peerDependencies:
       jotai: '>=1.10.0'
 
-  jotai@2.14.0:
-    resolution: {integrity: sha512-JQkNkTnqjk1BlSUjHfXi+pGG/573bVN104gp6CymhrWDseZGDReTNniWrLhJ+zXbM6pH+82+UNJ2vwYQUkQMWQ==}
+  jotai@2.15.0:
+    resolution: {integrity: sha512-nbp/6jN2Ftxgw0VwoVnOg0m5qYM1rVcfvij+MZx99Z5IK13eGve9FJoCwGv+17JvVthTjhSmNtT5e1coJnr6aw==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@babel/core': '>=7.0.0'
@@ -14686,13 +14686,13 @@ snapshots:
 
   jiti@2.5.1: {}
 
-  jotai-minidb@0.0.8(jotai@2.14.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.14)(react@19.1.1)):
+  jotai-minidb@0.0.8(jotai@2.15.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.14)(react@19.1.1)):
     dependencies:
       '@rocicorp/resolver': 1.0.2
       idb-keyval: 6.2.2
-      jotai: 2.14.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.14)(react@19.1.1)
+      jotai: 2.15.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.14)(react@19.1.1)
 
-  jotai@2.14.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.14)(react@19.1.1):
+  jotai@2.15.0(@babel/core@7.28.0)(@babel/template@7.27.2)(@types/react@19.1.14)(react@19.1.1):
     optionalDependencies:
       '@babel/core': 7.28.0
       '@babel/template': 7.27.2
