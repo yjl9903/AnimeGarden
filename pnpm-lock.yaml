@@ -102,8 +102,8 @@ importers:
         specifier: 17.2.3
         version: 17.2.3
       drizzle-orm:
-        specifier: 0.44.5
-        version: 0.44.5(@cloudflare/workers-types@4.20250927.0)(postgres@3.4.7)
+        specifier: 0.44.6
+        version: 0.44.6(@cloudflare/workers-types@4.20250927.0)(postgres@3.4.7)
       fast-xml-parser:
         specifier: 5.2.5
         version: 5.2.5
@@ -4792,8 +4792,8 @@ packages:
     resolution: {integrity: sha512-+CHgPFzuoTQTt7cOYCV6MOw2w8vqEn/ap1yv4bpZOWL03u7rlVRQhUY0WYT3rHsgVTXwYQDZaSUJSQrMBUKuWg==}
     hasBin: true
 
-  drizzle-orm@0.44.5:
-    resolution: {integrity: sha512-jBe37K7d8ZSKptdKfakQFdeljtu3P2Cbo7tJoJSVZADzIKOBo9IAJPOmMsH2bZl90bZgh8FQlD8BjxXA/zuBkQ==}
+  drizzle-orm@0.44.6:
+    resolution: {integrity: sha512-uy6uarrrEOc9K1u5/uhBFJbdF5VJ5xQ/Yzbecw3eAYOunv5FDeYkR2m8iitocdHBOHbvorviKOW5GVw0U1j4LQ==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=4'
@@ -13658,7 +13658,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.44.5(@cloudflare/workers-types@4.20250927.0)(postgres@3.4.7):
+  drizzle-orm@0.44.6(@cloudflare/workers-types@4.20250927.0)(postgres@3.4.7):
     optionalDependencies:
       '@cloudflare/workers-types': 4.20250927.0
       postgres: 3.4.7
