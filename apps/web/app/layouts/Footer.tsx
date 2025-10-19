@@ -65,7 +65,10 @@ export const Footer = memo((props: FooterProps) => {
           <div className="flex">
             <span className="text-base-900 font-bold select-none">状态</span>
             <span className="i-carbon:chevron-right text-xl lt-sm:text-base text-base-900 font-bold select-none relative top-[2px]"></span>
-            <span className="ml-2">
+            <a href="https://status.onekuma.cn/" target="_blank" className="ml-2">
+              监控
+            </a>
+            <span className="ml-4 lt-sm:ml-2">
               {timestamp
                 ? '数据更新于 ' + formatChinaTime(timestamp)
                 : !loading
@@ -89,13 +92,10 @@ export const Footer = memo((props: FooterProps) => {
           <div className="flex mt-2">
             <span className="text-base-900 font-bold select-none">关于</span>
             <span className="i-carbon:chevron-right text-xl lt-sm:text-base text-base-900 font-bold select-none relative top-[2px]"></span>
-            <NavLink to="/about" className="ml-2 lt-sm:ml-2">
-              关于本站
-            </NavLink>
             <a
               href="https://github.com/yjl9903/AnimeGarden"
               target="_blank"
-              className="ml-4 lt-sm:ml-2"
+              className="ml-2"
             >
               GitHub
             </a>
@@ -125,9 +125,6 @@ export const Footer = memo((props: FooterProps) => {
               className="ml-4 lt-sm:ml-2"
             >
               帮助文档
-            </a>
-            <a href="https://status.onekuma.cn/" target="_blank" className="ml-4 lt-sm:ml-2">
-              监控
             </a>
           </div>
           <div className="flex justify-between items-center mt-8">
