@@ -12,7 +12,7 @@ export async function updateCalendar(mod: SubjectsModule) {
   // 1. Load bgmd
   const bgmd = await import('bgmd/calendar', { with: { type: 'json' } });
 
-  const { calendar, web } = bgmd;
+  const { calendar, web } = bgmd.default;
   const onair = [...calendar, web].flat();
 
   // 2. Diff new subjects
