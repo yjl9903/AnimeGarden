@@ -5,9 +5,9 @@ const subjectNameMap = new Map<string, BasicSubject>();
 
 const loadPromise = new Promise(async (res) => {
   try {
-    const { subjects } = import.meta.env.SSR
-      ? await import('bgmd/full', { with: { type: 'json' } })
-      : await import('bgmd', { with: { type: 'json' } });
+    const bgmd = import.meta.env.SSR ? await import('bgmd/full') : await import('bgmd');
+
+    const subjects = bgmd.default.subjects.sort((a, b) => a.id - b.id);
 
     for (const bgm of subjects) {
       subjectIdMap.set(bgm.id, bgm);
@@ -17,9 +17,9 @@ const loadPromise = new Promise(async (res) => {
       }
     }
 
-    res(undefined);
+    res(subjects.length);
   } catch (error) {
-    console.error(error);
+    console.error('[web]', 'load subjects failed', error);
     res(undefined);
   }
 });

@@ -258,11 +258,22 @@ function SearchSubject(props: {
 }) {
   const { search, onInputChange, onSelect } = props;
 
+  const [dirty, setDirty] = useState(false);
+
   const bangumis = useMemo(() => {
     const filter = parseSearchInput(search);
     const keywors = [...filter.search, ...filter.include];
     return searchSubjects(keywors).slice(0, 3);
   }, [search]);
+
+  useEffect(() => {
+    if (bangumis.length > 0) return;
+    waitForSubjectsLoaded().then(() => {
+      if (!dirty) {
+        setDirty(true);
+      }
+    });
+  }, [bangumis,dirty]);
 
   return (
     bangumis.length > 0 && (
