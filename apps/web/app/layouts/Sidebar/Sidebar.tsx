@@ -49,7 +49,7 @@ const SidebarContent = memo(() => {
   return (
     <div className="sidebar-wrapper space-y-2">
       <div className="mt-[8px] px2 py1 text-base-700 select-none font-500 font-quicksand flex items-center">
-        <div className="block pt-[9px]">
+        <div className="block">
           <span className="i-carbon:bookmark text-sm relative top-[2px] mr1"></span>
           <span className="text-sm font-bold">收藏夹</span>
         </div>
