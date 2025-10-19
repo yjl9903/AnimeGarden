@@ -1,13 +1,14 @@
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
+
+import { useEffect, useState } from 'react';
 import { NavLink, useLoaderData } from '@remix-run/react';
-import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare';
 
 import Layout from '~/layouts/Layout';
+import { getCalendar } from '~/utils/calendar';
 import { fetchTimestamp, getCanonicalURL } from '~/utils';
-import { getPosterImage, getCalendar } from '~/utils/anime';
 import { getSubjectDisplayName, getSubjectURL } from '~/utils/subjects';
 
 import './anime.css';
-import { useEffect, useState } from 'react';
 
 export const loader = async ({ params }: LoaderFunctionArgs) => {
   return {
@@ -20,7 +21,8 @@ export const meta: MetaFunction = () => {
     { title: '动画周历 | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站' },
     {
       name: 'description',
-      content: '动画每周播出时间表, 动画周历, Anime Garden 動漫花園資源網镜像站, 动漫花园动画 BT 资源聚合站'
+      content:
+        '动画每周播出时间表, 动画周历, Anime Garden 動漫花園資源網镜像站, 动漫花园动画 BT 资源聚合站'
     },
     { tagName: 'link', rel: 'canonical', href: getCanonicalURL('/anime') }
   ];
@@ -123,11 +125,11 @@ export default function Index() {
                 className={`bgm-list px-6 pb-2 flex w-full space-x-6 overflow-x-auto cal-${cal.index}`}
                 onScroll={scrollHandler[cal.index - 1]}
               >
-                {cal.bangumis.map((bgm: any) => (
+                {cal.bangumis.map((bgm) => (
                   <NavLink to={getSubjectURL(bgm)} className="block w-max" key={bgm.id}>
                     <div className="w-150px h-225px flex items-center select-none">
                       <img
-                        src={getPosterImage(bgm)}
+                        src={bgm.poster}
                         alt={`${getSubjectDisplayName(bgm)} poster`}
                         className="rounded-md max-h-225px hover:shadow-box"
                       />

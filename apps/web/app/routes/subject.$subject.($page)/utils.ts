@@ -1,4 +1,3 @@
-import { Jsonify } from './../../../../../packages/client/src/types';
 import type { Resource } from '@animegarden/client';
 
 const FansubNames = [

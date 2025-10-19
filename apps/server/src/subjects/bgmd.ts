@@ -1,5 +1,4 @@
-import type { FullBangumi } from 'bgmd/types';
-import type { calendar as Calendar, web as Web } from 'bgmd/calendar';
+import type { BasicSubject, FullSubject } from 'bgmd';
 
 import { normalizeTitle } from '@animegarden/client';
 
@@ -12,15 +11,12 @@ import type { NewSubject, Subject } from './schema';
 export async function updateCalendar(mod: SubjectsModule) {
   // 1. Load bgmd
   const bgmd = await import('bgmd/calendar', { with: { type: 'json' } });
-  // @ts-ignore
-  const { calendar, web } = (bgmd?.default ?? bgmd) as {
-    calendar: typeof Calendar;
-    web: typeof Web;
-  };
+
+  const { calendar, web } = bgmd;
   const onair = [...calendar, web].flat();
 
   // 2. Diff new subjects
-  const insertMap = new Map<number, FullBangumi>();
+  const insertMap = new Map<number, BasicSubject>();
   const archiveMap = new Map<number, Subject>();
   for (const bgm of onair) {
     const id = bgm.id;
@@ -36,7 +32,7 @@ export async function updateCalendar(mod: SubjectsModule) {
 
   // 3. Archive old subjects, and insert new subjects
   const archived = await mod.archiveSubjects([...archiveMap.keys()]);
-  const { subs, errors } = transformFullBangumis(mod, onair, false);
+  const { subs, errors } = transformSubjects(mod, onair, false);
   const { inserted, conflict } = await mod.insertSubjects(subs, {
     indexResources: true,
     offset: 30,
@@ -60,10 +56,10 @@ export async function updateCalendar(mod: SubjectsModule) {
  */
 export async function importFromBgmd(mod: SubjectsModule) {
   const bgmd = await import('bgmd', { with: { type: 'json' } });
-  // @ts-ignore
-  const { bangumis } = (bgmd?.default ?? bgmd) as { bangumis: Omit<FullBangumi, 'summary'>[] };
 
-  const { subs, errors } = transformFullBangumis(mod, bangumis, true);
+  const { subjects } = bgmd.default;
+
+  const { subs, errors } = transformSubjects(mod, subjects, true);
 
   // 时间倒序排序
   subs.sort((lhs, rhs) => {
@@ -98,29 +94,29 @@ export async function importFromBgmd(mod: SubjectsModule) {
   };
 }
 
-function transformFullBangumis(
+function transformSubjects(
   mod: SubjectsModule,
-  bangumis: Omit<FullBangumi, 'summary'>[],
+  bangumis: (FullSubject | BasicSubject)[],
   isArchived = true
 ) {
   const subs: NewSubject[] = [];
   const errors: typeof bangumis = [];
 
   for (const bgm of bangumis) {
-    const bgmId = bgm.bangumi?.id ?? +bgm.id;
-    const activedAt = toShanghai(bgm.air_date);
-    const keywords = normalizeTags(bgm);
+    const bgmId = bgm.id;
+    const activedAt = bgm.onair_date ? toShanghai(bgm.onair_date) : undefined;
+    const keywords = normalizeSearchInclude(bgm);
 
     if (bgmId && activedAt) {
       subs.push({
         id: bgmId,
-        name: bgm.name,
+        name: bgm.title,
         activedAt,
         keywords,
         isArchived
       });
     } else {
-      mod.system.logger.warn(`Invalid bangumi item: ${bgm.name} (id: ${bgm.id})`);
+      mod.system.logger.warn(`Invalid bangumi item: ${bgm.title} (id: ${bgm.id})`);
       errors.push(bgm);
     }
   }
@@ -147,7 +143,7 @@ function toShanghai(str: string) {
   return !Number.isNaN(shanghaiTime.getTime()) ? shanghaiTime : undefined;
 }
 
-function normalizeTags(bgm: Omit<FullBangumi, 'summary'>) {
-  const keywords = [bgm.name, ...bgm.alias, ...(bgm.original ?? [])].map(normalizeTitle);
+function normalizeSearchInclude(bgm: FullSubject | BasicSubject) {
+  const keywords = [bgm.title, ...bgm.search.include].map(normalizeTitle);
   return [...new Set(keywords)];
 }

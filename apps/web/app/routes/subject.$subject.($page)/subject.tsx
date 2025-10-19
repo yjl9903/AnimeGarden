@@ -1,14 +1,16 @@
+import type { FullSubject } from 'bgmd';
+
 import clsx from 'clsx';
-import { useCallback } from 'react';
+import { toast } from 'sonner';
 import { NavLink } from '@remix-run/react';
+import { useCallback } from 'react';
 
 import type { Jsonify } from '@animegarden/client';
 
 import { getWeekday } from '~/utils/date';
-import { type FullBangumiItem, getSubjectDisplayName, getSubjectURL } from '~/utils/subjects';
-import { toast } from 'sonner';
+import { getSubjectDisplayName, getSubjectURL } from '~/utils/subjects';
 
-export function SubjectCard({ subject }: { subject: Jsonify<FullBangumiItem> }) {
+export function SubjectCard({ subject }: { subject: Jsonify<FullSubject> }) {
   const onClickShare = useCallback(
     async (e: React.MouseEvent) => {
       e.preventDefault();
@@ -25,35 +27,36 @@ export function SubjectCard({ subject }: { subject: Jsonify<FullBangumiItem> }) 
     },
     [subject]
   );
-  
+
   return (
     <div className="mb-12 p-4 w-full bg-zinc-50 dark:bg-zinc-800 drop-shadow rounded-md flex gap-8 lt-md:flex-col">
-      {subject.bangumi?.images && (
+      {subject.poster ? (
         <div className="w-[300px] flex-shrink-0 lt-md:w-full">
-          <img
-            src={subject.bangumi?.images.large}
-            alt={subject.name}
-            className="rounded-md hover:drop-shadow"
-          />
+          <img src={subject.poster} alt={subject.title} className="rounded-md hover:drop-shadow" />
         </div>
+      ) : (
+        <div className="w-[300px] flex-shrink-0 lt-md:w-full"></div>
       )}
       <div className="info-box space-y-8">
         <h1 className="text-2xl font-bold flex items-center gap-2 pr-2">
           <NavLink to={getSubjectURL(subject)} className="text-link-active">
             {getSubjectDisplayName(subject)}
           </NavLink>
-          <span className="h-[30px] px-1.5 py-1.5 w-auto rounded-md flex items-center cursor-pointer hover:bg-layer-muted" onClick={onClickShare}>
+          <span
+            className="h-[30px] px-1.5 py-1.5 w-auto rounded-md flex items-center cursor-pointer hover:bg-layer-muted"
+            onClick={onClickShare}
+          >
             <span className="i-carbon-share text-sm"></span>
           </span>
         </h1>
         <article className="grid grid-cols-1 gap-2">
           <p className="space-x-2">
             <span className="font-bold mr-3">放送日期</span>
-            <span>{getWeekday(subject.air_date)}</span>
+            <span>{getWeekday(subject.onair_date!)}</span>
           </p>
           <p className="space-x-2">
             <span className="font-bold mr-3">放送开始</span>
-            <span>{subject.air_date}</span>
+            <span>{subject.onair_date}</span>
           </p>
           <p className="flex items-center space-x-2">
             <span className="font-bold mr-3">外部链接</span>
@@ -65,7 +68,7 @@ export function SubjectCard({ subject }: { subject: Jsonify<FullBangumiItem> }) 
               <span className="i-mingcute-bilibili-line"></span>
               <span>Bangumi</span>
             </a>
-            {subject.tmdb && (
+            {/* {subject.tmdb && (
               <a
                 href={`https://www.themoviedb.org/${subject.tmdb.type}/${subject.tmdb.id}`}
                 target="_blank"
@@ -74,13 +77,13 @@ export function SubjectCard({ subject }: { subject: Jsonify<FullBangumiItem> }) 
                 <span className="i-simple-icons-themoviedatabase"></span>
                 <span>TMDB</span>
               </a>
-            )}
+            )} */}
           </p>
         </article>
         <SubjectSummary
           className="summary-box"
           summary={subject.summary}
-          tags={subject.bangumi?.tags}
+          tags={subject.tags}
         ></SubjectSummary>
       </div>
     </div>

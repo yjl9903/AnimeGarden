@@ -108,7 +108,7 @@ export const meta: MetaFunction<typeof loader> = ({ location, data, params }) =>
 
   const cover = description?.images[0]?.src;
   const subject = resource?.subjectId ? getSubjectById(resource.subjectId) : undefined;
-  const subjectImage = subject?.bangumi?.images.large;
+  const subjectImage = subject?.poster;
   if (cover || subjectImage) {
     og.push({
       name: 'og:image',

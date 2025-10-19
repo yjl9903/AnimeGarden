@@ -1,25 +1,19 @@
-import type { Jsonify } from '@animegarden/client';
-import type { FullBangumi } from 'bgmd/types';
+import type { BasicSubject, FullSubject } from 'bgmd';
 
-export type BangumiItem = Omit<FullBangumi, 'summary'>;
-
-export type FullBangumiItem = FullBangumi;
-
-const subjectIdMap = new Map<number, BangumiItem>();
-const subjectNameMap = new Map<string, BangumiItem>();
+const subjectIdMap = new Map<number, BasicSubject>();
+const subjectNameMap = new Map<string, BasicSubject>();
 
 const loadPromise = new Promise(async (res) => {
   try {
-    const { bangumis } = import.meta.env.SSR ? await import('bgmd/full') : await import('bgmd');
+    const { subjects } = import.meta.env.SSR
+      ? await import('bgmd/full', { with: { type: 'json' } })
+      : await import('bgmd', { with: { type: 'json' } });
 
-    for (const bgm of bangumis) {
+    for (const bgm of subjects) {
       subjectIdMap.set(bgm.id, bgm);
-      if (bgm.bangumi?.name_cn) {
-        subjectNameMap.set(bgm.bangumi?.name_cn, bgm);
-      }
-      subjectNameMap.set(bgm.name, bgm);
-      if (bgm.bangumi?.name_cn) {
-        subjectNameMap.set(bgm.bangumi?.name_cn, bgm);
+      subjectNameMap.set(bgm.title, bgm);
+      for (const include of bgm.search.include) {
+        subjectNameMap.set(include, bgm);
       }
     }
 
@@ -38,12 +32,12 @@ export async function waitForSubjectsLoaded() {
   return await loadPromise;
 }
 
-export function getSubjectById(id: number) {
-  return subjectIdMap.get(id);
+export function getSubjectById(id: number): FullSubject | undefined {
+  return subjectIdMap.get(id) as any;
 }
 
-export function getSubjectByName(name: string) {
-  return subjectNameMap.get(name);
+export function getSubjectByName(name: string): FullSubject | undefined {
+  return subjectNameMap.get(name) as any;
 }
 
 export function searchSubjects(keywords: string[]) {
@@ -52,25 +46,22 @@ export function searchSubjects(keywords: string[]) {
     .filter((bgm) => {
       return keywords.some((keyword) => {
         return (
-          bgm.name.includes(keyword) ||
-          bgm.bangumi?.name_cn?.includes(keyword) ||
-          bgm.alias?.some((alias) => alias.includes(keyword))
+          bgm.title.includes(keyword) ||
+          bgm.search.include.some((include) => include.includes(keyword))
         );
       });
     });
 }
 
-export function getSubjectDisplayName(
-  bgm?: Pick<FullBangumi | BangumiItem | Jsonify<BangumiItem>, 'name' | 'bangumi'>
-) {
-  return bgm?.bangumi?.name_cn || bgm?.name || '';
+export function getSubjectDisplayName(bgm?: BasicSubject) {
+  return bgm?.title || '';
 }
 
-export function getAllSubjectNames(bgm?: Pick<FullBangumi, 'name' | 'bangumi' | 'alias'>) {
+export function getAllSubjectNames(bgm?: BasicSubject) {
   if (!bgm) return [];
-  return [...new Set([bgm.name, bgm.bangumi?.name_cn, ...bgm.alias].filter(Boolean))];
+  return [...new Set([bgm.title, ...bgm.search.include].filter(Boolean))];
 }
 
-export function getSubjectURL(bgm: Pick<FullBangumi, 'id'>) {
+export function getSubjectURL(bgm: Pick<BasicSubject, 'id'>) {
   return `/subject/${bgm.id}`;
 }

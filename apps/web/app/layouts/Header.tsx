@@ -3,7 +3,8 @@ import { NavLink } from '@remix-run/react';
 import { useAtomValue } from 'jotai';
 import { memo, useEffect, useMemo, useState } from 'react';
 
-import { getCalendar } from '~/utils/anime';
+import { preferFansubsAtom } from '~/states';
+import { getCalendar } from '~/utils/calendar';
 import { getSubjectURL } from '~/utils/subjects';
 import { getOpenFeedTrackEvent } from '~/utils/umami';
 import { fansubs as AllFansubs, types, DisplayTypeColor } from '~/utils/constants';
@@ -14,7 +15,6 @@ import {
   DropdownSubMenu
 } from '~/components/Dropdown';
 import { DisplayTypeIcon } from '~/components/Icons';
-import { preferFansubsAtom } from '~/states';
 
 export const Header = memo((props: { feedURL?: string }) => {
   const { feedURL } = props;
@@ -101,7 +101,7 @@ const AnimeDropdown = memo(() => {
                         index === day.bangumis.length - 1 && 'rounded-b-md'
                       )}
                     >
-                      {bgm.bangumi?.name_cn || bgm.name}
+                      {bgm.title}
                     </NavLink>
                   ))}
                 </div>

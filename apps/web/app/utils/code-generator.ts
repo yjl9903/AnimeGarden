@@ -1,13 +1,16 @@
-import { FEED_HOST, APP_HOST } from '~build/env';
-import { stringifyURLSearch } from '@animegarden/client';
+import type { BasicSubject } from 'bgmd';
+
 import type { ResolvedFilterOptions, PresetOptions, Jsonify } from '@animegarden/client';
-import type { FullBangumi } from 'bgmd/types';
+
+import { stringifyURLSearch } from '@animegarden/client';
+
+import { FEED_HOST, APP_HOST } from '~build/env';
 
 import { resolveFilterOptions } from '~/routes/resources.($page)/Filter';
 
 export interface CodeGeneratorOptions {
   filter?: Jsonify<ResolvedFilterOptions & PresetOptions> | (ResolvedFilterOptions & PresetOptions);
-  subject?: Omit<FullBangumi, 'summary'>;
+  subject?: BasicSubject;
 }
 
 export function generateCurlCode(options: CodeGeneratorOptions): string {

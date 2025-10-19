@@ -256,7 +256,7 @@ const CollectionItemFilter = memo((props: { item: CollectionItem }) => {
           <span className="font-bold mr2 select-none">动画</span>
           {subjects.map((subject) => (
             <span key={subject.id} className={``}>
-              {subject.bangumi?.name_cn || subject.name}
+              {subject.title}
               {/* (Bangumi: {subject.id}) */}
             </span>
           ))}
@@ -353,7 +353,7 @@ export function inferCollectionItemName(item: CollectionItem | Jsonify<Collectio
   if (item.subjects && item.subjects.length === 1) {
     const bgm = getSubjectById(item.subjects[0]);
     if (bgm) {
-      title = bgm.bangumi?.name_cn || bgm.name;
+      title = bgm.title;
     }
   } else if (item.search && item.search.length > 0) {
     title = item.search.join(' ');

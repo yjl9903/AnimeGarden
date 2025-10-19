@@ -81,8 +81,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/anipar
       bgmd:
-        specifier: 0.0.64
-        version: 0.0.64
+        specifier: 0.20251020.2
+        version: 0.20251020.2
       breadc:
         specifier: 0.9.7
         version: 0.9.7
@@ -208,8 +208,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/anipar
       bgmd:
-        specifier: 0.0.64
-        version: 0.0.64
+        specifier: 0.20251020.2
+        version: 0.20251020.2
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1
@@ -4158,9 +4158,6 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
-  bangumi-data@0.3.177:
-    resolution: {integrity: sha512-ApeKK5Hg//DO5ArAL6r3JdyE0QXypNwGkwk+jYvaWcBrL05R29xVZ0pKvSPBkvCY5fH1XAPFgdi5VX7UdpWnbQ==}
-
   base64-arraybuffer@1.0.2:
     resolution: {integrity: sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==}
     engines: {node: '>= 0.6.0'}
@@ -4180,23 +4177,9 @@ packages:
     resolution: {integrity: sha512-sMm2sV5PRs0YOVk0LTKtjuIprVzxgTQUsrGX/7Yph2Rm4FO2Fqqtq7hNjsOB5xezM4v4+5rljCgK++UeQJZguA==}
     engines: {node: '>=12.20.0'}
 
-  bgmc@0.0.10:
-    resolution: {integrity: sha512-V5pkx/jHgNMfYs+P4xFIGm+dsRjyWuXq/lMzzCPv8vY0nATkD/11RFM3phy6zw0hNb0OmOL4l9xpN+eFDlkPXA==}
-    engines: {node: '>=v20.8.0'}
-    hasBin: true
-
-  bgmc@0.0.12:
-    resolution: {integrity: sha512-jfQHXcaznbnbeGpWQQXOo17DMD+iMgM7cFgjq6VCXzwbL2ri9LydT2TDQKl7MHdCSxTILQFaWqbk1BvTi+Qeyw==}
-    engines: {node: '>=v20.8.0'}
-    hasBin: true
-
-  bgmd@0.0.64:
-    resolution: {integrity: sha512-LsPwyh8Mckt+vfvy7R/QaJcsdQjVODI9+dEQz7Gd9g9kf4rTwAy6jbuurMZHOEjbcZNW5maspLNkkE5kAnw2wQ==}
-    engines: {node: '>=v20.8.0'}
-
-  bgmt@0.1.0:
-    resolution: {integrity: sha512-lHKCIODzIgLV6pwlWrAXr1XYzuddn2gpT6Ju5SXWCiWEKd8Y/Ef/+XqXUJB/lhO+zvAZxMaIOwzAE/jXNIy0BA==}
-    engines: {node: '>=v20.8.0'}
+  bgmd@0.20251020.2:
+    resolution: {integrity: sha512-IjTVXd7cvjoD10mpgeUcuNa2H2uSwqmfh5qluMXeLOjHSJim+4NSguEvFOb5ITfeNJOQNP1Nm8UhjeaMwfYpMQ==}
+    engines: {node: '>=v24.0.0'}
 
   bidi-js@1.0.3:
     resolution: {integrity: sha512-RKshQI1R3YQ+n9YJz2QQ147P66ELpa1FQEg20Dk8oW9t2KgLbpDLLp9aGZ7y8WHSshDknG0bknqGw5/tyCs5tw==}
@@ -7692,11 +7675,6 @@ packages:
 
   tldts@7.0.14:
     resolution: {integrity: sha512-lMNHE4aSI3LlkMUMicTmAG3tkkitjOQGDTFboPJwAg2kJXKP1ryWEyqujktg5qhrFZOkk5YFzgkxg3jErE+i5w==}
-    hasBin: true
-
-  tmdbc@0.0.2:
-    resolution: {integrity: sha512-dKVpUVyRtVuFZFmmEQvF9XQjiqCar2MFct3al2UZLZH8ylT/lQNHhx1cdB3sl7n1589OttkAXVg6Sfk6vC+ZvA==}
-    engines: {node: '>=v20.8.0'}
     hasBin: true
 
   tmp@0.0.33:
@@ -13002,8 +12980,6 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
-  bangumi-data@0.3.177: {}
-
   base64-arraybuffer@1.0.2: {}
 
   base64-js@1.5.1: {}
@@ -13018,26 +12994,7 @@ snapshots:
 
   bep53-range@2.0.0: {}
 
-  bgmc@0.0.10:
-    dependencies:
-      breadc: 0.9.7
-
-  bgmc@0.0.12:
-    dependencies:
-      breadc: 0.9.7
-
-  bgmd@0.0.64:
-    dependencies:
-      bangumi-data: 0.3.177
-      bgmc: 0.0.12
-      bgmt: 0.1.0
-      tmdbc: 0.0.2
-      type-fest: 4.41.0
-
-  bgmt@0.1.0:
-    dependencies:
-      bgmc: 0.0.10
-      simptrad: 0.2.0
+  bgmd@0.20251020.2: {}
 
   bidi-js@1.0.3:
     dependencies:
@@ -17002,10 +16959,6 @@ snapshots:
   tldts@7.0.14:
     dependencies:
       tldts-core: 7.0.14
-
-  tmdbc@0.0.2:
-    dependencies:
-      breadc: 0.9.7
 
   tmp@0.0.33:
     dependencies:

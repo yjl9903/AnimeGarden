@@ -32,8 +32,15 @@ export const meta: MetaFunction<typeof loader> = ({ params, data }) => {
   const title = data?.name;
 
   return [
-    { title: (title ? title + ' | ' : '') + 'Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站' },
-    { name: 'description', content: 'Anime Garden 资源收藏夹, 動漫花園資源網镜像站, 动漫花园动画 BT 资源聚合站' },
+    {
+      title:
+        (title ? title + ' | ' : '') +
+        'Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站'
+    },
+    {
+      name: 'description',
+      content: 'Anime Garden 资源收藏夹, 動漫花園資源網镜像站, 动漫花园动画 BT 资源聚合站'
+    },
     { tagName: 'link', rel: 'canonical', href: getCanonicalURL(`/collection/${params.hash}`) }
   ];
 };

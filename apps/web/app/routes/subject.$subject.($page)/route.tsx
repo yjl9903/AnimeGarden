@@ -19,9 +19,8 @@ import Resources from '~/components/Resources';
 import { generateTitleFromFilter } from '~/utils/server/meta';
 import { fetchResources, getFeedURL, getCanonicalURL, track } from '~/utils';
 import {
-  type FullBangumiItem,
-  getAllSubjectNames,
   getSubjectById,
+  getAllSubjectNames,
   getSubjectDisplayName,
   waitForSubjectsLoaded
 } from '~/utils/subjects';
@@ -38,7 +37,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   }
 
   const subjectId = +params.subject!;
-  const subject = getSubjectById(subjectId) as FullBangumiItem;
+  const subject = getSubjectById(subjectId);
 
   const { ok, resources, pagination, filter, timestamp, error } = await fetchResources({
     subject: subjectId,
@@ -88,7 +87,7 @@ export const meta: MetaFunction<typeof loader> = ({ location, data, params }) =>
       ]
     : [];
 
-  const subjectImage = subject?.bangumi?.images.large;
+  const subjectImage = subject?.poster;
   if (subjectImage) {
     og.push({
       name: 'og:image',
@@ -158,7 +157,7 @@ export default function SubjectIndex() {
       <div className="w-full pt-13 pb-24">
         {ok && subject ? (
           <>
-            <SubjectCard subject={subject!}></SubjectCard>
+            <SubjectCard subject={subject}></SubjectCard>
             <div className="flex flex-col gap-12">
               {resources.map((group) => (
                 <div

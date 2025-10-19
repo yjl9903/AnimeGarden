@@ -3,7 +3,7 @@ import { NavLink } from '@remix-run/react';
 import { useCallback } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 
-import type { FullBangumi } from 'bgmd/types';
+import type { FullSubject } from 'bgmd';
 
 import {
   type PresetOptions,
@@ -72,7 +72,7 @@ export function resolveFilterOptions(
 interface Props {
   filter?: Jsonify<ResolvedFilterOptions & PresetOptions>;
 
-  subject?: Omit<FullBangumi, 'summary'>;
+  subject?: FullSubject;
 
   feedURL?: string;
 

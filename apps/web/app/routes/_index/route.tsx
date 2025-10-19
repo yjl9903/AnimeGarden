@@ -34,7 +34,10 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
 export const meta: MetaFunction = () => {
   return [
     { title: 'Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站' },
-    { name: 'description', content: 'Anime Garden 動漫花園資源網镜像站, 动漫花园动画 BT 资源聚合站' },
+    {
+      name: 'description',
+      content: 'Anime Garden 動漫花園資源網镜像站, 动漫花园动画 BT 资源聚合站'
+    },
     { tagName: 'link', rel: 'canonical', href: getCanonicalURL('/') }
   ];
 };
