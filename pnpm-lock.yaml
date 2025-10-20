@@ -436,8 +436,8 @@ importers:
         specifier: ^27.0.1
         version: 27.0.1(postcss@8.5.6)
       parse-torrent:
-        specifier: ^11.0.18
-        version: 11.0.18
+        specifier: ^11.0.19
+        version: 11.0.19
       rss-parser:
         specifier: ^3.13.0
         version: 3.13.0
@@ -6418,8 +6418,8 @@ packages:
   parse-path@7.1.0:
     resolution: {integrity: sha512-EuCycjZtfPcjWk7KTksnJ5xPMvWGA/6i4zrLYhRG0hGvC3GPU/jGUj3Cy+ZR0v30duV3e23R95T1lE2+lsndSw==}
 
-  parse-torrent@11.0.18:
-    resolution: {integrity: sha512-C1igbmTrQQuKlspAfP1wcLaOPlvtu5qi4pMdPoCCfepHmxDOk8iArJ2J1yblLx11UefZJUaKEPSxIwMdG11SuA==}
+  parse-torrent@11.0.19:
+    resolution: {integrity: sha512-T0lEkDdFVQsy0YxHIKjzDHSgt/yl57f3INs5jl7OZqAm77XDF0FgRgrv3LCKgSqsTOrMwYaF0t2761WKdvhgig==}
     engines: {node: '>=12.20.0'}
     hasBin: true
 
@@ -7377,6 +7377,7 @@ packages:
   sitemap@8.0.0:
     resolution: {integrity: sha512-+AbdxhM9kJsHtruUF39bwS/B0Fytw6Fr1o4ZAIAEqA6cke2xcoO2GleBw9Zw7nRzILVEgz7zBM5GiTJjie1G9A==}
     engines: {node: '>=14.0.0', npm: '>=6.0.0'}
+    deprecated: 'SECURITY: Multiple vulnerabilities fixed in 8.0.1 (XML injection, path traversal, command injection, protocol injection). Upgrade immediately: npm install sitemap@8.0.1'
     hasBin: true
 
   smob@1.5.0:
@@ -15551,7 +15552,7 @@ snapshots:
     dependencies:
       protocols: 2.0.2
 
-  parse-torrent@11.0.18:
+  parse-torrent@11.0.19:
     dependencies:
       bencode: 4.0.0
       cross-fetch-ponyfill: 1.0.3
