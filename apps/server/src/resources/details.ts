@@ -1,6 +1,6 @@
 import type { ConsolaInstance } from 'consola';
 
-import { and, eq } from 'drizzle-orm';
+import { and, eq, ilike, desc } from 'drizzle-orm';
 
 import {
   type ProviderType,
@@ -15,6 +15,7 @@ import type { Detail } from '../schema';
 
 import { details } from '../schema/details';
 import { resources } from '../schema/resources';
+import { ScraperProviders } from '../providers';
 import { nextTick } from '../utils/timer';
 import { DETAIL_EXPIRE } from '../constants';
 
@@ -127,6 +128,58 @@ export class DetailsManager {
         duplicatedId: found.duplicatedId
       };
     }
+  }
+
+  public async getByInfoHash(infoHash: string) {
+    const trimmed = infoHash.trim();
+    if (!trimmed) {
+      return {
+        resource: undefined,
+        detail: undefined,
+        isDeleted: false,
+        duplicatedId: undefined
+      };
+    }
+
+    const upper = trimmed.toUpperCase();
+    const isHex = /^[0-9A-F]{40}$/.test(upper);
+    const isBase32 = /^[A-Z2-7]{32}$/.test(upper);
+    if (!isHex && !isBase32) {
+      return {
+        resource: undefined,
+        detail: undefined,
+        isDeleted: false,
+        duplicatedId: undefined
+      };
+    }
+
+    const magnetPrefix = `magnet:?xt=urn:btih:${upper}`;
+    const resp = await this.system.database
+      .select(RESOURCE_SELECTOR)
+      .from(resources)
+      .where(ilike(resources.magnet, `${magnetPrefix}%`))
+      .orderBy(desc(resources.createdAt))
+      .limit(1);
+
+    const found = resp[0];
+    if (!found) {
+      return {
+        resource: undefined,
+        detail: undefined,
+        isDeleted: false,
+        duplicatedId: undefined
+      };
+    }
+
+    const provider = found.provider as ProviderType;
+    const providerInstance = ScraperProviders.get(provider);
+
+    return await this.getByProviderId(provider, found.providerId, async () => {
+      if (!providerInstance) {
+        return undefined;
+      }
+      return await providerInstance.fetchResourceDetail(this.system, found.href);
+    });
   }
 
   private async fixResourceWithDetail(

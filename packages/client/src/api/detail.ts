@@ -30,3 +30,33 @@ export async function fetchResourceDetail(
     timestamp: resp?.timestamp ? new Date(resp.timestamp) : undefined
   };
 }
+
+export async function fetchResourceDetailByInfoHash(
+  infoHash: string,
+  options: FetchResourceDetailOptions = {}
+): Promise<FetchResourceDetailResult> {
+  const hash = infoHash.trim();
+  if (!hash) {
+    return {
+      ok: false,
+      resource: undefined,
+      detail: undefined,
+      timestamp: undefined
+    };
+  }
+
+  const resp = await fetchAPI<any>(
+    `detail/info-hash/${encodeURIComponent(hash)}`,
+    undefined,
+    options
+  ).catch((_err) => {
+    return undefined;
+  });
+
+  return {
+    ok: resp && resp.resource !== undefined && resp.timestamp !== undefined,
+    resource: resp?.resource,
+    detail: resp?.detail,
+    timestamp: resp?.timestamp ? new Date(resp.timestamp) : undefined
+  };
+}

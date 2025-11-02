@@ -133,5 +133,40 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
       });
   }
 
+  app.get('/detail/infohash/:hash', etag(), async (c) => {
+    const raw = c.req.param('hash') ?? '';
+    const infoHash = raw.trim();
+    const upper = infoHash.toUpperCase();
+    const isHex = /^[0-9A-F]{40}$/.test(upper);
+    const isBase32 = /^[A-Z2-7]{32}$/.test(upper);
+
+    if (!infoHash || (!isHex && !isBase32)) {
+      c.res.headers.set('Cache-Control', 'no-store');
+      return c.json({
+        status: 'ERROR',
+        message: `Invalid info hash: ${infoHash || raw}`,
+        resource: undefined,
+        detail: undefined,
+        isDeleted: false,
+        duplicatedId: undefined,
+        timestamp: sys.modules.providers.timestamp
+      });
+    }
+
+    const resp = await sys.modules.resources.details.getByInfoHash(infoHash);
+    c.res.headers.set('Cache-Control', `public, max-age=${24 * 60 * 60}`);
+
+    return c.json({
+      status: resp.resource ? 'OK' : 'ERROR',
+      ...(resp.resource
+        ? {}
+        : {
+            message: `Unknown detail info hash: ${infoHash}`
+          }),
+      ...resp,
+      timestamp: sys.modules.providers.timestamp
+    });
+  });
+
   return app;
 });
