@@ -43,15 +43,15 @@
   "dependencies": {
     "@animegarden/client": "workspace:*",
     "anipar": "workspace:*",
-    "jsdom": "^27.0.0",
-    "parse-torrent": "^11.0.18",
+    "jsdom": "^27.0.1",
+    "parse-torrent": "^11.0.19",
     "rss-parser": "^3.13.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@animegarden/shared": "workspace:*",
     "@types/jsdom": "^27.0.0",
-    "@types/parse-torrent": "^5.8.7"
+    "@types/parse-torrent": "^5.8.8"
   },
   "engines": {
     "node": ">=v18.16.0"
