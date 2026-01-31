@@ -30,8 +30,8 @@ importers:
         specifier: latest
         version: 10.4.1
       drizzle-kit:
-        specifier: 0.31.5
-        version: 0.31.5
+        specifier: 0.31.8
+        version: 0.31.8
       prettier:
         specifier: 3.6.2
         version: 3.6.2
@@ -108,8 +108,8 @@ importers:
         specifier: 17.2.3
         version: 17.2.3
       drizzle-orm:
-        specifier: 0.44.6
-        version: 0.44.6(@cloudflare/workers-types@4.20250927.0)(postgres@3.4.8)
+        specifier: 0.45.1
+        version: 0.45.1(@cloudflare/workers-types@4.20250927.0)(postgres@3.4.8)
       fast-xml-parser:
         specifier: 5.2.5
         version: 5.2.5
@@ -4912,12 +4912,12 @@ packages:
     resolution: {integrity: sha512-pYxfDYpued//QpnLIm4Avk7rsNtAtQkUES2cwAYSvD/wd2pKD71gN2Ebj3e7klzXwjocvE8c5vx/1fxwpqmSxA==}
     engines: {node: '>=4'}
 
-  drizzle-kit@0.31.5:
-    resolution: {integrity: sha512-+CHgPFzuoTQTt7cOYCV6MOw2w8vqEn/ap1yv4bpZOWL03u7rlVRQhUY0WYT3rHsgVTXwYQDZaSUJSQrMBUKuWg==}
+  drizzle-kit@0.31.8:
+    resolution: {integrity: sha512-O9EC/miwdnRDY10qRxM8P3Pg8hXe3LyU4ZipReKOgTwn4OqANmftj8XJz1UPUAS6NMHf0E2htjsbQujUTkncCg==}
     hasBin: true
 
-  drizzle-orm@0.44.6:
-    resolution: {integrity: sha512-uy6uarrrEOc9K1u5/uhBFJbdF5VJ5xQ/Yzbecw3eAYOunv5FDeYkR2m8iitocdHBOHbvorviKOW5GVw0U1j4LQ==}
+  drizzle-orm@0.45.1:
+    resolution: {integrity: sha512-Te0FOdKIistGNPMq2jscdqngBRfBpC8uMFVwqjf6gtTVJHIQ/dosgV/CLBU2N4ZJBsXL5savCba9b0YJskKdcA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=4'
@@ -14006,7 +14006,7 @@ snapshots:
 
   drange@1.1.1: {}
 
-  drizzle-kit@0.31.5:
+  drizzle-kit@0.31.8:
     dependencies:
       '@drizzle-team/brocli': 0.10.2
       '@esbuild-kit/esm-loader': 2.6.5
@@ -14015,7 +14015,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.44.6(@cloudflare/workers-types@4.20250927.0)(postgres@3.4.8):
+  drizzle-orm@0.45.1(@cloudflare/workers-types@4.20250927.0)(postgres@3.4.8):
     optionalDependencies:
       '@cloudflare/workers-types': 4.20250927.0
       postgres: 3.4.8
