@@ -9,6 +9,7 @@ import type { NewResource as NewDbResource } from '../schema';
 
 import { Module } from '../system/module';
 import { resources as resourceSchema } from '../schema/resources';
+import { normalizeBtihToBase32, normalizeBtihToHex } from '../utils';
 
 import type { InsertResourcesOptions, NewResource } from './types';
 
@@ -119,7 +120,7 @@ FROM ${resourceSchema}
 WHERE (${eq(resourceSchema.isDeleted, false)})
 AND (${isNull(resourceSchema.duplicatedId)})
 AND (${lt(resourceSchema.createdAt, r.createdAt!)})
-AND (${eq(resourceSchema.title, r.title)} OR ${eq(resourceSchema.magnet, r.magnet)})
+AND (${eq(resourceSchema.title, r.title)} OR ${eq(resourceSchema.magnet, normalizeBtihToHex(r.magnet))} OR ${eq(resourceSchema.magnet, normalizeBtihToBase32(r.magnet))})
 ORDER BY ${resourceSchema.createdAt} asc
 LIMIT 1)`
                   : undefined;
@@ -288,7 +289,7 @@ FROM ${resourceSchema}
 WHERE (${eq(resourceSchema.isDeleted, false)})
 AND (${isNull(resourceSchema.duplicatedId)})
 AND (${lt(resourceSchema.createdAt, updated.createdAt!)})
-AND (${eq(resourceSchema.title, updated.title)} OR ${eq(resourceSchema.magnet, updated.magnet)})
+AND (${eq(resourceSchema.title, updated.title)} OR ${eq(resourceSchema.magnet, normalizeBtihToHex(updated.magnet))} OR ${eq(resourceSchema.magnet, normalizeBtihToBase32(updated.magnet))})
 ORDER BY ${resourceSchema.createdAt} asc
 LIMIT 1)`;
 
