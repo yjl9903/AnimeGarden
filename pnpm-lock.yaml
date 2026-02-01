@@ -69,11 +69,11 @@ importers:
         specifier: 0.9.7
         version: 0.9.7
       '@hono/node-server':
-        specifier: 1.19.5
-        version: 1.19.5(hono@4.9.9)
+        specifier: 1.19.9
+        version: 1.19.9(hono@4.11.7)
       '@hono/zod-validator':
-        specifier: 0.7.3
-        version: 0.7.3(hono@4.9.9)(zod@3.25.76)
+        specifier: 0.7.6
+        version: 0.7.6(hono@4.11.7)(zod@3.25.76)
       '@node-rs/jieba':
         specifier: 2.0.1
         version: 2.0.1
@@ -111,8 +111,8 @@ importers:
         specifier: 11.3.3
         version: 11.3.3
       hono:
-        specifier: 4.9.9
-        version: 4.9.9
+        specifier: 4.11.7
+        version: 4.11.7
       ioredis:
         specifier: 5.9.2
         version: 5.9.2
@@ -232,8 +232,8 @@ importers:
         specifier: 5.2.5
         version: 5.2.5
       hono:
-        specifier: 4.9.9
-        version: 4.9.9
+        specifier: 4.11.7
+        version: 4.11.7
       isbot:
         specifier: 5.1.34
         version: 5.1.34
@@ -2050,14 +2050,14 @@ packages:
   '@formkit/auto-animate@0.9.0':
     resolution: {integrity: sha512-VhP4zEAacXS3dfTpJpJ88QdLqMTcabMg0jwpOSxZ/VzfQVfl3GkZSCZThhGC5uhq/TxPHPzW0dzr4H9Bb1OgKA==}
 
-  '@hono/node-server@1.19.5':
-    resolution: {integrity: sha512-iBuhh+uaaggeAuf+TftcjZyWh2GEgZcVGXkNtskLVoWaXhnJtC5HLHrU8W1KHDoucqO1MswwglmkWLFyiDn4WQ==}
+  '@hono/node-server@1.19.9':
+    resolution: {integrity: sha512-vHL6w3ecZsky+8P5MD+eFfaGTyCeOHUIFYMGpQGbrBTSmNNoxv0if69rEZ5giu36weC5saFuznL411gRX7bJDw==}
     engines: {node: '>=18.14.1'}
     peerDependencies:
       hono: ^4
 
-  '@hono/zod-validator@0.7.3':
-    resolution: {integrity: sha512-uYGdgVib3RlGD698WR5dVM0zB3UuPY5vHKXffGUbUh7r4xY+mFIhF3/v4AcQVLrU5CQdBso8BJr4wuVoCrjTuQ==}
+  '@hono/zod-validator@0.7.6':
+    resolution: {integrity: sha512-Io1B6d011Gj1KknV4rXYz4le5+5EubcWEU/speUjuw9XMMIaP3n78yXLhjd2A3PXaXaUwEAluOiAyLqhBEJgsw==}
     peerDependencies:
       hono: '>=3.9.0'
       zod: ^3.25.0 || ^4.0.0
@@ -5445,8 +5445,8 @@ packages:
   highlightjs-vue@1.0.0:
     resolution: {integrity: sha512-PDEfEF102G23vHmPhLyPboFCD+BkMGu+GuJe2d9/eH4FsCwvgBpnc9n0pGE+ffKdph38s6foEZiEjdgHdzp+IA==}
 
-  hono@4.9.9:
-    resolution: {integrity: sha512-Hxw4wT6zjJGZJdkJzAx9PyBdf7ZpxaTSA0NfxqjLghwMrLBX8p33hJBzoETRakF3UJu6OdNQBZAlNSkGqKFukw==}
+  hono@4.11.7:
+    resolution: {integrity: sha512-l7qMiNee7t82bH3SeyUCt9UF15EVmaBvsppY2zQtrbIhl/yzBTny+YUxsVjSjQ6gaqaeVtZmGocom8TzBlA4Yw==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -10389,13 +10389,13 @@ snapshots:
 
   '@formkit/auto-animate@0.9.0': {}
 
-  '@hono/node-server@1.19.5(hono@4.9.9)':
+  '@hono/node-server@1.19.9(hono@4.11.7)':
     dependencies:
-      hono: 4.9.9
+      hono: 4.11.7
 
-  '@hono/zod-validator@0.7.3(hono@4.9.9)(zod@3.25.76)':
+  '@hono/zod-validator@0.7.6(hono@4.11.7)(zod@3.25.76)':
     dependencies:
-      hono: 4.9.9
+      hono: 4.11.7
       zod: 3.25.76
 
   '@iconify-json/ant-design@1.2.5':
@@ -14477,7 +14477,7 @@ snapshots:
 
   highlightjs-vue@1.0.0: {}
 
-  hono@4.9.9: {}
+  hono@4.11.7: {}
 
   hookable@5.5.3: {}
 
