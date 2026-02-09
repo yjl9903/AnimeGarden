@@ -46,7 +46,6 @@ app
   .option('--site <site>', 'Web site host')
   .option('--host <ip>', 'Listen host')
   .option('--port <port>', 'Listen port')
-  .option('--import', 'Import bangumi data', { default: false })
   .action(async (options) => {
     const sys = await initialize({ ...options, cron: false });
     sys.initialize(); // async initializing system
