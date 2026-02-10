@@ -54,6 +54,12 @@ importers:
         specifier: 4.64.0
         version: 4.64.0(@cloudflare/workers-types@4.20260210.0)
 
+  apps/animegarden:
+    dependencies:
+      '@animegarden/client':
+        specifier: workspace:*
+        version: link:../../packages/client
+
   apps/server:
     dependencies:
       '@animegarden/client':
@@ -395,12 +401,6 @@ importers:
       '@total-typescript/ts-reset':
         specifier: ^0.6.1
         version: 0.6.1
-
-  packages/animegarden:
-    dependencies:
-      '@animegarden/client':
-        specifier: workspace:*
-        version: link:../client
 
   packages/anipar:
     devDependencies:
