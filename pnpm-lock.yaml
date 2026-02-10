@@ -111,8 +111,8 @@ importers:
         specifier: 0.45.1
         version: 0.45.1(@cloudflare/workers-types@4.20260210.0)(postgres@3.4.8)
       fast-xml-parser:
-        specifier: 5.2.5
-        version: 5.2.5
+        specifier: 5.3.5
+        version: 5.3.5
       fs-extra:
         specifier: 11.3.3
         version: 11.3.3
@@ -235,8 +235,8 @@ importers:
         specifier: 2.0.1
         version: 2.0.1(date-fns@2.30.0)
       fast-xml-parser:
-        specifier: 5.2.5
-        version: 5.2.5
+        specifier: 5.3.5
+        version: 5.3.5
       hono:
         specifier: 4.11.9
         version: 4.11.9
@@ -5277,12 +5277,12 @@ packages:
   fast-uri@3.0.6:
     resolution: {integrity: sha512-Atfo14OibSv5wAp4VWNsFYE1AchQRTv9cBGWET4pZWHzYshFSS9NQI6I57rdKn9croWVMbYFbLhJ+yJvmZIIHw==}
 
-  fast-xml-parser@5.2.5:
-    resolution: {integrity: sha512-pfX9uG9Ki0yekDHx2SiuRIyFdyAr1kMIMitPvb0YBo8SUfKvia7w7FIyd/l6av85pFYRhZscS75MwMnbvY+hcQ==}
-    hasBin: true
-
   fast-xml-parser@5.3.4:
     resolution: {integrity: sha512-EFd6afGmXlCx8H8WTZHhAoDaWaGyuIBoZJ2mknrNxug+aZKjkp0a0dlars9Izl+jF+7Gu1/5f/2h68cQpe0IiA==}
+    hasBin: true
+
+  fast-xml-parser@5.3.5:
+    resolution: {integrity: sha512-JeaA2Vm9ffQKp9VjvfzObuMCjUYAp5WDYhRYL5LrBPY/jUDlUtOvDfot0vKSkB9tuX885BDHjtw4fZadD95wnA==}
     hasBin: true
 
   fastq@1.19.1:
@@ -7762,6 +7762,9 @@ packages:
 
   strnum@2.1.1:
     resolution: {integrity: sha512-7ZvoFTiCnGxBtDqJ//Cu6fWtZtc7Y3x+QOirG15wztbdngGSkht27o2pyGWrVy0b4WAy3jbKmnoK6g5VlVNUUw==}
+
+  strnum@2.1.2:
+    resolution: {integrity: sha512-l63NF9y/cLROq/yqKXSLtcMeeyOfnSQlfMSlzFt/K73oIaD8DGaQWd7Z34X9GPiKqP5rbSh84Hl4bOlLcjiSrQ==}
 
   style-to-object@0.4.4:
     resolution: {integrity: sha512-HYNoHZa2GorYNyqiCaBgsxvcJIn7OHq6inEga+E6Ke3m5JkoqpQbnFssk4jwe+K7AhGa2fcha4wSOf1Kn01dMg==}
@@ -14415,13 +14418,13 @@ snapshots:
 
   fast-uri@3.0.6: {}
 
-  fast-xml-parser@5.2.5:
-    dependencies:
-      strnum: 2.1.1
-
   fast-xml-parser@5.3.4:
     dependencies:
       strnum: 2.1.1
+
+  fast-xml-parser@5.3.5:
+    dependencies:
+      strnum: 2.1.2
 
   fastq@1.19.1:
     dependencies:
@@ -17182,6 +17185,8 @@ snapshots:
   strip-final-newline@2.0.0: {}
 
   strnum@2.1.1: {}
+
+  strnum@2.1.2: {}
 
   style-to-object@0.4.4:
     dependencies:
