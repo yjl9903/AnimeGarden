@@ -28,6 +28,10 @@
   },
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "bin": {
+    "anime": "./cli.mjs",
+    "animegarden": "./cli.mjs"
+  },
   "files": [
     "dist"
   ],
@@ -39,9 +43,16 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@animegarden/client": "workspace:*"
+    "@animegarden/client": "workspace:*",
+    "@breadc/color": "1.0.0-beta.3",
+    "@breadfs/webdav": "^0.1.9",
+    "breadc": "1.0.0-beta.3",
+    "breadfs": "^0.1.9",
+    "dotenv": "17.2.4",
+    "yaml": "^2.8.2",
+    "zod": "3.25.76"
   },
   "engines": {
-    "node": ">=v18.16.0"
+    "node": ">=v24.0.0"
   }
 }
