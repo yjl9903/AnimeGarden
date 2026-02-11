@@ -1,7 +1,7 @@
 {
   "name": "animespace",
   "version": "0.5.2",
-  "description": "AnimeGarden CLI",
+  "description": "AnimeSpace CLI",
   "keywords": [
     "dmhy",
     "scraper",
@@ -44,12 +44,12 @@
   },
   "dependencies": {
     "@animegarden/client": "workspace:*",
-    "@breadc/color": "1.0.0-beta.3",
-    "@breadfs/webdav": "^0.1.9",
-    "breadc": "1.0.0-beta.3",
-    "breadfs": "^0.1.9",
+    "@breadc/color": "1.0.0-beta.4",
+    "@breadfs/webdav": "0.1.9",
+    "breadc": "1.0.0-beta.4",
+    "breadfs": "0.1.9",
     "dotenv": "17.2.4",
-    "yaml": "^2.8.2",
+    "yaml": "2.8.2",
     "zod": "3.25.76"
   },
   "engines": {
