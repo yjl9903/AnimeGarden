@@ -2,17 +2,16 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { z } from 'zod';
-import { parse } from 'yaml';
+import { config as dotenvConfig } from 'dotenv';
 
-import type { LocalPath } from '../utils/fs.js';
-
-import { LocalFS } from '../utils/fs.js';
+import { parseYAMLWithEnvTag } from '../utils/yaml.js';
+import { type LocalPath, LocalFS } from '../utils/fs.js';
+import { resolveCollectionFiles } from '../subject/load.js';
 import { type Downloader, DownloaderSchema } from '../download/downloader.js';
 
-import type { Preference } from './preference.js';
-
-import { PreferenceSchema } from './preference.js';
-import { type Storage, StorageSchema, resolveStorage, validateStorage } from './storage.js';
+import { type Preference, PreferenceSchema } from './preference.js';
+import { type SQLite, SQLiteSchema, resolveDatabase } from './database.js';
+import { type Storage, StorageInputSchema, resolveStorage } from './storage.js';
 
 export interface Space {
   readonly root: LocalPath;
@@ -24,13 +23,16 @@ export interface Space {
   readonly preference: Preference;
 
   readonly collections: LocalPath[];
+
+  readonly sqlite: SQLite;
 }
 
 export const SpaceSchema = z.object({
-  storage: z.record(z.string(), StorageSchema),
-  downloader: DownloaderSchema,
+  storage: StorageInputSchema.optional(),
+  downloader: DownloaderSchema.optional(),
   preference: PreferenceSchema,
-  collections: z.string().array().default(['./collections/*.yml', './collections/*.yaml'])
+  collections: z.string().array().default(['collections/*.yml', 'collections/*.yaml']),
+  sqlite: SQLiteSchema
 });
 
 export function inferRoot() {
@@ -43,25 +45,34 @@ export function inferRoot() {
   return path.resolve(os.homedir(), '.animespace');
 }
 
-export async function loadSpace(): Promise<Space> {
-  const rootDir = inferRoot();
+function parseSpaceYAML(yaml: string) {
+  const value = parseYAMLWithEnvTag(yaml);
+  return SpaceSchema.parse(value);
+}
+
+export async function loadSpace(rootDir: string): Promise<Space> {
   const root = LocalFS.path(rootDir);
 
-  // TODO: load anime.yaml
+  dotenvConfig({
+    path: root.join('.env').path,
+    override: false,
+    quiet: true
+  });
 
-  const storage = resolveStorage(root);
+  const configPath = root.join('anime.yaml');
+  const configContent = (await configPath.exists()) ? await configPath.readText() : '';
+  const config = parseSpaceYAML(configContent);
+
+  const storage = resolveStorage(root, config.storage);
+  const collections = await resolveCollectionFiles(root, config.collections);
+  const sqlite = resolveDatabase(root, config.sqlite);
 
   return {
     root,
     storage,
-    downloader: {
-      provider: 'qbittorrent'
-    },
-    preference: {},
-    collections: []
+    downloader: config.downloader ?? { provider: 'qbittorrent' },
+    preference: config.preference ?? {},
+    collections,
+    sqlite
   };
-}
-
-export async function validateSpace(space: Space) {
-  await validateStorage(space.storage);
 }

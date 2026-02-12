@@ -1,0 +1,13 @@
+name: demo
+enable: false
+subjects:
+  - name: Subject-A
+    naming: {}
+    source: {}
+  - name: Subject-B
+    enable: true
+    storage:
+      driver: custom
+      path: nested/path
+    naming: {}
+    source: {}

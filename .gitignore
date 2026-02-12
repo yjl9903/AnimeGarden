@@ -5,6 +5,7 @@ node_modules
 .env
 .env.*
 !.env.local
+!apps/animespace/test/__assets__/space-env/.env
 
 # Build output
 .turbo
