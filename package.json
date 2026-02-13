@@ -29,6 +29,7 @@
     "@cloudflare/workers-types": "4.20260214.0",
     "@flydotio/dockerfile": "0.7.10",
     "@total-typescript/ts-reset": "0.6.1",
+    "@types/better-sqlite3": "7.6.13",
     "@types/fs-extra": "11.0.4",
     "@types/node": "24.10.13",
     "@vite-pwa/assets-generator": "1.0.2",
@@ -45,21 +46,5 @@
   "packageManager": "pnpm@10.29.3",
   "engines": {
     "node": ">=v18.16.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "bufferutil",
-      "core-js-pure",
-      "esbuild",
-      "fs-native-extensions",
-      "node-datachannel",
-      "sharp",
-      "tree-sitter",
-      "tree-sitter-json",
-      "tree-sitter-yaml",
-      "utf-8-validate",
-      "utp-native",
-      "workerd"
-    ]
   }
 }

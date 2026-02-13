@@ -3,18 +3,19 @@
   "compilerOptions": {
     "noEmit": true,
     "target": "ESNext",
-    "module": "ESNext",
+    "module": "preserve",
     "lib": [
       "ESNext",
       "DOM"
     ],
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "strict": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "allowImportingTsExtensions": true,
     "paths": {
       "animegarden": [
         "./packages/animegarden/src/index.ts"

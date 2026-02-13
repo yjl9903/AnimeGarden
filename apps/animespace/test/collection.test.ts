@@ -2,9 +2,9 @@ import path from 'node:path';
 
 import { describe, expect, it } from 'vitest';
 
-import { System } from '../src/system/system.js';
-import { LocalFS } from '../src/utils/fs.js';
-import { loadCollections } from '../src/subject/load.js';
+import { System } from '../src/system/system.ts';
+import { LocalFS } from '../src/utils/fs.ts';
+import { loadCollections } from '../src/subject/load.ts';
 
 const ASSETS_DIR = path.resolve(import.meta.dirname, '__assets__');
 

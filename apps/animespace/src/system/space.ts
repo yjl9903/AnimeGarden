@@ -4,14 +4,14 @@ import path from 'node:path';
 import { z } from 'zod';
 import { config as dotenvConfig } from 'dotenv';
 
-import { parseYAMLWithEnvTag } from '../utils/yaml.js';
-import { type LocalPath, LocalFS } from '../utils/fs.js';
-import { resolveCollectionFiles } from '../subject/load.js';
-import { type Downloader, DownloaderSchema } from '../download/downloader.js';
+import { parseYAMLWithEnvTag } from '../utils/yaml.ts';
+import { type LocalPath, LocalFS } from '../utils/fs.ts';
+import { resolveCollectionFiles } from '../subject/load.ts';
+import { type Downloader, DownloaderSchema } from '../download/downloader.ts';
 
-import { type Preference, PreferenceSchema } from './preference.js';
-import { type SQLite, SQLiteSchema, resolveDatabase } from './database.js';
-import { type Storage, StorageInputSchema, resolveStorage } from './storage.js';
+import { type Preference, PreferenceSchema } from './preference.ts';
+import { type SQLite, SQLiteSchema, resolveDatabase } from './database.ts';
+import { type Storage, StorageInputSchema, resolveStorage } from './storage.ts';
 
 export interface Space {
   readonly root: LocalPath;

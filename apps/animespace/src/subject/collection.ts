@@ -1,9 +1,9 @@
-import type { System } from '../system/system.js';
-import type { LocalPath } from '../utils/fs.js';
+import type { System } from '../system/system.ts';
+import type { LocalPath } from '../utils/fs.ts';
 
-import type { RawCollection } from './schema.js';
+import type { RawCollection } from './schema.ts';
 
-import { Subject } from './subject.js';
+import { Subject } from './subject.ts';
 
 export class Collection {
   public readonly system: System;

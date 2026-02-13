@@ -1,13 +1,13 @@
 import path from 'node:path';
 import { glob } from 'node:fs/promises';
 
-import type { System } from '../system/system.js';
+import type { System } from '../system/system.ts';
 
-import { parseYAMLWithEnvTag } from '../utils/yaml.js';
-import { type LocalPath, LocalFS } from '../utils/fs.js';
+import { parseYAMLWithEnvTag } from '../utils/yaml.ts';
+import { type LocalPath, LocalFS } from '../utils/fs.ts';
 
-import { Collection } from './collection.js';
-import { type RawCollection, RawCollectionSchema } from './schema.js';
+import { Collection } from './collection.ts';
+import { type RawCollection, RawCollectionSchema } from './schema.ts';
 
 function parseCollectionYAML(yaml: string): RawCollection {
   const parsed = parseYAMLWithEnvTag(yaml);
