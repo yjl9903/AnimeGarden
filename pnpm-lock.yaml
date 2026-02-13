@@ -72,8 +72,8 @@ importers:
         specifier: 3.986.0
         version: 3.986.0
       '@breadc/color':
-        specifier: 1.0.0-beta.3
-        version: 1.0.0-beta.3
+        specifier: 1.0.0-beta.6
+        version: 1.0.0-beta.6
       '@hono/mcp':
         specifier: 0.2.3
         version: 0.2.3(@modelcontextprotocol/sdk@1.26.0(zod@3.25.76))(hono-rate-limiter@0.4.2(hono@4.11.9))(hono@4.11.9)(zod@3.25.76)
@@ -96,8 +96,8 @@ importers:
         specifier: 0.20260129.0
         version: 0.20260129.0
       breadc:
-        specifier: 1.0.0-beta.3
-        version: 1.0.0-beta.3
+        specifier: 1.0.0-beta.6
+        version: 1.0.0-beta.6
       consola:
         specifier: 3.4.2
         version: 3.4.2
@@ -1199,17 +1199,17 @@ packages:
     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
     engines: {node: '>=6.9.0'}
 
-  '@breadc/color@1.0.0-beta.3':
-    resolution: {integrity: sha512-l4FSLGOb9lG32Bbx5qwOrsVEbLpb2+mlgVuLS7aeWtgsNLuQ/0mAbYQLMHF6CRaiurJXaUq7OsKe8e76dWBnXw==}
+  '@breadc/color@1.0.0-beta.6':
+    resolution: {integrity: sha512-oOIf+u8TYumGQ9w5zrVFSOxJe8995DYFqjiKU+D5IEhg/wcJfUnX7chakAQrSha2U5T9K+TecxBDqhcomMtssw==}
 
-  '@breadc/core@1.0.0-beta.3':
-    resolution: {integrity: sha512-5/b8GqapdO4zTltEjs7EzK8js9Nzzprn/iEv6UNGkdXzFLLk6+Z6SFCJCfIaY694GgueSrZ+IoJWr+I5UsdIOA==}
+  '@breadc/core@1.0.0-beta.6':
+    resolution: {integrity: sha512-KalZIXTZxqnJOA8KtT+s36MIDMRHR2vFthLhvmAYphgmaj6A1QTi1Eddja7DEwnSQ63rpmfJE1W7eb/I4dS5Qw==}
 
-  '@breadc/death@1.0.0-beta.3':
-    resolution: {integrity: sha512-pvdZD7b4ft7maKkYRssJLbmh1s+/+x1/1IYLq7w5JkocS4ypl3IXyczjlf9XMsGPAARWnrizMazWQKmlwi0NAQ==}
+  '@breadc/death@1.0.0-beta.6':
+    resolution: {integrity: sha512-PgLkQrQZ9RDuTrecT/4sjARYilTEVG2uRXMjpqE5akvp33MZM+cJthUhxs8HxX3D/wXadS86zkHDOwJBLBFt8g==}
 
-  '@breadc/tui@1.0.0-beta.3':
-    resolution: {integrity: sha512-rtjpwCE9sh2VPvblb2KEaWxOPV5NyHPeQa3/gHt/HG+xT4Y5+fB7HKz63xdhEZ9zE1WPVOzlVISI2UJPM89/jA==}
+  '@breadc/tui@1.0.0-beta.6':
+    resolution: {integrity: sha512-PEuuCai1Hfgi5xQjKc51NWnIZP6IXeklvcXhmxWWbxwyFTkN5Px8C//Gmv8rRM3+Oc4Vj5xZ9k224KbW38BMVg==}
 
   '@canvas/image-data@1.1.0':
     resolution: {integrity: sha512-QdObRRjRbcXGmM1tmJ+MrHcaz1MftF2+W7YI+MsphnsCrmtyfS0d5qJbk0MeSbUeyM/jCb0hmnkXPsy026L7dA==}
@@ -4331,8 +4331,8 @@ packages:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
 
-  breadc@1.0.0-beta.3:
-    resolution: {integrity: sha512-LYGJfxy/2J+0K0PQqDE97xMyR/aOqLhn9DuED6gHglbDdYE4XO98KXxukJ7m0/G8NjHvB2iLFeALRnTnb4A3zw==}
+  breadc@1.0.0-beta.6:
+    resolution: {integrity: sha512-0LCz6+2efrB/JaA/CMHRa0mJjsSA7e14kGMFX+Kur3zmvIStHIVlW2Dv54Zj/VF6rtDQmmFiJa6XFcplFijFww==}
 
   browserify-zlib@0.1.4:
     resolution: {integrity: sha512-19OEpq7vWgsH6WkvkBJQDFvJS1uPcbFOQ4v9CU839dO+ZZXUZO6XpE6hNCqvlIIj+4fZvRiJ6DsAQ382GwiyTQ==}
@@ -9869,17 +9869,17 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@breadc/color@1.0.0-beta.3': {}
+  '@breadc/color@1.0.0-beta.6': {}
 
-  '@breadc/core@1.0.0-beta.3':
+  '@breadc/core@1.0.0-beta.6':
     dependencies:
-      '@breadc/color': 1.0.0-beta.3
+      '@breadc/color': 1.0.0-beta.6
 
-  '@breadc/death@1.0.0-beta.3': {}
+  '@breadc/death@1.0.0-beta.6': {}
 
-  '@breadc/tui@1.0.0-beta.3':
+  '@breadc/tui@1.0.0-beta.6':
     dependencies:
-      '@breadc/color': 1.0.0-beta.3
+      '@breadc/color': 1.0.0-beta.6
       std-env: 3.10.0
       string-width: 8.1.1
 
@@ -12795,7 +12795,7 @@ snapshots:
       '@babel/plugin-syntax-typescript': 7.28.6(@babel/core@7.29.0)
       '@vanilla-extract/babel-plugin-debug-ids': 1.2.2
       '@vanilla-extract/css': 1.18.0
-      esbuild: 0.17.6
+      esbuild: 0.18.20
       eval: 0.1.8
       find-up: 5.0.0
       javascript-stringify: 2.1.0
@@ -13108,12 +13108,12 @@ snapshots:
     dependencies:
       fill-range: 7.1.1
 
-  breadc@1.0.0-beta.3:
+  breadc@1.0.0-beta.6:
     dependencies:
-      '@breadc/color': 1.0.0-beta.3
-      '@breadc/core': 1.0.0-beta.3
-      '@breadc/death': 1.0.0-beta.3
-      '@breadc/tui': 1.0.0-beta.3
+      '@breadc/color': 1.0.0-beta.6
+      '@breadc/core': 1.0.0-beta.6
+      '@breadc/death': 1.0.0-beta.6
+      '@breadc/tui': 1.0.0-beta.6
 
   browserify-zlib@0.1.4:
     dependencies:
