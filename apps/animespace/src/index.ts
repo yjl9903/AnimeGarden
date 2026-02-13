@@ -1,3 +1,3 @@
-export * from './system/space.js';
+export * from './system/space.ts';
 
-export * from './system/system.js';
+export * from './system/system.ts';

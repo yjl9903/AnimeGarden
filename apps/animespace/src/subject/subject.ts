@@ -1,9 +1,10 @@
-import type { System } from '../system/system.js';
+import type { System } from '../system/system.ts';
 
-import type { RawCollection, RawSubject } from './schema.js';
+import type { RawCollection, RawSubject } from './schema.ts';
 
 export interface SubjectStorage {
   readonly driver: string;
+
   readonly path: string;
 }
 

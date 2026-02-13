@@ -3,7 +3,7 @@ import path from 'node:path';
 import { z } from 'zod';
 import { WebDAVFS } from 'breadfs/webdav';
 
-import { type LocalPath, type StoragePath, LocalFS } from '../utils/fs.js';
+import { type LocalPath, type StoragePath, LocalFS } from '../utils/fs.ts';
 
 export type Storage = { default: StoragePath } & Record<string, StoragePath>;
 

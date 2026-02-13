@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import { afterEach, describe, expect, it } from 'vitest';
 
-import { loadSpace } from '../src/system/space.js';
+import { loadSpace } from '../src/system/space.ts';
 
 const ASSETS_DIR = path.resolve(import.meta.dirname, '__assets__');
 

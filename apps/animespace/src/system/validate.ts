@@ -1,21 +1,21 @@
 import path from 'node:path';
 
-import type { Subject } from '../subject/subject.js';
+import type { Subject } from '../subject/subject.ts';
 
-import type { Space } from './space.js';
+import type { Space } from './space.ts';
 
-export async function validateSpace(space: Space, subjects: Subject[] = []) {
+export async function validate(space: Space, subjects: Subject[] = []) {
   await validateStorage(space);
   await validateSubjects(space, subjects);
 }
 
-async function validateStorage(space: Space) {
+export async function validateStorage(space: Space) {
   for (const storage of Object.values(space.storage)) {
     await storage.list();
   }
 }
 
-async function validateSubjects(space: Space, subjects: Subject[]) {
+export async function validateSubjects(space: Space, subjects: Subject[]) {
   validateUniqueSubjectName(subjects);
   validateStorageDriver(space, subjects);
   validateStoragePathPrefixConflict(subjects);

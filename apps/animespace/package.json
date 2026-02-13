@@ -1,7 +1,7 @@
 {
   "name": "animespace",
   "version": "0.5.2",
-  "description": "AnimeSpace CLI",
+  "description": "「 你所热爱的就是你的动画 」",
   "keywords": [
     "dmhy",
     "scraper",
@@ -37,6 +37,8 @@
   ],
   "scripts": {
     "build": "unbuild",
+    "drizzle": "drizzle-kit",
+    "drizzle:generate": "drizzle-kit generate",
     "format": "prettier --write 'src/**/*.ts' 'test/**/*.ts'",
     "test": "vitest",
     "test:ci": "vitest --run",
@@ -44,11 +46,13 @@
   },
   "dependencies": {
     "@animegarden/client": "workspace:*",
-    "@breadc/color": "1.0.0-beta.4",
+    "@breadc/color": "1.0.0-beta.6",
     "@breadfs/webdav": "0.1.9",
-    "breadc": "1.0.0-beta.4",
+    "better-sqlite3": "12.6.2",
+    "breadc": "1.0.0-beta.6",
     "breadfs": "0.1.9",
     "dotenv": "17.2.4",
+    "drizzle-orm": "0.45.1",
     "undici": "7.21.0",
     "yaml": "2.8.2",
     "zod": "3.25.76"
