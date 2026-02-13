@@ -72,8 +72,8 @@ importers:
         specifier: 3.988.0
         version: 3.988.0
       '@breadc/color':
-        specifier: 1.0.0-beta.4
-        version: 1.0.0-beta.4
+        specifier: 1.0.0-beta.5
+        version: 1.0.0-beta.5
       '@hono/mcp':
         specifier: 0.2.3
         version: 0.2.3(@modelcontextprotocol/sdk@1.26.0(zod@3.25.76))(hono-rate-limiter@0.4.2(hono@4.11.9))(hono@4.11.9)(zod@3.25.76)
@@ -96,8 +96,8 @@ importers:
         specifier: 0.20260129.0
         version: 0.20260129.0
       breadc:
-        specifier: 1.0.0-beta.4
-        version: 1.0.0-beta.4
+        specifier: 1.0.0-beta.5
+        version: 1.0.0-beta.5
       consola:
         specifier: 3.4.2
         version: 3.4.2
@@ -1195,17 +1195,17 @@ packages:
     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
     engines: {node: '>=6.9.0'}
 
-  '@breadc/color@1.0.0-beta.4':
-    resolution: {integrity: sha512-mrEc3SMYJ5KJ4ROiEqQ/XgSYUJ9XMn3K20LA8Ux/C4O5KhrO4VT3qKOasPxAlY8vr7lv4A1zeIa8jgFpawxwEQ==}
+  '@breadc/color@1.0.0-beta.5':
+    resolution: {integrity: sha512-l79QKaTGiQDIUmg8WClcdizfGyu0Wu9AxG/3jlH6+40VFze3Lns2xv8sQqWiKHm5NZG5qjOKWXGRfMaoq3DO4g==}
 
-  '@breadc/core@1.0.0-beta.4':
-    resolution: {integrity: sha512-u8oBtEvYAy/lIlsafXL4epOA0JZWkBpL20GAlYT1nMagxRQsJpXvV0/KstRFwktPn2vTVmYCAtIHrFgMHpOJDg==}
+  '@breadc/core@1.0.0-beta.5':
+    resolution: {integrity: sha512-2u454wxqVKZYppFc4QMGNx81xvuQutnasJ2nTcVZR+KbPjDFN7CvWIMt0lkxIyCsjy4atW7hPYGIaLVL6klI+w==}
 
-  '@breadc/death@1.0.0-beta.4':
-    resolution: {integrity: sha512-EnH9MbOJMjX9+9HcdrT9PV0gggh9EL6nWH9d7eDRARAKfHvQ8WyQ3Dh+Swb78oOJdCbR6o89bWLHxpRQ2BlWlg==}
+  '@breadc/death@1.0.0-beta.5':
+    resolution: {integrity: sha512-xwvvnv3ixYcEdxUXebOvBiWjywTru8I1T0ZZcaNHNpwgMu7toyeqn21+v+Vdo2XJAtmmACl51GLFAtXre0u6BQ==}
 
-  '@breadc/tui@1.0.0-beta.4':
-    resolution: {integrity: sha512-w6Sexl5kx5Mm1Qmg52RISfeKrnnVRsN5vKZ6bPVGZN0TVelZ2krLtliJrRY6I5T4tJhogwIN0caSShxJZFHgqw==}
+  '@breadc/tui@1.0.0-beta.5':
+    resolution: {integrity: sha512-iVq9CgYP3lzwGSD6dqb9SFDfMr30Ute5GJFnOf6dCQeu8LJ4FgQYCZMbVT6ez47WHUEbzEFDAim8aKWk+IEnSA==}
 
   '@canvas/image-data@1.1.0':
     resolution: {integrity: sha512-QdObRRjRbcXGmM1tmJ+MrHcaz1MftF2+W7YI+MsphnsCrmtyfS0d5qJbk0MeSbUeyM/jCb0hmnkXPsy026L7dA==}
@@ -4330,8 +4330,8 @@ packages:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
 
-  breadc@1.0.0-beta.4:
-    resolution: {integrity: sha512-X0VUQwyZYzvttiLbi4o9bUbfPeslF0tuS6rC7VUmQikZYKyBK2L9X4+QfE0WeQg3w53q4Ws3Iis4RtPh0paYjg==}
+  breadc@1.0.0-beta.5:
+    resolution: {integrity: sha512-qKYJsPJpmGW499Rw3V3mIEnO+vgWVnGn/isj1qfJBOLW0uki+US1F6J6Gm5NoxDO6hXcjMkUrPvCdPxZoG5abA==}
 
   browserify-zlib@0.1.4:
     resolution: {integrity: sha512-19OEpq7vWgsH6WkvkBJQDFvJS1uPcbFOQ4v9CU839dO+ZZXUZO6XpE6hNCqvlIIj+4fZvRiJ6DsAQ382GwiyTQ==}
@@ -9860,17 +9860,17 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@breadc/color@1.0.0-beta.4': {}
+  '@breadc/color@1.0.0-beta.5': {}
 
-  '@breadc/core@1.0.0-beta.4':
+  '@breadc/core@1.0.0-beta.5':
     dependencies:
-      '@breadc/color': 1.0.0-beta.4
+      '@breadc/color': 1.0.0-beta.5
 
-  '@breadc/death@1.0.0-beta.4': {}
+  '@breadc/death@1.0.0-beta.5': {}
 
-  '@breadc/tui@1.0.0-beta.4':
+  '@breadc/tui@1.0.0-beta.5':
     dependencies:
-      '@breadc/color': 1.0.0-beta.4
+      '@breadc/color': 1.0.0-beta.5
       std-env: 3.10.0
       string-width: 8.1.1
 
@@ -13103,12 +13103,12 @@ snapshots:
     dependencies:
       fill-range: 7.1.1
 
-  breadc@1.0.0-beta.4:
+  breadc@1.0.0-beta.5:
     dependencies:
-      '@breadc/color': 1.0.0-beta.4
-      '@breadc/core': 1.0.0-beta.4
-      '@breadc/death': 1.0.0-beta.4
-      '@breadc/tui': 1.0.0-beta.4
+      '@breadc/color': 1.0.0-beta.5
+      '@breadc/core': 1.0.0-beta.5
+      '@breadc/death': 1.0.0-beta.5
+      '@breadc/tui': 1.0.0-beta.5
 
   browserify-zlib@0.1.4:
     dependencies:
