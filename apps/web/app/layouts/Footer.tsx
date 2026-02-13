@@ -92,11 +92,7 @@ export const Footer = memo((props: FooterProps) => {
           <div className="flex mt-2">
             <span className="text-base-900 font-bold select-none">关于</span>
             <span className="i-carbon:chevron-right text-xl lt-sm:text-base text-base-900 font-bold select-none relative top-[2px]"></span>
-            <a
-              href="https://github.com/yjl9903/AnimeGarden"
-              target="_blank"
-              className="ml-2"
-            >
+            <a href="https://github.com/yjl9903/AnimeGarden" target="_blank" className="ml-2">
               GitHub
             </a>
             <a href="https://animespace.onekuma.cn" target="_blank" className="ml-4 lt-sm:ml-2">

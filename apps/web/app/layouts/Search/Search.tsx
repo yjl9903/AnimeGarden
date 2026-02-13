@@ -273,7 +273,7 @@ function SearchSubject(props: {
         setDirty(true);
       }
     });
-  }, [bangumis,dirty]);
+  }, [bangumis, dirty]);
 
   return (
     bangumis.length > 0 && (

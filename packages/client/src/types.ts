@@ -133,8 +133,7 @@ export interface ScrapedResource {
 }
 
 export interface ScrapedResourceDetail
-  extends Omit<ScrapedResource, 'magnet' | 'tracker'>,
-    ResourceDetail {}
+  extends Omit<ScrapedResource, 'magnet' | 'tracker'>, ResourceDetail {}
 
 export type FetchOptions = {
   /**
