@@ -7,6 +7,13 @@ import { version, description } from '../package.json';
 
 import { makeSystem } from './system/system.ts';
 import { searchResources } from './command/animegarden.ts';
+import {
+  listStorage,
+  getStorage,
+  putStorage,
+  removeStorage,
+  moveStorage
+} from './command/storage.ts';
 
 const app = breadc('anime', { version, description, i18n: 'zh' }).use(async (ctx, next) => {
   const system = await makeSystem();
@@ -55,68 +62,41 @@ bangumi.command('index <id>', '导入 bangumi 目录').action(async () => {});
 const storage = app.group('storage').option('--storage <name>');
 
 storage
-  .command('list <file>', '列出目录内容')
+  .command('list [file]', '列出目录内容')
   .alias('ls')
   .action(async (file, options, context) => {
-    const system = context.data.system;
-    await system.validateStorage();
-    const driver = system.space.storage[options.storage || 'default'];
-    if (!driver) {
-      throw new Error(`Storage "${options.storage}" is not existed`);
-    }
-
-    if (file.startsWith('../')) {
-      throw new Error(`Path "${file}" is invalid`);
-    }
-
-    const filepath = driver.join(file);
-
-    const content = await filepath.list();
-    for (const file of content) {
-      system.logger.log(`- ${file.path}`);
-    }
+    await context.data.system.validateStorage();
+    return await listStorage(context.data.system, file, options);
   });
 
 storage
   .command('get <file>', '下载文件')
   .option('-o, --output <dst>', '输出到本地文件')
   .action(async (file, options, context) => {
-    const system = context.data.system;
-    await system.validateStorage();
-
-    // TODO
+    return await getStorage(context.data.system, file, options);
   });
 
 storage
   .command('put <file>', '上传文件')
   .option('-i, --input <src>', '待上传的本地文件')
   .action(async (file, options, context) => {
-    const system = context.data.system;
-    await system.validateStorage();
-
-    // TODO
+    return await putStorage(context.data.system, file, options);
   });
 
 storage
   .command('remove <file>', '删除文件')
   .alias('rm')
   .action(async (file, options, context) => {
-    const system = context.data.system;
-    await system.validateStorage();
-
-    // TODO
+    return await removeStorage(context.data.system, file, options);
   });
 
 storage
   .command('move <src> <dst>', '移动文件')
   .alias('mv')
-  .option('--input-driver <driver>', '源路径所属 driver')
-  .option('--output-driver <driver>', '目标路径所属 driver')
+  .option('--src-storage <driver>', '源路径所属 driver')
+  .option('--dst-storage <driver>', '目标路径所属 driver')
   .action(async (src, dst, options, context) => {
-    const system = context.data.system;
-    await system.validateStorage();
-
-    // TODO
+    return await moveStorage(context.data.system, src, dst, options);
   });
 
 setGlobalDispatcher(new EnvHttpProxyAgent());
