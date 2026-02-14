@@ -2,17 +2,24 @@ import path from 'node:path';
 
 import { z } from 'zod';
 import { WebDAVFS } from 'breadfs/webdav';
+import { AliyundriveFS } from 'breadfs/aliyundrive';
 
 import { type LocalPath, type StoragePath, LocalFS } from '../utils/fs.ts';
 
 export type Storage = { default: StoragePath } & Record<string, StoragePath>;
 
 export const StorageSchema = z.object({
-  driver: z.enum(['local', 'webdav']),
+  driver: z.enum(['local', 'webdav', 'aliyundrive']),
   directory: z.string(),
+
+  // WebDAV
   url: z.string().optional(),
   username: z.string().optional(),
-  password: z.string().optional()
+  password: z.string().optional(),
+
+  // Aliyundrive
+  token: z.string().optional(),
+  endpoint: z.string().optional()
 });
 
 export const StorageInputSchema = z
@@ -65,6 +72,24 @@ function resolveStoragePath(root: LocalPath, config: StorageConfig, name: string
         ? config.directory
         : `/${config.directory}`;
       return webdav.path(directory);
+    }
+    case 'aliyundrive': {
+      if (!config.token) {
+        throw new Error(`Storage "${name}" with driver "aliyundrive" requires "token".`);
+      }
+      if (!config.endpoint) {
+        throw new Error(`Storage "${name}" with driver "aliyundrive" requires "endpoint".`);
+      }
+      const aliyun = AliyundriveFS.make({
+        refresh: {
+          token: config.token,
+          endpoint: config.endpoint
+        }
+      });
+      const directory = config.directory.startsWith('/')
+        ? config.directory
+        : `/${config.directory}`;
+      return aliyun.path(directory);
     }
   }
 }
