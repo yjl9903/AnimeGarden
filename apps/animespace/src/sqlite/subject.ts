@@ -4,7 +4,7 @@ import { sqliteTable, integer, text, uniqueIndex } from 'drizzle-orm/sqlite-core
 export const subjects = sqliteTable('subjects', {
   id: integer('id').primaryKey({ autoIncrement: true }).notNull(),
   name: text('name').unique().notNull(),
-  enable: integer('enable', { mode: 'boolean' }).notNull(),
+  enabled: integer('enabled', { mode: 'boolean' }).notNull(),
   source: text('source', { mode: 'json' }).$type<{}>(), // TODO
   naming: text('naming', { mode: 'json' }).$type<{}>() // TODO
 });

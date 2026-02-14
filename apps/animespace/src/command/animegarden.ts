@@ -11,6 +11,7 @@ export interface SearchResourcesOptions {
   before?: string;
   limit?: string | number;
   refresh?: boolean;
+  json?: boolean;
 }
 
 export async function searchResources(
@@ -35,8 +36,8 @@ export async function searchResources(
   }
 
   const response = options.refresh
-    ? await system.animegardenSourceManager.refresh(filter)
-    : await system.animegardenSourceManager.fetchResources(filter);
+    ? await system.managers.animegarden.refresh(filter)
+    : await system.managers.animegarden.fetchResources(filter);
 
   if (!response.ok) {
     throw response.error ?? new Error('Search anime resources failed.');
@@ -45,19 +46,29 @@ export async function searchResources(
   const limit = parsePositiveIntOption(options.limit, 20);
   const items = response.resources.slice(0, limit);
 
-  if (items.length === 0) {
-    system.logger.log('未匹配到资源。');
-    return;
-  }
+  if (options.json) {
+    system.logger.log(JSON.stringify(items, null, 2));
+  } else if (!!system.logger.stream.isTTY) {
+    if (items.length === 0) {
+      system.logger.log('未匹配到资源。');
+      return;
+    }
 
-  for (const [index, resource] of items.entries()) {
-    system.logger.log(
-      `${String(index + 1).padStart(2, ' ')}. ${link(resource.title, `https://animes.garden/detail/${resource.provider}/${resource.providerId}`)}`
-    );
-  }
+    for (const [index, resource] of items.entries()) {
+      system.logger.log(
+        `${String(index + 1).padStart(2, ' ')}. ${link(resource.title, `https://animes.garden/detail/${resource.provider}/${resource.providerId}`)}`
+      );
+    }
 
-  system.logger.log();
-  system.logger.log(`共匹配 ${response.resources.length} 条，已展示 ${items.length} 条。`);
+    system.logger.log();
+    system.logger.log(`共匹配 ${response.resources.length} 条，已展示 ${items.length} 条。`);
+  } else {
+    for (const [index, resource] of items.entries()) {
+      system.logger.log(
+        `${resource.title} ${`https://animes.garden/detail/${resource.provider}/${resource.providerId}`}`
+      );
+    }
+  }
 }
 
 function parseDateOption(name: string, value: string) {

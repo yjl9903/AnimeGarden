@@ -120,19 +120,19 @@ storage:
 
 1. `name?: string`: 仅供识别管理，无运行语义。
 
-2. `enable?: boolean`
+2. `enabled?: boolean`
 
 3. `subjects: Subject[]`
 
 说明：
 
 1. `defaults.storage` / `defaults.naming` / `defaults.source` 不支持。
-2. 继承字段当前只有 `enable`。
+2. 继承字段当前只有 `enabled`。
 
 ### 5.3 Subject 配置结构（输入）
 
 1. `name: string`（全局唯一）
-2. `enable?: boolean`
+2. `enabled?: boolean`
 3. `bgm?: number`（直接写 id）
 4. `tmdb?: { type: string; id: number }`
 5. `storage?: { driver?: string; path?: string }`
@@ -141,7 +141,7 @@ storage:
 
 ### 5.4 Subject 归一化规则
 
-1. `enable` 优先级：`subject.enable > collection.enable > true`
+1. `enabled` 优先级：`subject.enabled > collection.enabled > true`
 2. `storage.driver` 默认 `default`
 3. `storage.path` 默认 `subject.name`
 

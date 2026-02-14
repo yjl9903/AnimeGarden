@@ -1,8 +1,9 @@
 import path from 'node:path';
 
-import type { LocalPath, StoragePath } from '../utils/fs.ts';
-import { LocalFS } from '../utils/fs.ts';
 import type { System } from '../system/system.ts';
+import type { LocalPath, StoragePath } from '../utils/fs.ts';
+
+import { LocalFS } from '../utils/fs.ts';
 
 export interface StorageCommandOptions {
   storage?: string;

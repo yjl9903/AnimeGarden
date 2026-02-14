@@ -9,11 +9,11 @@ export interface SubjectStorage {
 }
 
 export class Subject {
-  public readonly system: System;
+  private readonly system: System;
 
   public readonly name: string;
 
-  public readonly enable: boolean;
+  public readonly enabled: boolean;
 
   public readonly bgm?: number;
 
@@ -32,7 +32,7 @@ export class Subject {
     system: System,
     options: {
       name: string;
-      enable: boolean;
+      enabled: boolean;
       bgm?: number;
       tmdb?: {
         type: string;
@@ -45,7 +45,7 @@ export class Subject {
   ) {
     this.system = system;
     this.name = options.name;
-    this.enable = options.enable;
+    this.enabled = options.enabled;
     this.bgm = options.bgm;
     this.tmdb = options.tmdb;
     this.storage = options.storage;
@@ -60,7 +60,7 @@ export class Subject {
   ): Subject {
     return new Subject(system, {
       name: rawSubject.name,
-      enable: rawSubject.enable ?? rawCollection.enable ?? true,
+      enabled: rawSubject.enabled ?? rawCollection.enabled ?? true,
       bgm: rawSubject.bgm,
       tmdb: rawSubject.tmdb,
       storage: {

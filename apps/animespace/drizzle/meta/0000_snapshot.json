@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "f98e6212-8736-4985-a548-b4ff58cea2db",
+  "id": "a2f563b7-851e-4473-8892-211a98327429",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "animegarden_filter_resources": {
@@ -345,8 +345,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "enable": {
-          "name": "enable",
+        "enabled": {
+          "name": "enabled",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
