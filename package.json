@@ -26,23 +26,23 @@
     "postversion": "turbo run build"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20260210.0",
+    "@cloudflare/workers-types": "4.20260214.0",
     "@flydotio/dockerfile": "0.7.10",
     "@total-typescript/ts-reset": "0.6.1",
     "@types/fs-extra": "11.0.4",
-    "@types/node": "24.10.12",
+    "@types/node": "24.10.13",
     "@vite-pwa/assets-generator": "1.0.2",
     "bumpp": "latest",
     "drizzle-kit": "0.31.9",
     "prettier": "3.8.1",
     "tsx": "4.21.0",
-    "turbo": "2.8.3",
+    "turbo": "2.8.8",
     "typescript": "5.9.3",
     "unbuild": "3.6.1",
     "vitest": "4.0.18",
-    "wrangler": "4.64.0"
+    "wrangler": "4.65.0"
   },
-  "packageManager": "pnpm@10.29.2",
+  "packageManager": "pnpm@10.29.3",
   "engines": {
     "node": ">=v18.16.0"
   },
