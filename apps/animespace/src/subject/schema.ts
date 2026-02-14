@@ -12,13 +12,13 @@ export const SubjectStorageSchema = z
   .optional();
 
 export const RawSubjectSchema = z.object({
-  name: z.string().min(1),
-  enable: z.boolean().optional(),
-  bgm: z.number().optional(),
+  name: z.coerce.string().min(1).max(128),
+  enabled: z.coerce.boolean().optional(),
+  bgm: z.coerce.number().optional(),
   tmdb: z
     .object({
       type: z.string(),
-      id: z.number()
+      id: z.coerce.number()
     })
     .optional(),
   storage: SubjectStorageSchema,
@@ -30,7 +30,7 @@ export type RawSubject = z.infer<typeof RawSubjectSchema>;
 
 export const RawCollectionSchema = z.object({
   name: z.string().optional(),
-  enable: z.boolean().optional(),
+  enabled: z.boolean().optional(),
   subjects: z.array(RawSubjectSchema)
 });
 

@@ -1,4 +1,5 @@
 import Sqlite from 'better-sqlite3';
+import createDebug from 'debug';
 import { sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/better-sqlite3';
 
@@ -11,11 +12,15 @@ import { subjectFiles, subjects } from './subject.ts';
 import { resources, filters, filterResources } from './animegarden.ts';
 import { MetadataKey, metadata, getMetadata, setMetadata } from './metadata.ts';
 
+const debug = createDebug('animespace:sqlite');
+
 const CURRENT_SCHEMA_VERSION = 1;
 
 export async function openDatabase(
   space: Space
 ): Promise<{ client: Sqlite.Database; database: Database }> {
+  debug('start opening database', space.sqlite.path.path);
+
   const client = new Sqlite(space.sqlite.path.path);
 
   const database = drizzle(client, {
@@ -23,6 +28,8 @@ export async function openDatabase(
   });
 
   await migrateDatabase(database);
+
+  debug('finish opening database ok', space.sqlite.path.path);
 
   return { client, database };
 }
@@ -34,12 +41,16 @@ export async function migrateDatabase(database: Database) {
 
     const currentVersion = await readSchemaVersion(database);
     if (currentVersion < 1) {
+      debug(`start migrating database from ${currentVersion}`);
+
       await migrateV1(database);
 
       const resp = await setMetadata(database, MetadataKey.SCHEMA_VERSION, CURRENT_SCHEMA_VERSION);
       if (!resp.ok) {
         throw resp.error;
       }
+
+      debug(`finish migrating database from ${currentVersion}`);
     }
 
     await database.run(sql.raw('COMMIT'));
@@ -87,7 +98,7 @@ async function migrateV1(database: Database) {
       CREATE TABLE IF NOT EXISTS subjects (
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         name TEXT NOT NULL,
-        enable INTEGER NOT NULL,
+        enabled INTEGER NOT NULL,
         source TEXT,
         naming TEXT
       )

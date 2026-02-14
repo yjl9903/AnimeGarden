@@ -1,11 +1,11 @@
 name: demo
-enable: false
+enabled: false
 subjects:
   - name: Subject-A
     naming: {}
     source: {}
   - name: Subject-B
-    enable: true
+    enabled: true
     storage:
       driver: custom
       path: nested/path

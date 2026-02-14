@@ -1,5 +1,6 @@
 import path from 'node:path';
 import { glob } from 'node:fs/promises';
+import createDebug from 'debug';
 
 import type { System } from '../system/system.ts';
 
@@ -9,6 +10,8 @@ import { type LocalPath, LocalFS } from '../utils/fs.ts';
 import { Collection } from './collection.ts';
 import { type RawCollection, RawCollectionSchema } from './schema.ts';
 
+const debug = createDebug('animespace:collection');
+
 function parseCollectionYAML(yaml: string): RawCollection {
   const parsed = parseYAMLWithEnvTag(yaml);
   return RawCollectionSchema.parse(parsed);
@@ -17,11 +20,21 @@ function parseCollectionYAML(yaml: string): RawCollection {
 async function loadCollection(system: System, file: LocalPath): Promise<Collection> {
   const content = await file.readText();
   const rawCollection = parseCollectionYAML(content);
-  return Collection.fromRaw(system, file, rawCollection);
+  const collection = Collection.fromRaw(system, file, rawCollection);
+
+  debug('load collection', collection.name, collection.enabled);
+  if (debug.enabled) {
+    for (const subject of collection.subjects) {
+      debug('load subject', subject);
+    }
+  }
+
+  return collection;
 }
 
 export async function loadCollections(system: System, files: LocalPath[]): Promise<Collection[]> {
-  return Promise.all(files.map((file) => loadCollection(system, file)));
+  const collections = await Promise.all(files.map((file) => loadCollection(system, file)));
+  return collections;
 }
 
 export async function resolveCollectionFiles(
@@ -35,5 +48,6 @@ export async function resolveCollectionFiles(
       files.add(path.normalize(absolute));
     }
   }
+  debug('resolve collection files', [...files]);
   return [...files].sort().map((file) => LocalFS.path(file));
 }

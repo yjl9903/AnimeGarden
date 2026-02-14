@@ -12,7 +12,7 @@ export class Collection {
 
   public readonly name?: string;
 
-  public readonly enable: boolean;
+  public readonly enabled: boolean;
 
   public readonly subjects: Subject[];
 
@@ -21,14 +21,14 @@ export class Collection {
     options: {
       file: LocalPath;
       name?: string;
-      enable?: boolean;
+      enabled?: boolean;
       subjects: Subject[];
     }
   ) {
     this.system = system;
     this.file = options.file;
     this.name = options.name;
-    this.enable = options.enable ?? true;
+    this.enabled = options.enabled ?? true;
     this.subjects = options.subjects;
   }
 
@@ -40,7 +40,7 @@ export class Collection {
     return new Collection(system, {
       file,
       name: rawCollection.name,
-      enable: rawCollection.enable,
+      enabled: rawCollection.enabled,
       subjects
     });
   }

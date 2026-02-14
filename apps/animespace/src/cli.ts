@@ -14,6 +14,8 @@ import {
   removeStorage,
   moveStorage
 } from './command/storage.ts';
+import { getSubjects, getSubject } from './command/subject.ts';
+import { introspectSubjects, refreshSubjects, watchSubjects } from './command/refresh.ts';
 
 const app = breadc('anime', { version, description, i18n: 'zh' }).use(async (ctx, next) => {
   const system = await makeSystem();
@@ -24,9 +26,63 @@ const app = breadc('anime', { version, description, i18n: 'zh' }).use(async (ctx
   }
 });
 
-app.command('watch', '拉取, 下载, 整理上传最新动画资源').action(async (options) => {});
+app.command('watch', '拉取, 下载, 上传所有动画资源').action(async (options, context) => {
+  const { system } = context.data;
+  return await watchSubjects(system, {});
+});
 
-app.command('download <url>', '下载, 整理上传资源').action(async () => {});
+app.command('introspect', '同步存储状态到本地').action(async (options, context) => {
+  const { system } = context.data;
+  const subjects = await getSubjects(system, {});
+  return await introspectSubjects(system, subjects);
+});
+
+app.command('download <url>', '下载资源').action(async (url, options, context) => {
+  const { system } = context.data;
+});
+
+const subject = app
+  .group('subject')
+  .option('-n, --name <string>', '目标动画条目名称')
+  .option('--bgm <id>', 'Bangumi 条目 id');
+
+subject.command('refresh', '拉取, 下载, 上传动画资源').action(async (options, context) => {
+  const { system } = context.data;
+  const subject = await getSubject(system, options);
+  return await refreshSubjects(system, [subject]);
+});
+
+subject
+  .command('source', '查看动画资源来源')
+  .option('--json', '输出 JSON 格式')
+  .action(async (options, context) => {
+    const { system } = context.data;
+    const subject = await getSubject(system, options);
+
+    // TODO
+    // console.log(subject);
+  });
+
+subject
+  .command('files', '查看动画资源目录')
+  .option('--json', '输出 JSON 格式')
+  .action(async (options, context) => {
+    const { system } = context.data;
+    const subject = await getSubject(system, options);
+
+    // TODO
+  });
+
+subject
+  .command('upload', '上传动画资源')
+  .option('-i, --input <file>', '待上传文件')
+  .option('--url', 'Anime Garden 链接, 磁力链接, 种子链接')
+  .action(async (options, context) => {
+    const { system } = context.data;
+    const subject = await getSubject(system, options);
+
+    // TODO
+  });
 
 // garden
 const garden = app.group('garden');
@@ -39,31 +95,51 @@ garden
   .option('--before <date>', '资源上传时间终点')
   .option('--limit <count>', '展示数量, 默认: 20')
   .option('--refresh', '强制刷新缓存')
+  .option('--json', '输出 JSON 格式')
   .action(async (texts, options, context) => {
     return await searchResources(context.data.system, texts, options);
   });
 
-garden.command('detail <provider> <id>', '显示资源详情').action(async () => {});
+garden
+  .command('detail <provider> <id>', '显示资源详情')
+  .option('--json', '输出 JSON 格式')
+  .action(async () => {});
 
-garden.command('collection <id>', '导入 Anime Garden 收藏夹').action(async () => {});
+garden
+  .command('collection <id>', '导入 Anime Garden 收藏夹')
+  .option('--json', '输出 JSON 格式')
+  .action(async () => {});
 
 // bangumi
 const bangumi = app.group('bangumi');
 
-bangumi.command('search <text>', '搜索 bangumi 条目').action(async () => {});
+bangumi
+  .command('search <text>', '搜索 bangumi 条目')
+  .option('--json', '输出 JSON 格式')
+  .action(async () => {});
 
-bangumi.command('subject <id>', '显示 bangumi 条目详情').action(async () => {});
+bangumi
+  .command('subject <id>', '显示 bangumi 条目详情')
+  .option('--json', '输出 JSON 格式')
+  .action(async () => {});
 
-bangumi.command('collection <id>', '导入 bangumi 用户收藏夹').action(async () => {});
+bangumi
+  .command('collection <id>', '导入 bangumi 用户收藏夹')
+  .option('--json', '输出 JSON 格式')
+  .action(async () => {});
 
-bangumi.command('index <id>', '导入 bangumi 目录').action(async () => {});
+bangumi
+  .command('index <id>', '导入 bangumi 目录')
+  .option('--json', '输出 JSON 格式')
+  .action(async () => {});
 
 // storage
-const storage = app.group('storage').option('--storage <name>');
+const storage = app.group('storage').option('-s, --storage <name>');
 
 storage
   .command('list [file]', '列出目录内容')
   .alias('ls')
+  .option('--json', '输出 JSON 格式')
   .action(async (file, options, context) => {
     await context.data.system.validateStorage();
     return await listStorage(context.data.system, file, options);

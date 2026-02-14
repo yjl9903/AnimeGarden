@@ -54,7 +54,7 @@ CREATE UNIQUE INDEX `subject_files_storage_path` ON `subject_files` (`storage`,`
 CREATE TABLE `subjects` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`name` text NOT NULL,
-	`enable` integer NOT NULL,
+	`enabled` integer NOT NULL,
 	`source` text,
 	`naming` text
 );

@@ -18,15 +18,15 @@ describe('load collections and subjects', () => {
 
     expect(collection).toBeDefined();
     expect(collection!.name).toBe('demo');
-    expect(collection!.enable).toBe(false);
+    expect(collection!.enabled).toBe(false);
     expect(collection!.subjects).toHaveLength(2);
 
     const [a, b] = collection!.subjects;
-    expect(a!.enable).toBe(false);
+    expect(a!.enabled).toBe(false);
     expect(a!.storage.driver).toBe('default');
     expect(a!.storage.path).toBe('Subject-A');
 
-    expect(b!.enable).toBe(true);
+    expect(b!.enabled).toBe(true);
     expect(b!.storage.driver).toBe('custom');
     expect(b!.storage.path).toBe('nested/path');
   });
@@ -50,6 +50,6 @@ describe('load collections and subjects', () => {
 
     expect(subjects).toHaveLength(1);
     expect(subjects[0]!.name).toBe('Subject-A');
-    expect(subjects[0]!.enable).toBe(true);
+    expect(subjects[0]!.enabled).toBe(true);
   });
 });
