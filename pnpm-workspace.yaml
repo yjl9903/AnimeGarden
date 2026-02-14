@@ -1,10 +1,11 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
+  - apps/*
+  - packages/*
 
 onlyBuiltDependencies:
   - '@scarf/scarf'
   - '@tree-sitter-grammars/tree-sitter-yaml'
+  - better-sqlite3
   - bufferutil
   - core-js-pure
   - esbuild
