@@ -35,9 +35,7 @@ export async function searchResources(
     filter.before = parseDateOption('before', options.before);
   }
 
-  const response = options.refresh
-    ? await system.managers.animegarden.refresh(filter)
-    : await system.managers.animegarden.fetchResources(filter);
+  const response = await system.managers.animegarden.fetchResources(filter, options.refresh);
 
   if (!response.ok) {
     throw response.error ?? new Error('Search anime resources failed.');

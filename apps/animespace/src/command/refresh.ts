@@ -1,14 +1,11 @@
 import type { Subject } from '../subject/subject.ts';
-import type { System, GetSubjectsOptions } from '../system/system.ts';
+import type { System, GetSubjectsOptions, RefreshOptions } from '../system/system.ts';
 
-export async function watchSubjects(system: System, options: GetSubjectsOptions) {
-  await system.loadSubjects();
-  await system.validate();
-
-  // TODO
-}
-
-export async function refreshSubjects(system: System, subjects: Subject[]) {
+export async function refreshSubjects(
+  system: System,
+  subjects: Subject[],
+  options: RefreshOptions = {}
+) {
   await system.validate();
 
   // TODO

@@ -1,15 +1,6 @@
 import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';
 
-export const enum TorrentStatus {
-  pending = 'pending',
-  downloading = 'downloading',
-  completed = 'completed',
-  failed = 'failed'
-}
-
-export interface TorrentFile {
-  // TODO
-}
+import type { TorrentFile, TorrentStatus } from '../download/torrent.ts';
 
 // Manage pending, downloading, downloaded torrents
 export const torrents = sqliteTable('torrents', {

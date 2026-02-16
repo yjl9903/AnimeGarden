@@ -17,11 +17,21 @@ describe('load space', () => {
 
     const space = await loadSpace(root);
 
-    expect(space.root.path).toBe(root);
-    expect(space.storage.default.path).toBe(path.join(root, 'anime'));
-    expect(space.sqlite.path.path).toBe(path.join(root, 'animespace.db'));
-    expect(space.collections).toEqual([]);
-    expect(space.downloader.provider).toBe('qbittorrent');
+    expect({
+      rootBasename: path.basename(space.root.path),
+      storageDefault: path.relative(root, space.storage.default.path),
+      sqlitePath: path.relative(root, space.sqlite.path.path),
+      collections: space.collections.map((file) => path.relative(root, file.path)),
+      downloader: space.downloader.provider
+    }).toMatchInlineSnapshot(`
+      {
+        "collections": [],
+        "downloader": "qbittorrent",
+        "rootBasename": "space-default",
+        "sqlitePath": "animespace.db",
+        "storageDefault": "anime",
+      }
+    `);
   });
 
   it('loads .env values and resolves collections/sqlite/storage paths', async () => {
@@ -29,9 +39,18 @@ describe('load space', () => {
 
     const space = await loadSpace(root);
 
-    expect(space.storage.default.path).toBe(path.join(root, 'library/anime'));
-    expect(space.sqlite.path.path).toBe(path.join(root, 'data/animespace.db'));
-    expect(space.collections).toHaveLength(1);
-    expect(space.collections[0]!.path).toBe(path.join(root, 'collections', 'demo.yaml'));
+    expect({
+      storageDefault: path.relative(root, space.storage.default.path),
+      sqlitePath: path.relative(root, space.sqlite.path.path),
+      collections: space.collections.map((file) => path.relative(root, file.path))
+    }).toMatchInlineSnapshot(`
+      {
+        "collections": [
+          "collections/demo.yaml",
+        ],
+        "sqlitePath": "data/animespace.db",
+        "storageDefault": "library/anime",
+      }
+    `);
   });
 });

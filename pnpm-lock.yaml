@@ -71,6 +71,12 @@ importers:
       '@breadfs/webdav':
         specifier: 0.1.10
         version: 0.1.10
+      '@node-rs/jieba':
+        specifier: 2.0.1
+        version: 2.0.1
+      anipar:
+        specifier: workspace:*
+        version: link:../../packages/anipar
       better-sqlite3:
         specifier: 12.6.2
         version: 12.6.2
@@ -89,6 +95,9 @@ importers:
       drizzle-orm:
         specifier: 0.45.1
         version: 0.45.1(@cloudflare/workers-types@4.20260214.0)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.6.2)(postgres@3.4.8)
+      fast-glob:
+        specifier: 3.3.3
+        version: 3.3.3
       undici:
         specifier: 7.21.0
         version: 7.21.0
@@ -98,6 +107,10 @@ importers:
       zod:
         specifier: 3.25.76
         version: 3.25.76
+    devDependencies:
+      date-fns:
+        specifier: 4.1.0
+        version: 4.1.0
 
   apps/server:
     dependencies:
@@ -4958,6 +4971,9 @@ packages:
   date-fns@2.30.0:
     resolution: {integrity: sha512-fnULvOpxnC5/Vg3NCiWelDsLiUc9bRwAPs/+LfTLNvetFCtCTN+yQz15C/fs4AwX1R9K5GLtLfn8QW+dWisaAw==}
     engines: {node: '>=0.11'}
+
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
   debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
@@ -14110,6 +14126,8 @@ snapshots:
   date-fns@2.30.0:
     dependencies:
       '@babel/runtime': 7.28.6
+
+  date-fns@4.1.0: {}
 
   debug@2.6.9:
     dependencies:

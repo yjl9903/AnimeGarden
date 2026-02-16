@@ -1,7 +1,3 @@
-import os from 'node:os';
-import path from 'node:path';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
-
 import { eq } from 'drizzle-orm';
 import { afterEach, describe, expect, it } from 'vitest';
 
@@ -10,12 +6,12 @@ import { loadSpace } from '../src/system/space.ts';
 import { openDatabase } from '../src/sqlite/connect.ts';
 import { MetadataKey, getMetadata } from '../src/sqlite/metadata.ts';
 
-const roots: string[] = [];
+import { createAnimeSpaceTestKit } from './helpers/animespace.ts';
+
+const kit = createAnimeSpaceTestKit();
 
 afterEach(async () => {
-  for (const root of roots.splice(0)) {
-    await rm(root, { recursive: true, force: true });
-  }
+  await kit.cleanup();
 });
 
 describe('sqlite migration', () => {
@@ -27,8 +23,12 @@ describe('sqlite migration', () => {
     const opened = await openDatabase(space);
     const version = await getMetadata(opened.database, MetadataKey.SCHEMA_VERSION, 0);
 
-    expect(version.ok).toBe(true);
-    expect(version.ok && version.value).toBe(1);
+    expect(version).toMatchInlineSnapshot(`
+      {
+        "ok": true,
+        "value": 1,
+      }
+    `);
 
     await opened.database
       .insert(filters)
@@ -46,7 +46,11 @@ describe('sqlite migration', () => {
       .where(eq(filters.key, 'migration-first-open'))
       .execute();
 
-    expect(rows).toHaveLength(1);
+    expect(rows.map((row) => row.key)).toMatchInlineSnapshot(`
+      [
+        "migration-first-open",
+      ]
+    `);
 
     opened.client.close();
   });
@@ -71,11 +75,19 @@ describe('sqlite migration', () => {
     const second = await openDatabase(space);
     const secondVersion = await getMetadata(second.database, MetadataKey.SCHEMA_VERSION, 0);
 
-    expect(secondVersion.ok).toBe(true);
-    expect(secondVersion.ok && secondVersion.value).toBe(1);
+    expect(secondVersion).toMatchInlineSnapshot(`
+      {
+        "ok": true,
+        "value": 1,
+      }
+    `);
 
     const secondRows = await second.database.select().from(filters).execute();
-    expect(secondRows.some((row) => row.key === 'migration-reopen-1')).toBe(true);
+    expect(secondRows.map((row) => row.key)).toMatchInlineSnapshot(`
+      [
+        "migration-reopen-1",
+      ]
+    `);
 
     await second.database
       .insert(filters)
@@ -91,18 +103,17 @@ describe('sqlite migration', () => {
     const third = await openDatabase(space);
     const thirdRows = await third.database.select().from(filters).execute();
 
-    expect(thirdRows.map((row) => row.key).sort()).toEqual([
-      'migration-reopen-1',
-      'migration-reopen-2'
-    ]);
+    expect(thirdRows.map((row) => row.key).sort()).toMatchInlineSnapshot(`
+      [
+        "migration-reopen-1",
+        "migration-reopen-2",
+      ]
+    `);
 
     third.client.close();
   });
 });
 
 async function createTempSpace() {
-  const root = await mkdtemp(path.join(os.tmpdir(), 'animespace-migration-'));
-  roots.push(root);
-  await writeFile(path.join(root, 'anime.yaml'), '{}\n');
-  return root;
+  return await kit.createTempRoot({ prefix: 'animespace-migration-', yaml: '{}\n' });
 }

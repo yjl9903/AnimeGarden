@@ -14,27 +14,39 @@ import {
   removeStorage,
   moveStorage
 } from './command/storage.ts';
-import { getSubjects, getSubject } from './command/subject.ts';
-import { introspectSubjects, refreshSubjects, watchSubjects } from './command/refresh.ts';
+import { printSpace } from './command/space.ts';
+import {
+  getSubjects,
+  getSubject,
+  printParsedResources,
+  printExtractedResources
+} from './command/subject.ts';
 
-const app = breadc('anime', { version, description, i18n: 'zh' }).use(async (ctx, next) => {
-  const system = await makeSystem();
-  try {
-    return await next({ data: { system } });
-  } finally {
-    system.close();
-  }
-});
+const app = breadc('anime', { version, description, i18n: 'zh' })
+  .option('-C, --dir <path>', '指定配置文件目录')
+  .use(async (ctx, next) => {
+    const dir = ctx.options.get('dir')?.value();
+    const system = await makeSystem(typeof dir === 'string' ? dir : undefined);
+    try {
+      return await next({ data: { system } });
+    } finally {
+      system.close();
+    }
+  });
 
 app.command('watch', '拉取, 下载, 上传所有动画资源').action(async (options, context) => {
   const { system } = context.data;
-  return await watchSubjects(system, {});
+  printSpace(system);
+
+  return await system.watchSubjects({});
 });
 
 app.command('introspect', '同步存储状态到本地').action(async (options, context) => {
   const { system } = context.data;
+  printSpace(system);
+
   const subjects = await getSubjects(system, {});
-  return await introspectSubjects(system, subjects);
+  return await system.introspectSubjects(subjects);
 });
 
 app.command('download <url>', '下载资源').action(async (url, options, context) => {
@@ -48,23 +60,32 @@ const subject = app
 
 subject.command('refresh', '拉取, 下载, 上传动画资源').action(async (options, context) => {
   const { system } = context.data;
+  printSpace(system);
+
   const subject = await getSubject(system, options);
-  return await refreshSubjects(system, [subject]);
+  return await system.refreshSubjects([subject]);
 });
 
 subject
-  .command('source', '查看动画资源来源')
+  .command('resources', '显示动画资源列表')
+  .option('--full', '显示解析前的完整资源列表')
   .option('--json', '输出 JSON 格式')
   .action(async (options, context) => {
     const { system } = context.data;
     const subject = await getSubject(system, options);
-
-    // TODO
-    // console.log(subject);
+    const resources = await subject.fetchResources();
+    if (options.full) {
+      printParsedResources(system, subject, resources, options);
+      return resources;
+    } else {
+      const extracted = await subject.extractResources(resources);
+      printExtractedResources(system, subject, extracted, options);
+      return extracted;
+    }
   });
 
 subject
-  .command('files', '查看动画资源目录')
+  .command('files', '显示动画资源目录')
   .option('--json', '输出 JSON 格式')
   .action(async (options, context) => {
     const { system } = context.data;

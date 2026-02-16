@@ -6,7 +6,9 @@ import { type Result, tryAsync } from '../utils/result';
 import type { Database } from './types';
 
 export const enum MetadataKey {
-  SCHEMA_VERSION = 'schema_version'
+  SCHEMA_VERSION = 'schema_version',
+
+  ANIMEGARDEN_SYNCED_AT = 'animegarden_synced_at'
 }
 
 export const metadata = sqliteTable('metadata', {

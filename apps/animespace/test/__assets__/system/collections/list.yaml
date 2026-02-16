@@ -1,4 +1,5 @@
 subjects:
   - name: Subject-A
     naming: {}
-    source: {}
+    source:
+      include: [Subject-A]
