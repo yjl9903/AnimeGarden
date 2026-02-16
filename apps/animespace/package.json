@@ -22,18 +22,19 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     }
   },
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/index.d.mts",
   "bin": {
     "anime": "./cli.mjs",
     "animegarden": "./cli.mjs"
   },
   "files": [
-    "dist"
+    "dist",
+    "*.mjs"
   ],
   "scripts": {
     "build": "unbuild",
