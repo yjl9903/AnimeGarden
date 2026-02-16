@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "796bd695-8aa9-49c3-a8be-c28dc18f8b69",
+  "id": "61938bae-5568-4fdb-bccf-e90fc24e3cac",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "animegarden_filter_resources": {
@@ -284,13 +284,6 @@
           "autoincrement": false,
           "default": 0
         },
-        "mtime": {
-          "name": "mtime",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
         "checksum": {
           "name": "checksum",
           "type": "text",
@@ -321,7 +314,7 @@
         },
         "torrent_info_hash": {
           "name": "torrent_info_hash",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

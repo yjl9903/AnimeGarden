@@ -115,12 +115,11 @@ async function migrateV1(database: Database) {
         storage TEXT NOT NULL,
         path TEXT NOT NULL,
         size INTEGER DEFAULT 0,
-        mtime INTEGER NOT NULL,
         checksum TEXT NOT NULL,
         source TEXT,
         animegarden_provider_name TEXT,
         animegarden_provider_id TEXT,
-        torrent_info_hash INTEGER,
+        torrent_info_hash TEXT,
         torrent_file_path TEXT
       )
     `)
