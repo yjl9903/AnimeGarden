@@ -2,6 +2,7 @@ import { sqliteTable, integer, text, uniqueIndex } from 'drizzle-orm/sqlite-core
 
 import type { SubjectSource } from '../subject/source/source.ts';
 import type { SubjectNaming } from '../subject/source/naming.ts';
+import type { ExtractedSubjectResource } from '../subject/source/resource.ts';
 
 // Subjects from collection files
 export const subjects = sqliteTable('subjects', {
@@ -26,18 +27,17 @@ export const subjectFiles = sqliteTable(
     storage: text('storage').notNull(),
     path: text('path').notNull(),
     size: integer('size').default(0),
-    mtime: integer('mtime').notNull(),
     checksum: text('checksum').notNull(),
 
     // Related source
-    source: text('source'),
+    source: text('source', { mode: 'json' }).$type<ExtractedSubjectResource>(),
 
     // Related Anime Garden resource id
     animegardenProvider: text('animegarden_provider_name'),
     animegardenProviderId: text('animegarden_provider_id'),
 
     // Related torrent info hash and corresponding filepath
-    torrentInfoHash: integer('torrent_info_hash'),
+    torrentInfoHash: text('torrent_info_hash'),
     torrentFilePath: text('torrent_file_path')
   },
   (t) => {

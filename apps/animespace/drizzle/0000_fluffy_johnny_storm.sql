@@ -44,12 +44,11 @@ CREATE TABLE `subject_files` (
 	`storage` text NOT NULL,
 	`path` text NOT NULL,
 	`size` integer DEFAULT 0,
-	`mtime` integer NOT NULL,
 	`checksum` text NOT NULL,
 	`source` text,
 	`animegarden_provider_name` text,
 	`animegarden_provider_id` text,
-	`torrent_info_hash` integer,
+	`torrent_info_hash` text,
 	`torrent_file_path` text
 );
 --> statement-breakpoint
