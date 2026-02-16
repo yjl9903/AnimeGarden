@@ -1,110 +1,138 @@
-# AnimeSpace Preference + Naming 设计与实现说明
+# Preference 与 Naming（当前实现说明）
 
-## 目标
+本文档以 `apps/animespace/src` 当前代码为准，描述已实现行为与边界。
 
-在现有 `source` 解析基础上，补全 `preference` 与 `naming`：
+## 1. 配置入口
 
-1. 继承链：`subject 对应配置 > collection.preference > root(anime.yaml).preference > 默认值`。
-2. `preference.animegarden` 作为 `subject.source.animegarden.filter` 的默认筛选配置。
-3. `subject.naming` 支持命名字段覆盖与模板渲染，且对 `season/year/month` 的覆盖仅在 `resource.metadata` 没有对应字段时生效。
+### 1.1 root / collection preference
 
-## 配置定义
-
-### root / collection preference
+代码：`apps/animespace/src/subject/preference.ts`
 
 ```yaml
 preference:
   animegarden:
     after: 2025-01-01
     before: 2025-12-31
-    types: [动画]
+    type: 动画
     fansubs: [字幕组A]
     publishers: [发布组A]
+  order:
+    fansubs: [字幕组A, 字幕组B]
+    keywords:
+      quality: [1080p, HEVC]
   naming:
     template:
-      TV: "{name} S{season}E{episode} {fansub}"
-      Movie: "{name} {fansub}"
+      TV: "{name} S{season}E{episode} {{fansub}}"
+      Movie: "{name} {{fansub}}"
 ```
 
-说明：
+`animegarden` 当前支持字段：
 
-- `animegarden` 仅支持：`after/before/type(s)/fansub(s)/publisher(s)`。
-- 解析规则与 `subject.source.animegarden` 相同（单值/数组、singular/plural 合并、去重保序）。
-- `naming.template` 为按 `SubjectType` 的模板映射，支持 `TV/Movie`，兼容中文键 `动画/电影` 并归一化。
+1. `after`
+2. `before`
+3. `type/types`
+4. `fansub/fansubs`
+5. `publisher/publishers`
 
-### subject naming
+说明：`type/fansub/publisher` 与 plural 字段会做合并、去重、保序。
+
+### 1.2 subject naming
+
+代码：`apps/animespace/src/subject/schema.ts`
 
 ```yaml
 naming:
-  name: 动画名
+  name: 命名动画
   season: 2
   year: 2025
   month: 10
   template:
-    TV: "{name} S{season}E{episode} {fansub}"
-    Movie: "{name} {fansub}"
+    TV: "{name} S{season}E{episode} {{fansub}}"
 ```
 
-说明：
+当前还支持字符串简写：
 
-- `name`：命名用显示名称，默认 `subject.name`。
-- `season/year/month`：覆盖解析结果时，仅在对应 `resource.metadata` 字段不存在时生效。
-- `template`：覆盖上层模板映射。
+```yaml
+naming: 命名动画
+```
 
-## 模板规则
+会被展开成：`{ name: "命名动画" }`。
 
-仅支持以下 token：
+## 2. 继承与合并
 
-- `{name}`
-- `{season}`
-- `{episode}`
-- `{fansub}`
-- `{year}`
-- `{month}`
+代码：`apps/animespace/src/subject/subject.ts`, `apps/animespace/src/subject/preference.ts`
 
-渲染规则：
+### 2.1 source.filter 合并
 
-1. 缺失值替换为空字符串。
-2. 渲染后归一化空白（连续空白压缩并 `trim`）。
-3. 不支持 `{ep}`、`{{fansub}}` 等旧 token。
+合并优先级：
+
+1. `subject.source.animegarden.filter`
+2. `collection.preference.animegarden`
+3. `root.preference.animegarden`
+
+规则为字段级覆盖，不做数组拼接。
+
+### 2.2 order 合并
+
+当前逻辑：
+
+1. `fansubs` 先取 `source.order.fansubs`，否则 collection/root。
+2. 若 `source.animegarden.filter.fansubs` 存在，会覆盖上一步结果。
+3. `keywords` 以组名（`name`）为 key 做覆盖合并。
+
+### 2.3 naming.template 合并
+
+优先级：
+
+1. `subject.naming.template`
+2. `collection.preference.naming.template`
+3. `root.preference.naming.template`
+4. `DefaultNamingTemplate`
+
+## 3. 模板与渲染
+
+代码：`apps/animespace/src/subject/source/naming.ts`
+
+支持 token：
+
+1. `{name}`
+2. `{season}`
+3. `{episode}`
+4. `{fansub}`
+5. `{year}`
+6. `{month}`
 
 默认模板：
 
-- TV: `"{name} S{season}E{episode} {fansub}"`
-- Movie: `"{name} {fansub}"`
+1. TV: `"{name} S{season}E{episode} {{fansub}}"`
+2. Movie: `"{name} {{fansub}}"`
 
-## 合并策略
+渲染规则（当前实现）：
 
-### Source filter
+1. 替换上述 token。
+2. `season/episode` 小于 10 时补零。
+3. 渲染结果仅做 `trim()`。
+4. 未实现“连续空白压缩”。
+5. 当模板使用 `{{fansub}}` 时，结果会保留外层 `{}`（例如 `{Fansub}`）。
 
-按字段覆盖，不做数组拼接：
+## 4. season/year/month 覆盖行为
 
-`subject.source.filter.xxx ?? collection.preference.animegarden.xxx ?? root.preference.animegarden.xxx`
+代码：`apps/animespace/src/subject/source/extract.ts`
 
-### Naming template
+分组提取时的取值顺序：
 
-`subject.naming.template > collection.preference.naming.template > root.preference.naming.template > 默认模板`
+1. `season = resource.metadata.season ?? subject.naming.season ?? parsed.season ?? 1`
+2. `year = resource.metadata.year ?? subject.naming.year ?? parsed.year`
+3. `month = resource.metadata.month ?? subject.naming.month ?? parsed.month`
 
-## 实现落点
+即：只有当 `resource.metadata` 缺失时，才使用 `subject.naming` 覆盖值。
 
-1. `src/system/preference.ts`
-   - 定义 `Preference`、`PreferenceSchema`、merge helper。
-2. `src/subject/schema.ts`
-   - `RawCollectionSchema` 增加 `preference`。
-   - `RawSubjectSchema.naming` 改为强类型 schema。
-3. `src/subject/collection.ts`
-   - Collection 持有 preference。
-4. `src/subject/subject.ts`
-   - 构建阶段完成 source filter 与 naming 继承。
-5. `src/subject/source/naming.ts`
-   - 模板解析、默认模板、渲染函数。
-6. `src/subject/source/extract.ts`
-   - 应用 naming 覆盖并填充 `extracted.filename`。
+## 5. 与文档设计差异（保留提醒）
 
-## 验收标准
+以下是当前实现与早期设计文档中常见预期的差异：
 
-1. `preference` 在 root 与 collection 均可解析。
-2. source filter 按优先级覆盖，且字段行为符合 animegarden 解析。
-3. `subject.naming` 为强类型且包含默认模板。
-4. `extract` 输出稳定 `filename`。
-5. `season/year/month` 覆盖遵守 metadata 守卫规则。
+1. `naming` 当前可缺省，不是强制必填。
+2. 模板默认仍使用 `{{fansub}}` 形式。
+3. 渲染阶段未做空白归一化。
+
+这些行为已被现有测试覆盖（`apps/animespace/test/preference.test.ts`）。

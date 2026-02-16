@@ -46,8 +46,11 @@ CREATE TABLE `subject_files` (
 	`size` integer DEFAULT 0,
 	`mtime` integer NOT NULL,
 	`checksum` text NOT NULL,
-	`torrent_id` integer,
-	`torrent_file` text
+	`source` text,
+	`animegarden_provider_name` text,
+	`animegarden_provider_id` text,
+	`torrent_info_hash` integer,
+	`torrent_file_path` text
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `subject_files_storage_path` ON `subject_files` (`storage`,`path`);--> statement-breakpoint
@@ -55,8 +58,10 @@ CREATE TABLE `subjects` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`name` text NOT NULL,
 	`enabled` integer NOT NULL,
-	`source` text,
-	`naming` text
+	`source` text NOT NULL,
+	`naming` text NOT NULL,
+	`created_at` integer NOT NULL,
+	`updated_at` integer NOT NULL
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `subjects_name_unique` ON `subjects` (`name`);--> statement-breakpoint

@@ -99,8 +99,10 @@ async function migrateV1(database: Database) {
         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
         name TEXT NOT NULL,
         enabled INTEGER NOT NULL,
-        source TEXT,
-        naming TEXT
+        source TEXT NOT NULL,
+        naming TEXT NOT NULL,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL
       )
     `)
   );
@@ -115,8 +117,11 @@ async function migrateV1(database: Database) {
         size INTEGER DEFAULT 0,
         mtime INTEGER NOT NULL,
         checksum TEXT NOT NULL,
-        torrent_id INTEGER,
-        torrent_file TEXT
+        source TEXT,
+        animegarden_provider_name TEXT,
+        animegarden_provider_id TEXT,
+        torrent_info_hash INTEGER,
+        torrent_file_path TEXT
       )
     `)
   );

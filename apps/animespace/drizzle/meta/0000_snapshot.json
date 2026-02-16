@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "a2f563b7-851e-4473-8892-211a98327429",
+  "id": "796bd695-8aa9-49c3-a8be-c28dc18f8b69",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "animegarden_filter_resources": {
@@ -298,15 +298,36 @@
           "notNull": true,
           "autoincrement": false
         },
-        "torrent_id": {
-          "name": "torrent_id",
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "animegarden_provider_name": {
+          "name": "animegarden_provider_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "animegarden_provider_id": {
+          "name": "animegarden_provider_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "torrent_info_hash": {
+          "name": "torrent_info_hash",
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
         },
-        "torrent_file": {
-          "name": "torrent_file",
+        "torrent_file_path": {
+          "name": "torrent_file_path",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -356,14 +377,28 @@
           "name": "source",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "naming": {
           "name": "naming",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
           "autoincrement": false
         }
       },

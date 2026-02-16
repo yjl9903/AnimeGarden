@@ -6,7 +6,7 @@ import type { Database } from '../sqlite/types.ts';
 
 import { loop } from '../utils/loop.ts';
 import { memoAsync } from '../utils/result.ts';
-import { openDatabase } from '../sqlite/connect.ts';
+import { openDatabase } from '../sqlite/open.ts';
 import { loadCollections } from '../subject/load.ts';
 import { AnimeGardenSourceManager } from '../subject/animegarden/manager.ts';
 import { refreshSubjects, introspectSubjects } from '../command/refresh.ts';
@@ -73,6 +73,25 @@ export class System {
     return this.space;
   }
 
+  public close() {
+    try {
+      this.openDatabase.clear();
+    } catch {}
+
+    try {
+      this.managers.animegarden?.close();
+    } catch {}
+
+    for (const fn of this.disposables) {
+      try {
+        fn();
+      } catch {}
+    }
+    this.disposables.length = 0;
+
+    this.debug('close system');
+  }
+
   public async loadSubjects() {
     if (!this.space) {
       throw new Error('Space is not loaded.');
@@ -131,17 +150,6 @@ export class System {
     await validateStorage(this);
 
     this.debug('finish validating storage ok');
-  }
-
-  public close() {
-    for (const fn of this.disposables) {
-      try {
-        fn();
-      } catch {}
-    }
-    this.disposables.length = 0;
-
-    this.debug('close system');
   }
 
   /**
