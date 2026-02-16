@@ -201,10 +201,10 @@ export class AnimeGardenSourceManager {
       if (!predicate(row)) {
         return false;
       }
-      // @hack 原本是 jieba
       if (!searchKeywords || searchKeywords.length === 0) {
         return true;
       }
+      // 服务端使用 postgres 进行分词筛选, 本地进行简单的分词模拟
       const title = new Set(
         jieba.cut(removePunctuations(normalizeTitle(row.title).toLocaleLowerCase()))
       );

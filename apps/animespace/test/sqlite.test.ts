@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 
 import { filters } from '../src/sqlite/animegarden.ts';
 import { loadSpace } from '../src/system/space.ts';
-import { openDatabase } from '../src/sqlite/connect.ts';
+import { openDatabase } from '../src/sqlite/open.ts';
 import { MetadataKey, getMetadata } from '../src/sqlite/metadata.ts';
 
 import { createAnimeSpaceTestKit } from './helpers/animespace.ts';
