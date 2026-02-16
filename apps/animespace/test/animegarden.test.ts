@@ -1,12 +1,8 @@
-import os from 'node:os';
-import path from 'node:path';
-import { mkdtemp, rm, writeFile } from 'node:fs/promises';
-
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import type { Resource, FetchResourcesOptions, FetchResourcesResult } from '@animegarden/client';
 
-import { System } from '../src/system/system.ts';
+import { createAnimeSpaceTestKit } from './helpers/animespace.ts';
 
 const { fetchResourcesMock } = vi.hoisted(() => ({
   fetchResourcesMock: vi.fn()
@@ -20,20 +16,17 @@ vi.mock('@animegarden/client', async () => {
   };
 });
 
-const roots: string[] = [];
+const kit = createAnimeSpaceTestKit();
 
 afterEach(async () => {
   fetchResourcesMock.mockReset();
-  delete process.env.ANIMESPACE_ROOT;
-  for (const root of [...roots]) {
-    await rm(root, { recursive: true, force: true });
-  }
+  await kit.cleanup();
 });
 
 describe('anime garden source manager', () => {
   it('reads from cache and refreshes when forced', async () => {
-    const system = await createSystem();
-    const manager = system.animegardenSourceManager;
+    const system = await kit.createSystem({ openDatabase: true });
+    const manager = system.managers.animegarden;
 
     const firstResource = makeResource(1, 'Test Resource 1');
     const secondResource = makeResource(2, 'Test Resource 2');
@@ -44,29 +37,55 @@ describe('anime garden source manager', () => {
       .mockResolvedValueOnce(makeSuccessResult([firstResource, secondResource])); // refresh
 
     const first = await manager.fetchResources({ include: ['Test'] });
-    expect(first.ok).toBe(true);
-    expect(first.resources.map((resource) => resource.title)).toEqual(['Test Resource 1']);
-    expect(fetchResourcesMock).toHaveBeenCalledTimes(2);
+    expect({
+      ok: first.ok,
+      titles: first.resources.map((resource) => resource.title),
+      calls: fetchResourcesMock.mock.calls.length
+    }).toMatchInlineSnapshot(`
+      {
+        "calls": 2,
+        "ok": true,
+        "titles": [
+          "Test Resource 1",
+        ],
+      }
+    `);
 
     const second = await manager.fetchResources({ include: ['Test'] });
-    expect(second.ok).toBe(true);
-    expect(second.resources.map((resource) => resource.title)).toEqual(['Test Resource 1']);
-    expect(fetchResourcesMock).toHaveBeenCalledTimes(2);
+    expect({
+      ok: second.ok,
+      titles: second.resources.map((resource) => resource.title),
+      calls: fetchResourcesMock.mock.calls.length
+    }).toMatchInlineSnapshot(`
+      {
+        "calls": 2,
+        "ok": true,
+        "titles": [
+          "Test Resource 1",
+        ],
+      }
+    `);
 
-    const refreshed = await manager.refresh({ include: ['Test'] });
-    expect(refreshed.ok).toBe(true);
-    expect(refreshed.resources.map((resource) => resource.title)).toEqual([
-      'Test Resource 2',
-      'Test Resource 1'
-    ]);
-    expect(fetchResourcesMock).toHaveBeenCalledTimes(3);
-
-    system.close();
+    const refreshed = await manager.fetchResources({ include: ['Test'] }, true);
+    expect({
+      ok: refreshed.ok,
+      titles: refreshed.resources.map((resource) => resource.title),
+      calls: fetchResourcesMock.mock.calls.length
+    }).toMatchInlineSnapshot(`
+      {
+        "calls": 3,
+        "ok": true,
+        "titles": [
+          "Test Resource 2",
+          "Test Resource 1",
+        ],
+      }
+    `);
   });
 
   it('throws when remote request fails', async () => {
-    const system = await createSystem();
-    const manager = system.animegardenSourceManager;
+    const system = await kit.createSystem({ openDatabase: true });
+    const manager = system.managers.animegarden;
     const remoteError = new Error('remote failed');
 
     fetchResourcesMock
@@ -74,8 +93,6 @@ describe('anime garden source manager', () => {
       .mockResolvedValueOnce(makeFailureResult(remoteError)); // first query
 
     await expect(manager.fetchResources({ include: ['Init'] })).rejects.toThrow('remote failed');
-
-    system.close();
   });
 });
 
@@ -129,18 +146,4 @@ function makeFailureResult(error: Error): FetchResourcesResult<FetchResourcesOpt
     timestamp: undefined,
     error
   };
-}
-
-async function createSystem() {
-  const root = await mkdtemp(path.join(os.tmpdir(), 'animespace-manager-'));
-  roots.push(root);
-  await writeFile(path.join(root, 'anime.yaml'), '{}\n');
-
-  process.env.ANIMESPACE_ROOT = root;
-
-  const system = new System();
-  await system.loadSpace();
-  await system.openDatabase();
-
-  return system;
 }

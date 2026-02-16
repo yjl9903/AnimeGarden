@@ -1,24 +1,36 @@
 import path from 'node:path';
 
+import { BreadFSError } from 'breadfs';
+
 import type { Subject } from '../subject/subject.ts';
 
 import type { Space } from './space.ts';
+import type { System } from './system.ts';
 
-export async function validate(space: Space, subjects: Subject[] = []) {
-  await validateStorage(space);
-  await validateSubjects(space, subjects);
+export async function validate(system: System) {
+  await validateStorage(system);
+  await validateSubjects(system);
 }
 
-export async function validateStorage(space: Space) {
-  for (const storage of Object.values(space.storage)) {
-    await storage.list();
+export async function validateStorage(system: System) {
+  for (const [name, storage] of Object.entries(system.space.storage)) {
+    try {
+      await storage.list();
+    } catch (error) {
+      system.logger.error(
+        `校验存储失败 ${name} ${storage.fs.name}://${storage.path} 原因:`,
+        error instanceof BreadFSError ? error.message : '',
+        error
+      );
+      throw error;
+    }
   }
 }
 
-export async function validateSubjects(space: Space, subjects: Subject[]) {
-  validateUniqueSubjectName(subjects);
-  validateStorageDriver(space, subjects);
-  validateStoragePathPrefixConflict(subjects);
+export async function validateSubjects(system: System) {
+  validateUniqueSubjectName(system.subjects);
+  validateStorageDriver(system.space, system.subjects);
+  validateStoragePathPrefixConflict(system.subjects);
 }
 
 function normalizeStoragePath(input: string): string {

@@ -1,6 +1,9 @@
-import type { System } from '../system/system.ts';
 import type { LocalPath } from '../utils/fs.ts';
+import type { System } from '../system/system.ts';
 
+import { subjects } from '../sqlite/subject.ts';
+
+import type { Preference } from './preference.ts';
 import type { RawCollection } from './schema.ts';
 
 import { Subject } from './subject.ts';
@@ -14,6 +17,8 @@ export class Collection {
 
   public readonly enabled: boolean;
 
+  public readonly preference?: Preference;
+
   public readonly subjects: Subject[];
 
   public constructor(
@@ -22,6 +27,7 @@ export class Collection {
       file: LocalPath;
       name?: string;
       enabled?: boolean;
+      preference?: Preference;
       subjects: Subject[];
     }
   ) {
@@ -29,6 +35,7 @@ export class Collection {
     this.file = options.file;
     this.name = options.name;
     this.enabled = options.enabled ?? true;
+    this.preference = options.preference;
     this.subjects = options.subjects;
   }
 
@@ -41,7 +48,13 @@ export class Collection {
       file,
       name: rawCollection.name,
       enabled: rawCollection.enabled,
+      preference: rawCollection.preference,
       subjects
     });
+  }
+
+  public async upsertToDatabase() {
+    const database = await this.system.openDatabase();
+    // TODO
   }
 }

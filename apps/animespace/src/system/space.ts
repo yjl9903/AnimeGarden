@@ -7,9 +7,9 @@ import { config as dotenvConfig } from 'dotenv';
 import { parseYAMLWithEnvTag } from '../utils/yaml.ts';
 import { type LocalPath, LocalFS } from '../utils/fs.ts';
 import { resolveCollectionFiles } from '../subject/load.ts';
+import { type Preference, PreferenceSchema } from '../subject/preference.ts';
 import { type Downloader, DownloaderSchema } from '../download/downloader.ts';
 
-import { type Preference, PreferenceSchema } from './preference.ts';
 import { type SQLite, SQLiteSchema, resolveDatabase } from './database.ts';
 import { type Storage, StorageInputSchema, resolveStorage } from './storage.ts';
 

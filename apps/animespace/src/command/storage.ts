@@ -5,11 +5,15 @@ import type { LocalPath, StoragePath } from '../utils/fs.ts';
 
 import { LocalFS } from '../utils/fs.ts';
 
+import { printList } from './tui.ts';
+
 export interface StorageCommandOptions {
   storage?: string;
 }
 
-export interface ListStorageOptions extends StorageCommandOptions {}
+export interface ListStorageOptions extends StorageCommandOptions {
+  json?: boolean;
+}
 
 export interface GetStorageOptions extends StorageCommandOptions {
   output?: string;
@@ -33,9 +37,13 @@ export async function listStorage(
   const filepath = resolveStoragePath(storage, file, { allowRoot: true });
   const content = await filepath.list();
 
-  for (const entry of content) {
-    system.logger.log(`- ${entry.path}`);
-  }
+  printList(
+    system,
+    content,
+    (file) => file.path,
+    (file) => file.path,
+    { json: options.json, type: 'bullet' }
+  );
 }
 
 export async function getStorage(system: System, file: string, options: GetStorageOptions) {

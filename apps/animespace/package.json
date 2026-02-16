@@ -49,15 +49,21 @@
     "@breadc/color": "1.0.0-beta.8",
     "@breadfs/aliyundrive": "0.1.11",
     "@breadfs/webdav": "0.1.10",
+    "@node-rs/jieba": "2.0.1",
+    "anipar": "workspace:*",
     "better-sqlite3": "12.6.2",
     "breadc": "1.0.0-beta.8",
     "breadfs": "0.1.11",
     "debug": "4.4.3",
     "dotenv": "17.2.4",
     "drizzle-orm": "0.45.1",
+    "fast-glob": "3.3.3",
     "undici": "7.21.0",
     "yaml": "2.8.2",
     "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "date-fns": "4.1.0"
   },
   "engines": {
     "node": ">=v24.0.0"
