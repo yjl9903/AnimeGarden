@@ -22,6 +22,22 @@
 
 [![home](./assets/home.jpeg)](https://animes.garden/resources/1?subject=477825)
 
+## 使用 MCP
+
+Anime Garden MCP 服务端点: `https://api.animes.garden/mcp`.
+
+你只需要将如下配置放入你的 MCP Client 即可.
+
+```json
+{
+  "mcpServers": {
+    "animegarden": {
+      "url": "https://api.animes.garden/mcp"
+    }
+  }
+}
+```
+
 ## 使用开放 API
 
 ```bash

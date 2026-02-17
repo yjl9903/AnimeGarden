@@ -72,8 +72,8 @@ importers:
         specifier: 3.990.0
         version: 3.990.0
       '@breadc/color':
-        specifier: 1.0.0-beta.8
-        version: 1.0.0-beta.8
+        specifier: 1.0.0-beta.10
+        version: 1.0.0-beta.10
       '@hono/mcp':
         specifier: 0.2.3
         version: 0.2.3(@modelcontextprotocol/sdk@1.26.0(zod@3.25.76))(hono-rate-limiter@0.4.2(hono@4.11.9))(hono@4.11.9)(zod@3.25.76)
@@ -96,8 +96,8 @@ importers:
         specifier: 0.20260129.0
         version: 0.20260129.0
       breadc:
-        specifier: 1.0.0-beta.8
-        version: 1.0.0-beta.8
+        specifier: 1.0.0-beta.10
+        version: 1.0.0-beta.10
       consola:
         specifier: 3.4.2
         version: 3.4.2
@@ -1195,17 +1195,17 @@ packages:
     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
     engines: {node: '>=6.9.0'}
 
-  '@breadc/color@1.0.0-beta.8':
-    resolution: {integrity: sha512-J70HdbJtM7U8FMwufIstQe+I5orYLeoV+zgOjEbXz5YNWTp7sCaFb6s/K6SK4xuLILv8LHC5yZf5aZ03gPFITA==}
+  '@breadc/color@1.0.0-beta.10':
+    resolution: {integrity: sha512-Ohiyw5TDYRaZokBt6+qw0xsn9NbeUvAExgsbFA1nE9BqfXGVnxsvI6vAIoil5aSHumEpAxjUAF8muRPH5BCQEQ==}
 
-  '@breadc/core@1.0.0-beta.8':
-    resolution: {integrity: sha512-uS155cofxuAc/boDw/QAm15QiWI8WJiO7DTjHAR041f0/7Ev6BESWEr/F5kLHdn2fnXlShL6oSGBA/85iT+9rw==}
+  '@breadc/core@1.0.0-beta.10':
+    resolution: {integrity: sha512-ttaS9mRpQikuEV055u9TLh3bePdXoZV4nFnVXDfswFrJC7zgspZ2U9KHm8G3SUofqF9OSHTZ7IPh44RNfmjkFA==}
 
-  '@breadc/death@1.0.0-beta.8':
-    resolution: {integrity: sha512-UU5GCHoNela8SJJZtei5T1IuHYG+g0dEj+ZcLVTt81P5F8WhJhuuqFOjbwxHV0hUVGEhyxZblzVSKxYEb4ZjVw==}
+  '@breadc/death@1.0.0-beta.10':
+    resolution: {integrity: sha512-SD9A1sJsnHb3nhGkLVSddBnPSakXHxfrOtgCF6322yADkNQ6TLRgd8yVz1KWppoJvKOJAVuxGZSoiyRe+QXACw==}
 
-  '@breadc/tui@1.0.0-beta.8':
-    resolution: {integrity: sha512-Kc+SDzPWttywcPGLzuvFpV6QlkFLQJhHKUunINO3+xnbRdwg3VDPVLEL2/qtX0PBDKdA5OuImeJ4uTxyYbk8jA==}
+  '@breadc/tui@1.0.0-beta.10':
+    resolution: {integrity: sha512-/EKJxYG5YAyZ53mXZusOdbY5OfHSO4o4hDahZV6yRoKpWeEYkXDfkdHACJFrYu+Jarw0UTxHHXpPjsQMz1OX+w==}
 
   '@canvas/image-data@1.1.0':
     resolution: {integrity: sha512-QdObRRjRbcXGmM1tmJ+MrHcaz1MftF2+W7YI+MsphnsCrmtyfS0d5qJbk0MeSbUeyM/jCb0hmnkXPsy026L7dA==}
@@ -4330,8 +4330,8 @@ packages:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
 
-  breadc@1.0.0-beta.8:
-    resolution: {integrity: sha512-ooFOnSovVBngw7Mj1U/qunm2yliW1z/4ut6GmO2XQTxG1cur5w/8NLLNtGCOvJENd9eYBeQn6qRhtk972zYvZQ==}
+  breadc@1.0.0-beta.10:
+    resolution: {integrity: sha512-pdhMLCXdTS4nTnkv7rfD+gIZli5vb3YyCXyucYRK6eIcauBRfVJNRu32pszNcQ8IKzKdaMDjUNTslYAdGnGGBg==}
 
   browserify-zlib@0.1.4:
     resolution: {integrity: sha512-19OEpq7vWgsH6WkvkBJQDFvJS1uPcbFOQ4v9CU839dO+ZZXUZO6XpE6hNCqvlIIj+4fZvRiJ6DsAQ382GwiyTQ==}
@@ -9860,17 +9860,17 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@breadc/color@1.0.0-beta.8': {}
+  '@breadc/color@1.0.0-beta.10': {}
 
-  '@breadc/core@1.0.0-beta.8':
+  '@breadc/core@1.0.0-beta.10':
     dependencies:
-      '@breadc/color': 1.0.0-beta.8
+      '@breadc/color': 1.0.0-beta.10
 
-  '@breadc/death@1.0.0-beta.8': {}
+  '@breadc/death@1.0.0-beta.10': {}
 
-  '@breadc/tui@1.0.0-beta.8':
+  '@breadc/tui@1.0.0-beta.10':
     dependencies:
-      '@breadc/color': 1.0.0-beta.8
+      '@breadc/color': 1.0.0-beta.10
       std-env: 3.10.0
       string-width: 8.1.1
 
@@ -13103,12 +13103,12 @@ snapshots:
     dependencies:
       fill-range: 7.1.1
 
-  breadc@1.0.0-beta.8:
+  breadc@1.0.0-beta.10:
     dependencies:
-      '@breadc/color': 1.0.0-beta.8
-      '@breadc/core': 1.0.0-beta.8
-      '@breadc/death': 1.0.0-beta.8
-      '@breadc/tui': 1.0.0-beta.8
+      '@breadc/color': 1.0.0-beta.10
+      '@breadc/core': 1.0.0-beta.10
+      '@breadc/death': 1.0.0-beta.10
+      '@breadc/tui': 1.0.0-beta.10
 
   browserify-zlib@0.1.4:
     dependencies:

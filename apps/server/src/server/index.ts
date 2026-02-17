@@ -5,8 +5,11 @@ import { prettyJSON } from 'hono/pretty-json';
 import { serve } from '@hono/node-server';
 import { Cron } from 'croner';
 
+import { SupportProviders } from '@animegarden/client';
+
 import { System } from '../system';
 
+import { McpServer } from './mcp';
 import { defineUsersRoutes } from './routes/users';
 import { defineSubjectsRoutes } from './routes/subjects';
 import { defineResourcesRoutes } from './routes/resources';
@@ -14,8 +17,6 @@ import { defineCollectionsRoutes } from './routes/collections';
 import { defineFeedRoutes } from './routes/feed';
 import { defineAdminRoutes } from './routes/admin';
 import { defineSitemapsRoutes } from './routes/sitemaps';
-import { SupportProviders } from '@animegarden/client';
-import { McpServer } from './mcp';
 
 export * from './rss';
 
@@ -204,12 +205,7 @@ function registerMcp(sys: System, app: Hono) {
   const mcp = new McpServer(sys);
 
   app.all('/mcp', async (c) => {
-    if (!mcp.mcp.isConnected()) {
-      // Connect the mcp with the transport
-      await mcp.mcp.connect(mcp.transport);
-    }
-
-    return mcp.transport.handleRequest(c);
+    return mcp.handleRequest(c);
   });
 
   return mcp;

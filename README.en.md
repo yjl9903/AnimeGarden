@@ -28,9 +28,25 @@
 curl "https://api.animes.garden/resources?page=1&pageSize=10"
 ```
 
-You can find the interactive Open API document [here](https://animes.garden/docs/api) and more API usage example in [examples/api.http](./examples/api.http).
+You can find the [interactive Open API document](https://animes.garden/docs/api) and more API usage example in [examples/api.http](./examples/api.http).
 
 If you are using JavaScript / TypeScript, you can just use the API wrapper `fetchResources` and `fetchResourceDetail` in package [animegarden](https://www.npmjs.com/package/animegarden).
+
+## MCP Configuration
+
+Anime Garden MCP API endpoint: `https://api.animes.garden/mcp`.
+
+Add following snippets to your MCP client config file.
+
+```json
+{
+  "mcpServers": {
+    "animegarden": {
+      "url": "https://api.animes.garden/mcp"
+    }
+  }
+}
+```
 
 ## NPM Package Usage
 
