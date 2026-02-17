@@ -46,6 +46,7 @@ COPY ./packages/anipar/package.json ./packages/anipar/
 COPY ./packages/client/package.json ./packages/client/
 COPY ./packages/scraper/package.json ./packages/scraper/
 COPY ./packages/shared/package.json ./packages/shared/
+COPY ./apps/animespace/package.json ./apps/animespace/
 COPY ./apps/server/package.json ./apps/server/
 COPY ./apps/web/package.json ./apps/web/
 COPY ./apps/worker/package.json ./apps/worker/
