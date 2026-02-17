@@ -26,9 +26,9 @@ import { Context } from 'hono';
 const MCP_RESOURCE_URI_TEMPLATE = 'animegarden://resources/{provider}/{providerId}';
 
 const MCP_SERVER_DESCRIPTION = [
-  'Anime Garden MCP for anime torrent discovery and detail lookup.',
+  'Anime Garden MCP for anime torrent discovery.',
   'Capabilities:',
-  '- search_resources: search aggregated resources from dmhy/moe/ani with filter conditions, returning metadata such as title, magnet link, fansub, publisher, created timestamp, type, size, and uri.',
+  '- search_resources: search aggregated resources from 動漫花園 (dmhy) / 萌番组 (moe) / Ani with filter conditions, returning metadata such as title, magnet link, fansub, publisher, created timestamp, type, size, and uri.',
   `- resource_detail: read one resource by URI template ${MCP_RESOURCE_URI_TEMPLATE}.`,
   'Recommended usage for LLM agents:',
   '1) Call search_resources first to find candidates.',
@@ -70,15 +70,15 @@ export class McpServer {
     this.mcp.registerTool(
       'search_resources',
       {
-        title: 'Search anime torrent resources from 動漫花園, 萌番组, Ani with Anime Garden',
+        title:
+          'Search anime torrent resources aggregated from 動漫花園, 萌番组, Ani with Anime Garden',
         description: [
-          'Search anime torrent resources aggregated from 動漫花園 (dmhy), 萌番组 (moe), and Ani.',
-          'Filter behavior:',
+          'Search filter behavior:',
           '- Different conditions are combined with AND.',
           '- Within fansubs/publishers/types/subjects/include/exclude, values are OR.',
           '- search has higher priority than include.',
           '- keywords uses AND (all keywords must be present), exclude uses AND (all excluded words must not be present).',
-          'Recommended query patterns:',
+          'Recommended search patterns:',
           '1) Latest episode releases:',
           '{"types":["动画"]}',
           '2) Specific show + quality + codec:',
