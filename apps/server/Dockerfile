@@ -33,7 +33,6 @@ RUN apt-get update -qq && \
 # Install node modules
 COPY --link package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json .npmrc .node-version ./
 COPY ./patches/ ./patches/
-COPY ./packages/animegarden/package.json ./packages/animegarden/
 COPY ./packages/anipar/package.json ./packages/anipar/
 COPY ./packages/client/package.json ./packages/client/
 COPY ./packages/scraper/package.json ./packages/scraper/
