@@ -2,6 +2,7 @@
 
 [![Group](https://img.shields.io/badge/Telegram-2CA5E0?style=flat-squeare&logo=telegram&logoColor=white)](https://t.me/+QLdRRqoDt1gxMWZl)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/yjl9903/AnimeGarden)
+[![MCP Badge](https://lobehub.com/badge/mcp/yjl9903-AnimeGarden)](https://lobehub.com/mcp/yjl9903-AnimeGarden)
 [![version](https://img.shields.io/npm/v/animegarden?label=animegarden)](https://www.npmjs.com/package/animegarden)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
