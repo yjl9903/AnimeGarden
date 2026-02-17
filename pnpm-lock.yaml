@@ -63,8 +63,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/client
       '@breadc/color':
-        specifier: 1.0.0-beta.8
-        version: 1.0.0-beta.8
+        specifier: 1.0.0-beta.10
+        version: 1.0.0-beta.10
       '@breadfs/aliyundrive':
         specifier: 0.1.11
         version: 0.1.11
@@ -74,6 +74,9 @@ importers:
       '@node-rs/jieba':
         specifier: 2.0.1
         version: 2.0.1
+      '@nqbt/core':
+        specifier: 0.1.0
+        version: 0.1.0
       anipar:
         specifier: workspace:*
         version: link:../../packages/anipar
@@ -81,8 +84,8 @@ importers:
         specifier: 12.6.2
         version: 12.6.2
       breadc:
-        specifier: 1.0.0-beta.8
-        version: 1.0.0-beta.8
+        specifier: 1.0.0-beta.10
+        version: 1.0.0-beta.10
       breadfs:
         specifier: 0.1.11
         version: 0.1.11(tslib@2.8.1)
@@ -1250,26 +1253,14 @@ packages:
   '@breadc/color@1.0.0-beta.10':
     resolution: {integrity: sha512-Ohiyw5TDYRaZokBt6+qw0xsn9NbeUvAExgsbFA1nE9BqfXGVnxsvI6vAIoil5aSHumEpAxjUAF8muRPH5BCQEQ==}
 
-  '@breadc/color@1.0.0-beta.8':
-    resolution: {integrity: sha512-J70HdbJtM7U8FMwufIstQe+I5orYLeoV+zgOjEbXz5YNWTp7sCaFb6s/K6SK4xuLILv8LHC5yZf5aZ03gPFITA==}
-
   '@breadc/core@1.0.0-beta.10':
     resolution: {integrity: sha512-ttaS9mRpQikuEV055u9TLh3bePdXoZV4nFnVXDfswFrJC7zgspZ2U9KHm8G3SUofqF9OSHTZ7IPh44RNfmjkFA==}
-
-  '@breadc/core@1.0.0-beta.8':
-    resolution: {integrity: sha512-uS155cofxuAc/boDw/QAm15QiWI8WJiO7DTjHAR041f0/7Ev6BESWEr/F5kLHdn2fnXlShL6oSGBA/85iT+9rw==}
 
   '@breadc/death@1.0.0-beta.10':
     resolution: {integrity: sha512-SD9A1sJsnHb3nhGkLVSddBnPSakXHxfrOtgCF6322yADkNQ6TLRgd8yVz1KWppoJvKOJAVuxGZSoiyRe+QXACw==}
 
-  '@breadc/death@1.0.0-beta.8':
-    resolution: {integrity: sha512-UU5GCHoNela8SJJZtei5T1IuHYG+g0dEj+ZcLVTt81P5F8WhJhuuqFOjbwxHV0hUVGEhyxZblzVSKxYEb4ZjVw==}
-
   '@breadc/tui@1.0.0-beta.10':
     resolution: {integrity: sha512-/EKJxYG5YAyZ53mXZusOdbY5OfHSO4o4hDahZV6yRoKpWeEYkXDfkdHACJFrYu+Jarw0UTxHHXpPjsQMz1OX+w==}
-
-  '@breadc/tui@1.0.0-beta.8':
-    resolution: {integrity: sha512-Kc+SDzPWttywcPGLzuvFpV6QlkFLQJhHKUunINO3+xnbRdwg3VDPVLEL2/qtX0PBDKdA5OuImeJ4uTxyYbk8jA==}
 
   '@breadfs/aliyundrive@0.1.11':
     resolution: {integrity: sha512-R91XfoFxOYX1xsu0NkcZFTJ1E0a0pojdE41A37tLUsS8juJIVA7Ehy5WsS31j0/c9BUzTIm8A/QM3+/NI/yHLw==}
@@ -2921,6 +2912,10 @@ packages:
     resolution: {integrity: sha512-gGq0NJkIGSwdbUt4yhdF8ZrmkGKVz9vAdVzpOfnom+V8PLSmSOVhZwbNvZZS1EYcJN5hzzKBxmmVVAInM6HQLg==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
+  '@nqbt/core@0.1.0':
+    resolution: {integrity: sha512-ik7LHgBPhyXHizBhB/c+BycVrBgi7Ypwq0OPb+hmPOvbpzOP7htJAUkn5rxG+fegXD6B1DqG2CVI5z0mI4uzmQ==}
+    engines: {node: '>=v24.0.0'}
+
   '@onekuma/preset.css@0.1.11':
     resolution: {integrity: sha512-BMkKJ6jy8jxfuGqAMHtCIVyVvkHpk6ynFlteYhfzPsyfZHCZ7MGoon7CTInNdBSYne49WuVqJBMX2wbG01pjlw==}
     engines: {node: '>=v18.16.0'}
@@ -4552,9 +4547,6 @@ packages:
 
   breadc@1.0.0-beta.10:
     resolution: {integrity: sha512-pdhMLCXdTS4nTnkv7rfD+gIZli5vb3YyCXyucYRK6eIcauBRfVJNRu32pszNcQ8IKzKdaMDjUNTslYAdGnGGBg==}
-
-  breadc@1.0.0-beta.8:
-    resolution: {integrity: sha512-ooFOnSovVBngw7Mj1U/qunm2yliW1z/4ut6GmO2XQTxG1cur5w/8NLLNtGCOvJENd9eYBeQn6qRhtk972zYvZQ==}
 
   breadfs@0.1.11:
     resolution: {integrity: sha512-cNCv9IQBqMNEaLwC++3xWbmCPJ66GT6Rr2R6KANstxWV1HfkobE772nyJkMf/Ly0KWVrgdm+6V5r/74EHCCXoQ==}
@@ -10215,29 +10207,15 @@ snapshots:
 
   '@breadc/color@1.0.0-beta.10': {}
 
-  '@breadc/color@1.0.0-beta.8': {}
-
   '@breadc/core@1.0.0-beta.10':
     dependencies:
       '@breadc/color': 1.0.0-beta.10
 
-  '@breadc/core@1.0.0-beta.8':
-    dependencies:
-      '@breadc/color': 1.0.0-beta.8
-
   '@breadc/death@1.0.0-beta.10': {}
-
-  '@breadc/death@1.0.0-beta.8': {}
 
   '@breadc/tui@1.0.0-beta.10':
     dependencies:
       '@breadc/color': 1.0.0-beta.10
-      std-env: 3.10.0
-      string-width: 8.1.1
-
-  '@breadc/tui@1.0.0-beta.8':
-    dependencies:
-      '@breadc/color': 1.0.0-beta.8
       std-env: 3.10.0
       string-width: 8.1.1
 
@@ -11459,6 +11437,10 @@ snapshots:
   '@npmcli/promise-spawn@6.0.2':
     dependencies:
       which: 3.0.1
+
+  '@nqbt/core@0.1.0':
+    dependencies:
+      cookie: 1.1.1
 
   '@onekuma/preset.css@0.1.11': {}
 
@@ -13650,13 +13632,6 @@ snapshots:
       '@breadc/core': 1.0.0-beta.10
       '@breadc/death': 1.0.0-beta.10
       '@breadc/tui': 1.0.0-beta.10
-
-  breadc@1.0.0-beta.8:
-    dependencies:
-      '@breadc/color': 1.0.0-beta.8
-      '@breadc/core': 1.0.0-beta.8
-      '@breadc/death': 1.0.0-beta.8
-      '@breadc/tui': 1.0.0-beta.8
 
   breadfs@0.1.11(tslib@2.8.1):
     dependencies:
