@@ -46,23 +46,26 @@ export interface Resource<T extends { tracker?: boolean; metadata?: boolean } = 
 
   size: number;
 
-  fansub?: {
-    id: number;
+  fansub?:
+    | {
+        id: number;
 
-    name: string;
+        name: string;
 
-    avatar?: string;
-  };
+        avatar?: string | null | undefined;
+      }
+    | null
+    | undefined;
 
   publisher: {
     id: number;
 
     name: string;
 
-    avatar?: string;
+    avatar?: string | null | undefined;
   };
 
-  subjectId?: number;
+  subjectId?: number | null | undefined;
 
   createdAt: Date;
 

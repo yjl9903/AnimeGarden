@@ -1,0 +1,7 @@
+storage:
+  driver: local
+  directory: !env STORE_DIR
+sqlite:
+  path: !env SQLITE_REL
+collections:
+  - collections/*.yaml

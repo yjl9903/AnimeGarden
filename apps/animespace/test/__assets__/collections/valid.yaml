@@ -1,0 +1,15 @@
+name: demo
+enabled: false
+subjects:
+  - name: Subject-A
+    naming: {}
+    source:
+      include: [Subject-A]
+  - name: Subject-B
+    enabled: true
+    storage:
+      driver: custom
+      path: nested/path
+    naming: {}
+    source:
+      include: [Subject-B]

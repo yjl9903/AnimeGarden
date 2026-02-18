@@ -1,12 +1,13 @@
 {
   "name": "animespace",
   "version": "0.5.2",
-  "description": "AnimeGarden CLI",
+  "description": "「 你所热爱的就是你的动画 」",
   "keywords": [
-    "dmhy",
-    "scraper",
+    "animespace",
     "animegarden",
-    "animespace"
+    "cli",
+    "bangumi",
+    "dmhy"
   ],
   "homepage": "https://github.com/yjl9903/AnimeGarden#readme",
   "bugs": {
@@ -22,26 +23,52 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/index.d.mts",
       "import": "./dist/index.mjs"
     }
   },
   "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "types": "dist/index.d.mts",
+  "bin": {
+    "anime": "./cli.mjs",
+    "animespace": "./cli.mjs"
+  },
   "files": [
-    "dist"
+    "dist",
+    "*.mjs"
   ],
   "scripts": {
     "build": "unbuild",
+    "drizzle": "drizzle-kit",
+    "drizzle:generate": "drizzle-kit generate",
     "format": "prettier --write 'src/**/*.ts' 'test/**/*.ts'",
     "test": "vitest",
     "test:ci": "vitest --run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@animegarden/client": "workspace:*"
+    "@animegarden/client": "workspace:*",
+    "@breadc/color": "1.0.0-beta.10",
+    "@breadfs/aliyundrive": "0.1.11",
+    "@breadfs/webdav": "0.1.11",
+    "@node-rs/jieba": "2.0.1",
+    "@nqbt/core": "0.1.0",
+    "anipar": "workspace:*",
+    "better-sqlite3": "12.6.2",
+    "breadc": "1.0.0-beta.10",
+    "breadfs": "0.1.11",
+    "debug": "4.4.3",
+    "dotenv": "17.2.4",
+    "drizzle-orm": "0.45.1",
+    "fast-glob": "3.3.3",
+    "undici": "7.21.0",
+    "yaml": "2.8.2",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "date-fns": "4.1.0"
   },
   "engines": {
-    "node": ">=v18.16.0"
+    "node": ">=v24.0.0"
   }
 }

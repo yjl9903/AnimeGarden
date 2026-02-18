@@ -1,3 +1,20 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
+  - apps/*
+  - packages/*
+
+onlyBuiltDependencies:
+  - '@scarf/scarf'
+  - '@tree-sitter-grammars/tree-sitter-yaml'
+  - better-sqlite3
+  - bufferutil
+  - core-js-pure
+  - esbuild
+  - fs-native-extensions
+  - node-datachannel
+  - sharp
+  - tree-sitter
+  - tree-sitter-json
+  - tree-sitter-yaml
+  - utf-8-validate
+  - utp-native
+  - workerd
