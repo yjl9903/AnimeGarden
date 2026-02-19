@@ -250,11 +250,11 @@ importers:
         specifier: 5.1.35
         version: 5.1.35
       jotai:
-        specifier: 2.17.1
-        version: 2.17.1(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.4)
+        specifier: 2.18.0
+        version: 2.18.0(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.4)
       jotai-minidb:
         specifier: 0.0.8
-        version: 0.0.8(jotai@2.17.1(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.4))
+        version: 0.0.8(jotai@2.18.0(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.4))
       lucide-react:
         specifier: 0.574.0
         version: 0.574.0(react@19.2.4)
@@ -5831,8 +5831,8 @@ packages:
     peerDependencies:
       jotai: '>=1.10.0'
 
-  jotai@2.17.1:
-    resolution: {integrity: sha512-TFNZZDa/0ewCLQyRC/Sq9crtixNj/Xdf/wmj9631xxMuKToVJZDbqcHIYN0OboH+7kh6P6tpIK7uKWClj86PKw==}
+  jotai@2.18.0:
+    resolution: {integrity: sha512-XI38kGWAvtxAZ+cwHcTgJsd+kJOJGf3OfL4XYaXWZMZ7IIY8e53abpIHvtVn1eAgJ5dlgwlGFnP4psrZ/vZbtA==}
     engines: {node: '>=12.20.0'}
     peerDependencies:
       '@babel/core': '>=7.0.0'
@@ -14783,13 +14783,13 @@ snapshots:
 
   jose@6.1.3: {}
 
-  jotai-minidb@0.0.8(jotai@2.17.1(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.4)):
+  jotai-minidb@0.0.8(jotai@2.18.0(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.4)):
     dependencies:
       '@rocicorp/resolver': 1.0.2
       idb-keyval: 6.2.2
-      jotai: 2.17.1(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.4)
+      jotai: 2.18.0(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.4)
 
-  jotai@2.17.1(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.4):
+  jotai@2.18.0(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@19.2.14)(react@19.2.4):
     optionalDependencies:
       '@babel/core': 7.29.0
       '@babel/template': 7.28.6
