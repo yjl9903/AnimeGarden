@@ -2,14 +2,13 @@ import { and, desc, eq, gt, inArray, isNull, lt, or, sql } from 'drizzle-orm';
 
 import type { ProviderType } from '@animegarden/client';
 
-import { retryFn } from '@animegarden/shared';
+import { retryFn, normalizeBtihToBase32, normalizeBtihToHex } from '@animegarden/shared';
 
 import type { System, Notification } from '../system';
 import type { NewResource as NewDbResource } from '../schema';
 
 import { Module } from '../system/module';
 import { resources as resourceSchema } from '../schema/resources';
-import { normalizeBtihToBase32, normalizeBtihToHex } from '../utils';
 
 import type { InsertResourcesOptions, NewResource } from './types';
 

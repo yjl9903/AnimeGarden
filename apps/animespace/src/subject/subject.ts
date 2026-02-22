@@ -1,9 +1,18 @@
+import { eq } from 'drizzle-orm';
+
 import type { System } from '../system/system.ts';
 
 import type { RawCollection, RawSubject } from './schema.ts';
 import type { ExtractedSubjectResource, ParsedSubjectResource } from './source/resource.ts';
 import type { SubjectSource } from './source/source.ts';
 import type { SubjectNaming } from './source/naming.ts';
+
+import {
+  type DatabaseSubject,
+  type DatabaseSubjectFile,
+  subjects,
+  subjectFiles
+} from '../sqlite/subject.ts';
 
 import { SubjectType } from './source/schema.ts';
 import { fetchResources, extractResources } from './source/extract.ts';
@@ -17,7 +26,7 @@ export interface SubjectStorage {
 }
 
 export class Subject {
-  private readonly system: System;
+  public readonly system: System;
 
   public readonly name: string;
 
@@ -111,6 +120,11 @@ export class Subject {
     });
   }
 
+  public getStorage() {
+    const driver = this.system.space.storage[this.storage.driver];
+    return driver.join(this.storage.path);
+  }
+
   public async fetchResources(): Promise<ParsedSubjectResource[]> {
     return await fetchResources(this.system, this);
   }
@@ -119,5 +133,28 @@ export class Subject {
     resources: ParsedSubjectResource[]
   ): Promise<ExtractedSubjectResource[]> {
     return await extractResources(this.system, this, resources);
+  }
+
+  public async getSubject(): Promise<DatabaseSubject> {
+    const database = await this.system.openDatabase();
+    const resp = await database.select().from(subjects).where(eq(subjects.name, this.name));
+    if (resp.length !== 1) {
+      throw new Error(`can not find subjects name=${this.name}`);
+    }
+    return resp[0];
+  }
+
+  public async getSubjectFiles(): Promise<DatabaseSubjectFile[]> {
+    try {
+      const database = await this.system.openDatabase();
+      const subject = await this.getSubject();
+      const resp = await database
+        .select()
+        .from(subjectFiles)
+        .where(eq(subjectFiles.subjectId, subject.id));
+      return resp;
+    } catch {
+      return [];
+    }
   }
 }

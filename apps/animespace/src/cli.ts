@@ -14,7 +14,6 @@ import {
   removeStorage,
   moveStorage
 } from './command/storage.ts';
-import { printSpace } from './command/space.ts';
 import {
   getSubjects,
   getSubject,
@@ -34,22 +33,34 @@ const app = breadc('anime', { version, description, i18n: 'zh' })
     }
   });
 
-app.command('watch', '拉取, 下载, 上传所有动画资源').action(async (options, context) => {
-  const { system } = context.data;
-  printSpace(system);
+app
+  .command('watch', '拉取, 下载, 上传所有动画资源')
+  .option('-n, --name <string>', '目标动画条目名称')
+  .option('--bgm <id>', 'Bangumi 条目 id')
+  .action(async (options, context) => {
+    const { system } = context.data;
+    return await system.watchSubjects({ name: options.name, bgm: options.bgm });
+  });
 
-  return await system.watchSubjects({});
-});
+app
+  .command('push', '拉取, 下载, 上传动画资源')
+  .option('-n, --name <string>', '目标动画条目名称')
+  .option('--bgm <id>', 'Bangumi 条目 id')
+  .action(async (options, context) => {
+    const { system } = context.data;
+    return await system.pushSubjects({ name: options.name, bgm: options.bgm });
+  });
 
-app.command('introspect', '同步存储状态到本地').action(async (options, context) => {
-  const { system } = context.data;
-  printSpace(system);
+app
+  .command('pull', '同步存储状态到本地')
+  .option('-n, --name <string>', '目标动画条目名称')
+  .option('--bgm <id>', 'Bangumi 条目 id')
+  .action(async (options, context) => {
+    const { system } = context.data;
+    return await system.pullSubjects({ name: options.name, bgm: options.bgm, checksum: false });
+  });
 
-  const subjects = await getSubjects(system, {});
-  return await system.introspectSubjects(subjects);
-});
-
-app.command('download <url>', '下载资源').action(async (url, options, context) => {
+app.command('download <url>', '[WIP] 下载资源').action(async (url, options, context) => {
   const { system } = context.data;
 });
 
@@ -58,13 +69,16 @@ const subject = app
   .option('-n, --name <string>', '目标动画条目名称')
   .option('--bgm <id>', 'Bangumi 条目 id');
 
-subject.command('refresh', '拉取, 下载, 上传动画资源').action(async (options, context) => {
-  const { system } = context.data;
-  printSpace(system);
+subject
+  .command('upload', '[WIP] 手动上传动画资源')
+  .option('-i, --input <file>', '待上传文件')
+  .option('--url', 'Anime Garden 链接, 磁力链接, 种子链接')
+  .action(async (options, context) => {
+    const { system } = context.data;
+    const subject = await getSubject(system, options);
 
-  const subject = await getSubject(system, options);
-  return await system.refreshSubjects([subject]);
-});
+    // TODO
+  });
 
 subject
   .command('resources', '显示动画资源列表')
@@ -85,19 +99,8 @@ subject
   });
 
 subject
-  .command('files', '显示动画资源目录')
+  .command('files', '[WIP] 显示动画资源目录')
   .option('--json', '输出 JSON 格式')
-  .action(async (options, context) => {
-    const { system } = context.data;
-    const subject = await getSubject(system, options);
-
-    // TODO
-  });
-
-subject
-  .command('upload', '上传动画资源')
-  .option('-i, --input <file>', '待上传文件')
-  .option('--url', 'Anime Garden 链接, 磁力链接, 种子链接')
   .action(async (options, context) => {
     const { system } = context.data;
     const subject = await getSubject(system, options);
@@ -122,12 +125,12 @@ garden
   });
 
 garden
-  .command('detail <provider> <id>', '显示资源详情')
+  .command('detail <provider> <id>', '[WIP] 显示资源详情')
   .option('--json', '输出 JSON 格式')
   .action(async () => {});
 
 garden
-  .command('collection <id>', '导入 Anime Garden 收藏夹')
+  .command('collection <id>', '[WIP] 导入 Anime Garden 收藏夹')
   .option('--json', '输出 JSON 格式')
   .action(async () => {});
 
@@ -135,22 +138,22 @@ garden
 const bangumi = app.group('bangumi');
 
 bangumi
-  .command('search <text>', '搜索 bangumi 条目')
+  .command('search <text>', '[WIP] 搜索 bangumi 条目')
   .option('--json', '输出 JSON 格式')
   .action(async () => {});
 
 bangumi
-  .command('subject <id>', '显示 bangumi 条目详情')
+  .command('subject <id>', '[WIP] 显示 bangumi 条目详情')
   .option('--json', '输出 JSON 格式')
   .action(async () => {});
 
 bangumi
-  .command('collection <id>', '导入 bangumi 用户收藏夹')
+  .command('collection <id>', '[WIP] 导入 bangumi 用户收藏夹')
   .option('--json', '输出 JSON 格式')
   .action(async () => {});
 
 bangumi
-  .command('index <id>', '导入 bangumi 目录')
+  .command('index <id>', '[WIP] 导入 bangumi 目录')
   .option('--json', '输出 JSON 格式')
   .action(async () => {});
 

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { normalizeBtihToBase32, normalizeBtihToHex } from '../src/utils';
+import { normalizeBtihToBase32, normalizeBtihToHex } from '../src';
 
 describe('magnet', () => {
   it('should convert base32 to hex', () => {

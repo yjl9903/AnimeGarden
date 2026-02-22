@@ -1,9 +1,11 @@
-import { dim } from 'breadc';
-import type { System } from '../system/system.ts';
-import { StoragePath } from '../utils/fs.ts';
+import { bold, dim } from 'breadc';
 
-export function printSpace(system: System) {
-  system.logger.log(`${dim('Space')}    ${system.space.root.path}`);
+import type { System } from '../system/system.ts';
+import type { Subject } from '../subject/subject.ts';
+import type { StoragePath } from '../utils/fs.ts';
+
+export function printSpace(system: System, subjects: Subject[]) {
+  system.logger.log(`${dim('空间')}  ${system.space.root.path}`);
 
   const storage = Object.entries(system.space.storage);
   const renderPath = (path: StoragePath) => {
@@ -12,16 +14,20 @@ export function printSpace(system: System) {
     }
     return `${path.fs.name}://${path.path}`;
   };
-  if (storage.length === 0) {
-    system.logger.log(`${dim('Storage')}  ${renderPath(system.space.storage.default)}`);
+  if (storage.length === 1) {
+    system.logger.log(`${dim('存储')}  ${renderPath(system.space.storage.default)}`);
   } else {
     const length = Math.max(...Object.keys(system.space.storage).map((t) => t.length));
     system.logger.log(
-      `${dim('Storage')}  ${'default'.padEnd(length, ' ')}  ${renderPath(system.space.storage.default)}`
+      `${dim('存储')}  ${'default'.padEnd(length, ' ')}  ${renderPath(system.space.storage.default)}`
     );
     for (const [key, value] of storage) {
       if (key === 'default') continue;
-      system.logger.log(`${dim('Storage')}  ${key.padEnd(length, ' ')}  ${renderPath(value)}`);
+      system.logger.log(`${dim('存储')}  ${key.padEnd(length, ' ')}  ${renderPath(value)}`);
     }
   }
+
+  system.logger.log(`${dim('动画')}  已加载 ${`${subjects.length} 条动画配置`}`);
+
+  system.logger.log();
 }

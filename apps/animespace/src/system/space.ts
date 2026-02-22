@@ -8,7 +8,11 @@ import { parseYAMLWithEnvTag } from '../utils/yaml.ts';
 import { type LocalPath, LocalFS } from '../utils/fs.ts';
 import { resolveCollectionFiles } from '../subject/load.ts';
 import { type Preference, PreferenceSchema } from '../subject/preference.ts';
-import { type Downloader, DownloaderSchema } from '../download/downloader.ts';
+import {
+  type DownloaderConfig,
+  DownloaderInputSchema,
+  resolveDownloader
+} from '../download/schema.ts';
 
 import { type SQLite, SQLiteSchema, resolveDatabase } from './database.ts';
 import { type Storage, StorageInputSchema, resolveStorage } from './storage.ts';
@@ -18,7 +22,7 @@ export interface Space {
 
   readonly storage: Storage;
 
-  readonly downloader: Downloader;
+  readonly downloader: DownloaderConfig;
 
   readonly preference: Preference;
 
@@ -29,7 +33,7 @@ export interface Space {
 
 export const SpaceSchema = z.object({
   storage: StorageInputSchema.optional(),
-  downloader: DownloaderSchema.optional(),
+  downloader: DownloaderInputSchema.optional(),
   preference: PreferenceSchema,
   collections: z.string().array().default(['collections/*.yml', 'collections/*.yaml']),
   sqlite: SQLiteSchema
@@ -70,7 +74,7 @@ export async function loadSpace(rootDir: string): Promise<Space> {
   return {
     root,
     storage,
-    downloader: config.downloader ?? { provider: 'qbittorrent' },
+    downloader: resolveDownloader(root, config.downloader),
     preference: config.preference ?? {},
     collections,
     sqlite
