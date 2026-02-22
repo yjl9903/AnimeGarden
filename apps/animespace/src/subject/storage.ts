@@ -1,6 +1,7 @@
 import path from 'node:path';
 import createDebug from 'debug';
-import { lightBlue, lightCyan, lightGreen, lightRed, link } from 'breadc';
+import { eq } from 'drizzle-orm';
+import { lightYellow, lightGreen, lightRed, link } from 'breadc';
 import { type Queue, newQueue } from '@animegarden/shared';
 
 import { LocalFS } from '../utils/fs.ts';
@@ -32,6 +33,8 @@ export class StorageManager {
   public async upload(subject: Subject, resource: ExtractedSubjectResource, detail: TorrentDetail) {
     await subject.getStorage().ensureDir();
 
+    const database = await this.system.openDatabase();
+
     const toReplaced = (await subject.getSubjectFiles()).filter(
       (sf) =>
         sf.resource &&
@@ -40,11 +43,32 @@ export class StorageManager {
     );
 
     if (toReplaced.length) {
-      for (const oldRes of toReplaced) {
-        const queue = this.queues[oldRes.storage];
+      for (const oldSubjectFile of toReplaced) {
+        const queue = this.queues[oldSubjectFile.storage];
         if (!queue) continue;
+
+        const oldPath = this.system.space.storage[oldSubjectFile.storage].fs.path(
+          oldSubjectFile.path
+        );
+
+        if (
+          toReplaced.length === 1 &&
+          detail.files.length === 1 &&
+          oldSubjectFile.checksum &&
+          detail.files[0].checksum &&
+          oldSubjectFile.checksum === detail.files[0].checksum
+        ) {
+          this.system.logger.log(lightGreen(`重复上传 ${link(oldPath.basename, resource.url)}`));
+          await database
+            .update(subjectFiles)
+            .set({
+              resource: { ...resource, subjectFiles: undefined }
+            })
+            .where(eq(subjectFiles.id, oldSubjectFile.id));
+          return;
+        }
+
         await queue.add(async () => {
-          const oldPath = this.system.space.storage[oldRes.storage].fs.path(oldRes.path);
           this.system.logger.log(`${lightRed(`删除文件`)} ${oldPath.toString()}`);
           await oldPath.remove();
         });
@@ -67,7 +91,7 @@ export class StorageManager {
         const MAX_RETRY = 3;
 
         for (let i = 0; i < MAX_RETRY; i++) {
-          this.system.logger.log(lightCyan(`开始上传 ${link(dstName, resource.url)}`));
+          this.system.logger.log(lightYellow(`开始上传 ${link(dstName, resource.url)}`));
 
           const handle = this.system.logger.progress(`上传 ${link(dstName, resource.url)}`, {
             width: 40,
@@ -104,7 +128,6 @@ export class StorageManager {
 
             handle.remove();
 
-            const database = await this.system.openDatabase();
             await database.insert(subjectFiles).values({
               subjectId: (await subject.getSubject()).id,
               storage: subject.storage.driver,

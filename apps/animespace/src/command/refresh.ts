@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { bold, lightBlue, lightCyan, lightGreen, lightRed, link } from 'breadc';
+import { bold, lightBlue, lightGreen, lightRed, lightYellow, link } from 'breadc';
 
 import type { Subject } from '../subject/subject.ts';
 import type { System, PushOptions, PullOptions } from '../system/system.ts';
@@ -76,7 +76,7 @@ async function pushSubject(subject: Subject) {
     const requests: DownloadRequest[] = [];
     for (const res of toDownload) {
       if (res.magnet) {
-        system.logger.log(`${lightCyan('开始下载')}  ${link(res.extracted.filename, res.url)}`);
+        system.logger.log(`${lightYellow('开始下载')}  ${link(res.extracted.filename, res.url)}`);
         requests.push({
           infoHash: getInfoHash(res.magnet),
           magnet: res.magnet,
