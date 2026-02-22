@@ -3,6 +3,7 @@ import type { System } from '../../system/system.ts';
 import type { Subject } from '../subject.ts';
 
 import { isDef } from '../../utils/types.ts';
+import { isSameMagnet } from '../../utils/torrent.ts';
 
 import type {
   SubjectResource,
@@ -14,6 +15,17 @@ import type { SubjectSource } from './source.ts';
 import { SubjectType } from './schema.ts';
 import { parseResource } from './parser.ts';
 import { renderNamingTemplate, resolveTemplateByType } from './naming.ts';
+import { stringifyURLSearch } from '@animegarden/client';
+
+export function getSourceURL(subject: Subject) {
+  const { source } = subject;
+
+  if (source.animegarden) {
+    return `https://animes.garden/resources?${stringifyURLSearch(source.animegarden.filter).toString()}`;
+  }
+
+  return undefined;
+}
 
 export async function fetchResources(
   system: System,
@@ -39,6 +51,32 @@ export async function fetchResources(
 
   // 3. Apply resource rewrite rules
   const applied = applyResourcesRewriteRules(system, source, parsed);
+
+  // 4. Match with subjectFiles
+  const subjectFiles = await subject.getSubjectFiles();
+  for (const resource of applied) {
+    const related = subjectFiles.filter((subjectFile) => {
+      // TODO: should handle resource.pickedFiles
+      if (
+        resource.animegarden &&
+        resource.animegarden.provider === subjectFile.animegardenProvider &&
+        resource.animegarden.providerId === subjectFile.animegardenProviderId
+      ) {
+        return true;
+      }
+      if (
+        resource.magnet &&
+        subjectFile.torrentInfoHash &&
+        isSameMagnet(resource.magnet, subjectFile.torrentInfoHash)
+      ) {
+        return true;
+      }
+      return false;
+    });
+    if (related.length > 0) {
+      resource.subjectFiles = related;
+    }
+  }
 
   return applied;
 }
@@ -151,20 +189,39 @@ export async function extractResources(
     });
   }
 
-  // 4. Fullfill final name
-  for (const res of selected) {
-    const template = resolveTemplateByType(res.extracted.type, subject.naming.template);
-    res.extracted.filename = renderNamingTemplate(template, {
-      name: subject.naming.name,
-      season: res.extracted.season,
-      episode: res.extracted.episode,
-      fansub: res.extracted.fansub,
-      year: res.extracted.year,
-      month: res.extracted.month
-    });
-  }
-
   return selected;
+}
+
+export function nameResource(subject: Subject, res: ParsedSubjectResource) {
+  const season = res.metadata.season ?? subject.naming.season ?? res.parsed.season ?? 1;
+  const episode = res.parsed.episode;
+  const fansub = res.parsed.fansub ?? '';
+  const year = res.metadata.year ?? subject.naming.year ?? res.parsed.year;
+  const month = res.metadata.month ?? subject.naming.month ?? res.parsed.month;
+
+  const template = resolveTemplateByType(res.parsed.type, subject.naming.template);
+
+  const extracted = res as unknown as ExtractedSubjectResource;
+  extracted.extracted = {
+    type: res.parsed.type,
+    filename: '',
+    season,
+    episode: episode ?? 1,
+    fansub,
+    year,
+    month
+  };
+
+  extracted.extracted.filename = renderNamingTemplate(template, {
+    name: subject.naming.name,
+    season,
+    episode,
+    fansub,
+    year,
+    month
+  });
+
+  return extracted;
 }
 
 function groupResources(
@@ -175,11 +232,8 @@ function groupResources(
   for (const res of resources) {
     if (!res.parsed.episode) continue;
 
-    const season = res.metadata.season ?? subject.naming.season ?? res.parsed.season ?? 1;
-    const episode = res.parsed.episode;
-    const fansub = res.parsed.fansub ?? '';
-    const year = res.metadata.year ?? subject.naming.year ?? res.parsed.year;
-    const month = res.metadata.month ?? subject.naming.month ?? res.parsed.month;
+    const extracted = nameResource(subject, res);
+    const { season, episode } = extracted.extracted;
 
     const key =
       subject.type === SubjectType.TV
@@ -188,17 +242,6 @@ function groupResources(
     if (!group.has(key)) {
       group.set(key, []);
     }
-
-    const extracted = res as unknown as ExtractedSubjectResource;
-    extracted.extracted = {
-      type: res.parsed.type,
-      filename: '',
-      season,
-      episode,
-      fansub,
-      year,
-      month
-    };
 
     group.get(key)!.push(extracted);
   }

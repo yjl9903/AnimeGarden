@@ -8,7 +8,7 @@ const B32_LOOKUP: ReadonlyMap<string, number> = (() => {
   return map;
 })();
 
-export function base32ToBytes(b32: string): Uint8Array {
+function base32ToBytes(b32: string): Uint8Array {
   const s = b32.trim().toUpperCase().replace(/=+$/g, '');
   let bits = 0;
   let value = 0;
@@ -29,7 +29,7 @@ export function base32ToBytes(b32: string): Uint8Array {
   return Uint8Array.from(out);
 }
 
-export function bytesToBase32(bytes: Uint8Array): string {
+function bytesToBase32(bytes: Uint8Array): string {
   let bits = 0;
   let value = 0;
   let out = '';
@@ -52,7 +52,7 @@ export function bytesToBase32(bytes: Uint8Array): string {
   return out;
 }
 
-export function hexToBytes(hex: string): Uint8Array {
+function hexToBytes(hex: string): Uint8Array {
   const h = hex.trim().toLowerCase();
   if (!/^[0-9a-f]+$/.test(h) || h.length % 2 !== 0) {
     throw new Error('Invalid hex string');
@@ -64,7 +64,7 @@ export function hexToBytes(hex: string): Uint8Array {
   return out;
 }
 
-export function bytesToHex(bytes: Uint8Array): string {
+function bytesToHex(bytes: Uint8Array): string {
   let out = '';
   for (const b of bytes) out += b.toString(16).padStart(2, '0');
   return out;
@@ -88,9 +88,8 @@ export function btihHexToBase32(btihHex: string): string {
   return bytesToBase32(bytes);
 }
 
-// ---- optional: parse magnet and extract btih ----
 // Supports multiple xt=...; returns the first btih found.
-function extractBtihFromMagnet(
+export function extractBtihFromMagnet(
   magnetUrl: string
 ): { format: 'hex' | 'base32'; value: string } | null {
   const url = magnetUrl.trim();
@@ -116,7 +115,6 @@ function extractBtihFromMagnet(
   return null;
 }
 
-// ---- optional: normalize magnet to hex/base32 btih ----
 export function normalizeBtihToHex(magnetUrl: string): string {
   const r = extractBtihFromMagnet(magnetUrl);
   if (!r) return magnetUrl;

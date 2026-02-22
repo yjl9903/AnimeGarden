@@ -29,8 +29,8 @@ export const subjectFiles = sqliteTable(
     size: integer('size').default(0),
     checksum: text('checksum').notNull(),
 
-    // Related source
-    source: text('source', { mode: 'json' }).$type<ExtractedSubjectResource>(),
+    // Related resource
+    resource: text('resource', { mode: 'json' }).$type<ExtractedSubjectResource>(),
 
     // Related Anime Garden resource id
     animegardenProvider: text('animegarden_provider_name'),

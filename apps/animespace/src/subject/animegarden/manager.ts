@@ -29,7 +29,7 @@ type SourceFetchResult = FetchResourcesResult<{ tracker: true }>;
 const debug = createDebug('animespace:animegarden');
 
 // 跳过 sync 的时间间隔
-const SKIP_SYNC_INTERVAL = 2 * 60 * 1000;
+const SKIP_SYNC_INTERVAL = 5 * 60 * 1000;
 
 // 缓存过期时间
 const CacheStaleDurationMs = 7 * 24 * 60 * 60 * 1000;
@@ -150,7 +150,7 @@ export class AnimeGardenSourceManager {
       ...filter,
       tracker: true
     });
-    if (!remote.ok) {
+    if (!remote.ok || !remote.timestamp) {
       throw remote.error ?? new Error('Failed to fetch resources from AnimeGarden.');
     }
     this.latestFetchedAt = new Date(

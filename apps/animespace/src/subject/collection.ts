@@ -1,3 +1,5 @@
+import { sql } from 'drizzle-orm';
+
 import type { LocalPath } from '../utils/fs.ts';
 import type { System } from '../system/system.ts';
 
@@ -55,6 +57,31 @@ export class Collection {
 
   public async upsertToDatabase() {
     const database = await this.system.openDatabase();
-    // TODO
+    const resp = await database
+      .insert(subjects)
+      .values(
+        this.subjects.map((subject) => ({
+          name: subject.name,
+          enabled: subject.enabled,
+          source: subject.source,
+          naming: subject.naming,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }))
+      )
+      .onConflictDoUpdate({
+        target: subjects.name,
+        set: {
+          enabled: sql`excluded.enabled`,
+          source: sql`excluded.source`,
+          naming: sql`excluded.naming`,
+          updatedAt: new Date()
+        }
+      })
+      .returning({
+        id: subjects.id,
+        name: subjects.name
+      });
+    return resp;
   }
 }

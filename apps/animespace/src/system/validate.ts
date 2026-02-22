@@ -14,15 +14,22 @@ export async function validate(system: System) {
 
 export async function validateStorage(system: System) {
   for (const [name, storage] of Object.entries(system.space.storage)) {
-    try {
-      await storage.list();
-    } catch (error) {
-      system.logger.error(
-        `校验存储失败 ${name} ${storage.fs.name}://${storage.path} 原因:`,
-        error instanceof BreadFSError ? error.message : '',
-        error
-      );
-      throw error;
+    const MAX_RETRY = 3;
+    for (let i = 0; i < MAX_RETRY; i++) {
+      try {
+        await storage.list();
+      } catch (error) {
+        system.logger.error(
+          `校验存储失败 ${name} ${storage.fs.name}://${storage.path} 原因:`,
+          error instanceof BreadFSError ? (error.cause as any)?.message : '',
+          error
+        );
+        if (i + 1 === MAX_RETRY) {
+          throw error;
+        } else {
+          await new Promise((res) => setTimeout(res, 20 * 1000));
+        }
+      }
     }
   }
 }

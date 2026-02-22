@@ -45,7 +45,7 @@ CREATE TABLE `subject_files` (
 	`path` text NOT NULL,
 	`size` integer DEFAULT 0,
 	`checksum` text NOT NULL,
-	`source` text,
+	`resource` text,
 	`animegarden_provider_name` text,
 	`animegarden_provider_id` text,
 	`torrent_info_hash` text,
