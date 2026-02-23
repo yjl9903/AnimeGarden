@@ -1,6 +1,7 @@
 import type { Resource } from '@animegarden/client';
 
 const FansubNames = [
+  '雪飄工作室(FLsnow)',
   '北宇治字幕组',
   'LoliHouse',
   '喵萌奶茶屋',
@@ -17,8 +18,12 @@ const FansubNames = [
   '幻樱字幕组',
   '离谱Sub',
   '爱恋字幕社',
-  'ANi'
+  '黑白字幕组',
+  '绿茶字幕组',
+  'ANi',
+  '六四位元字幕組'
 ];
+
 const FansubOrder = new Map<string, number>(FansubNames.map((name, i) => [name, i]));
 
 export function groupResourcesByFansub(resources: Resource<{ tracker: true }>[]) {
