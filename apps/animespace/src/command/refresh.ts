@@ -109,7 +109,11 @@ async function pushSubject(subject: Subject) {
                 return;
               }
               // 3. Upload files
-              await system.managers.storage.upload(subject, ticket.resource, detail);
+              try {
+                await system.managers.storage.upload(subject, ticket.resource, detail);
+              } catch (error) {
+                system.logger.error(error);
+              }
             })()
           );
         }

@@ -1,15 +1,16 @@
 import path from 'node:path';
 import createDebug from 'debug';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { lightYellow, lightGreen, lightRed, link } from 'breadc';
 import { type Queue, newQueue } from '@animegarden/shared';
+
+import type { System } from '../system/system.ts';
+import type { TorrentDetail } from '../download/torrent.ts';
 
 import { LocalFS } from '../utils/fs.ts';
 import { getInfoHash } from '../utils/torrent.ts';
 import { formatBytes } from '../utils/bytes.ts';
 import { subjectFiles } from '../sqlite/subject.ts';
-import type { System } from '../system/system.ts';
-import type { TorrentDetail } from '../download/torrent.ts';
 
 import type { Subject } from './subject.ts';
 import type { ExtractedSubjectResource } from './source/resource.ts';
@@ -58,7 +59,7 @@ export class StorageManager {
           detail.files[0].checksum &&
           oldSubjectFile.checksum === detail.files[0].checksum
         ) {
-          this.system.logger.log(lightGreen(`重复上传 ${link(oldPath.basename, resource.url)}`));
+          this.system.logger.log(lightGreen(`重复上传  ${link(oldPath.basename, resource.url)}`));
           await database
             .update(subjectFiles)
             .set({
@@ -69,8 +70,9 @@ export class StorageManager {
         }
 
         await queue.add(async () => {
-          this.system.logger.log(`${lightRed(`删除文件`)} ${oldPath.toString()}`);
+          this.system.logger.log(`${lightRed(`删除文件`)}  ${oldPath.toString()}`);
           await oldPath.remove();
+          await database.delete(subjectFiles).where(eq(subjectFiles.id, oldSubjectFile.id));
         });
       }
     }
@@ -91,7 +93,8 @@ export class StorageManager {
         const MAX_RETRY = 3;
 
         for (let i = 0; i < MAX_RETRY; i++) {
-          this.system.logger.log(lightYellow(`开始上传 ${link(dstName, resource.url)}`));
+          const retry = i > 0 ? ` (重试 ${i + 1} / ${MAX_RETRY})` : '';
+          this.system.logger.log(lightYellow(`开始上传  ${link(dstName, resource.url)}${retry}`));
 
           const handle = this.system.logger.progress(`上传 ${link(dstName, resource.url)}`, {
             width: 40,
@@ -128,33 +131,50 @@ export class StorageManager {
 
             handle.remove();
 
-            await database.insert(subjectFiles).values({
-              subjectId: (await subject.getSubject()).id,
-              storage: subject.storage.driver,
-              path: dst.path,
-              size: file.size,
-              checksum: file.checksum || '',
-              resource: { ...resource, subjectFiles: undefined },
-              animegardenProvider: resource.animegarden?.provider,
-              animegardenProviderId: resource.animegarden?.providerId,
-              torrentInfoHash: resource.magnet ? getInfoHash(resource.magnet) : undefined,
-              torrentFilePath: file.name
-            });
+            await database
+              .insert(subjectFiles)
+              .values({
+                subjectId: (await subject.getSubject()).id,
+                storage: subject.storage.driver,
+                path: dst.path,
+                size: file.size,
+                checksum: file.checksum || '',
+                resource: { ...resource, subjectFiles: undefined },
+                animegardenProvider: resource.animegarden?.provider,
+                animegardenProviderId: resource.animegarden?.providerId,
+                torrentInfoHash: resource.magnet ? getInfoHash(resource.magnet) : undefined,
+                torrentFilePath: file.name
+              })
+              .onConflictDoUpdate({
+                target: [subjectFiles.storage, subjectFiles.path],
+                set: {
+                  size: file.size,
+                  checksum: file.checksum || '',
+                  resource: sql`excluded.resource`,
+                  animegardenProvider: resource.animegarden?.provider,
+                  animegardenProviderId: resource.animegarden?.providerId,
+                  torrentInfoHash: resource.magnet ? getInfoHash(resource.magnet) : undefined,
+                  torrentFilePath: file.name
+                }
+              });
 
-            this.system.logger.log(lightGreen(`成功上传 ${link(dstName, resource.url)}`));
+            this.system.logger.log(lightGreen(`成功上传  ${link(dstName, resource.url)}`));
 
             break;
           } catch (error) {
             handle.remove();
 
             if (i + 1 === MAX_RETRY) {
+              this.system.logger.log(lightRed(`上传失败  ${link(dstName, resource.url)}`));
               throw error;
+            } else {
+              debug(error);
             }
           }
         }
       });
     } else {
-      this.system.logger.error(`种子内容解析失败 ${link(resource.name, resource.url)}`);
+      this.system.logger.error(`种子内容解析失败  ${link(resource.name, resource.url)}`);
     }
   }
 }
