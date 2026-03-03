@@ -1,6 +1,7 @@
 import createDebug from 'debug';
-import { and, eq, inArray, sql } from 'drizzle-orm';
+import { lightRed } from 'breadc';
 import { QBittorrent } from 'nqbt';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 
 import type { System } from '../../system/system.ts';
 
@@ -131,11 +132,23 @@ export class QbittorrentDownloader extends Downloader {
         continue;
       }
 
-      await client.addNewMagnet(req.magnet, {
-        category: config.category,
-        savepath: config.savePath,
-        paused: true
-      });
+      try {
+        await client.addNewMagnet(req.magnet, {
+          category: config.category,
+          savepath: config.savePath,
+          paused: true
+        });
+      } catch (error) {
+        this.system.logger.log(`${lightRed('下载失败')}  ${req.magnet}`);
+        this.system.logger.error(error);
+        tickets.push({
+          infoHash: req.infoHash,
+          status: DownloadTicketStatus.failed,
+          subject: req.subject,
+          resource: req.resource
+        });
+        continue;
+      }
 
       try {
         await client.setTorrentShareLimits(req.infoHash, DEFAULT_QBITTORRENT_SHARE_LIMITS);
@@ -227,10 +240,11 @@ export class QbittorrentDownloader extends Downloader {
         if (!state) {
           pending.delete(hash);
           deleted.push(hash);
+
           yield {
             infoHash: hash,
             status: DownloadEventStatus.deleted,
-            error: 'Torrent is missing from qBittorrent category.'
+            error: 'Torrent is missing.'
           };
           continue;
         }
@@ -248,6 +262,7 @@ export class QbittorrentDownloader extends Downloader {
 
         if (state.status === TorrentStatus.failed) {
           pending.delete(hash);
+
           yield {
             infoHash: hash,
             status: DownloadEventStatus.failed,

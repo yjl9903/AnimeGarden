@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { bold, lightBlue, lightGreen, lightRed, lightYellow, link } from 'breadc';
+import { bold, dim, lightBlue, lightGreen, lightRed, lightYellow, link } from 'breadc';
 
 import type { Subject } from '../subject/subject.ts';
 import type { System, PushOptions, PullOptions } from '../system/system.ts';
@@ -69,7 +69,7 @@ async function pushSubject(subject: Subject) {
   const extracted = await subject.extractResources(fetched);
   const [downloaded, toDownload] = splitArray(extracted, (r) => !!r.subjectFiles);
   system.logger.log(
-    `${lightBlue('存储快照')}  已下载 ${downloaded.length} 条资源 (${link(`已抓取 ${extracted.length} 条`, getSourceURL(subject) || '')})`
+    `${dim('存储快照')}  已下载 ${downloaded.length} 条资源 (${link(`已抓取 ${extracted.length} 条`, getSourceURL(subject) || '')})`
   );
 
   if (toDownload.length > 0) {
@@ -105,7 +105,7 @@ async function pushSubject(subject: Subject) {
               const ticket = tickets.find((t) => t.infoHash === event.infoHash);
               const detail = await system.managers.downloader.getTorrentDetail(event.infoHash);
               if (!ticket || !detail || detail.files.length === 0) {
-                system.logger.error(`${lightRed('未知种子')}  ${event.infoHash}`);
+                system.logger.log(`${lightRed('未知种子')}  ${event.infoHash}`);
                 return;
               }
               // 3. Upload files
@@ -131,11 +131,19 @@ async function pullSubject(subject: Subject, options: PullOptions) {
 
   system.logger.log(`${lightBlue('同步快照')}  ${bold(subject.name)}`);
   printSource(system, subject);
-  const fetched = (await subject.fetchResources()).map((res) => nameResource(subject, res));
-  const extracted = await subject.extractResources(fetched);
-  system.logger.log(
-    `${lightBlue('成功抓取')}  ${link(`共 ${fetched.length} 条资源`, getSourceURL(subject) || '')}`
+  const fetched = (await subject.fetchResources().catch(() => undefined))?.map((res) =>
+    nameResource(subject, res)
   );
+  const extracted = fetched ? await subject.extractResources(fetched) : undefined;
+  if (fetched === undefined || extracted === undefined) {
+    system.logger.log(`${lightRed('抓取失败')}  ${getSourceURL(subject)}`);
+    system.logger.log();
+    return;
+  } else {
+    system.logger.log(
+      `${lightBlue('成功抓取')}  ${link(`共 ${fetched.length} 条资源`, getSourceURL(subject) || '')}`
+    );
+  }
 
   const subjectId = (await subject.getSubject()).id;
   const subjectFiles = await subject.getSubjectFiles();

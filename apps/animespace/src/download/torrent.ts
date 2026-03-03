@@ -12,7 +12,8 @@ export const enum TorrentStatus {
 
 export const enum DownloadTicketStatus {
   existing = 'existing',
-  created = 'created'
+  created = 'created',
+  failed = 'failed'
 }
 
 export const enum DownloadEventStatus {

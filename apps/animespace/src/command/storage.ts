@@ -40,8 +40,8 @@ export async function listStorage(
   printList(
     system,
     content,
-    (file) => file.path,
-    (file) => file.path,
+    (file) => storage.relative(file).path,
+    (file) => storage.relative(file).path,
     { json: options.json, type: 'bullet' }
   );
 }
@@ -52,7 +52,7 @@ export async function getStorage(system: System, file: string, options: GetStora
   const output = await resolveDownloadOutputPath(source, options.output);
 
   await source.copyTo(output);
-  system.logger.log(`Downloaded: ${source.path} -> ${output.path}`);
+  system.logger.log(`Downloaded: ${storage.relative(source).path} -> ${output.path}`);
 }
 
 export async function putStorage(system: System, file: string, options: PutStorageOptions) {
@@ -61,7 +61,7 @@ export async function putStorage(system: System, file: string, options: PutStora
   const input = resolveLocalPath(options.input ?? file);
 
   await input.copyTo(target);
-  system.logger.log(`Uploaded: ${input.path} -> ${target.path}`);
+  system.logger.log(`Uploaded: ${input.path} -> ${storage.relative(target).path}`);
 }
 
 export async function removeStorage(system: System, file: string, options: StorageCommandOptions) {
@@ -88,7 +88,9 @@ export async function moveStorage(
   const target = resolveStoragePath(dstStorage, dst, { allowRoot: false });
 
   await source.moveTo(target);
-  system.logger.log(`Moved: ${source.path} -> ${target.path}`);
+  system.logger.log(
+    `Moved: ${srcStorage.relative(source.path).path} -> ${dstStorage.relative(target.path).path}`
+  );
 }
 
 function requireStorage(system: System, name: string | undefined): StoragePath {
