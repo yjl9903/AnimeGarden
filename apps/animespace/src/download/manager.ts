@@ -14,7 +14,8 @@ import {
   type TorrentDetail,
   type DownloaderTransferStats,
   type TorrentState,
-  DownloadEventStatus
+  DownloadEventStatus,
+  DownloadTicketStatus
 } from './torrent.ts';
 import { QbittorrentDownloader } from './qbittorrent/index.ts';
 
@@ -70,7 +71,13 @@ export class DownloaderManager {
       this.runningTickets.set(ticket.infoHash, ticket);
     }
 
-    const running = this.getRunningHashes();
+    const running = this.getRunningTickets()
+      .filter(
+        (ticket) =>
+          ticket.status === DownloadTicketStatus.created ||
+          ticket.status === DownloadTicketStatus.existing
+      )
+      .map((ticket) => ticket.infoHash);
     if (running.length > 0) {
       await this.runScheduler(running);
     }
@@ -82,16 +89,18 @@ export class DownloaderManager {
     return [...this.runningTickets.values()];
   }
 
-  public getRunningHashes() {
-    return [...this.runningTickets.keys()];
-  }
-
   public async getTransferStats(): Promise<DownloaderTransferStats> {
     return await this.downloader.getTransferStats();
   }
 
   public async getTorrentStates(): Promise<TorrentState[]> {
-    const targets = this.getRunningHashes();
+    const targets = this.getRunningTickets()
+      .filter(
+        (ticket) =>
+          ticket.status === DownloadTicketStatus.created ||
+          ticket.status === DownloadTicketStatus.existing
+      )
+      .map((ticket) => ticket.infoHash);
     if (targets.length === 0) {
       return [];
     }
@@ -104,7 +113,12 @@ export class DownloaderManager {
 
   public async *waitForSubject(subject: Subject): AsyncGenerator<DownloadEvent> {
     const targets = this.getRunningTickets()
-      .filter((ticket) => ticket.subject.name === subject.name)
+      .filter(
+        (ticket) =>
+          ticket.subject.name === subject.name &&
+          (ticket.status === DownloadTicketStatus.created ||
+            ticket.status === DownloadTicketStatus.existing)
+      )
       .map((ticket) => ticket.infoHash);
 
     if (targets.length === 0) {
@@ -127,13 +141,20 @@ export class DownloaderManager {
         event.status === DownloadEventStatus.deleted
       ) {
         this.system.logger.log(
-          lightRed(`下载失败  ${link(ticket.resource.extracted.filename, ticket.resource.url)}`)
+          lightRed(
+            `下载失败  ${link(ticket.resource.extracted.filename, ticket.resource.url)}  ${event.error}`
+          )
         );
       }
 
       {
         const selfRunning = this.getRunningTickets()
-          .filter((ticket) => ticket.subject.name === subject.name)
+          .filter(
+            (ticket) =>
+              ticket.subject.name === subject.name &&
+              (ticket.status === DownloadTicketStatus.created ||
+                ticket.status === DownloadTicketStatus.existing)
+          )
           .map((ticket) => ticket.infoHash);
 
         if (selfRunning.length > 0) {
@@ -142,7 +163,12 @@ export class DownloaderManager {
       }
       {
         const otherRunning = this.getRunningTickets()
-          .filter((ticket) => ticket.subject.name !== subject.name)
+          .filter(
+            (ticket) =>
+              ticket.subject.name !== subject.name &&
+              (ticket.status === DownloadTicketStatus.created ||
+                ticket.status === DownloadTicketStatus.existing)
+          )
           .map((ticket) => ticket.infoHash);
         if (otherRunning.length > 0) {
           await this.runScheduler(otherRunning);
@@ -185,7 +211,7 @@ export class DownloaderManager {
             return '';
           },
           eta(ctx) {
-            if (ctx.state.eta) {
+            if (ctx.state.eta && ctx.state.eta !== 8_640_000) {
               if (ctx.state.eta < 60) {
                 return ` | eta: ${ctx.state.eta} s`;
               } else if (ctx.state.eta < 60 * 60) {

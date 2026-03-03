@@ -66,11 +66,11 @@ importers:
         specifier: 1.0.0-beta.12
         version: 1.0.0-beta.12
       '@breadfs/aliyundrive':
-        specifier: 0.1.11
-        version: 0.1.11
+        specifier: 0.1.12
+        version: 0.1.12
       '@breadfs/webdav':
-        specifier: 0.1.11
-        version: 0.1.11
+        specifier: 0.1.12
+        version: 0.1.12
       '@node-rs/jieba':
         specifier: 2.0.1
         version: 2.0.1
@@ -84,8 +84,8 @@ importers:
         specifier: 1.0.0-beta.12
         version: 1.0.0-beta.12
       breadfs:
-        specifier: 0.1.11
-        version: 0.1.11(tslib@2.8.1)
+        specifier: 0.1.12
+        version: 0.1.12(tslib@2.8.1)
       debug:
         specifier: 4.4.3
         version: 4.4.3
@@ -1262,24 +1262,24 @@ packages:
   '@breadc/tui@1.0.0-beta.12':
     resolution: {integrity: sha512-jDRu0bGn+/aBai27GvBtaGBdIQtMrTzfZVh3HFH3zcdqo5fhelc9ZMj74m/nWSqDk5eOOcxCTZmxVnwHNnlKLA==}
 
-  '@breadfs/aliyundrive@0.1.11':
-    resolution: {integrity: sha512-R91XfoFxOYX1xsu0NkcZFTJ1E0a0pojdE41A37tLUsS8juJIVA7Ehy5WsS31j0/c9BUzTIm8A/QM3+/NI/yHLw==}
+  '@breadfs/aliyundrive@0.1.12':
+    resolution: {integrity: sha512-IMsRgzdnXNvBtqWY3aMqN8RH3DEKgz5SFSPFWKnqsUCUwAC9Mx8hwozs9ExFEsooMFqJSLUPoSAcaYQckWUTnA==}
     engines: {node: '>=v20.6.1'}
 
-  '@breadfs/core@0.1.11':
-    resolution: {integrity: sha512-B2PxjVqjaJFZdgpzVfcRz4HYCiM7nYHsQ230PEeQdbDzaS8TLzXjSmcAG58zLmbAw7S5KhzlEFMP6V8h8FHucg==}
+  '@breadfs/core@0.1.12':
+    resolution: {integrity: sha512-dfS3eVkBnwXq9FRYZYfhqTEWjlyV/FNaZpCgJF95GC9Gg4rwVMWuk4LYNH8h6db/+srKBFKOa+xqHisDreNjCA==}
     engines: {node: '>=v20.6.1'}
 
-  '@breadfs/mem@0.1.11':
-    resolution: {integrity: sha512-UcJISt+gtiD3YNdDKs9J5g5jEoFgotYF0d+0sszZ+CSXrTy0/9WVmDGfxYTgMofZUZBYGBvMHTS2/LjpVmeHKg==}
+  '@breadfs/mem@0.1.12':
+    resolution: {integrity: sha512-CQMa2V8cGHy7pxSr6XZ2WytKnTCuswgmN5yFEBgsAPex8/3Eb3JXbkZhXK8s+xxcNoUCOCToBANOf3zIdpjw9w==}
     engines: {node: '>=v20.6.1'}
 
-  '@breadfs/node@0.1.11':
-    resolution: {integrity: sha512-9b0PBjWM9xRU5HHMICVJ4MUQF/xm+LHrUVl47zne/Z+EOE/UuDPxp8Mdgvabgdq8qHH1DAqjjTBTEmcXE1qSjg==}
+  '@breadfs/node@0.1.12':
+    resolution: {integrity: sha512-z33QZ4M62fnuy7BiPY/B78+EvgEBPBIDmYR6dKmYcdffwf3GL+Dqn0LsOffqdcEJxaDLw9SVzTtKXXU/9Zui9Q==}
     engines: {node: '>=v20.6.1'}
 
-  '@breadfs/webdav@0.1.11':
-    resolution: {integrity: sha512-6GnLNoFz/PqvLVgbV2q28GX+AcbSXRgLkqoV7ElcpawSZh5lmo/1grZWQ/TJp3LmCdmyYDnt8hyUSlm721gGTA==}
+  '@breadfs/webdav@0.1.12':
+    resolution: {integrity: sha512-Lt2pygwhKHOXg4GELlM3U9JcXBUv02l487KxUBzVPKigYiCMgCJH2ieD7rp4QawngUviHJL/nIMhNQatBghYzQ==}
     engines: {node: '>=v20.6.1'}
 
   '@buttercup/fetch@0.2.1':
@@ -4548,8 +4548,8 @@ packages:
   breadc@1.0.0-beta.12:
     resolution: {integrity: sha512-hb1K0VcGG4zVHsWw46L2fIsuKgxdvKv4NWVk5G4i7XNioNPCRn4LEPh4jt2mD4VX2PmVERa2ruvG3YE5vB3gwA==}
 
-  breadfs@0.1.11:
-    resolution: {integrity: sha512-cNCv9IQBqMNEaLwC++3xWbmCPJ66GT6Rr2R6KANstxWV1HfkobE772nyJkMf/Ly0KWVrgdm+6V5r/74EHCCXoQ==}
+  breadfs@0.1.12:
+    resolution: {integrity: sha512-toRtFvevkoOLBooWEvM9Rw4ptRC3RM6HxuHj6MzuF1OcV9LXHLJxrW3rFrABBLhKYk7jUIJaW6veeP7VKnlNvA==}
     engines: {node: '>=v20.6.1'}
 
   browserify-zlib@0.1.4:
@@ -10231,32 +10231,32 @@ snapshots:
       std-env: 3.10.0
       string-width: 8.2.0
 
-  '@breadfs/aliyundrive@0.1.11':
+  '@breadfs/aliyundrive@0.1.12':
     dependencies:
-      '@breadfs/core': 0.1.11
+      '@breadfs/core': 0.1.12
 
-  '@breadfs/core@0.1.11':
+  '@breadfs/core@0.1.12':
     dependencies:
       pathe: 2.0.3
 
-  '@breadfs/mem@0.1.11(tslib@2.8.1)':
+  '@breadfs/mem@0.1.12(tslib@2.8.1)':
     dependencies:
-      '@breadfs/core': 0.1.11
+      '@breadfs/core': 0.1.12
       fflate: 0.8.2
       memfs: 4.56.10(tslib@2.8.1)
       pathe: 2.0.3
     transitivePeerDependencies:
       - tslib
 
-  '@breadfs/node@0.1.11':
+  '@breadfs/node@0.1.12':
     dependencies:
-      '@breadfs/core': 0.1.11
+      '@breadfs/core': 0.1.12
       fs-extra: 11.3.3
       pathe: 2.0.3
 
-  '@breadfs/webdav@0.1.11':
+  '@breadfs/webdav@0.1.12':
     dependencies:
-      '@breadfs/core': 0.1.11
+      '@breadfs/core': 0.1.12
       webdav: 5.9.0
 
   '@buttercup/fetch@0.2.1':
@@ -13645,14 +13645,14 @@ snapshots:
       '@breadc/death': 1.0.0-beta.12
       '@breadc/tui': 1.0.0-beta.12
 
-  breadfs@0.1.11(tslib@2.8.1):
+  breadfs@0.1.12(tslib@2.8.1):
     dependencies:
-      '@breadfs/core': 0.1.11
-      '@breadfs/mem': 0.1.11(tslib@2.8.1)
-      '@breadfs/node': 0.1.11
+      '@breadfs/core': 0.1.12
+      '@breadfs/mem': 0.1.12(tslib@2.8.1)
+      '@breadfs/node': 0.1.12
     optionalDependencies:
-      '@breadfs/aliyundrive': 0.1.11
-      '@breadfs/webdav': 0.1.11
+      '@breadfs/aliyundrive': 0.1.12
+      '@breadfs/webdav': 0.1.12
     transitivePeerDependencies:
       - tslib
 
