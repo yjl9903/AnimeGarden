@@ -119,7 +119,7 @@
 1. `openDatabase` 会执行 `migrateDatabase`。
 2. migration 使用运行时 DDL（事务 + schema_version）。
 3. 当前版本常量：`CURRENT_SCHEMA_VERSION = 1`。
-4. 已知风险：`connect.ts` DDL 与 drizzle table schema 存在不一致（见 review findings）。
+4. 已知风险：`open.ts` 中 migration DDL 与 drizzle table schema 存在不一致（见 review findings）。
 
 ## 9. 校验规则
 
@@ -130,9 +130,9 @@
 3. 同一 storage driver 下路径禁止前缀冲突。
 4. storage path 必须是相对路径，且不能包含 `..`。
 
-## 10. 当前未实现边界
+## 10. 当前边界与未完成项（已按现代码更新）
 
-1. `command/refresh.ts` 的 `refreshSubjects` 与 `introspectSubjects` 仍为 TODO。
-2. `subject_files` upsert 逻辑仍为 TODO（`Collection.upsertToDatabase`）。
-3. 下载管线与 qbittorrent 模块尚未落地。
-4. 多个 CLI command action 仍为空实现（bangumi/garden detail/collection 等）。
+1. `push/pull` 主流程已落地（`apps/animespace/src/command/refresh.ts`），但尚未实现 `watch --interval`、`pull --checksum` 等参数语义。
+2. `subject_files` 写入逻辑已落地（`apps/animespace/src/subject/storage.ts`, `apps/animespace/src/command/refresh.ts`），但文件级绑定仍未覆盖 `pickedFiles` 等更细粒度场景。
+3. downloader 与 qBittorrent 模块已落地（`apps/animespace/src/download/*`），当前 provider 仅支持 `qbittorrent`。
+4. 多个 CLI command action 仍为空实现（bangumi/garden detail/collection、subject upload/files 等）。
