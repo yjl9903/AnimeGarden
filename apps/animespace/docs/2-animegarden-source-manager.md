@@ -5,7 +5,7 @@
 ## 1. 代码落点
 
 1. `apps/animespace/src/subject/animegarden/manager.ts`
-2. `apps/animespace/src/sqlite/connect.ts`
+2. `apps/animespace/src/sqlite/open.ts`
 3. `apps/animespace/src/sqlite/animegarden.ts`
 4. `apps/animespace/src/sqlite/metadata.ts`
 5. `apps/animespace/src/system/system.ts`
@@ -30,9 +30,11 @@
 
 1. 读取 metadata `animegarden_synced_at`。
 2. 读取本地最新 `animegarden_resources`（按 `createdAt desc, fetchedAt desc`）。
-3. 若本地存在资源且距离上次同步小于 2 分钟，跳过同步，只更新 `latestFetchedAt`。
+3. 若本地存在资源且距离上次同步小于 5 分钟，跳过同步，只更新 `latestFetchedAt`。
 4. 若本地无资源或资源最晚 `createdAt` 超过 7 天：清空 `resources + filters + filter_resources`。
 5. 调用 `syncLatestResources` 拉取最新资源并 upsert。
+   - 仅当“已有本地资源且未过期”时走连续分页同步。
+   - 首次初始化或缓存过期后重建时只拉取一页基线数据。
 6. 写入 metadata `animegarden_synced_at = now`。
 
 ## 4. 查询与缓存命中
@@ -61,7 +63,7 @@
 1. 同步时固定查询 `type: '动画'`、`tracker: true`。
 2. 每页 `pageSize = 1000`，从第 1 页开始。
 3. 连续 1 页无缺失资源则提前停止。
-4. 最大抓取页数阈值为 10；超过后会清空 filters 缓存关系。
+4. 最大抓取页数阈值常量为 `10`，当前实现判断条件是 `page > 10`，会在触发阈值时清空 filters 缓存关系并停止。
 
 ## 6. 数据库表与索引（当前 schema）
 
@@ -79,10 +81,10 @@
 
 1. `System.loadSpace()` 会创建 `system.managers.animegarden`。
 2. manager 依赖 `system.openDatabase()` 获取数据库。
-3. `System.close()` 当前仅关闭数据库连接，不会主动调用 manager `close()`。
+3. `System.close()` 会主动调用 manager `close()`，并清理 memoized 初始化状态。
 
 ## 8. 当前实现已知问题（Review 关注项）
 
-1. `connect.ts` 中 migration DDL 与 drizzle schema 存在字段漂移风险（详见 review findings）。
+1. `open.ts` 中 migration DDL 与 drizzle schema 存在字段漂移风险（详见 review findings）。
 2. `hasNewMatchedResources` 的标题匹配使用分词 + 关键词命中，注释中已标记 hack。
-3. `System.close()` 未级联 manager `close()`，initialize memo 生命周期与系统关闭不完全一致。
+3. `syncLatestResources` 的页数阈值判断为 `page > 10`（而非 `>= 10`），行为上会多拉取一轮再触发阈值分支。

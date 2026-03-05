@@ -103,6 +103,7 @@
 1. 关键词排序里，未命中关键词时 `findIndex` 返回 `-1`，会影响优先级比较结果。
 2. fallback 排序当前是 `name.localeCompare`，不是“按创建时间/抓取时间”。
 3. `parseResource` 对 `type` 的推断还留有 TODO。
+4. 提取阶段使用 `if (!parsed.episode) continue`，`episode=0` 会被当作“无集数”过滤。
 
 ## 8. 对外稳定接口（当前）
 

@@ -2,6 +2,8 @@
 
 本文档细化 `pull/push/watch` 方案中的 downloader 子系统，目标是提供“可直接编码”的接口与行为约束。
 
+> 说明：本文档描述的是目标接口与约束，不完全等同于当前 `apps/animespace/src/download/*` 的签名。当前差异请参考 `7-design-implementation-gap.md`。
+
 ## 1. 目标与非目标
 
 ### 1.1 目标
