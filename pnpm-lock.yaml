@@ -72,8 +72,8 @@ importers:
         specifier: 3.992.0
         version: 3.992.0
       '@breadc/color':
-        specifier: 1.0.0-beta.10
-        version: 1.0.0-beta.10
+        specifier: 1.0.0-beta.13
+        version: 1.0.0-beta.13
       '@hono/mcp':
         specifier: 0.2.3
         version: 0.2.3(@modelcontextprotocol/sdk@1.26.0(zod@3.25.76))(hono-rate-limiter@0.4.2(hono@4.12.1))(hono@4.12.1)(zod@3.25.76)
@@ -96,8 +96,8 @@ importers:
         specifier: 0.20260129.0
         version: 0.20260129.0
       breadc:
-        specifier: 1.0.0-beta.10
-        version: 1.0.0-beta.10
+        specifier: 1.0.0-beta.13
+        version: 1.0.0-beta.13
       consola:
         specifier: 3.4.2
         version: 3.4.2
@@ -1203,17 +1203,17 @@ packages:
     resolution: {integrity: sha512-ctxtJ/eA+t+6q2++vj5j7FYX3nRu311q1wfYH3xjlLOsczhlhxAg2FWNUXhpGvAw3BWo1xBcvOV6/YLc2r5FJw==}
     hasBin: true
 
-  '@breadc/color@1.0.0-beta.10':
-    resolution: {integrity: sha512-Ohiyw5TDYRaZokBt6+qw0xsn9NbeUvAExgsbFA1nE9BqfXGVnxsvI6vAIoil5aSHumEpAxjUAF8muRPH5BCQEQ==}
+  '@breadc/color@1.0.0-beta.13':
+    resolution: {integrity: sha512-egF3FtYmY+6WNdt5zCh9cuClGmfMaqTyWe0yODsQGQOoBoWSU53LP2XpM18U0LkMpGS6qvW4TfSl0yXKRry/1Q==}
 
-  '@breadc/core@1.0.0-beta.10':
-    resolution: {integrity: sha512-ttaS9mRpQikuEV055u9TLh3bePdXoZV4nFnVXDfswFrJC7zgspZ2U9KHm8G3SUofqF9OSHTZ7IPh44RNfmjkFA==}
+  '@breadc/core@1.0.0-beta.13':
+    resolution: {integrity: sha512-eC0qWTBBxOXGDREIMOkcZWshjecML6y7IVxE9KQRbLaQlKJm9uRed6M0aD2v44ET5XKd2+OYckwDByO67yLt4A==}
 
-  '@breadc/death@1.0.0-beta.10':
-    resolution: {integrity: sha512-SD9A1sJsnHb3nhGkLVSddBnPSakXHxfrOtgCF6322yADkNQ6TLRgd8yVz1KWppoJvKOJAVuxGZSoiyRe+QXACw==}
+  '@breadc/death@1.0.0-beta.13':
+    resolution: {integrity: sha512-PNZ6AKgks+I3cJ/R1npq85eBvhi6bu/Ie9p5N/0Cfh/K1LO99ngRxUCT6HxFOHtQwN0g9RsacwSirswFRp/JQw==}
 
-  '@breadc/tui@1.0.0-beta.10':
-    resolution: {integrity: sha512-/EKJxYG5YAyZ53mXZusOdbY5OfHSO4o4hDahZV6yRoKpWeEYkXDfkdHACJFrYu+Jarw0UTxHHXpPjsQMz1OX+w==}
+  '@breadc/tui@1.0.0-beta.13':
+    resolution: {integrity: sha512-MRVuOAD+I+WnOBeJYCkStFvgUxXr0JsrLdW+D9624tzQntS0L9VMin8Edhm4D0kh5SLKUTKClGBesJ4X9ckY6A==}
 
   '@canvas/image-data@1.1.0':
     resolution: {integrity: sha512-QdObRRjRbcXGmM1tmJ+MrHcaz1MftF2+W7YI+MsphnsCrmtyfS0d5qJbk0MeSbUeyM/jCb0hmnkXPsy026L7dA==}
@@ -4335,8 +4335,8 @@ packages:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
 
-  breadc@1.0.0-beta.10:
-    resolution: {integrity: sha512-pdhMLCXdTS4nTnkv7rfD+gIZli5vb3YyCXyucYRK6eIcauBRfVJNRu32pszNcQ8IKzKdaMDjUNTslYAdGnGGBg==}
+  breadc@1.0.0-beta.13:
+    resolution: {integrity: sha512-CWuTWTbAUKHatG9e9ZttrTBHqWuY0kPYtp+6caRCrS0h9Wf9091dk2vGSJLCZDsGc2KTJzHQCgg88vJpSz4EGQ==}
 
   browserify-zlib@0.1.4:
     resolution: {integrity: sha512-19OEpq7vWgsH6WkvkBJQDFvJS1uPcbFOQ4v9CU839dO+ZZXUZO6XpE6hNCqvlIIj+4fZvRiJ6DsAQ382GwiyTQ==}
@@ -5349,6 +5349,10 @@ packages:
 
   get-east-asian-width@1.4.0:
     resolution: {integrity: sha512-QZjmEOC+IT1uk6Rx0sX22V6uHWVwbdbxf1faPqJ1QhLdGgsRGCZoyaQBm/piRdJy/D2um6hM1UP7ZEeQ4EkP+Q==}
+    engines: {node: '>=18'}
+
+  get-east-asian-width@1.5.0:
+    resolution: {integrity: sha512-CQ+bEO+Tva/qlmw24dCejulK5pMzVnUOFOijVogd3KQs07HnRIgp8TGipvCCRT06xeYEbpbgwaCxglFyiuIcmA==}
     engines: {node: '>=18'}
 
   get-intrinsic@1.3.0:
@@ -7648,6 +7652,10 @@ packages:
     resolution: {integrity: sha512-gmBGslpoQJtgnMAvOVqGZpEz9dyoKTCzy2nfz/n8aIFhN/jCE/rCmcxabB6jOOHV+0WNnylOxaxBQPSvcWklhA==}
     engines: {node: '>=12'}
 
+  strip-ansi@7.2.0:
+    resolution: {integrity: sha512-yDPMNjp4WyfYBkHnjIRLfca1i6KMyGCtsVgoKe/z1+6vukgaENdgGBZt+ZmKPc4gavvEZ5OgHfHdrazhgNyG7w==}
+    engines: {node: '>=12'}
+
   strip-bom@3.0.0:
     resolution: {integrity: sha512-vavAMRXOgBVNF6nyEEmL3DBK19iRpDcoIwW+swQ+CbGiu7lju6t+JklA1MHweoWtadgt4ISVUsXLyDq34ddcwA==}
     engines: {node: '>=4'}
@@ -9882,19 +9890,20 @@ snapshots:
     dependencies:
       css-tree: 3.1.0
 
-  '@breadc/color@1.0.0-beta.10': {}
+  '@breadc/color@1.0.0-beta.13': {}
 
-  '@breadc/core@1.0.0-beta.10':
+  '@breadc/core@1.0.0-beta.13':
     dependencies:
-      '@breadc/color': 1.0.0-beta.10
+      '@breadc/color': 1.0.0-beta.13
 
-  '@breadc/death@1.0.0-beta.10': {}
+  '@breadc/death@1.0.0-beta.13': {}
 
-  '@breadc/tui@1.0.0-beta.10':
+  '@breadc/tui@1.0.0-beta.13':
     dependencies:
-      '@breadc/color': 1.0.0-beta.10
+      '@breadc/color': 1.0.0-beta.13
+      get-east-asian-width: 1.5.0
       std-env: 3.10.0
-      string-width: 8.1.1
+      strip-ansi: 7.2.0
 
   '@canvas/image-data@1.1.0': {}
 
@@ -13123,12 +13132,12 @@ snapshots:
     dependencies:
       fill-range: 7.1.1
 
-  breadc@1.0.0-beta.10:
+  breadc@1.0.0-beta.13:
     dependencies:
-      '@breadc/color': 1.0.0-beta.10
-      '@breadc/core': 1.0.0-beta.10
-      '@breadc/death': 1.0.0-beta.10
-      '@breadc/tui': 1.0.0-beta.10
+      '@breadc/color': 1.0.0-beta.13
+      '@breadc/core': 1.0.0-beta.13
+      '@breadc/death': 1.0.0-beta.13
+      '@breadc/tui': 1.0.0-beta.13
 
   browserify-zlib@0.1.4:
     dependencies:
@@ -14291,6 +14300,8 @@ snapshots:
   get-caller-file@2.0.5: {}
 
   get-east-asian-width@1.4.0: {}
+
+  get-east-asian-width@1.5.0: {}
 
   get-intrinsic@1.3.0:
     dependencies:
@@ -16842,6 +16853,10 @@ snapshots:
       ansi-regex: 5.0.1
 
   strip-ansi@7.1.2:
+    dependencies:
+      ansi-regex: 6.2.2
+
+  strip-ansi@7.2.0:
     dependencies:
       ansi-regex: 6.2.2
 
