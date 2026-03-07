@@ -63,8 +63,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/client
       '@breadc/color':
-        specifier: 1.0.0-beta.12
-        version: 1.0.0-beta.12
+        specifier: 1.0.0-beta.13
+        version: 1.0.0-beta.13
       '@breadfs/aliyundrive':
         specifier: 0.1.12
         version: 0.1.12
@@ -81,8 +81,8 @@ importers:
         specifier: 12.6.2
         version: 12.6.2
       breadc:
-        specifier: 1.0.0-beta.12
-        version: 1.0.0-beta.12
+        specifier: 1.0.0-beta.13
+        version: 1.0.0-beta.13
       breadfs:
         specifier: 0.1.12
         version: 0.1.12(tslib@2.8.1)
@@ -127,8 +127,8 @@ importers:
         specifier: 3.990.0
         version: 3.990.0
       '@breadc/color':
-        specifier: 1.0.0-beta.12
-        version: 1.0.0-beta.12
+        specifier: 1.0.0-beta.13
+        version: 1.0.0-beta.13
       '@hono/mcp':
         specifier: 0.2.3
         version: 0.2.3(@modelcontextprotocol/sdk@1.26.0(zod@3.25.76))(hono-rate-limiter@0.4.2(hono@4.11.9))(hono@4.11.9)(zod@3.25.76)
@@ -151,8 +151,8 @@ importers:
         specifier: 0.20260129.0
         version: 0.20260129.0
       breadc:
-        specifier: 1.0.0-beta.12
-        version: 1.0.0-beta.12
+        specifier: 1.0.0-beta.13
+        version: 1.0.0-beta.13
       consola:
         specifier: 3.4.2
         version: 3.4.2
@@ -1250,17 +1250,17 @@ packages:
     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
     engines: {node: '>=6.9.0'}
 
-  '@breadc/color@1.0.0-beta.12':
-    resolution: {integrity: sha512-HPsrV6nh+CyuX5T3133FoGO+b2cXyaS6GEadl+uYL0l5t899oAK6CiAKxYmG4HIGsBWlYorFAiWkdhkqYw26Kg==}
+  '@breadc/color@1.0.0-beta.13':
+    resolution: {integrity: sha512-egF3FtYmY+6WNdt5zCh9cuClGmfMaqTyWe0yODsQGQOoBoWSU53LP2XpM18U0LkMpGS6qvW4TfSl0yXKRry/1Q==}
 
-  '@breadc/core@1.0.0-beta.12':
-    resolution: {integrity: sha512-/c1toFpLmr9kgp66rtF0On2dttt7hepr6MjZWlY9O1lwJ1RviHSNQutGn28vAwh5EeN9DC9LQpKUYJoiWIYZCw==}
+  '@breadc/core@1.0.0-beta.13':
+    resolution: {integrity: sha512-eC0qWTBBxOXGDREIMOkcZWshjecML6y7IVxE9KQRbLaQlKJm9uRed6M0aD2v44ET5XKd2+OYckwDByO67yLt4A==}
 
-  '@breadc/death@1.0.0-beta.12':
-    resolution: {integrity: sha512-o47GKu4zqksFtSxpk4ZrnGUj8HvSWct191T0mRBRxgGpthejt1UoZ7p20IMlbhTt55xEHgcT+iu+LiwaieSjSw==}
+  '@breadc/death@1.0.0-beta.13':
+    resolution: {integrity: sha512-PNZ6AKgks+I3cJ/R1npq85eBvhi6bu/Ie9p5N/0Cfh/K1LO99ngRxUCT6HxFOHtQwN0g9RsacwSirswFRp/JQw==}
 
-  '@breadc/tui@1.0.0-beta.12':
-    resolution: {integrity: sha512-jDRu0bGn+/aBai27GvBtaGBdIQtMrTzfZVh3HFH3zcdqo5fhelc9ZMj74m/nWSqDk5eOOcxCTZmxVnwHNnlKLA==}
+  '@breadc/tui@1.0.0-beta.13':
+    resolution: {integrity: sha512-MRVuOAD+I+WnOBeJYCkStFvgUxXr0JsrLdW+D9624tzQntS0L9VMin8Edhm4D0kh5SLKUTKClGBesJ4X9ckY6A==}
 
   '@breadfs/aliyundrive@0.1.12':
     resolution: {integrity: sha512-IMsRgzdnXNvBtqWY3aMqN8RH3DEKgz5SFSPFWKnqsUCUwAC9Mx8hwozs9ExFEsooMFqJSLUPoSAcaYQckWUTnA==}
@@ -4545,8 +4545,8 @@ packages:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
 
-  breadc@1.0.0-beta.12:
-    resolution: {integrity: sha512-hb1K0VcGG4zVHsWw46L2fIsuKgxdvKv4NWVk5G4i7XNioNPCRn4LEPh4jt2mD4VX2PmVERa2ruvG3YE5vB3gwA==}
+  breadc@1.0.0-beta.13:
+    resolution: {integrity: sha512-CWuTWTbAUKHatG9e9ZttrTBHqWuY0kPYtp+6caRCrS0h9Wf9091dk2vGSJLCZDsGc2KTJzHQCgg88vJpSz4EGQ==}
 
   breadfs@0.1.12:
     resolution: {integrity: sha512-toRtFvevkoOLBooWEvM9Rw4ptRC3RM6HxuHj6MzuF1OcV9LXHLJxrW3rFrABBLhKYk7jUIJaW6veeP7VKnlNvA==}
@@ -7923,10 +7923,6 @@ packages:
     resolution: {integrity: sha512-KpqHIdDL9KwYk22wEOg/VIqYbrnLeSApsKT/bSj6Ez7pn3CftUiLAv2Lccpq1ALcpLV9UX1Ppn92npZWu2w/aw==}
     engines: {node: '>=20'}
 
-  string-width@8.2.0:
-    resolution: {integrity: sha512-6hJPQ8N0V0P3SNmP6h2J99RLuzrWz2gvT7VnK5tKvrNqJoyS9W4/Fb8mo31UiPvy00z7DQXkP2hnKBVav76thw==}
-    engines: {node: '>=20'}
-
   string.prototype.matchall@4.0.12:
     resolution: {integrity: sha512-6CC9uyBL+/48dYizRf7H7VAYCMCNTBeM78x/VTUe9bFEaxBepPJDa1Ow99LqI/1yF7kuy7Q3cQsYMrcjGUcskA==}
     engines: {node: '>= 0.4'}
@@ -7962,6 +7958,10 @@ packages:
 
   strip-ansi@7.1.2:
     resolution: {integrity: sha512-gmBGslpoQJtgnMAvOVqGZpEz9dyoKTCzy2nfz/n8aIFhN/jCE/rCmcxabB6jOOHV+0WNnylOxaxBQPSvcWklhA==}
+    engines: {node: '>=12'}
+
+  strip-ansi@7.2.0:
+    resolution: {integrity: sha512-yDPMNjp4WyfYBkHnjIRLfca1i6KMyGCtsVgoKe/z1+6vukgaENdgGBZt+ZmKPc4gavvEZ5OgHfHdrazhgNyG7w==}
     engines: {node: '>=12'}
 
   strip-bom@3.0.0:
@@ -10217,19 +10217,20 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
-  '@breadc/color@1.0.0-beta.12': {}
+  '@breadc/color@1.0.0-beta.13': {}
 
-  '@breadc/core@1.0.0-beta.12':
+  '@breadc/core@1.0.0-beta.13':
     dependencies:
-      '@breadc/color': 1.0.0-beta.12
+      '@breadc/color': 1.0.0-beta.13
 
-  '@breadc/death@1.0.0-beta.12': {}
+  '@breadc/death@1.0.0-beta.13': {}
 
-  '@breadc/tui@1.0.0-beta.12':
+  '@breadc/tui@1.0.0-beta.13':
     dependencies:
-      '@breadc/color': 1.0.0-beta.12
+      '@breadc/color': 1.0.0-beta.13
+      get-east-asian-width: 1.5.0
       std-env: 3.10.0
-      string-width: 8.2.0
+      strip-ansi: 7.2.0
 
   '@breadfs/aliyundrive@0.1.12':
     dependencies:
@@ -13638,12 +13639,12 @@ snapshots:
     dependencies:
       fill-range: 7.1.1
 
-  breadc@1.0.0-beta.12:
+  breadc@1.0.0-beta.13:
     dependencies:
-      '@breadc/color': 1.0.0-beta.12
-      '@breadc/core': 1.0.0-beta.12
-      '@breadc/death': 1.0.0-beta.12
-      '@breadc/tui': 1.0.0-beta.12
+      '@breadc/color': 1.0.0-beta.13
+      '@breadc/core': 1.0.0-beta.13
+      '@breadc/death': 1.0.0-beta.13
+      '@breadc/tui': 1.0.0-beta.13
 
   breadfs@0.1.12(tslib@2.8.1):
     dependencies:
@@ -17409,11 +17410,6 @@ snapshots:
       get-east-asian-width: 1.4.0
       strip-ansi: 7.1.2
 
-  string-width@8.2.0:
-    dependencies:
-      get-east-asian-width: 1.5.0
-      strip-ansi: 7.1.2
-
   string.prototype.matchall@4.0.12:
     dependencies:
       call-bind: 1.0.8
@@ -17477,6 +17473,10 @@ snapshots:
       ansi-regex: 5.0.1
 
   strip-ansi@7.1.2:
+    dependencies:
+      ansi-regex: 6.2.2
+
+  strip-ansi@7.2.0:
     dependencies:
       ansi-regex: 6.2.2
 

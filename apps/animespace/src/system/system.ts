@@ -155,8 +155,13 @@ export class System {
 
     this.logger.log(dim(`连接 ${this.space.downloader.provider} 下载器`));
     const manager = this.managers.downloader;
-    await manager.initialize();
-    this.logger.log(dim(`连接 ${this.space.downloader.provider} 下载器成功`));
+    try {
+      await manager.initialize();
+      this.logger.log(dim(`连接 ${this.space.downloader.provider} 下载器成功`));
+    } catch (error) {
+      this.logger.log(lightRed(`连接 ${this.space.downloader.provider} 下载器成功`));
+      throw error;
+    }
 
     return manager;
   });
@@ -233,10 +238,10 @@ export class System {
   }
 
   public async initializeSource() {
-    this.logger.log(lightBlue('同步 Anime Garden 资源'));
+    this.logger.log(lightBlue('开始同步  Anime Garden 资源'));
     try {
       await this.managers.animegarden.initialize();
-      this.logger.log(lightGreen('同步 Anime Garden 资源成功'));
+      this.logger.log(lightGreen('成功同步  Anime Garden 资源'));
     } catch (error) {
       this.logger.log(lightRed('同步 Anime Garden 资源失败'));
       this.logger.error(error);
@@ -291,7 +296,7 @@ export class System {
         }
       }
 
-      this.logger.log(lightGreen('成功推送 Anime Space 更新'));
+      this.logger.log(lightGreen('成功推送  Anime Space 更新'));
       this.logger.log();
     }
   }
@@ -314,7 +319,7 @@ export class System {
     const tasks = await pushSubjects(this, subjects);
     await Promise.allSettled(tasks.map((t) => t.promise));
 
-    this.logger.log(lightGreen('成功推送 Anime Space 更新'));
+    this.logger.log(lightGreen('成功推送  Anime Space 更新'));
     this.logger.log();
   }
 
