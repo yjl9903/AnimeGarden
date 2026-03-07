@@ -21,6 +21,7 @@ import {
   buildResourceUri
 } from './utils';
 import { searchResourcesInputSchema } from './schema';
+import { getMcpClientInfo } from './log';
 import { Context } from 'hono';
 
 const MCP_RESOURCE_URI_TEMPLATE = 'animegarden://resources/{provider}/{providerId}';
@@ -239,11 +240,42 @@ export class McpServer {
   }
 
   public async handleRequest(c: Context) {
-    // Connect the mcp with the transport
-    if (!this.mcp.isConnected()) {
-      await this.mcp.connect(this.transport);
+    const info = getMcpClientInfo(c);
+    this.logger.info(
+      `incoming mcp request`,
+      info.client,
+      info.sessionId,
+      info.mcpProtocolVersion,
+      `accept: ${info.accept}`,
+      `content-type: ${info.contentType}`,
+      `user-agent: ${info.userAgent}`
+    );
+
+    if (info.accept?.includes('text/html')) {
+      return c.json(
+        {
+          status: 'ERROR',
+          message: 'Please connect /mcp with MCP client'
+        },
+        400
+      );
     }
-    // Handle mcp request
-    return this.transport.handleRequest(c);
+
+    try {
+      // Connect the mcp with the transport
+      if (!this.mcp.isConnected()) {
+        await this.mcp.connect(this.transport);
+      }
+
+      // Handle mcp request
+      return await this.transport.handleRequest(c);
+    } catch (error) {
+      this.logger.error(`handle mcp request error`, info.client, info.sessionId, error);
+
+      return c.json(
+        { status: 'ERROR', message: (error as any)?.message || 'unknown mcp error' },
+        500
+      );
+    }
   }
 }
