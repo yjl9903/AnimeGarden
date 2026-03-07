@@ -23,15 +23,21 @@
 
 [![home](./assets/home.jpeg)](https://animes.garden/resources/1?subject=477825)
 
-## Open API Usage
+## Skill Usage
+
+[Anime Garden Skill](https://github.com/yjl9903/AnimeGarden/tree/main/skills/animegarden): lookup anime torrent resources using Anime Garden open API.
+
+For openclaw, use clawhub to add [Anime Garden skill](https://clawhub.ai/yjl9903/animegarden).
 
 ```bash
-curl "https://api.animes.garden/resources?page=1&pageSize=10"
+npx clawhub install animegarden
 ```
 
-You can find the [interactive Open API document](https://animes.garden/docs/api) and more API usage example in [examples/api.http](./examples/api.http).
+Use Vercel skills CLI to install Anime Garden skill.
 
-If you are using JavaScript / TypeScript, you can just use the API wrapper `fetchResources` and `fetchResourceDetail` in package [animegarden](https://www.npmjs.com/package/animegarden).
+```bash
+npx skills add https://github.com/yjl9903/AnimeGarden --skill animegarden
+```
 
 ## MCP Server Usage
 
@@ -49,21 +55,15 @@ Add following snippets to your MCP client config file.
 }
 ```
 
-## Skill Usage
-
-Anime Garden Skill is located at [skills/animegarden/](https://github.com/yjl9903/AnimeGarden/tree/main/skills/animegarden).
-
-For openclaw, use clawhub to add [Anime Garden skill](https://clawhub.ai/yjl9903/animegarden).
+## Open API Usage
 
 ```bash
-npx clawhub install animegarden
+curl "https://api.animes.garden/resources?page=1&pageSize=10"
 ```
 
-Use Vercel skills CLI to install Anime Garden skill.
+You can find the [interactive Open API document](https://animes.garden/docs/api) and more API usage example in [examples/api.http](./examples/api.http).
 
-```bash
-npx skills add https://github.com/yjl9903/AnimeGarden --skill animegarden
-```
+If you are using JavaScript / TypeScript, you can just use the API wrapper `fetchResources` and `fetchResourceDetail` in package [animegarden](https://www.npmjs.com/package/animegarden).
 
 ## NPM Package Usage
 
