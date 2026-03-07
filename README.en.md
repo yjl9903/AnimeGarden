@@ -23,20 +23,24 @@
 
 [![home](./assets/home.jpeg)](https://animes.garden/resources/1?subject=477825)
 
-## Skill Usage
+## Skills Usage
 
-[Anime Garden Skill](https://github.com/yjl9903/AnimeGarden/tree/main/skills/animegarden): lookup anime torrent resources using Anime Garden open API.
+**Anime Garden skill**: lookup anime torrent resources using Anime Garden open API.
 
-For openclaw, use clawhub to add [Anime Garden skill](https://clawhub.ai/yjl9903/animegarden).
+**Yuc's Anime List skill**: scrape quarterly anime lineups from yuc.wiki.
+
+For openclaw, use clawhub to add [Anime Garden skill](https://clawhub.ai/yjl9903/animegarden) and [Yuc's Anime List Skill](https://clawhub.ai/yjl9903/yuc).
 
 ```bash
 npx clawhub install animegarden
+npx clawhub install yuc
 ```
 
-Use Vercel skills CLI to install Anime Garden skill.
+Use Vercel skills CLI to install [Anime Garden skill](https://skills.sh/yjl9903/animegarden/animegarden) and [Yuc's Anime List Skill](https://skills.sh/yjl9903/animegarden/yuc).
 
 ```bash
 npx skills add https://github.com/yjl9903/AnimeGarden --skill animegarden
+npx skills add https://github.com/yjl9903/AnimeGarden --skill yuc
 ```
 
 ## MCP Server Usage
