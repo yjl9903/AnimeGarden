@@ -31,9 +31,9 @@ export async function generateCollection(
     return {
       ok: true,
       ...collection,
-      createdAt: resp.createdAt,
       hash: resp.hash,
-      timestamp: new Date(resp.timestamp)
+      createdAt: resp.createdAt,
+      timestamp: resp.timestamp
     };
   }
 
@@ -55,10 +55,15 @@ export async function fetchCollection(
   });
 
   if (resp) {
+    const timestamp = resp.timestamp as Date | undefined;
+    if (!timestamp) {
+      return undefined;
+    }
+
     return {
       ok: true,
       ...resp,
-      timestamp: new Date(resp.timestamp)
+      timestamp
     };
   }
 

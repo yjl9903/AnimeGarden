@@ -55,8 +55,7 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
       status: 'OK',
       // For legacy compatibility
       complete: resp.pagination.complete,
-      ...resp,
-      timestamp: sys.modules.providers.timestamp
+      ...resp
     });
   }
 
@@ -79,8 +78,7 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
 
       return {
         status: 'OK',
-        ...resp,
-        timestamp: sys.modules.providers.timestamp
+        ...resp
       };
     },
     {
@@ -148,8 +146,7 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
         resource: undefined,
         detail: undefined,
         isDeleted: false,
-        duplicatedId: undefined,
-        timestamp: sys.modules.providers.timestamp
+        duplicatedId: undefined
       });
     }
 
@@ -163,8 +160,7 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
         : {
             message: `Unknown detail info hash: ${infoHash}`
           }),
-      ...resp,
-      timestamp: sys.modules.providers.timestamp
+      ...resp
     });
   });
 

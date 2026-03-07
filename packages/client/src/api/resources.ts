@@ -163,9 +163,7 @@ async function fetchPage<T extends FetchResourcesOptions = FetchResourcesOptions
   searchParams.set('page', '' + page);
 
   const r = await fetchAPI<any>('resources?' + searchParams.toString(), undefined, options);
-
-  const timestamp = new Date(r.timestamp);
-  if (!isNaN(timestamp.getTime())) {
+  if (r.timestamp) {
     // --- Fix date type ---
     for (const res of r.resources) {
       res.createdAt = new Date(res.createdAt);
@@ -183,7 +181,7 @@ async function fetchPage<T extends FetchResourcesOptions = FetchResourcesOptions
       resources: r.resources as Resource<T>[],
       pagination: r.pagination as PaginationResponse | undefined,
       filter: r.filter as ResolvedFilterOptions | undefined,
-      timestamp
+      timestamp: r.timestamp
     };
   } else {
     throw new Error(`Invalid response /resource?${searchParams.toString()}`, { cause: r });

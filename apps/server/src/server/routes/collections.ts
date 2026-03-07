@@ -35,8 +35,7 @@ export const defineCollectionsRoutes = defineHandler((sys, app) => {
       status: 'OK',
       id: gen.id,
       hash: gen.hash,
-      createdAt: gen.createdAt,
-      timestamp: sys.modules.providers.timestamp
+      createdAt: gen.createdAt
     });
   }
 
@@ -50,15 +49,13 @@ export const defineCollectionsRoutes = defineHandler((sys, app) => {
       if (result) {
         return c.json({
           status: 'OK',
-          ...result,
-          timestamp: sys.modules.providers.timestamp
+          ...result
         });
       } else {
         return c.json(
           {
             status: 'ERROR',
-            message: 'Failed querying collection result',
-            timestamp: sys.modules.providers.timestamp
+            message: 'Failed querying collection result'
           } as const,
           400
         );

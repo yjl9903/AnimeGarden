@@ -8,6 +8,7 @@ import {
   type PaginationOptions,
   type FetchResourcesOptions,
   fetchAPI as rawFetchAPI,
+  fetchStatus as rawFetchStatus,
   fetchResources as rawFetchResources,
   fetchResourceDetail as rawFetchResourceDetail,
   fetchCollection as rawFetchCollection,
@@ -59,8 +60,14 @@ let lastTimestamp!: Date;
 
 export async function fetchTimestamp(): Promise<{ timestamp?: string | undefined }> {
   try {
-    const resp = await fetchAPI<{ timestamp: string }>('/', undefined);
-    if (resp && resp.timestamp) {
+    const resp = await rawFetchStatus({
+      fetch: ofetch,
+      baseURL,
+      retry: 0,
+      timeout: 10 * 1000,
+      signal: AbortSignal.timeout(10 * 1000)
+    } as const);
+    if (resp.ok && resp.timestamp) {
       lastTimestamp = new Date(resp.timestamp);
 
       return {

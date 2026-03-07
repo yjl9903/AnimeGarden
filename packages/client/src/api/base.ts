@@ -4,11 +4,39 @@ import type { FetchOptions } from '../types';
 
 import { version, DefaultBaseURL } from '../constants';
 
+export type FetchAPIResult<T> = T extends Record<string, any>
+  ? T & { timestamp?: Date }
+  : T;
+
+function parseTimestamp(value: Date | string | number | undefined | null): Date | undefined {
+  if (value === undefined || value === null) {
+    return undefined;
+  }
+
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? undefined : value;
+  }
+
+  if (typeof value === 'number') {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? undefined : date;
+  }
+
+  const timestamp = value.trim();
+  if (!timestamp) {
+    return undefined;
+  }
+
+  const date = /^-?\d+$/.test(timestamp) ? new Date(Number(timestamp)) : new Date(timestamp);
+
+  return Number.isNaN(date.getTime()) ? undefined : date;
+}
+
 export async function fetchAPI<T>(
   path: string,
   init: RequestInit | undefined = undefined,
   options: FetchOptions = {}
-): Promise<T> {
+): Promise<FetchAPIResult<T>> {
   const { fetch = globalThis.fetch, baseURL = DefaultBaseURL, retry = 0 } = options;
 
   const url = new URL(path.replace(/^\/+/g, ''), baseURL);
@@ -20,7 +48,7 @@ export async function fetchAPI<T>(
     headers.set(`user-agent`, `animegarden@${version}`);
   }
 
-  return await retryFn<T>(
+  return await retryFn<FetchAPIResult<T>>(
     async () => {
       const signal =
         options.timeout && options.timeout > 0
@@ -51,7 +79,20 @@ export async function fetchAPI<T>(
         }
 
         if (resp.ok) {
-          return (await resp.json()) as T;
+          const data = (await resp.json()) as T;
+          const timestamp =
+            parseTimestamp(resp.headers.get('x-response-timestamp')) ??
+            parseTimestamp(
+              data && typeof data === 'object'
+                ? (data as Record<string, any>).timestamp
+                : undefined
+            );
+
+          if (data && typeof data === 'object') {
+            return Object.assign(data as object, { timestamp }) as FetchAPIResult<T>;
+          }
+
+          return data as FetchAPIResult<T>;
         } else {
           // 429 TOO MANY REQUEST
           if (resp.status === 429) {

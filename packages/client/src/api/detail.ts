@@ -27,7 +27,7 @@ export async function fetchResourceDetail(
     ok: resp && resp.resource !== undefined && resp.timestamp !== undefined,
     resource: resp?.resource,
     detail: resp?.detail,
-    timestamp: resp?.timestamp ? new Date(resp.timestamp) : undefined
+    timestamp: resp?.timestamp
   };
 }
 
@@ -57,6 +57,6 @@ export async function fetchResourceDetailByInfoHash(
     ok: resp && resp.resource !== undefined && resp.timestamp !== undefined,
     resource: resp?.resource,
     detail: resp?.detail,
-    timestamp: resp?.timestamp ? new Date(resp.timestamp) : undefined
+    timestamp: resp?.timestamp
   };
 }

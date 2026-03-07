@@ -1,3 +1,5 @@
+import { randomUUID } from 'node:crypto';
+
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
@@ -8,6 +10,8 @@ import { Cron } from 'croner';
 import { SupportProviders } from '@animegarden/client';
 
 import { System } from '../system';
+
+import type { AppEnv } from './utils/hono';
 
 import { McpServer } from './mcp';
 import { defineUsersRoutes } from './routes/users';
@@ -33,7 +37,7 @@ export interface ListenOptions {
 export class Server {
   public readonly system: System;
 
-  public readonly hono: Hono;
+  public readonly hono: Hono<AppEnv>;
 
   public constructor(system: System, options: ServerOptions = {}) {
     this.system = system;
@@ -131,7 +135,25 @@ export class Executor extends Server {
   }
 }
 
-function registerHono(sys: System, app: Hono) {
+function registerHono(sys: System, app: Hono<AppEnv>) {
+  app.use('*', async (ctx, next) => {
+    const requestId = ctx.req.header('X-Request-Id') ?? randomUUID();
+    ctx.set('requestId', requestId);
+
+    try {
+      await next();
+    } finally {
+      ctx.res.headers.set('X-Request-Id', requestId);
+
+      const responseTimestamp = ctx.get('responseTimestamp') || new Date();
+      ctx.res.headers.set('X-Response-Timestamp', responseTimestamp.toISOString());
+
+      const contentType = ctx.res.headers.get('content-type');
+      if (contentType && contentType.toLowerCase().startsWith('application/json')) {
+        ctx.res.headers.set('Content-Type', 'application/json; charset=utf-8');
+      }
+    }
+  });
   app.use(
     '*',
     cors({
@@ -157,19 +179,23 @@ function registerHono(sys: System, app: Hono) {
   });
 
   app.get('/', async (c) => {
-    const timestamp = sys.modules.providers.timestamp;
+    const timestamp = new Date(sys.modules.providers.timestamp);
+    c.set('responseTimestamp', timestamp);
+
     return c.json({
       status: 'OK',
-      timestamp: new Date(timestamp).toISOString(),
+      timestamp: timestamp.toISOString(),
       providers: Object.fromEntries(sys.modules.providers.providers)
     });
   });
 
   app.get('/health', async (c) => {
-    const timestamp = sys.modules.providers.timestamp;
+    const timestamp = new Date(sys.modules.providers.timestamp);
+    c.set('responseTimestamp', timestamp);
+
     return c.json({
       status: 'OK',
-      timestamp: new Date(timestamp).toISOString(),
+      timestamp: timestamp.toISOString(),
       providers: Object.fromEntries(sys.modules.providers.providers)
     });
   });
@@ -201,7 +227,7 @@ function registerHono(sys: System, app: Hono) {
   return app;
 }
 
-function registerMcp(sys: System, app: Hono) {
+function registerMcp(sys: System, app: Hono<AppEnv>) {
   const mcp = new McpServer(sys);
 
   app.all('/mcp', async (c) => {

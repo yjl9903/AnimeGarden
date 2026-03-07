@@ -4,7 +4,7 @@ import { fetchAPI } from './base';
 
 export async function fetchStatus(options: FetchOptions = {}) {
   const resp = await fetchAPI<{
-    timestamp: string;
+    timestamp?: Date;
     providers: Record<
       ProviderType,
       { id: ProviderType; name: string; refreshedAt: string; isActive: boolean }
