@@ -172,8 +172,8 @@ importers:
         specifier: 0.45.1
         version: 0.45.1(@cloudflare/workers-types@4.20260307.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.6.2)(postgres@3.4.8)
       fast-xml-parser:
-        specifier: 5.3.7
-        version: 5.3.7
+        specifier: 5.4.2
+        version: 5.4.2
       fs-extra:
         specifier: 11.3.4
         version: 11.3.4
@@ -296,8 +296,8 @@ importers:
         specifier: 2.0.1
         version: 2.0.1(date-fns@2.30.0)
       fast-xml-parser:
-        specifier: 5.3.7
-        version: 5.3.7
+        specifier: 5.4.2
+        version: 5.4.2
       hono:
         specifier: 4.12.5
         version: 4.12.5
@@ -5447,12 +5447,15 @@ packages:
   fast-uri@3.1.0:
     resolution: {integrity: sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==}
 
+  fast-xml-builder@1.0.0:
+    resolution: {integrity: sha512-fpZuDogrAgnyt9oDDz+5DBz0zgPdPZz6D4IR7iESxRXElrlGTRkHJ9eEt+SACRJwT0FNFrt71DFQIUFBJfX/uQ==}
+
   fast-xml-parser@5.3.4:
     resolution: {integrity: sha512-EFd6afGmXlCx8H8WTZHhAoDaWaGyuIBoZJ2mknrNxug+aZKjkp0a0dlars9Izl+jF+7Gu1/5f/2h68cQpe0IiA==}
     hasBin: true
 
-  fast-xml-parser@5.3.7:
-    resolution: {integrity: sha512-JzVLro9NQv92pOM/jTCR6mHlJh2FGwtomH8ZQjhFj/R29P2Fnj38OgPJVtcvYw6SuKClhgYuwUZf5b3rd8u2mA==}
+  fast-xml-parser@5.4.2:
+    resolution: {integrity: sha512-pw/6pIl4k0CSpElPEJhDppLzaixDEuWui2CUQQBH/ECDf7+y6YwA4Gf7Tyb0Rfe4DIMuZipYj4AEL0nACKglvQ==}
     hasBin: true
 
   fastq@1.20.1:
@@ -14709,12 +14712,15 @@ snapshots:
 
   fast-uri@3.1.0: {}
 
+  fast-xml-builder@1.0.0: {}
+
   fast-xml-parser@5.3.4:
     dependencies:
       strnum: 2.1.2
 
-  fast-xml-parser@5.3.7:
+  fast-xml-parser@5.4.2:
     dependencies:
+      fast-xml-builder: 1.0.0
       strnum: 2.1.2
 
   fastq@1.20.1:
@@ -18417,7 +18423,7 @@ snapshots:
       base-64: 1.0.0
       byte-length: 1.0.2
       entities: 6.0.1
-      fast-xml-parser: 5.3.7
+      fast-xml-parser: 5.4.2
       hot-patcher: 2.0.1
       layerr: 3.0.0
       md5: 2.3.0
