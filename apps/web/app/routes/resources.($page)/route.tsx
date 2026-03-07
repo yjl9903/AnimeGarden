@@ -1,6 +1,12 @@
 import { useMemo } from 'react';
 import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
-import { type ClientLoaderFunction, redirect, useLoaderData, useLocation } from '@remix-run/react';
+import {
+  type ClientLoaderFunction,
+  redirect,
+  data,
+  useLoaderData,
+  useLocation
+} from '@remix-run/react';
 
 import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
 
@@ -48,14 +54,19 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
     console.error('[ERROR]', error);
   }
 
-  return {
-    ok,
-    resources,
-    pagination,
-    page,
-    filter,
-    timestamp
-  };
+  return data(
+    {
+      ok,
+      resources,
+      pagination,
+      page,
+      filter,
+      timestamp
+    },
+    {
+      status: ok ? 200 : 500
+    }
+  );
 };
 
 export const meta: MetaFunction<typeof loader> = ({ location, data }) => {

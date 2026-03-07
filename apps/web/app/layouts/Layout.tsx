@@ -20,7 +20,7 @@ export const HeroHeight = 300;
 export interface LayoutProps {
   children?: React.ReactNode;
 
-  timestamp?: string;
+  timestamp?: Date;
 
   feedURL?: string;
 

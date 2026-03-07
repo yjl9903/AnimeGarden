@@ -85,7 +85,7 @@ export default function Collections() {
   );
 }
 
-const CollectionItemTitle = memo((props: { item: Jsonify<Collection<true>['filters'][0]> }) => {
+const CollectionItemTitle = memo((props: { item: Collection<true>['filters'][0] }) => {
   const item = props.item;
   const name = inferCollectionItemName(props.item);
 

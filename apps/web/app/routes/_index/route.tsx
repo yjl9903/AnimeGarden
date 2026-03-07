@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useLoaderData, useLocation } from '@remix-run/react';
+import { data, useLoaderData, useLocation } from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare';
 
 import type { Resource } from '@animegarden/client';
@@ -23,11 +23,14 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       console.error('[ERROR]', error);
     }
 
-    return { ok, resources: resources as Resource<{ tracker: true }>[], timestamp };
+    return data(
+      { ok, resources: resources as Resource<{ tracker: true }>[], timestamp },
+      { status: ok ? 200 : 500 }
+    );
   } catch (error) {
     console.error('[ERROR]', error);
 
-    return { ok: false, resources: [], timestamp: undefined };
+    return data({ ok: false, resources: [], timestamp: undefined }, { status: 500 });
   }
 };
 

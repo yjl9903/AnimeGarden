@@ -76,7 +76,7 @@ interface Props {
 
   feedURL?: string;
 
-  resources?: Jsonify<Resource<{ tracker: true }>>[];
+  resources?: Resource<{ tracker: true }>[];
 
   complete?: boolean;
 }

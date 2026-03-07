@@ -28,7 +28,7 @@ export interface ResourcesTableProps extends Partial<PaginationProps> {
 
   pathname?: string;
 
-  resources: Jsonify<Resource<{ tracker: true }>>[];
+  resources: Resource<{ tracker: true }>[];
 
   columns?: {
     /**
@@ -40,7 +40,7 @@ export interface ResourcesTableProps extends Partial<PaginationProps> {
   };
 }
 
-function getDetailHref(r: Jsonify<Resource>) {
+function getDetailHref(r: Pick<Resource, 'provider' | 'providerId'>) {
   return `/detail/${r.provider}/${r.providerId}`;
 }
 
@@ -135,7 +135,7 @@ export default function ResourcesTable(props: ResourcesTableProps) {
 export const ResourceItem = memo(
   (props: {
     pathname?: string;
-    resource: Jsonify<Resource<{ tracker: true }>>;
+    resource: ResourcesTableProps['resources'][number];
     columns?: ResourcesTableProps['columns'];
   }) => {
     const hydrated = useHydrated();

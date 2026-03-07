@@ -58,7 +58,7 @@ export async function fetchAPI<T>(path: string, request: RequestInit | undefined
 
 let lastTimestamp!: Date;
 
-export async function fetchTimestamp(): Promise<{ timestamp?: string | undefined }> {
+export async function fetchTimestamp(): Promise<{ timestamp: Date | undefined }> {
   try {
     const resp = await rawFetchStatus({
       fetch: ofetch,
@@ -71,15 +71,15 @@ export async function fetchTimestamp(): Promise<{ timestamp?: string | undefined
       lastTimestamp = new Date(resp.timestamp);
 
       return {
-        timestamp: resp.timestamp.toISOString()
+        timestamp: resp.timestamp
       };
     }
   } catch (error) {
-    console.error('[API]', 'fetchTimestamp', error);
+    console.error('[ERROR]', 'fetchTimestamp', error);
   }
 
   return {
-    timestamp: lastTimestamp.toISOString()
+    timestamp: lastTimestamp
   };
 }
 

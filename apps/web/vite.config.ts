@@ -11,6 +11,13 @@ import Inline from 'vite-plugin-inline';
 
 import { env } from './node/env';
 
+declare module '@remix-run/node' {
+  // or cloudflare, deno, etc.
+  interface Future {
+    v3_singleFetch: true;
+  }
+}
+
 const { APP_HOST, FEED_HOST, SERVER_URL, KEEPSHARE } = env();
 
 // Analytics Engines
@@ -79,7 +86,8 @@ export default defineConfig({
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
         v3_throwAbortReason: true,
-        v3_singleFetch: true
+        v3_singleFetch: true,
+        v3_lazyRouteDiscovery: true
       }
     }),
     Icons({ compiler: 'jsx', jsx: 'react' }),

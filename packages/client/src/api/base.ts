@@ -4,9 +4,7 @@ import type { FetchOptions } from '../types';
 
 import { version, DefaultBaseURL } from '../constants';
 
-export type FetchAPIResult<T> = T extends Record<string, any>
-  ? T & { timestamp?: Date }
-  : T;
+export type FetchAPIResult<T> = T extends Record<string, any> ? T & { timestamp?: Date } : T;
 
 function parseTimestamp(value: Date | string | number | undefined | null): Date | undefined {
   if (value === undefined || value === null) {
@@ -83,9 +81,7 @@ export async function fetchAPI<T>(
           const timestamp =
             parseTimestamp(resp.headers.get('x-response-timestamp')) ??
             parseTimestamp(
-              data && typeof data === 'object'
-                ? (data as Record<string, any>).timestamp
-                : undefined
+              data && typeof data === 'object' ? (data as Record<string, any>).timestamp : undefined
             );
 
           if (data && typeof data === 'object') {

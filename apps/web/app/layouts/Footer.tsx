@@ -9,7 +9,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { isOpenSidebar } from './Sidebar';
 
 export interface FooterProps {
-  timestamp: string | undefined;
+  timestamp: Date | undefined;
 
   feedURL: string | undefined;
 }
@@ -17,17 +17,17 @@ export interface FooterProps {
 export const Footer = memo((props: FooterProps) => {
   const isOpen = useAtomValue(isOpenSidebar);
 
-  const { timestamp: timestampStr, feedURL } = props;
+  const { timestamp: timestampInput, feedURL } = props;
 
   const ref = useRef<{ timestamp?: string }>({});
-  if (timestampStr) {
+  if (timestampInput) {
     if (!ref.current) ref.current = {};
-    ref.current.timestamp = timestampStr;
+    ref.current.timestamp = timestampInput.toISOString();
   }
 
   const [timestamp, setTimestamp] = useState(
-    (timestampStr ?? ref.current?.timestamp)
-      ? new Date(timestampStr ?? ref.current.timestamp!)
+    (timestampInput ?? ref.current?.timestamp)
+      ? new Date(timestampInput ?? ref.current.timestamp!)
       : undefined
   );
 
@@ -38,7 +38,7 @@ export const Footer = memo((props: FooterProps) => {
       fetchTimestamp()
         .then((t) => {
           if (t.timestamp) {
-            ref.current.timestamp = t.timestamp;
+            ref.current.timestamp = t.timestamp.toISOString();
             setTimestamp(new Date(t.timestamp));
           }
           setLoading(false);

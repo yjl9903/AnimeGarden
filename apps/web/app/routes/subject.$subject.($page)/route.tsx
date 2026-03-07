@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import {
   type ClientLoaderFunction,
+  data,
   NavLink,
   redirect,
   useLoaderData,
@@ -51,15 +52,20 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     console.error('[ERROR]', error);
   }
 
-  return {
-    ok,
-    subjectId,
-    subject,
-    resources: groupResourcesByFansub(resources),
-    pagination,
-    filter,
-    timestamp
-  };
+  return data(
+    {
+      ok,
+      subjectId,
+      subject,
+      resources: groupResourcesByFansub(resources),
+      pagination,
+      filter,
+      timestamp
+    },
+    {
+      status: ok ? 200 : 500
+    }
+  );
 };
 
 export const meta: MetaFunction<typeof loader> = ({ location, data, params }) => {
