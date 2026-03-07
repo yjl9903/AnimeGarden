@@ -32,7 +32,7 @@ You can find the [interactive Open API document](https://animes.garden/docs/api)
 
 If you are using JavaScript / TypeScript, you can just use the API wrapper `fetchResources` and `fetchResourceDetail` in package [animegarden](https://www.npmjs.com/package/animegarden).
 
-## MCP Configuration
+## MCP Server Usage
 
 Anime Garden MCP API endpoint: `https://api.animes.garden/mcp`.
 
@@ -46,6 +46,16 @@ Add following snippets to your MCP client config file.
     }
   }
 }
+```
+
+## Skill Usage
+
+Anime Garden Skill is located at [skills/animegarden/](https://github.com/yjl9903/AnimeGarden/tree/main/skills/animegarden).
+
+Use Vercel skills CLI to install Anime Garden skill.
+
+```bash
+npx skills add https://github.com/yjl9903/AnimeGarden --skill animegarden
 ```
 
 ## NPM Package Usage
