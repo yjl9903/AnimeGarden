@@ -71,7 +71,7 @@ export async function fetchTimestamp(): Promise<{ timestamp?: string | undefined
       lastTimestamp = new Date(resp.timestamp);
 
       return {
-        timestamp: resp.timestamp
+        timestamp: resp.timestamp.toISOString()
       };
     }
   } catch (error) {
