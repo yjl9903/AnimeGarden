@@ -33,3 +33,9 @@ This skill keeps two references:
    - Use when: the user explicitly asks for manual scraping, or the script fails / produces suspicious output.
 
 Default policy: use the reference script first. Switch to the manual scrape guide only on explicit request or script issues.
+
+## Runtime & Safety Notes
+
+- No external binaries are required for the default flow; script and manual quarter discovery use Python standard library only.
+- No environment variables or credentials are required by this skill.
+- Network scope is limited to public pages on `https://yuc.wiki/` (homepage + target quarter page).

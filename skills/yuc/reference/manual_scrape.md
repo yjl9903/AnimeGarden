@@ -15,11 +15,22 @@ If quarter is not specified, request `https://yuc.wiki/` and extract `/<YYYYMM>/
 Recommended command:
 
 ```bash
-curl -L -s https://yuc.wiki/ \
-  | rg -o '/20[0-9]{4}/' \
-  | tr -d '/' \
-  | sort -u \
-  | tail -n 1
+python3 - <<'PY'
+import re
+from urllib.request import urlopen
+
+homepage = urlopen("https://yuc.wiki/").read().decode("utf-8", errors="ignore")
+quarters = sorted(
+    {
+        m
+        for m in re.findall(r"/(20\d{4})/", homepage)
+        if re.fullmatch(r"20\d{2}(01|04|07|10)", m)
+    }
+)
+if not quarters:
+    raise SystemExit("No quarter links found on homepage")
+print(quarters[-1])
+PY
 ```
 
 Prefer quarter URL `https://yuc.wiki/YYYYMM/`; fallback to `https://yuc.wiki/YYYYMM`.

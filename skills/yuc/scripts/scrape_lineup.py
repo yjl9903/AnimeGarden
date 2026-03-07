@@ -3,7 +3,6 @@ import argparse
 import html
 import json
 import re
-import subprocess
 import sys
 from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
@@ -27,15 +26,17 @@ def fetch_text(url: str) -> str:
 
 
 def discover_latest_quarter() -> str:
-    cmd = (
-        "curl -L -s https://yuc.wiki/ "
-        "| rg -o '/20[0-9]{4}/' "
-        "| tr -d '/' | sort -u | tail -n 1"
+    homepage = fetch_text("https://yuc.wiki/")
+    quarters = sorted(
+        {
+            m
+            for m in re.findall(r"/(20\d{4})/", homepage)
+            if re.fullmatch(r"20\d{2}(01|04|07|10)", m)
+        }
     )
-    out = subprocess.check_output(cmd, shell=True, text=True).strip()
-    if not re.fullmatch(r"20\d{4}", out):
-        raise RuntimeError(f"failed to discover latest quarter, got: {out!r}")
-    return out
+    if not quarters:
+        raise RuntimeError("failed to discover latest quarter from homepage links")
+    return quarters[-1]
 
 
 def parse_yuc_quarter(quarter_code: str, page_html: str) -> dict:
