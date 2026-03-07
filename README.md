@@ -43,7 +43,13 @@ Anime Garden MCP 服务端点: `https://api.animes.garden/mcp`.
 
 Anime Garden Skill 位于 [skills/animegarden/](https://github.com/yjl9903/AnimeGarden/tree/main/skills/animegarden).
 
-使用 Vercel skills CLI 添加 Anime Garden skill.
+为 OpenClaw 使用 clawhub 添加 [Anime Garden skill](https://clawhub.ai/yjl9903/animegarden).
+
+```bash
+npx clawhub install animegarden
+```
+
+使用 Vercel skills CLI 添加 [Anime Garden skill](https://skills.sh/yjl9903/animegarden/animegarden).
 
 ```bash
 npx skills add https://github.com/yjl9903/AnimeGarden --skill animegarden

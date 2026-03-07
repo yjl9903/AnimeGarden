@@ -53,6 +53,12 @@ Add following snippets to your MCP client config file.
 
 Anime Garden Skill is located at [skills/animegarden/](https://github.com/yjl9903/AnimeGarden/tree/main/skills/animegarden).
 
+For openclaw, use clawhub to add [Anime Garden skill](https://clawhub.ai/yjl9903/animegarden).
+
+```bash
+npx clawhub install animegarden
+```
+
 Use Vercel skills CLI to install Anime Garden skill.
 
 ```bash
