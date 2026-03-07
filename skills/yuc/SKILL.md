@@ -34,6 +34,17 @@ This skill keeps two references:
 
 Default policy: use the reference script first. Switch to the manual scrape guide only on explicit request or script issues.
 
+## Post-Processing Output Requirement
+
+After the scraping process is completed (regardless of using the reference script or the manual workflow), do not stop at raw JSON output.
+
+- You must organize and present a human-readable seasonal airing table.
+- The table should be grouped by `group` (for example: Mon-Sun and `网络放送 & 其他`), and include at least:
+  - title
+  - status/time
+  - episode note
+- Keep the readable table concise, and include source quarter information (`quarter_code` and `quarter_title`).
+
 ## Runtime & Safety Notes
 
 - No external binaries are required for the default flow; script and manual quarter discovery use Python standard library only.
