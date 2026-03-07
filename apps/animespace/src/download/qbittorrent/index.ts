@@ -227,6 +227,7 @@ export class QbittorrentDownloader extends Downloader {
     }
 
     const pending = new Set(tracked);
+
     while (pending.size > 0) {
       const snapshot = [...pending];
       const states = await this.getTorrentStates(snapshot);

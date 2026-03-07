@@ -17,7 +17,7 @@ export async function pushSubjects(system: System, subjects: Subject[], options:
   const tasks: Array<{ subject: Subject; promise: Promise<void> }> = [];
 
   try {
-    system.logger.log(lightBlue('开始推送 Anime Space 更新'));
+    system.logger.log(lightBlue('开始推送  Anime Space 更新'));
     system.logger.log();
 
     await system.initializeSource();

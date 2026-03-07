@@ -94,7 +94,9 @@ export class StorageManager {
 
         for (let i = 0; i < MAX_RETRY; i++) {
           const retry = i > 0 ? ` (重试 ${i + 1} / ${MAX_RETRY})` : '';
-          this.system.logger.log(lightYellow(`开始上传  ${link(dstName, resource.url)}${retry}`));
+          this.system.logger.log(
+            `${lightYellow(`开始上传`)}  ${link(dstName, resource.url)}${retry}`
+          );
 
           const handle = this.system.logger.progress(`上传 ${link(dstName, resource.url)}`, {
             width: 40,
@@ -158,14 +160,14 @@ export class StorageManager {
                 }
               });
 
-            this.system.logger.log(lightGreen(`成功上传  ${link(dstName, resource.url)}`));
+            this.system.logger.log(`${lightGreen(`成功上传`)}  ${link(dstName, resource.url)}`);
 
             break;
           } catch (error) {
             handle.remove();
 
             if (i + 1 === MAX_RETRY) {
-              this.system.logger.log(lightRed(`上传失败  ${link(dstName, resource.url)}`));
+              this.system.logger.log(`${lightRed(`上传失败`)}  ${link(dstName, resource.url)}`);
               throw error;
             } else {
               debug(error);
