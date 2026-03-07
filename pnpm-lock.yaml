@@ -102,8 +102,8 @@ importers:
         specifier: 0.1.1
         version: 0.1.1
       undici:
-        specifier: 7.21.0
-        version: 7.21.0
+        specifier: 7.22.0
+        version: 7.22.0
       yaml:
         specifier: 2.8.2
         version: 2.8.2
@@ -8341,10 +8341,6 @@ packages:
 
   undici@7.18.2:
     resolution: {integrity: sha512-y+8YjDFzWdQlSE9N5nzKMT3g4a5UBX1HKowfdXh0uvAnTaqqwqB92Jt4UXBAeKekDs5IaDKyJFR4X1gYVCgXcw==}
-    engines: {node: '>=20.18.1'}
-
-  undici@7.21.0:
-    resolution: {integrity: sha512-Hn2tCQpoDt1wv23a68Ctc8Cr/BHpUSfaPYrkajTXOS9IKpxVRx/X5m1K2YkbK2ipgZgxXSgsUinl3x+2YdSSfg==}
     engines: {node: '>=20.18.1'}
 
   undici@7.22.0:
@@ -17988,8 +17984,6 @@ snapshots:
   undici@6.23.0: {}
 
   undici@7.18.2: {}
-
-  undici@7.21.0: {}
 
   undici@7.22.0: {}
 
