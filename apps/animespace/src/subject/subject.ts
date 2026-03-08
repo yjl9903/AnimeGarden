@@ -18,6 +18,7 @@ import { SubjectType } from './source/schema.ts';
 import { fetchResources, extractResources } from './source/extract.ts';
 import { DefaultNamingTemplate, type NamingTemplate } from './source/naming.ts';
 import { mergePreferenceValue, mergeSubjectSourcePreference } from './preference.ts';
+import { normalizeFilename } from '../utils/fs.ts';
 
 export interface SubjectStorage {
   readonly driver: string;
@@ -98,7 +99,8 @@ export class Subject {
     ) as NamingTemplate;
 
     const naming: SubjectNaming = {
-      name: rawNaming.name ?? rawSubject.name,
+      // 片名中有 / (Fate/strange Fake -> Fate strange Fake)
+      name: normalizeFilename(rawNaming.name ?? rawSubject.name),
       template: namingTemplate,
       season: rawNaming.season,
       year: rawNaming.year,
@@ -113,7 +115,8 @@ export class Subject {
       tmdb: rawSubject.tmdb,
       storage: {
         driver: rawSubject.storage?.driver ?? 'default',
-        path: rawSubject.storage?.path ?? rawSubject.name
+        // 片名中有 / (Fate/strange Fake -> Fate strange Fake)
+        path: rawSubject.storage?.path ?? normalizeFilename(rawSubject.name)
       },
       naming,
       source

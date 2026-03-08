@@ -8,3 +8,16 @@ export { fs as LocalFS } from 'breadfs/node';
 export type LocalPath = Path<NodeProvider>;
 
 export type StoragePath = Path<NodeProvider | WebDAVProvider | AliyunDriveProvider>;
+
+export function normalizeFilename(filename: string) {
+  return filename
+    .replace(/\//g, '／')
+    .replace(/\\/g, '＼')
+    .replace(/:/g, '：')
+    .replace(/\*/g, '＊')
+    .replace(/\?/g, '？')
+    .replace(/"/g, '＂')
+    .replace(/</g, '＜')
+    .replace(/>/g, '＞')
+    .replace(/\|/g, '｜');
+}
