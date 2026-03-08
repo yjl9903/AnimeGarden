@@ -57,7 +57,7 @@ export const Footer = memo((props: FooterProps) => {
         'relative',
         'flex',
         'justify-center',
-        'border-t border-t-1 py-6 h-[220px] bg-hero'
+        'border-t border-t-1 py-6 h-[252px] bg-hero'
       )}
     >
       <div className={clsx('main', 'w-full')}>
@@ -100,6 +100,19 @@ export const Footer = memo((props: FooterProps) => {
             </a>
           </div>
           <div className="flex mt-2">
+            <span className="text-base-900 font-bold select-none">开放</span>
+            <span className="i-carbon:chevron-right lt-sm:text-base text-base-900 text-xl font-bold select-none relative top-[2px]"></span>
+            <a href="https://github.com/yjl9903/AnimeGarden?tab=readme-ov-file#%E4%BD%BF%E7%94%A8-skills" target="_blank" className="ml-2 lt-sm:ml-2">
+              Agent Skills
+            </a>
+            <a href="https://github.com/yjl9903/AnimeGarden?tab=readme-ov-file#%E4%BD%BF%E7%94%A8-mcp" target="_blank" className="ml-4 lt-sm:ml-2">
+              MCP
+            </a>
+            <NavLink to="/docs/api" className="ml-4 lt-sm:ml-2">
+              API 文档
+            </NavLink>
+          </div>
+          <div className="flex mt-2">
             <span className="text-base-900 font-bold select-none">更多</span>
             <span className="i-carbon:chevron-right lt-sm:text-base text-base-900 text-xl font-bold select-none relative top-[2px]"></span>
             <a href="https://t.me/animegarden_dev" target="_blank" className="ml-2 lt-sm:ml-2">
@@ -112,9 +125,6 @@ export const Footer = memo((props: FooterProps) => {
             >
               问题反馈
             </a>
-            <NavLink to="/docs/api" className="ml-4 lt-sm:ml-2">
-              API 文档
-            </NavLink>
             <a
               href="https://animespace.onekuma.cn/animegarden/search"
               target="_blank"
