@@ -24,12 +24,13 @@ import {
   normalizeTitle,
   transformResourceHref
 } from '@animegarden/client';
-import { removePunctuations, retryFn } from '@animegarden/shared';
+import { removePunctuations } from '@animegarden/shared';
 
 import type { System, Notification } from '../system';
 
 import { resources } from '../schema/resources';
 import { memo, jieba, nextTick } from '../utils';
+import { retryDatabaseFn } from '../utils/database';
 import {
   MAX_RESOURCES_TASK_COUNT,
   RESOURCES_TASK_PREFETCH_COUNT,
@@ -560,7 +561,7 @@ export class QueryManager {
       }
     }
 
-    const resp = await retryFn(
+    const resp = await retryDatabaseFn(
       () =>
         this.system.database
           .select(RESOURCE_SELECTOR)
@@ -569,7 +570,7 @@ export class QueryManager {
           .orderBy(desc(resources.createdAt))
           .offset(offset)
           .limit(limit),
-      5
+      { count: 5 }
     );
 
     const internedResp = this.hydrateResources(resp);
@@ -596,7 +597,7 @@ export class QueryManager {
       ...notification.duplicated.inserted
     ];
 
-    const resp = await retryFn(
+    const resp = await retryDatabaseFn(
       () =>
         this.system.database
           .select(RESOURCE_SELECTOR)
@@ -609,7 +610,7 @@ export class QueryManager {
             )
           )
           .orderBy(desc(resources.createdAt)),
-      5
+      { count: 5 }
     );
 
     this.logger.info(`Notified ${resp.length} new resources`);

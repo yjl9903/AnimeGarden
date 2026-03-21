@@ -47,7 +47,7 @@ app
   .option('--host <ip>', 'Listen host')
   .option('--port <port>', 'Listen port')
   .action(async (options) => {
-    const sys = await initialize({ ...options, cron: false });
+    const sys = await initialize({ ...options, cron: false, profile: 'server' });
     sys.initialize(); // async initializing system
 
     const server = await makeServer(sys, {});
@@ -65,7 +65,7 @@ app
   .option('--listen', 'Enable server listening', { default: true })
   .option('--import', 'Import bangumi data', { default: true })
   .action(async (options) => {
-    const sys = await initialize({ ...options, cron: true });
+    const sys = await initialize({ ...options, cron: true, profile: 'cron' });
     const executor = await makeExecutor(sys, {});
 
     const initializing = sys.initialize();

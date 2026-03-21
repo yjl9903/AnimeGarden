@@ -2,10 +2,9 @@ import { eq } from 'drizzle-orm';
 
 import type { ProviderType } from '@animegarden/client';
 
-import { retryFn } from '@animegarden/shared';
-
 import type { System } from '../system';
 
+import { retryDatabaseFn } from '../utils/database';
 import { Module } from '../system/module';
 import { providers } from '../schema/providers';
 
@@ -27,7 +26,7 @@ export class ProvidersModule extends Module<System['modules']> {
   }
 
   public async fetchProviders() {
-    const resp = await retryFn(() => this.database.select().from(providers), 5);
+    const resp = await retryDatabaseFn(() => this.database.select().from(providers), { count: 5 });
     this.providers.clear();
     for (const p of resp) {
       this.providers.set(p.id, p);
@@ -51,14 +50,14 @@ export class ProvidersModule extends Module<System['modules']> {
         info.refreshedAt = timestamp;
       }
 
-      const resp = await retryFn(
+      const resp = await retryDatabaseFn(
         () =>
           this.database
             .update(providers)
             .set({ isActive: true, refreshedAt: timestamp })
             .where(eq(providers.id, provider))
             .returning(),
-        5
+        { count: 5 }
       );
 
       this.fetchProviders();
@@ -77,14 +76,14 @@ export class ProvidersModule extends Module<System['modules']> {
         info.isActive = isActive;
       }
 
-      const resp = await retryFn(
+      const resp = await retryDatabaseFn(
         () =>
           this.database
             .update(providers)
             .set({ isActive })
             .where(eq(providers.id, provider))
             .returning(),
-        5
+        { count: 5 }
       );
 
       this.fetchProviders();

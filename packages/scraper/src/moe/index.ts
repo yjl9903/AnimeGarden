@@ -25,20 +25,23 @@ export async function fetchMoePage(
 ): Promise<ScrapedResource[]> {
   const { page = 1, retry = 5 } = options;
 
-  const resp = await retryFn(async () => {
-    const resp = await ofetch(`https://bangumi.moe/api/torrent/page/${page}`, {
-      headers: new Headers([
-        [
-          'User-Agent',
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
-        ]
-      ])
-    });
-    if (!resp.ok) {
-      throw new NetworkError('moe', `https://bangumi.moe/api/torrent/page/${page}`, resp);
-    }
-    return resp;
-  }, retry);
+  const resp = await retryFn(
+    async () => {
+      const resp = await ofetch(`https://bangumi.moe/api/torrent/page/${page}`, {
+        headers: new Headers([
+          [
+            'User-Agent',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
+          ]
+        ])
+      });
+      if (!resp.ok) {
+        throw new NetworkError('moe', `https://bangumi.moe/api/torrent/page/${page}`, resp);
+      }
+      return resp;
+    },
+    { count: retry }
+  );
 
   const data = (await resp.json()) as any;
 
@@ -102,16 +105,19 @@ export async function fetchMoeDetail(
 ): Promise<ScrapedResourceDetail> {
   const { retry = 5 } = options;
 
-  const resp = await retryFn(async () => {
-    const resp = await ofetch(`https://bangumi.moe/api/torrent/fetch`, {
-      method: 'POST',
-      body: JSON.stringify({ _id: id })
-    });
-    if (!resp.ok) {
-      throw new NetworkError('moe', `https://bangumi.moe/api/torrent/fetch`, resp);
-    }
-    return resp;
-  }, retry);
+  const resp = await retryFn(
+    async () => {
+      const resp = await ofetch(`https://bangumi.moe/api/torrent/fetch`, {
+        method: 'POST',
+        body: JSON.stringify({ _id: id })
+      });
+      if (!resp.ok) {
+        throw new NetworkError('moe', `https://bangumi.moe/api/torrent/fetch`, resp);
+      }
+      return resp;
+    },
+    { count: retry }
+  );
 
   const torrent = (await resp.json()) as any;
 

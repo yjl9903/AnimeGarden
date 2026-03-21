@@ -20,22 +20,25 @@ export async function fetchUser(
     return Users.get(id)!;
   }
 
-  const resp = await retryFn(async () => {
-    const resp = await ofetch(`https://bangumi.moe/api/user/fetch`, {
-      method: 'POST',
-      body: JSON.stringify({ _ids: [id] }),
-      headers: new Headers([
-        [
-          'User-Agent',
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
-        ]
-      ])
-    });
-    if (!resp.ok) {
-      throw new NetworkError('moe', `https://bangumi.moe/api/user/fetch`, resp);
-    }
-    return resp;
-  }, 10);
+  const resp = await retryFn(
+    async () => {
+      const resp = await ofetch(`https://bangumi.moe/api/user/fetch`, {
+        method: 'POST',
+        body: JSON.stringify({ _ids: [id] }),
+        headers: new Headers([
+          [
+            'User-Agent',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
+          ]
+        ])
+      });
+      if (!resp.ok) {
+        throw new NetworkError('moe', `https://bangumi.moe/api/user/fetch`, resp);
+      }
+      return resp;
+    },
+    { count: 10 }
+  );
 
   const data = (await resp.json()) as any;
 
@@ -59,22 +62,25 @@ export async function fetchTeam(
     return Teams.get(id)!;
   }
 
-  const resp = await retryFn(async () => {
-    const resp = await ofetch(`https://bangumi.moe/api/team/fetch`, {
-      method: 'POST',
-      body: JSON.stringify({ _ids: [id] }),
-      headers: new Headers([
-        [
-          'User-Agent',
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
-        ]
-      ])
-    });
-    if (!resp.ok) {
-      throw new NetworkError('moe', `https://bangumi.moe/api/team/fetch`, resp);
-    }
-    return resp;
-  }, 10);
+  const resp = await retryFn(
+    async () => {
+      const resp = await ofetch(`https://bangumi.moe/api/team/fetch`, {
+        method: 'POST',
+        body: JSON.stringify({ _ids: [id] }),
+        headers: new Headers([
+          [
+            'User-Agent',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
+          ]
+        ])
+      });
+      if (!resp.ok) {
+        throw new NetworkError('moe', `https://bangumi.moe/api/team/fetch`, resp);
+      }
+      return resp;
+    },
+    { count: 10 }
+  );
 
   const data = (await resp.json()) as any;
 

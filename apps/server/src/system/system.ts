@@ -1,7 +1,7 @@
 import { type Redis as RedisStorage } from 'ioredis';
 import { type ConsolaInstance, createConsola } from 'consola';
 
-import type { Database } from '../connect/database';
+import type { Database, SystemProfile } from '../connect/database';
 
 import { NOTIFY_CHANNEL, RPC_INVOKE_CHANNEL } from '../constants';
 import { makeChannelMessageBus, subscribeRedisChannel } from '../connect/redis';
@@ -22,6 +22,8 @@ export interface SystemOptions {
   redisUri?: string;
 
   cron?: boolean;
+
+  profile?: SystemProfile;
 
   site?: string;
 }

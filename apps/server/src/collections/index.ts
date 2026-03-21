@@ -2,10 +2,10 @@ import { eq } from 'drizzle-orm';
 
 import type { System } from '../system';
 
-import { retryFn } from '@animegarden/shared';
 import { type Collection, hashCollection } from '@animegarden/client';
 
 import { memo } from '../utils/cache';
+import { retryDatabaseFn } from '../utils/database';
 import { Module } from '../system/module';
 import { collections } from '../schema/collections';
 import { MAX_COLLECTION_COUNT } from '../constants';
@@ -58,7 +58,7 @@ export class CollectionsModule extends Module<System['modules']> {
         return resp[0];
       } else {
         return (
-          await retryFn(
+          await retryDatabaseFn(
             () =>
               this.database
                 .select({
@@ -68,7 +68,7 @@ export class CollectionsModule extends Module<System['modules']> {
                 })
                 .from(collections)
                 .where(eq(collections.hash, hsh)),
-            5
+            { count: 5 }
           ).catch(() => [])
         )?.[0];
       }
@@ -80,9 +80,9 @@ export class CollectionsModule extends Module<System['modules']> {
 
   public getCollection = memo(
     async (hsh: string) => {
-      const resp = await retryFn(
+      const resp = await retryDatabaseFn(
         () => this.database.select().from(collections).where(eq(collections.hash, hsh)),
-        5
+        { count: 5 }
       );
 
       this.logger.info(`Get collection detail ${hsh} => ${resp?.length === 1 ? 'ok' : 'fail'}`);

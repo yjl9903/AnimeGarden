@@ -47,20 +47,23 @@ export async function fetchLastestANi(
 ): Promise<ScrapedResource[]> {
   const { retry = 5 } = options;
 
-  const resp = await retryFn(async () => {
-    const resp = await ofetch(`https://api.ani.rip/ani-torrent.xml`, {
-      headers: new Headers([
-        [
-          'User-Agent',
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
-        ]
-      ])
-    });
-    if (!resp.ok) {
-      throw new NetworkError('ani', 'https://api.ani.rip/', resp);
-    }
-    return resp;
-  }, retry);
+  const resp = await retryFn(
+    async () => {
+      const resp = await ofetch(`https://api.ani.rip/ani-torrent.xml`, {
+        headers: new Headers([
+          [
+            'User-Agent',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
+          ]
+        ])
+      });
+      if (!resp.ok) {
+        throw new NetworkError('ani', 'https://api.ani.rip/', resp);
+      }
+      return resp;
+    },
+    { count: retry }
+  );
 
   const feed = await parser.parseString(await resp.text());
 
@@ -71,20 +74,23 @@ export async function fetchLastestANi(
     const link = item.link;
     if (!link || !link.endsWith('.torrent')) continue;
 
-    const resp = await retryFn(async () => {
-      const resp = await ofetch(link, {
-        headers: new Headers([
-          [
-            'User-Agent',
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
-          ]
-        ])
-      });
-      if (!resp.ok) {
-        throw new NetworkError('ani', link, resp);
-      }
-      return resp;
-    }, retry);
+    const resp = await retryFn(
+      async () => {
+        const resp = await ofetch(link, {
+          headers: new Headers([
+            [
+              'User-Agent',
+              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
+            ]
+          ])
+        });
+        if (!resp.ok) {
+          throw new NetworkError('ani', link, resp);
+        }
+        return resp;
+      },
+      { count: retry }
+    );
 
     const blob = await resp.blob();
     const buffer = Buffer.from(await blob.arrayBuffer());
@@ -180,20 +186,23 @@ export async function fetchANiDetail(
 ): Promise<ScrapedResourceDetail | undefined> {
   const { retry = 5 } = options;
 
-  const resp = await retryFn(async () => {
-    const resp = await ofetch(`https://nyaa.si/view/${id}`, {
-      headers: new Headers([
-        [
-          'User-Agent',
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
-        ]
-      ])
-    });
-    if (!resp.ok) {
-      throw new NetworkError('ani', `https://nyaa.si/view/${id}`, resp);
-    }
-    return resp;
-  }, retry);
+  const resp = await retryFn(
+    async () => {
+      const resp = await ofetch(`https://nyaa.si/view/${id}`, {
+        headers: new Headers([
+          [
+            'User-Agent',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0'
+          ]
+        ])
+      });
+      if (!resp.ok) {
+        throw new NetworkError('ani', `https://nyaa.si/view/${id}`, resp);
+      }
+      return resp;
+    },
+    { count: retry }
+  );
 
   const html = await resp.text();
   const { document } = new JSDOM(html).window;

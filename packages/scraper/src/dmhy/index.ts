@@ -27,13 +27,16 @@ export async function fetchDmhyPage(
 ): Promise<ScrapedResource[]> {
   const { page = 1, retry = 5 } = options;
 
-  const resp = await retryFn(async () => {
-    const resp = await ofetch(`https://share.dmhy.org/topics/list/page/${page}`);
-    if (!resp.ok) {
-      throw new NetworkError('dmhy', `https://share.dmhy.org/topics/list/page/${page}`, resp);
-    }
-    return resp;
-  }, retry);
+  const resp = await retryFn(
+    async () => {
+      const resp = await ofetch(`https://share.dmhy.org/topics/list/page/${page}`);
+      if (!resp.ok) {
+        throw new NetworkError('dmhy', `https://share.dmhy.org/topics/list/page/${page}`, resp);
+      }
+      return resp;
+    },
+    { count: retry }
+  );
 
   const html = await resp.text();
   const { document } = new JSDOM(html).window;
@@ -152,13 +155,16 @@ export async function fetchDmhyDetail(
   if (!matchId) return undefined;
 
   const { retry = 5 } = options;
-  const resp = await retryFn(async () => {
-    const resp = await ofetch(url.href);
-    if (!resp.ok) {
-      throw new NetworkError('dmhy', url.href, resp);
-    }
-    return resp;
-  }, retry);
+  const resp = await retryFn(
+    async () => {
+      const resp = await ofetch(url.href);
+      if (!resp.ok) {
+        throw new NetworkError('dmhy', url.href, resp);
+      }
+      return resp;
+    },
+    { count: retry }
+  );
 
   const html = await resp.text();
   const { document } = new JSDOM(html).window;

@@ -8,7 +8,7 @@ import {
   type Jsonify,
   type Resource
 } from '@animegarden/client';
-import { splitOnce, retryFn } from '@animegarden/shared';
+import { splitOnce } from '@animegarden/shared';
 
 import type { System } from '../system';
 import type { Detail } from '../schema';
@@ -16,6 +16,7 @@ import type { Detail } from '../schema';
 import { details } from '../schema/details';
 import { resources } from '../schema/resources';
 import { ScraperProviders } from '../providers';
+import { retryDatabaseFn } from '../utils/database';
 import { nextTick } from '../utils/timer';
 import { DETAIL_EXPIRE } from '../constants';
 
@@ -199,12 +200,15 @@ export class DetailsManager {
 
         // 更新 db
         nextTick().then(async () => {
-          await retryFn(async () => {
-            await this.system.database
-              .update(resources)
-              .set({ magnet, tracker })
-              .where(eq(resources.id, id));
-          }, 5).catch(() => {});
+          await retryDatabaseFn(
+            async () => {
+              await this.system.database
+                .update(resources)
+                .set({ magnet, tracker })
+                .where(eq(resources.id, id));
+            },
+            { count: 5 }
+          ).catch(() => {});
         });
       }
     }
@@ -264,18 +268,18 @@ export class DetailsManager {
       fetchedAt: new Date()
     };
 
-    const resp = await retryFn(
+    const resp = await retryDatabaseFn(
       () =>
         this.system.database
           .insert(details)
           .values(detail)
           .onConflictDoNothing()
           .returning({ id: details.id }),
-      5
+      { count: 5 }
     ).catch(() => undefined);
     if (resp) {
       if (resp.length === 0) {
-        await retryFn(
+        await retryDatabaseFn(
           () =>
             this.system.database
               .update(details)
@@ -288,7 +292,7 @@ export class DetailsManager {
               })
               .where(eq(details.id, resource.id))
               .returning({ id: details.id }),
-          5
+          { count: 5 }
         ).catch(() => undefined);
       }
 

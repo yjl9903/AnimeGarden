@@ -112,7 +112,9 @@ export async function fetchAPI<T>(
         }
       }
     },
-    retry,
-    options.signal
+    {
+      count: retry,
+      signal: options.signal
+    }
   );
 }

@@ -2,7 +2,7 @@ import { and, desc, eq, gt, inArray, isNull, lt, or, sql } from 'drizzle-orm';
 
 import type { ProviderType } from '@animegarden/client';
 
-import { retryFn, normalizeBtihToBase32, normalizeBtihToHex } from '@animegarden/shared';
+import { normalizeBtihToBase32, normalizeBtihToHex } from '@animegarden/shared';
 
 import type { System, Notification } from '../system';
 import type { NewResource as NewDbResource } from '../schema';
@@ -16,6 +16,7 @@ import { QueryManager } from './query';
 import { DetailsManager } from './details';
 import { prefetchKeepShare } from './keepshare';
 import { transformNewResources } from './transform';
+import { retryDatabaseFn } from '../utils/database';
 
 export * from './types';
 
@@ -92,7 +93,7 @@ export class ResourcesModule extends Module<System['modules']> {
 
     if (newResources.length === 0) return { inserted: [], conflict: [], errors: [], duplicated };
 
-    const resp = await retryFn(
+    const resp = await retryDatabaseFn(
       () =>
         this.database
           .insert(resourceSchema)
@@ -142,7 +143,7 @@ LIMIT 1)`
             isDeleted: resourceSchema.isDeleted,
             duplicatedId: resourceSchema.duplicatedId
           }),
-      5
+      { count: 5 }
     );
 
     const conflict: NonNullable<ReturnType<typeof transformNewResources>['result']>[] = [];
@@ -159,7 +160,7 @@ LIMIT 1)`
         if (r.duplicatedId) continue;
 
         // Update duplicated id which createdAt > r.createdAt
-        const resp = await retryFn(
+        const resp = await retryDatabaseFn(
           () =>
             this.database
               .update(resourceSchema)
@@ -175,7 +176,7 @@ LIMIT 1)`
                 )
               )
               .returning({ id: resourceSchema.id }),
-          5
+          { count: 5 }
         );
         duplicated.push(...resp.map((r) => r.id));
       }
@@ -199,7 +200,7 @@ LIMIT 1)`
       indexSubject: true
     });
     if (!updated) return;
-    const dbRes = await retryFn(
+    const dbRes = await retryDatabaseFn(
       () =>
         this.database.query.resources.findFirst({
           where: and(
@@ -207,7 +208,7 @@ LIMIT 1)`
             eq(resourceSchema.providerId, updated.providerId)
           )
         }),
-      5
+      { count: 5 }
     ).catch(() => undefined);
     if (!dbRes) {
       const { inserted, duplicated } = await this.insertResources([{ ...resource, fetchedAt }], {
@@ -292,7 +293,7 @@ AND (${eq(resourceSchema.title, updated.title)} OR ${eq(resourceSchema.magnet, n
 ORDER BY ${resourceSchema.createdAt} asc
 LIMIT 1)`;
 
-    const resp1 = await retryFn(
+    const resp1 = await retryDatabaseFn(
       () =>
         this.database
           .update(resourceSchema)
@@ -309,13 +310,13 @@ LIMIT 1)`;
             providerId: resourceSchema.providerId,
             title: resourceSchema.title
           }),
-      5
+      { count: 5 }
     ).catch(() => undefined);
 
     const id = resp1?.[0].id;
     if (resp1 && resp1.length === 1 && id) {
       // Clearing all the related duplicated item
-      const resp2 = await retryFn(
+      const resp2 = await retryDatabaseFn(
         () =>
           this.database
             .update(resourceSchema)
@@ -324,11 +325,11 @@ LIMIT 1)`;
             .returning({
               id: resourceSchema.id
             }),
-        5
+        { count: 5 }
       ).catch(() => undefined);
 
       // Update duplicated id which createdAt > r.createdAt
-      const resp3 = await retryFn(
+      const resp3 = await retryDatabaseFn(
         () =>
           this.database
             .update(resourceSchema)
@@ -349,7 +350,7 @@ LIMIT 1)`;
             .returning({
               id: resourceSchema.id
             }),
-        5
+        { count: 5 }
       );
 
       const removed = new Set(resp2?.map((r) => r.id));
@@ -374,7 +375,7 @@ LIMIT 1)`;
     const maxCreatedAt = resources.reduce((acc, cur) => {
       return Math.max(acc, new Date(cur.createdAt!).getTime());
     }, Number.MIN_SAFE_INTEGER);
-    const stored = await retryFn(
+    const stored = await retryDatabaseFn(
       () =>
         this.database
           .select({
@@ -393,14 +394,14 @@ LIMIT 1)`;
             )
           )
           .orderBy(desc(resourceSchema.createdAt)),
-      5
+      { count: 5 }
     ).catch(() => []);
 
     const deleted = stored.filter((st) => !visited.has(st.provider + ':' + st.providerId));
     if (deleted.length > 0) {
       this.logger.info('Mark resources as deleted', deleted);
 
-      const resp = await retryFn(
+      const resp = await retryDatabaseFn(
         () =>
           this.database
             .update(resourceSchema)
@@ -417,11 +418,11 @@ LIMIT 1)`;
               providerId: resourceSchema.providerId,
               title: resourceSchema.title
             }),
-        5
+        { count: 5 }
       ).catch(() => []);
 
       // Clearing related duplicate id
-      const inserted = await retryFn(
+      const inserted = await retryDatabaseFn(
         () =>
           this.database
             .update(resourceSchema)
@@ -435,7 +436,7 @@ LIMIT 1)`;
             .returning({
               id: resourceSchema.id
             }),
-        5
+        { count: 5 }
       ).catch(() => []);
 
       return {
