@@ -3,8 +3,10 @@ import { randomUUID } from 'node:crypto';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
+import { timeout } from 'hono/timeout';
 import { prettyJSON } from 'hono/pretty-json';
 import { serve } from '@hono/node-server';
+import { HTTPException } from 'hono/http-exception';
 import { Cron } from 'croner';
 
 import { SupportProviders } from '@animegarden/client';
@@ -33,6 +35,8 @@ export interface ListenOptions {
 
   port?: string | number;
 }
+
+const EXECUTOR_INTERNAL_REQUEST_HEADER = 'x-animegarden-executor-request';
 
 export class Server {
   public readonly system: System;
@@ -88,7 +92,8 @@ export class Executor extends Server {
             const req = new Request(`https://api.animes.garden/admin/resources/${provider}`, {
               method: 'POST',
               headers: {
-                authorization: `Bearer ${this.system.secret}`
+                authorization: `Bearer ${this.system.secret}`,
+                [EXECUTOR_INTERNAL_REQUEST_HEADER]: '1'
               }
             });
             const res = await this.hono.fetch(req);
@@ -106,7 +111,8 @@ export class Executor extends Server {
             const req = new Request(`https://api.animes.garden/admin/resources/${provider}/sync`, {
               method: 'POST',
               headers: {
-                authorization: `Bearer ${this.system.secret}`
+                authorization: `Bearer ${this.system.secret}`,
+                [EXECUTOR_INTERNAL_REQUEST_HEADER]: '1'
               }
             });
             const res = await this.hono.fetch(req);
@@ -200,6 +206,26 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
     });
   });
 
+  const requestTimeout = timeout(30 * 1000, () => {
+    return new HTTPException(408, {
+      res: new Response(
+        JSON.stringify({
+          status: 'ERROR',
+          message: 'Request timeout after waiting 30 seconds. Please try again later.'
+        }),
+        { status: 408 }
+      )
+    });
+  });
+  app.use('*', async (c, next) => {
+    if (c.req.header(EXECUTOR_INTERNAL_REQUEST_HEADER) === '1') {
+      await next();
+      return;
+    }
+
+    return requestTimeout(c, next);
+  });
+
   // Bind routes
   defineUsersRoutes(sys, app);
   defineSubjectsRoutes(sys, app);
@@ -210,10 +236,13 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
   defineSitemapsRoutes(sys, app);
 
   // Handle errors
-  app.onError((err, c) => {
-    sys.logger.error(err);
-
-    return c.json({ status: 'ERROR' }, 500);
+  app.onError((error, c) => {
+    if (error instanceof HTTPException) {
+      return error.getResponse();
+    } else {
+      sys.logger.error(error);
+      return c.json({ status: 'ERROR' }, 500);
+    }
   });
 
   process.on('uncaughtException', (err) => {

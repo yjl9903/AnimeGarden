@@ -66,6 +66,11 @@ export interface DatabaseResource {
   metadata: { anipar?: ParseResult } | null;
 }
 
+export type RedisQueryResource = Omit<DatabaseResource, 'createdAt' | 'fetchedAt'> & {
+  createdAt: string;
+  fetchedAt: string;
+};
+
 export interface InsertResourcesOptions {
   /**
    * Whether match resources' title with active subjects

@@ -18,7 +18,7 @@ export const RPC_REPLY_CHANNEL = `reply-rpc`;
 /**
  * 最大同时存活缓存任务个数
  */
-export const MAX_RESOURCES_TASK_COUNT = 300;
+export const MAX_RESOURCES_TASK_COUNT = 100;
 
 /**
  * 最大同时存活收藏夹个数

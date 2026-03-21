@@ -33,7 +33,7 @@ import { resources } from '../schema/resources';
 import { memo, jieba, nextTick } from '../utils';
 import { MAX_RESOURCES_TASK_COUNT, RESOURCES_TASK_PREFETCH_COUNT } from '../constants';
 
-import type { DatabaseResource, DatabaseFilterOptions } from './types';
+import type { DatabaseResource, RedisQueryResource, DatabaseFilterOptions } from './types';
 
 import { transformDatabaseUser } from './transform';
 import { TitlePool, MagnetPool, TrackerPool } from './pool';
@@ -207,24 +207,44 @@ export class QueryManager {
       }
 
       if (task) {
-        // 预取缓存
-        await task.prefetch();
+        let prefetched = false;
 
-        // 最多再预取 1 次
-        for (let i = 0; i < 2; i++) {
-          if (i > 0) {
-            await task.prefetchNextPage();
-          }
+        try {
+          // 预取缓存
+          await task.prefetch();
+          prefetched = true;
+        } catch (error) {
+          // 预取失败, 回退到 db
+          this.logger.error(`Prefetch failed`, task.key, error);
+          task.prefetch.clear().catch(() => undefined);
+          prefetched = false;
+        }
 
-          const cache = await task.fetch(dbOptions, page, pageSize);
-          if (cache.ok) {
-            return {
-              resources: cache.resources,
-              hasMore: cache.hasMore
-            };
-          }
-          if (!task.hasMore) {
-            break;
+        if (prefetched) {
+          // 最多再预取 1 次
+          for (let i = 0; i < 2; i++) {
+            if (i > 0) {
+              try {
+                /// 预取缓存
+                await task.prefetchNextPage();
+              } catch (error) {
+                // 预取失败, 回退到 db
+                this.logger.error(`Prefetch next page failed`, task.key, error);
+                task.prefetchNextPage.clear().catch(() => undefined);
+                break;
+              }
+            }
+
+            const cache = await task.fetch(dbOptions, page, pageSize);
+            if (cache.ok) {
+              return {
+                resources: cache.resources,
+                hasMore: cache.hasMore
+              };
+            }
+            if (!task.hasMore) {
+              break;
+            }
           }
         }
       }
@@ -333,8 +353,30 @@ export class QueryManager {
 
   public findFromRedis = memo(
     async (filter: DatabaseFilterOptions, offset: number, limit: number) => {
-      // TODO: read redis here
+      const redis = this.system.publisherRedis ?? this.system.redis;
+      const timestamp = this.system.modules.providers.timestamp.getTime().toString();
+
+      if (redis) {
+        try {
+          const key = this.getRedisQueryCacheKey(filter, offset, limit, timestamp);
+          const cached = await redis.get(key);
+          if (cached) {
+            this.logger.info(`Redis cache hit ${key}`);
+            const parsed = JSON.parse(cached) as RedisQueryResource[];
+            return this.hydrateResources(parsed);
+          }
+        } catch {}
+      }
+
       const resp = await this.findFromDatabase(filter, offset, limit);
+
+      if (redis) {
+        try {
+          const key = this.getRedisQueryCacheKey(filter, offset, limit, timestamp);
+          await redis.set(key, JSON.stringify(resp), 'EX', 5 * 60);
+        } catch {}
+      }
+
       return resp;
     },
     {
@@ -346,6 +388,44 @@ export class QueryManager {
       autoStartGC: false
     }
   );
+
+  private getRedisQueryCacheKey(
+    filter: DatabaseFilterOptions,
+    offset: number,
+    limit: number,
+    timestamp: string
+  ) {
+    return `animegarden:resources:query:${hash(filter)}:${timestamp}:${offset}:${limit}`;
+  }
+
+  private hydrateResources(resp: Array<DatabaseResource | RedisQueryResource>) {
+    const normalized = resp.map((resource) => ({
+      ...resource,
+      createdAt: new Date(resource.createdAt),
+      fetchedAt: new Date(resource.fetchedAt)
+    })) as DatabaseResource[];
+
+    for (const resource of normalized) {
+      resource.title = TitlePool.get(resource.title);
+      resource.magnet = MagnetPool.get(resource.magnet);
+      resource.tracker = TrackerPool.get(resource.tracker);
+    }
+
+    const cacheResources = this.resources;
+    return normalized.map((resource) => {
+      const provider = resource.provider as ProviderType;
+      const { providerId } = resource;
+      const cache = cacheResources.get(provider)?.get(providerId);
+      if (cache) {
+        return cache;
+      }
+      if (!cacheResources.has(provider)) {
+        cacheResources.set(provider, new Map());
+      }
+      cacheResources.get(provider)?.set(providerId, resource);
+      return resource;
+    });
+  }
 
   public async findFromDatabase(filter: DatabaseFilterOptions, offset: number, limit: number) {
     const now = performance.now();
@@ -491,28 +571,7 @@ export class QueryManager {
       5
     );
 
-    // 1. Intern resource.tracker
-    for (const resource of resp) {
-      resource.title = TitlePool.get(resource.title);
-      resource.magnet = MagnetPool.get(resource.magnet);
-      resource.tracker = TrackerPool.get(resource.tracker);
-    }
-
-    // 2. Intern resource object
-    const cacheResources = this.resources;
-    const internedResp = resp.map((resource) => {
-      const { provider, providerId } = resource;
-      const cache = cacheResources.get(provider)?.get(providerId);
-      if (cache) {
-        return cache;
-      }
-      if (!cacheResources.has(provider)) {
-        cacheResources.set(provider, new Map());
-      }
-      cacheResources.get(provider)?.set(providerId, resource);
-      return resource;
-    });
-    // -------------------------
+    const internedResp = this.hydrateResources(resp);
 
     const end = performance.now();
 
@@ -623,7 +682,7 @@ export class Task {
 
   public prefetch = memoAsync(async () => {
     const count = this.prefetchCount;
-    const resp = await this.query.findFromDatabase(
+    const resp = await this.query.findFromRedis(
       this.options,
       count,
       RESOURCES_TASK_PREFETCH_COUNT + 1
@@ -640,7 +699,7 @@ export class Task {
     if (!this.hasMore) return;
 
     const prevCount = this.prefetchCount;
-    const resp = await this.query.findFromDatabase(
+    const resp = await this.query.findFromRedis(
       this.options,
       prevCount,
       RESOURCES_TASK_PREFETCH_COUNT + 1
