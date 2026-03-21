@@ -1,9 +1,9 @@
-import { etag } from 'hono/etag';
 import { toDate } from 'date-fns-tz';
 
 import { parseURLSearch } from '@animegarden/client';
 
 import { getRssString } from '../rss';
+import { safeEtag as etag } from '../utils/etag';
 import { defineHandler } from '../utils/hono';
 import { generateTitleFromFilter } from '../utils/meta';
 

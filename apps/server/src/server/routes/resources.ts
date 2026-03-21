@@ -1,7 +1,5 @@
 import type { Context } from 'hono';
 
-import { etag } from 'hono/etag';
-
 import { type ProviderType, SupportProviders, parseURLSearch } from '@animegarden/client';
 
 import type { System } from '../../system';
@@ -11,6 +9,7 @@ import { type Provider, ScraperProviders } from '../../providers';
 
 import { defineHandler } from '../utils/hono';
 import { MAX_DETAIL_CACHE_COUNT } from '../constants';
+import { safeEtag as etag } from '../utils/etag';
 
 export const defineResourcesRoutes = defineHandler((sys, app) => {
   async function listResources(ctx: Context, sys: System, provider?: ProviderType) {

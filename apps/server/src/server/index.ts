@@ -28,6 +28,8 @@ export * from './rss';
 
 export * from './sitemap';
 
+export * from './utils/etag';
+
 export interface ServerOptions {}
 
 export interface ListenOptions {

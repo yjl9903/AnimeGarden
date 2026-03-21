@@ -1,6 +1,5 @@
-import { etag } from 'hono/etag';
-
 import { defineHandler } from '../utils/hono';
+import { safeEtag as etag } from '../utils/etag';
 
 export const defineSubjectsRoutes = defineHandler((sys, app) =>
   app.get('/subjects', etag(), (c) => {

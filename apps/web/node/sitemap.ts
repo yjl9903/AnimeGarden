@@ -1,10 +1,10 @@
 import { Hono } from 'hono';
-import { etag as honoEtag } from 'hono/etag';
 
 import { fetchAPI } from '@animegarden/client';
 import { sitemap, sitemapIndex } from '@animegarden/server';
 
 import { env } from './env';
+import { safeEtag } from './etag';
 
 const app = new Hono();
 
@@ -102,7 +102,7 @@ const items = sitemap({
   }
 });
 
-const etag = honoEtag();
+const etag = safeEtag();
 
 app.get('/sitemap-index.xml', etag, index);
 
