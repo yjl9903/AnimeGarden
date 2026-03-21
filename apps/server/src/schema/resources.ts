@@ -1,5 +1,6 @@
 import type { ParseResult } from 'anipar';
 
+import { sql } from 'drizzle-orm';
 import {
   bigint,
   boolean,
@@ -49,6 +50,8 @@ export const resources = pgTable(
     isDeleted: boolean('is_deleted').default(false)
   },
   (t) => {
+    const liveRootCondition = sql`${t.isDeleted} = false AND ${t.duplicatedId} IS NULL`;
+
     return [
       uniqueIndex('unique_resources_provider_id').on(t.provider, t.providerId),
       index('resources_title_index').on(t.title),
@@ -58,7 +61,35 @@ export const resources = pgTable(
       index('resources_fansub_id_index').on(t.fansubId),
       index('resources_subject_id_index').on(t.subjectId),
       index('resources_sort_by_created_at').on(t.createdAt.desc()),
-      index('resources_title_search_index').using('gin', t.titleSearch)
+      index('resources_title_search_index').using('gin', t.titleSearch),
+      index('resources_live_created_at_index').on(t.createdAt.desc()).where(liveRootCondition),
+      index('resources_live_title_alt_trgm_index')
+        .using('gin', t.titleAlt.op('gin_trgm_ops'))
+        .where(liveRootCondition),
+      index('resources_live_subject_created_at_index')
+        .on(t.subjectId, t.createdAt.desc())
+        .where(sql`${liveRootCondition} AND ${t.subjectId} IS NOT NULL`),
+      index('resources_live_type_created_at_index')
+        .on(t.type, t.createdAt.desc())
+        .where(liveRootCondition),
+      index('resources_live_fansub_created_at_index')
+        .on(t.fansubId, t.createdAt.desc())
+        .where(sql`${liveRootCondition} AND ${t.fansubId} IS NOT NULL`),
+      index('resources_live_publisher_created_at_index')
+        .on(t.publisherId, t.createdAt.desc())
+        .where(liveRootCondition),
+      index('resources_live_title_search_index')
+        .using('gin', t.titleSearch)
+        .where(liveRootCondition),
+      index('resources_live_title_created_at_index')
+        .on(t.title, t.createdAt)
+        .where(liveRootCondition),
+      index('resources_live_magnet_created_at_index')
+        .on(t.magnet, t.createdAt)
+        .where(liveRootCondition),
+      index('resources_duplicated_id_not_null_index')
+        .on(t.duplicatedId)
+        .where(sql`${t.duplicatedId} IS NOT NULL`)
     ];
   }
 );

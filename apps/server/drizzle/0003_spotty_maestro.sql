@@ -1,0 +1,11 @@
+CREATE EXTENSION IF NOT EXISTS pg_trgm;--> statement-breakpoint
+CREATE INDEX "resources_live_created_at_index" ON "resources" USING btree ("created_at" DESC NULLS LAST) WHERE "resources"."is_deleted" = false AND "resources"."duplicated_id" IS NULL;--> statement-breakpoint
+CREATE INDEX "resources_live_title_alt_trgm_index" ON "resources" USING gin ("title_alt" gin_trgm_ops) WHERE "resources"."is_deleted" = false AND "resources"."duplicated_id" IS NULL;--> statement-breakpoint
+CREATE INDEX "resources_live_subject_created_at_index" ON "resources" USING btree ("subject_id","created_at" DESC NULLS LAST) WHERE "resources"."is_deleted" = false AND "resources"."duplicated_id" IS NULL AND "resources"."subject_id" IS NOT NULL;--> statement-breakpoint
+CREATE INDEX "resources_live_type_created_at_index" ON "resources" USING btree ("type","created_at" DESC NULLS LAST) WHERE "resources"."is_deleted" = false AND "resources"."duplicated_id" IS NULL;--> statement-breakpoint
+CREATE INDEX "resources_live_fansub_created_at_index" ON "resources" USING btree ("fansub_id","created_at" DESC NULLS LAST) WHERE "resources"."is_deleted" = false AND "resources"."duplicated_id" IS NULL AND "resources"."fansub_id" IS NOT NULL;--> statement-breakpoint
+CREATE INDEX "resources_live_publisher_created_at_index" ON "resources" USING btree ("publisher_id","created_at" DESC NULLS LAST) WHERE "resources"."is_deleted" = false AND "resources"."duplicated_id" IS NULL;--> statement-breakpoint
+CREATE INDEX "resources_live_title_search_index" ON "resources" USING gin ("title_search") WHERE "resources"."is_deleted" = false AND "resources"."duplicated_id" IS NULL;--> statement-breakpoint
+CREATE INDEX "resources_live_title_created_at_index" ON "resources" USING btree ("title","created_at") WHERE "resources"."is_deleted" = false AND "resources"."duplicated_id" IS NULL;--> statement-breakpoint
+CREATE INDEX "resources_live_magnet_created_at_index" ON "resources" USING btree ("magnet","created_at") WHERE "resources"."is_deleted" = false AND "resources"."duplicated_id" IS NULL;--> statement-breakpoint
+CREATE INDEX "resources_duplicated_id_not_null_index" ON "resources" USING btree ("duplicated_id") WHERE "resources"."duplicated_id" IS NOT NULL;

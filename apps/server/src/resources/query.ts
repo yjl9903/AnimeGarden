@@ -1,7 +1,6 @@
 import type { ConsolaInstance } from 'consola';
 
 import { hash } from 'ohash';
-import { memoAsync } from 'memofunc';
 import {
   type SQLWrapper,
   sql,
@@ -31,7 +30,11 @@ import type { System, Notification } from '../system';
 
 import { resources } from '../schema/resources';
 import { memo, jieba, nextTick } from '../utils';
-import { MAX_RESOURCES_TASK_COUNT, RESOURCES_TASK_PREFETCH_COUNT } from '../constants';
+import {
+  MAX_RESOURCES_TASK_COUNT,
+  RESOURCES_TASK_PREFETCH_COUNT,
+  RESOURCES_TASK_PREFETCH_MAX_COUNT
+} from '../constants';
 
 import type { DatabaseResource, RedisQueryResource, DatabaseFilterOptions } from './types';
 
@@ -207,34 +210,10 @@ export class QueryManager {
       }
 
       if (task) {
-        let prefetched = false;
+        const requiredCount = page * pageSize;
 
-        try {
-          // 预取缓存
-          await task.prefetch();
-          prefetched = true;
-        } catch (error) {
-          // 预取失败, 回退到 db
-          this.logger.error(`Prefetch failed`, task.key, error);
-          task.prefetch.clear().catch(() => undefined);
-          prefetched = false;
-        }
-
-        if (prefetched) {
-          // 最多再预取 1 次
-          for (let i = 0; i < 2; i++) {
-            if (i > 0) {
-              try {
-                /// 预取缓存
-                await task.prefetchNextPage();
-              } catch (error) {
-                // 预取失败, 回退到 db
-                this.logger.error(`Prefetch next page failed`, task.key, error);
-                task.prefetchNextPage.clear().catch(() => undefined);
-                break;
-              }
-            }
-
+        while (true) {
+          if (task.ok) {
             const cache = await task.fetch(dbOptions, page, pageSize);
             if (cache.ok) {
               return {
@@ -242,9 +221,31 @@ export class QueryManager {
                 hasMore: cache.hasMore
               };
             }
-            if (!task.hasMore) {
+            if (!task.canPrefetchMore()) {
               break;
             }
+          }
+
+          const cursor = task.prefetchCount;
+
+          try {
+            // 预取缓存
+            await task.prefetch(cursor, requiredCount);
+          } catch (error) {
+            // 预取失败, 回退到 db
+            this.logger.error(`Prefetch failed`, task.key, error);
+            break;
+          }
+
+          const cache = await task.fetch(dbOptions, page, pageSize);
+          if (cache.ok) {
+            return {
+              resources: cache.resources,
+              hasMore: cache.hasMore
+            };
+          }
+          if (!task.canPrefetchMore() || task.prefetchCount <= cursor) {
+            break;
           }
         }
       }
@@ -639,6 +640,10 @@ export class QueryManager {
 export class Task {
   private readonly query: QueryManager;
 
+  private readonly prefetching: Map<number, Promise<void>> = new Map();
+
+  private prefetchLimited = false;
+
   public readonly key: string;
 
   public readonly options: DatabaseFilterOptions;
@@ -671,8 +676,8 @@ export class Task {
   }
 
   public clear() {
-    this.prefetch.clear();
-    this.prefetchNextPage.clear();
+    this.prefetching.clear();
+    this.prefetchLimited = false;
     this.prefetchCount = 0;
     this.ok = false;
     this.resources = [];
@@ -680,38 +685,78 @@ export class Task {
     return this;
   }
 
-  public prefetch = memoAsync(async () => {
-    const count = this.prefetchCount;
-    const resp = await this.query.findFromRedis(
-      this.options,
-      count,
-      RESOURCES_TASK_PREFETCH_COUNT + 1
-    );
-    this.resources = resp;
-    this.prefetchCount += resp.length;
-    this.hasMore = resp.length > RESOURCES_TASK_PREFETCH_COUNT;
-    this.fetchedAt = new Date();
-    this.ok = true;
-    return;
-  });
+  public canPrefetchMore() {
+    return this.hasMore && !this.prefetchLimited;
+  }
 
-  public prefetchNextPage = memoAsync(async () => {
-    if (!this.hasMore) return;
+  private syncPrefetchState() {
+    this.prefetchCount = this.resources.length;
+    this.prefetchLimited = this.hasMore && this.prefetchCount >= RESOURCES_TASK_PREFETCH_MAX_COUNT;
+  }
 
-    const prevCount = this.prefetchCount;
-    const resp = await this.query.findFromRedis(
-      this.options,
-      prevCount,
-      RESOURCES_TASK_PREFETCH_COUNT + 1
-    );
-    this.resources.push(...resp);
-    this.prefetchCount += resp.length;
-    this.hasMore = resp.length > RESOURCES_TASK_PREFETCH_COUNT;
-    this.fetchedAt = new Date();
-    this.ok = true;
-    this.prefetchNextPage.clear();
-    return;
-  });
+  public async prefetch(cursor: number, requiredCount: number) {
+    const nextCursor = Math.max(0, Math.min(cursor, this.prefetchCount));
+
+    if (nextCursor < this.prefetchCount) {
+      return;
+    }
+
+    if (this.prefetchLimited || (!this.hasMore && this.ok)) {
+      return;
+    }
+
+    const pending = this.prefetching.get(nextCursor);
+    if (pending) {
+      await pending;
+      return;
+    }
+
+    const prefetching = (async () => {
+      const rest = RESOURCES_TASK_PREFETCH_MAX_COUNT - nextCursor;
+      if (rest <= 0) {
+        this.prefetchLimited = this.hasMore;
+        return;
+      }
+
+      const prefetchCount = Math.min(this.getPrefetchCount(requiredCount), rest);
+      const resp = await this.query.findFromRedis(this.options, nextCursor, prefetchCount + 1);
+      const hasMore = resp.length > prefetchCount;
+      const fetched = hasMore ? resp.slice(0, prefetchCount) : resp;
+
+      if (nextCursor === 0) {
+        this.resources = fetched;
+      } else {
+        this.resources.push(...fetched);
+      }
+
+      this.hasMore = hasMore;
+      this.syncPrefetchState();
+      this.fetchedAt = new Date();
+      this.ok = true;
+    })().finally(() => {
+      this.prefetching.delete(nextCursor);
+    });
+
+    this.prefetching.set(nextCursor, prefetching);
+    await prefetching;
+  }
+
+  private getPrefetchCount(requiredCount: number) {
+    const normalizedCount = Math.max(1, Math.min(requiredCount, RESOURCES_TASK_PREFETCH_COUNT));
+
+    let multiplier = 3;
+    if (this.options.search && this.options.search.length > 0) {
+      multiplier = 2;
+    } else if (
+      (this.options.include && this.options.include.length > 0) ||
+      (this.options.keywords && this.options.keywords.length > 0) ||
+      (this.options.exclude && this.options.exclude.length > 0)
+    ) {
+      multiplier = 4;
+    }
+
+    return Math.min(Math.max(normalizedCount * multiplier, 30), RESOURCES_TASK_PREFETCH_COUNT);
+  }
 
   public async fetch(options: DatabaseFilterOptions, page: number, pageSize: number) {
     const conds = buildFilterConds(this.query.system, options);
@@ -755,8 +800,8 @@ export class Task {
       }
     }
     if (changed) {
-      this.prefetchCount = this.resources.length;
       this.resources.sort((lhs, rhs) => rhs.createdAt.getTime() - lhs.createdAt.getTime());
+      this.syncPrefetchState();
     }
   }
 
@@ -770,7 +815,7 @@ export class Task {
         return true;
       }
     });
-    this.prefetchCount = this.resources.length;
+    this.syncPrefetchState();
     return realRemoved;
   }
 }
