@@ -206,12 +206,12 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
     });
   });
 
-  const requestTimeout = timeout(30 * 1000, () => {
+  const requestTimeout = timeout(60 * 1000, () => {
     return new HTTPException(408, {
       res: new Response(
         JSON.stringify({
           status: 'ERROR',
-          message: 'Request timeout after waiting 30 seconds. Please try again later.'
+          message: 'Request timeout after waiting 60 seconds. Please try again later.'
         }),
         { status: 408 }
       )
