@@ -23,6 +23,7 @@ import { defineCollectionsRoutes } from './routes/collections';
 import { defineFeedRoutes } from './routes/feed';
 import { defineAdminRoutes } from './routes/admin';
 import { defineSitemapsRoutes } from './routes/sitemaps';
+import { getResourcesQueryErrorResponse, getResourcesQueryErrorXml } from './utils/resources-query';
 
 export * from './rss';
 
@@ -241,10 +242,27 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
   app.onError((error, c) => {
     if (error instanceof HTTPException) {
       return error.getResponse();
-    } else {
-      sys.logger.error(error);
-      return c.json({ status: 'ERROR' }, 500);
     }
+
+    const queryError = getResourcesQueryErrorResponse(error);
+    if (queryError) {
+      if (c.req.path.endsWith('/feed.xml')) {
+        c.res.headers.set('Content-Type', 'application/xml; charset=UTF-8');
+        c.res.headers.set('Cache-Control', 'no-store');
+        return c.body(getResourcesQueryErrorXml(queryError.message), queryError.status);
+      }
+
+      return c.json(
+        {
+          status: 'ERROR',
+          message: queryError.message
+        },
+        queryError.status
+      );
+    }
+
+    sys.logger.error(error);
+    return c.json({ status: 'ERROR' }, 500);
   });
 
   process.on('uncaughtException', (err) => {

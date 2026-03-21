@@ -18,7 +18,16 @@ export interface ConnectDatabaseOptions extends postgres.Options<{}> {}
 
 export type SystemProfile = 'cli' | 'server' | 'cron';
 
+export type DatabaseConnection = ReturnType<typeof postgres>;
+
 export type Database = ReturnType<typeof connectDatabase>['database'];
+
+const RESOURCES_SLOW_DATABASE_CONNECTION_OPTIONS = {
+  application_name: 'animegarden-server-resources-slow',
+  statement_timeout: 60_000,
+  lock_timeout: 1_000,
+  idle_in_transaction_session_timeout: 15_000
+} satisfies NonNullable<ConnectDatabaseOptions['connection']>;
 
 const DATABASE_POOL_OPTIONS = {
   max: 5,
@@ -41,8 +50,8 @@ const DATABASE_PROFILE_CONNECTION_OPTIONS: Record<
   },
   cron: {
     application_name: 'animegarden-cron',
-    statement_timeout: 30_000,
-    lock_timeout: 2_000,
+    statement_timeout: 60_000,
+    lock_timeout: 5_000,
     idle_in_transaction_session_timeout: 30_000
   }
 };
@@ -52,6 +61,16 @@ export function getDatabaseConnectOptions(profile: SystemProfile = 'cli'): Conne
     ...DATABASE_POOL_OPTIONS,
     connection: {
       ...DATABASE_PROFILE_CONNECTION_OPTIONS[profile]
+    }
+  };
+}
+
+export function getResourcesSlowDatabaseConnectOptions(): ConnectDatabaseOptions {
+  return {
+    ...DATABASE_POOL_OPTIONS,
+    max: 1,
+    connection: {
+      ...RESOURCES_SLOW_DATABASE_CONNECTION_OPTIONS
     }
   };
 }

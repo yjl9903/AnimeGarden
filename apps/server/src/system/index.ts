@@ -1,8 +1,11 @@
 import { connectRedis } from '../connect/redis';
-import { connectDatabase, getDatabaseConnectOptions } from '../connect/database';
+import {
+  connectDatabase,
+  getDatabaseConnectOptions,
+  getResourcesSlowDatabaseConnectOptions
+} from '../connect/database';
 
 import { TagsModule } from '../tags';
-import { SystemError } from '../error';
 import { SubjectsModule } from '../subjects';
 import { ResourcesModule } from '../resources';
 import { ProvidersModule } from '../providers';
@@ -10,11 +13,13 @@ import { CollectionsModule } from '../collections';
 import { UsersModule, TeamsModule } from '../users';
 
 import { setSecret } from './secret';
+import { SystemError } from '../error';
 import { type SystemOptions, System as ISystem } from './system';
 
 export * from './types';
 
 export * from './module';
+export * from '../error';
 
 export { type SystemOptions } from './system';
 
@@ -54,6 +59,18 @@ export async function makeSystem(options: SystemOptions) {
     system.database = database;
     system.disposables.push(() => connection.end());
     system.logger.success(`Connect to Postgres (${profile})`);
+
+    if (profile === 'server') {
+      const { connection: slowConnection, database: slowDatabase } = connectDatabase(
+        options.postgresUri,
+        getResourcesSlowDatabaseConnectOptions()
+      );
+
+      system.slowDatabase = slowDatabase;
+      system.slowQueryConnection = slowConnection;
+      system.disposables.push(() => slowConnection.end());
+      system.logger.success('Connect to Postgres (resources-slow)');
+    }
   } catch (error) {
     throw error;
   }

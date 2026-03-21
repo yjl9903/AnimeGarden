@@ -38,6 +38,24 @@ function isNonRetryableDatabaseError(error: unknown) {
   return false;
 }
 
+function hasDatabaseErrorMessage(error: unknown, pattern: string) {
+  let current = error;
+  while (isErrorLike(current)) {
+    const message = typeof current.message === 'string' ? current.message.toLowerCase() : '';
+    if (message.includes(pattern)) {
+      return true;
+    }
+
+    current = current.cause;
+  }
+
+  return false;
+}
+
+export function isDatabaseStatementTimeoutError(error: unknown) {
+  return hasDatabaseErrorMessage(error, 'statement timeout');
+}
+
 export function shouldRetryDatabaseError(error: unknown) {
   return !isNonRetryableDatabaseError(error);
 }

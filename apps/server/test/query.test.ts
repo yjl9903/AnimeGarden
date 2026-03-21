@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { hash } from 'ohash';
 
 import { RESOURCES_TASK_PREFETCH_MAX_COUNT } from '../src/constants';
+import { ResourcesSlowQueryBusyError } from '../src/error';
 import { QueryManager, Task } from '../src/resources/query';
 
 import type { DatabaseFilterOptions, DatabaseResource } from '../src/resources/types';
@@ -55,12 +56,21 @@ function createManager() {
   const logger = {
     withTag: vi.fn(() => logger),
     error: vi.fn(),
-    info: vi.fn()
+    info: vi.fn(),
+    warn: vi.fn()
   };
 
   const manager = new QueryManager(
     {
-      modules: {}
+      database: {},
+      slowDatabase: undefined,
+      slowQueryConnection: undefined,
+      options: {},
+      modules: {
+        providers: {
+          timestamp: new Date('2026-01-01T00:00:00.000Z')
+        }
+      }
     } as any,
     logger as any
   ) as any;
@@ -159,5 +169,82 @@ describe('Task prefetch', () => {
     await task.prefetch(task.prefetchCount, 1000);
 
     expect(findFromRedis).toHaveBeenCalledTimes(calls + 1);
+  });
+});
+
+describe('resources slow query fallback', () => {
+  it('coalesces concurrent downgraded queries on the accurate path', async () => {
+    const { manager } = createManager();
+    const expected = [createResource(1)];
+
+    vi.spyOn(manager as any, 'readRedisQueryCache').mockResolvedValue(undefined);
+    vi.spyOn(manager as any, 'writeRedisQueryCache').mockResolvedValue(undefined);
+
+    const findFromDatabase = vi
+      .spyOn(manager, 'findFromDatabase')
+      .mockImplementation(async () => expected);
+
+    const [resp1, resp2] = await Promise.all([
+      (manager as any).findFromAccurateQuery({}, 0, 10),
+      (manager as any).findFromAccurateQuery({}, 0, 10)
+    ]);
+
+    expect(resp1).toEqual(expected);
+    expect(resp2).toEqual(expected);
+    expect(findFromDatabase).toHaveBeenCalledTimes(1);
+    expect(findFromDatabase).toHaveBeenCalledWith({}, 0, 10, {
+      allowSlowQueryFallback: true
+    });
+  });
+
+  it('falls back to the extended-timeout lane after a statement timeout', async () => {
+    const { manager } = createManager();
+    const expected = [createResource(1)];
+
+    const executeResourcesQuery = vi
+      .spyOn(manager as any, 'executeResourcesQuery')
+      .mockRejectedValueOnce(new Error('canceling statement due to statement timeout'))
+      .mockResolvedValueOnce(expected);
+
+    const slowQueryConnection = {
+      unsafe: vi
+        .fn()
+        .mockResolvedValueOnce([{ locked: true }])
+        .mockResolvedValueOnce([{ pg_advisory_unlock: true }])
+    };
+
+    (manager.system as any).slowDatabase = {};
+    (manager.system as any).slowQueryConnection = slowQueryConnection;
+
+    const resp = await manager.findFromDatabase({}, 0, 10, {
+      allowSlowQueryFallback: true
+    });
+
+    expect(resp).toEqual(expected);
+    expect(executeResourcesQuery).toHaveBeenCalledTimes(2);
+    expect(executeResourcesQuery).toHaveBeenNthCalledWith(
+      2,
+      (manager.system as any).slowDatabase,
+      expect.any(Array),
+      0,
+      10,
+      '{}',
+      'slow database'
+    );
+    expect(slowQueryConnection.unsafe).toHaveBeenCalledTimes(2);
+  });
+
+  it('rejects immediately when the slow lane is already busy', async () => {
+    const { manager } = createManager();
+
+    (manager.system as any).slowDatabase = {};
+    (manager.system as any).slowQueryConnection = {
+      unsafe: vi.fn()
+    };
+    (manager as any).slowQuerying = true;
+
+    await expect((manager as any).findFromSlowDatabase([], 0, 10, '{}')).rejects.toBeInstanceOf(
+      ResourcesSlowQueryBusyError
+    );
   });
 });

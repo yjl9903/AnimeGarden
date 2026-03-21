@@ -26,16 +26,18 @@ import {
 } from '@animegarden/client';
 import { removePunctuations } from '@animegarden/shared';
 
+import type { Database } from '../connect/database';
 import type { System, Notification } from '../system';
 
 import { resources } from '../schema/resources';
 import { memo, jieba, nextTick } from '../utils';
-import { retryDatabaseFn } from '../utils/database';
+import { isDatabaseStatementTimeoutError, retryDatabaseFn } from '../utils/database';
 import {
   MAX_RESOURCES_TASK_COUNT,
   RESOURCES_TASK_PREFETCH_COUNT,
   RESOURCES_TASK_PREFETCH_MAX_COUNT
 } from '../constants';
+import { ResourcesSlowQueryBusyError, ResourcesSlowQueryTimeoutError } from '../error';
 
 import type { DatabaseResource, RedisQueryResource, DatabaseFilterOptions } from './types';
 
@@ -63,6 +65,9 @@ export const RESOURCE_SELECTOR = {
   metadata: resources.metadata
 };
 
+const RESOURCES_SLOW_QUERY_LOCK_NAMESPACE = 9_201;
+const RESOURCES_SLOW_QUERY_LOCK_KEY = 1;
+
 export class QueryManager {
   public readonly system: System;
 
@@ -73,6 +78,8 @@ export class QueryManager {
   private readonly downgrade: Set<string> = new Set();
 
   private readonly resources: Map<ProviderType, Map<string, DatabaseResource>> = new Map();
+
+  private slowQuerying = false;
 
   public constructor(system: System, logger: ConsolaInstance) {
     this.system = system;
@@ -109,8 +116,10 @@ export class QueryManager {
     // 垃圾回收
     {
       this.findFromRedis.startGC();
+      this.findFromAccurateQuery.startGC();
       this.system.disposables.push(() => {
         this.findFromRedis.stopGC();
+        this.findFromAccurateQuery.stopGC();
       });
     }
 
@@ -254,7 +263,7 @@ export class QueryManager {
 
     // 回退到直接查数据库
     this.downgrade.add(fullKey);
-    const resp = await this.findFromRedis(dbOptions, (page - 1) * pageSize, pageSize + 1);
+    const resp = await this.findFromAccurateQuery(dbOptions, (page - 1) * pageSize, pageSize + 1);
 
     return {
       resources: resp.slice(0, pageSize),
@@ -353,31 +362,39 @@ export class QueryManager {
     };
   }
 
+  private findFromAccurateQuery = memo(
+    async (filter: DatabaseFilterOptions, offset: number, limit: number) => {
+      const cached = await this.readRedisQueryCache(filter, offset, limit);
+      if (cached) {
+        return cached;
+      }
+
+      const resp = await this.findFromDatabase(filter, offset, limit, {
+        allowSlowQueryFallback: true
+      });
+      await this.writeRedisQueryCache(filter, offset, limit, resp);
+      return resp;
+    },
+    {
+      getKey: (filter, offset, limit) => {
+        return hash(filter) + ':' + offset + ':' + limit;
+      },
+      expirationTtl: 5 * 60 * 1000,
+      maxSize: Math.round(MAX_RESOURCES_TASK_COUNT * 1.5),
+      autoStartGC: false
+    }
+  );
+
   public findFromRedis = memo(
     async (filter: DatabaseFilterOptions, offset: number, limit: number) => {
-      const redis = this.system.publisherRedis ?? this.system.redis;
-      const timestamp = this.system.modules.providers.timestamp.getTime().toString();
-
-      if (redis) {
-        try {
-          const key = this.getRedisQueryCacheKey(filter, offset, limit, timestamp);
-          const cached = await redis.get(key);
-          if (cached) {
-            this.logger.info(`Redis cache hit ${key}`);
-            const parsed = JSON.parse(cached) as RedisQueryResource[];
-            return this.hydrateResources(parsed);
-          }
-        } catch {}
+      const cached = await this.readRedisQueryCache(filter, offset, limit);
+      if (cached) {
+        return cached;
       }
 
       const resp = await this.findFromDatabase(filter, offset, limit);
 
-      if (redis) {
-        try {
-          const key = this.getRedisQueryCacheKey(filter, offset, limit, timestamp);
-          await redis.set(key, JSON.stringify(resp), 'EX', 5 * 60);
-        } catch {}
-      }
+      await this.writeRedisQueryCache(filter, offset, limit, resp);
 
       return resp;
     },
@@ -390,6 +407,46 @@ export class QueryManager {
       autoStartGC: false
     }
   );
+
+  private async readRedisQueryCache(filter: DatabaseFilterOptions, offset: number, limit: number) {
+    const redis = this.system.publisherRedis ?? this.system.redis;
+    const timestamp = this.system.modules.providers.timestamp.getTime().toString();
+
+    if (!redis) {
+      return undefined;
+    }
+
+    try {
+      const key = this.getRedisQueryCacheKey(filter, offset, limit, timestamp);
+      const cached = await redis.get(key);
+      if (cached) {
+        this.logger.info(`Redis cache hit ${key}`);
+        const parsed = JSON.parse(cached) as RedisQueryResource[];
+        return this.hydrateResources(parsed);
+      }
+    } catch {}
+
+    return undefined;
+  }
+
+  private async writeRedisQueryCache(
+    filter: DatabaseFilterOptions,
+    offset: number,
+    limit: number,
+    resp: DatabaseResource[]
+  ) {
+    const redis = this.system.publisherRedis ?? this.system.redis;
+    const timestamp = this.system.modules.providers.timestamp.getTime().toString();
+
+    if (!redis) {
+      return;
+    }
+
+    try {
+      const key = this.getRedisQueryCacheKey(filter, offset, limit, timestamp);
+      await redis.set(key, JSON.stringify(resp), 'EX', 5 * 60);
+    } catch {}
+  }
 
   private getRedisQueryCacheKey(
     filter: DatabaseFilterOptions,
@@ -429,13 +486,21 @@ export class QueryManager {
     });
   }
 
-  public async findFromDatabase(filter: DatabaseFilterOptions, offset: number, limit: number) {
-    const now = performance.now();
-    const payload = JSON.stringify(filter);
+  public async findFromDatabase(
+    filter: DatabaseFilterOptions,
+    offset: number,
+    limit: number,
+    options: {
+      allowSlowQueryFallback?: boolean;
 
-    this.logger.info(
-      `Start executing resources query on database: ${payload} (offset: ${offset}, limit: ${limit})`
-    );
+      database?: Database;
+
+      lane?: string;
+    } = {}
+  ) {
+    const database = options.database ?? this.system.database;
+    const lane = options.lane ?? 'database';
+    const payload = JSON.stringify(filter);
 
     const {
       preset,
@@ -453,7 +518,7 @@ export class QueryManager {
       exclude
     } = filter;
 
-    const conds: (SQLWrapper | undefined)[] = [eq(resources.isDeleted, false)];
+    const conds: SQLWrapper[] = [eq(resources.isDeleted, false)];
 
     if (provider) {
       conds.push(eq(resources.provider, provider));
@@ -561,9 +626,43 @@ export class QueryManager {
       }
     }
 
+    try {
+      return await this.executeResourcesQuery(database, conds, offset, limit, payload, lane);
+    } catch (error) {
+      if (
+        options.allowSlowQueryFallback &&
+        database === this.system.database &&
+        this.system.slowDatabase &&
+        this.system.slowQueryConnection &&
+        isDatabaseStatementTimeoutError(error)
+      ) {
+        this.logger.warn(
+          `Resources query timed out on default database lane, retrying with extended timeout: ${payload} (offset: ${offset}, limit: ${limit})`
+        );
+        return await this.findFromSlowDatabase(conds, offset, limit, payload);
+      }
+
+      throw error;
+    }
+  }
+
+  private async executeResourcesQuery(
+    database: Database,
+    conds: SQLWrapper[],
+    offset: number,
+    limit: number,
+    payload: string,
+    lane: string
+  ) {
+    const now = performance.now();
+
+    this.logger.info(
+      `Start executing resources query on ${lane}: ${payload} (offset: ${offset}, limit: ${limit})`
+    );
+
     const resp = await retryDatabaseFn(
       () =>
-        this.system.database
+        database
           .select(RESOURCE_SELECTOR)
           .from(resources)
           .where(and(...conds))
@@ -574,18 +673,79 @@ export class QueryManager {
     );
 
     const internedResp = this.hydrateResources(resp);
-
     const end = performance.now();
 
     this.logger.info(
-      `Finish selecting ${internedResp.length} resources in ${Math.floor(end - now)} ms from database: ${payload} (offset: ${offset}, limit: ${limit})`
+      `Finish selecting ${internedResp.length} resources in ${Math.floor(end - now)} ms from ${lane}: ${payload} (offset: ${offset}, limit: ${limit})`
     );
 
     return internedResp;
   }
 
+  private async findFromSlowDatabase(
+    conds: SQLWrapper[],
+    offset: number,
+    limit: number,
+    payload: string
+  ) {
+    if (!this.system.slowDatabase || !this.system.slowQueryConnection) {
+      throw new ResourcesSlowQueryTimeoutError();
+    }
+
+    if (this.slowQuerying) {
+      throw new ResourcesSlowQueryBusyError();
+    }
+
+    let locked = false;
+    this.slowQuerying = true;
+
+    try {
+      locked = await this.tryAcquireSlowQueryLock();
+      if (!locked) {
+        throw new ResourcesSlowQueryBusyError();
+      }
+
+      return await this.executeResourcesQuery(
+        this.system.slowDatabase,
+        conds,
+        offset,
+        limit,
+        payload,
+        'slow database'
+      );
+    } catch (error) {
+      if (isDatabaseStatementTimeoutError(error)) {
+        throw new ResourcesSlowQueryTimeoutError();
+      }
+
+      throw error;
+    } finally {
+      if (locked) {
+        await this.releaseSlowQueryLock();
+      }
+      this.slowQuerying = false;
+    }
+  }
+
+  private async tryAcquireSlowQueryLock() {
+    const resp = (await this.system.slowQueryConnection!.unsafe(
+      'SELECT pg_try_advisory_lock($1, $2) AS locked',
+      [RESOURCES_SLOW_QUERY_LOCK_NAMESPACE, RESOURCES_SLOW_QUERY_LOCK_KEY]
+    )) as Array<{ locked?: boolean }>;
+
+    return resp[0]?.locked === true;
+  }
+
+  private async releaseSlowQueryLock() {
+    await this.system.slowQueryConnection!.unsafe('SELECT pg_advisory_unlock($1, $2)', [
+      RESOURCES_SLOW_QUERY_LOCK_NAMESPACE,
+      RESOURCES_SLOW_QUERY_LOCK_KEY
+    ]);
+  }
+
   public async onNotifications(notification: Notification) {
     this.findFromRedis.clear();
+    this.findFromAccurateQuery.clear();
 
     const removed = new Set([
       ...notification.resources.deleted,

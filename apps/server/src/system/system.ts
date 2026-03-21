@@ -1,7 +1,7 @@
 import { type Redis as RedisStorage } from 'ioredis';
 import { type ConsolaInstance, createConsola } from 'consola';
 
-import type { Database, SystemProfile } from '../connect/database';
+import type { Database, DatabaseConnection, SystemProfile } from '../connect/database';
 
 import { NOTIFY_CHANNEL, RPC_INVOKE_CHANNEL } from '../constants';
 import { makeChannelMessageBus, subscribeRedisChannel } from '../connect/redis';
@@ -12,7 +12,7 @@ import { Module } from './module';
 import { getSecret } from './secret';
 import { type RpcEventMap, type RpcPayload, type RpcSender, type RpcBus, makeRpcBus } from './rpc';
 
-export type { Database, RedisStorage };
+export type { Database, DatabaseConnection, RedisStorage };
 
 export interface SystemOptions {
   secret?: string;
@@ -32,6 +32,10 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
   public readonly logger: ConsolaInstance;
 
   public database!: Database;
+
+  public slowDatabase?: Database;
+
+  public slowQueryConnection?: DatabaseConnection;
 
   public redis?: RedisStorage;
 
