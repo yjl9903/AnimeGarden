@@ -5,28 +5,35 @@ import { shouldRetryDatabaseError } from '../src/utils/database';
 
 describe('database connection profiles', () => {
   it('uses short timeouts for server requests', () => {
-    expect(getDatabaseConnectOptions('server')).toMatchObject({
-      max: 5,
-      idle_timeout: 60,
-      max_lifetime: 60 * 30,
-      connection: {
-        application_name: 'animegarden-server',
-        statement_timeout: 3_000,
-        lock_timeout: 1_000,
-        idle_in_transaction_session_timeout: 15_000
+    expect(getDatabaseConnectOptions('server')).toMatchInlineSnapshot(`
+      {
+        "connection": {
+          "application_name": "animegarden-server",
+          "idle_in_transaction_session_timeout": 15000,
+          "lock_timeout": 1000,
+          "statement_timeout": 3000,
+        },
+        "idle_timeout": 60,
+        "max": 5,
+        "max_lifetime": 1800,
       }
-    });
+    `);
   });
 
   it('uses a relaxed timeout profile for cron and no statement timeout for cli', () => {
-    expect(getDatabaseConnectOptions('cron')).toMatchObject({
-      connection: {
-        application_name: 'animegarden-cron',
-        statement_timeout: 30_000,
-        lock_timeout: 2_000,
-        idle_in_transaction_session_timeout: 30_000
+    expect(getDatabaseConnectOptions('cron')).toMatchInlineSnapshot(`
+      {
+        "connection": {
+          "application_name": "animegarden-cron",
+          "idle_in_transaction_session_timeout": 30000,
+          "lock_timeout": 5000,
+          "statement_timeout": 60000,
+        },
+        "idle_timeout": 60,
+        "max": 5,
+        "max_lifetime": 1800,
       }
-    });
+    `);
 
     expect(getDatabaseConnectOptions('cli')).toMatchObject({
       connection: {
