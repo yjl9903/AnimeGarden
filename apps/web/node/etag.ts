@@ -117,8 +117,15 @@ export function safeEtag(options?: SafeEtagOptions): MiddlewareHandler {
     await next();
 
     const res = c.res;
+
+    // Only cache 200 response
+    if (res.status !== 200) {
+      return;
+    }
+
     let etag = res.headers.get('ETag');
     if (!etag) {
+      // body re-used
       if (!generator || res.bodyUsed) {
         return;
       }
