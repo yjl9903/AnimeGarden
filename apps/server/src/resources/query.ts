@@ -314,6 +314,9 @@ export class QueryManager {
         }
       }
     }
+
+    // 3. 恢复 downgrade task
+    this.downgrade.clear();
   }
 
   private normalizeDatabaseFilterOptions(filter: ResolvedFilterOptions): DatabaseFilterOptions {
