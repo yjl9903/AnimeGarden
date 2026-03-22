@@ -7,7 +7,7 @@ import { memo, useCallback, useRef, useState } from 'react';
 import type { Collection, Jsonify } from '@animegarden/client';
 
 import { getSubjectById } from '~/utils/subjects';
-import { DisplayTypeColor, formatChinaTime, getFeedURL, trackCopyFeed } from '~/utils';
+import { DisplayTypeColor, formatChinaTime, getFeedURL, track, trackCopyFeed } from '~/utils';
 import {
   collectionsAtom,
   deleteCollectionItemAtom,
@@ -56,6 +56,7 @@ export const CollectionItemContent = memo(
           duration: 3000,
           closeButton: true
         });
+        track('copy.feed');
       } catch (error) {
         console.error(error);
         toast.error('复制 RSS 订阅失败', { closeButton: true });
@@ -198,7 +199,7 @@ export const CollectionItemContent = memo(
                         e.preventDefault();
                         e.stopPropagation();
                         window.open(`/resources/1${item.searchParams}`);
-                        console.log('open', e);
+                        track('colleciton.open-resources', { search: item.searchParams });
                       }}
                     >
                       <span className="i-ant-design:link-outlined mr1"></span>

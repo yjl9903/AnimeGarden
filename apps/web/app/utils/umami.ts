@@ -9,8 +9,17 @@ export const getPikPakTrackEvent = (provider: string, providerId: string) => ({
 });
 
 export const getOpenFeedTrackEvent = () => ({
-  'data-umami-event': 'open-feed'
+  'data-umami-event': 'feed.open'
 });
+
+interface ErrorTrackingPayload {
+  path: string;
+  error: string;
+}
+
+export interface TrackErrorRenderPayload extends ErrorTrackingPayload {}
+
+export interface TrackResourcesFetchErrorPayload extends ErrorTrackingPayload {}
 
 export const track = (event: string, payload?: Record<string, string>) => {
   try {
@@ -23,34 +32,51 @@ export const track = (event: string, payload?: Record<string, string>) => {
   }
 };
 
+function buildTrackPayload(
+  payload: TrackErrorRenderPayload | TrackResourcesFetchErrorPayload
+): Record<string, string> {
+  return {
+    path: payload.path,
+    error: payload.error
+  };
+}
+
 export const trackAddCollection = () => {
-  track('add-collection');
+  track('collection.add');
 };
 
 export const trackCopyFeed = () => {
-  track('copy-feed');
+  track('copy.feed');
 };
 
 export const trackCopyMagnetLinks = () => {
-  track('copy-magnet-links');
+  track('copy.magnet-links');
 };
 
 export const trackCopyJSONData = () => {
-  track('copy-json-data');
+  track('copy.json');
 };
 
 export const trackCopyFetchCurl = () => {
-  track('copy-fetch-code', { language: 'curl' });
+  track('copy.fetch', { language: 'curl' });
 };
 
 export const trackCopyFetchJS = () => {
-  track('copy-fetch-code', { language: 'javascript' });
+  track('copy.fetc', { language: 'javascript' });
 };
 
 export const trackCopyFetchPython = () => {
-  track('copy-fetch-code', { language: 'python' });
+  track('copy.fetch', { language: 'python' });
 };
 
 export const trackCopyIframe = () => {
-  track('copy-iframe-code');
+  track('copy.iframe');
+};
+
+export const trackRenderError = (payload: TrackErrorRenderPayload) => {
+  track('error.render', buildTrackPayload(payload));
+};
+
+export const trackFetchResourcesError = (payload: TrackResourcesFetchErrorPayload) => {
+  track('error.fetch-resources', buildTrackPayload(payload));
 };

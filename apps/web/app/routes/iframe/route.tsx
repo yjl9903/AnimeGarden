@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import styleToObject from 'style-to-object';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useLoaderData, useLocation } from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 
@@ -9,7 +9,13 @@ import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
 import Resources from '~/components/Resources';
 import { stringifySearch } from '~/layouts/Search/utils';
 import { generateTitleFromFilter } from '~/utils/server/meta';
-import { fetchResources, getCanonicalURL } from '~/utils';
+import {
+  fetchResources,
+  getCanonicalURL,
+  getTrackingError,
+  serializeError,
+  trackFetchResourcesError
+} from '~/utils';
 
 import { Error } from '../resources.($page)/Error';
 
@@ -17,18 +23,23 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
   const { filter: parsedFilter, pagination: parsedPagination } = parseURLSearch(url.searchParams);
-  const { ok, resources, pagination, filter, timestamp } = await fetchResources({
+  const { ok, resources, pagination, filter, timestamp, error } = await fetchResources({
     ...parsedFilter,
     ...parsedPagination,
     pageSize: 30
   });
+
+  if (error) {
+    console.error('[ERROR]', error);
+  }
 
   return {
     ok,
     resources,
     pagination,
     filter,
-    timestamp
+    timestamp,
+    error: serializeError(error)
   };
 };
 
@@ -56,7 +67,17 @@ export default function ResourcesIndex() {
   const inlineClassName = searchParams.getAll('className');
   const inlineStyle = styleToObject(searchParams.getAll('style').join(';')) ?? {};
 
-  const { ok, resources, pagination, filter, timestamp } = useLoaderData<typeof loader>();
+  const { ok, resources, pagination, filter, timestamp, error } = useLoaderData<typeof loader>();
+  const path = `${location.pathname}${location.search}`;
+
+  useEffect(() => {
+    if (!error || !ok) return;
+
+    trackFetchResourcesError({
+      path,
+      error: getTrackingError(error, 'iframe-fetch-failed')
+    });
+  }, [error, ok, path]);
 
   return (
     <div className={clsx('w-full', inlineClassName)} style={inlineStyle}>
@@ -75,7 +96,11 @@ export default function ResourcesIndex() {
           ></Resources>
         </>
       ) : (
-        <Error></Error>
+        <Error
+          tracking={{
+            error: getTrackingError(error, 'iframe-render-failed')
+          }}
+        ></Error>
       )}
     </div>
   );

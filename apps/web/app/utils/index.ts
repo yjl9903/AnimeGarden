@@ -4,6 +4,8 @@ export * from './date';
 
 export * from './api';
 
+export * from './error';
+
 export * from './url';
 
 export * from './string';

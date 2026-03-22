@@ -11,7 +11,7 @@ export const ThemeToggle = memo(() => {
 
   const handleModeChange = (mode: ThemeMode) => {
     setMode(mode);
-    track(`switch-color-mode-${mode}`);
+    track(`theme.switch`, { mode });
   };
 
   return (

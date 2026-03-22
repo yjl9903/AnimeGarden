@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/node';
 import {
   type ClientLoaderFunction,
@@ -16,7 +16,14 @@ import { stringifySearch } from '~/layouts/Search/utils';
 import { usePreferFansub } from '~/states';
 import { waitForSubjectsLoaded } from '~/utils/subjects';
 import { generateTitleFromFilter } from '~/utils/server/meta';
-import { fetchResources, getFeedURL, getCanonicalURL } from '~/utils';
+import {
+  fetchResources,
+  getFeedURL,
+  getCanonicalURL,
+  getTrackingError,
+  serializeError,
+  trackFetchResourcesError
+} from '~/utils';
 
 import { Error } from './Error';
 import { FilterCard } from './Filter';
@@ -61,7 +68,8 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       pagination,
       page,
       filter,
-      timestamp
+      timestamp,
+      error: serializeError(error)
     },
     {
       status: ok ? 200 : 500
@@ -97,10 +105,21 @@ export const clientLoader: ClientLoaderFunction = async ({ serverLoader }) => {
 
 export default function ResourcesIndex() {
   const location = useLocation();
-  const { ok, resources, pagination, filter, page, timestamp } = useLoaderData<typeof loader>();
+  const { ok, resources, pagination, filter, page, timestamp, error } =
+    useLoaderData<typeof loader>();
   const feedURL = useMemo(() => getFeedURL(location.search), [location]);
+  const path = `${location.pathname}${location.search}`;
 
   usePreferFansub(filter?.fansubs);
+
+  useEffect(() => {
+    if (!error || !ok) return;
+
+    trackFetchResourcesError({
+      path,
+      error: getTrackingError(error, 'resources-fetch-failed')
+    });
+  }, [error, ok, path]);
 
   return (
     <Layout feedURL={feedURL} timestamp={timestamp}>
@@ -122,7 +141,11 @@ export default function ResourcesIndex() {
             ></Resources>
           </>
         ) : (
-          <Error></Error>
+          <Error
+            tracking={{
+              error: getTrackingError(error, 'resources-render-failed')
+            }}
+          ></Error>
         )}
       </div>
     </Layout>

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { data, useLoaderData, useLocation } from '@remix-run/react';
 import { type LoaderFunctionArgs, type MetaFunction } from '@remix-run/cloudflare';
 
@@ -6,7 +6,14 @@ import type { Resource } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import { fetchResources, getFeedURL, getCanonicalURL } from '~/utils';
+import {
+  fetchResources,
+  getFeedURL,
+  getCanonicalURL,
+  getTrackingError,
+  serializeError,
+  trackFetchResourcesError
+} from '~/utils';
 
 import { Error } from '../resources.($page)/Error';
 
@@ -24,13 +31,26 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     }
 
     return data(
-      { ok, resources: resources as Resource<{ tracker: true }>[], timestamp },
+      {
+        ok,
+        resources: resources as Resource<{ tracker: true }>[],
+        timestamp,
+        error: serializeError(error)
+      },
       { status: ok ? 200 : 500 }
     );
   } catch (error) {
     console.error('[ERROR]', error);
 
-    return data({ ok: false, resources: [], timestamp: undefined }, { status: 500 });
+    return data(
+      {
+        ok: false,
+        resources: [],
+        timestamp: undefined,
+        error: serializeError(error)
+      },
+      { status: 500 }
+    );
   }
 };
 
@@ -47,8 +67,18 @@ export const meta: MetaFunction = () => {
 
 export default function Index() {
   const location = useLocation();
-  const { ok, resources, timestamp } = useLoaderData<typeof loader>();
+  const { ok, resources, timestamp, error } = useLoaderData<typeof loader>();
   const feedURL = useMemo(() => getFeedURL(location.search), [location]);
+  const path = `${location.pathname}${location.search}`;
+
+  useEffect(() => {
+    if (!error || !ok) return;
+
+    trackFetchResourcesError({
+      path,
+      error: getTrackingError(error, 'index-fetch-failed')
+    });
+  }, [error, ok, path]);
 
   return (
     <Layout feedURL={feedURL} timestamp={timestamp}>
@@ -62,7 +92,11 @@ export default function Index() {
             link={(page) => `/resources/${page}?type=动画&type=合集&preset=bangumi`}
           ></Resources>
         ) : (
-          <Error></Error>
+          <Error
+            tracking={{
+              error: getTrackingError(error, 'index-render-failed')
+            }}
+          ></Error>
         )}
       </div>
     </Layout>

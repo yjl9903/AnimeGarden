@@ -48,7 +48,15 @@ export const meta: MetaFunction<typeof loader> = ({ params, data }) => {
 export default function Collections() {
   const data = useLoaderData<typeof loader>();
 
-  if (!data) return <Error></Error>;
+  if (!data) {
+    return (
+      <Error
+        tracking={{
+          error: 'collection-render-failed'
+        }}
+      ></Error>
+    );
+  }
 
   const filters = data.filters!;
   const results = data.results!;

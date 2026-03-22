@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import {
   type ClientLoaderFunction,
   data,
@@ -18,7 +18,15 @@ import { APP_HOST } from '~build/env';
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
 import { generateTitleFromFilter } from '~/utils/server/meta';
-import { fetchResources, getFeedURL, getCanonicalURL, track } from '~/utils';
+import {
+  fetchResources,
+  getFeedURL,
+  getCanonicalURL,
+  getTrackingError,
+  serializeError,
+  track,
+  trackFetchResourcesError
+} from '~/utils';
 import {
   getSubjectById,
   getAllSubjectNames,
@@ -60,7 +68,8 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       resources: groupResourcesByFansub(resources),
       pagination,
       filter,
-      timestamp
+      timestamp,
+      error: serializeError(error)
     },
     {
       status: ok ? 200 : 500
@@ -141,8 +150,9 @@ export default function SubjectIndex() {
   const params = useParams();
   const location = useLocation();
 
-  const { ok, subjectId, subject, resources, pagination, timestamp } =
+  const { ok, subjectId, subject, resources, pagination, timestamp, error } =
     useLoaderData<typeof loader>();
+  const path = `${location.pathname}${location.search}`;
 
   const feedURL = useMemo(() => {
     const search = new URLSearchParams(location.search);
@@ -157,6 +167,15 @@ export default function SubjectIndex() {
     });
     return `/resources/1?${search.toString()}`;
   }, [subject, location]);
+
+  useEffect(() => {
+    if (!error || !ok || !subject) return;
+
+    trackFetchResourcesError({
+      path,
+      error: getTrackingError(error, 'subject-fetch-failed')
+    });
+  }, [error, ok, path, subject]);
 
   return (
     <Layout feedURL={feedURL} timestamp={timestamp} heading={false}>
@@ -189,7 +208,7 @@ export default function SubjectIndex() {
                   to={fallbackSearchURL}
                   className="text-link"
                   onClick={() => {
-                    track('fallback-subject-search', {
+                    track('subject.fallback-search', {
                       subject: 'subject:' + subject.id
                     });
                   }}
@@ -215,6 +234,11 @@ export default function SubjectIndex() {
                 </span>
               ) : undefined
             }
+            tracking={{
+              error: !subject
+                ? 'subject-not-found'
+                : getTrackingError(error, 'subject-render-failed')
+            }}
           ></Error>
         )}
       </div>

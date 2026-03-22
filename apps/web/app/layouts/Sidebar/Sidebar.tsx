@@ -7,7 +7,7 @@ import { type MouseEvent, memo, useCallback, useMemo } from 'react';
 
 import type { Collection } from '@animegarden/client';
 
-import { generateCollection } from '~/utils';
+import { generateCollection, track } from '~/utils';
 import { getActivePageTab } from '~/utils/routes';
 import { updateCollectionAtom, currentCollectionAtom } from '~/states/collection';
 
@@ -35,7 +35,13 @@ const SidebarTrigger = memo(() => {
   const setIsOpen = useSetAtom(isOpenSidebar);
 
   return (
-    <div className="sidebar-trigger font-quicksand font-500" onClick={() => setIsOpen(true)}>
+    <div
+      className="sidebar-trigger font-quicksand font-500"
+      onClick={() => {
+        setIsOpen(true);
+        track('collection.open-sidebar');
+      }}
+    >
       <span className="i-carbon:bookmark text-sm relative top-[2px] mr1"></span>
       <span className="text-sm">收藏夹</span>
     </div>
@@ -139,6 +145,7 @@ const Collection = memo((props: { collection: Collection<true> }) => {
       const resp = await createCollection();
       if (resp) {
         navigate(`/collection/${resp.hash}`);
+        track('collection.open', { hash: resp.hash || '' });
       }
     },
     [createCollection]
@@ -158,6 +165,7 @@ const Collection = memo((props: { collection: Collection<true> }) => {
           closeButton: true,
           position: 'top-right'
         });
+        track('collection.share', { hash: resp.hash || '' });
       } else {
         toast.warning(`复制 ${collection.name} 分享链接失败`, {
           dismissible: true,
