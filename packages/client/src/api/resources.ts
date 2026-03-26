@@ -184,7 +184,7 @@ async function fetchPage<T extends FetchResourcesOptions = FetchResourcesOptions
       timestamp: r.timestamp
     };
   } else {
-    throw new Error(`Invalid response /resource?${searchParams.toString()}`, { cause: r });
+    throw new Error(`Invalid response /resources?${searchParams.toString()}`, { cause: r });
   }
 }
 
