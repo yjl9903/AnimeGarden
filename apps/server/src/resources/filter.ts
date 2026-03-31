@@ -11,6 +11,8 @@ export const BANGUMI_BANNED_FANSUBS = [
 ];
 
 export const BANGUMI_BANNED_PUBLISHERS = [
+  'Resona', // 国漫
+  '百度云盘', // 国漫
   'Lanborey' // 国漫
 ];
 
