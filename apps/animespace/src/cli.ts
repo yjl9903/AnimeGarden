@@ -7,6 +7,7 @@ import { version, description } from '../package.json';
 
 import { makeSystem } from './system/system.ts';
 import { searchResources } from './command/animegarden.ts';
+import { searchBangumi, importBangumiCollection } from './command/bangumi.ts';
 import {
   listStorage,
   getStorage,
@@ -138,24 +139,30 @@ garden
 const bangumi = app.group('bangumi');
 
 bangumi
-  .command('search <text>', '[WIP] 搜索 bangumi 条目')
+  .command('search <text>', '搜索 bangumi 条目')
   .option('--json', '输出 JSON 格式')
-  .action(async () => {});
+  .action(async (text, options, context) => {
+    return await searchBangumi(context.data.system, text, options);
+  });
 
 bangumi
   .command('subject <id>', '[WIP] 显示 bangumi 条目详情')
   .option('--json', '输出 JSON 格式')
-  .action(async () => {});
+  .action(async () => {
+    // TODO
+  });
 
 bangumi
-  .command('collection <id>', '[WIP] 导入 bangumi 用户收藏夹')
+  .command('collection', '导入 bangumi 用户收藏夹')
+  .option('--uid <uid>', 'Bangumi 用户 UID')
+  .option('--status <type>', 'Bangumi 收藏类型: doing/wish/collect/on_hold/dropped')
+  .option('--after <date>', '按开播日期筛选起点')
+  .option('--before <date>', '按开播日期筛选终点')
+  .option('--dump [file]', '写入 collection 文件')
   .option('--json', '输出 JSON 格式')
-  .action(async () => {});
-
-bangumi
-  .command('index <id>', '[WIP] 导入 bangumi 目录')
-  .option('--json', '输出 JSON 格式')
-  .action(async () => {});
+  .action(async (options, context) => {
+    return await importBangumiCollection(context.data.system, options);
+  });
 
 // storage
 const storage = app.group('storage').option('-s, --storage <name>');

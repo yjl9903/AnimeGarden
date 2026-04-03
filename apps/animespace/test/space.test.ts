@@ -3,12 +3,16 @@ import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { loadSpace } from '../src/system/space.ts';
+import { createAnimeSpaceTestKit } from './helpers/animespace.ts';
 
 const ASSETS_DIR = path.resolve(import.meta.dirname, '__assets__');
+const kit = createAnimeSpaceTestKit();
 
 afterEach(async () => {
   delete process.env.STORE_DIR;
   delete process.env.SQLITE_REL;
+  delete process.env.ANIMEGARDEN_RETRY;
+  await kit.cleanup();
 });
 
 describe('load space', () => {
@@ -52,5 +56,49 @@ describe('load space', () => {
         "storageDefault": "library/anime",
       }
     `);
+  });
+
+  it('loads bangumi uid from anime.yaml', async () => {
+    const root = await kit.createTempRoot({
+      yaml: `
+bangumi:
+  uid: 123456
+collections: []
+`
+    });
+
+    const space = await loadSpace(root);
+
+    expect(space.bangumi).toEqual({ uid: 123456 });
+  });
+
+  it('loads animegarden retry from anime.yaml', async () => {
+    const root = await kit.createTempRoot({
+      yaml: `
+animegarden:
+  retry: 3
+collections: []
+`
+    });
+
+    const space = await loadSpace(root);
+
+    expect(space.animegarden).toEqual({ retry: 3 });
+  });
+
+  it('coerces animegarden retry from env-backed yaml values', async () => {
+    process.env.ANIMEGARDEN_RETRY = '5';
+
+    const root = await kit.createTempRoot({
+      yaml: `
+animegarden:
+  retry: !env ANIMEGARDEN_RETRY
+collections: []
+`
+    });
+
+    const space = await loadSpace(root);
+
+    expect(space.animegarden).toEqual({ retry: 5 });
   });
 });

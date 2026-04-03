@@ -159,7 +159,7 @@ export class System {
       await manager.initialize();
       this.logger.log(dim(`连接 ${this.space.downloader.provider} 下载器成功`));
     } catch (error) {
-      this.logger.log(lightRed(`连接 ${this.space.downloader.provider} 下载器成功`));
+      this.logger.log(lightRed(`连接 ${this.space.downloader.provider} 下载器失败`));
       throw error;
     }
 

@@ -24,6 +24,14 @@ export interface Space {
 
   readonly downloader: DownloaderConfig;
 
+  readonly animegarden: {
+    readonly retry: number;
+  };
+
+  readonly bangumi: {
+    readonly uid?: string | number;
+  };
+
   readonly preference: Preference;
 
   readonly collections: LocalPath[];
@@ -34,6 +42,16 @@ export interface Space {
 export const SpaceSchema = z.object({
   storage: StorageInputSchema.optional(),
   downloader: DownloaderInputSchema.optional(),
+  animegarden: z
+    .object({
+      retry: z.coerce.number().int().min(0).default(3)
+    })
+    .default({}),
+  bangumi: z
+    .object({
+      uid: z.union([z.string(), z.number()]).optional()
+    })
+    .default({}),
   preference: PreferenceSchema,
   collections: z.string().array().default(['collections/*.yml', 'collections/*.yaml']),
   sqlite: SQLiteSchema
@@ -75,6 +93,8 @@ export async function loadSpace(rootDir: string): Promise<Space> {
     root,
     storage,
     downloader: resolveDownloader(root, config.downloader),
+    animegarden: config.animegarden,
+    bangumi: config.bangumi,
     preference: config.preference ?? {},
     collections,
     sqlite

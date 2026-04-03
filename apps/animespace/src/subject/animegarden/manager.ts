@@ -45,6 +45,10 @@ export class AnimeGardenSourceManager {
 
   public constructor(private readonly system: System) {}
 
+  private get retryCount() {
+    return this.system.space.animegarden.retry;
+  }
+
   public initialize = memoAsync(async () => {
     debug('start initializing');
 
@@ -148,6 +152,7 @@ export class AnimeGardenSourceManager {
 
     const remote = await fetchAnimeGardenResources({
       ...filter,
+      retry: this.retryCount,
       tracker: true
     });
     if (!remote.ok || !remote.timestamp) {
@@ -341,6 +346,7 @@ export class AnimeGardenSourceManager {
         page,
         pageSize: 1000,
         type: '动画',
+        retry: this.retryCount,
         tracker: true
       });
 

@@ -94,6 +94,43 @@ describe('anime garden source manager', () => {
 
     await expect(manager.fetchResources({ include: ['Init'] })).rejects.toThrow('remote failed');
   });
+
+  it('uses configured animegarden retry for remote fetches', async () => {
+    const system = await kit.createSystem({
+      openDatabase: true,
+      yaml: `
+animegarden:
+  retry: 3
+collections: []
+`
+    });
+    const manager = system.managers.animegarden;
+
+    fetchResourcesMock
+      .mockResolvedValueOnce(makeSuccessResult([makeResource(1, 'Init')]))
+      .mockResolvedValueOnce(makeSuccessResult([makeResource(2, 'Query')]));
+
+    await manager.fetchResources({ include: ['Test'] });
+
+    expect(fetchResourcesMock).toHaveBeenNthCalledWith(
+      1,
+      expect.objectContaining({
+        page: 1,
+        pageSize: 1000,
+        type: '动画',
+        tracker: true,
+        retry: 3
+      })
+    );
+    expect(fetchResourcesMock).toHaveBeenNthCalledWith(
+      2,
+      expect.objectContaining({
+        include: ['Test'],
+        tracker: true,
+        retry: 3
+      })
+    );
+  });
 });
 
 function makeResource(id: number, title: string): Resource<FetchResourcesOptions> {
