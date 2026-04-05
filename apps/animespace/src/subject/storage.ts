@@ -59,7 +59,7 @@ export class StorageManager {
           detail.files[0].checksum &&
           oldSubjectFile.checksum === detail.files[0].checksum
         ) {
-          this.system.logger.log(lightGreen(`重复上传  ${link(oldPath.basename, resource.url)}`));
+          this.system.logger.log(lightGreen(`重复上传 ${link(oldPath.basename, resource.url)}`));
           await database
             .update(subjectFiles)
             .set({
@@ -70,7 +70,7 @@ export class StorageManager {
         }
 
         await queue.add(async () => {
-          this.system.logger.log(`${lightRed(`删除文件`)}  ${oldPath.toString()}`);
+          this.system.logger.log(`${lightRed(`删除文件`)} ${oldPath.toString()}`);
           await oldPath.remove();
           await database.delete(subjectFiles).where(eq(subjectFiles.id, oldSubjectFile.id));
         });
@@ -95,7 +95,7 @@ export class StorageManager {
         for (let i = 0; i < MAX_RETRY; i++) {
           const retry = i > 0 ? ` (重试 ${i + 1} / ${MAX_RETRY})` : '';
           this.system.logger.log(
-            `${lightYellow(`开始上传`)}  ${link(dstName, resource.url)}${retry}`
+            `${lightYellow(`开始上传`)} ${link(dstName, resource.url)}${retry}`
           );
 
           const handle = this.system.logger.progress(`上传 ${link(dstName, resource.url)}`, {
@@ -160,14 +160,14 @@ export class StorageManager {
                 }
               });
 
-            this.system.logger.log(`${lightGreen(`成功上传`)}  ${link(dstName, resource.url)}`);
+            this.system.logger.log(`${lightGreen(`成功上传`)} ${link(dstName, resource.url)}`);
 
             break;
           } catch (error) {
             handle.remove();
 
             if (i + 1 === MAX_RETRY) {
-              this.system.logger.log(`${lightRed(`上传失败`)}  ${link(dstName, resource.url)}`);
+              this.system.logger.log(`${lightRed(`上传失败`)} ${link(dstName, resource.url)}`);
               throw error;
             } else {
               debug(error);
@@ -176,7 +176,7 @@ export class StorageManager {
         }
       });
     } else {
-      this.system.logger.error(`种子内容解析失败  ${link(resource.name, resource.url)}`);
+      this.system.logger.error(`种子内容解析失败 ${link(resource.name, resource.url)}`);
     }
   }
 }

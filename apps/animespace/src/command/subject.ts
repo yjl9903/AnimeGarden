@@ -99,41 +99,41 @@ export async function printSource(system: System, subject: Subject) {
   if (subject.source.animegarden) {
     const { animegarden } = subject.source;
     if (animegarden.filter.after) {
-      system.logger.log(`${dim('开始于')}    ${formatDateTime(animegarden.filter.after)}`);
+      system.logger.log(`${dim('开始于')}   ${formatDateTime(animegarden.filter.after)}`);
     }
     if (animegarden.filter.before) {
-      system.logger.log(`${dim('结束于')}    ${formatDateTime(animegarden.filter.before)}`);
+      system.logger.log(`${dim('结束于')}   ${formatDateTime(animegarden.filter.before)}`);
     }
     if (animegarden.filter.search && animegarden.filter.search.length > 0) {
       if (animegarden.filter.search.length === 1) {
-        system.logger.log(`${dim('标题搜索')}  ${animegarden.filter.search[0]}`);
+        system.logger.log(`${dim('标题搜索')} ${animegarden.filter.search[0]}`);
       } else if (animegarden.filter.search.length > 1) {
-        system.logger.log(`${dim('标题搜索')}  ${dim('|')} ${animegarden.filter.search[0]}`);
+        system.logger.log(`${dim('标题搜索')} ${dim('|')} ${animegarden.filter.search[0]}`);
         for (const search of animegarden.filter.search.slice(1)) {
-          system.logger.log(`          ${dim('|')} ${search}`);
+          system.logger.log(`         ${dim('|')} ${search}`);
         }
       }
     }
     if (animegarden.filter.include && animegarden.filter.include.length > 0) {
       if (animegarden.filter.include.length === 1) {
-        system.logger.log(`${dim('标题包含')}  ${animegarden.filter.include[0]}`);
+        system.logger.log(`${dim('标题包含')} ${animegarden.filter.include[0]}`);
       } else if (animegarden.filter.include.length > 1) {
-        system.logger.log(`${dim('标题包含')}  ${dim('|')} ${animegarden.filter.include[0]}`);
+        system.logger.log(`${dim('标题包含')} ${dim('|')} ${animegarden.filter.include[0]}`);
         for (const include of animegarden.filter.include.slice(1)) {
-          system.logger.log(`          ${dim('|')} ${include}`);
+          system.logger.log(`         ${dim('|')} ${include}`);
         }
       }
     }
     if (animegarden.filter.keywords && animegarden.filter.keywords.length > 0) {
-      system.logger.log(`${dim('关键词')}    ${animegarden.filter.keywords.join(' & ')}`);
+      system.logger.log(`${dim('关键词')}   ${animegarden.filter.keywords.join(' & ')}`);
     }
     if (animegarden.filter.exclude && animegarden.filter.exclude.length > 0) {
-      system.logger.log(`${dim('排除')}      ${animegarden.filter.exclude.join(' & ')}`);
+      system.logger.log(`${dim('排除')}     ${animegarden.filter.exclude.join(' & ')}`);
     }
     if (animegarden.filter.fansubs) {
-      system.logger.log(`${dim('字幕组')}    ${animegarden.filter.fansubs.join(` ${dim('>')} `)}`);
+      system.logger.log(`${dim('字幕组')}   ${animegarden.filter.fansubs.join(` ${dim('>')} `)}`);
     } else {
-      system.logger.log(`${dim('字幕组')}    未配置`);
+      system.logger.log(`${dim('字幕组')}   未配置`);
     }
   }
 }

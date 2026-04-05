@@ -139,7 +139,7 @@ export class QbittorrentDownloader extends Downloader {
           paused: true
         });
       } catch (error) {
-        this.system.logger.log(`${lightRed('下载失败')}  ${req.magnet}`);
+        this.system.logger.log(`${lightRed('下载失败')} ${req.magnet}`);
         this.system.logger.error(error);
         tickets.push({
           infoHash: req.infoHash,

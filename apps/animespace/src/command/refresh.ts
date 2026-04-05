@@ -17,7 +17,7 @@ export async function pushSubjects(system: System, subjects: Subject[], options:
   const tasks: Array<{ subject: Subject; promise: Promise<void> }> = [];
 
   try {
-    system.logger.log(lightBlue('开始推送  Anime Space 更新'));
+    system.logger.log(lightBlue('开始推送 Anime Space 更新'));
     system.logger.log();
 
     await system.initializeSource();
@@ -63,20 +63,21 @@ export async function pullSubjects(system: System, subjects: Subject[], options:
 async function pushSubject(subject: Subject) {
   const { system } = subject;
 
-  system.logger.log(`${lightBlue('抓取资源')}  ${bold(subject.name)}`);
+  system.logger.log(`${lightBlue('抓取资源')} ${bold(subject.name)}`);
   printSource(system, subject);
+
   const fetched = await subject.fetchResources();
   const extracted = await subject.extractResources(fetched);
   const [downloaded, toDownload] = splitArray(extracted, (r) => !!r.subjectFiles);
   system.logger.log(
-    `${dim('存储快照')}  已下载 ${downloaded.length} 条资源 (${link(`已抓取 ${extracted.length} 条`, getSourceURL(subject) || '')})`
+    `${dim('存储快照')} 已下载 ${downloaded.length} 条资源 (${link(`已抓取 ${extracted.length} 条`, getSourceURL(subject) || '')})`
   );
 
   if (toDownload.length > 0) {
     const requests: DownloadRequest[] = [];
     for (const res of toDownload) {
       if (res.magnet) {
-        system.logger.log(`${lightYellow('开始下载')}  ${link(res.extracted.filename, res.url)}`);
+        system.logger.log(`${lightYellow('开始下载')} ${link(res.extracted.filename, res.url)}`);
         requests.push({
           infoHash: getInfoHash(res.magnet),
           magnet: res.magnet,
@@ -84,7 +85,7 @@ async function pushSubject(subject: Subject) {
           resource: res
         });
       } else {
-        system.logger.log(`${lightRed('未知资源')}  ${link(res.extracted.filename, res.url)}`);
+        system.logger.log(`${lightRed('未知资源')} ${link(res.extracted.filename, res.url)}`);
       }
     }
 
@@ -105,7 +106,7 @@ async function pushSubject(subject: Subject) {
               const ticket = tickets.find((t) => t.infoHash === event.infoHash);
               const detail = await system.managers.downloader.getTorrentDetail(event.infoHash);
               if (!ticket || !detail || detail.files.length === 0) {
-                system.logger.log(`${lightRed('未知种子')}  ${event.infoHash}`);
+                system.logger.log(`${lightRed('未知种子')} ${event.infoHash}`);
                 return;
               }
               // 3. Upload files
@@ -129,19 +130,19 @@ async function pushSubject(subject: Subject) {
 async function pullSubject(subject: Subject, options: PullOptions) {
   const { system } = subject;
 
-  system.logger.log(`${lightBlue('同步快照')}  ${bold(subject.name)}`);
+  system.logger.log(`${lightBlue('同步快照')} ${bold(subject.name)}`);
   printSource(system, subject);
   const fetched = (await subject.fetchResources().catch(() => undefined))?.map((res) =>
     nameResource(subject, res)
   );
   const extracted = fetched ? await subject.extractResources(fetched) : undefined;
   if (fetched === undefined || extracted === undefined) {
-    system.logger.log(`${lightRed('抓取失败')}  ${getSourceURL(subject)}`);
+    system.logger.log(`${lightRed('抓取失败')} ${getSourceURL(subject)}`);
     system.logger.log();
     return;
   } else {
     system.logger.log(
-      `${lightBlue('成功抓取')}  ${link(`共 ${fetched.length} 条资源`, getSourceURL(subject) || '')}`
+      `${lightBlue('成功抓取')} ${link(`共 ${fetched.length} 条资源`, getSourceURL(subject) || '')}`
     );
   }
 
@@ -154,14 +155,14 @@ async function pullSubject(subject: Subject, options: PullOptions) {
       .catch(() => [])
   ).filter((file) => ['.mp4', '.mkv', '.ass'].includes(file.extname));
   system.logger.log(
-    `${lightBlue('快照状态')}  本地已同步 ${subjectFiles.length} 个文件 (共 ${storageFiles.length} 个文件)`
+    `${lightBlue('快照状态')} 本地已同步 ${subjectFiles.length} 个文件 (共 ${storageFiles.length} 个文件)`
   );
 
   const database = await system.openDatabase();
 
   for (const subjectFile of subjectFiles) {
     if (!storageFiles.some((storageFile) => subjectFile.path === storageFile.path)) {
-      system.logger.log(`${lightRed('删除快照')}  ${subjectFile.path}`);
+      system.logger.log(`${lightRed('删除快照')} ${subjectFile.path}`);
       await database.delete(subjectFilesSchema).where(eq(subjectFilesSchema.id, subjectFile.id));
     }
   }
@@ -187,7 +188,7 @@ async function pullSubject(subject: Subject, options: PullOptions) {
       const stat = await storageFile.stat();
 
       system.logger.log(
-        `${lightGreen('绑定快照')}  ${storageFile.path} -> ${link(bound.name, bound.url)}`
+        `${lightGreen('绑定快照')} ${storageFile.path} -> ${link(bound.name, bound.url)}`
       );
 
       await database.insert(subjectFilesSchema).values([

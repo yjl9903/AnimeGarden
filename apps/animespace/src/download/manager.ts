@@ -134,7 +134,7 @@ export class DownloaderManager {
 
       if (event.status === DownloadEventStatus.completed) {
         this.system.logger.log(
-          `${lightGreen(`成功下载`)}  ${link(ticket.resource.extracted.filename, ticket.resource.url)}`
+          `${lightGreen(`成功下载`)} ${link(ticket.resource.extracted.filename, ticket.resource.url)}`
         );
       } else if (
         event.status === DownloadEventStatus.failed ||
@@ -143,7 +143,7 @@ export class DownloaderManager {
         this.system.logger.log(
           `${lightRed(
             `下载失败`
-          )}  ${link(ticket.resource.extracted.filename, ticket.resource.url)}  ${event.error}`
+          )} ${link(ticket.resource.extracted.filename, ticket.resource.url)}  ${event.error}`
         );
       }
 
