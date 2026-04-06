@@ -154,8 +154,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/anipar
       bgmd:
-        specifier: 0.20260129.0
-        version: 0.20260129.0
+        specifier: 0.20260406.0
+        version: 0.20260406.0
       breadc:
         specifier: 1.0.0-beta.14
         version: 1.0.0-beta.14
@@ -278,8 +278,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/anipar
       bgmd:
-        specifier: 0.20260129.0
-        version: 0.20260129.0
+        specifier: 0.20260406.0
+        version: 0.20260406.0
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1
@@ -4659,8 +4659,8 @@ packages:
     engines: {node: '>=v20.8.0'}
     hasBin: true
 
-  bgmd@0.20260129.0:
-    resolution: {integrity: sha512-t2nteiK2YSrPR9XK86cxVAaraf1ub4K/KUxKSh8bAHoEd+mbVIpfeZAKYGiZvzQ909X72d3iSifo/y/sA18GtQ==}
+  bgmd@0.20260406.0:
+    resolution: {integrity: sha512-1aa7WNudwOaiafQnkkt6zUb8bDL/00OYtV0BRdrgZCa7/Us06GmMsN2th1nYfsV+9TXqgrV32qrB0vS8PlULiQ==}
     engines: {node: '>=v24.0.0'}
 
   bgmt@0.1.3:
@@ -13766,7 +13766,7 @@ snapshots:
     dependencies:
       breadc: 1.0.0-beta.14
 
-  bgmd@0.20260129.0: {}
+  bgmd@0.20260406.0: {}
 
   bgmt@0.1.3:
     dependencies:
