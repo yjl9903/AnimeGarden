@@ -1,3 +1,5 @@
+import { stringifyURLSearch } from '@animegarden/client';
+
 import type { System } from '../../system/system.ts';
 
 import type { Subject } from '../subject.ts';
@@ -15,7 +17,6 @@ import type { SubjectSource } from './source.ts';
 import { SubjectType } from './schema.ts';
 import { parseResource } from './parser.ts';
 import { renderNamingTemplate, resolveTemplateByType } from './naming.ts';
-import { stringifyURLSearch } from '@animegarden/client';
 
 export function getSourceURL(subject: Subject) {
   const { source } = subject;

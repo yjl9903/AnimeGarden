@@ -24,7 +24,7 @@ export async function getSubject(system: System, options: GetSubjectsOptions) {
 
   const subject = system.getSubject(options);
   if (!subject) {
-    system.logger.error(`未找到相关动画条目`, options);
+    system.logger.error(`未找到相关动画条目`, options.name);
     throw new Error(`未找到相关动画条目`);
   }
 

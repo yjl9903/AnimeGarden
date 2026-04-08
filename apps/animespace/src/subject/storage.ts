@@ -31,7 +31,79 @@ export class StorageManager {
 
   public close() {}
 
-  public async upload(subject: Subject, resource: ExtractedSubjectResource, detail: TorrentDetail) {
+  /**
+   * 配置文件中的命名变化, 触发已上传的文件重命名
+   */
+  public async syncFileName(subject: Subject, resource: ExtractedSubjectResource) {
+    const database = await this.system.openDatabase();
+
+    await Promise.all(
+      (resource.subjectFiles ?? []).map(async (subjectFile) => {
+        const targetName =
+          resource.extracted.filename +
+          path.extname(subjectFile.torrentFilePath || subjectFile.path);
+        if (targetName === path.basename(subjectFile.path)) {
+          return;
+        }
+
+        const queue = this.queues[subjectFile.storage];
+        const storage = this.system.space.storage[subjectFile.storage];
+        if (!queue || !storage) {
+          return;
+        }
+
+        const source = storage.fs.path(subjectFile.path);
+        const target = storage.fs.path(source.dirname).join(targetName);
+
+        try {
+          await queue.add(async () => {
+            const [sourceExists, targetExists] = await Promise.all([
+              source.exists(),
+              target.exists()
+            ]);
+
+            if (!sourceExists && targetExists) {
+              this.system.logger.log(
+                `${lightYellow(`开始更名`)} ${source.basename} -> ${target.basename}`
+              );
+            } else if (sourceExists && targetExists) {
+              throw new Error(`目标文件已存在: ${target.path}`);
+            } else if (!sourceExists) {
+              throw new Error(`存储文件不存在: ${source.path}`);
+            } else {
+              this.system.logger.log(
+                `${lightYellow(`开始更名`)} ${source.basename} -> ${target.basename}`
+              );
+              await source.moveTo(target);
+            }
+
+            await database
+              .update(subjectFiles)
+              .set({
+                path: target.path,
+                resource: { ...resource, subjectFiles: undefined }
+              })
+              .where(eq(subjectFiles.id, subjectFile.id));
+
+            this.system.logger.log(`${lightGreen(`更名成功`)} ${link(targetName, resource.url)}`);
+          });
+        } catch (error) {
+          this.system.logger.log(`${lightRed(`更名失败`)} ${link(targetName, resource.url)}`);
+          this.system.logger.error(error);
+          throw error;
+        }
+      })
+    );
+  }
+
+  /**
+   * 种子内容上传到存储
+   */
+  public async uploadTorrent(
+    subject: Subject,
+    resource: ExtractedSubjectResource,
+    detail: TorrentDetail
+  ) {
     await subject.getStorage().ensureDir();
 
     const database = await this.system.openDatabase();

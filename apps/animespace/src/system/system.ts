@@ -224,7 +224,11 @@ export class System {
     if (filter.name) {
       const filterName = filter.name;
       return this.subjects.find((subject) => {
-        return subject.name.includes(filterName);
+        return (
+          subject.name.includes(filterName) ||
+          subject.source.animegarden?.filter?.search?.includes(filterName) ||
+          subject.source.animegarden?.filter?.include?.includes(filterName)
+        );
       });
     }
     if (filter.bgm) {
@@ -286,7 +290,7 @@ export class System {
         );
         for (const task of tasks) {
           running.add(task.subject);
-          task.promise.finally(() => {
+          Promise.all(task.promises).finally(() => {
             running.delete(task.subject);
           });
         }
@@ -317,7 +321,7 @@ export class System {
     this.logger.log();
 
     const tasks = await pushSubjects(this, subjects);
-    await Promise.allSettled(tasks.map((t) => t.promise));
+    await Promise.all(tasks.flatMap((t) => t.promises));
 
     this.logger.log(lightGreen('成功推送 Anime Space 更新'));
     this.logger.log();

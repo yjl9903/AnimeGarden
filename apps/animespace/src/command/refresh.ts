@@ -14,7 +14,7 @@ import { printList } from './tui.ts';
 import { printSource } from './subject.ts';
 
 export async function pushSubjects(system: System, subjects: Subject[], options: PushOptions = {}) {
-  const tasks: Array<{ subject: Subject; promise: Promise<void> }> = [];
+  const tasks: Array<{ subject: Subject; promises: Promise<void>[] }> = [];
 
   try {
     system.logger.log(lightBlue('开始推送 Anime Space 更新'));
@@ -69,6 +69,9 @@ async function pushSubject(subject: Subject) {
   const fetched = await subject.fetchResources();
   const extracted = await subject.extractResources(fetched);
   const [downloaded, toDownload] = splitArray(extracted, (r) => !!r.subjectFiles);
+  const syncing = downloaded.map((downloaded) =>
+    system.managers.storage.syncFileName(subject, downloaded)
+  );
   system.logger.log(
     `${dim('存储快照')} 已下载 ${downloaded.length} 条资源 (${link(`已抓取 ${extracted.length} 条`, getSourceURL(subject) || '')})`
   );
@@ -93,34 +96,44 @@ async function pushSubject(subject: Subject) {
 
     return {
       subject,
-      promise: (async () => {
-        // 1. Submit torrents to downloader
-        const tickets = await system.managers.downloader.submit(requests);
+      promises: [
+        ...syncing,
+        (async () => {
+          // 1. Submit torrents to downloader
+          const tickets = await system.managers.downloader.submit(requests);
 
-        const uploading: Promise<void>[] = [];
+          const uploading: Promise<void>[] = [];
 
-        for await (const event of system.managers.downloader.waitForSubject(subject)) {
-          uploading.push(
-            (async () => {
-              // 2. Wait for torrents downloaded
-              const ticket = tickets.find((t) => t.infoHash === event.infoHash);
-              const detail = await system.managers.downloader.getTorrentDetail(event.infoHash);
-              if (!ticket || !detail || detail.files.length === 0) {
-                system.logger.log(`${lightRed('未知种子')} ${event.infoHash}`);
-                return;
-              }
-              // 3. Upload files
-              try {
-                await system.managers.storage.upload(subject, ticket.resource, detail);
-              } catch (error) {
-                system.logger.error(error);
-              }
-            })()
-          );
-        }
+          for await (const event of system.managers.downloader.waitForSubject(subject)) {
+            uploading.push(
+              (async () => {
+                // 2. Wait for torrents downloaded
+                const ticket = tickets.find((t) => t.infoHash === event.infoHash);
+                const detail = await system.managers.downloader.getTorrentDetail(event.infoHash);
+                if (!ticket || !detail || detail.files.length === 0) {
+                  system.logger.log(`${lightRed('未知种子')} ${event.infoHash}`);
+                  return;
+                }
+                // 3. Upload files
+                try {
+                  await system.managers.storage.uploadTorrent(subject, ticket.resource, detail);
+                } catch (error) {
+                  system.logger.error(error);
+                }
+              })()
+            );
+          }
 
-        await Promise.all(uploading);
-      })()
+          await Promise.all(uploading);
+        })()
+      ]
+    };
+  } else if (syncing.length > 0) {
+    system.logger.log();
+
+    return {
+      subject,
+      promises: syncing
     };
   } else {
     system.logger.log();
