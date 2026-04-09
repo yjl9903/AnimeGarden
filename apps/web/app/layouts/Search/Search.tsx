@@ -13,7 +13,13 @@ import {
   useState
 } from 'react';
 
-import { fetchResources } from '~/utils';
+import {
+  fetchResources,
+  trackSearchHistoryClick,
+  trackSearchHistoryDelete,
+  trackSearchTrigger,
+  type SearchTriggerSource
+} from '~/utils';
 import {
   getSubjectDisplayName,
   getSubjectURL,
@@ -138,7 +144,7 @@ export const Search = memo(() => {
   }, []);
 
   const selectGoToSearch = useCallback(
-    async (text?: string) => {
+    async (text?: string, source: SearchTriggerSource = 'button') => {
       const target = text ?? input;
       if (target) {
         setInput(target);
@@ -150,6 +156,11 @@ export const Search = memo(() => {
           // Set histories
           setHistories(newHistories);
         }
+
+        trackSearchTrigger({
+          text: target,
+          source
+        });
 
         stopFetch();
         await waitForSubjectsLoaded();
@@ -207,7 +218,7 @@ export const Search = memo(() => {
 
         <span
           className="absolute right-0 top-[-1px] h-[30px] flex items-center cursor-pointer"
-          onMouseDown={() => selectGoToSearch()}
+          onMouseDown={() => selectGoToSearch(undefined, 'button')}
         >
           <span className="i-fluent:arrow-enter-24-filled text-base-500 hover:text-base-900"></span>
         </span>
@@ -216,8 +227,8 @@ export const Search = memo(() => {
         {enable && input.trim() && (
           <Command.Item
             value="go-to-search-page"
-            onMouseDown={() => selectGoToSearch()}
-            onSelect={() => selectGoToSearch()}
+            onMouseDown={() => selectGoToSearch(undefined, 'command')}
+            onSelect={() => selectGoToSearch(undefined, 'command')}
           >
             {DMHY_RE.test(input) ? `前往 ${input}` : `在本页列出 ${input} 的搜索结果...`}
           </Command.Item>
@@ -234,7 +245,7 @@ export const Search = memo(() => {
             search={search}
             signals={signals.current}
             onSelect={selectStatic}
-            selectGoToSearch={() => selectGoToSearch()}
+            selectGoToSearch={() => selectGoToSearch(undefined, 'result-more')}
           ></SearchResult>
         )}
         {enable && !input.trim() && histories.length > 0 && (
@@ -485,7 +496,7 @@ function SearchLoading(props: { search: string }) {
 }
 
 function SearchHistory(props: {
-  selectGoToSearch: (text: string) => void;
+  selectGoToSearch: (text: string, source?: SearchTriggerSource) => void;
   onInputChange: (text: string) => void;
 }) {
   const [histories, setHistories] = useAtom(historiesAtom);
@@ -493,6 +504,10 @@ function SearchHistory(props: {
 
   const onClearHistories = useCallback(
     (ev: React.MouseEvent) => {
+      trackSearchHistoryDelete({
+        action: 'clear',
+        count: String(histories.length)
+      });
       setHistories([]);
       ev.stopPropagation();
       ev.preventDefault();
@@ -502,6 +517,10 @@ function SearchHistory(props: {
 
   const onRemoveHistory = useCallback(
     (ev: React.MouseEvent, item: string) => {
+      trackSearchHistoryDelete({
+        action: 'remove',
+        text: item
+      });
       const filterHistories = histories.filter((content) => content !== item);
       setHistories(filterHistories);
 
@@ -526,7 +545,8 @@ function SearchHistory(props: {
         <Command.Item
           key={h}
           onMouseDown={(ev) => {
-            selectGoToSearch(h);
+            trackSearchHistoryClick(h);
+            selectGoToSearch(h, 'history');
             ev.stopPropagation();
             ev.preventDefault();
           }}

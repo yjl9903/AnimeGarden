@@ -6,7 +6,7 @@ import { memo, useEffect, useMemo, useState } from 'react';
 import { preferFansubsAtom } from '~/states';
 import { getCalendar } from '~/utils/calendar';
 import { getSubjectURL } from '~/utils/subjects';
-import { getOpenFeedTrackEvent } from '~/utils/umami';
+import { getOpenFeedTrackEvent, trackNavClick } from '~/utils/umami';
 import { fansubs as AllFansubs, types, DisplayTypeColor } from '~/utils/constants';
 import {
   Dropdown,
@@ -26,7 +26,9 @@ export const Header = memo((props: { feedURL?: string }) => {
     >
       <nav className="main flex gap-1 [&>div]:(leading-$nav-height)">
         <div className="box-content w-[32px] pl3 lt-sm:pl1 text-2xl text-center font-quicksand font-bold pointer-events-auto">
-          <NavLink to="/">🌸</NavLink>
+          <NavLink to="/" onClick={() => trackNavClick('home', { item: 'home' })}>
+            🌸
+          </NavLink>
         </div>
         <AnimeDropdown />
         <FansubsDropdown />
@@ -36,7 +38,7 @@ export const Header = memo((props: { feedURL?: string }) => {
           {feedURL && (
             <a
               href={feedURL}
-              {...getOpenFeedTrackEvent()}
+              {...getOpenFeedTrackEvent(feedURL)}
               className="inline cursor-pointer rounded-md p-2 text-[#ee802f] [&:hover>span]:(text-[#ff7800]! border-b-2 border-b-[#ff7800]!)"
               target="_blank"
             >
@@ -60,7 +62,7 @@ const AnimeDropdown = memo(() => {
     <Dropdown
       className="nav-animes pointer-events-auto [&:hover>a]:bg-zinc-100! dark:[&:hover>a]:bg-zinc-800!"
       trigger={
-        <NavLink to="/anime" className="rounded-md p-2">
+        <NavLink to="/anime" className="rounded-md p-2" onClick={() => trackNavClick('anime')}>
           动画
         </NavLink>
       }
@@ -69,6 +71,7 @@ const AnimeDropdown = memo(() => {
         <NavLink
           to="/anime"
           className="block px2 py1 rounded-t-md hover:bg-basis-100 dark:hover:bg-basis-800"
+          onClick={() => trackNavClick('anime')}
         >
           周历
         </NavLink>
@@ -95,6 +98,12 @@ const AnimeDropdown = memo(() => {
                     <NavLink
                       to={getSubjectURL(bgm)}
                       key={bgm.id}
+                      onClick={() =>
+                        trackNavClick('anime', {
+                          item: bgm.title,
+                          group: `周${day.text}`
+                        })
+                      }
                       className={clsx(
                         'block w-[360px] max-w-[calc(100vw-144px)] px2 py1 hover:bg-basis-100 dark:hover:bg-basis-800 whitespace-nowrap overflow-hidden text-ellipsis',
                         index === 0 && 'rounded-t-md',
@@ -137,7 +146,11 @@ const FansubsDropdown = memo(() => {
     <Dropdown
       className="nav-fansubs pointer-events-auto [&:hover>a]:bg-zinc-100! dark:[&:hover>a]:bg-zinc-800!"
       trigger={
-        <NavLink to={`/resources/1?fansub=${fansubs[0]}`} className="rounded-md p-2">
+        <NavLink
+          to={`/resources/1?fansub=${fansubs[0]}`}
+          className="rounded-md p-2"
+          onClick={() => trackNavClick('fansub')}
+        >
           字幕组
         </NavLink>
       }
@@ -147,6 +160,7 @@ const FansubsDropdown = memo(() => {
           <NavLink
             key={fansub}
             to={`/resources/1?fansub=${fansub}`}
+            onClick={() => trackNavClick('fansub', { item: fansub })}
             className="block px2 py1 hover:bg-basis-100 dark:hover:bg-basis-800 whitespace-nowrap overflow-hidden text-ellipsis"
           >
             {fansub}
@@ -162,7 +176,11 @@ const TypesDropdown = memo(() => {
     <Dropdown
       className="nav-types pointer-events-auto [&:hover>a]:bg-zinc-100! dark:[&:hover>a]:bg-zinc-800!"
       trigger={
-        <NavLink to={`/resources/1`} className="rounded-md p-2">
+        <NavLink
+          to={`/resources/1`}
+          className="rounded-md p-2"
+          onClick={() => trackNavClick('type')}
+        >
           资源
         </NavLink>
       }
@@ -176,6 +194,7 @@ const TypesDropdown = memo(() => {
                 ? `/resources/1?type=动画&preset=bangumi`
                 : `/resources/1?type=${type}`
             }
+            onClick={() => trackNavClick('type', { item: type })}
             className={clsx(
               'flex items-center gap-2 px2 py1 hover:bg-basis-100 dark:hover:bg-basis-800',
               DisplayTypeColor[type]

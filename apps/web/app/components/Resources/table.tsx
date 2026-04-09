@@ -17,7 +17,9 @@ import {
   formatChinaTime,
   parseSize,
   getPikPakTrackEvent,
-  getDownloadTrackEvent
+  getDownloadTrackEvent,
+  trackResourceMoreClick,
+  trackResourceRefineFilterClick
 } from '~/utils';
 
 import { Tag } from './tag';
@@ -160,6 +162,7 @@ export const ResourceItem = memo(
             <div className="flex-shrink-0 mr3 flex justify-center items-center">
               <NavLink
                 to={`${pathname ?? '/resources'}/1?${followSearch(location, { type: r.type })}`}
+                onClick={() => trackResourceRefineFilterClick('type', r.type)}
                 className={`flex items-center justify-center h-[32px] w-[32px] rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 ${DisplayTypeColor[r.type]}`}
               >
                 {DisplayTypeIcon[r.type]({})}
@@ -211,6 +214,13 @@ export const ResourceItem = memo(
                 </a>
                 <NavLink
                   to={getDetailHref(r)}
+                  onClick={() =>
+                    trackResourceMoreClick({
+                      provider: r.provider,
+                      providerId: r.providerId,
+                      type: r.type
+                    })
+                  }
                   className="text-link-secondary text-xs"
                   aria-label={`Go to resource detail of ${r.title}`}
                 >
@@ -228,6 +238,7 @@ export const ResourceItem = memo(
               {r.fansub ? (
                 <NavLink
                   to={`${pathname ?? '/resources'}/1?${followSearch(location, { fansub: r.fansub.name })}`}
+                  onClick={() => trackResourceRefineFilterClick('fansub', r.fansub!.name)}
                   className="block w-max"
                   aria-label={`Go to resources list of fansub ${r.fansub.name}`}
                 >
@@ -239,6 +250,7 @@ export const ResourceItem = memo(
               ) : r.publisher ? (
                 <NavLink
                   to={`${pathname ?? '/resources'}/1?${followSearch(location, { publisher: r.publisher.name })}`}
+                  onClick={() => trackResourceRefineFilterClick('publisher', r.publisher!.name)}
                   className="block w-max"
                   aria-label={`Go to resources list of publisher ${r.publisher.name}`}
                 >
