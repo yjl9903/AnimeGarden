@@ -1,7 +1,7 @@
 import clsx, { type ClassValue } from 'clsx';
 import { memo } from 'react';
 
-export interface DropdownProps {
+export interface DropdownProps extends Omit<React.ComponentProps<'div'>, 'className' | 'children'> {
   className?: ClassValue;
 
   trigger: React.ReactNode;
@@ -10,10 +10,15 @@ export interface DropdownProps {
 }
 
 export const Dropdown = memo((props: DropdownProps) => {
+  const { className, trigger, children, ...rest } = props;
+
   return (
-    <div className={clsx('relative', '[&:hover>.c-dropdown]:block', props.className)}>
-      {props.trigger}
-      {props.children}
+    <div
+      {...rest}
+      className={clsx('relative', '[&:hover>.c-dropdown]:block', className)}
+    >
+      {trigger}
+      {children}
     </div>
   );
 });

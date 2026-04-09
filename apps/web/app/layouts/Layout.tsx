@@ -62,7 +62,10 @@ const Hero = memo((props: { feedURL?: string; heading?: boolean }) => {
         className="w-full h-$nav-height z-12 flex items-center justify-center pointer-events-none"
         suppressHydrationWarning={true}
       >
-        <div className="vercel relative h-[44.4px] xl:w-[640px] lg:w-[600px] md:w-[500px] lt-md:w-[calc(100vw-116px)] pointer-events-auto">
+        <div
+          data-header-collision-source
+          className="vercel relative h-[44.4px] xl:w-[640px] lg:w-[600px] md:w-[500px] lt-md:w-[calc(100vw-116px)] pointer-events-auto"
+        >
           <Search></Search>
         </div>
       </search>
@@ -74,13 +77,21 @@ const Hero = memo((props: { feedURL?: string; heading?: boolean }) => {
       >
         {props.heading === false ? (
           <div className="lg:z-12 lt-lg:z-10 w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none">
-            <NavLink to="/" className="pointer-events-auto cursor-pointer">
+            <NavLink
+              to="/"
+              data-header-collision-source
+              className="pointer-events-auto cursor-pointer"
+            >
               <span>🌸 Anime Garden</span>
             </NavLink>
           </div>
         ) : (
           <h1 className="lg:z-12 lt-lg:z-10 w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none">
-            <NavLink to="/" className="pointer-events-auto cursor-pointer">
+            <NavLink
+              to="/"
+              data-header-collision-source
+              className="pointer-events-auto cursor-pointer"
+            >
               <span>🌸 Anime Garden</span>
             </NavLink>
           </h1>

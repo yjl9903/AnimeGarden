@@ -61,6 +61,7 @@ const AnimeDropdown = memo(() => {
   return (
     <Dropdown
       className="nav-animes pointer-events-auto [&:hover>a]:bg-zinc-100! dark:[&:hover>a]:bg-zinc-800!"
+      data-nav-collision-target="anime"
       trigger={
         <NavLink to="/anime" className="rounded-md p-2" onClick={() => trackNavClick('anime')}>
           动画
@@ -145,6 +146,7 @@ const FansubsDropdown = memo(() => {
   return (
     <Dropdown
       className="nav-fansubs pointer-events-auto [&:hover>a]:bg-zinc-100! dark:[&:hover>a]:bg-zinc-800!"
+      data-nav-collision-target="fansubs"
       trigger={
         <NavLink
           to={`/resources/1?fansub=${fansubs[0]}`}
@@ -175,6 +177,7 @@ const TypesDropdown = memo(() => {
   return (
     <Dropdown
       className="nav-types pointer-events-auto [&:hover>a]:bg-zinc-100! dark:[&:hover>a]:bg-zinc-800!"
+      data-nav-collision-target="types"
       trigger={
         <NavLink
           to={`/resources/1`}
