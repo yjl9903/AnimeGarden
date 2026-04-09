@@ -108,8 +108,8 @@ importers:
         specifier: ^2.4.2
         version: 2.4.2
       undici:
-        specifier: 7.24.5
-        version: 7.24.5
+        specifier: 8.0.2
+        version: 8.0.2
       yaml:
         specifier: 2.8.3
         version: 2.8.3
@@ -205,8 +205,8 @@ importers:
         specifier: 9.0.1
         version: 9.0.1
       undici:
-        specifier: 7.24.5
-        version: 7.24.5
+        specifier: 8.0.2
+        version: 8.0.2
       zod:
         specifier: 3.25.76
         version: 3.25.76
@@ -8470,6 +8470,10 @@ packages:
   undici@7.24.5:
     resolution: {integrity: sha512-3IWdCpjgxp15CbJnsi/Y9TCDE7HWVN19j1hmzVhoAkY/+CJx449tVxT5wZc1Gwg8J+P0LWvzlBzxYRnHJ+1i7Q==}
     engines: {node: '>=20.18.1'}
+
+  undici@8.0.2:
+    resolution: {integrity: sha512-B9MeU5wuFhkFAuNeA19K2GDFcQXZxq33fL0nRy2Aq30wdufZbyyvxW3/ChaeipXVfy/wUweZyzovQGk39+9k2w==}
+    engines: {node: '>=22.19.0'}
 
   unenv@2.0.0-rc.24:
     resolution: {integrity: sha512-i7qRCmY42zmCwnYlh9H2SvLEypEFGye5iRmEMKjcGi7zk9UquigRjFtTLz0TYqr0ZGLZhaMHl/foy1bZR+Cwlw==}
@@ -18166,6 +18170,8 @@ snapshots:
   undici@7.24.4: {}
 
   undici@7.24.5: {}
+
+  undici@8.0.2: {}
 
   unenv@2.0.0-rc.24:
     dependencies:
