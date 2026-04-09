@@ -103,6 +103,14 @@ export const Footer = memo((props: FooterProps) => {
               動漫花園
             </a>
             <a
+              href="https://mikanani.me/"
+              target="_blank"
+              className="ml-4"
+              onClick={onExternalLinkClick('源站', '蜜柑计划', 'https://mikanani.me/')}
+            >
+              蜜柑计划
+            </a>
+            <a
               href="https://bangumi.moe/"
               target="_blank"
               className="ml-4"

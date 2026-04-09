@@ -33,7 +33,13 @@ import {
 import { inputAtom, historiesAtom } from '~/states/search';
 import { useActiveElement, useDocument, useEventListener } from '~/hooks';
 
-import { DMHY_RE, debounce, parseSearchInput, resolveSearchURL, stringifySearch } from './utils';
+import {
+  debounce,
+  isDirectDetailURL,
+  parseSearchInput,
+  resolveSearchURL,
+  stringifySearch
+} from './utils';
 
 const SEARCH_HELP_URL = `https://animespace.onekuma.cn/animegarden/search.html`;
 
@@ -252,7 +258,7 @@ export const Search = memo(() => {
             onMouseDown={() => selectGoToSearch(undefined, 'command')}
             onSelect={() => selectGoToSearch(undefined, 'command')}
           >
-            {DMHY_RE.test(input) ? `前往 ${input}` : `在本页列出 ${input} 的搜索结果...`}
+            {isDirectDetailURL(input) ? `前往 ${input}` : `在本页列出 ${input} 的搜索结果...`}
           </Command.Item>
         )}
         {enable && input.trim() && (
@@ -458,7 +464,7 @@ function SearchResult(props: {
   const { data: searchResult, isLoading } = useSWR(
     () => {
       if (!search) return null;
-      if (DMHY_RE.test(search)) return null;
+      if (isDirectDetailURL(search)) return null;
 
       const filter = parseSearchInput(search);
 

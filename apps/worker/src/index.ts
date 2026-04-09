@@ -7,6 +7,8 @@ import type { Env } from './types';
 
 import { FilterSchema } from './legacy';
 
+const LEGACY_PROVIDER_IDS = ['dmhy', 'mikan', 'moe'] as const;
+
 type User = {
   id: string | number;
 
@@ -25,11 +27,11 @@ const getPublishers = memoAsync(async () => {
 
   const map = new Map<string, User>();
   for (const team of users) {
-    if (team.providers.dmhy) {
-      map.set(team.providers.dmhy.providerId, team);
-    }
-    if (team.providers.moe) {
-      map.set(team.providers.moe.providerId, team);
+    for (const provider of LEGACY_PROVIDER_IDS) {
+      const target = team.providers[provider];
+      if (target) {
+        map.set(target.providerId, team);
+      }
     }
   }
   return map;
@@ -45,11 +47,11 @@ const getFansubs = memoAsync(async () => {
 
   const map = new Map<string, User>();
   for (const team of teams) {
-    if (team.providers.dmhy) {
-      map.set(team.providers.dmhy.providerId, team);
-    }
-    if (team.providers.moe) {
-      map.set(team.providers.moe.providerId, team);
+    for (const provider of LEGACY_PROVIDER_IDS) {
+      const target = team.providers[provider];
+      if (target) {
+        map.set(target.providerId, team);
+      }
     }
   }
   return map;

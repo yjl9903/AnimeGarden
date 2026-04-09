@@ -6,7 +6,7 @@ import {
   ResourceTemplate
 } from '@modelcontextprotocol/sdk/server/mcp.js';
 
-import { parseURLSearch } from '@animegarden/client';
+import { SupportProviders, parseURLSearch } from '@animegarden/client';
 
 import { version } from '../../../package.json';
 
@@ -26,15 +26,17 @@ import { Context } from 'hono';
 
 const MCP_RESOURCE_URI_TEMPLATE = 'animegarden://resources/{provider}/{providerId}';
 
+const MCP_PROVIDER_LIST = `[${SupportProviders.join(', ')}]`;
+
 const MCP_SERVER_DESCRIPTION = [
   'Anime Garden MCP for anime torrent discovery.',
   'Capabilities:',
-  '- search_resources: search aggregated resources from 動漫花園 (dmhy) / 萌番组 (moe) / Ani with filter conditions, returning metadata such as title, magnet link, fansub, publisher, created timestamp, type, size, and uri.',
+  '- search_resources: search aggregated resources from 動漫花園 (dmhy) / 蜜柑计划 (mikan) / 萌番组 (moe) / ANi with filter conditions, returning metadata such as title, magnet link, fansub, publisher, created timestamp, type, size, and uri.',
   `- resource_detail: read one resource by URI template ${MCP_RESOURCE_URI_TEMPLATE}.`,
   'Recommended usage for LLM agents:',
   '1) Call search_resources first to find candidates.',
   '2) Use search_resources results directly for most tasks; call resource_detail only when full description text or detailed file list is required.',
-  '3) Prefer providerId from search results; provider must be one of [dmhy, moe, ani].',
+  `3) Prefer providerId from search results; provider must be one of ${MCP_PROVIDER_LIST}.`,
   'Notes:',
   '- This server focuses on retrieval; it does not download torrents.',
   '- If a resource is not found, treat it as unavailable or stale upstream data.'
@@ -72,7 +74,7 @@ export class McpServer {
       'search_resources',
       {
         title:
-          'Search anime torrent resources aggregated from 動漫花園, 萌番组, Ani with Anime Garden',
+          'Search anime torrent resources aggregated from 動漫花園, 蜜柑计划, 萌番组, ANi with Anime Garden',
         description: [
           'Search filter behavior:',
           '- Different conditions are combined with AND.',
@@ -154,8 +156,7 @@ export class McpServer {
                 text: safeJsonStringify({
                   error: 'INVALID_RESOURCE_URI',
                   uri: uri.toString(),
-                  message:
-                    'Expected URI format: animegarden://resources/{provider}/{providerId}, provider in [dmhy, moe, ani].'
+                  message: `Expected URI format: animegarden://resources/{provider}/{providerId}, provider in ${MCP_PROVIDER_LIST}.`
                 })
               }
             ]

@@ -5,6 +5,8 @@ export function transformResourceHref(provider: ProviderType, href?: string) {
   switch (provider) {
     case 'dmhy':
       return `https://share.dmhy.org/topics/view/${href}`;
+    case 'mikan':
+      return `https://mikanani.me/Home/Episode/${href}`;
     case 'moe':
       return `https://bangumi.moe/torrent/${href}`;
     case 'ani':
@@ -19,6 +21,8 @@ export function transformPublisherHref(provider: ProviderType, publisherId?: str
   switch (provider) {
     case 'dmhy':
       return `https://share.dmhy.org/topics/list/user_id/${publisherId}`;
+    case 'mikan':
+      return `https://mikanani.me/Home/PublishGroup/${publisherId}`;
     case 'moe':
       return `https://bangumi.moe/tag/${publisherId}`;
     case 'ani':
@@ -33,6 +37,8 @@ export function transformFansubHref(provider: ProviderType, fansubId?: string) {
   switch (provider) {
     case 'dmhy':
       return `https://share.dmhy.org/topics/list/team_id/${fansubId}`;
+    case 'mikan':
+      return `https://mikanani.me/Home/PublishGroup/${fansubId}`;
     case 'moe':
       return `https://bangumi.moe/tag/${fansubId}`;
     case 'ani':
