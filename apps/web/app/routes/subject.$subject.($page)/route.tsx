@@ -21,6 +21,7 @@ import { generateTitleFromFilter } from '~/utils/server/meta';
 import {
   fetchResources,
   getFeedURL,
+  getOpenFeedTrackEvent,
   getCanonicalURL,
   getTrackingError,
   serializeError,
@@ -255,6 +256,10 @@ function FansubGroupResources({
   group: ReturnType<typeof groupResourcesByFansub>[number];
   complete: boolean;
 }) {
+  const feedURL = getFeedURL(
+    `?subject=${subject}&${group.fansub ? `fansub=${group.fansub.name}` : `publisher=${group.publisher.name}`}`
+  );
+
   return (
     <>
       <h2 className="text-2xl font-bold flex items-center gap-2 pr-2">
@@ -266,9 +271,8 @@ function FansubGroupResources({
         </NavLink>
         <span className="block flex-auto"></span>
         <a
-          href={getFeedURL(
-            `?subject=${subject}&${group.fansub ? `fansub=${group.fansub.name}` : `publisher=${group.publisher.name}`}`
-          )}
+          href={feedURL}
+          {...getOpenFeedTrackEvent(feedURL)}
           target="_blank"
           className="flex items-center cursor-pointer text-base font-light text-[#ee802f] border-b-2 border-b-transparent hover:(text-[#ff7800] border-b-[#ff7800])"
         >
