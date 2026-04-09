@@ -6,15 +6,16 @@
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
     "format": "prettier --write '**/*.ts'",
-    "test:ci": "wrangler deploy --dry-run"
+    "test:ci": "wrangler deploy --dry-run",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@animegarden/client": "workspace:*",
     "@animegarden/scraper": "workspace:*",
-    "memofunc": "^0.1.6",
-    "zod": "^3.25.76"
+    "memofunc": "0.1.6",
+    "zod": "3.25.76"
   },
   "devDependencies": {
-    "@total-typescript/ts-reset": "^0.6.1"
+    "@total-typescript/ts-reset": "0.6.1"
   }
 }

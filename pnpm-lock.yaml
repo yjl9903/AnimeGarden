@@ -450,14 +450,14 @@ importers:
         specifier: workspace:*
         version: link:../../packages/scraper
       memofunc:
-        specifier: ^0.1.6
+        specifier: 0.1.6
         version: 0.1.6
       zod:
-        specifier: ^3.25.76
+        specifier: 3.25.76
         version: 3.25.76
     devDependencies:
       '@total-typescript/ts-reset':
-        specifier: ^0.6.1
+        specifier: 0.6.1
         version: 0.6.1
 
   packages/anipar:
