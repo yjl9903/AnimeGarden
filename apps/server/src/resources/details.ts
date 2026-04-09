@@ -16,8 +16,8 @@ import type { Detail } from '../schema';
 import { details } from '../schema/details';
 import { resources } from '../schema/resources';
 import { ScraperProviders } from '../providers';
-import { retryDatabaseFn } from '../utils/database';
 import { nextTick } from '../utils/timer';
+import { retryDatabaseFn } from '../utils/database';
 import { DETAIL_EXPIRE } from '../constants';
 
 import type { DatabaseResource } from './types';
@@ -100,7 +100,10 @@ export class DetailsManager {
             this.logger.success(`Finish fetching resource detail of ${provider}:${providerId}`);
 
             // Fix resource
-            this.fixResourceWithDetail(provider, found, resource, scraped);
+            void this.fixResourceWithDetail(provider, found, resource, scraped).catch((error) => {
+              this.logger.warn(`Fail fixing resource detail of ${provider}:${providerId}`);
+              this.logger.error(error);
+            });
 
             return {
               resource,
@@ -241,6 +244,11 @@ export class DetailsManager {
       });
     }
 
+    const publisher = this.system.modules.users.getByName(resource.publisher.name);
+    const fansub = resource.fansub
+      ? this.system.modules.teams.getByName(resource.fansub.name)
+      : undefined;
+
     // 更新资源信息
     await this.system.modules.resources.updateResource({
       provider: found.provider,
@@ -252,8 +260,20 @@ export class DetailsManager {
       tracker: found.tracker,
       size: found.size,
       createdAt: new Date(found.createdAt),
-      publisher: resource.publisher.name,
-      fansub: resource.fansub?.name,
+      publisher: publisher
+        ? {
+            providerId: undefined,
+            name: publisher?.name,
+            avatar: publisher?.avatar || undefined
+          }
+        : undefined,
+      fansub: fansub
+        ? {
+            providerId: undefined,
+            name: fansub?.name,
+            avatar: fansub?.avatar || undefined
+          }
+        : undefined,
       isDeleted: false
     });
   }

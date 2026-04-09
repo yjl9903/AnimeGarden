@@ -752,29 +752,34 @@ export class QueryManager {
 
     const removed = new Set([
       ...notification.resources.deleted,
-      ...notification.duplicated.duplicated
+      ...notification.resources.updated.map((resource) => resource.id),
+      ...notification.duplicated.attached
     ]);
 
     const notified = [
       ...notification.resources.inserted.map((r) => r.id),
-      ...notification.duplicated.inserted
+      ...notification.resources.updated.map((resource) => resource.id),
+      ...notification.duplicated.detached
     ];
 
-    const resp = await retryDatabaseFn(
-      () =>
-        this.system.database
-          .select(RESOURCE_SELECTOR)
-          .from(resources)
-          .where(
-            and(
-              eq(resources.isDeleted, false),
-              isNull(resources.duplicatedId),
-              inArray(resources.id, notified)
-            )
+    const resp =
+      notified.length > 0
+        ? await retryDatabaseFn(
+            () =>
+              this.system.database
+                .select(RESOURCE_SELECTOR)
+                .from(resources)
+                .where(
+                  and(
+                    eq(resources.isDeleted, false),
+                    isNull(resources.duplicatedId),
+                    inArray(resources.id, notified)
+                  )
+                )
+                .orderBy(desc(resources.createdAt)),
+            { count: 5 }
           )
-          .orderBy(desc(resources.createdAt)),
-      { count: 5 }
-    );
+        : [];
 
     this.logger.info(`Notified ${resp.length} new resources`);
 

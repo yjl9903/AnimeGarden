@@ -114,9 +114,7 @@ function updateHeaderCollisionStyles(targets: HTMLElement[]) {
         )
         .join(',\n');
 
-      return rules
-        ? `${rules} {\n  display: none;\n}`
-        : '';
+      return rules ? `${rules} {\n  display: none;\n}` : '';
     })
     .filter(Boolean)
     .join('\n');
@@ -216,8 +214,4 @@ window.scrollTo = (...args) => {
 };
 
 // 监听 script error
-window.addEventListener(
-  'error',
-  handleScriptError,
-  true
-);
+window.addEventListener('error', handleScriptError, true);

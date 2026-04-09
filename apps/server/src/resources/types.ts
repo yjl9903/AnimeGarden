@@ -1,6 +1,16 @@
 import type { ParseResult } from 'anipar';
 import type { ResolvedFilterOptions } from '@animegarden/client';
 
+import type { NotifiedResource } from '../system/types';
+
+export interface NewParty {
+  providerId?: string;
+
+  name: string;
+
+  avatar?: string;
+}
+
 export interface NewResource {
   provider: string;
 
@@ -23,9 +33,9 @@ export interface NewResource {
 
   fetchedAt?: Date;
 
-  publisher: string;
+  publisher?: NewParty;
 
-  fansub?: string;
+  fansub?: NewParty;
 
   isDeleted?: boolean | null | undefined;
 }
@@ -71,25 +81,35 @@ export type RedisQueryResource = Omit<DatabaseResource, 'createdAt' | 'fetchedAt
   fetchedAt: string;
 };
 
-export interface InsertResourcesOptions {
+export interface UpsertResourcesOptions {
   /**
    * Whether match resources' title with active subjects
    *
    * @default true
    */
   indexSubject?: boolean;
+}
 
-  /**
-   * Whether update duplicated resources after it
-   *
-   * @default false
-   */
-  updateDuplicatedId?: boolean;
+export type InsertResourcesOptions = UpsertResourcesOptions;
 
-  /**
-   * @default false
-   */
-  keepshare?: boolean;
+export interface UpsertResourcesResult {
+  inserted: NotifiedResource[];
+
+  updated: NotifiedResource[];
+
+  changed: number[];
+
+  errors: NewResource[];
+}
+
+export interface DuplicateMaintenanceResult {
+  attached: number[];
+
+  detached: number[];
+}
+
+export interface SyncDeletedResourcesResult {
+  deleted: NotifiedResource[];
 }
 
 export type DatabaseFilterOptions = Omit<

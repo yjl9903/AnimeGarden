@@ -97,8 +97,6 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
   private async initializeRedis() {
     const { redis, publisherRedis } = this;
 
-    if (!redis || !publisherRedis) return;
-
     this.rpcSender.send = this.options.cron
       ? async (event) => {
           const { channel, type, gid, payload } = event;
@@ -108,9 +106,12 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
           return true;
         }
       : async (event) => {
+          if (!redis) return false;
           await redis.publish(RPC_INVOKE_CHANNEL, JSON.stringify(event));
           return true;
         };
+
+    if (!redis || !publisherRedis) return;
 
     this.channelMessageBus.listen(redis);
 
@@ -160,8 +161,15 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
   }
 
   private async onNotification(notification: Notification) {
+    const resourceChanges =
+      notification.resources.inserted.length +
+      notification.resources.updated.length +
+      notification.resources.deleted.length;
+    const duplicateChanges =
+      notification.duplicated.attached.length + notification.duplicated.detached.length;
+
     this.channelMessageBus.logger.info(
-      `Recive update notification message: ${notification.resources.inserted.length} new resources`
+      `Recive update notification message: ${resourceChanges} resource changes, ${duplicateChanges} duplicate changes`
     );
 
     await this.refresh(notification);
@@ -172,7 +180,7 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
       if (!this.publisherRedis) return;
 
       this.channelMessageBus.logger.info(
-        `Publish notification to channel ${NOTIFY_CHANNEL}: ${notification.resources.inserted.length} new resources, ${notification.resources.deleted.length} deleted resources, ${notification.duplicated.inserted} unique resources, ${notification.duplicated.duplicated.length} duplicated resources`
+        `Publish notification to channel ${NOTIFY_CHANNEL}: ${notification.resources.inserted.length} inserted, ${notification.resources.updated.length} updated, ${notification.resources.deleted.length} deleted, ${notification.duplicated.attached.length} attached, ${notification.duplicated.detached.length} detached`
       );
 
       try {

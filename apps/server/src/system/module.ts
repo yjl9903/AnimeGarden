@@ -2,15 +2,16 @@ import { type ConsolaInstance, createConsola } from 'consola';
 
 import type { System } from './system';
 import type { Notification } from './types';
+import type { RpcEventMap } from './rpc';
 
-export abstract class Module<M extends Record<string, Module> = {}> {
-  public readonly system: System<M>;
+export abstract class Module<M extends Record<string, Module> = {}, E extends RpcEventMap = any> {
+  public readonly system: System<M, E>;
 
   public readonly name: string;
 
   public readonly logger: ConsolaInstance;
 
-  public constructor(system: System<M>, name: string) {
+  public constructor(system: System<M, E>, name: string) {
     this.system = system;
     this.name = name;
     this.logger = createConsola().withTag(name);

@@ -1,3 +1,5 @@
+import { sql } from 'drizzle-orm';
+
 import { parse } from 'anipar';
 import { SupportProviders, normalizeTitle } from '@animegarden/client';
 
@@ -5,8 +7,24 @@ import type { System } from '../system';
 import type { NewResource as NewDbResource, Team, User } from '../schema';
 
 import { jieba } from '../utils';
+import { anonymous } from '../constants';
 
 import type { InsertResourcesOptions, NewResource } from './types';
+
+export function buildTitleSearchSql(resource: NewDbResource) {
+  const search1 = resource.titleSearch[0] ? resource.titleSearch[0].join(' ') : undefined;
+  const search2 = resource.titleSearch[3] ? resource.titleSearch[3].join(' ') : undefined;
+
+  if (search1 && search2) {
+    return sql`(setweight(to_tsvector('simple', ${search1}), 'A') || setweight(to_tsvector('simple', ${search2}), 'D'))`;
+  }
+
+  if (search1) {
+    return sql`setweight(to_tsvector('simple', ${search1}), 'A')`;
+  }
+
+  return sql`setweight(to_tsvector('simple', ${search2 ?? ''}), 'D')`;
+}
 
 export function transformNewResources(
   sys: System,
@@ -17,20 +35,23 @@ export function transformNewResources(
 
   const errors = [];
 
+  const publisherName = res.publisher?.name ?? anonymous;
+  const fansubName = res.fansub?.name;
+
   if (!SupportProviders.includes(res.provider as any)) {
     errors.push(`Unknown provider: ${res.provider}`);
   }
 
   const titleAlt = normalizeTitle(res.title);
   const size = typeof res.size === 'string' ? Math.floor(parseSize(res.size)) : res.size;
-  const publisher = sys.modules.users.getByName(res.publisher);
-  const fansub = res.fansub ? sys.modules.teams.getByName(res.fansub) : undefined;
+  const publisher = sys.modules.users.getByName(publisherName);
+  const fansub = fansubName ? sys.modules.teams.getByName(fansubName) : undefined;
 
   if (!publisher) {
-    errors.push(`Unknown publisher: ${res.publisher}`);
+    errors.push(`Unknown publisher: ${publisherName}`);
   }
-  if (res.fansub && !fansub) {
-    errors.push(`Unknown fansub: ${res.fansub}`);
+  if (fansubName && !fansub) {
+    errors.push(`Unknown fansub: ${fansubName}`);
   }
 
   if (errors.length === 0) {

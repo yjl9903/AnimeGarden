@@ -12,6 +12,7 @@ import { Cron } from 'croner';
 import { SupportProviders } from '@animegarden/client';
 
 import { System } from '../system';
+import { registerResourcesJobRpc } from '../resources/jobs';
 
 import type { AppEnv } from './utils/hono';
 
@@ -38,8 +39,6 @@ export interface ListenOptions {
 
   port?: string | number;
 }
-
-const EXECUTOR_INTERNAL_REQUEST_HEADER = 'x-animegarden-executor-request';
 
 export class Server {
   public readonly system: System;
@@ -92,15 +91,7 @@ export class Executor extends Server {
       (provider) =>
         new Cron(`*/5 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
           try {
-            const req = new Request(`https://api.animes.garden/admin/resources/${provider}`, {
-              method: 'POST',
-              headers: {
-                authorization: `Bearer ${this.system.secret}`,
-                [EXECUTOR_INTERNAL_REQUEST_HEADER]: '1'
-              }
-            });
-            const res = await this.hono.fetch(req);
-            await res.json();
+            await this.system.rpc.invoke('resources.fetch', { provider });
           } catch (error) {
             this.system.logger.error(error);
           }
@@ -111,15 +102,11 @@ export class Executor extends Server {
       (provider) =>
         new Cron(`0 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
           try {
-            const req = new Request(`https://api.animes.garden/admin/resources/${provider}/sync`, {
-              method: 'POST',
-              headers: {
-                authorization: `Bearer ${this.system.secret}`,
-                [EXECUTOR_INTERNAL_REQUEST_HEADER]: '1'
-              }
+            await this.system.rpc.invoke('resources.sync', {
+              provider,
+              start: 1,
+              end: 10
             });
-            const res = await this.hono.fetch(req);
-            await res.json();
           } catch (error) {
             this.system.logger.error(error);
           }
@@ -220,14 +207,7 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
       )
     });
   });
-  app.use('*', async (c, next) => {
-    if (c.req.header(EXECUTOR_INTERNAL_REQUEST_HEADER) === '1') {
-      await next();
-      return;
-    }
-
-    return requestTimeout(c, next);
-  });
+  app.use('*', requestTimeout);
 
   // Bind routes
   defineUsersRoutes(sys, app);
@@ -298,6 +278,7 @@ export async function makeServer(sys: System, options: ServerOptions) {
 export async function makeExecutor(sys: System, options: ExecutorOptions) {
   const executor = new Executor(sys);
 
+  registerResourcesJobRpc(sys);
   registerHono(sys, executor.hono);
 
   return executor;

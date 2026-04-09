@@ -248,3 +248,48 @@ describe('resources slow query fallback', () => {
     );
   });
 });
+
+describe('resources notifications', () => {
+  it('removes stale cached resources and reloads live roots for updated/detached ids', async () => {
+    const { manager } = createManager();
+    const task = new Task(manager, 'task', {});
+
+    task.ok = true;
+    task.resources = [createResource(1), createResource(2), createResource(4)];
+    task.prefetchCount = task.resources.length;
+
+    (manager.tasks as Map<string, Task>).set(task.key, task);
+    (manager.findFromRedis as any).clear = vi.fn();
+    (manager.findFromAccurateQuery as any).clear = vi.fn();
+    (manager.system as any).database = {
+      select: vi.fn(() => ({
+        from: vi.fn(() => ({
+          where: vi.fn(() => ({
+            orderBy: vi.fn(async () => [createResource(3), createResource(1)])
+          }))
+        }))
+      }))
+    };
+
+    await manager.onNotifications({
+      resources: {
+        inserted: [],
+        updated: [
+          {
+            id: 1,
+            provider: 'dmhy',
+            providerId: '1',
+            title: 'resource-1'
+          }
+        ],
+        deleted: [2]
+      },
+      duplicated: {
+        attached: [4],
+        detached: [3]
+      }
+    });
+
+    expect(task.resources.map((resource) => resource.id)).toEqual([3, 1]);
+  });
+});

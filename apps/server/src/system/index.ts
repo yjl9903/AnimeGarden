@@ -33,7 +33,7 @@ export type System = ISystem<
     teams: TeamsModule;
     collections: CollectionsModule;
   },
-  {}
+  import('./types').ResourcesRpcEventMap
 >;
 
 export async function makeSystem(options: SystemOptions) {

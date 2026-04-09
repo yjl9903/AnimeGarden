@@ -13,10 +13,7 @@ export const Dropdown = memo((props: DropdownProps) => {
   const { className, trigger, children, ...rest } = props;
 
   return (
-    <div
-      {...rest}
-      className={clsx('relative', '[&:hover>.c-dropdown]:block', className)}
-    >
+    <div {...rest} className={clsx('relative', '[&:hover>.c-dropdown]:block', className)}>
       {trigger}
       {children}
     </div>

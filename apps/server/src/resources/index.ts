@@ -1,24 +1,88 @@
-import { and, desc, eq, gt, inArray, isNull, lt, or, sql } from 'drizzle-orm';
+import { and, desc, eq, inArray, lt, gt } from 'drizzle-orm';
 
-import type { ProviderType } from '@animegarden/client';
-
+import { type ProviderType, SupportProviders } from '@animegarden/client';
 import { normalizeBtihToBase32, normalizeBtihToHex } from '@animegarden/shared';
 
+import type { NotifiedResource } from '../system/types';
 import type { System, Notification } from '../system';
 import type { NewResource as NewDbResource } from '../schema';
 
 import { Module } from '../system/module';
 import { resources as resourceSchema } from '../schema/resources';
+import { retryDatabaseFn } from '../utils/database';
 
-import type { InsertResourcesOptions, NewResource } from './types';
+import type {
+  DuplicateMaintenanceResult,
+  NewResource,
+  SyncDeletedResourcesResult as MarkDeletedResourcesResult,
+  UpsertResourcesOptions,
+  UpsertResourcesResult
+} from './types';
 
 import { QueryManager } from './query';
 import { DetailsManager } from './details';
-import { prefetchKeepShare } from './keepshare';
-import { transformNewResources } from './transform';
-import { retryDatabaseFn } from '../utils/database';
+import { buildTitleSearchSql, transformNewResources } from './transform';
 
 export * from './types';
+
+const NOTIFIED_RESOURCE_SELECTOR = {
+  id: resourceSchema.id,
+  provider: resourceSchema.provider,
+  providerId: resourceSchema.providerId,
+  title: resourceSchema.title
+} as const;
+
+const UPSERT_RESOURCE_SELECTOR = {
+  id: resourceSchema.id,
+  provider: resourceSchema.provider,
+  providerId: resourceSchema.providerId,
+  title: resourceSchema.title,
+  titleAlt: resourceSchema.titleAlt,
+  href: resourceSchema.href,
+  magnet: resourceSchema.magnet,
+  tracker: resourceSchema.tracker,
+  publisherId: resourceSchema.publisherId,
+  fansubId: resourceSchema.fansubId,
+  subjectId: resourceSchema.subjectId,
+  isDeleted: resourceSchema.isDeleted
+} as const;
+
+const DUPLICATE_RESOURCE_SELECTOR = {
+  id: resourceSchema.id,
+  provider: resourceSchema.provider,
+  magnet: resourceSchema.magnet,
+  createdAt: resourceSchema.createdAt,
+  duplicatedId: resourceSchema.duplicatedId,
+  isDeleted: resourceSchema.isDeleted
+} as const;
+
+type ExistingUpsertResource = {
+  id: number;
+  provider: ProviderType;
+  providerId: string;
+  title: string;
+  titleAlt: string;
+  href: string;
+  magnet: string;
+  tracker: string;
+  publisherId: number;
+  fansubId: number | null;
+  subjectId: number | null;
+  isDeleted: boolean | null;
+};
+
+type DuplicateResource = {
+  id: number;
+  provider: ProviderType;
+  magnet: string;
+  createdAt: Date;
+  duplicatedId: number | null;
+  isDeleted: boolean | null;
+};
+
+function getResourceKey(resource: { provider: string; providerId: string }) {
+  return `${resource.provider}:${resource.providerId}`;
+}
 
 export class ResourcesModule extends Module<System['modules']> {
   public static name = 'resources';
@@ -46,14 +110,9 @@ export class ResourcesModule extends Module<System['modules']> {
     this.logger.success('Refresh Resources module OK');
   }
 
-  /**
-   * Check whether each input provider id has been inserted to DB
-   *
-   * @param provider
-   * @param ids provider id set
-   * @returns
-   */
   public async getResourcesByProviderId(provider: string, ids: string[]) {
+    if (ids.length === 0) return [];
+
     return await this.database
       .select({ provider: resourceSchema.provider, providerId: resourceSchema.providerId })
       .from(resourceSchema)
@@ -65,325 +124,223 @@ export class ResourcesModule extends Module<System['modules']> {
       );
   }
 
-  /**
-   * Insert resources to DB
-   *
-   * @param resources
-   * @param options
-   * @returns
-   */
-  public async insertResources(resources: NewResource[], options: InsertResourcesOptions = {}) {
-    const map = new Map<string, NonNullable<ReturnType<typeof transformNewResources>['result']>>();
-    const newResources: NewDbResource[] = [];
-    const errors = [];
-    const duplicated: number[] = [];
-
-    for (const r of resources) {
-      const key = `${r.provider}:${r.providerId}`;
-      if (map.has(key)) continue;
-
-      const res = transformNewResources(this.system, r, options);
-      if (!res.errors && res.result) {
-        map.set(key, res.result);
-        newResources.push(res.result);
-      } else {
-        errors.push(r);
+  private async getExistingResources(resources: NewDbResource[]) {
+    const grouped = new Map<ProviderType, string[]>();
+    for (const resource of resources) {
+      if (!grouped.has(resource.provider)) {
+        grouped.set(resource.provider, []);
       }
+      grouped.get(resource.provider)!.push(resource.providerId);
     }
 
-    if (newResources.length === 0) return { inserted: [], conflict: [], errors: [], duplicated };
+    const resp: Map<string, ExistingUpsertResource> = new Map();
 
-    const resp = await retryDatabaseFn(
-      () =>
-        this.database
-          .insert(resourceSchema)
-          .values(
-            newResources.map((r) => {
-              const search1 = r.titleSearch[0] ? r.titleSearch[0].join(' ') : undefined;
-              const search2 = r.titleSearch[3] ? r.titleSearch[3].join(' ') : undefined;
+    for (const [provider, providerIds] of grouped) {
+      if (providerIds.length === 0) continue;
 
-              const titleSearch =
-                search1 && search2
-                  ? sql`(setweight(to_tsvector('simple', ${search1}), 'A') || setweight(to_tsvector('simple', ${search2}), 'D'))`
-                  : search1
-                    ? sql`setweight(to_tsvector('simple', ${search1}), 'A')`
-                    : sql`setweight(to_tsvector('simple', ${search2 ?? ''}), 'D')`;
-
-              // 1. provider is different
-              // 2. exisit, isDeleted = false
-              // 3. root resource has no duplicated id, duplicatedId is null
-              // 4. Same magnet or same title
-              const duplicatedId =
-                r.magnet && r.title
-                  ? sql`(SELECT ${resourceSchema.id}
-FROM ${resourceSchema}
-WHERE (${eq(resourceSchema.isDeleted, false)})
-AND (${isNull(resourceSchema.duplicatedId)})
-AND (${lt(resourceSchema.createdAt, r.createdAt!)})
-AND (${eq(resourceSchema.title, r.title)} OR ${eq(resourceSchema.magnet, normalizeBtihToHex(r.magnet))} OR ${eq(resourceSchema.magnet, normalizeBtihToBase32(r.magnet))})
-ORDER BY ${resourceSchema.createdAt} asc
-LIMIT 1)`
-                  : undefined;
-
-              return {
-                ...r,
-                titleSearch,
-                duplicatedId
-              };
-            })
+      const rows = await this.database
+        .select(UPSERT_RESOURCE_SELECTOR)
+        .from(resourceSchema)
+        .where(
+          and(
+            eq(resourceSchema.provider, provider),
+            inArray(resourceSchema.providerId, [...new Set(providerIds)])
           )
-          .onConflictDoNothing()
-          .returning({
-            id: resourceSchema.id,
-            provider: resourceSchema.provider,
-            providerId: resourceSchema.providerId,
-            title: resourceSchema.title,
-            magnet: resourceSchema.magnet,
-            createdAt: resourceSchema.createdAt,
-            isDeleted: resourceSchema.isDeleted,
-            duplicatedId: resourceSchema.duplicatedId
-          }),
-      { count: 5 }
-    );
-
-    const conflict: NonNullable<ReturnType<typeof transformNewResources>['result']>[] = [];
-    if (resp.length < newResources.length) {
-      for (const r of resp) {
-        map.delete(`${r.provider}:${r.providerId}`);
-      }
-      conflict.push(...map.values());
-    }
-
-    if (options.updateDuplicatedId) {
-      for (const r of resp) {
-        if (r.isDeleted) continue;
-        if (r.duplicatedId) continue;
-
-        // Update duplicated id which createdAt > r.createdAt
-        const resp = await retryDatabaseFn(
-          () =>
-            this.database
-              .update(resourceSchema)
-              .set({
-                duplicatedId: r.id
-              })
-              .where(
-                and(
-                  eq(resourceSchema.isDeleted, false),
-                  isNull(resourceSchema.duplicatedId),
-                  gt(resourceSchema.createdAt, r.createdAt!),
-                  or(eq(resourceSchema.title, r.title), eq(resourceSchema.magnet, r.magnet))
-                )
-              )
-              .returning({ id: resourceSchema.id }),
-          { count: 5 }
         );
-        duplicated.push(...resp.map((r) => r.id));
+      for (const row of rows) {
+        resp.set(getResourceKey(row), row);
       }
     }
 
-    // prefetch keepshare
-    if (options.keepshare) {
-      prefetchKeepShare(resp);
-    }
-
-    return {
-      inserted: resp,
-      conflict,
-      errors,
-      duplicated: [...new Set(duplicated)]
-    };
+    return resp;
   }
 
-  public async updateResource(resource: NewResource, fetchedAt?: Date) {
-    const { result: updated } = transformNewResources(this.system, resource, {
-      indexSubject: true
-    });
-    if (!updated) return;
-    const dbRes = await retryDatabaseFn(
-      () =>
-        this.database.query.resources.findFirst({
-          where: and(
-            eq(resourceSchema.provider, updated.provider),
-            eq(resourceSchema.providerId, updated.providerId)
-          )
-        }),
-      { count: 5 }
-    ).catch(() => undefined);
-    if (!dbRes) {
-      const { inserted, duplicated } = await this.insertResources([{ ...resource, fetchedAt }], {
-        indexSubject: true,
-        updateDuplicatedId: true
-      });
-      return { updated: inserted[0], inserted: [], duplicated };
-    }
+  public async upsertResources(
+    resources: NewResource[],
+    options: UpsertResourcesOptions = {}
+  ): Promise<UpsertResourcesResult> {
+    const deduped = [
+      ...new Map(resources.map((resource) => [getResourceKey(resource), resource])).values()
+    ];
+    const errors: NewResource[] = [];
 
-    let changed = false;
-    const set: Partial<typeof resourceSchema.$inferInsert> = {};
-
-    if ((updated.isDeleted ?? false) !== dbRes.isDeleted) {
-      changed = true;
-      set.isDeleted = updated.isDeleted ?? false;
-    }
-
-    if (updated.href !== dbRes.href) {
-      changed = true;
-      set.href = updated.href;
-    }
-
-    if (updated.magnet !== dbRes.magnet) {
-      changed = true;
-      set.magnet = updated.magnet;
-    }
-
-    if (updated.tracker !== dbRes.tracker) {
-      changed = true;
-      set.tracker = updated.tracker;
-    }
-
-    if (updated.subjectId !== dbRes.subjectId) {
-      changed = true;
-      set.subjectId = updated.subjectId;
-    }
-
-    if (updated.publisherId !== dbRes.publisherId) {
-      changed = true;
-      set.publisherId = dbRes.publisherId;
-    }
-
-    if (updated.fansubId !== dbRes.fansubId) {
-      changed = true;
-      set.fansubId = updated.fansubId;
-    }
-
-    if (updated.title !== dbRes?.title) {
-      changed = true;
-      set.title = updated.title;
-      set.titleAlt = updated.titleAlt;
-
-      // title search
-      const search1 = updated.titleSearch[0] ? updated.titleSearch[0].join(' ') : undefined;
-      const search2 = updated.titleSearch[3] ? updated.titleSearch[3].join(' ') : undefined;
-
-      const titleSearch =
-        search1 && search2
-          ? sql`(setweight(to_tsvector('simple', ${search1}), 'A') || setweight(to_tsvector('simple', ${search2}), 'D'))`
-          : search1
-            ? sql`setweight(to_tsvector('simple', ${search1}), 'A')`
-            : sql`setweight(to_tsvector('simple', ${search2 ?? ''}), 'D')`;
-
-      // @ts-ignore
-      set.titleSearch = titleSearch;
-    }
-
-    // Do update
-    if (changed) {
-      // Update fetched at
-      set.fetchedAt = fetchedAt ?? new Date();
-    }
-
-    // Force updating duplicated id
-    // @ts-ignore
-    set.duplicatedId = sql`(SELECT ${resourceSchema.id}
-FROM ${resourceSchema}
-WHERE (${eq(resourceSchema.isDeleted, false)})
-AND (${isNull(resourceSchema.duplicatedId)})
-AND (${lt(resourceSchema.createdAt, updated.createdAt!)})
-AND (${eq(resourceSchema.title, updated.title)} OR ${eq(resourceSchema.magnet, normalizeBtihToHex(updated.magnet))} OR ${eq(resourceSchema.magnet, normalizeBtihToBase32(updated.magnet))})
-ORDER BY ${resourceSchema.createdAt} asc
-LIMIT 1)`;
-
-    const resp1 = await retryDatabaseFn(
-      () =>
-        this.database
-          .update(resourceSchema)
-          .set(set)
-          .where(
-            and(
-              eq(resourceSchema.provider, updated.provider),
-              eq(resourceSchema.providerId, updated.providerId)
-            )
-          )
-          .returning({
-            id: resourceSchema.id,
-            provider: resourceSchema.provider,
-            providerId: resourceSchema.providerId,
-            title: resourceSchema.title
-          }),
-      { count: 5 }
-    ).catch(() => undefined);
-
-    const id = resp1?.[0].id;
-    if (resp1 && resp1.length === 1 && id) {
-      // Clearing all the related duplicated item
-      const resp2 = await retryDatabaseFn(
-        () =>
-          this.database
-            .update(resourceSchema)
-            .set({ duplicatedId: null })
-            .where(eq(resourceSchema.duplicatedId, id))
-            .returning({
-              id: resourceSchema.id
-            }),
-        { count: 5 }
-      ).catch(() => undefined);
-
-      // Update duplicated id which createdAt > r.createdAt
-      const resp3 = await retryDatabaseFn(
-        () =>
-          this.database
-            .update(resourceSchema)
-            .set({
-              duplicatedId: id
-            })
-            .where(
-              and(
-                eq(resourceSchema.isDeleted, false),
-                isNull(resourceSchema.duplicatedId),
-                gt(resourceSchema.createdAt, resource.createdAt),
-                or(
-                  eq(resourceSchema.title, resource.title),
-                  eq(resourceSchema.magnet, resource.magnet)
-                )
-              )
-            )
-            .returning({
-              id: resourceSchema.id
-            }),
-        { count: 5 }
-      );
-
-      const removed = new Set(resp2?.map((r) => r.id));
-      const inserted = new Set(resp3?.map((r) => r.id));
-
+    if (deduped.length === 0) {
       return {
-        updated: resp1[0],
-        inserted: [...removed].filter((id) => !inserted.has(id)),
-        duplicated: [...inserted].filter((id) => !removed.has(id))
+        inserted: [],
+        updated: [],
+        changed: [],
+        errors
       };
     }
 
-    return { updated: undefined, inserted: [], duplicated: [] };
+    await this.ensureParties(deduped);
+
+    const transformed: NewDbResource[] = [];
+    for (const resource of deduped) {
+      const result = transformNewResources(this.system, resource, options);
+      if (result.result) {
+        transformed.push(result.result);
+      } else {
+        errors.push(resource);
+      }
+    }
+
+    if (transformed.length === 0) {
+      return {
+        inserted: [],
+        updated: [],
+        changed: [],
+        errors
+      };
+    }
+
+    const existing = await this.getExistingResources(transformed);
+
+    const toInsert: NewDbResource[] = [];
+    const toUpdate: Array<{
+      resource: NewDbResource;
+      existed: ExistingUpsertResource;
+      set: Partial<typeof resourceSchema.$inferInsert>;
+    }> = [];
+
+    for (const resource of transformed) {
+      const existed = existing.get(getResourceKey(resource));
+      if (!existed) {
+        toInsert.push(resource);
+        continue;
+      }
+
+      {
+        let changed = false;
+        const set: Partial<typeof resourceSchema.$inferInsert> = {};
+
+        if ((resource.isDeleted ?? false) !== existed.isDeleted) {
+          changed = true;
+          set.isDeleted = resource.isDeleted ?? false;
+        }
+
+        if (resource.href !== existed.href) {
+          changed = true;
+          set.href = resource.href;
+        }
+
+        if (resource.magnet !== existed.magnet) {
+          changed = true;
+          set.magnet = resource.magnet;
+        }
+
+        if (resource.tracker !== existed.tracker) {
+          changed = true;
+          set.tracker = resource.tracker;
+        }
+
+        if (resource.subjectId !== existed.subjectId) {
+          changed = true;
+          set.subjectId = resource.subjectId;
+        }
+
+        if (resource.publisherId !== existed.publisherId) {
+          changed = true;
+          set.publisherId = resource.publisherId;
+        }
+
+        if (resource.fansubId !== existed.fansubId) {
+          changed = true;
+          set.fansubId = resource.fansubId;
+        }
+
+        if (resource.title !== existed.title || resource.titleAlt !== existed.titleAlt) {
+          changed = true;
+          set.title = resource.title;
+          set.titleAlt = resource.titleAlt;
+          // @ts-ignore
+          set.titleSearch = buildTitleSearchSql(resource);
+        }
+
+        if (changed) {
+          set.fetchedAt = resource.fetchedAt ?? new Date();
+          toUpdate.push({
+            resource,
+            existed,
+            set
+          });
+        }
+      }
+    }
+
+    const inserted =
+      toInsert.length > 0
+        ? await retryDatabaseFn(
+            () =>
+              this.database
+                .insert(resourceSchema)
+                .values(
+                  toInsert.map((resource) => ({
+                    ...resource,
+                    titleSearch: buildTitleSearchSql(resource)
+                  }))
+                )
+                .onConflictDoNothing()
+                .returning(NOTIFIED_RESOURCE_SELECTOR),
+            { count: 5 }
+          )
+        : [];
+
+    const updated: NotifiedResource[] = [];
+    for (const item of toUpdate) {
+      const resp = await retryDatabaseFn(
+        () =>
+          this.database
+            .update(resourceSchema)
+            .set(item.set)
+            .where(
+              and(
+                eq(resourceSchema.provider, item.resource.provider),
+                eq(resourceSchema.providerId, item.resource.providerId)
+              )
+            )
+            .returning(NOTIFIED_RESOURCE_SELECTOR),
+        { count: 5 }
+      );
+
+      if (resp[0]) {
+        updated.push(resp[0]);
+      }
+    }
+
+    return {
+      inserted,
+      updated,
+      changed: [
+        ...inserted.map((resource) => resource.id),
+        ...updated.map((resource) => resource.id)
+      ],
+      errors
+    };
   }
 
-  public async syncResources(platform: ProviderType, resources: NewResource[]) {
-    const visited = new Set(resources.map((r) => r.provider + ':' + r.providerId));
+  public async markDeletedResources(
+    platform: ProviderType,
+    resources: NewResource[]
+  ): Promise<MarkDeletedResourcesResult> {
+    if (resources.length === 0) {
+      return {
+        deleted: []
+      };
+    }
 
-    const minCreatedAt = resources.reduce((acc, cur) => {
-      return Math.min(acc, new Date(cur.createdAt!).getTime());
+    const visited = new Set(resources.map((resource) => getResourceKey(resource)));
+    const minCreatedAt = resources.reduce((acc, resource) => {
+      return Math.min(acc, resource.createdAt.getTime());
     }, Number.MAX_SAFE_INTEGER);
-    const maxCreatedAt = resources.reduce((acc, cur) => {
-      return Math.max(acc, new Date(cur.createdAt!).getTime());
+    const maxCreatedAt = resources.reduce((acc, resource) => {
+      return Math.max(acc, resource.createdAt.getTime());
     }, Number.MIN_SAFE_INTEGER);
+
     const stored = await retryDatabaseFn(
       () =>
         this.database
-          .select({
-            id: resourceSchema.id,
-            title: resourceSchema.title,
-            provider: resourceSchema.provider,
-            providerId: resourceSchema.providerId
-          })
+          .select(NOTIFIED_RESOURCE_SELECTOR)
           .from(resourceSchema)
           .where(
             and(
@@ -397,57 +354,199 @@ LIMIT 1)`;
       { count: 5 }
     ).catch(() => []);
 
-    const deleted = stored.filter((st) => !visited.has(st.provider + ':' + st.providerId));
-    if (deleted.length > 0) {
-      this.logger.info('Mark resources as deleted', deleted);
+    const deleted = stored.filter((resource) => !visited.has(getResourceKey(resource)));
+    if (deleted.length === 0) {
+      return {
+        deleted: []
+      };
+    }
 
-      const resp = await retryDatabaseFn(
+    this.logger.info('Mark resources as deleted', deleted);
+
+    const deletedIds = deleted.map((resource) => resource.id);
+    const resp = await retryDatabaseFn(
+      () =>
+        this.database
+          .update(resourceSchema)
+          .set({ isDeleted: true })
+          .where(inArray(resourceSchema.id, deletedIds))
+          .returning(NOTIFIED_RESOURCE_SELECTOR),
+      { count: 5 }
+    ).catch(() => []);
+
+    return {
+      deleted: resp
+    };
+  }
+
+  public async updateResource(resource: NewResource, fetchedAt?: Date) {
+    const upsert = await this.upsertResources([{ ...resource, fetchedAt }], {
+      indexSubject: true
+    });
+
+    const duplicated =
+      upsert.changed.length > 0
+        ? await this.maintainDuplicatedResources(upsert.changed)
+        : { attached: [], detached: [] };
+
+    return {
+      inserted: upsert.inserted,
+      updated: upsert.updated,
+      duplicated
+    };
+  }
+
+  public async maintainDuplicatedResources(changed: number[]): Promise<DuplicateMaintenanceResult> {
+    if (changed.length === 0) {
+      return {
+        attached: [],
+        detached: []
+      };
+    }
+
+    const seeds = await retryDatabaseFn(
+      () =>
+        this.database
+          .select(DUPLICATE_RESOURCE_SELECTOR)
+          .from(resourceSchema)
+          .where(inArray(resourceSchema.id, changed)),
+      { count: 5 }
+    );
+
+    // magnet -> 2 magnet variants
+    const magnets = new Map<string, string[]>();
+    for (const seed of seeds) {
+      if (!seed.magnet) continue;
+      const variants = [normalizeBtihToHex(seed.magnet), normalizeBtihToBase32(seed.magnet)].filter(
+        Boolean
+      );
+      if (variants.length === 2) {
+        magnets.set(variants[0], variants);
+      }
+    }
+
+    if (magnets.size === 0) {
+      return {
+        attached: [],
+        detached: []
+      };
+    }
+
+    const attach = new Set<number>();
+    const detach = new Set<number>();
+
+    // Mark duplicated_id = null
+    const winnerIds = new Set<number>();
+    // Mark duplicated_id = key where id in value
+    const loserIds = new Map<number, Set<number>>();
+
+    for (const variants of magnets.values()) {
+      const candidates = await retryDatabaseFn(
         () =>
           this.database
-            .update(resourceSchema)
-            .set({ isDeleted: true })
+            .select(DUPLICATE_RESOURCE_SELECTOR)
+            .from(resourceSchema)
             .where(
-              inArray(
-                resourceSchema.id,
-                deleted.map((st) => st.id)
-              )
-            )
-            .returning({
-              id: resourceSchema.id,
-              provider: resourceSchema.provider,
-              providerId: resourceSchema.providerId,
-              title: resourceSchema.title
-            }),
+              and(eq(resourceSchema.isDeleted, false), inArray(resourceSchema.magnet, variants))
+            ),
         { count: 5 }
-      ).catch(() => []);
+      );
 
-      // Clearing related duplicate id
-      const inserted = await retryDatabaseFn(
+      if (candidates.length === 0) {
+        continue;
+      }
+
+      candidates.sort((lhs: DuplicateResource, rhs: DuplicateResource) => {
+        const providerPriority =
+          SupportProviders.indexOf(lhs.provider) - SupportProviders.indexOf(rhs.provider);
+        if (providerPriority !== 0) return providerPriority;
+
+        const createdAt = lhs.createdAt.getTime() - rhs.createdAt.getTime();
+        if (createdAt !== 0) return createdAt;
+
+        return lhs.id - rhs.id;
+      });
+
+      const winner = candidates[0];
+
+      for (const resource of candidates) {
+        const nextDuplicatedId = resource.id === winner.id ? null : winner.id;
+        const currentDuplicatedId = resource.duplicatedId ?? null;
+        if (currentDuplicatedId === nextDuplicatedId) continue;
+
+        if (nextDuplicatedId === null) {
+          winnerIds.add(resource.id);
+          if (currentDuplicatedId !== null) {
+            detach.add(resource.id);
+          }
+        } else {
+          if (!loserIds.has(nextDuplicatedId)) {
+            loserIds.set(nextDuplicatedId, new Set());
+          }
+          loserIds.get(nextDuplicatedId)!.add(resource.id);
+          if (currentDuplicatedId === null) {
+            attach.add(resource.id);
+          }
+        }
+      }
+    }
+
+    if (winnerIds.size > 0) {
+      await retryDatabaseFn(
         () =>
           this.database
             .update(resourceSchema)
             .set({ duplicatedId: null })
-            .where(
-              inArray(
-                resourceSchema.duplicatedId,
-                deleted.map((st) => st.id)
-              )
-            )
-            .returning({
-              id: resourceSchema.id
-            }),
+            .where(inArray(resourceSchema.id, [...winnerIds])),
         { count: 5 }
-      ).catch(() => []);
+      );
+    }
 
-      return {
-        deleted: resp,
-        inserted: inserted.map((r) => r.id)
-      };
+    for (const [duplicatedId, ids] of loserIds) {
+      await retryDatabaseFn(
+        () =>
+          this.database
+            .update(resourceSchema)
+            .set({ duplicatedId })
+            .where(inArray(resourceSchema.id, [...ids])),
+        { count: 5 }
+      );
     }
 
     return {
-      deleted: [],
-      inserted: []
+      attached: [...attach],
+      detached: [...detach]
     };
+  }
+
+  private async ensureParties(resources: NewResource[]) {
+    await this.system.modules.users.insertUsers(
+      resources
+        .map((resource) =>
+          resource.publisher && resource.publisher.providerId
+            ? {
+                provider: resource.provider,
+                providerId: resource.publisher.providerId,
+                name: resource.publisher.name,
+                avatar: resource.publisher.avatar
+              }
+            : undefined
+        )
+        .filter(Boolean)
+    );
+    await this.system.modules.teams.insertTeams(
+      resources
+        .map((resource) =>
+          resource.fansub && resource.fansub.providerId
+            ? {
+                provider: resource.provider,
+                providerId: resource.fansub.providerId,
+                name: resource.fansub.name,
+                avatar: resource.fansub.avatar
+              }
+            : undefined
+        )
+        .filter(Boolean)
+    );
   }
 }
