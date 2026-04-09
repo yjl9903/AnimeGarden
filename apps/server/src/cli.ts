@@ -142,6 +142,7 @@ app
     const start = options.start;
     const end = options.end ? +options.end : start + 1;
     for (let i = start; i < end; i++) {
+      console.log(`Fetching dmhy page ${i}`);
       const resp = await fetchDmhyPage(fetch, { page: i, retry: options.retry });
       if (resp.length === 0) break;
       fs.writeFileSync(path.join(outDir, i + '.json'), JSON.stringify(resp, null, 2), 'utf-8');
@@ -162,6 +163,7 @@ app
     const start = options.start;
     const end = options.end ? +options.end : start + 1;
     for (let i = start; i < end; i++) {
+      console.log(`Fetching moe page ${i}`);
       const resp = await fetchMoePage(fetch, { page: i, retry: options.retry });
       if (resp.length === 0) break;
       fs.writeFileSync(path.join(outDir, i + '.json'), JSON.stringify(resp, null, 2), 'utf-8');
@@ -182,6 +184,7 @@ app
     const start = options.start;
     const end = options.end ? +options.end : start + 1;
     for (let i = start; i < end; i++) {
+      console.log(`Fetching mikan page ${i}`);
       const resp = await fetchMikanPage(fetch, { page: i, retry: options.retry });
       if (resp.length === 0) break;
       fs.writeFileSync(path.join(outDir, i + '.json'), JSON.stringify(resp, null, 2), 'utf-8');
