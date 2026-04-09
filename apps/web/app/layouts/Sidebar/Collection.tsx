@@ -199,7 +199,7 @@ export const CollectionItemContent = memo(
                         e.preventDefault();
                         e.stopPropagation();
                         window.open(`/resources/1${item.searchParams}`);
-                        track('colleciton.open-resources', { search: item.searchParams });
+                        track('collection.open-resources', { search: item.searchParams });
                       }}
                     >
                       <span className="i-ant-design:link-outlined mr1"></span>

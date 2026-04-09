@@ -276,7 +276,7 @@ function FansubGroupResources({
           target="_blank"
           className="flex items-center cursor-pointer text-base font-light text-[#ee802f] border-b-2 border-b-transparent hover:(text-[#ff7800] border-b-[#ff7800])"
         >
-          <span className="i-mdi-rss text-sm mr-1"></span>
+          <span className="i-mdi-rss text-sm mr-1 relative top-[1px]"></span>
           <span>RSS</span>
         </a>
       </h2>

@@ -3,8 +3,10 @@ import { Command } from 'cmdk';
 import { useAtom } from 'jotai';
 import { useLocation, useNavigate } from '@remix-run/react';
 import {
-  type FormEvent,
+  type CompositionEvent,
+  type InputEvent as ReactInputEvent,
   type KeyboardEvent,
+  type RefObject,
   memo,
   useCallback,
   useEffect,
@@ -17,6 +19,8 @@ import {
   fetchResources,
   trackSearchHistoryClick,
   trackSearchHistoryDelete,
+  trackSearchResultClick,
+  trackSearchSuggestionClick,
   trackSearchTrigger,
   type SearchTriggerSource
 } from '~/utils';
@@ -32,6 +36,26 @@ import { useActiveElement, useDocument, useEventListener } from '~/hooks';
 import { DMHY_RE, debounce, parseSearchInput, resolveSearchURL, stringifySearch } from './utils';
 
 const SEARCH_HELP_URL = `https://animespace.onekuma.cn/animegarden/search.html`;
+
+const SEARCH_SELECT_TRACK_WINDOW_MS = 300;
+
+type RecentTrackRef = RefObject<{
+  key?: string;
+  timestamp?: number;
+}>;
+
+function trackOnceWithinWindow(trackedRef: RecentTrackRef, key: string, action: () => void) {
+  const now = Date.now();
+  if (
+    trackedRef.current.key === key &&
+    now - (trackedRef.current.timestamp ?? 0) < SEARCH_SELECT_TRACK_WINDOW_MS
+  ) {
+    return;
+  }
+
+  trackedRef.current = { key, timestamp: now };
+  action();
+}
 
 export const Search = memo(() => {
   const location = useLocation();
@@ -109,9 +133,8 @@ export const Search = memo(() => {
     setInput(value);
     setDebounceSearch(value);
   }, []);
-  const onCompositionEnd = useCallback((ev: FormEvent<HTMLInputElement>) => {
-    const e = ev.nativeEvent as InputEvent;
-    const value = (e.target as HTMLInputElement).value;
+  const onCompositionEnd = useCallback((ev: CompositionEvent<HTMLInputElement>) => {
+    const value = ev.currentTarget.value;
     // After 输入法 is confirmed, trigger search
     setDebounceSearch(value);
   }, []);
@@ -129,11 +152,10 @@ export const Search = memo(() => {
       event.stopPropagation();
     }
   }, []);
-  const onInput = useCallback((ev: FormEvent<HTMLInputElement>) => {
-    const e = ev.nativeEvent as InputEvent;
-    const value = (e.target as HTMLInputElement).value;
+  const onInput = useCallback((ev: ReactInputEvent<HTMLInputElement>) => {
+    const value = ev.currentTarget.value;
     // When using 输入法, not trigger search
-    if (!e.isComposing) {
+    if (!ev.nativeEvent.isComposing) {
       setDebounceSearch(value);
     }
   }, []);
@@ -268,6 +290,7 @@ function SearchSubject(props: {
   onSelect: (key: string, text?: string, isCleanUp?: boolean) => void;
 }) {
   const { search, onInputChange, onSelect } = props;
+  const trackedRef = useRef<{ key?: string; timestamp?: number }>({});
 
   const [dirty, setDirty] = useState(false);
 
@@ -276,6 +299,23 @@ function SearchSubject(props: {
     const keywors = [...filter.search, ...filter.include];
     return searchSubjects(keywors).slice(0, 3);
   }, [search]);
+
+  const handleSuggestionSelect = useCallback(
+    (bgm: (typeof bangumis)[number]) => {
+      const text = '动画:' + getSubjectDisplayName(bgm);
+
+      trackOnceWithinWindow(trackedRef, `subject:${bgm.id}`, () => {
+        trackSearchSuggestionClick({
+          text,
+          subjectId: String(bgm.id)
+        });
+      });
+
+      onInputChange(text);
+      onSelect(getSubjectURL(bgm), text, false);
+    },
+    [bangumis, onInputChange, onSelect]
+  );
 
   useEffect(() => {
     if (bangumis.length > 0) return;
@@ -292,14 +332,8 @@ function SearchSubject(props: {
         {bangumis.map((bgm) => (
           <Command.Item
             key={bgm.id}
-            onMouseDown={() => {
-              onInputChange('动画:' + getSubjectDisplayName(bgm));
-              onSelect(getSubjectURL(bgm), '动画:' + getSubjectDisplayName(bgm), false);
-            }}
-            onSelect={() => {
-              onInputChange('动画:' + getSubjectDisplayName(bgm));
-              onSelect(getSubjectURL(bgm), '动画:' + getSubjectDisplayName(bgm), false);
-            }}
+            onMouseDown={() => handleSuggestionSelect(bgm)}
+            onSelect={() => handleSuggestionSelect(bgm)}
           >
             {getSubjectDisplayName(bgm)}
           </Command.Item>
@@ -403,6 +437,23 @@ function SearchResult(props: {
   selectGoToSearch: () => void;
 }) {
   const { search, signals, onSelect, selectGoToSearch } = props;
+  const trackedRef = useRef<{ key?: string; timestamp?: number }>({});
+
+  const handleResultSelect = useCallback(
+    (provider: string, providerId: string) => {
+      const resource = `${provider}:${providerId}`;
+
+      trackOnceWithinWindow(trackedRef, `resource:${resource}`, () => {
+        trackSearchResultClick({
+          text: search,
+          resource
+        });
+      });
+
+      onSelect(`/detail/${provider}/${providerId}`);
+    },
+    [onSelect, search]
+  );
 
   const { data: searchResult, isLoading } = useSWR(
     () => {
@@ -455,8 +506,8 @@ function SearchResult(props: {
             <Command.Item
               key={r.href}
               value={r.href}
-              onSelect={() => onSelect(`/detail/${r.provider}/${r.providerId}`)}
-              onMouseDown={() => onSelect(`/detail/${r.provider}/${r.providerId}`)}
+              onSelect={() => handleResultSelect(r.provider, r.providerId)}
+              onMouseDown={() => handleResultSelect(r.provider, r.providerId)}
             >
               {r.title}
             </Command.Item>

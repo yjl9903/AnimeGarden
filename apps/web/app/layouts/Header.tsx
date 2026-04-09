@@ -43,7 +43,7 @@ export const Header = memo((props: { feedURL?: string }) => {
               target="_blank"
             >
               <span>
-                <span className="i-mdi-rss text-sm mr1" />
+                <span className="i-mdi-rss text-sm mr1 relative top-[2px]" />
                 <span>RSS</span>
               </span>
             </a>

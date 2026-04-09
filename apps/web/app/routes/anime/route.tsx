@@ -5,7 +5,7 @@ import { NavLink, useLoaderData } from '@remix-run/react';
 
 import Layout from '~/layouts/Layout';
 import { getCalendar } from '~/utils/calendar';
-import { fetchTimestamp, getCanonicalURL } from '~/utils';
+import { fetchTimestamp, getCanonicalURL, trackAnimeCalendarClick } from '~/utils';
 import { getSubjectDisplayName, getSubjectURL } from '~/utils/subjects';
 
 import './anime.css';
@@ -126,7 +126,18 @@ export default function Index() {
                 onScroll={scrollHandler[cal.index - 1]}
               >
                 {cal.bangumis.map((bgm) => (
-                  <NavLink to={getSubjectURL(bgm)} className="block w-max" key={bgm.id}>
+                  <NavLink
+                    to={getSubjectURL(bgm)}
+                    className="block w-max"
+                    key={bgm.id}
+                    onClick={() =>
+                      trackAnimeCalendarClick({
+                        subjectId: String(bgm.id),
+                        title: getSubjectDisplayName(bgm),
+                        weekday: `星期${cal.text}`
+                      })
+                    }
+                  >
                     <div className="w-150px h-225px flex items-center select-none">
                       <img
                         src={bgm.poster}

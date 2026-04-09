@@ -54,6 +54,22 @@ export interface TrackFooterExternalLinkPayload {
   href: string;
 }
 
+export interface TrackAnimeCalendarClickPayload {
+  subjectId: string;
+  title: string;
+  weekday: string;
+}
+
+export interface TrackSearchSuggestionClickPayload {
+  text: string;
+  subjectId: string;
+}
+
+export interface TrackSearchResultClickPayload {
+  text: string;
+  resource: string;
+}
+
 export const track = (event: string, payload?: Record<string, string>) => {
   try {
     // @ts-ignore
@@ -95,7 +111,7 @@ export const trackCopyFetchCurl = () => {
 };
 
 export const trackCopyFetchJS = () => {
-  track('copy.fetc', { language: 'javascript' });
+  track('copy.fetch', { language: 'javascript' });
 };
 
 export const trackCopyFetchPython = () => {
@@ -167,5 +183,27 @@ export const trackFooterExternalLinkClick = (payload: TrackFooterExternalLinkPay
     section: payload.section,
     label: payload.label,
     href: payload.href
+  });
+};
+
+export const trackAnimeCalendarClick = (payload: TrackAnimeCalendarClickPayload) => {
+  track('anime.calendar.click', {
+    subjectId: payload.subjectId,
+    title: payload.title,
+    weekday: payload.weekday
+  });
+};
+
+export const trackSearchSuggestionClick = (payload: TrackSearchSuggestionClickPayload) => {
+  track('search.suggestion.click', {
+    text: payload.text,
+    subjectId: payload.subjectId
+  });
+};
+
+export const trackSearchResultClick = (payload: TrackSearchResultClickPayload) => {
+  track('search.result.click', {
+    text: payload.text,
+    resource: payload.resource
   });
 };
