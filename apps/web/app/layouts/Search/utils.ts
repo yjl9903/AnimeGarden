@@ -5,6 +5,34 @@ import { getSubjectById, getSubjectByName, getSubjectDisplayName } from '~/utils
 
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
 
+// TODO: support other mikan url
+export const MIKAN_RE =
+  /(?:https?:\/\/mikanani\.kas\.pub\/Home\/Episode\/|\/Home\/Episode\/)?([0-9a-fA-F]{40})/;
+
+export function matchDirectDetailURL(search: string) {
+  const dmhy = DMHY_RE.exec(search);
+  if (dmhy) {
+    return {
+      provider: 'dmhy',
+      providerId: dmhy[1]
+    } as const;
+  }
+
+  const mikan = MIKAN_RE.exec(search);
+  if (mikan) {
+    return {
+      provider: 'mikan',
+      providerId: mikan[1].toLowerCase()
+    } as const;
+  }
+
+  return undefined;
+}
+
+export function isDirectDetailURL(search: string) {
+  return matchDirectDetailURL(search) !== undefined;
+}
+
 export function parseSearchInput(input: string) {
   function splitWords(search: string) {
     const matchQuotes = {
@@ -239,9 +267,9 @@ export function resolveSearchURL(search: string) {
   } else if (search.startsWith(location.host)) {
     return search.slice(location.host.length);
   } else {
-    const match = DMHY_RE.exec(search);
+    const match = matchDirectDetailURL(search);
     if (match) {
-      return `/detail/dmhy/${match[1]}`;
+      return `/detail/${match.provider}/${match.providerId}`;
     } else {
       const filter = parseSearchInput(search);
       const searchParams = stringifyURLSearch(filter);

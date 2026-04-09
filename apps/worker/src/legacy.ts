@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { SupportProviders } from '@animegarden/client';
+
 const dateLike = z
   .union([z.coerce.number().transform((n) => new Date(n)), z.coerce.date()])
   .optional();
@@ -30,7 +32,7 @@ const numberArrayLike = z.coerce
   .pipe(z.union([numberArray, stringArray]))
   .optional();
 
-const providerEnum = z.enum(['dmhy', 'moe']);
+const providerEnum = z.enum(SupportProviders);
 const providerLike = z
   .union([
     providerEnum.transform((t) => [t]),

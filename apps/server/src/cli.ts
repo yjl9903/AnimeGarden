@@ -204,17 +204,6 @@ app
     fs.writeFileSync(path.join(outDir, 'latest.json'), JSON.stringify(resp, null, 2), 'utf-8');
   });
 
-app
-  .command('import [dir]', 'Import subjects, tags, and local resources data (WIP)')
-  .action(async (dir, options) => {
-    const sys = await initialize(options);
-    await sys.initialize();
-    await sys.modules.subjects.importFromBgmd();
-    await sys.modules.subjects.updateCalendar();
-    await sys.modules.tags.importFromAnipar();
-    await sys.close();
-  });
-
 app.command('import tags', 'Import tags from anipar (WIP)').action(async (options) => {
   const sys = await initialize(options);
   await sys.initialize();
@@ -231,12 +220,21 @@ app.command('import subjects', 'Import subjects from bgmd').action(async (option
 });
 
 app
-  .command('import resources [dir]', 'Import local resources data (WIP)')
+  .command('import resources <dir>', 'Import local resources data (WIP)')
+  .option('--batch-size <size>', 'JSON files per batch', { cast: (v) => (v ? +v : 10) })
   .action(async (dir, options) => {
     const sys = await initialize(options);
-    await sys.initialize();
-    // TODO
-    await sys.close();
+
+    try {
+      await sys.initialize();
+      const { runImportResources } = await import('./resources/import');
+      await runImportResources(sys, {
+        dir,
+        batchSize: options.batchSize
+      });
+    } finally {
+      await sys.close();
+    }
   });
 
 // --- utils

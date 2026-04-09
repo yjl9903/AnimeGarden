@@ -47,10 +47,11 @@
                       "type": "object",
                       "properties": {
                         "dmhy": { "$ref": "#/components/schemas/Provider" },
+                        "mikan": { "$ref": "#/components/schemas/Provider" },
                         "moe": { "$ref": "#/components/schemas/Provider" },
                         "ani": { "$ref": "#/components/schemas/Provider" }
                       },
-                      "required": ["dmhy", "moe", "ani"],
+                      "required": ["dmhy", "mikan", "moe", "ani"],
                       "additionalProperties": false
                     }
                   },
@@ -281,7 +282,7 @@
             "description": "提供商名称",
             "schema": {
               "type": "string",
-              "enum": ["dmhy", "moe", "ani"]
+              "enum": ["dmhy", "mikan", "moe", "ani"]
             }
           },
           {
@@ -356,7 +357,7 @@
             "description": "提供商名称",
             "schema": {
               "type": "string",
-              "enum": ["dmhy", "moe", "ani"]
+              "enum": ["dmhy", "mikan", "moe", "ani"]
             }
           },
           {
@@ -404,7 +405,7 @@
             "description": "提供商名称",
             "schema": {
               "type": "string",
-              "enum": ["dmhy", "moe", "ani"]
+              "enum": ["dmhy", "mikan", "moe", "ani"]
             }
           },
           {
@@ -986,7 +987,7 @@
             "description": "提供商名称",
             "schema": {
               "type": "string",
-              "enum": ["dmhy", "moe", "ani"]
+              "enum": ["dmhy", "mikan", "moe", "ani"]
             }
           }
         ],
@@ -1070,7 +1071,7 @@
             "description": "提供商名称",
             "schema": {
               "type": "string",
-              "enum": ["dmhy", "moe", "ani"]
+              "enum": ["dmhy", "mikan", "moe", "ani"]
             }
           },
           {
@@ -1200,7 +1201,7 @@
         "description": "提供商过滤",
         "schema": {
           "type": "string",
-          "enum": ["dmhy", "moe", "ani"]
+          "enum": ["dmhy", "mikan", "moe", "ani"]
         }
       },
       "SearchParam": {
@@ -1359,7 +1360,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "enum": ["dmhy", "moe", "ani"]
+            "enum": ["dmhy", "mikan", "moe", "ani"]
           },
           "name": {
             "type": "string"
@@ -1586,7 +1587,7 @@
           },
           "provider": {
             "type": "string",
-            "enum": ["dmhy", "moe", "ani"]
+            "enum": ["dmhy", "mikan", "moe", "ani"]
           },
           "duplicate": {
             "type": "boolean"
@@ -1680,7 +1681,7 @@
           },
           "provider": {
             "type": "string",
-            "enum": ["dmhy", "moe", "ani"]
+            "enum": ["dmhy", "mikan", "moe", "ani"]
           },
           "duplicate": {
             "type": "boolean",
