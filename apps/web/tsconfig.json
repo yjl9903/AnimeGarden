@@ -1,7 +1,10 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2022"
+    ],
     "types": [
       "@remix-run/node",
       "vite/client",
@@ -21,11 +24,18 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "@/*": ["./app/*"],
-      "~/*": ["./app/*"],
-      "@animegarden/client": ["../../packages/client/src/index.ts"],
-      "@animegarden/scraper": ["../../packages/scraper/src/index.ts"],
-      "@animegarden/shared": ["../../packages/shared/src/index.ts"]
+      "@/*": [
+        "./app/*"
+      ],
+      "~/*": [
+        "./app/*"
+      ],
+      "@animegarden/client": [
+        "../../packages/client/src/index.ts"
+      ],
+      "@animegarden/shared": [
+        "../../packages/shared/src/index.ts"
+      ]
     },
     "noEmit": true
   },
@@ -37,5 +47,7 @@
     "**/.client/**/*.ts",
     "**/.client/**/*.tsx"
   ],
-  "exclude": ["../../packages/**/*"]
+  "exclude": [
+    "../../packages/**/*"
+  ]
 }
