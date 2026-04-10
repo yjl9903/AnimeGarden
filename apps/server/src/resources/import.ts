@@ -15,25 +15,6 @@ export interface ImportResourcesOptions {
   batchSize?: number;
 }
 
-function isProviderType(provider: string): provider is ProviderType {
-  return SupportProviders.includes(provider as ProviderType);
-}
-
-function resolveImportProvider(dir: string | undefined, provider?: string) {
-  if (provider && isProviderType(provider)) {
-    return provider;
-  }
-
-  if (dir) {
-    const name = path.basename(path.resolve(dir));
-    if (isProviderType(name)) {
-      return name;
-    }
-  }
-
-  return undefined;
-}
-
 function orderImportFiles(files: string[]) {
   const pages = files
     .map((file) => {
@@ -113,7 +94,7 @@ export async function runImportResources(sys: System, options: ImportResourcesOp
     const batchIndex = Math.floor(offset / batchSize) + 1;
     const batchFiles = files.slice(offset, offset + batchSize);
 
-    console.log(
+    sys.logger.info(
       `Importing batch ${batchIndex}/${totalBatches}: ${batchFiles[0]} .. ${batchFiles.at(-1)}`
     );
 
@@ -148,12 +129,12 @@ export async function runImportResources(sys: System, options: ImportResourcesOp
     detached += duplicated.detached.length;
     errors += upsert.errors.length;
 
-    console.log(
+    sys.logger.info(
       `Imported batch ${batchIndex}/${totalBatches}: ${upsert.inserted.length} inserted, ${upsert.updated.length} updated, ${duplicated.attached.length} attached, ${duplicated.detached.length} detached, ${upsert.errors.length} errors`
     );
   }
 
-  console.log(
+  sys.logger.info(
     `Import finished: ${inserted} inserted, ${updated} updated, ${attached} attached, ${detached} detached, ${errors} errors`
   );
 }
