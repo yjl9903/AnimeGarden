@@ -18,7 +18,7 @@ import {
   parseSize,
   getPikPakTrackEvent,
   getDownloadTrackEvent,
-  trackResourceMoreClick,
+  trackResourceDetailClick,
   trackResourceRefineFilterClick
 } from '~/utils';
 
@@ -215,7 +215,7 @@ export const ResourceItem = memo(
                 <NavLink
                   to={getDetailHref(r)}
                   onClick={() =>
-                    trackResourceMoreClick({
+                    trackResourceDetailClick({
                       provider: r.provider,
                       providerId: r.providerId,
                       type: r.type

@@ -163,8 +163,8 @@ export const trackSearchHistoryDelete = (payload: TrackSearchHistoryDeletePayloa
   track('search.history.delete', result);
 };
 
-export const trackResourceMoreClick = (payload: TrackResourceMoreClickPayload) => {
-  track('resources.more.click', {
+export const trackResourceDetailClick = (payload: TrackResourceMoreClickPayload) => {
+  track('resources.detail.click', {
     resource: `${payload.provider}:${payload.providerId}`,
     type: payload.type
   });
