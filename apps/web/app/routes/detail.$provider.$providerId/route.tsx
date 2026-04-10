@@ -163,7 +163,7 @@ export default function Resources() {
             <h2 className="text-lg font-bold border-b px4 py2 flex items-center">
               <a
                 href={pikpakUrl}
-                {...getPikPakTrackEvent(provider, providerId)}
+                {...getPikPakTrackEvent(provider, providerId, 'detail')}
                 className="play text-link-active underline underline-dotted underline-offset-6"
                 target="_blank"
               >
@@ -180,7 +180,7 @@ export default function Resources() {
                 <span>
                   <a
                     href={pikpakUrl}
-                    {...getPikPakTrackEvent(provider, providerId)}
+                    {...getPikPakTrackEvent(provider, providerId, 'detail')}
                     className="play text-link-active underline underline-dotted underline-offset-6"
                     target="_blank"
                   >
@@ -189,7 +189,7 @@ export default function Resources() {
                 </span>
                 <a
                   href={pikpakUrl}
-                  {...getPikPakTrackEvent(provider, providerId)}
+                  {...getPikPakTrackEvent(provider, providerId, 'detail')}
                   className="play text-link"
                   target="_blank"
                 >
@@ -201,7 +201,7 @@ export default function Resources() {
                   <span>{magnet.name}</span>
                   <a
                     href={magnet.url}
-                    {...getDownloadTrackEvent(provider, providerId)}
+                    {...getDownloadTrackEvent(provider, providerId, 'detail')}
                     className="download text-link"
                   >
                     {splitMagnetURL(magnet.url)}

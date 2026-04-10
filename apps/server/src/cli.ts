@@ -221,6 +221,12 @@ app.command('import subjects', 'Import subjects from bgmd').action(async (option
 
 app
   .command('import resources <dir>', 'Import local resources data (WIP)')
+  .option('--start <page>', 'Import resources from page (inclusive)', {
+    cast: (v) => (v ? +v : undefined)
+  })
+  .option('--end <page>', 'Import resources to page (inclusive)', {
+    cast: (v) => (v ? +v : undefined)
+  })
   .option('--batch-size <size>', 'JSON files per batch', { cast: (v) => (v ? +v : 10) })
   .action(async (dir, options) => {
     const sys = await initialize(options);
@@ -230,6 +236,8 @@ app
       const { runImportResources } = await import('./resources/import');
       await runImportResources(sys, {
         dir,
+        start: options.start,
+        end: options.end,
         batchSize: options.batchSize
       });
     } finally {

@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 
-import { type ProviderType, type ScrapedResource, SupportProviders } from '@animegarden/client';
+import type { ScrapedResource } from '@animegarden/client';
 
 import type { System } from '../system';
 
@@ -13,27 +13,62 @@ export interface ImportResourcesOptions {
   provider?: string;
 
   batchSize?: number;
+
+  start?: number;
+
+  end?: number;
 }
 
-function orderImportFiles(files: string[]) {
+interface ImportFile {
+  file: string;
+  page?: number;
+}
+
+interface PagedImportFile extends ImportFile {
+  page: number;
+}
+
+function parseImportFile(file: string): ImportFile {
+  const match = /^(\d+)\.json$/.exec(file);
+  return match
+    ? {
+        file,
+        page: +match[1]
+      }
+    : {
+        file
+      };
+}
+
+function orderImportFiles(files: string[]): ImportFile[] {
   const pages = files
-    .map((file) => {
-      const match = /^(\d+)\.json$/.exec(file);
-      return match
-        ? {
-            file,
-            page: +match[1]
-          }
-        : undefined;
-    })
-    .filter(Boolean)
+    .map(parseImportFile)
+    .filter((file): file is PagedImportFile => file.page !== undefined)
     .sort((lhs, rhs) => rhs.page - lhs.page);
 
   const others = files
-    .filter((file) => !/^\d+\.json$/.test(file))
-    .sort((lhs, rhs) => lhs.localeCompare(rhs));
+    .map(parseImportFile)
+    .filter((file) => file.page === undefined)
+    .sort((lhs, rhs) => lhs.file.localeCompare(rhs.file));
 
-  return [...pages.map((item) => item.file), ...others];
+  return [...pages, ...others];
+}
+
+function filterImportFilesByPage(files: ImportFile[], options: ImportResourcesOptions) {
+  if (options.start === undefined && options.end === undefined) {
+    return files;
+  }
+
+  const minPage =
+    options.start !== undefined && options.end !== undefined
+      ? Math.min(options.start, options.end)
+      : (options.start ?? Number.NEGATIVE_INFINITY);
+  const maxPage =
+    options.start !== undefined && options.end !== undefined
+      ? Math.max(options.start, options.end)
+      : (options.end ?? Number.POSITIVE_INFINITY);
+
+  return files.filter((file) => file.page !== undefined && file.page >= minPage && file.page <= maxPage);
 }
 
 function toNewResource(resource: ScrapedResource, fetchedAt?: Date): NewResource {
@@ -75,10 +110,18 @@ export async function runImportResources(sys: System, options: ImportResourcesOp
     throw new TypeError(`Import dir does not exist: ${inputDir}`);
   }
 
-  const files = orderImportFiles(
-    (await fs.readdir(inputDir)).filter((file) => path.extname(file).toLowerCase() === '.json')
+  const files = filterImportFilesByPage(
+    orderImportFiles(
+      (await fs.readdir(inputDir)).filter((file) => path.extname(file).toLowerCase() === '.json')
+    ),
+    options
   );
   if (files.length === 0) {
+    if (options.start !== undefined || options.end !== undefined) {
+      throw new TypeError(
+        `No JSON page files found in ${inputDir} for range ${options.start ?? '*'} .. ${options.end ?? '*'}`
+      );
+    }
     throw new TypeError(`No JSON files found in ${inputDir}`);
   }
 
@@ -90,20 +133,29 @@ export async function runImportResources(sys: System, options: ImportResourcesOp
   let detached = 0;
   let errors = 0;
 
+  if (options.start !== undefined || options.end !== undefined) {
+    const pageFiles = files.filter((file) => file.page !== undefined);
+    sys.logger.info(
+      `Importing page range ${pageFiles[0]?.page} .. ${pageFiles.at(-1)?.page} from ${inputDir}`
+    );
+  }
+
   for (let offset = 0; offset < files.length; offset += batchSize) {
     const batchIndex = Math.floor(offset / batchSize) + 1;
     const batchFiles = files.slice(offset, offset + batchSize);
 
     sys.logger.info(
-      `Importing batch ${batchIndex}/${totalBatches}: ${batchFiles[0]} .. ${batchFiles.at(-1)}`
+      `Importing batch ${batchIndex}/${totalBatches}: ${batchFiles[0]?.file} .. ${batchFiles.at(-1)?.file}`
     );
 
     const fetchedAt = new Date();
     const pages = await Promise.all(
       batchFiles.map(async (file) => {
-        const content = await fs.readJSON(path.join(inputDir, file));
+        const content = await fs.readJSON(path.join(inputDir, file.file));
         if (!Array.isArray(content)) {
-          throw new TypeError(`Import file is not a resource array: ${path.join(inputDir, file)}`);
+          throw new TypeError(
+            `Import file is not a resource array: ${path.join(inputDir, file.file)}`
+          );
         }
         return content as ScrapedResource[];
       })

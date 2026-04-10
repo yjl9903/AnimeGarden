@@ -173,6 +173,8 @@ export class ResourcesModule extends Module<System['modules']> {
       };
     }
 
+    this.logger.info(`Start upserting ${resources.length} resources`);
+
     await this.ensureParties(deduped);
 
     const transformed: NewDbResource[] = [];
@@ -184,6 +186,10 @@ export class ResourcesModule extends Module<System['modules']> {
         errors.push(resource);
       }
     }
+
+    this.logger.success(
+      `Finish transforming upserting ${transformed.length} resources, failed ${errors.length} resources`
+    );
 
     if (transformed.length === 0) {
       return {
@@ -307,6 +313,10 @@ export class ResourcesModule extends Module<System['modules']> {
         updated.push(resp[0]);
       }
     }
+
+    this.logger.success(
+      `Finish inserting ${inserted.length} resources, updating ${updated.length} resources, encountering ${errors.length} resources`
+    );
 
     return {
       inserted,
@@ -432,6 +442,8 @@ export class ResourcesModule extends Module<System['modules']> {
       };
     }
 
+    this.logger.info(`Start maintaining ${changed.length} resources`);
+
     const attach = new Set<number>();
     const detach = new Set<number>();
 
@@ -491,6 +503,10 @@ export class ResourcesModule extends Module<System['modules']> {
       }
     }
 
+    this.logger.success(
+      `Finish selecting ${winnerIds.size} leader resources, ${loserIds.size} kinds duplicated resources`
+    );
+
     if (winnerIds.size > 0) {
       await retryDatabaseFn(
         () =>
@@ -512,6 +528,10 @@ export class ResourcesModule extends Module<System['modules']> {
         { count: 5 }
       );
     }
+
+    this.logger.success(
+      `Finish marking ${winnerIds.size} leader resources, ${loserIds.size} kinds duplicated resources`
+    );
 
     return {
       attached: [...attach],

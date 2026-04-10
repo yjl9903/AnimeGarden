@@ -56,7 +56,7 @@ export class UsersModule extends Module<System['modules']> {
   }
 
   public async insertUsers(users: UserInfo[]) {
-    this.logger.info(`Start inserting ${users.length} users`, users);
+    this.logger.info(`Start inserting ${users.length} users`);
 
     const dbUsers = [...this.users.values()];
     const map = new Map<string, (typeof dbUsers)[0]>();
@@ -215,7 +215,7 @@ export class TeamsModule extends Module<System['modules']> {
   }
 
   public async insertTeams(teams: TeamInfo[]) {
-    this.logger.info(`Start inserting ${teams.length} teams`, teams);
+    this.logger.info(`Start inserting ${teams.length} teams`);
 
     const dbTeams = [...this.teams.values()];
     const map = new Map<string, (typeof dbTeams)[0]>();

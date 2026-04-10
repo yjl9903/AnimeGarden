@@ -176,7 +176,7 @@ export const ResourceItem = memo(
                       <>
                         <a
                           href={getPikPakUrlChecker(r.magnet)}
-                          {...getPikPakTrackEvent(r.provider, r.providerId)}
+                          {...getPikPakTrackEvent(r.provider, r.providerId, 'title')}
                           className="text-link mr1"
                           aria-label={`Go to download resource of ${r.title}`}
                           target="_blank"
@@ -205,7 +205,7 @@ export const ResourceItem = memo(
                 </NavLink>
                 <a
                   href={r.magnet + (hydrated ? r.tracker : '')}
-                  {...getDownloadTrackEvent(r.provider, r.providerId)}
+                  {...getDownloadTrackEvent(r.provider, r.providerId, 'size')}
                   data-resource-title={r.title}
                   className="text-link-secondary-hover-base text-xs text-zinc-400"
                   aria-label="Download resource"
@@ -226,7 +226,7 @@ export const ResourceItem = memo(
                 >
                   <CarbonLaunch className="vertical-middle relative bottom-[1px] inline-block"></CarbonLaunch>
                   <span> </span>
-                  <span className="more">更多</span>
+                  <span className="more">详情</span>
                 </NavLink>
               </div>
             </div>
@@ -267,7 +267,7 @@ export const ResourceItem = memo(
           <div className="flex gap1 items-center justify-start">
             <a
               href={getPikPakUrlChecker(r.magnet)}
-              {...getPikPakTrackEvent(r.provider, r.providerId)}
+              {...getPikPakTrackEvent(r.provider, r.providerId, 'play')}
               data-resource-title={r.title}
               className="play text-xl text-base-500 hover:text-base-900"
               aria-label="Play resource"
@@ -277,7 +277,7 @@ export const ResourceItem = memo(
             </a>
             <a
               href={r.magnet + (hydrated ? r.tracker : '')}
-              {...getPikPakTrackEvent(r.provider, r.providerId)}
+              {...getDownloadTrackEvent(r.provider, r.providerId, 'download')}
               data-resource-title={r.title}
               className="download text-xl text-base-500 hover:text-base-900"
               aria-label="Download resource"
