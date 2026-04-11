@@ -14,10 +14,9 @@ export class MikanProvider extends Provider {
   }
 
   public async fetchLatestResources(sys: System): Promise<ScrapedResource[]> {
-    // return await fetchLatestPages(sys, MikanProvider.name, async (page) =>
-    //   (await fetchMikanPage(fetch, { page, retry: 5 })).filter((r) => r.fansub && r.publisher)
-    // );
-    return [];
+    return await fetchLatestPages(sys, MikanProvider.name, async (page) =>
+      (await fetchMikanPage(fetch, { page, retry: 5 })).filter((r) => r.fansub && r.publisher)
+    );
   }
 
   public async fetchResourcePages(
@@ -25,15 +24,14 @@ export class MikanProvider extends Provider {
     start: number,
     end: number
   ): Promise<ScrapedResource[]> {
-    // return await fetchResourcePages(
-    //   sys,
-    //   MikanProvider.name,
-    //   async (page) =>
-    //     (await fetchMikanPage(fetch, { page, retry: 5 })).filter((r) => r.fansub && r.publisher),
-    //   start,
-    //   end
-    // );
-    return [];
+    return await fetchResourcePages(
+      sys,
+      MikanProvider.name,
+      async (page) =>
+        (await fetchMikanPage(fetch, { page, retry: 5 })).filter((r) => r.fansub && r.publisher),
+      start,
+      end
+    );
   }
 
   public async fetchResourceDetail(

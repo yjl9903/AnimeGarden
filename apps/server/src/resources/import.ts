@@ -1,11 +1,15 @@
 import fs from 'fs-extra';
 import path from 'path';
+import { and, eq, isNull } from 'drizzle-orm';
 
-import type { ScrapedResource } from '@animegarden/client';
+import type { ProviderType, ScrapedResource } from '@animegarden/client';
 
 import type { System } from '../system';
+import { resources as resourceSchema } from '../schema/resources';
 
 import type { NewResource } from './types';
+
+const DUPLICATE_REPAIR_BATCH_SIZE = 1000;
 
 export interface ImportResourcesOptions {
   dir?: string;
@@ -98,6 +102,43 @@ function toNewResource(resource: ScrapedResource, fetchedAt?: Date): NewResource
         }
       : undefined
   };
+}
+
+async function maintainMikanUnduplicatedResources(sys: System) {
+  const provider = 'mikan' as ProviderType;
+  const rows = await sys.database
+    .select({ id: resourceSchema.id })
+    .from(resourceSchema)
+    .where(and(eq(resourceSchema.provider, provider), isNull(resourceSchema.duplicatedId)));
+
+  if (rows.length === 0) {
+    return;
+  }
+
+  const totalBatches = Math.ceil(rows.length / DUPLICATE_REPAIR_BATCH_SIZE);
+  let attached = 0;
+  let detached = 0;
+
+  sys.logger.info(
+    `Start repairing duplicated markers for ${rows.length} ${provider} resources with null duplicated_id`
+  );
+
+  for (let offset = 0; offset < rows.length; offset += DUPLICATE_REPAIR_BATCH_SIZE) {
+    const batchIndex = Math.floor(offset / DUPLICATE_REPAIR_BATCH_SIZE) + 1;
+    const ids = rows.slice(offset, offset + DUPLICATE_REPAIR_BATCH_SIZE).map((row) => row.id);
+    const duplicated = await sys.modules.resources.maintainDuplicatedResources(ids);
+
+    attached += duplicated.attached.length;
+    detached += duplicated.detached.length;
+
+    sys.logger.info(
+      `Repaired duplicated markers batch ${batchIndex}/${totalBatches}: ${duplicated.attached.length} attached, ${duplicated.detached.length} detached`
+    );
+  }
+
+  sys.logger.info(
+    `Finish repairing duplicated markers for ${provider}: ${attached} attached, ${detached} detached`
+  );
 }
 
 export async function runImportResources(sys: System, options: ImportResourcesOptions) {

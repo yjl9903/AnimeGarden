@@ -6,6 +6,6 @@ export const MaxRequestPageSize = 1000;
 
 export const DefaultBaseURL = 'https://api.animes.garden/';
 
-export const SupportProviders = ['dmhy', 'mikan', 'moe', 'ani'] as const;
+export const SupportProviders = ['dmhy', 'moe', 'mikan', 'ani'] as const;
 
 export const SupportPresets = ['bangumi'] as const;
