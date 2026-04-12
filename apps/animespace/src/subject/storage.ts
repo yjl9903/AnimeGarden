@@ -142,7 +142,7 @@ export class StorageManager {
         }
 
         await queue.add(async () => {
-          this.system.logger.log(`${lightRed(`删除文件`)} ${oldPath.toString()}`);
+          this.system.logger.log(`${lightRed(`删除文件`)} ${oldPath.basename}`);
           await oldPath.remove();
           await database.delete(subjectFiles).where(eq(subjectFiles.id, oldSubjectFile.id));
         });
