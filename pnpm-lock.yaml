@@ -178,8 +178,8 @@ importers:
         specifier: 0.45.2
         version: 0.45.2(@cloudflare/workers-types@4.20260417.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.9.0)(postgres@3.4.9)
       fast-xml-parser:
-        specifier: 5.6.0
-        version: 5.6.0
+        specifier: 5.7.1
+        version: 5.7.1
       fs-extra:
         specifier: 11.3.4
         version: 11.3.4
@@ -299,8 +299,8 @@ importers:
         specifier: 2.0.1
         version: 2.0.1(date-fns@2.30.0)
       fast-xml-parser:
-        specifier: 5.6.0
-        version: 5.6.0
+        specifier: 5.7.1
+        version: 5.7.1
       hono:
         specifier: 4.12.14
         version: 4.12.14
@@ -2951,8 +2951,8 @@ packages:
       '@emnapi/core': ^1.7.1
       '@emnapi/runtime': ^1.7.1
 
-  '@nodable/entities@1.1.0':
-    resolution: {integrity: sha512-bidpxmTBP0pOsxULw6XlxzQpTgrAGLDHGBK/JuWhPDL6ZV0GZ/PmN9CA9do6e+A9lYI6qx6ikJUtJYRxup141g==}
+  '@nodable/entities@2.1.0':
+    resolution: {integrity: sha512-nyT7T3nbMyBI/lvr6L5TyWbFJAI9FTgVRakNoBqCD+PmID8DzFrrNdLLtHMwMszOtqZa8PAOV24ZqDnQrhQINA==}
 
   '@node-rs/jieba-android-arm-eabi@2.0.1':
     resolution: {integrity: sha512-tavsIaxybnlA9tRbJ+oc3NW3zhx0d5rNiCGdpIdGWjflwS7HyeUTVAZmAFDlg58Mc6EjTdVKZH+RolBbAJtgcQ==}
@@ -5757,12 +5757,15 @@ packages:
   fast-xml-builder@1.1.4:
     resolution: {integrity: sha512-f2jhpN4Eccy0/Uz9csxh3Nu6q4ErKxf0XIsasomfOihuSUa3/xw6w8dnOtCDgEItQFJG8KyXPzQXzcODDrrbOg==}
 
+  fast-xml-builder@1.1.5:
+    resolution: {integrity: sha512-4TJn/8FKLeslLAH3dnohXqE3QSoxkhvaMzepOIZytwJXZO69Bfz0HBdDHzOTOon6G59Zrk6VQ2bEiv1t61rfkA==}
+
   fast-xml-parser@5.5.8:
     resolution: {integrity: sha512-Z7Fh2nVQSb2d+poDViM063ix2ZGt9jmY1nWhPfHBOK2Hgnb/OW3P4Et3P/81SEej0J7QbWtJqxO05h8QYfK7LQ==}
     hasBin: true
 
-  fast-xml-parser@5.6.0:
-    resolution: {integrity: sha512-5G+uaEBbOm9M4dgMOV3K/rBzfUNGqGqoUTaYJM3hBwM8t71w07gxLQZoTsjkY8FtfjabqgQHEkeIySBDYeBmJw==}
+  fast-xml-parser@5.7.1:
+    resolution: {integrity: sha512-8Cc3f8GUGUULg34pBch/KGyPLglS+OFs05deyOlY7fL2MTagYPKrVQNmR1fLF/yJ9PH5ZSTd3YDF6pnmeZU+zA==}
     hasBin: true
 
   fastq@1.20.1:
@@ -11673,7 +11676,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@nodable/entities@1.1.0': {}
+  '@nodable/entities@2.1.0': {}
 
   '@node-rs/jieba-android-arm-eabi@2.0.1':
     optional: true
@@ -15131,16 +15134,20 @@ snapshots:
     dependencies:
       path-expression-matcher: 1.5.0
 
+  fast-xml-builder@1.1.5:
+    dependencies:
+      path-expression-matcher: 1.5.0
+
   fast-xml-parser@5.5.8:
     dependencies:
       fast-xml-builder: 1.1.4
       path-expression-matcher: 1.5.0
       strnum: 2.2.3
 
-  fast-xml-parser@5.6.0:
+  fast-xml-parser@5.7.1:
     dependencies:
-      '@nodable/entities': 1.1.0
-      fast-xml-builder: 1.1.4
+      '@nodable/entities': 2.1.0
+      fast-xml-builder: 1.1.5
       path-expression-matcher: 1.5.0
       strnum: 2.2.3
 
@@ -18828,7 +18835,7 @@ snapshots:
       base-64: 1.0.0
       byte-length: 1.0.2
       entities: 6.0.1
-      fast-xml-parser: 5.6.0
+      fast-xml-parser: 5.7.1
       hot-patcher: 2.0.1
       layerr: 3.0.0
       md5: 2.3.0
