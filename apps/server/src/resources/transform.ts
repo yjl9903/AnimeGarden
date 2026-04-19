@@ -56,10 +56,6 @@ export function transformNewResources(
 
   if (errors.length === 0) {
     const anipar = parse(titleAlt);
-    const metadata: Record<string, any> = {};
-    if (anipar) {
-      metadata.anipar = anipar;
-    }
 
     const titleSearch = [
       anipar
@@ -93,9 +89,7 @@ export function transformNewResources(
         publisherId: publisher!.id,
         fansubId: fansub?.id,
         subjectId: indexSubject ? matchActiveSubjects(sys, titleAlt) : null,
-        metadata: {
-          ...metadata
-        },
+        metadata: {},
         isDeleted: res.isDeleted ?? false
       }
     };
