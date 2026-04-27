@@ -178,8 +178,8 @@ importers:
         specifier: 0.45.2
         version: 0.45.2(@cloudflare/workers-types@4.20260421.1)(@types/better-sqlite3@7.6.13)(better-sqlite3@12.9.0)(postgres@3.4.9)
       fast-xml-parser:
-        specifier: 5.7.1
-        version: 5.7.1
+        specifier: 5.7.2
+        version: 5.7.2
       fs-extra:
         specifier: 11.3.4
         version: 11.3.4
@@ -299,8 +299,8 @@ importers:
         specifier: 2.0.1
         version: 2.0.1(date-fns@2.30.0)
       fast-xml-parser:
-        specifier: 5.7.1
-        version: 5.7.1
+        specifier: 5.7.2
+        version: 5.7.2
       hono:
         specifier: 4.12.14
         version: 4.12.14
@@ -5773,6 +5773,10 @@ packages:
 
   fast-xml-parser@5.7.1:
     resolution: {integrity: sha512-8Cc3f8GUGUULg34pBch/KGyPLglS+OFs05deyOlY7fL2MTagYPKrVQNmR1fLF/yJ9PH5ZSTd3YDF6pnmeZU+zA==}
+    hasBin: true
+
+  fast-xml-parser@5.7.2:
+    resolution: {integrity: sha512-P7oW7tLbYnhOLQk/Gv7cZgzgMPP/XN03K02/Jy6Y/NHzyIAIpxuZIM/YqAkfiXFPxA2CTm7NtCijK9EDu09u2w==}
     hasBin: true
 
   fastq@1.20.1:
@@ -15160,6 +15164,13 @@ snapshots:
       path-expression-matcher: 1.5.0
       strnum: 2.2.3
 
+  fast-xml-parser@5.7.2:
+    dependencies:
+      '@nodable/entities': 2.1.0
+      fast-xml-builder: 1.1.5
+      path-expression-matcher: 1.5.0
+      strnum: 2.2.3
+
   fastq@1.20.1:
     dependencies:
       reusify: 1.1.0
@@ -18846,7 +18857,7 @@ snapshots:
       base-64: 1.0.0
       byte-length: 1.0.2
       entities: 6.0.1
-      fast-xml-parser: 5.7.1
+      fast-xml-parser: 5.7.2
       hot-patcher: 2.0.1
       layerr: 3.0.0
       md5: 2.3.0
