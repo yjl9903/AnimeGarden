@@ -19,11 +19,11 @@ jobs:
           fetch-depth: 0
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v5.0.0
+        uses: pnpm/action-setup@v6.0.3
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 24.14.1
+          node-version: 24.15.0
           cache: pnpm
           registry-url: "https://registry.npmjs.org"
 
