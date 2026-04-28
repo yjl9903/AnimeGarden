@@ -154,8 +154,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/anipar
       bgmd:
-        specifier: 0.20260418.0
-        version: 0.20260418.0
+        specifier: 0.20260428.0
+        version: 0.20260428.0
       breadc:
         specifier: 1.0.0-beta.15
         version: 1.0.0-beta.15
@@ -278,8 +278,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/anipar
       bgmd:
-        specifier: 0.20260418.0
-        version: 0.20260418.0
+        specifier: 0.20260428.0
+        version: 0.20260428.0
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1
@@ -4836,8 +4836,8 @@ packages:
     engines: {node: '>=v20.8.0'}
     hasBin: true
 
-  bgmd@0.20260418.0:
-    resolution: {integrity: sha512-w8qU6ZMInC/uSOjOmwrY9N0kL9qr+JH63Cm4a+4TBAnzK25L7kpWJwa7UPQpWl8kDIqCmKl/gw0xeTKbb5XE9A==}
+  bgmd@0.20260428.0:
+    resolution: {integrity: sha512-utRcS94hEbOUcg4AJt6Bs/DA8OnZxEdQMhD6LF9OPwA0+fZPcQpz3IFXktexoGegVIoGcK26fxdJSpT3kXZuDg==}
     engines: {node: '>=v24.0.0'}
 
   bgmt@0.1.3:
@@ -13774,7 +13774,7 @@ snapshots:
       '@babel/plugin-syntax-typescript': 7.28.6(@babel/core@7.29.0)
       '@vanilla-extract/babel-plugin-debug-ids': 1.2.2
       '@vanilla-extract/css': 1.20.1
-      esbuild: 0.17.6
+      esbuild: 0.18.20
       eval: 0.1.8
       find-up: 5.0.0
       javascript-stringify: 2.1.0
@@ -14043,7 +14043,7 @@ snapshots:
     dependencies:
       breadc: 1.0.0-beta.15
 
-  bgmd@0.20260418.0: {}
+  bgmd@0.20260428.0: {}
 
   bgmt@0.1.3:
     dependencies:
