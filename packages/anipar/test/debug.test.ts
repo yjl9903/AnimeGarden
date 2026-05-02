@@ -3,37 +3,37 @@ import { describe, it, expect } from 'vitest';
 import { Fansub, parse } from '../src/index.js';
 
 describe('debug', () => {
-  const title = `[LoliHouse] 佐佐木与宫野 / Sasaki to Miyano [01-12 合集][WebRip 1080p HEVC-10bit AAC ASSx2][简繁内封字幕][Fin]`;
+  const title = `[Up to 21°C] 女神降临（日配版） / Yeosin Gangnim (Japanese Audio) - 09 (ABEMA 1920x1080 AVC AAC MP4)
+`;
 
   it(title, () => {
-    expect(parse(title, { fansub: Fansub.LoliHouse })).toMatchInlineSnapshot(`
+    expect(parse(title, { fansub: Fansub.Kirara_Fantasia })).toMatchInlineSnapshot(`
       {
-        "episodeRange": {
-          "from": 1,
-          "to": 12,
-          "type": "合集",
+        "episode": {
+          "number": 9,
         },
         "fansub": {
-          "name": "LoliHouse",
+          "alias": "Up to 21°C",
+          "name": "Kirara Fantasia",
         },
         "file": {
           "audio": {
             "term": "AAC",
           },
+          "extension": "MP4",
           "video": {
-            "resolution": "1080p",
-            "term": "HEVC-10bit",
+            "resolution": "1920x1080",
+            "term": "AVC",
           },
         },
-        "language": "简繁",
-        "source": "WebRip",
-        "subtitles": "内封字幕",
-        "tags": [
-          "Fin",
-        ],
-        "title": "佐佐木与宫野",
+        "platform": "ABEMA",
+        "title": "女神降临",
         "titles": [
-          "Sasaki to Miyano",
+          "Yeosin Gangnim",
+        ],
+        "variants": [
+          "日配版",
+          "Japanese Audio",
         ],
       }
     `);

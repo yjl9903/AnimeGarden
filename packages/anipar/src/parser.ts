@@ -59,6 +59,19 @@ const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
       }
     }
 
+    // [花语字幕组&LoliHouse][清恋][Seiren][07][WebRip 1920x1080 HEVC AAC][繁日外挂字幕] v2
+    if (ctx.tags) {
+      ctx.tags.filter((tag) => {
+        const res = /^[vV](\d+)$/.exec(tag)?.[1];
+        if (res) {
+          ctx.update('version', +res);
+          return false;
+        } else {
+          return true;
+        }
+      });
+    }
+
     return ctx.validate();
   },
   [Fansub.绿茶字幕组]: (ctx) => {

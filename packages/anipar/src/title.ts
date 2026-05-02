@@ -13,7 +13,14 @@ export function splitMultipleTitles(ctx: Context, separators = ['/', '-']) {
   }
 
   // "xxx" 或者 "[xxx]" 内的内容为一个整体 或者 "xxx [yyy] zzz" 被当成一个整体
-  const fullText = rest.length === 1 ? rest[0].text : rest.map((t) => t.toString()).join('');
+  const fullText =
+    rest.length === 1
+      ? rest[0].text.trim()
+      : rest
+          .map((t) => t.toString())
+          .join('')
+          .trim();
+
   if (!fullText) return [];
 
   for (const separator of separators) {

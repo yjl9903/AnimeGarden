@@ -40,7 +40,7 @@ export const Wrappers = new Map([
 
 export const RevWrappers = new Map([...Wrappers.entries()].map(([k, v]) => [v, k]));
 
-export function tokenize(text: string, trim = true) {
+export function tokenize(text: string) {
   const tokens: Token[] = [];
 
   let cursor = 0;
@@ -73,10 +73,6 @@ export function tokenize(text: string, trim = true) {
   }
   if (cur) {
     tokens.push(new Token(cur));
-  }
-
-  if (trim) {
-    return tokens.map((t) => t.trim()).filter(t => t.text);
   }
 
   return tokens.filter((t) => t.text);

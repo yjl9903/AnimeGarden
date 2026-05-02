@@ -98,15 +98,30 @@ const VideoTerm = new Set([
 const VideoResolution = new Set([
   '480P',
   '720P',
+  '804P',
   '1080P',
   '2160P',
   'AI2160p',
+  '854X480',
+  '854×480',
   '1280X720',
   '1280×720',
   '1920X816',
   '1920×816',
+  '1920X818',
+  '1920x818',
+  '1920X820',
+  '1920×820',
   '1920X1080',
   '1920×1080',
+  '2048X852',
+  '2048×852',
+  '2538X1080',
+  '2538×1080',
+  '2600X1080',
+  '2600×1080',
+  '3840X2160',
+  '3840×2160',
   '2K',
   '4K'
 ]);
@@ -138,10 +153,62 @@ const Source = new Set([
   'WEB-DL',
   'WEBRIP',
   'WEB-RIP',
-  'WEB-MKV'
+  'WEB-MKV',
+  'MASTERRIP'
 ]);
 
-const Platfroms = new Set(['Baha', 'Bilibili', 'B-Global', 'ABEMA', 'CR', 'ViuTV', 'AMZN', 'ADN']);
+const Platfroms = new Set([
+  'Baha',
+  'Bilibili',
+  'B-Global',
+  'ABEMA',
+  'CR',
+  'ViuTV',
+  'AMZN',
+  'ADN',
+  'Sentai'
+]);
+
+const Variants = new Set([
+  '日配版',
+  '中配版',
+  '日文配音',
+  '中文配音',
+  'Japanese Audio',
+  'Japanese Dub'
+]);
+
+const SubtitleFormats = new Set([
+  'ASS',
+  'ASSX2',
+  'ASSX3',
+  'ASSX4',
+  'HARDSUB',
+  'HARDSUBS',
+  'SOFTSUB',
+  'SOFTSUBS',
+  'SUB',
+  'SUBBED',
+  'SUBTITLED',
+  'SRT',
+  'SRTX2',
+  'SRTX3',
+  'SRTX4'
+]);
+
+const SubtitleEncoding = new Set(['GB', 'BIG5']);
+
+const PlatformLanguage = new Map([
+  ['ViuTV粵語', ['ViuTV', '粵語']],
+  ['TVB粵語', ['TVB', '粵語']]
+]);
+
+// TODO
+const LanguageSubtitleFormats = new Map([
+  ['代理商粵語', ['粵語', undefined]],
+  ['粵日雙語+內封繁體中文字幕', ['繁體中文', '內封字幕']],
+  ['粵語+無對白字幕', ['粵語+無對白', undefined]]
+]);
 
 const Languages = new Set([
   'CN',
@@ -150,6 +217,7 @@ const Languages = new Set([
   'YUE',
   'JP',
   '简体',
+  '简繁',
   '国语中字',
   '繁體',
   '中日双语',
@@ -158,27 +226,6 @@ const Languages = new Set([
   'HOY粵語'
 ]);
 
-const Subtitles = new Set([
-  'ASS',
-  'ASSX2',
-  'GB',
-  'BIG5',
-  'DUB',
-  'DUBBED',
-  'HARDSUB',
-  'HARDSUBS',
-  'RAW',
-  'SOFTSUB',
-  'SOFTSUBS',
-  'SUB',
-  'SUBBED',
-  'SUBTITLED',
-  'SRT',
-  'SRTX3'
-]);
-
-const Variants = new Set(['日配版', '中配版', '日文配音', '中文配音']);
-
 const LanguagePrefixes = [
   '简体',
   '简日双语',
@@ -186,6 +233,8 @@ const LanguagePrefixes = [
   '简繁日双语',
   '简繁日语',
   '简繁日',
+  '简繁英日',
+  '简繁日英',
   '简繁英',
   '简繁',
   '繁體',
@@ -197,18 +246,16 @@ const LanguagePrefixes = [
   '英文'
 ];
 
-const SubtitlesSufixes = new Set(['内嵌', '內嵌', '内封', '内封字幕', '外挂', '外掛', '外挂字幕']);
-
-const PlatformLanguage = new Map([['ViuTV粵語', ['ViuTV', '粵語']]]);
-
-const LanguageSubtitles = new Map([
-  ['简体字幕', ['简体', undefined]],
-  ['繁體字幕', ['繁體', undefined]],
-  ['简日双语字幕', ['简日双语', undefined]],
-  ['TVB粵語', ['粵語', undefined]],
-  ['代理商粵語', ['粵語', undefined]],
-  ['粵日雙語+內封繁體中文字幕', ['繁體中文', '內封字幕']],
-  ['粵語+無對白字幕', [undefined, '無對白字幕']]
+const SubtitleFormatSuffixes = new Set([
+  '内嵌字幕',
+  '内嵌',
+  '內嵌',
+  '内封字幕',
+  '内封',
+  '外挂字幕',
+  '外挂',
+  '外掛',
+  '字幕'
 ]);
 
 const Extension = new Set([
@@ -231,12 +278,19 @@ const Extension = new Set([
 
 const OtherTags = new Set([
   //
+  'RAW',
+  'DUB',
+  'DUBBED',
+  //
   '国漫',
+  'Donghua',
   //
   '先行版',
   '先行版本',
   '正式版',
   '正式版本',
+  '放送版',
+  'On-air version',
   //
   '年齡限制版',
   //
@@ -245,16 +299,23 @@ const OtherTags = new Set([
   '僅限港澳台',
   '僅限港澳台地區',
   '僅限港澳臺地區',
+  '仅限港澳台',
+  '仅限港澳台地区',
   //
   '重播',
   //
   'End',
+  'END',
+  'TV + Movie Fin',
+  'FIN',
   'Fin'
 ]);
 
 // Prefix
-const SearchPrefix = ['检索：', '检索用：'];
+const SearchPrefix = ['检索：', '檢索：', '检索用：', '檢索用：'];
+
 const HiringPrefix = ['招募', '字幕社招人', '字幕社招人內詳'];
+
 const OtherPrefix = ['▶'];
 
 export function matchSingleTag(ctx: Context, text: string) {
@@ -284,8 +345,9 @@ export function matchSingleTag(ctx: Context, text: string) {
     ctx.update('type', text);
     return true;
   }
-  if (Variants.has(upper)) {
-    ctx.update('variant', text);
+  if (Variants.has(text)) {
+    const variants = [...(ctx.result.variants ?? []), text];
+    ctx.update('variants', variants);
     return true;
   }
   if (Extension.has(upper)) {
@@ -293,33 +355,50 @@ export function matchSingleTag(ctx: Context, text: string) {
     return true;
   }
   if (OtherTags.has(text)) {
-    ctx.tags.push(text);
+    ctx.tags.push(text.trim());
     return true;
   }
 
   // Match language and subtitles
   {
+    const languages = [...(ctx.result.subtitle?.languages ?? [])];
+
     if (Languages.has(upper)) {
-      ctx.update('language', text);
+      languages.push(text);
+      ctx.update2('subtitle', 'languages', languages);
       return true;
     }
-    if (Subtitles.has(upper)) {
-      if (!ctx.result.subtitles) {
-        ctx.update('subtitles', text);
+    if (SubtitleFormats.has(upper)) {
+      if (!ctx.result.subtitle?.format) {
+        ctx.update2('subtitle', 'format', text);
       }
       return true;
     }
-    // Combine language and subtitles
-    const combined = LanguageSubtitles.get(text);
-    if (combined) {
-      ctx.update('language', combined[0]);
-      ctx.update('subtitles', combined[1]);
+    if (SubtitleEncoding.has(upper)) {
+      if (!ctx.result.subtitle?.encoding) {
+        ctx.update2('subtitle', 'encoding', text);
+      }
       return true;
     }
+
+    // Combine language and subtitles
+    const combined = LanguageSubtitleFormats.get(text);
+    if (combined) {
+      if (combined[0]) {
+        languages.push(combined[0]);
+        ctx.update2('subtitle', 'languages', languages);
+      }
+      if (combined[1] && !ctx.result.subtitle?.format) {
+        ctx.update2('subtitle', 'format', combined[1]);
+      }
+      return true;
+    }
+
     const combined2 = PlatformLanguage.get(text);
     if (combined2) {
       ctx.update('platform', combined2[0]);
-      ctx.update('language', combined2[1]);
+      languages.push(combined2[1]);
+      ctx.update2('subtitle', 'languages', languages);
       return true;
     }
 
@@ -327,10 +406,14 @@ export function matchSingleTag(ctx: Context, text: string) {
     for (const prefix of LanguagePrefixes) {
       if (text.startsWith(prefix)) {
         const language = prefix;
-        const subtitles = text.slice(prefix.length);
-        if (SubtitlesSufixes.has(subtitles)) {
-          ctx.update('language', language);
-          ctx.update('subtitles', subtitles);
+        const format = text.slice(prefix.length);
+        if (SubtitleFormatSuffixes.has(format)) {
+          languages.push(language);
+          ctx.update2('subtitle', 'languages', languages);
+
+          if (format !== '字幕' && !ctx.result.subtitle?.format) {
+            ctx.update2('subtitle', 'format', format);
+          }
           return true;
         }
       }
@@ -409,7 +492,10 @@ export function matchSingleTag(ctx: Context, text: string) {
     for (const prefix of SearchPrefix) {
       if (text.startsWith(prefix)) {
         const title = text.slice(prefix.length).trim();
-        ctx.tags.push(title);
+        ctx.update(
+          'search',
+          title.split('/').map((t) => t.trim())
+        );
         return true;
       }
     }
@@ -420,7 +506,7 @@ export function matchSingleTag(ctx: Context, text: string) {
     }
     for (const prefix of OtherPrefix) {
       if (text.startsWith(prefix)) {
-        ctx.tags.push(text);
+        ctx.tags.push(text.trim());
         return true;
       }
     }
@@ -467,6 +553,8 @@ export function parsePrefixWrappedTags(ctx: Context) {
   while (ctx.left < ctx.right) {
     if (parseWrappedTag(ctx, ctx.tokens[ctx.left])) {
       ctx.left += 1;
+    } else if (ctx.tokens[ctx.left].trim().toString() === '') {
+      ctx.left += 1;
     } else {
       break;
     }
@@ -477,10 +565,12 @@ export function parseSuffixWrappedTags(ctx: Context) {
   while (ctx.left < ctx.right) {
     if (parseWrappedTag(ctx, ctx.tokens[ctx.right])) {
       ctx.right -= 1;
+    } else if (ctx.tokens[ctx.right].trim().toString() === '') {
+      ctx.right -= 1;
     } else {
       // Unknown tags
       if (ctx.left + 2 < ctx.right && ctx.right >= ctx.tokens.length - 1) {
-        ctx.tags.push(ctx.tokens[ctx.right].text);
+        ctx.tags.push(ctx.tokens[ctx.right].text.trim());
         ctx.right -= 1;
       } else {
         break;
@@ -504,6 +594,7 @@ export function parsePrefixTextTags(ctx: Context) {
 }
 
 export function parsePrefixTextInlineTags(ctx: Context, text: string) {
+  text = text.trim();
   {
     // ★10月新番
     const match = /^★?(\d\d?)月新?番★?/.exec(text);
@@ -530,7 +621,7 @@ export function parsePrefixTextInlineTags(ctx: Context, text: string) {
 export function parseSuffixTextInlineTags(ctx: Context, text: string) {
   let changed = 0;
 
-  const tokens = tokenize(text, false);
+  const tokens = tokenize(text);
 
   while (tokens.length > 1) {
     const token = tokens[tokens.length - 1].trim();
@@ -559,6 +650,7 @@ export function parseSuffixTextInlineMultipleTags(
   text: string,
   separators = [' ', '★']
 ) {
+  text = text.trim();
   {
     for (const sep of separators) {
       const parts = text.split(sep);

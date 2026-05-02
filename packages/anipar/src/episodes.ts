@@ -10,6 +10,8 @@ const EpisodesRange1 = /^(\d+)-(\d+)\s*(.*)$/;
 const EpisodesRange2 = /^全(\d+)集$/;
 
 export function matchEpiodes(ctx: Context, text: string) {
+  text = text.trimEnd();
+
   // 1. Single episode
   {
     const res = WrappedEpisodeRE.exec(text);
@@ -103,7 +105,7 @@ export function matchEpiodes(ctx: Context, text: string) {
 
         const tag = res[2];
         if (tag) {
-          ctx.update('tags', [...new Set([...(ctx.result.tags ?? []), tag])]);
+          ctx.tags.push(tag.trim());
         }
         return true;
       }
@@ -128,9 +130,10 @@ export function parseWrappedEpisodes(ctx: Context) {
 }
 
 const SuffixEpisodeRE = [
-  /- (?<sp>SP)?(?<ep1>\d+)(?:\.(?<sub>\d))?(?:[vV](?<version>\d+))?(?:\s*-)?$/,
-  /第(?<ep1>\d+)(?:\.(?<sub>\d))?[集话話]$/
+  /\s*- (?<sp>SP)?(?<ep1>\d+)(?:\.(?<sub>\d))?(?:[vV](?<version>\d+))?(?:\s*-)?$/,
+  /\s*第(?<ep1>\d+)(?:\.(?<sub>\d))?[集话話]$/
 ];
+const SuffixEpisodeRangeRE = /- (?<from>\d+)-(?<to>\d+)(?:\s+(?<type>.+))?$/;
 
 export const Types = new Set([
   'GEKIJOUBAN',
@@ -170,6 +173,42 @@ export function parseSuffixTextInlineEpisodes(ctx: Context, text: string) {
     return text;
   }
 
+  text = text.trimEnd();
+
+  // - 01-24 修正合集
+  {
+    const res = SuffixEpisodeRangeRE.exec(text);
+    if (res) {
+      const from = res.groups?.from ? +res.groups.from : NaN;
+      const to = res.groups?.to ? +res.groups.to : NaN;
+      if (!Number.isNaN(from) && !Number.isNaN(to)) {
+        ctx.update2('episodeRange', 'from', from);
+        ctx.update2('episodeRange', 'to', to);
+
+        const type = res.groups?.type?.trim();
+        if (type) {
+          const version = /[vV](\d+)$/.exec(type);
+          if (version) {
+            const versionNumber = +version[1];
+            if (!Number.isNaN(versionNumber)) {
+              ctx.update('version', versionNumber);
+              const typeWithoutVersion = type.slice(0, type.length - version[0].length).trim();
+              if (typeWithoutVersion) {
+                ctx.update2('episodeRange', 'type', typeWithoutVersion);
+              }
+            } else {
+              ctx.update2('episodeRange', 'type', type);
+            }
+          } else {
+            ctx.update2('episodeRange', 'type', type);
+          }
+        }
+
+        return text.slice(0, text.length - res[0].length).trimEnd();
+      }
+    }
+  }
+
   // episodes
   for (const RE of SuffixEpisodeRE) {
     const res = RE.exec(text);
@@ -195,7 +234,7 @@ export function parseSuffixTextInlineEpisodes(ctx: Context, text: string) {
         }
 
         // Remove token suffix
-        return text.slice(0, text.length - res[0].length).trim();
+        return text.slice(0, text.length - res[0].length).trimEnd();
       }
     }
   }
@@ -207,7 +246,7 @@ export function parseSuffixTextInlineEpisodes(ctx: Context, text: string) {
       ctx.update('type', type);
 
       // Remove token suffix
-      return text.slice(0, text.length - toMatch.length).trim();
+      return text.slice(0, text.length - toMatch.length).trimEnd();
     }
   }
 
@@ -220,9 +259,10 @@ export function parseSuffixEpisodes(ctx: Context) {
   }
 
   const token = ctx.tokens[ctx.right];
-  const trimmed = parseSuffixTextInlineEpisodes(ctx, token.text);
+  const text = token.text.trimEnd();
+  const trimmed = parseSuffixTextInlineEpisodes(ctx, text);
 
-  if (trimmed !== token.text) {
+  if (trimmed !== text) {
     ctx.tokens[ctx.right] = new Token(trimmed, token.left, token.right);
     return true;
   }
@@ -326,12 +366,20 @@ const SuffixSeasonOrEpisodesRes: Array<[RegExp, (res: RegExpExecArray, ctx: Cont
       }
     ],
     [
-      / (\d+)$/,
+      / (?<ep1>\d+)$|\((?<ep2>\d+)\)$/,
       (res, ctx) => {
-        const season = +res[1];
+        const text = res.groups?.ep1 ?? res.groups?.ep2;
+        const season = text !== undefined ? +text : NaN;
         if (!Number.isNaN(season) && ctx.hasEpisode) {
           if (!ctx.result.season?.number || ctx.result.season.number === season) {
             ctx.update2('season', 'number', season);
+            return true;
+          } else if (
+            (!ctx.result.year || ctx.result.year === season) &&
+            1949 <= season &&
+            season <= 2099
+          ) {
+            ctx.update('year', season);
             return true;
           }
         }
@@ -341,11 +389,17 @@ const SuffixSeasonOrEpisodesRes: Array<[RegExp, (res: RegExpExecArray, ctx: Cont
   ];
 
 export function parseSuffixTextInlineSeason(ctx: Context, text: string) {
-  for (const [re, fn] of SuffixSeasonOrEpisodesRes) {
-    const res = re.exec(text);
-    if (res && fn(res, ctx)) {
-      text = text.slice(0, text.length - res[0].length).trimEnd();
+  let changed = false;
+  do {
+    changed = false;
+    text = text.trimEnd();
+    for (const [re, fn] of SuffixSeasonOrEpisodesRes) {
+      const res = re.exec(text);
+      if (res && fn(res, ctx)) {
+        changed = true;
+        text = text.slice(0, text.length - res[0].length).trimEnd();
+      }
     }
-  }
+  } while (changed);
   return text;
 }

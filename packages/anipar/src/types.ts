@@ -42,9 +42,6 @@ export interface ParseResult {
   // Type, e.g. OVA
   type?: string;
 
-  // 变体版本, e.g. 日配, 中配
-  variant?: string;
-
   // episode info
   episode?: EpisodeInfo;
 
@@ -57,11 +54,8 @@ export interface ParseResult {
   // 发布版本
   version?: number;
 
-  // 字幕语言
-  language?: string;
-
-  // 字幕类型
-  subtitles?: string;
+  // 字幕信息
+  subtitle?: SubtitleInfo;
 
   // 来源类型, e.g. WEB-DL
   source?: string;
@@ -79,7 +73,21 @@ export interface ParseResult {
   file?: FileInfo;
 
   // Tags
-  tags: string[];
+  tags?: string[];
+
+  // 变体版本, e.g. 日配, 中配
+  variants?: string[];
+
+  // 检索用
+  search?: string[];
+}
+
+export interface SubtitleInfo {
+  format?: string;
+
+  encoding?: string;
+
+  languages?: string[];
 }
 
 export interface EpisodeInfo {

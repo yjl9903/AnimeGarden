@@ -2,6 +2,7 @@ import type { ParseOptions, ParseResult } from './types.js';
 
 import { Token } from './tokenizer/index.js';
 
+// MARK: 上下文
 export class Context {
   // Left cursor for consumed tokens (inclusive)
   public left = 0;
@@ -71,10 +72,69 @@ export class Context {
       this.result.tags = [...new Set([...(this.result.tags ?? []), ...this.tags])];
     }
 
+    if (this.result.subtitle?.languages) {
+      const languages = this.result.subtitle?.languages;
+      this.result.subtitle.languages = normalizeLanguages(languages);
+    }
+
+    if (this.result.variants) {
+      this.result.variants = [...new Set(this.result.variants)];
+    }
+
     if (this.result.title && this.result.title.length > 0) {
       return this.result as ParseResult;
     }
 
     return undefined;
   }
+}
+
+// MARK: 字幕语言归一化
+
+const NormalizedLanguages = ['简', '繁', '粤', '日', '英'] as const;
+
+function normalizeLanguage(language: string): string[] | undefined {
+  const trimmed = language.trim();
+  const upper = trimmed.toUpperCase();
+
+  if (/^(CN|CHINESE|ZH|中|中文|中字|国语中字|國語中字)$/.test(upper)) {
+    return undefined;
+  }
+
+  const languages: string[] = [];
+  const matches = {
+    简: /(^|[^A-Z])CHS($|[^A-Z])|ZH[-_]?HANS|简|簡|简体|簡體|简中|簡中/i.test(trimmed),
+    繁: /(^|[^A-Z])CHT($|[^A-Z])|ZH[-_]?HANT|繁|繁体|繁體|繁中|BIG5/i.test(trimmed),
+    粤: /(^|[^A-Z])YUE($|[^A-Z])|粤|粵|广东话|廣東話|CANTONESE/i.test(trimmed),
+    日: /(^|[^A-Z])(JP|JPN|JA)($|[^A-Z])|日|日本|JAPANESE/i.test(trimmed),
+    英: /(^|[^A-Z])(EN|ENG)($|[^A-Z])|英|ENGLISH/i.test(trimmed)
+  };
+
+  if (/[中华華]/.test(trimmed) && !matches.简 && !matches.繁 && !matches.粤) {
+    return undefined;
+  }
+
+  for (const language of NormalizedLanguages) {
+    if (matches[language]) {
+      languages.push(language);
+    }
+  }
+
+  return languages.length > 0 ? languages : undefined;
+}
+
+function normalizeLanguages(languages: string[]): string[] {
+  const normalized = new Set<string>();
+  const unknown: string[] = [];
+
+  for (const language of languages) {
+    const parts = normalizeLanguage(language);
+    if (parts) {
+      parts.forEach((part) => normalized.add(part));
+    } else if (!unknown.includes(language)) {
+      unknown.push(language);
+    }
+  }
+
+  return [...NormalizedLanguages.filter((language) => normalized.has(language)), ...unknown];
 }
