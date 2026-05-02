@@ -1,6 +1,7 @@
-import { Context } from './context';
-import { RevWrappers, Token } from './tokenizer';
-import { matchEpiodes, SuffixSeasonOrEpisodesRes } from './episodes';
+import type { Context } from './context.js';
+
+import { Token, tokenize } from './tokenizer/index.js';
+import { Types, matchEpiodes } from './episodes.js';
 
 const AudioTerm = new Set([
   // Audio channels
@@ -140,40 +141,7 @@ const Source = new Set([
   'WEB-MKV'
 ]);
 
-const Platfrom = new Set(['Baha', 'Bilibili', 'B-Global', 'ABEMA', 'CR', 'ViuTV', 'AMZN', 'ADN']);
-
-const Type = new Set([
-  'GEKIJOUBAN',
-  'MOVIE',
-  'OAD',
-  'OAV',
-  'ONA',
-  'OVA',
-  'SPECIAL',
-  'SPECIALS',
-  'TV',
-  '特别篇',
-  '特別篇',
-  '特別編',
-  '特别话',
-  '特別话',
-  '特別話',
-  '番外篇',
-  '番外編',
-  '剧场版',
-  '劇場版',
-  //
-  'SP',
-  //
-  'ED',
-  'ENDING',
-  'NCED',
-  'NCOP',
-  'OP',
-  'OPENING',
-  'PREVIEW',
-  'PV'
-]);
+const Platfroms = new Set(['Baha', 'Bilibili', 'B-Global', 'ABEMA', 'CR', 'ViuTV', 'AMZN', 'ADN']);
 
 const Languages = new Set([
   'CN',
@@ -192,6 +160,7 @@ const Languages = new Set([
 
 const Subtitles = new Set([
   'ASS',
+  'ASSX2',
   'GB',
   'BIG5',
   'DUB',
@@ -204,23 +173,31 @@ const Subtitles = new Set([
   'SUB',
   'SUBBED',
   'SUBTITLED',
-  'SRT'
+  'SRT',
+  'SRTX3'
 ]);
+
+const Variants = new Set(['日配版', '中配版', '日文配音', '中文配音']);
 
 const LanguagePrefixes = [
   '简体',
-  '繁體',
+  '简日双语',
   '简日',
-  '繁日',
   '简繁日双语',
-  '简繁日',
-  '简繁',
-  '繁简日',
   '简繁日语',
-  '简日双语'
+  '简繁日',
+  '简繁英',
+  '简繁',
+  '繁體',
+  '繁体',
+  '繁日',
+  '繁英',
+  '繁简日',
+  '中日英',
+  '英文'
 ];
 
-const SubtitlesSufixes = new Set(['内嵌', '內嵌', '内封', '内封字幕', '外挂', '外掛']);
+const SubtitlesSufixes = new Set(['内嵌', '內嵌', '内封', '内封字幕', '外挂', '外掛', '外挂字幕']);
 
 const PlatformLanguage = new Map([['ViuTV粵語', ['ViuTV', '粵語']]]);
 
@@ -252,14 +229,35 @@ const Extension = new Set([
   'WMV'
 ]);
 
-const Tags = new Set(['国漫', '先行版', '先行版本', '正式版', '正式版本', 'Ani-One']);
+const OtherTags = new Set([
+  //
+  '国漫',
+  //
+  '先行版',
+  '先行版本',
+  '正式版',
+  '正式版本',
+  //
+  '年齡限制版',
+  //
+  'Ani-One',
+  //
+  '僅限港澳台',
+  '僅限港澳台地區',
+  '僅限港澳臺地區',
+  //
+  '重播',
+  //
+  'End',
+  'Fin'
+]);
 
 // Prefix
 const SearchPrefix = ['检索：', '检索用：'];
-const HiringPrefix = ['招募', '字幕社招人'];
+const HiringPrefix = ['招募', '字幕社招人', '字幕社招人內詳'];
 const OtherPrefix = ['▶'];
 
-function matchSingleTag(ctx: Context, text: string) {
+export function matchSingleTag(ctx: Context, text: string) {
   const upper = text.toUpperCase();
   // Match keywords
   if (AudioTerm.has(upper)) {
@@ -278,19 +276,23 @@ function matchSingleTag(ctx: Context, text: string) {
     ctx.update('source', text);
     return true;
   }
-  if (Platfrom.has(text)) {
+  if (Platfroms.has(text)) {
     ctx.update('platform', text);
     return true;
   }
-  if (Type.has(upper)) {
+  if (Types.has(upper)) {
     ctx.update('type', text);
+    return true;
+  }
+  if (Variants.has(upper)) {
+    ctx.update('variant', text);
     return true;
   }
   if (Extension.has(upper)) {
     ctx.update2('file', 'extension', text);
     return true;
   }
-  if (Tags.has(text)) {
+  if (OtherTags.has(text)) {
     ctx.tags.push(text);
     return true;
   }
@@ -302,7 +304,9 @@ function matchSingleTag(ctx: Context, text: string) {
       return true;
     }
     if (Subtitles.has(upper)) {
-      ctx.update('subtitles', text);
+      if (!ctx.result.subtitles) {
+        ctx.update('subtitles', text);
+      }
       return true;
     }
     // Combine language and subtitles
@@ -425,8 +429,7 @@ function matchSingleTag(ctx: Context, text: string) {
   return false;
 }
 
-const TagSeperators = [' ', '_'];
-function matchMultipleTags(ctx: Context, text: string) {
+export function matchMultipleTags(ctx: Context, text: string, TagSeperators = [' ', '_']) {
   for (const sep of TagSeperators) {
     const parts = text.split(sep);
     if (parts.length <= 1) continue;
@@ -444,8 +447,7 @@ function matchMultipleTags(ctx: Context, text: string) {
   return false;
 }
 
-function parseTag(ctx: Context, cursor: number) {
-  const token = ctx.tokens[cursor];
+function parseWrappedTag(ctx: Context, token: Token) {
   if (token.isWrapped) {
     const text = token.text;
     if (matchSingleTag(ctx, text)) {
@@ -461,9 +463,19 @@ function parseTag(ctx: Context, cursor: number) {
   return false;
 }
 
-export function parseRightTags(ctx: Context) {
+export function parsePrefixWrappedTags(ctx: Context) {
   while (ctx.left < ctx.right) {
-    if (parseTag(ctx, ctx.right)) {
+    if (parseWrappedTag(ctx, ctx.tokens[ctx.left])) {
+      ctx.left += 1;
+    } else {
+      break;
+    }
+  }
+}
+
+export function parseSuffixWrappedTags(ctx: Context) {
+  while (ctx.left < ctx.right) {
+    if (parseWrappedTag(ctx, ctx.tokens[ctx.right])) {
       ctx.right -= 1;
     } else {
       // Unknown tags
@@ -475,13 +487,80 @@ export function parseRightTags(ctx: Context) {
       }
     }
   }
+}
 
+export function parsePrefixTextTags(ctx: Context) {
+  if (ctx.left > ctx.right) return false;
+
+  const token = ctx.tokens[ctx.left];
+  const trimmed = parsePrefixTextInlineTags(ctx, token.text);
+
+  if (trimmed !== token.text) {
+    ctx.tokens[ctx.left] = new Token(trimmed, token.left, token.right);
+    return true;
+  }
+
+  return false;
+}
+
+export function parsePrefixTextInlineTags(ctx: Context, text: string) {
   {
-    // Handle space splitted tags: 【極影字幕社】★10月新番 在地下城尋求邂逅是否搞錯了什麼 第五季 豐饒的女神篇 第06話 BIG5 1080P MP4（字幕社招人內詳）
-    const token = ctx.tokens[ctx.right];
-    const text = token.text;
-    const sepearators = [' ', '★'];
-    for (const sep of sepearators) {
+    // ★10月新番
+    const match = /^★?(\d\d?)月新?番★?/.exec(text);
+    if (match) {
+      const matched = match[0];
+      const month = +match[1];
+      ctx.update('month', month);
+      text = text.slice(matched.length);
+    }
+  }
+  {
+    // ★剧场版★
+    const match = /^★?(剧场版|劇場版)★?/.exec(text);
+    if (match) {
+      const matched = match[0];
+      const type = match[1];
+      ctx.update('type', type);
+      text = text.slice(matched.length);
+    }
+  }
+  return text;
+}
+
+export function parseSuffixTextInlineTags(ctx: Context, text: string) {
+  let changed = 0;
+
+  const tokens = tokenize(text, false);
+
+  while (tokens.length > 1) {
+    const token = tokens[tokens.length - 1].trim();
+    if (parseWrappedTag(ctx, token)) {
+      changed += 1;
+      tokens.pop();
+    } else {
+      break;
+    }
+  }
+
+  if (changed) {
+    return tokens.map((t) => t.toString()).join('');
+  }
+
+  return text;
+}
+
+/**
+ * Handle inline space splitted tags:
+ *
+ * @example【極影字幕社】★10月新番 在地下城尋求邂逅是否搞錯了什麼 第五季 豐饒的女神篇 第06話 BIG5 1080P MP4（字幕社招人內詳）
+ */
+export function parseSuffixTextInlineMultipleTags(
+  ctx: Context,
+  text: string,
+  separators = [' ', '★']
+) {
+  {
+    for (const sep of separators) {
       const parts = text.split(sep);
       if (parts.length > 1) {
         let changed = 0;
@@ -504,7 +583,7 @@ export function parseRightTags(ctx: Context) {
         }
         if (changed > 1) {
           const trimmed = parts.join(sep);
-          ctx.tokens[ctx.right] = new Token(trimmed, token.left, token.right);
+          text = trimmed;
         }
         if (changed > 0) {
           break;
@@ -512,78 +591,5 @@ export function parseRightTags(ctx: Context) {
       }
     }
   }
-}
-
-export function parseLeftTags(ctx: Context) {
-  while (ctx.left < ctx.right) {
-    if (parseTag(ctx, ctx.left)) {
-      ctx.left += 1;
-    } else {
-      break;
-    }
-  }
-
-  // Match prefix
-  {
-    const token = ctx.tokens[ctx.left];
-    const text = token.text;
-    // 【极影字幕社】 ★10月新番
-    const match = /^★?(\d\d?)月新?番★?/.exec(text);
-    if (match) {
-      const matched = match[0];
-      const month = +match[1];
-      ctx.update('month', month);
-      ctx.tokens[ctx.left] = token.slice(matched.length);
-      if (ctx.tokens[ctx.left].text.length === 0) {
-        ctx.left += 1;
-      }
-    }
-  }
-  {
-    const token = ctx.tokens[ctx.left];
-    const text = token.text;
-    const match = /^★?(剧场版|劇場版)★?/.exec(text);
-    if (match) {
-      const matched = match[0];
-      const type = match[1];
-      ctx.update('type', type);
-      ctx.tokens[ctx.left] = token.slice(matched.length);
-      if (ctx.tokens[ctx.left].text.length === 0) {
-        ctx.left += 1;
-      }
-    }
-  }
-}
-
-export function parseSuffixSeasonOrEpisodes(ctx: Context, text: string) {
-  while (true) {
-    let found = false;
-    // Ends with: [45]
-    if (RevWrappers.has(text[text.length - 1])) {
-      const leftWrapper = RevWrappers.get(text[text.length - 1])!;
-      const leftIdx = text.lastIndexOf(leftWrapper);
-      if (leftIdx !== -1) {
-        const maybe = text.slice(leftIdx + 1, text.length - 1);
-        if (maybe.length > 0) {
-          if (matchSingleTag(ctx, maybe) || (!ctx.hasEpisode && matchEpiodes(ctx, maybe))) {
-            text = text.slice(0, text.length - maybe.length - 2).trimEnd();
-            found = true;
-          }
-        }
-      }
-    }
-
-    //
-    for (const [re, fn] of SuffixSeasonOrEpisodesRes) {
-      const res = re.exec(text);
-      if (res && fn(res, ctx)) {
-        text = text.slice(0, text.length - res[0].length).trimEnd();
-        found = true;
-        break;
-      }
-    }
-    if (!found) break;
-  }
-
   return text;
 }

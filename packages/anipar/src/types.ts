@@ -11,11 +11,17 @@ export interface ParseResult {
 
   // fansub info
   fansub?: {
-    // fansub name
+    // fansub name, may be set with specific fansub
     name: string;
+
+    // fansub name in title
+    alias?: string;
 
     // collab fansubs name
     collab?: string[];
+
+    // fansub tags, e.g. 個人製作合集
+    tags?: string[];
   };
 
   // season info
@@ -27,8 +33,17 @@ export interface ParseResult {
     title?: string;
   };
 
+  // part info
+  part?: {
+    // part number
+    number: number;
+  };
+
   // Type, e.g. OVA
   type?: string;
+
+  // 变体版本, e.g. 日配, 中配
+  variant?: string;
 
   // episode info
   episode?: EpisodeInfo;
@@ -37,31 +52,27 @@ export interface ParseResult {
   episodes?: EpisodeInfo[];
 
   // episode range
-  episodeRange?: {
-    from: number;
+  episodeRange?: EpisodeRange;
 
-    to: number;
-  };
-
-  // Release version
+  // 发布版本
   version?: number;
 
-  // Subtitles language
+  // 字幕语言
   language?: string;
 
-  // Subtitles format
+  // 字幕类型
   subtitles?: string;
 
-  // Source, e.g. WEB-DL
+  // 来源类型, e.g. WEB-DL
   source?: string;
 
-  // Source platform, e.g. Baha
+  // 来源平台, e.g. Baha
   platform?: string;
 
-  // Onair year
+  // 发布年份
   year?: number;
 
-  // Onair month
+  // 发布月份
   month?: number;
 
   // Video file info
@@ -79,6 +90,15 @@ export interface EpisodeInfo {
 
   // Episode title
   title?: string;
+}
+
+export interface EpisodeRange {
+  from: number;
+
+  to: number;
+
+  // 类型, e.g. 修正合集
+  type?: string;
 }
 
 export interface FileInfo {
