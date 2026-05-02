@@ -48,8 +48,9 @@ export function splitMultipleTitles(ctx: Context, separators = ['/', '-']) {
 
 export function parseSingleTitleText(ctx: Context, text: string) {
   // [ANi]  ATRI -My Dear Moments-（僅限港澳台） - 07 [1080P][Bilibili][WEB-DL][AAC AVC][CHT CHS][MP4]
-  text = parseSuffixTextInlineTags(ctx, text);
-  text = parseSuffixTextInlineSeason(ctx, text);
+  text = parseSuffixTextInlineTags(ctx, text).trimEnd();
+  text = parseSuffixTextInlineSeason(ctx, text).trimEnd();
+  text = parseSuffixTextInlineTags(ctx, text).trimEnd();
   return text;
 }
 

@@ -3,37 +3,35 @@ import { describe, it, expect } from 'vitest';
 import { Fansub, parse } from '../src/index.js';
 
 describe('debug', () => {
-  const title = `[Up to 21°C] 女神降临（日配版） / Yeosin Gangnim (Japanese Audio) - 09 (ABEMA 1920x1080 AVC AAC MP4)
-`;
+  const title = `[黒ネズミたち] 海贼王 / One Piece - 536(retake) (B-Global 3840x2160 HEVC AAC MKV)`;
 
   it(title, () => {
     expect(parse(title, { fansub: Fansub.Kirara_Fantasia })).toMatchInlineSnapshot(`
       {
         "episode": {
-          "number": 9,
+          "number": 536,
         },
         "fansub": {
-          "alias": "Up to 21°C",
+          "alias": "黒ネズミたち",
           "name": "Kirara Fantasia",
         },
         "file": {
           "audio": {
             "term": "AAC",
           },
-          "extension": "MP4",
+          "extension": "MKV",
           "video": {
-            "resolution": "1920x1080",
-            "term": "AVC",
+            "resolution": "3840x2160",
+            "term": "HEVC",
           },
         },
-        "platform": "ABEMA",
-        "title": "女神降临",
-        "titles": [
-          "Yeosin Gangnim",
+        "platform": "B-Global",
+        "tags": [
+          "retake",
         ],
-        "variants": [
-          "日配版",
-          "Japanese Audio",
+        "title": "海贼王",
+        "titles": [
+          "One Piece",
         ],
       }
     `);

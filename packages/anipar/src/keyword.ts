@@ -175,7 +175,8 @@ const Variants = new Set([
   '日文配音',
   '中文配音',
   'Japanese Audio',
-  'Japanese Dub'
+  'Japanese Dub',
+  'JP Dub'
 ]);
 
 const SubtitleFormats = new Set([
@@ -281,6 +282,7 @@ const OtherTags = new Set([
   'RAW',
   'DUB',
   'DUBBED',
+  'retake',
   //
   '国漫',
   'Donghua',
