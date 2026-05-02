@@ -68,6 +68,11 @@ export async function fetchMoePage(
       title = removeExtraSpaces(title);
     }
 
+    // @hack 删除末尾的 v2
+    if (team?.name === 'LoliHouse' && title.endsWith('v2')) {
+      title = title.slice(0, title.length - 2).trimEnd();
+    }
+
     result.push({
       provider: 'moe',
       providerId: torrent._id,

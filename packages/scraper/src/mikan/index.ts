@@ -4,6 +4,7 @@ import type { ScrapedResource, ScrapedResourceDetail } from '@animegarden/client
 
 import { removeExtraSpaces, retryFn, splitOnce } from '@animegarden/shared';
 
+import { stripSuffix } from '../utils';
 import { NetworkError } from '../error';
 
 const BASE_URL = 'https://mikanani.kas.pub';
@@ -184,7 +185,7 @@ export async function fetchMikanPage(
     }
 
     const titleNode = tds[2].querySelector<HTMLAnchorElement>('a[href*="/Home/Episode/"]');
-    const rawTitle = titleNode?.textContent?.trim();
+    let rawTitle = titleNode?.textContent?.trim();
     const href = titleNode?.getAttribute('href')?.trim();
     const providerId = href ? parseEpisodeId(href) : undefined;
     if (!rawTitle || !providerId) {
@@ -212,10 +213,30 @@ export async function fetchMikanPage(
 
     const group = parseFirstPublishGroup(tds[1]);
 
+    // @hack
+    if (group?.name === 'ANi') {
+      rawTitle = stripSuffix(removeExtraSpaces(rawTitle), [
+        '.torrent',
+        '.mp3',
+        '.MP3',
+        '.mp4',
+        '.MP4',
+        '.mkv',
+        '.MKV'
+      ]);
+    } else {
+      rawTitle = removeExtraSpaces(rawTitle);
+    }
+
+    // @hack 删除末尾的 v2
+    if (group?.name === 'LoliHouse' && rawTitle.endsWith('v2')) {
+      rawTitle = rawTitle.slice(0, rawTitle.length - 2).trimEnd();
+    }
+
     result.push({
       provider: 'mikan',
       providerId,
-      title: removeExtraSpaces(rawTitle),
+      title: rawTitle,
       href: providerId,
       type: '动画',
       magnet,

@@ -101,6 +101,11 @@ export async function fetchDmhyPage(
       title = removeExtraSpaces(title);
     }
 
+    // @hack 删除末尾的 v2
+    if (fansubName === 'LoliHouse' && title.endsWith('v2')) {
+      title = title.slice(0, title.length - 2).trimEnd();
+    }
+
     // @hack ANiTorrent -> ANi
     if (publisherName === 'ANiTorrent') {
       publisherName = 'ANi';
