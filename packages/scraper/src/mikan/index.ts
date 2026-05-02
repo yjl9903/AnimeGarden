@@ -229,7 +229,7 @@ export async function fetchMikanPage(
     }
 
     // @hack 删除末尾的 v2
-    if (group?.name === 'LoliHouse' && rawTitle.endsWith('v2')) {
+    if (rawTitle.endsWith('v2')) {
       rawTitle = rawTitle.slice(0, rawTitle.length - 2).trimEnd();
     }
 

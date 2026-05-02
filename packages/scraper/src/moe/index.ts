@@ -69,7 +69,7 @@ export async function fetchMoePage(
     }
 
     // @hack 删除末尾的 v2
-    if (team?.name === 'LoliHouse' && title.endsWith('v2')) {
+    if (title.endsWith('v2')) {
       title = title.slice(0, title.length - 2).trimEnd();
     }
 
