@@ -366,7 +366,18 @@ const SuffixSeasonOrEpisodesRes: Array<[RegExp, (res: RegExpExecArray, ctx: Cont
       }
     ],
     [
-      / (?<ep1>\d+)$|\((?<ep2>\d+)\)$/,
+      /\s+[vV](\d+)$/,
+      (res, ctx) => {
+        const version = +res[1];
+        if (!Number.isNaN(version)) {
+          ctx.update('version', version);
+          return true;
+        }
+        return false;
+      }
+    ],
+    [
+      /\s+(?<ep1>\d+)$|\((?<ep2>\d+)\)$/,
       (res, ctx) => {
         const text = res.groups?.ep1 ?? res.groups?.ep2;
         const season = text !== undefined ? +text : NaN;
