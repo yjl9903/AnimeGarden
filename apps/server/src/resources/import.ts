@@ -72,7 +72,9 @@ function filterImportFilesByPage(files: ImportFile[], options: ImportResourcesOp
       ? Math.max(options.start, options.end)
       : (options.end ?? Number.POSITIVE_INFINITY);
 
-  return files.filter((file) => file.page !== undefined && file.page >= minPage && file.page <= maxPage);
+  return files.filter(
+    (file) => file.page !== undefined && file.page >= minPage && file.page <= maxPage
+  );
 }
 
 function toNewResource(resource: ScrapedResource, fetchedAt?: Date): NewResource {

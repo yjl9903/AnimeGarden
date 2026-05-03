@@ -201,12 +201,16 @@ describe('mikan', () => {
       },
       createdAt: '2026-04-09T14:04:00.000Z'
     });
-    expect(resources[0].magnet).toBe('magnet:?xt=urn:btih:765fcf5524c805231d25f74d4c90c41a5abab6dc');
+    expect(resources[0].magnet).toBe(
+      'magnet:?xt=urn:btih:765fcf5524c805231d25f74d4c90c41a5abab6dc'
+    );
     expect(resources[0].tracker).toBe(
       '&tr=http%3a%2f%2ft.nyaatracker.com%2fannounce&tr=http%3a%2f%2ftracker.kamigami.org%3a2710%2fannounce'
     );
 
-    expect(resources[1]?.title).toBe('[ANi] 库吉马唱歌的家 - 01 [1080P][Baha][WEB-DL][AAC AVC][CHT][MP4]');
+    expect(resources[1]?.title).toBe(
+      '[ANi] 库吉马唱歌的家 - 01 [1080P][Baha][WEB-DL][AAC AVC][CHT][MP4]'
+    );
 
     expect(resources[2]).toMatchObject({
       providerId: '22ab4969f1aa0c058bfbd014be802b6cc1956eb2',
@@ -236,7 +240,8 @@ describe('mikan', () => {
     expect(detail).toMatchObject({
       provider: 'mikan',
       providerId: '22ab4969f1aa0c058bfbd014be802b6cc1956eb2',
-      title: '【悠哈璃羽字幕社&西农YUI汉化组】[暗芝居 第十六季_Yami Shibai 16][13][x264 1080p][CHT]',
+      title:
+        '【悠哈璃羽字幕社&西农YUI汉化组】[暗芝居 第十六季_Yami Shibai 16][13][x264 1080p][CHT]',
       href: 'https://mikanani.kas.pub/Home/Episode/22ab4969f1aa0c058bfbd014be802b6cc1956eb2',
       type: '动画',
       size: '59.8MB',

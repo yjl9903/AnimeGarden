@@ -79,7 +79,11 @@ export const Footer = memo((props: FooterProps) => {
               href="https://uptime.animes.garden/status/animegarden"
               target="_blank"
               className="ml-2"
-              onClick={onExternalLinkClick('状态', '监控', 'https://uptime.animes.garden/status/animegarden')}
+              onClick={onExternalLinkClick(
+                '状态',
+                '监控',
+                'https://uptime.animes.garden/status/animegarden'
+              )}
             >
               监控
             </a>
