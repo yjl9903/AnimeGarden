@@ -3,35 +3,29 @@ import { describe, it, expect } from 'vitest';
 import { Fansub, parse } from '../src/index.js';
 
 describe('debug', () => {
-  const title = `[黒ネズミたち] 海贼王 / One Piece - 536(retake) (B-Global 3840x2160 HEVC AAC MKV)`;
+  const title = `[桜都字幕组][公主连结 Re:Dive/Princess Connect! Re:Dive][13 END][BIG5][1080P]`;
 
   it(title, () => {
-    expect(parse(title, { fansub: Fansub.Kirara_Fantasia })).toMatchInlineSnapshot(`
+    expect(parse(title, { fansub: Fansub.桜都字幕组 })).toMatchInlineSnapshot(`
       {
         "episode": {
-          "number": 536,
+          "number": 13,
+          "type": "END",
         },
         "fansub": {
-          "alias": "黒ネズミたち",
-          "name": "Kirara Fantasia",
+          "name": "桜都字幕组",
         },
         "file": {
-          "audio": {
-            "term": "AAC",
-          },
-          "extension": "MKV",
           "video": {
-            "resolution": "3840x2160",
-            "term": "HEVC",
+            "resolution": "1080P",
           },
         },
-        "platform": "B-Global",
-        "tags": [
-          "retake",
-        ],
-        "title": "海贼王",
+        "subtitle": {
+          "encoding": "BIG5",
+        },
+        "title": "公主连结 Re:Dive",
         "titles": [
-          "One Piece",
+          "Princess Connect! Re:Dive",
         ],
       }
     `);

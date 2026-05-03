@@ -43,14 +43,7 @@ const AudioTerm = new Set([
   'DUAL AUDIO'
 ]);
 
-const VideoTerm = new Set([
-  // Frame rate
-  '23.976FPS',
-  '24FPS',
-  '29.97FPS',
-  '30FPS',
-  '60FPS',
-  '120FPS',
+const VideoTerms = new Set([
   // Video codec
   '8BIT',
   '8-BIT',
@@ -76,6 +69,8 @@ const VideoTerm = new Set([
   'HEVC2',
   'HEVC_OPUS',
   'HEVC-10BIT',
+  'HEVC-10BIT-1440P', // TODO: split resolution
+  'HEVC-10BIT-2160P', // TODO: split resolution
   'HEVC_10BIT',
   'HEVC-8BIT',
   'HEVC_8BIT',
@@ -98,16 +93,18 @@ const VideoTerm = new Set([
   'SD'
 ]);
 
-const VideoResolution = new Set([
+const VideoFrameRates = new Set(['23.976FPS', '24FPS', '29.97FPS', '30FPS', '60FPS', '120FPS']);
+
+const VideoResolutions = new Set([
   '480P',
   '720P',
-  '720P@60FPS', // TODO
+  '720P@60FPS', // TODO: use regexp
   '804P',
   '960P',
   '1080P',
-  '1080P@60FPS', // TODO
+  '1080P@60FPS', // TODO: use regexp
   '2160P',
-  'AI2160p', // TODO
+  'AI2160p', // TODO: use regexp
   '854X480',
   '854×480',
   '1280X720',
@@ -170,10 +167,13 @@ const Platfroms = new Set([
   'B-Global',
   'ABEMA',
   'CR',
+  'AT-X',
   'ViuTV',
   'AMZN',
   'ADN',
-  'Sentai'
+  'Sentai',
+  'Netflix',
+  'NF'
 ]);
 
 const Variants = new Set([
@@ -206,7 +206,7 @@ const SubtitleFormats = new Set([
   'SRTX4'
 ]);
 
-const SubtitleEncoding = new Set(['GB&BIG5', 'BIG5&GB', 'GB', 'BIG5']);
+const SubtitleEncoding = new Set(['GB&BIG5', 'BIG5&GB', '外挂GB/BIG5', 'GB', 'BIG5']);
 
 const PlatformLanguage = new Map([
   ['ViuTV粵語', ['ViuTV', '粵語']],
@@ -266,6 +266,7 @@ const SubtitleFormatSuffixes = new Set([
   '外挂字幕',
   '外挂',
   '外掛',
+  '内挂',
   '字幕'
 ]);
 
@@ -321,11 +322,15 @@ export function matchSingleTag(ctx: Context, text: string) {
     ctx.update3('file', 'audio', 'term', text);
     return true;
   }
-  if (VideoTerm.has(upper)) {
+  if (VideoTerms.has(upper)) {
     ctx.update3('file', 'video', 'term', text);
     return true;
   }
-  if (VideoResolution.has(upper)) {
+  if (VideoFrameRates.has(upper)) {
+    ctx.update3('file', 'video', 'fps', text);
+    return true;
+  }
+  if (VideoResolutions.has(upper)) {
     ctx.update3('file', 'video', 'resolution', text);
     return true;
   }
@@ -511,7 +516,11 @@ export function matchSingleTag(ctx: Context, text: string) {
   return false;
 }
 
-export function matchMultipleTags(ctx: Context, text: string, TagSeperators = [' ', '_', '&']) {
+export function matchMultipleTags(
+  ctx: Context,
+  text: string,
+  TagSeperators = [' ', '_', '&', '+']
+) {
   for (const sep of TagSeperators) {
     const parts = text.split(sep);
     if (parts.length <= 1) continue;

@@ -96,6 +96,9 @@ export interface EpisodeInfo {
   // 总集篇 xx.5
   numberSub?: number;
 
+  // END, FIN
+  type?: string;
+
   // Episode title
   title?: string;
 }
@@ -107,7 +110,11 @@ export interface VolumeInfo {
 export interface EpisodesRange {
   from: number;
 
+  fromSub?: number;
+
   to: number;
+
+  toSub?: number;
 
   // 类型, e.g. 修正合集
   type?: string;
