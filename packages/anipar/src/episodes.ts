@@ -58,8 +58,8 @@ export function matchEpiodes(ctx: Context, text: string) {
       const from = +res[1];
       const to = +res[2];
       if (!Number.isNaN(from) && !Number.isNaN(to)) {
-        ctx.update2('episodeRange', 'from', from);
-        ctx.update2('episodeRange', 'to', to);
+        ctx.update2('episodesRange', 'from', from);
+        ctx.update2('episodesRange', 'to', to);
 
         const type = res[3] ? res[3].trim() : undefined;
         if (type) {
@@ -69,12 +69,12 @@ export function matchEpiodes(ctx: Context, text: string) {
             const version = +exec2[1];
             if (!Number.isNaN(version)) {
               ctx.update('version', version);
-              ctx.update2('episodeRange', 'type', type.slice(0, type.length - exec2[0].length));
+              ctx.update2('episodesRange', 'type', type.slice(0, type.length - exec2[0].length));
             } else {
-              ctx.update2('episodeRange', 'type', type);
+              ctx.update2('episodesRange', 'type', type);
             }
           } else {
-            ctx.update2('episodeRange', 'type', type);
+            ctx.update2('episodesRange', 'type', type);
           }
         }
 
@@ -88,8 +88,8 @@ export function matchEpiodes(ctx: Context, text: string) {
     if (res) {
       const to = +res[1];
       if (!Number.isNaN(to)) {
-        ctx.update2('episodeRange', 'from', 1);
-        ctx.update2('episodeRange', 'to', to);
+        ctx.update2('episodesRange', 'from', 1);
+        ctx.update2('episodesRange', 'to', to);
         return true;
       }
     }
@@ -133,7 +133,7 @@ const SuffixEpisodeRE = [
   /\s*- (?<sp>SP)?(?<ep1>\d+)(?:\.(?<sub>\d))?(?:[vV](?<version>\d+))?(?:\s*-)?$/,
   /\s*第(?<ep1>\d+)(?:\.(?<sub>\d))?[集话話]$/
 ];
-const SuffixEpisodeRangeRE = /- (?<from>\d+)-(?<to>\d+)(?:\s+(?<type>.+))?$/;
+const SuffixepisodesRangeRE = /- (?<from>\d+)-(?<to>\d+)(?:\s+(?<type>.+))?$/;
 
 export const Types = new Set([
   'GEKIJOUBAN',
@@ -177,13 +177,13 @@ export function parseSuffixTextInlineEpisodes(ctx: Context, text: string) {
 
   // - 01-24 修正合集
   {
-    const res = SuffixEpisodeRangeRE.exec(text);
+    const res = SuffixepisodesRangeRE.exec(text);
     if (res) {
       const from = res.groups?.from ? +res.groups.from : NaN;
       const to = res.groups?.to ? +res.groups.to : NaN;
       if (!Number.isNaN(from) && !Number.isNaN(to)) {
-        ctx.update2('episodeRange', 'from', from);
-        ctx.update2('episodeRange', 'to', to);
+        ctx.update2('episodesRange', 'from', from);
+        ctx.update2('episodesRange', 'to', to);
 
         const type = res.groups?.type?.trim();
         if (type) {
@@ -194,13 +194,13 @@ export function parseSuffixTextInlineEpisodes(ctx: Context, text: string) {
               ctx.update('version', versionNumber);
               const typeWithoutVersion = type.slice(0, type.length - version[0].length).trim();
               if (typeWithoutVersion) {
-                ctx.update2('episodeRange', 'type', typeWithoutVersion);
+                ctx.update2('episodesRange', 'type', typeWithoutVersion);
               }
             } else {
-              ctx.update2('episodeRange', 'type', type);
+              ctx.update2('episodesRange', 'type', type);
             }
           } else {
-            ctx.update2('episodeRange', 'type', type);
+            ctx.update2('episodesRange', 'type', type);
           }
         }
 
@@ -313,6 +313,19 @@ const SuffixSeasonOrEpisodesRes: Array<[RegExp, (res: RegExpExecArray, ctx: Cont
       (res, ctx) => {
         const season = Number.parseInt(res[1]);
         if (!Number.isNaN(season)) {
+          if (!ctx.result.season?.number || ctx.result.season.number === season) {
+            ctx.update2('season', 'number', season);
+            return true;
+          }
+        }
+        return false;
+      }
+    ],
+    [
+      /(?:-\s+)(Third) Season$/,
+      (res, ctx) => {
+        const season = { Third: 3 }[res[1]];
+        if (season && !Number.isNaN(season)) {
           if (!ctx.result.season?.number || ctx.result.season.number === season) {
             ctx.update2('season', 'number', season);
             return true;

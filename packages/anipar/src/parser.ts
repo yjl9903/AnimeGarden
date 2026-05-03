@@ -6,6 +6,7 @@ import { parseMultipleTitles } from './title.js';
 import { Fansub, parseFansub } from './fansub.js';
 import { parseSuffixEpisodes } from './episodes.js';
 import { parsePrefixTextTags, parsePrefixWrappedTags, parseSuffixWrappedTags } from './keyword.js';
+import { parseFileExtension } from './file.js';
 
 const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
   [Fansub.Kirara_Fantasia]: (ctx) => {
@@ -39,7 +40,7 @@ const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
 
     // Postprocess
 
-    if (ctx.result.titles && ctx.result.episodeRange) {
+    if (ctx.result.titles && ctx.result.episodesRange) {
       const title = ctx.result.titles.at(-1);
       if (title && title.endsWith(' -')) {
         ctx.result.titles[ctx.result.titles.length - 1] = title.slice(0, title.length - 2);
@@ -80,18 +81,37 @@ const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
     parseSuffixEpisodes(ctx);
     parseMultipleTitles(ctx);
     return ctx.validate();
+  },
+  [Fansub.桜都字幕组]: (ctx) => {
+    parseFansub(ctx);
+    parseSuffixWrappedTags(ctx);
+    parseSuffixEpisodes(ctx);
+    parseMultipleTitles(ctx, false);
+    return ctx.validate();
+  },
+  [Fansub.Prejudice_Studio]: (ctx) => {
+    parseFansub(ctx);
+    parseSuffixWrappedTags(ctx);
+    parseSuffixEpisodes(ctx);
+    parseMultipleTitles(ctx, false);
+    return ctx.validate();
   }
 };
 
 export function parse(title: string, options: ParseOptions = {}): ParseResult | undefined {
   if (!title) return undefined;
 
-  const tokens = tokenize(title);
+  const file = parseFileExtension(title);
+
+  const tokens = tokenize(file.title);
   if (tokens.length === 0) return undefined;
 
   let fansub = options.fansub;
 
   const context = new Context(tokens, options);
+  if (file.extension) {
+    context.update2('file', 'extension', file.extension);
+  }
 
   const parser = fansub ? parsers[fansub] : undefined;
 

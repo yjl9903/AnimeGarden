@@ -6,7 +6,10 @@ import type { Fansub } from 'anipar';
 export function readTestAsset(fansub: Fansub) {
   return fs
     .readFileSync(
-      path.join(import.meta.dirname, `./__assets__/${fansub.toLowerCase().replace(/ /g, '_')}.csv`),
+      path.join(
+        import.meta.dirname,
+        `./__assets__/${fansub.toLowerCase().replace(/[ \-]/g, '_')}.csv`
+      ),
       'utf-8'
     )
     .split('\n')

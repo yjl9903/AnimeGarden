@@ -25,13 +25,10 @@ export interface ParseResult {
   };
 
   // season info
-  season?: {
-    // season number
-    number: number;
+  season?: SeasonInfo;
 
-    // season title
-    title?: string;
-  };
+  // seasons range, e.g. S1-S2
+  seasonsRange?: SeasonsRange;
 
   // part info
   part?: {
@@ -45,11 +42,14 @@ export interface ParseResult {
   // episode info
   episode?: EpisodeInfo;
 
+  // volume info
+  volume?: VolumeInfo;
+
   // Multiple episodes
   episodes?: EpisodeInfo[];
 
   // episode range
-  episodeRange?: EpisodeRange;
+  episodesRange?: EpisodesRange;
 
   // 发布版本
   version?: number;
@@ -100,13 +100,31 @@ export interface EpisodeInfo {
   title?: string;
 }
 
-export interface EpisodeRange {
+export interface VolumeInfo {
+  number: number;
+}
+
+export interface EpisodesRange {
   from: number;
 
   to: number;
 
   // 类型, e.g. 修正合集
   type?: string;
+}
+
+export interface SeasonInfo {
+  // season number
+  number: number;
+
+  // season title
+  title?: string;
+}
+
+export interface SeasonsRange {
+  from: number;
+
+  to: number;
 }
 
 export interface FileInfo {
@@ -120,5 +138,7 @@ export interface FileInfo {
     term?: string;
 
     resolution?: string;
+
+    fps?: string;
   };
 }

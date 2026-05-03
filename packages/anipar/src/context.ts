@@ -64,7 +64,7 @@ export class Context {
   }
 
   public get hasEpisode() {
-    return this.result.episode || this.result.episodes || this.result.episodeRange;
+    return this.result.episode || this.result.episodes || this.result.episodesRange;
   }
 
   public validate(): ParseResult | undefined {

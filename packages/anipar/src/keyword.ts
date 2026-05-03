@@ -1,5 +1,6 @@
 import type { Context } from './context.js';
 
+import { FileExtensions } from './file.js';
 import { Token, tokenize } from './tokenizer/index.js';
 import { Types, matchEpiodes } from './episodes.js';
 
@@ -21,6 +22,7 @@ const AudioTerm = new Set([
   'AAC×3',
   'AACX4',
   'AAC×4',
+  'QAAC',
   'AC3',
   'EAC3',
   'E-AC-3',
@@ -69,6 +71,7 @@ const VideoTerm = new Set([
   'X265',
   'X.264',
   'AVC',
+  'AVC-8BIT',
   'HEVC',
   'HEVC2',
   'HEVC_OPUS',
@@ -98,10 +101,13 @@ const VideoTerm = new Set([
 const VideoResolution = new Set([
   '480P',
   '720P',
+  '720P@60FPS', // TODO
   '804P',
+  '960P',
   '1080P',
+  '1080P@60FPS', // TODO
   '2160P',
-  'AI2160p',
+  'AI2160p', // TODO
   '854X480',
   '854×480',
   '1280X720',
@@ -159,6 +165,7 @@ const Source = new Set([
 
 const Platfroms = new Set([
   'Baha',
+  'Bili',
   'Bilibili',
   'B-Global',
   'ABEMA',
@@ -176,7 +183,9 @@ const Variants = new Set([
   '中文配音',
   'Japanese Audio',
   'Japanese Dub',
-  'JP Dub'
+  'JP Dub',
+  'English Audio',
+  'English Dub'
 ]);
 
 const SubtitleFormats = new Set([
@@ -197,7 +206,7 @@ const SubtitleFormats = new Set([
   'SRTX4'
 ]);
 
-const SubtitleEncoding = new Set(['GB', 'BIG5']);
+const SubtitleEncoding = new Set(['GB&BIG5', 'BIG5&GB', 'GB', 'BIG5']);
 
 const PlatformLanguage = new Map([
   ['ViuTV粵語', ['ViuTV', '粵語']],
@@ -216,6 +225,7 @@ const Languages = new Set([
   'CHS',
   'CHT',
   'YUE',
+  'JPN',
   'JP',
   '简体',
   '简繁',
@@ -259,30 +269,14 @@ const SubtitleFormatSuffixes = new Set([
   '字幕'
 ]);
 
-const Extension = new Set([
-  '3GP',
-  'AVI',
-  'DIVX',
-  'FLV',
-  'M2TS',
-  'MKV',
-  'MOV',
-  'MP4',
-  'MPG',
-  'OGM',
-  'RM',
-  'RMVB',
-  'TS',
-  'WEBM',
-  'WMV'
-]);
-
 const OtherTags = new Set([
   //
   'RAW',
   'DUB',
   'DUBBED',
   'retake',
+  //
+  '全歌曲特效',
   //
   '国漫',
   'Donghua',
@@ -352,7 +346,7 @@ export function matchSingleTag(ctx: Context, text: string) {
     ctx.update('variants', variants);
     return true;
   }
-  if (Extension.has(upper)) {
+  if (FileExtensions.has(upper)) {
     ctx.update2('file', 'extension', text);
     return true;
   }
@@ -517,7 +511,7 @@ export function matchSingleTag(ctx: Context, text: string) {
   return false;
 }
 
-export function matchMultipleTags(ctx: Context, text: string, TagSeperators = [' ', '_']) {
+export function matchMultipleTags(ctx: Context, text: string, TagSeperators = [' ', '_', '&']) {
   for (const sep of TagSeperators) {
     const parts = text.split(sep);
     if (parts.length <= 1) continue;
