@@ -15,6 +15,7 @@ const AudioTerm = new Set([
   'DTS5.1',
   'TRUEHD5.1',
   // Audio codec
+  'EAC3&AAC',
   'AAC',
   'AACX2',
   'AAC×2',
@@ -43,6 +44,7 @@ const AudioTerm = new Set([
   'DUAL AUDIO'
 ]);
 
+// TODO: split codec and bitDepth
 const VideoTerms = new Set([
   // Video codec
   '8BIT',
@@ -103,6 +105,7 @@ const VideoResolutions = new Set([
   '960P',
   '1080P',
   '1080P@60FPS', // TODO: use regexp
+  '1636P',
   '2160P',
   'AI2160p', // TODO: use regexp
   '854X480',
@@ -164,6 +167,7 @@ const Platfroms = new Set([
   'Baha',
   'Bili',
   'Bilibili',
+  'BiliBili',
   'B-Global',
   'ABEMA',
   'CR',
@@ -181,7 +185,9 @@ const Variants = new Set([
   '中配版',
   '日文配音',
   '中文配音',
+  'Chinese Audio',
   'Japanese Audio',
+  'JPN Audio',
   'Japanese Dub',
   'JP Dub',
   'English Audio',
@@ -248,13 +254,17 @@ const LanguagePrefixes = [
   '简繁日英',
   '简繁英',
   '简繁',
+  '简英',
+  '简',
   '繁體',
   '繁体',
   '繁日',
   '繁英',
   '繁简日',
+  '繁',
   '中日英',
-  '英文'
+  '英文',
+  '英'
 ];
 
 const SubtitleFormatSuffixes = new Set([
@@ -278,6 +288,8 @@ const OtherTags = new Set([
   'retake',
   //
   '全歌曲特效',
+  '无水印',
+  '含副音轨',
   //
   '国漫',
   'Donghua',
@@ -309,11 +321,22 @@ const OtherTags = new Set([
 ]);
 
 // Prefix
-const SearchPrefix = ['检索：', '檢索：', '检索用：', '檢索用：'];
+const SearchPrefix = [
+  '检索:',
+  '检索：',
+  '檢索:',
+  '檢索：',
+  '检索用:',
+  '检索用：',
+  '檢索用:',
+  '檢索用：'
+];
 
 const HiringPrefix = ['招募', '字幕社招人', '字幕社招人內詳'];
 
 const OtherPrefix = ['▶'];
+
+const Ignores = new Set(['务必查看bt站简介', '请看bt站简介', '添加日语']);
 
 export function matchSingleTag(ctx: Context, text: string) {
   const upper = text.toUpperCase();
@@ -358,6 +381,27 @@ export function matchSingleTag(ctx: Context, text: string) {
   if (OtherTags.has(text)) {
     ctx.tags.push(text.trim());
     return true;
+  }
+  if (Ignores.has(text)) {
+    return true;
+  }
+
+  // tmdbid=1406607
+  {
+    const res = /^tmdbid=(.+)$/.exec(text);
+    if (res) {
+      ctx.update('tmdbId', res[1]);
+      return true;
+    }
+  }
+
+  // 抚物语 ...
+  {
+    const res = /^.+物语$/.exec(text);
+    if (res) {
+      ctx.tags.push(text);
+      return true;
+    }
   }
 
   // Match language and subtitles
@@ -408,11 +452,11 @@ export function matchSingleTag(ctx: Context, text: string) {
       if (text.startsWith(prefix)) {
         const language = prefix;
         const format = text.slice(prefix.length);
-        if (SubtitleFormatSuffixes.has(format)) {
+        if (SubtitleFormatSuffixes.has(format) || format === '') {
           languages.push(language);
           ctx.update2('subtitle', 'languages', languages);
 
-          if (format !== '字幕' && !ctx.result.subtitle?.format) {
+          if (format && format !== '字幕' && !ctx.result.subtitle?.format) {
             ctx.update2('subtitle', 'format', format);
           }
           return true;
@@ -439,8 +483,8 @@ export function matchSingleTag(ctx: Context, text: string) {
       }
     }
     {
-      // ★10月新番
-      const match = /^★?(\d\d?)月新?番★?$/.exec(text);
+      // ★10月新番 ★04月新番★
+      const match = /^★?(\d{1,2})月新?番★?$/.exec(text);
       if (match) {
         const month = +match[1];
         if (1 <= month && month <= 12) {
@@ -591,7 +635,11 @@ export function parsePrefixTextTags(ctx: Context) {
   const trimmed = parsePrefixTextInlineTags(ctx, token.text);
 
   if (trimmed !== token.text) {
-    ctx.tokens[ctx.left] = new Token(trimmed, token.left, token.right);
+    if (trimmed) {
+      ctx.tokens[ctx.left] = new Token(trimmed, token.left, token.right);
+    } else {
+      ctx.left += 1;
+    }
     return true;
   }
 

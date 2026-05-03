@@ -8,7 +8,10 @@ export function readTestAsset(fansub: Fansub) {
     .readFileSync(
       path.join(
         import.meta.dirname,
-        `./__assets__/${fansub.toLowerCase().replace(/[ \-]/g, '_')}.csv`
+        `./__assets__/${fansub
+          .toLowerCase()
+          .replace(/[ \-(]/g, '_')
+          .replace(/[)]/g, '')}.csv`
       ),
       'utf-8'
     )

@@ -72,6 +72,9 @@ export interface ParseResult {
   // Video file info
   file?: FileInfo;
 
+  // tmdb id
+  tmdbId?: string;
+
   // Tags
   tags?: string[];
 

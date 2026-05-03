@@ -3,7 +3,7 @@ import type { Context } from './context.js';
 import { parseSuffixTextInlineTags } from './keyword.js';
 import { parseSuffixTextInlineSeason } from './episodes.js';
 
-export function splitMultipleTitles(ctx: Context, space = true, separators = ['/', '-']) {
+function splitMultipleTitles(ctx: Context, space = true, separators = ['/', '-']) {
   const rest = ctx.tokens.slice(ctx.left, ctx.right + 1);
   if (rest.length === 0) return [];
 
@@ -69,4 +69,24 @@ export function parseMultipleTitles(ctx: Context, space = true, separators = ['/
   }
 
   return [trimmedTitle, ...otherTitles];
+}
+
+export function parseSingleTitle(ctx: Context) {
+  const rest = ctx.tokens.slice(ctx.left, ctx.right + 1);
+  if (rest.length === 0) return '';
+
+  const fullText =
+    rest.length === 1
+      ? rest[0].text.trim()
+      : rest
+          .map((t) => t.toString())
+          .join('')
+          .trim();
+
+  const title = parseSingleTitleText(ctx, fullText);
+  if (title) {
+    ctx.update('title', title);
+  }
+
+  return title;
 }

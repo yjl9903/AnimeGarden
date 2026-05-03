@@ -93,7 +93,31 @@ const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
     parseFansub(ctx);
     parseSuffixWrappedTags(ctx);
     parseSuffixEpisodes(ctx);
-    parseMultipleTitles(ctx, false);
+    parseMultipleTitles(ctx, false, ['/']);
+    return ctx.validate();
+  },
+  [Fansub.喵萌奶茶屋]: (ctx) => {
+    parseFansub(ctx);
+    parsePrefixTextTags(ctx);
+    parseSuffixWrappedTags(ctx);
+    parseSuffixEpisodes(ctx);
+    parseMultipleTitles(ctx, true, ['/']);
+    return ctx.validate();
+  },
+  [Fansub.雪飄工作室]: (ctx) => {
+    parseFansub(ctx);
+    parseSuffixWrappedTags(ctx);
+    parseSuffixEpisodes(ctx);
+    parseMultipleTitles(ctx);
+
+    return ctx.validate();
+  },
+  [Fansub.三明治摆烂组]: (ctx) => {
+    parseFansub(ctx);
+    parseSuffixWrappedTags(ctx);
+    parseSuffixEpisodes(ctx);
+    parseMultipleTitles(ctx);
+
     return ctx.validate();
   }
 };
@@ -108,25 +132,25 @@ export function parse(title: string, options: ParseOptions = {}): ParseResult | 
 
   let fansub = options.fansub;
 
-  const context = new Context(tokens, options);
+  const ctx = new Context(tokens, options);
   if (file.extension) {
-    context.update2('file', 'extension', file.extension);
+    ctx.update2('file', 'extension', file.extension);
   }
 
   const parser = fansub ? parsers[fansub] : undefined;
 
   // Use pre-defined parser
   if (parser) {
-    const result = parser(context);
+    const result = parser(ctx);
     return result;
   }
 
   // Fallback to default parser
 
   // 1. Parse fansub
-  parseFansub(context);
+  parseFansub(ctx);
   if (!fansub) {
-    fansub = context.result.fansub?.name;
+    fansub = ctx.result.fansub?.name;
   }
   if (!fansub) {
     return undefined;
@@ -138,21 +162,21 @@ export function parse(title: string, options: ParseOptions = {}): ParseResult | 
   }
 
   // Parse left tags
-  parsePrefixWrappedTags(context);
-  parsePrefixTextTags(context);
+  parsePrefixWrappedTags(ctx);
+  parsePrefixTextTags(ctx);
 
   // 2. Parse right tags
-  parseSuffixWrappedTags(context);
-  parseSuffixEpisodes(context);
+  parseSuffixWrappedTags(ctx);
+  parseSuffixEpisodes(ctx);
 
   // 3. Parse title
-  const titles = parseMultipleTitles(context);
+  const titles = parseMultipleTitles(ctx);
   if (titles.length === 0) {
     return undefined;
   }
 
   // 4. Postprocess
-  const result = context.validate();
+  const result = ctx.validate();
 
   return result;
 }

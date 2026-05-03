@@ -7,9 +7,10 @@ const WrappedEpisodeRE =
 const WrappedSeasonRE = /^(?:S|Season)(\d+)\s*(Fin|End)?$/;
 const WrappedMovieRE = /^Movie [vV](\d+)$/;
 
-const EpisodesRange1 =
+const WrappedEpisodesRange1 =
   /^(?<ep1>\d+)(?:\.(?<sub1>\d))?[-~](?<ep2>\d+)(?:\.(?<sub2>\d))?\s*(?<type>.*)$/;
-const EpisodesRange2 = /^全(\d+)集$/;
+const WrappedEpisodesRange2 = /^全(\d+)集$/;
+const WrappedSeasonsRange = /^S(?<season1>\d)-S(?<season2>\d)$/;
 
 export function matchEpiodes(ctx: Context, text: string) {
   text = text.trimEnd();
@@ -73,10 +74,10 @@ export function matchEpiodes(ctx: Context, text: string) {
     }
   }
 
-  // 2. Episode range
+  // 2. Episodes range
   {
     // 01-26
-    const res = EpisodesRange1.exec(text);
+    const res = WrappedEpisodesRange1.exec(text);
     if (res) {
       const from = res.groups?.ep1 ? +res.groups.ep1 : NaN;
       const to = res.groups?.ep2 ? +res.groups.ep2 : NaN;
@@ -117,7 +118,7 @@ export function matchEpiodes(ctx: Context, text: string) {
   }
   {
     // 全26集
-    const res = EpisodesRange2.exec(text);
+    const res = WrappedEpisodesRange2.exec(text);
     if (res) {
       const to = +res[1];
       if (!Number.isNaN(to)) {
@@ -145,6 +146,20 @@ export function matchEpiodes(ctx: Context, text: string) {
     }
   }
 
+  // 4. Seasons Range
+  {
+    const res = WrappedSeasonsRange.exec(text);
+    if (res) {
+      const season1 = res.groups?.season1 ? +res.groups.season1 : NaN;
+      const season2 = res.groups?.season2 ? +res.groups.season2 : NaN;
+      if (!Number.isNaN(season1) && !Number.isNaN(season2)) {
+        ctx.update2('seasonsRange', 'from', season1);
+        ctx.update2('seasonsRange', 'to', season2);
+      }
+      return true;
+    }
+  }
+
   return false;
 }
 
@@ -163,7 +178,7 @@ export function parseWrappedEpisodes(ctx: Context) {
 }
 
 const SuffixEpisodeRE = [
-  /\s*- (?<sp>SP)?(?<ep1>\d+)(?:\.(?<sub>\d))?(?:[vV](?<version>\d+))?(?:\s*-)?$/,
+  /\s*- (?<type>SP|OVA)?(?<ep1>\d+)(?:\.(?<sub>\d))?(?:[vV](?<version>\d+))?(?:\s*-)?$/,
   /\s+S(?<season>\d+)E(?<ep1>\d+)$/,
   /\s*第(?<ep1>\d+)(?:\.(?<sub>\d))?[集话話]$/,
   /\s+S(?<season1>\d+)-S(?<season2>\d+)$/
@@ -250,8 +265,8 @@ export function parseSuffixTextInlineEpisodes(ctx: Context, text: string) {
     if (res) {
       const ep = res.groups?.ep1 ? +res.groups?.ep1 : NaN;
       if (!Number.isNaN(ep)) {
-        if (res.groups?.sp) {
-          ctx.update('type', res.groups.sp);
+        if (res.groups?.type) {
+          ctx.update('type', res.groups.type);
         }
 
         ctx.update2('episode', 'number', ep);
