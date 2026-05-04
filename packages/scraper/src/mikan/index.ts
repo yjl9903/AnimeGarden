@@ -185,10 +185,10 @@ export async function fetchMikanPage(
     }
 
     const titleNode = tds[2].querySelector<HTMLAnchorElement>('a[href*="/Home/Episode/"]');
-    let rawTitle = titleNode?.textContent?.trim();
+    let title = titleNode?.textContent?.trim();
     const href = titleNode?.getAttribute('href')?.trim();
     const providerId = href ? parseEpisodeId(href) : undefined;
-    if (!rawTitle || !providerId) {
+    if (!title || !providerId) {
       continue;
     }
 
@@ -213,9 +213,15 @@ export async function fetchMikanPage(
 
     const group = parseFirstPublishGroup(tds[1]);
 
+    // 剔除零宽空格, 清洗字幕组笔误
+    title = title
+      .replace(/[\u200B-\u200D\uFEFF]/g, '')
+      .replace(/\[\[/g, '[')
+      .replace(/\]\]/g, ']');
+
     // @hack
     if (group?.name === 'ANi') {
-      rawTitle = stripSuffix(removeExtraSpaces(rawTitle), [
+      title = stripSuffix(removeExtraSpaces(title), [
         '.torrent',
         '.mp3',
         '.MP3',
@@ -225,18 +231,18 @@ export async function fetchMikanPage(
         '.MKV'
       ]);
     } else {
-      rawTitle = removeExtraSpaces(rawTitle);
+      title = removeExtraSpaces(title);
     }
 
     // @hack 删除末尾的 v2
-    if (rawTitle.endsWith('v2')) {
-      rawTitle = rawTitle.slice(0, rawTitle.length - 2).trimEnd();
+    if (title.endsWith('v2')) {
+      title = title.slice(0, title.length - 2).trimEnd();
     }
 
     result.push({
       provider: 'mikan',
       providerId,
-      title: rawTitle,
+      title: title,
       href: providerId,
       type: '动画',
       magnet,

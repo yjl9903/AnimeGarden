@@ -86,6 +86,12 @@ export async function fetchDmhyPage(
     const matchId = /^(\d+)/.exec(lastHref);
     if (!matchId) continue;
 
+    // 剔除零宽空格, 清洗字幕组笔误
+    title = title
+      .replace(/[\u200B-\u200D\uFEFF]/g, '')
+      .replace(/\[\[/g, '[')
+      .replace(/\]\]/g, ']');
+
     // @hack
     if (fansubName === 'ANi') {
       title = stripSuffix(removeExtraSpaces(title), [

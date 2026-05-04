@@ -50,7 +50,13 @@ export async function fetchMoePage(
     const user = await fetchUser(ofetch, torrent.uploader_id);
     const team = torrent.team_id ? await fetchTeam(ofetch, torrent.team_id) : undefined;
 
-    let title = torrent.title;
+    let title: string = torrent.title;
+
+    // 剔除零宽空格, 清洗字幕组笔误
+    title = title
+      .replace(/[\u200B-\u200D\uFEFF]/g, '')
+      .replace(/\[\[/g, '[')
+      .replace(/\]\]/g, ']');
 
     // @hack
     if (team?.name === 'ANi' || team?.name === '云光字幕组') {
