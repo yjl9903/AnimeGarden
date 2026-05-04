@@ -1,8 +1,13 @@
 # syntax = docker/dockerfile:1
 
 ARG NODE_VERSION=24.15.0
-ARG PNPM_VERSION=10.33.2
 
+# Base Image
+FROM node:${NODE_VERSION}-slim AS base
+
+LABEL fly_launch_runtime="Node.js"
+
+# Declare args
 ARG APP_HOST=animes.garden
 ARG FEED_HOST=api.animes.garden
 
@@ -11,24 +16,20 @@ ARG FEED_SERVER_URL=https://api.animes.garden/
 
 ARG UMAMI_ID=bcff225d-6590-498e-9b39-3a5fc5c2b4d1
 
+ARG HOST=::
 ARG PORT=3000
 
-# Base Image
-FROM node:${NODE_VERSION}-slim AS base
-
-LABEL fly_launch_runtime="Node.js"
+# Set environment variables
+ENV CI=true NODE_ENV="production" HOST=${HOST} PORT=${PORT} \
+    APP_HOST=$APP_HOST FEED_HOST=$FEED_HOST \
+    SERVER_URL=$SERVER_URL FEED_SERVER_URL=$FEED_SERVER_URL \
+    UMAMI_ID=$UMAMI_ID
 
 # Node.js app lives here
 WORKDIR /app
 
-# Declare args
-ARG APP_HOST FEED_HOST SERVER_URL FEED_SERVER_URL UMAMI_ID
-
-# Set production environment or development for test
-ENV NODE_ENV="development" APP_HOST=$APP_HOST FEED_HOST=$FEED_HOST SERVER_URL=$SERVER_URL FEED_SERVER_URL=$FEED_SERVER_URL UMAMI_ID=$UMAMI_ID
-
-# Install pnpm
-RUN npm install -g pnpm@$PNPM_VERSION
+# Enable corepack
+RUN corepack enable pnpm
 
 
 # Throw-away build stage to reduce size of final image
@@ -54,28 +55,19 @@ RUN pnpm install --frozen-lockfile --prod=false
 # Copy application code
 COPY --link . .
 
-# Setup CI environment
-ENV CI=true
-
-# Build application
-RUN pnpm run build:web
-
-# Remove development dependencies
-RUN pnpm prune --prod
+# Build application and remove development dependencies
+RUN pnpm run build:web && pnpm prune --prod
 
 
 # Final stage for app image
 FROM base
 
+# Declare args
+ARG HOST=::
+ARG PORT=3000
+
 # Copy built application
 COPY --from=build /app /app
-
-# Listen on 3000
-ENV HOST=:: PORT=${PORT}
-
-# Declare args
-ARG APP_HOST FEED_HOST SERVER_URL FEED_SERVER_URL UMAMI_ID
-ENV APP_HOST=$APP_HOST FEED_HOST=$FEED_HOST SERVER_URL=$SERVER_URL FEED_SERVER_URL=$FEED_SERVER_URL UMAMI_ID=$UMAMI_ID
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE ${PORT}

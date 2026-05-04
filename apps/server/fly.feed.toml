@@ -11,9 +11,10 @@ dockerfile = 'Dockerfile'
 
 [build.args]
 NODE_VERSION = '24.15.0'
-PNPM_VERSION = '10.33.2'
 APP_HOST = 'animes.garden'
 FEED_HOST = 'api.animes.garden'
+TELEGRAM_TOKEN = ''
+TELEGRAM_CHAT_ID = '-1003904271816'
 
 [processes]
 server = './apps/server/manager.sh start'

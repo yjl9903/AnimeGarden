@@ -15,6 +15,8 @@ import { type RpcEventMap, type RpcPayload, type RpcSender, type RpcBus, makeRpc
 export type { Database, DatabaseConnection, RedisStorage };
 
 export interface SystemOptions {
+  profile?: SystemProfile;
+
   secret?: string;
 
   postgresUri?: string;
@@ -23,9 +25,13 @@ export interface SystemOptions {
 
   cron?: boolean;
 
-  profile?: SystemProfile;
-
   site?: string;
+
+  telegram?: {
+    token?: string;
+
+    chatId?: string;
+  };
 }
 
 export class System<M extends Record<string, Module> = {}, E extends RpcEventMap = {}> {

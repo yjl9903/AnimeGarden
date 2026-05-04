@@ -31,6 +31,19 @@ async function initialize(options: SystemOptions) {
     options.site = process.env.APP_HOST;
   }
 
+  if (process.env.TELEGRAM_TOKEN) {
+    if (!options.telegram) {
+      options.telegram = {};
+    }
+    options.telegram.token = process.env.TELEGRAM_TOKEN;
+  }
+  if (process.env.TELEGRAM_CHAT_ID) {
+    if (!options.telegram) {
+      options.telegram = {};
+    }
+    options.telegram.chatId = process.env.TELEGRAM_CHAT_ID;
+  }
+
   try {
     return await makeSystem(options);
   } catch (error) {

@@ -1,26 +1,31 @@
 # syntax = docker/dockerfile:1
 
 ARG NODE_VERSION=24.15.0
-ARG PNPM_VERSION=10.33.2
-
-ARG APP_HOST=animes.garden
-ARG FEED_HOST=api.animes.garden
-
-ARG PORT=3000
 
 # Base Image
 FROM node:${NODE_VERSION}-slim AS base
 
 LABEL fly_launch_runtime="Node.js"
 
+# Declare args
+ARG PNPM_VERSION=10.33.2
+
+ARG APP_HOST=animes.garden
+ARG FEED_HOST=api.animes.garden
+
+ARG HOST=0.0.0.0
+ARG PORT=3000
+
+# Set environment variables
+ENV CI=true NODE_ENV="production" \
+    HOST=${HOST} PORT=${PORT} \
+    APP_HOST=${APP_HOST} FEED_HOST=${FEED_HOST}
+
 # Node.js app lives here
-WORKDIR /app
+WORKDIR /app    
 
-# Set production environment
-ENV NODE_ENV="production"
-
-# Install pnpm
-RUN npm install -g pnpm@$PNPM_VERSION
+# Enable corepack
+RUN corepack enable pnpm
 
 
 # Throw-away build stage to reduce size of final image
@@ -46,25 +51,26 @@ RUN pnpm install --frozen-lockfile --prod=false
 # Copy application code
 COPY --link . .
 
-# Setup CI environment
-ENV CI=true
-
-# Build application
-RUN pnpm run build:server
-
-# Remove development dependencies
-RUN pnpm prune --prod
+# Build application and remove development dependencies
+RUN pnpm run build:server && pnpm prune --prod
 
 
 # Final stage for app image
 FROM base
 
+# Declare args
+ARG TELEGRAM_TOKEN
+ARG TELEGRAM_CHAT_ID
+
+ARG HOST=0.0.0.0
+ARG PORT=3000
+
+# Set environment variables
+ENV HOST=${HOST} PORT=${PORT} \
+    TELEGRAM_TOKEN=${TELEGRAM_TOKEN} TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+
 # Copy built application
 COPY --from=build /app /app
-
-# Declare args
-ARG PORT APP_HOST FEED_HOST
-ENV HOST=0.0.0.0 PORT=${PORT} APP_HOST=${APP_HOST} FEED_HOST=${FEED_HOST}
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE ${PORT}
