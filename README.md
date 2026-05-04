@@ -4,7 +4,6 @@
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/yjl9903/AnimeGarden)
 [![version](https://img.shields.io/npm/v/animegarden?label=animegarden)](https://www.npmjs.com/package/animegarden)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
-![umami](https://umami.onekuma.cn/p/kGNoZNtRB)
 
 [English](/README.en.md) | [简体中文](/README.md)
 

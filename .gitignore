@@ -6,13 +6,11 @@ node_modules
 .env
 .env.*
 !.env.local
-!apps/animespace/test/__assets__/**/.env
 
 # Build output
 .turbo
 .wrangler
 .animegarden
-.animespace
 chunk
 output
 dist
@@ -20,7 +18,6 @@ functions
 __pycache__
 *.ps1
 *.sqlite3
-apps/animespace/test/__assets__/**/*.db
 
 # Rest pulled from https://github.com/github/gitignore/blob/master/Node.gitignore
 # Logs

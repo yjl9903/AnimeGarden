@@ -6,6 +6,6 @@ INSERT INTO "providers" ("id", "name", "refreshed_at", "is_active") VALUES ('moe
 INSERT INTO "providers" ("id", "name", "refreshed_at", "is_active") VALUES ('ani', 'ANi', NOW(), true);
 
 -- anonymous users
-INSERT INTO "users" ("name", "avatar", "providers") VALUES ('anonymous', 'https://garden.onekuma.cn/favicon.svg', '{}');
-INSERT INTO "users" ("name", "avatar", "providers") VALUES ('ANi', 'https://garden.onekuma.cn/favicon.svg', '{}');
-INSERT INTO "teams" ("name", "avatar", "providers") VALUES ('ANi', 'https://garden.onekuma.cn/favicon.svg', '{}');
+INSERT INTO "users" ("name", "avatar", "providers") VALUES ('anonymous', 'https://animes.garden/favicon.svg', '{}');
+INSERT INTO "users" ("name", "avatar", "providers") VALUES ('ANi', 'https://animes.garden/favicon.svg', '{}');
+INSERT INTO "teams" ("name", "avatar", "providers") VALUES ('ANi', 'https://animes.garden/favicon.svg', '{}');

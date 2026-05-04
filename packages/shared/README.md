@@ -1,7 +1,6 @@
 # 🌸 @animegarden/shared
 
 [![version](https://img.shields.io/npm/v/@animegarden/shared?label=@animegarden/shared)](https://www.npmjs.com/package/@animegarden/shared)
-[![AnimeGarden](https://img.shields.io/endpoint?url=https://pages.onekuma.cn/project/animegarden&label=AnimeGarden)](https://animes.garden)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
 [AnimeGarden](https://animes.garden/) internal shared utilities.

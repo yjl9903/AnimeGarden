@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "anime": "tsx apps/animespace/src/cli.ts",
     "build": "turbo run build",
     "build:cli": "turbo run build --filter @animegarden/cli...",
     "build:server": "turbo run build --filter @animegarden/server...",
