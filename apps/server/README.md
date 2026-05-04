@@ -10,8 +10,6 @@ The server implmentation for [AnimeGarden](https://animes.garden/).
 + [萌番组](https://bangumi.moe/)
 + [Bangumi 番组计划](https://bgm.tv/)
 + [bangumi-data](https://github.com/bangumi-data/bangumi-data)
-+ [erengy/anitomy](https://github.com/erengy/anitomy)
-+ [tabratton/AnitomySharp](https://github.com/tabratton/AnitomySharp)
 
 ## License
 

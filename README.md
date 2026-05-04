@@ -107,8 +107,8 @@ const sakurato = await fetchResources({ count: -1, fansub: 'ANi' })
 ## 相关项目
 
 + [AnimeSpace](https://github.com/yjl9903/AnimeSpace): Keep following your favourite anime
-+ [Anitomy](https://github.com/yjl9903/anitomy): A TypeScript port of Anitomy inspired by AnitomySharp.
-+ [bgmc](https://github.com/yjl9903/bgmc): Bangumi Data / API Clients
++ [anipar](https://github.com/yjl9903/AnimeGarden/tree/main/packages/anipar): Parse structure metadata from resource's title.
++ [bgmx](https://github.com/yjl9903/bgmx): Bangumi Data / API Clients
 
 ## 鸣谢
 
@@ -116,8 +116,6 @@ const sakurato = await fetchResources({ count: -1, fansub: 'ANi' })
 + [萌番组](https://bangumi.moe/)
 + [Bangumi 番组计划](https://bgm.tv/)
 + [bangumi-data](https://github.com/bangumi-data/bangumi-data)
-+ [erengy/anitomy](https://github.com/erengy/anitomy)
-+ [tabratton/AnitomySharp](https://github.com/tabratton/AnitomySharp)
 
 ## 开源协议
 
