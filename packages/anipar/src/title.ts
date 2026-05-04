@@ -3,7 +3,26 @@ import type { Context } from './context.js';
 import { parseSuffixTextInlineTags } from './keyword.js';
 import { parseSuffixTextInlineSeason } from './episodes.js';
 
-function splitMultipleTitles(ctx: Context, space = true, separators = ['/', '-']) {
+interface SplitOptions {
+  // /**
+  //  * @default false
+  //  */
+  // nest?: boolean;
+
+  /**
+   * @default true
+   */
+  space?: boolean;
+
+  /**
+   * @default "['/', '-']"
+   */
+  separators?: string[];
+}
+
+function splitMultipleTitles(ctx: Context, options?: SplitOptions) {
+  const { space = true, separators = ['/', '-'] } = options ?? {};
+
   const rest = ctx.tokens.slice(ctx.left, ctx.right + 1);
   if (rest.length === 0) return [];
 
@@ -35,6 +54,21 @@ function splitMultipleTitles(ctx: Context, space = true, separators = ['/', '-']
     }
 
     for (let i = 0; i < parts.length; i += 1) {
+      if (!space && separator === '/' && i + 1 < parts.length) {
+        if (
+          // Fate/Grand Order 命运/冠位指定
+          parts[i].toUpperCase().endsWith('FATE') ||
+          parts[i].toUpperCase().endsWith('命运') ||
+          parts[i].toUpperCase().endsWith('命運') ||
+          // Ramma 1/2 22/7
+          (/\d$/.test(parts[i]) && /^\d/.test(parts[i + 1]))
+        ) {
+          result.push(parts[i] + separator + parts[i + 1]);
+          i += 1;
+          continue;
+        }
+      }
+
       result.push(parts[i]);
     }
 
@@ -54,11 +88,11 @@ export function parseSingleTitleText(ctx: Context, text: string) {
   return text;
 }
 
-export function parseMultipleTitles(ctx: Context, space = true, separators = ['/', '-']) {
-  const titles = splitMultipleTitles(ctx, space, separators);
+export function parseMultipleTitles(ctx: Context, options?: SplitOptions) {
+  const titles = splitMultipleTitles(ctx, options);
   if (titles.length === 0) return [];
 
-  const trimmedTitles = titles.map((t) => parseSingleTitleText(ctx, t));
+  const trimmedTitles = titles.map((t) => parseSingleTitleText(ctx, t)).filter(Boolean);
   const trimmedTitle = trimmedTitles[0];
 
   ctx.update('title', trimmedTitle);

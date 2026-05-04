@@ -27,6 +27,9 @@ export interface ParseResult {
   // season info
   season?: SeasonInfo;
 
+  // seasons info, e.g. S3+S4
+  seasons?: SeasonInfo[];
+
   // seasons range, e.g. S1-S2
   seasonsRange?: SeasonsRange;
 
@@ -44,6 +47,12 @@ export interface ParseResult {
 
   // volume info
   volume?: VolumeInfo;
+
+  // volumes info
+  volumes?: VolumeInfo;
+
+  // volumes range
+  volumesRange?: VolumesRange;
 
   // Multiple episodes
   episodes?: EpisodeInfo[];
@@ -108,6 +117,14 @@ export interface EpisodeInfo {
 
 export interface VolumeInfo {
   number: number;
+}
+
+export interface VolumesRange {
+  from: number;
+
+  to: number;
+
+  type?: string;
 }
 
 export interface EpisodesRange {

@@ -34,6 +34,7 @@ const AudioTerm = new Set([
   'FLAC×3',
   'FLACX4',
   'FLAC×4',
+  'FLAC/AC3', // TODO: split
   'LOSSLESS',
   'MP3',
   'WAV',
@@ -104,14 +105,21 @@ const VideoResolutions = new Set([
   '804P',
   '960P',
   '1080P',
+  '1180P',
   '1080P@60FPS', // TODO: use regexp
+  '1080P@96FPS', // TODO: use regexp
+  '1080P高帧率', // TODO: handle
+  '1920X816@60FPS', // TODO
   '1636P',
   '2160P',
   'AI2160p', // TODO: use regexp
   '854X480',
   '854×480',
+  '948X720',
   '1280X720',
   '1280×720',
+  '1920X804',
+  '1920×804',
   '1920X816',
   '1920×816',
   '1920X818',
@@ -160,7 +168,16 @@ const Source = new Set([
   'WEBRIP',
   'WEB-RIP',
   'WEB-MKV',
-  'MASTERRIP'
+  'MASTERRIP',
+  'DISC1', // TODO: volume [雪飄工作室][アイカツプラネット！/Aikatsu_Planet!/偶像活動星球][BDrip][Disc1](檢索:偶活/愛活)
+  'DISC2',
+  'DISC3',
+  'DISC4',
+  'DISC5',
+  'DISC6',
+  'DISC7',
+  'DISC8',
+  'DISC9'
 ]);
 
 const Platfroms = new Set([
@@ -172,6 +189,7 @@ const Platfroms = new Set([
   'ABEMA',
   'CR',
   'AT-X',
+  'AT-X版',
   'ViuTV',
   'AMZN',
   'ADN',
@@ -212,7 +230,7 @@ const SubtitleFormats = new Set([
   'SRTX4'
 ]);
 
-const SubtitleEncoding = new Set(['GB&BIG5', 'BIG5&GB', '外挂GB/BIG5', 'GB', 'BIG5']);
+const SubtitleEncoding = new Set(['GB&BIG5', 'BIG5&GB', '外挂GB/BIG5', 'GB/BIG5', 'GB', 'BIG5']);
 
 const PlatformLanguage = new Map([
   ['ViuTV粵語', ['ViuTV', '粵語']],
@@ -234,13 +252,18 @@ const Languages = new Set([
   'JPN',
   'JP',
   '简体',
+  '简/繁·日',
+  '繁/體',
   '简繁',
   '国语中字',
   '繁體',
   '中日双语',
+  '繁日双语',
   '简日双语',
   '繁日雙語',
-  'HOY粵語'
+  'HOY粵語',
+  '外挂CHS/CHT', // TODO: 处理 倒序
+  '外挂繁简日字幕' // TODO: 处理 倒序
 ]);
 
 const LanguagePrefixes = [
@@ -253,7 +276,10 @@ const LanguagePrefixes = [
   '简繁英日',
   '简繁日英',
   '简繁英',
+  '简繁泰',
+  '简/繁',
   '简繁',
+  '簡繁',
   '简英',
   '简',
   '繁體',
@@ -273,6 +299,7 @@ const SubtitleFormatSuffixes = new Set([
   '內嵌',
   '内封字幕',
   '内封',
+  '內封',
   '外挂字幕',
   '外挂',
   '外掛',
@@ -286,19 +313,27 @@ const OtherTags = new Set([
   'DUB',
   'DUBBED',
   'retake',
+  'SNS',
   //
   '全歌曲特效',
   '无水印',
   '含副音轨',
+  '特典',
+  'LIVE纯享',
+  '无损重制',
+  '广播剧_Dream☆Arch', // TODO: no hardcode
   //
   '国漫',
   'Donghua',
   //
+  '特別版',
   '先行版',
   '先行版本',
+  '正片先行版',
   '正式版',
   '正式版本',
   '放送版',
+  '修订版',
   'On-air version',
   //
   '年齡限制版',
@@ -332,14 +367,17 @@ const SearchPrefix = [
   '檢索用：'
 ];
 
-const HiringPrefix = ['招募', '字幕社招人', '字幕社招人內詳'];
+const HiringPrefix = ['招募', '急募', '字幕社招人', '字幕社招人'];
 
 const OtherPrefix = ['▶'];
 
-const Ignores = new Set(['务必查看bt站简介', '请看bt站简介', '添加日语']);
+const Ignores = new Set(['务必查看bt站简介', '请看bt站简介', '添加日语', '添加日語']);
 
 export function matchSingleTag(ctx: Context, text: string) {
+  text = text.trim();
+
   const upper = text.toUpperCase();
+
   // Match keywords
   if (AudioTerm.has(upper)) {
     ctx.update3('file', 'audio', 'term', text);
@@ -382,6 +420,14 @@ export function matchSingleTag(ctx: Context, text: string) {
     ctx.tags.push(text.trim());
     return true;
   }
+  if (text.endsWith('.ver')) {
+    ctx.tags.push(text.trim());
+    return true;
+  }
+  if (text.startsWith('Bloomy_Cafe')) {
+    ctx.tags.push(text.trim());
+    return true;
+  }
   if (Ignores.has(text)) {
     return true;
   }
@@ -397,7 +443,7 @@ export function matchSingleTag(ctx: Context, text: string) {
 
   // 抚物语 ...
   {
-    const res = /^.+物语$/.exec(text);
+    const res = /^.+(物语|物語)$/.exec(text);
     if (res) {
       ctx.tags.push(text);
       return true;
@@ -539,7 +585,10 @@ export function matchSingleTag(ctx: Context, text: string) {
         const title = text.slice(prefix.length).trim();
         ctx.update(
           'search',
-          title.split('/').map((t) => t.trim())
+          title
+            .split('/')
+            .map((t) => t.trim())
+            .filter(Boolean)
         );
         return true;
       }
@@ -552,6 +601,18 @@ export function matchSingleTag(ctx: Context, text: string) {
     for (const prefix of OtherPrefix) {
       if (text.startsWith(prefix)) {
         ctx.tags.push(text.trim());
+        return true;
+      }
+    }
+  }
+
+  // Match vol.1
+  {
+    const res = /^(?:Vol|vol|Volume|volume)\.?\s*(?<vol>\d+)$/.exec(text);
+    if (res) {
+      const vol = res.groups?.vol ? +res.groups.vol : NaN;
+      if (!Number.isNaN(vol)) {
+        ctx.update2('volume', 'number', vol);
         return true;
       }
     }
@@ -618,7 +679,26 @@ export function parseSuffixWrappedTags(ctx: Context) {
       ctx.right -= 1;
     } else {
       // Unknown tags
-      if (ctx.left + 2 < ctx.right && ctx.right >= ctx.tokens.length - 1) {
+      const isIgnoreLast = () => {
+        const token = ctx.tokens[ctx.tokens.length - 1];
+        if (SearchPrefix.some((prefix) => token.text.startsWith(prefix))) {
+          return true;
+        }
+        if (HiringPrefix.some((prefix) => token.text.startsWith(prefix))) {
+          return true;
+        }
+        if (Ignores.has(token.text)) {
+          return true;
+        }
+        return false;
+      };
+
+      if (
+        // xxx [未知标签]
+        (ctx.left + 2 < ctx.right && ctx.right === ctx.tokens.length - 1) ||
+        // xxx [未知标签](检索用)
+        (ctx.right === ctx.tokens.length - 2 && isIgnoreLast())
+      ) {
         ctx.tags.push(ctx.tokens[ctx.right].text.trim());
         ctx.right -= 1;
       } else {
@@ -665,6 +745,15 @@ export function parsePrefixTextInlineTags(ctx: Context, text: string) {
       const matched = match[0];
       const type = match[1];
       ctx.update('type', type);
+      text = text.slice(matched.length);
+    }
+  }
+  {
+    // ★老番★
+    const match = /^★?(老番)★?/.exec(text);
+    if (match) {
+      const matched = match[0];
+      // const type = match[1];
       text = text.slice(matched.length);
     }
   }

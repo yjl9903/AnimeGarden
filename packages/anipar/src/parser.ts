@@ -2,11 +2,11 @@ import type { ParseOptions, ParseResult } from './types.js';
 
 import { Context } from './context.js';
 import { tokenize } from './tokenizer/index.js';
+import { parseFileExtension } from './file.js';
 import { parseMultipleTitles } from './title.js';
 import { Fansub, parseFansub } from './fansub.js';
 import { parseSuffixEpisodes } from './episodes.js';
 import { parsePrefixTextTags, parsePrefixWrappedTags, parseSuffixWrappedTags } from './keyword.js';
-import { parseFileExtension } from './file.js';
 
 const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
   [Fansub.Kirara_Fantasia]: (ctx) => {
@@ -36,7 +36,7 @@ const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
     parseFansub(ctx);
     parseSuffixWrappedTags(ctx);
     parseSuffixEpisodes(ctx);
-    parseMultipleTitles(ctx);
+    parseMultipleTitles(ctx, { space: false, separators: ['/'] });
 
     // Postprocess
 
@@ -79,21 +79,21 @@ const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
     parseFansub(ctx);
     parseSuffixWrappedTags(ctx);
     parseSuffixEpisodes(ctx);
-    parseMultipleTitles(ctx);
+    parseMultipleTitles(ctx, { space: false, separators: ['/'] });
     return ctx.validate();
   },
   [Fansub.桜都字幕组]: (ctx) => {
     parseFansub(ctx);
     parseSuffixWrappedTags(ctx);
     parseSuffixEpisodes(ctx);
-    parseMultipleTitles(ctx, false);
+    parseMultipleTitles(ctx, { space: false });
     return ctx.validate();
   },
   [Fansub.Prejudice_Studio]: (ctx) => {
     parseFansub(ctx);
     parseSuffixWrappedTags(ctx);
     parseSuffixEpisodes(ctx);
-    parseMultipleTitles(ctx, false, ['/']);
+    parseMultipleTitles(ctx, { space: false, separators: ['/'] });
     return ctx.validate();
   },
   [Fansub.喵萌奶茶屋]: (ctx) => {
@@ -101,21 +101,46 @@ const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
     parsePrefixTextTags(ctx);
     parseSuffixWrappedTags(ctx);
     parseSuffixEpisodes(ctx);
-    parseMultipleTitles(ctx, true, ['/']);
+    parseMultipleTitles(ctx, { space: false, separators: ['/'] });
     return ctx.validate();
   },
   [Fansub.雪飄工作室]: (ctx) => {
     parseFansub(ctx);
+    parsePrefixWrappedTags(ctx);
     parseSuffixWrappedTags(ctx);
     parseSuffixEpisodes(ctx);
-    parseMultipleTitles(ctx);
-
+    parseMultipleTitles(ctx, { space: false, separators: ['/'] });
     return ctx.validate();
   },
   [Fansub.三明治摆烂组]: (ctx) => {
     parseFansub(ctx);
     parseSuffixWrappedTags(ctx);
+
+    // hack: [三明治摆烂组&Pre-S] 与游戏中心的少女异文化交流的故事 / Game Center Shoujo to Ibunka Kouryuu - 06.5 总集篇(S00E01) - [繁日内嵌][H264 1080P](检索：游乐场少女的异文化交流)
+    if (
+      ctx.left <= ctx.right &&
+      ctx.tokens[ctx.right].text === ' - ' &&
+      !ctx.tokens[ctx.right].isWrapped
+    ) {
+      ctx.right -= 1;
+    }
+
     parseSuffixEpisodes(ctx);
+
+    // hack: [三明治摆烂组&Pre-S] 与游戏中心的少女异文化交流的故事 / Game Center Shoujo to Ibunka Kouryuu - 06.5 总集篇(S00E01) - [繁日内嵌][H264 1080P](检索：游乐场少女的异文化交流)
+    if (
+      ctx.left <= ctx.right &&
+      ctx.result.episode &&
+      ctx.result.season &&
+      ctx.tokens[ctx.right].text.endsWith(' 总集篇')
+    ) {
+      const { episode, season } = ctx.result;
+      ctx.result.episode = undefined;
+      parseSuffixEpisodes(ctx);
+      ctx.result.episode = episode;
+      ctx.result.season = season;
+    }
+
     parseMultipleTitles(ctx);
 
     return ctx.validate();

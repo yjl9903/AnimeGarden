@@ -1,6 +1,6 @@
 import type { Context } from './context.js';
 
-const FansubTags = new Set(['個人製作合集']);
+const FansubTags = new Set(['個人製作合集', '代发', '羊圈个人译制']);
 
 export const enum Fansub {
   Kirara_Fantasia = 'Kirara Fantasia',
@@ -57,9 +57,12 @@ export function parseFansub(ctx: Context) {
     }
 
     let found = false;
-    const seps = ['&', '·'];
+    const seps = ['&', '＆', '·'];
     for (const sep of seps) {
-      const [name, ...collab] = text.split(sep);
+      const [name, ...collab] = text
+        .split(sep)
+        .map((t) => t.trim())
+        .filter(Boolean);
 
       if (collab.length > 0) {
         found = true;

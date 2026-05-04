@@ -2,22 +2,29 @@ import type { Context } from './context.js';
 
 import { Token } from './tokenizer/index.js';
 
-const WrappedEpisodeRE =
-  /^(?<type>OVA|SP)?(?<ep1>\d+)(?:\.(?<sub>\d))?(?:[vV](?<version>\d+))?(?:\s+(?<ep_type>.+))?$|^第(?<ep2>\d+)[集话話]$|^S(?<season>\d+)E(?<ep3>\d+)$/;
+const WrappedEpisodeRE1 =
+  /^(?<type>TV|OVA|OAD|SP)?(?<ep1>\d+)(?:\.(?<sub>\d))?(?:[vV](?<version>\d+))?(?:(?:\s+|_|-)?(?<ep_type>[^\d集]+))?$|^第(?<ep2>\d+)[集话話]$|^S(?<season>\d+)E(?<ep3>\d+)((?:[_|（])?(?<ep_type>[^\d][^）]*)(?:）)?)?$/;
+const WrappedEpisodeRE2 = /^(?<ep1>\d+)(?:\+(?<type>[^\d]+)|,|&|、)(?<ep2>\d+)$/;
 const WrappedSeasonRE = /^(?:S|Season)(\d+)\s*(Fin|End)?$/;
 const WrappedMovieRE = /^Movie [vV](\d+)$/;
 
 const WrappedEpisodesRange1 =
-  /^(?<ep1>\d+)(?:\.(?<sub1>\d))?[-~](?<ep2>\d+)(?:\.(?<sub2>\d))?\s*(?<type>.*)$/;
+  /^(?<type>TV|OVA|OAD|SP)?(?<ep1>\d+)(?:\.(?<sub1>\d))?[-~](?<ep2>\d+)(?:\.(?<sub2>\d))?\s*[_]?(?<range_type>.*)$/;
 const WrappedEpisodesRange2 = /^全(\d+)集$/;
-const WrappedSeasonsRange = /^S(?<season1>\d)-S(?<season2>\d)$/;
+
+const WrappedSeasonsRE = /^S(?<season1>\d)\+S(?<season2>\d)$/;
+const WrappedSeasonsRangeRE = /^S(?<season1>\d)-S(?<season2>\d)$/;
+
+const WrappedVolumeRE = /^(?:Vol|vol|Volume|volume)\.?\s*(?<vol>\d+)$/;
+const WrappedVolumesRangeRE =
+  /^(?:Vol|vol|Volume|volume)\.?\s*(?<vol1>\d+)-(?<vol2>\d+)\s+(?<type>.*)$/;
 
 export function matchEpiodes(ctx: Context, text: string) {
   text = text.trimEnd();
 
   // 1. Single episode
   {
-    const res = WrappedEpisodeRE.exec(text);
+    const res = WrappedEpisodeRE1.exec(text);
     if (res) {
       const epText = res.groups?.ep1! || res.groups?.ep2! || res.groups?.ep3!;
       const ep = +epText;
@@ -63,6 +70,36 @@ export function matchEpiodes(ctx: Context, text: string) {
     }
   }
   {
+    // 06,07 07+ES07
+    const res = WrappedEpisodeRE2.exec(text);
+    if (res) {
+      const ep1 = res.groups?.ep1 ? +res.groups.ep1 : NaN;
+      const ep2 = res.groups?.ep2 ? +res.groups.ep2 : NaN;
+      const type = res.groups?.type;
+      if (!Number.isNaN(ep1) && !Number.isNaN(ep2)) {
+        if (type) {
+          ctx.update2('episode', 'number', ep1);
+          ctx.update('episodes', [
+            {
+              number: ep2,
+              type
+            }
+          ]);
+        } else {
+          ctx.update('episodes', [
+            {
+              number: ep1
+            },
+            {
+              number: ep2
+            }
+          ]);
+        }
+        return true;
+      }
+    }
+  }
+  {
     // [Movie] / [Movie v2]
     const res = WrappedMovieRE.exec(text);
     if (res) {
@@ -87,18 +124,27 @@ export function matchEpiodes(ctx: Context, text: string) {
 
         const type = res.groups?.type ? res.groups.type.trim() : undefined;
         if (type) {
-          const exec2 = /[vV](\d+)$/.exec(type);
+          ctx.update('type', type);
+        }
+
+        const episodesRangeType = res.groups?.range_type ? res.groups.range_type.trim() : undefined;
+        if (episodesRangeType) {
+          const exec2 = /[vV](\d+)$/.exec(episodesRangeType);
 
           if (exec2) {
             const version = +exec2[1];
             if (!Number.isNaN(version)) {
               ctx.update('version', version);
-              ctx.update2('episodesRange', 'type', type.slice(0, type.length - exec2[0].length));
+              ctx.update2(
+                'episodesRange',
+                'type',
+                episodesRangeType.slice(0, episodesRangeType.length - exec2[0].length)
+              );
             } else {
-              ctx.update2('episodesRange', 'type', type);
+              ctx.update2('episodesRange', 'type', episodesRangeType);
             }
           } else {
-            ctx.update2('episodesRange', 'type', type);
+            ctx.update2('episodesRange', 'type', episodesRangeType);
           }
         }
 
@@ -148,7 +194,19 @@ export function matchEpiodes(ctx: Context, text: string) {
 
   // 4. Seasons Range
   {
-    const res = WrappedSeasonsRange.exec(text);
+    const res = WrappedSeasonsRE.exec(text);
+    if (res) {
+      const season1 = res.groups?.season1 ? +res.groups.season1 : NaN;
+      const season2 = res.groups?.season2 ? +res.groups.season2 : NaN;
+      if (!Number.isNaN(season1) && !Number.isNaN(season2)) {
+        ctx.update('seasons', [{ number: season1 }, { number: season2 }]);
+      }
+      return true;
+    }
+  }
+  {
+    // Vol.1-4 Fin
+    const res = WrappedSeasonsRangeRE.exec(text);
     if (res) {
       const season1 = res.groups?.season1 ? +res.groups.season1 : NaN;
       const season2 = res.groups?.season2 ? +res.groups.season2 : NaN;
@@ -157,6 +215,34 @@ export function matchEpiodes(ctx: Context, text: string) {
         ctx.update2('seasonsRange', 'to', season2);
       }
       return true;
+    }
+  }
+
+  // 5. Volume
+  {
+    const res = WrappedVolumeRE.exec(text);
+    if (res) {
+      const vol = res.groups?.vol ? +res.groups.vol : NaN;
+      if (!Number.isNaN(vol)) {
+        ctx.update2('volume', 'number', vol);
+        return true;
+      }
+    }
+  }
+  {
+    const res = WrappedVolumesRangeRE.exec(text);
+    if (res) {
+      const vol1 = res.groups?.vol1 ? +res.groups.vol1 : NaN;
+      const vol2 = res.groups?.vol2 ? +res.groups.vol2 : NaN;
+      const type = res.groups?.type;
+      if (!Number.isNaN(vol1) && !Number.isNaN(vol2)) {
+        ctx.update2('volumesRange', 'from', vol1);
+        ctx.update2('volumesRange', 'to', vol1);
+        if (type) {
+          ctx.update2('volumesRange', 'type', type);
+        }
+        return true;
+      }
     }
   }
 
@@ -178,7 +264,7 @@ export function parseWrappedEpisodes(ctx: Context) {
 }
 
 const SuffixEpisodeRE = [
-  /\s*- (?<type>SP|OVA)?(?<ep1>\d+)(?:\.(?<sub>\d))?(?:[vV](?<version>\d+))?(?:\s*-)?$/,
+  /\s*- (?<type>SP|OVA)?(?<ep1>\d+)(?:\.(?<sub>\d))?(?:[vV](?<version>\d+))?(?<ep_type>\s+[^\-]*)?(?:\s*-)?$/,
   /\s+S(?<season>\d+)E(?<ep1>\d+)$/,
   /\s*第(?<ep1>\d+)(?:\.(?<sub>\d))?[集话話]$/,
   /\s+S(?<season1>\d+)-S(?<season2>\d+)$/
@@ -195,6 +281,10 @@ export const Types = new Set([
   'SPECIAL',
   'SPECIALS',
   'TV',
+  '开播纪念特别篇',
+  '開播紀念特別篇',
+  '开篇纪念特别篇',
+  '開篇紀念特別篇',
   '特别篇',
   '特別篇',
   '特別編',
@@ -205,6 +295,11 @@ export const Types = new Set([
   '番外編',
   '剧场版',
   '劇場版',
+  '总集篇',
+  '總集篇',
+  //
+  '广播剧',
+  '朗读剧',
   //
   'SP',
   //
@@ -215,7 +310,11 @@ export const Types = new Set([
   'OP',
   'OPENING',
   'PREVIEW',
-  'PV'
+  'PV',
+  '特别篇PV',
+  //
+  '合集',
+  '修正合集'
 ]);
 
 export function parseSuffixTextInlineEpisodes(ctx: Context, text: string) {
@@ -329,11 +428,15 @@ export function parseSuffixEpisodes(ctx: Context) {
 
   const token = ctx.tokens[ctx.right];
   const text = token.text.trimEnd();
-  const trimmed = parseSuffixTextInlineEpisodes(ctx, text);
 
-  if (trimmed !== text) {
-    ctx.tokens[ctx.right] = new Token(trimmed, token.left, token.right);
-    return true;
+  if (token.isWrapped) {
+    return parseWrappedEpisodes(ctx);
+  } else {
+    const trimmed = parseSuffixTextInlineEpisodes(ctx, text);
+    if (trimmed !== text) {
+      ctx.tokens[ctx.right] = new Token(trimmed, token.left, token.right);
+      return true;
+    }
   }
 
   return false;
@@ -442,6 +545,17 @@ const SuffixSeasonOrEpisodesRes: Array<[RegExp, (res: RegExpExecArray, ctx: Cont
         const season = base * 10 + offset;
         if (!ctx.result.season?.number || ctx.result.season.number === season) {
           ctx.update2('season', 'number', season);
+          return true;
+        }
+        return false;
+      }
+    ],
+    [
+      /(?:Vol|vol|Volume|volume)\.?\s*(?<vol>\d+)$/,
+      (res, ctx) => {
+        const vol = res.groups?.vol ? +res.groups.vol : NaN;
+        if (!Number.isNaN(vol)) {
+          ctx.update2('volume', 'number', vol);
           return true;
         }
         return false;

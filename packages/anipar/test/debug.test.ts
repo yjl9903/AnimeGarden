@@ -3,39 +3,36 @@ import { describe, it, expect } from 'vitest';
 import { Fansub, parse } from '../src/index.js';
 
 describe('debug', () => {
-  const title = `[Pre-S&三明治摸鱼部&Y-Raws] 超时空辉夜姬 Cosmic Princess Kaguya [WebRip 1080P HEVC 10Bit EAC3&AAC MKV][简繁日内封]`;
+  const title = `[雪飄工作室][アイカツプラネット！ミララボ/Aikatsu_Planet!-Mirror_Labo/偶像活動星球！镜中练功房][S2E01（总第13集）][繁](檢索:偶活/愛活)`;
 
   it(title, () => {
-    expect(parse(title, { fansub: Fansub.Prejudice_Studio })).toMatchInlineSnapshot(`
+    expect(parse(title, { fansub: Fansub.雪飄工作室 })).toMatchInlineSnapshot(`
       {
+        "episode": {
+          "number": 1,
+          "type": "总第13集",
+        },
         "fansub": {
-          "alias": "Pre-S",
-          "collab": [
-            "三明治摸鱼部",
-            "Y-Raws",
-          ],
-          "name": "Prejudice-Studio",
+          "alias": "雪飄工作室",
+          "name": "雪飄工作室(FLsnow)",
         },
-        "file": {
-          "audio": {
-            "term": "EAC3&AAC",
-          },
-          "extension": "MKV",
-          "video": {
-            "resolution": "1080P",
-            "term": "10Bit",
-          },
+        "search": [
+          "偶活",
+          "愛活",
+        ],
+        "season": {
+          "number": 2,
         },
-        "source": "WebRip",
         "subtitle": {
-          "format": "内封",
           "languages": [
-            "简",
             "繁",
-            "日",
           ],
         },
-        "title": "超时空辉夜姬 Cosmic Princess Kaguya",
+        "title": "アイカツプラネット！ミララボ",
+        "titles": [
+          "Aikatsu_Planet!-Mirror_Labo",
+          "偶像活動星球！镜中练功房",
+        ],
       }
     `);
   });

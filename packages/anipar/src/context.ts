@@ -91,7 +91,7 @@ export class Context {
 
 // MARK: 字幕语言归一化
 
-const NormalizedLanguages = ['简', '繁', '粤', '日', '英'] as const;
+const NormalizedLanguages = ['简', '繁', '粤', '日', '英', '泰'] as const;
 
 function normalizeLanguage(language: string): string[] | undefined {
   const trimmed = language.trim();
@@ -107,7 +107,8 @@ function normalizeLanguage(language: string): string[] | undefined {
     繁: /(^|[^A-Z])CHT($|[^A-Z])|ZH[-_]?HANT|繁|繁体|繁體|繁中|BIG5/i.test(trimmed),
     粤: /(^|[^A-Z])YUE($|[^A-Z])|粤|粵|广东话|廣東話|CANTONESE/i.test(trimmed),
     日: /(^|[^A-Z])(JP|JPN|JA)($|[^A-Z])|日|日本|JAPANESE/i.test(trimmed),
-    英: /(^|[^A-Z])(EN|ENG)($|[^A-Z])|英|ENGLISH/i.test(trimmed)
+    英: /(^|[^A-Z])(EN|ENG)($|[^A-Z])|英|ENGLISH/i.test(trimmed),
+    泰: /(^|[^A-Z])(TH|THA)($|[^A-Z])|泰|THAI/i.test(trimmed)
   };
 
   if (/[中华華]/.test(trimmed) && !matches.简 && !matches.繁 && !matches.粤) {
