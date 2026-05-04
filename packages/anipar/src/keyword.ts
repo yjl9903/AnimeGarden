@@ -1,59 +1,59 @@
 import type { Context } from './context.js';
+import type { FileInfo } from './types.js';
 
 import { FileExtensions } from './file.js';
 import { Token, tokenize } from './tokenizer/index.js';
 import { Types, matchEpiodes } from './episodes.js';
 
-const AudioTerm = new Set([
-  // Audio channels
-  '2.0CH',
-  '2CH',
-  '5.1',
-  '5.1CH',
+// MARK: audio / video
+
+type AudioInfo = NonNullable<FileInfo['audio']>;
+
+type VideoInfo = NonNullable<FileInfo['video']>;
+
+const AudioChannels = new Set(['2.0CH', '2CH', '5.1', '5.1CH']);
+
+const AudioCompoundTerms = new Map<string, AudioInfo>([
+  ['DTS5.1', { codec: 'DTS', channels: '5.1' }],
+  ['TRUEHD5.1', { codec: 'TRUEHD', channels: '5.1' }],
+  ['AACX2', { codec: 'AAC', trackCount: 2 }],
+  ['AAC×2', { codec: 'AAC', trackCount: 2 }],
+  ['AACX3', { codec: 'AAC', trackCount: 3 }],
+  ['AAC×3', { codec: 'AAC', trackCount: 3 }],
+  ['AACX4', { codec: 'AAC', trackCount: 4 }],
+  ['AAC×4', { codec: 'AAC', trackCount: 4 }],
+  ['FLACX2', { codec: 'FLAC', trackCount: 2 }],
+  ['FLAC×2', { codec: 'FLAC', trackCount: 2 }],
+  ['FLACX3', { codec: 'FLAC', trackCount: 3 }],
+  ['FLAC×3', { codec: 'FLAC', trackCount: 3 }],
+  ['FLACX4', { codec: 'FLAC', trackCount: 4 }],
+  ['FLAC×4', { codec: 'FLAC', trackCount: 4 }]
+]);
+
+const AudioCodecs = new Set([
   'DTS',
   'DTS-ES',
-  'DTS5.1',
-  'TRUEHD5.1',
-  // Audio codec
   'EAC3&AAC',
   'AAC',
-  'AACX2',
-  'AAC×2',
-  'AACX3',
-  'AAC×3',
-  'AACX4',
-  'AAC×4',
   'QAAC',
   'AC3',
   'EAC3',
   'E-AC-3',
   'FLAC',
-  'FLACX2',
-  'FLAC×2',
-  'FLACX3',
-  'FLAC×3',
-  'FLACX4',
-  'FLAC×4',
   'FLAC/AC3', // TODO: split
   'LOSSLESS',
   'MP3',
   'WAV',
   'OGG',
   'VORBIS',
-  // Audio language
-  'DUALAUDIO',
-  'DUAL AUDIO'
+  'OPUS'
 ]);
 
-// TODO: split codec and bitDepth
-const VideoTerms = new Set([
-  // Video codec
-  '8BIT',
-  '8-BIT',
-  '10BIT',
-  '10BITS',
-  '10-BIT',
-  '10-BITS',
+const AudioLanguages = new Set(['DUALAUDIO', 'DUAL AUDIO']);
+
+const VideoBitDepths = new Set(['8BIT', '8-BIT', '10BIT', '10BITS', '10-BIT', '10-BITS']);
+
+const VideoCodecs = new Set([
   'HI10',
   'HI10P',
   'HI444',
@@ -67,78 +67,34 @@ const VideoTerms = new Set([
   'X265',
   'X.264',
   'AVC',
-  'AVC-8BIT',
   'HEVC',
   'HEVC2',
-  'HEVC_OPUS',
-  'HEVC-10BIT',
-  'HEVC-10BIT-1440P', // TODO: split resolution
-  'HEVC-10BIT-2160P', // TODO: split resolution
-  'HEVC_10BIT',
-  'HEVC-8BIT',
-  'HEVC_8BIT',
   'DIVX',
   'DIVX5',
   'DIVX6',
-  'XVID',
-  // Video format
-  'AVI',
-  'RMVB',
-  'WMV',
-  'WMV3',
-  'WMV9',
-  // Video quality
-  'HDR',
-  'HQ',
-  'LQ',
-  // Video resolution
-  'HD',
-  'SD'
+  'XVID'
+]);
+
+const VideoFormats = new Set(['AVI', 'RMVB', 'WMV', 'WMV3', 'WMV9']);
+
+const VideoQualities = new Set(['HDR', 'HQ', 'LQ']);
+
+const VideoResolutionTerms = new Set(['HD', 'SD']);
+
+const VideoCompoundTerms = new Map<string, VideoInfo & { audioCodec?: string }>([
+  ['AVC-8BIT', { codec: 'AVC', bitDepth: '8BIT' }],
+  ['HEVC_OPUS', { codec: 'HEVC', audioCodec: 'OPUS' }],
+  ['HEVC-10BIT', { codec: 'HEVC', bitDepth: '10BIT' }],
+  ['HEVC-10BIT-1440P', { codec: 'HEVC', bitDepth: '10BIT', resolution: '1440P' }],
+  ['HEVC-10BIT-2160P', { codec: 'HEVC', bitDepth: '10BIT', resolution: '2160P' }],
+  ['HEVC_10BIT', { codec: 'HEVC', bitDepth: '10BIT' }],
+  ['HEVC-8BIT', { codec: 'HEVC', bitDepth: '8BIT' }],
+  ['HEVC_8BIT', { codec: 'HEVC', bitDepth: '8BIT' }]
 ]);
 
 const VideoFrameRates = new Set(['23.976FPS', '24FPS', '29.97FPS', '30FPS', '60FPS', '120FPS']);
 
-const VideoResolutions = new Set([
-  '480P',
-  '720P',
-  '720P@60FPS', // TODO: use regexp
-  '804P',
-  '960P',
-  '1080P',
-  '1180P',
-  '1080P@60FPS', // TODO: use regexp
-  '1080P@96FPS', // TODO: use regexp
-  '1080P高帧率', // TODO: handle
-  '1920X816@60FPS', // TODO
-  '1636P',
-  '2160P',
-  'AI2160p', // TODO: use regexp
-  '854X480',
-  '854×480',
-  '948X720',
-  '1280X720',
-  '1280×720',
-  '1920X804',
-  '1920×804',
-  '1920X816',
-  '1920×816',
-  '1920X818',
-  '1920x818',
-  '1920X820',
-  '1920×820',
-  '1920X1080',
-  '1920×1080',
-  '2048X852',
-  '2048×852',
-  '2538X1080',
-  '2538×1080',
-  '2600X1080',
-  '2600×1080',
-  '3840X2160',
-  '3840×2160',
-  '2K',
-  '4K'
-]);
+const VideoResolutions = new Set(['2K', '4K']);
 
 const Source = new Set([
   'BD',
@@ -180,6 +136,8 @@ const Source = new Set([
   'DISC9'
 ]);
 
+// MARK: 语言,字幕等
+
 const Platfroms = new Set([
   'Baha',
   'Bili',
@@ -212,100 +170,111 @@ const Variants = new Set([
   'English Dub'
 ]);
 
-const SubtitleFormats = new Set([
-  'ASS',
-  'ASSX2',
-  'ASSX3',
-  'ASSX4',
-  'HARDSUB',
-  'HARDSUBS',
-  'SOFTSUB',
-  'SOFTSUBS',
-  'SUB',
-  'SUBBED',
-  'SUBTITLED',
-  'SRT',
-  'SRTX2',
-  'SRTX3',
-  'SRTX4'
+const SubtitleFormatTerms = new Map([
+  ['ASS', 'ASS'],
+  ['ASSX2', 'ASSx2'],
+  ['ASSX3', 'ASSx3'],
+  ['ASSX4', 'ASSx4'],
+  ['HARDSUB', 'HARDSUB'],
+  ['HARDSUBS', 'HARDSUB'],
+  ['SOFTSUB', 'SOFTSUB'],
+  ['SOFTSUBS', 'SOFTSUB'],
+  ['SUB', 'SUB'],
+  ['SUBBED', 'SUB'],
+  ['SUBTITLED', 'SUB'],
+  ['SRT', 'SRT'],
+  ['SRTX2', 'SRTx2'],
+  ['SRTX3', 'SRTx3'],
+  ['SRTX4', 'SRTx4']
 ]);
 
-const SubtitleEncoding = new Set(['GB&BIG5', 'BIG5&GB', '外挂GB/BIG5', 'GB/BIG5', 'GB', 'BIG5']);
+const SubtitleEncodingTerms = new Map<
+  string,
+  { format?: string; encoding?: string; encodings?: string[] }
+>([
+  ['GB&BIG5', { encodings: ['GB', 'BIG5'] }],
+  ['BIG5&GB', { encodings: ['BIG5', 'GB'] }],
+  ['外挂GB/BIG5', { format: '外挂', encodings: ['GB', 'BIG5'] }],
+  ['GB/BIG5', { encodings: ['GB', 'BIG5'] }],
+  ['GB', { encoding: 'GB' }],
+  ['BIG5', { encoding: 'BIG5' }]
+]);
 
-const PlatformLanguage = new Map([
+const PlatformLanguageTerms = new Map([
   ['ViuTV粵語', ['ViuTV', '粵語']],
   ['TVB粵語', ['TVB', '粵語']]
 ]);
 
-// TODO
-const LanguageSubtitleFormats = new Map([
-  ['代理商粵語', ['粵語', undefined]],
-  ['粵日雙語+內封繁體中文字幕', ['繁體中文', '內封字幕']],
-  ['粵語+無對白字幕', ['粵語+無對白', undefined]]
+const LanguageSubtitleFormatTerms = new Map<string, { language: string; format?: string }>([
+  ['代理商粵語', { language: '粵語' }],
+  ['粵日雙語+內封繁體中文字幕', { language: '繁體中文', format: '內封字幕' }],
+  ['粵語+無對白字幕', { language: '粵語+無對白' }]
 ]);
 
-const Languages = new Set([
-  'CN',
-  'CHS',
-  'CHT',
-  'YUE',
-  'JPN',
-  'JP',
-  '简体',
-  '简/繁·日',
-  '繁/體',
-  '简繁',
-  '国语中字',
-  '繁體',
-  '中日双语',
-  '繁日双语',
-  '简日双语',
-  '繁日雙語',
-  'HOY粵語',
-  '外挂CHS/CHT', // TODO: 处理 倒序
-  '外挂繁简日字幕' // TODO: 处理 倒序
+const SubtitleLanguageTerms = new Map([
+  ['CN', 'CN'],
+  ['CHS', 'CHS'],
+  ['CHT', 'CHT'],
+  ['YUE', 'YUE'],
+  ['JPN', 'JPN'],
+  ['JP', 'JP'],
+  ['简体', '简体'],
+  ['简/繁·日', '简/繁·日'],
+  ['繁/體', '繁/體'],
+  ['简繁', '简繁'],
+  ['国语中字', '国语中字'],
+  ['繁體', '繁體'],
+  ['中日双语', '中日双语'],
+  ['繁日双语', '繁日双语'],
+  ['简日双语', '简日双语'],
+  ['繁日雙語', '繁日雙語'],
+  ['HOY粵語', 'HOY粵語'],
+  ['外挂CHS/CHT', 'CHS/CHT'],
+  ['外挂繁简日字幕', '繁简日']
 ]);
 
-const LanguagePrefixes = [
-  '简体',
-  '简日双语',
-  '简日',
+const SubtitleLanguagePrefixes = [
   '简繁日双语',
   '简繁日语',
-  '简繁日',
   '简繁英日',
   '简繁日英',
+  '简繁日',
+  '简日双语',
+  '简/繁',
   '简繁英',
   '简繁泰',
-  '简/繁',
+  '繁简日',
+  '中日英',
+  '简日',
   '简繁',
   '簡繁',
   '简英',
-  '简',
   '繁體',
   '繁体',
   '繁日',
   '繁英',
-  '繁简日',
-  '繁',
-  '中日英',
   '英文',
+  '简体',
+  '简',
+  '繁',
   '英'
 ];
 
-const SubtitleFormatSuffixes = new Set([
-  '内嵌字幕',
-  '内嵌',
-  '內嵌',
-  '内封字幕',
-  '内封',
-  '內封',
-  '外挂字幕',
-  '外挂',
-  '外掛',
-  '内挂',
-  '字幕'
+const SubtitleFormatSuffixTerms = new Map([
+  ['内嵌字幕', '内嵌字幕'],
+  ['内嵌', '内嵌'],
+  ['內嵌', '內嵌'],
+  ['内封字幕', '内封字幕'],
+  ['内封', '内封'],
+  ['內封', '內封'],
+  ['外挂字幕', '外挂字幕'],
+  ['外挂', '外挂'],
+  ['外掛', '外掛'],
+  ['内挂', '内挂'],
+  ['字幕', undefined]
 ]);
+
+// MARK; 其他标签
 
 const OtherTags = new Set([
   //
@@ -334,6 +303,7 @@ const OtherTags = new Set([
   '正式版本',
   '放送版',
   '修订版',
+  '修訂版',
   'On-air version',
   //
   '年齡限制版',
@@ -373,22 +343,109 @@ const OtherPrefix = ['▶'];
 
 const Ignores = new Set(['务必查看bt站简介', '请看bt站简介', '添加日语', '添加日語']);
 
+// MARK: 解析逻辑
+
 export function matchSingleTag(ctx: Context, text: string) {
   text = text.trim();
 
   const upper = text.toUpperCase();
 
   // Match keywords
-  if (AudioTerm.has(upper)) {
-    ctx.update3('file', 'audio', 'term', text);
+  {
+    const info = AudioCompoundTerms.get(upper);
+    if (info) {
+      if (info.codec) {
+        ctx.update3('file', 'audio', 'codec', info.codec);
+      }
+      if (info.channels) {
+        ctx.update3('file', 'audio', 'channels', info.channels);
+      }
+      if (info.trackCount) {
+        ctx.update3('file', 'audio', 'trackCount', info.trackCount);
+      }
+      return true;
+    }
+  }
+  if (AudioChannels.has(upper)) {
+    ctx.update3('file', 'audio', 'channels', text);
     return true;
   }
-  if (VideoTerms.has(upper)) {
-    ctx.update3('file', 'video', 'term', text);
+  if (AudioCodecs.has(upper)) {
+    ctx.update3('file', 'audio', 'codec', text);
+    return true;
+  }
+  if (AudioLanguages.has(upper)) {
+    ctx.update3('file', 'audio', 'language', text);
+    return true;
+  }
+  {
+    const info = VideoCompoundTerms.get(upper);
+    if (info) {
+      if (info.codec) {
+        ctx.update3('file', 'video', 'codec', info.codec);
+      }
+      if (info.bitDepth) {
+        ctx.update3('file', 'video', 'bitDepth', info.bitDepth);
+      }
+      if (info.resolution) {
+        ctx.update3('file', 'video', 'resolution', info.resolution);
+      }
+      if (info.audioCodec) {
+        ctx.update3('file', 'audio', 'codec', info.audioCodec);
+      }
+      return true;
+    }
+  }
+  if (VideoCodecs.has(upper)) {
+    ctx.update3('file', 'video', 'codec', text);
+    return true;
+  }
+  if (VideoBitDepths.has(upper)) {
+    ctx.update3('file', 'video', 'bitDepth', text);
+    return true;
+  }
+  if (VideoFormats.has(upper)) {
+    ctx.update3('file', 'video', 'format', text);
+    return true;
+  }
+  if (VideoQualities.has(upper)) {
+    ctx.update3('file', 'video', 'quality', text);
+    return true;
+  }
+  if (VideoResolutionTerms.has(upper)) {
+    ctx.update3('file', 'video', 'resolution', text);
     return true;
   }
   if (VideoFrameRates.has(upper)) {
     ctx.update3('file', 'video', 'fps', text);
+    return true;
+  }
+  {
+    const res = /^(AI)(\d{3,4}[Pp])$/i.exec(text);
+    if (res) {
+      ctx.update3('file', 'video', 'enhancement', res[1]);
+      ctx.update3('file', 'video', 'resolution', res[2]);
+      return true;
+    }
+  }
+  {
+    const res = /^(\d{3,5}(?:[Pp]|[Xx×]\d{3,5}))@(\d+(?:\.\d+)?FPS)$/i.exec(text);
+    if (res) {
+      ctx.update3('file', 'video', 'resolution', res[1]);
+      ctx.update3('file', 'video', 'fps', res[2]);
+      return true;
+    }
+  }
+  {
+    const res = /^(\d{3,4}P)(高帧率)$/i.exec(text);
+    if (res) {
+      ctx.update3('file', 'video', 'resolution', res[1]);
+      ctx.update3('file', 'video', 'frameRateMode', res[2]);
+      return true;
+    }
+  }
+  if (/^\d{3,4}P$/i.test(text) || /^\d{3,5}[Xx×]\d{3,5}$/.test(text)) {
+    ctx.update3('file', 'video', 'resolution', text);
     return true;
   }
   if (VideoResolutions.has(upper)) {
@@ -452,59 +509,75 @@ export function matchSingleTag(ctx: Context, text: string) {
 
   // Match language and subtitles
   {
-    const languages = [...(ctx.result.subtitle?.languages ?? [])];
-
-    if (Languages.has(upper)) {
-      languages.push(text);
+    const appendSubtitleLanguage = (language: string) => {
+      const languages = [...(ctx.result.subtitle?.languages ?? []), language];
       ctx.update2('subtitle', 'languages', languages);
-      return true;
-    }
-    if (SubtitleFormats.has(upper)) {
-      if (!ctx.result.subtitle?.format) {
-        ctx.update2('subtitle', 'format', text);
+    };
+
+    const updateSubtitleFormat = (format: string | undefined, overwrite = false) => {
+      if (format && (overwrite || !ctx.result.subtitle?.format)) {
+        ctx.update2('subtitle', 'format', format);
       }
-      return true;
-    }
-    if (SubtitleEncoding.has(upper)) {
-      if (!ctx.result.subtitle?.encoding) {
-        ctx.update2('subtitle', 'encoding', text);
+    };
+
+    const updateSubtitleEncoding = (encoding: string | undefined) => {
+      if (encoding && !ctx.result.subtitle?.encoding && !ctx.result.subtitle?.encodings) {
+        ctx.update2('subtitle', 'encoding', encoding);
       }
+    };
+
+    const updateSubtitleEncodings = (encodings: string[] | undefined) => {
+      if (!encodings) {
+        return;
+      }
+      const values = [...(ctx.result.subtitle?.encodings ?? []), ...encodings];
+      ctx.update2('subtitle', 'encodings', values);
+      if (ctx.result.subtitle?.encoding) {
+        delete ctx.result.subtitle.encoding;
+      }
+    };
+
+    const language = SubtitleLanguageTerms.get(upper) ?? SubtitleLanguageTerms.get(text);
+    if (language) {
+      appendSubtitleLanguage(language);
       return true;
     }
 
-    // Combine language and subtitles
-    const combined = LanguageSubtitleFormats.get(text);
-    if (combined) {
-      if (combined[0]) {
-        languages.push(combined[0]);
-        ctx.update2('subtitle', 'languages', languages);
-      }
-      if (combined[1] && !ctx.result.subtitle?.format) {
-        ctx.update2('subtitle', 'format', combined[1]);
-      }
+    const format = SubtitleFormatTerms.get(upper);
+    if (format) {
+      updateSubtitleFormat(format);
       return true;
     }
 
-    const combined2 = PlatformLanguage.get(text);
-    if (combined2) {
-      ctx.update('platform', combined2[0]);
-      languages.push(combined2[1]);
-      ctx.update2('subtitle', 'languages', languages);
+    const encodingInfo = SubtitleEncodingTerms.get(upper) ?? SubtitleEncodingTerms.get(text);
+    if (encodingInfo) {
+      updateSubtitleFormat(encodingInfo.format, true);
+      updateSubtitleEncoding(encodingInfo.encoding);
+      updateSubtitleEncodings(encodingInfo.encodings);
       return true;
     }
 
-    // Auto combined
-    for (const prefix of LanguagePrefixes) {
+    const languageWithFormat = LanguageSubtitleFormatTerms.get(text);
+    if (languageWithFormat) {
+      appendSubtitleLanguage(languageWithFormat.language);
+      updateSubtitleFormat(languageWithFormat.format);
+      return true;
+    }
+
+    const platformLanguage = PlatformLanguageTerms.get(text);
+    if (platformLanguage) {
+      const [platform, language] = platformLanguage;
+      ctx.update('platform', platform);
+      appendSubtitleLanguage(language);
+      return true;
+    }
+
+    for (const prefix of SubtitleLanguagePrefixes) {
       if (text.startsWith(prefix)) {
-        const language = prefix;
-        const format = text.slice(prefix.length);
-        if (SubtitleFormatSuffixes.has(format) || format === '') {
-          languages.push(language);
-          ctx.update2('subtitle', 'languages', languages);
-
-          if (format && format !== '字幕' && !ctx.result.subtitle?.format) {
-            ctx.update2('subtitle', 'format', format);
-          }
+        const suffix = text.slice(prefix.length);
+        if (suffix === '' || SubtitleFormatSuffixTerms.has(suffix)) {
+          appendSubtitleLanguage(prefix);
+          updateSubtitleFormat(SubtitleFormatSuffixTerms.get(suffix));
           return true;
         }
       }

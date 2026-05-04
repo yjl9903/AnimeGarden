@@ -15,7 +15,7 @@ const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
     parseSuffixWrappedTags(ctx);
     parseSuffixEpisodes(ctx);
     parseMultipleTitles(ctx);
-    return ctx.validate();
+    return ctx.normalize();
   },
   [Fansub.ANi]: (ctx) => {
     // [ANi] Classroom of the Elite S2 -  歡迎來到實力至上主義的教室 第二季 - 02 [1080P][Baha][WEB-DL][AAC AVC][CHT][MP4]
@@ -30,7 +30,7 @@ const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
       ctx.update('titles', [titles[0]]);
     }
 
-    return ctx.validate();
+    return ctx.normalize();
   },
   [Fansub.LoliHouse]: (ctx) => {
     parseFansub(ctx);
@@ -73,28 +73,28 @@ const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
       });
     }
 
-    return ctx.validate();
+    return ctx.normalize();
   },
   [Fansub.绿茶字幕组]: (ctx) => {
     parseFansub(ctx);
     parseSuffixWrappedTags(ctx);
     parseSuffixEpisodes(ctx);
     parseMultipleTitles(ctx, { space: false, separators: ['/'] });
-    return ctx.validate();
+    return ctx.normalize();
   },
   [Fansub.桜都字幕组]: (ctx) => {
     parseFansub(ctx);
     parseSuffixWrappedTags(ctx);
     parseSuffixEpisodes(ctx);
     parseMultipleTitles(ctx, { space: false });
-    return ctx.validate();
+    return ctx.normalize();
   },
   [Fansub.Prejudice_Studio]: (ctx) => {
     parseFansub(ctx);
     parseSuffixWrappedTags(ctx);
     parseSuffixEpisodes(ctx);
     parseMultipleTitles(ctx, { space: false, separators: ['/'] });
-    return ctx.validate();
+    return ctx.normalize();
   },
   [Fansub.喵萌奶茶屋]: (ctx) => {
     parseFansub(ctx);
@@ -102,7 +102,7 @@ const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
     parseSuffixWrappedTags(ctx);
     parseSuffixEpisodes(ctx);
     parseMultipleTitles(ctx, { space: false, separators: ['/'] });
-    return ctx.validate();
+    return ctx.normalize();
   },
   [Fansub.雪飄工作室]: (ctx) => {
     parseFansub(ctx);
@@ -110,7 +110,7 @@ const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
     parseSuffixWrappedTags(ctx);
     parseSuffixEpisodes(ctx);
     parseMultipleTitles(ctx, { space: false, separators: ['/'] });
-    return ctx.validate();
+    return ctx.normalize();
   },
   [Fansub.三明治摆烂组]: (ctx) => {
     parseFansub(ctx);
@@ -143,7 +143,7 @@ const parsers: Record<string, (context: Context) => ParseResult | undefined> = {
 
     parseMultipleTitles(ctx);
 
-    return ctx.validate();
+    return ctx.normalize();
   }
 };
 
@@ -201,7 +201,7 @@ export function parse(title: string, options: ParseOptions = {}): ParseResult | 
   }
 
   // 4. Postprocess
-  const result = ctx.validate();
+  const result = ctx.normalize();
 
   return result;
 }
