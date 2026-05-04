@@ -42,6 +42,7 @@ export default defineConfig({
     }),
     presetWebFonts({
       provider: 'bunny',
+      inlineImports: false,
       fonts: {
         sans: ['IBM Plex Sans', 'Noto Sans Simplified Chinese'],
         mono: 'Input Mono',

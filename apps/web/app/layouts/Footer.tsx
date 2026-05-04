@@ -150,11 +150,7 @@ export const Footer = memo((props: FooterProps) => {
               href="https://docs.animes.garden"
               target="_blank"
               className="ml-4 lt-sm:ml-2"
-              onClick={onExternalLinkClick(
-                '关于',
-                'AnimeSpace 计划',
-                'https://docs.animes.garden'
-              )}
+              onClick={onExternalLinkClick('关于', 'AnimeSpace 计划', 'https://docs.animes.garden')}
             >
               AnimeSpace 计划
             </a>

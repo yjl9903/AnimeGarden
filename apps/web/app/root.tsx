@@ -1,6 +1,6 @@
 import { kebabCase } from 'scule';
 import { useEffect } from 'react';
-import { Provider, useAtom, useAtomValue } from 'jotai';
+import { Provider } from 'jotai';
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useRouteError } from '@remix-run/react';
 
 import { Toaster } from '~/components/ui/sonner';
@@ -8,8 +8,8 @@ import { NavHeight, SearchTop, HeroHeight } from '~/layouts/Layout';
 
 import Tags from '~analytics/scripts';
 
-import '@onekuma/preset.css';
 import 'virtual:uno.css';
+import '@onekuma/preset.css';
 
 import './styles/main.css';
 import './styles/sonner.css';
@@ -18,6 +18,11 @@ import './styles/sidebar.css';
 import './layouts/Search/cmdk.css';
 
 import scrollHandler from './layouts/global.ts?inline-ts';
+
+const WebFontStylesheets = [
+  'https://fonts.bunny.net/css?family=ibm-plex-sans|noto-sans-simplified-chinese|input-mono&display=swap',
+  'https://api.fontshare.com/v2/css?f[]=quicksand@1,300,400,500,600,700&display=swap'
+];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -36,6 +41,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="msapplication-TileColor" content="#FFFFFF" />
         <meta name="theme-color" content="#ffffff" />
         <meta name="yandex-verification" content="ff51c9d16e597b3c" />
+        <link rel="preconnect" href="https://fonts.bunny.net" />
+        <link rel="preconnect" href="https://api.fontshare.com" />
+        {WebFontStylesheets.map((href) => (
+          <link key={href} rel="stylesheet" href={href} />
+        ))}
         {!import.meta.env.DEV &&
           Tags.map((t) =>
             'src' in t ? (
