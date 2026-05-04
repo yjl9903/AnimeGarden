@@ -11,6 +11,7 @@ Follow [CONTRIBUTING.md](../../CONTRIBUTING.md#cloudflare-worker) to setup the e
 ## Credits
 
 + [動漫花園](https://share.dmhy.org/)
++ [蜜柑计划](https://mikanani.me/)
 + [萌番组](https://bangumi.moe/)
 
 ## License
