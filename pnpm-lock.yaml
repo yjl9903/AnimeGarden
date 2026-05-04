@@ -52,7 +52,7 @@ importers:
         version: 3.6.1(typescript@6.0.3)
       vitest:
         specifier: 4.1.5
-        version: 4.1.5(@types/node@24.12.2)(jsdom@29.1.1)(vite@7.3.2(@types/node@24.12.2)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))
+        version: 4.1.5(@types/node@24.12.2)(jsdom@29.1.1)(vite@7.3.2(@types/node@24.12.2)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))
       wrangler:
         specifier: 4.85.0
         version: 4.85.0(@cloudflare/workers-types@4.20260426.1)
@@ -278,7 +278,7 @@ importers:
         version: 2.6.1
       tailwindcss-animate:
         specifier: 1.0.7
-        version: 1.0.7(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.3))
+        version: 1.0.7(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.4))
       zod:
         specifier: 3.25.76
         version: 3.25.76
@@ -315,7 +315,7 @@ importers:
         version: 1.2.5
       '@remix-run/dev':
         specifier: 2.17.4
-        version: 2.17.4(@remix-run/react@2.17.4(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3))(@remix-run/serve@2.17.4(typescript@6.0.3))(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(typescript@6.0.3)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))(wrangler@4.85.0(@cloudflare/workers-types@4.20260426.1))(yaml@2.8.3)
+        version: 2.17.4(@remix-run/react@2.17.4(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3))(@remix-run/serve@2.17.4(typescript@6.0.3))(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(typescript@6.0.3)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))(wrangler@4.85.0(@cloudflare/workers-types@4.20260426.1))(yaml@2.8.4)
       '@svgr/core':
         specifier: 8.1.0
         version: 8.1.0(typescript@6.0.3)
@@ -333,7 +333,7 @@ importers:
         version: 5.18.0
       '@vite-pwa/remix':
         specifier: 0.2.0
-        version: 0.2.0(@remix-run/dev@2.17.4(@remix-run/react@2.17.4(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3))(@remix-run/serve@2.17.4(typescript@6.0.3))(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(typescript@6.0.3)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))(wrangler@4.85.0(@cloudflare/workers-types@4.20260426.1))(yaml@2.8.3))(@vite-pwa/assets-generator@1.0.2)(vite-plugin-pwa@1.2.0(@vite-pwa/assets-generator@1.0.2)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))(workbox-build@7.4.0)(workbox-window@7.4.0))
+        version: 0.2.0(@remix-run/dev@2.17.4(@remix-run/react@2.17.4(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3))(@remix-run/serve@2.17.4(typescript@6.0.3))(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(typescript@6.0.3)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))(wrangler@4.85.0(@cloudflare/workers-types@4.20260426.1))(yaml@2.8.4))(@vite-pwa/assets-generator@1.0.2)(vite-plugin-pwa@1.2.0(@vite-pwa/assets-generator@1.0.2)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))(workbox-build@7.4.0)(workbox-window@7.4.0))
       autoprefixer:
         specifier: 10.5.0
         version: 10.5.0(postcss@8.5.13)
@@ -342,37 +342,37 @@ importers:
         version: 8.5.13
       tailwindcss:
         specifier: 3.4.19
-        version: 3.4.19(tsx@4.21.0)(yaml@2.8.3)
+        version: 3.4.19(tsx@4.21.0)(yaml@2.8.4)
       unocss:
         specifier: 66.6.8
-        version: 66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))
+        version: 66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))
       unocss-preset-animations:
         specifier: 1.3.0
-        version: 1.3.0(@unocss/preset-wind3@66.6.8)(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)))
+        version: 1.3.0(@unocss/preset-wind3@66.6.8)(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)))
       unocss-preset-flowind:
         specifier: 0.0.6
-        version: 0.0.6(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)))
+        version: 0.0.6(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)))
       unocss-preset-shadcn:
         specifier: 1.0.1
-        version: 1.0.1(unocss-preset-animations@1.3.0(@unocss/preset-wind3@66.6.8)(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))))(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)))
+        version: 1.0.1(unocss-preset-animations@1.3.0(@unocss/preset-wind3@66.6.8)(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))))(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)))
       unplugin-analytics:
         specifier: 0.0.13
-        version: 0.0.13(esbuild@0.17.6)(rollup@2.80.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))
+        version: 0.0.13(esbuild@0.17.6)(rollup@2.80.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))
       unplugin-icons:
         specifier: 23.0.1
         version: 23.0.1(@svgr/core@8.1.0(typescript@6.0.3))
       unplugin-info:
         specifier: 1.3.2
-        version: 1.3.2(esbuild@0.17.6)(rollup@2.80.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))
+        version: 1.3.2(esbuild@0.17.6)(rollup@2.80.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))
       vite-plugin-inline:
         specifier: 0.1.0
-        version: 0.1.0(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))
+        version: 0.1.0(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))
       vite-plugin-pwa:
         specifier: 1.2.0
-        version: 1.2.0(@vite-pwa/assets-generator@1.0.2)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))(workbox-build@7.4.0)(workbox-window@7.4.0)
+        version: 1.2.0(@vite-pwa/assets-generator@1.0.2)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))(workbox-build@7.4.0)(workbox-window@7.4.0)
       vite-tsconfig-paths:
         specifier: 6.1.1
-        version: 6.1.1(typescript@6.0.3)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))
+        version: 6.1.1(typescript@6.0.3)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))
 
   apps/worker:
     dependencies:
@@ -8934,8 +8934,8 @@ packages:
   yallist@4.0.0:
     resolution: {integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==}
 
-  yaml@2.8.3:
-    resolution: {integrity: sha512-AvbaCLOO2Otw/lW5bmh9d/WEdcDFdQp2Z2ZUH3pX9U2ihyUY0nvLv7J6TrWowklRGPYbB/IuIMfYgxaCPg5Bpg==}
+  yaml@2.8.4:
+    resolution: {integrity: sha512-ml/JPOj9fOQK8RNnWojA67GbZ0ApXAUlN2UQclwv2eVgTgn7O9gg9o7paZWKMp4g0H3nTLtS9LVzhkpOFIKzog==}
     engines: {node: '>= 14.6'}
     hasBin: true
 
@@ -11778,7 +11778,7 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.3
 
-  '@remix-run/dev@2.17.4(@remix-run/react@2.17.4(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3))(@remix-run/serve@2.17.4(typescript@6.0.3))(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(typescript@6.0.3)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))(wrangler@4.85.0(@cloudflare/workers-types@4.20260426.1))(yaml@2.8.3)':
+  '@remix-run/dev@2.17.4(@remix-run/react@2.17.4(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3))(@remix-run/serve@2.17.4(typescript@6.0.3))(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(typescript@6.0.3)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))(wrangler@4.85.0(@cloudflare/workers-types@4.20260426.1))(yaml@2.8.4)':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/generator': 7.29.1
@@ -11835,12 +11835,12 @@ snapshots:
       tar-fs: 2.1.4
       tsconfig-paths: 4.2.0
       valibot: 1.3.1(typescript@6.0.3)
-      vite-node: 3.2.4(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)
+      vite-node: 3.2.4(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)
       ws: 7.5.10
     optionalDependencies:
       '@remix-run/serve': 2.17.4(typescript@6.0.3)
       typescript: 6.0.3
-      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)
+      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)
       wrangler: 4.85.0(@cloudflare/workers-types@4.20260426.1)
     transitivePeerDependencies:
       - '@types/node'
@@ -13249,7 +13249,7 @@ snapshots:
     dependencies:
       '@unocss/core': 66.6.8
 
-  '@unocss/vite@66.6.8(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))':
+  '@unocss/vite@66.6.8(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))':
     dependencies:
       '@jridgewell/remapping': 2.3.5
       '@unocss/config': 66.6.8
@@ -13260,7 +13260,7 @@ snapshots:
       pathe: 2.0.3
       tinyglobby: 0.2.16
       unplugin-utils: 0.3.1
-      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)
+      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)
 
   '@unplugin-analytics/core@0.0.13': {}
 
@@ -13324,11 +13324,11 @@ snapshots:
       sharp-ico: 0.1.5
       unconfig: 7.5.0
 
-  '@vite-pwa/remix@0.2.0(@remix-run/dev@2.17.4(@remix-run/react@2.17.4(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3))(@remix-run/serve@2.17.4(typescript@6.0.3))(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(typescript@6.0.3)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))(wrangler@4.85.0(@cloudflare/workers-types@4.20260426.1))(yaml@2.8.3))(@vite-pwa/assets-generator@1.0.2)(vite-plugin-pwa@1.2.0(@vite-pwa/assets-generator@1.0.2)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))(workbox-build@7.4.0)(workbox-window@7.4.0))':
+  '@vite-pwa/remix@0.2.0(@remix-run/dev@2.17.4(@remix-run/react@2.17.4(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3))(@remix-run/serve@2.17.4(typescript@6.0.3))(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(typescript@6.0.3)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))(wrangler@4.85.0(@cloudflare/workers-types@4.20260426.1))(yaml@2.8.4))(@vite-pwa/assets-generator@1.0.2)(vite-plugin-pwa@1.2.0(@vite-pwa/assets-generator@1.0.2)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))(workbox-build@7.4.0)(workbox-window@7.4.0))':
     dependencies:
-      vite-plugin-pwa: 1.2.0(@vite-pwa/assets-generator@1.0.2)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))(workbox-build@7.4.0)(workbox-window@7.4.0)
+      vite-plugin-pwa: 1.2.0(@vite-pwa/assets-generator@1.0.2)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))(workbox-build@7.4.0)(workbox-window@7.4.0)
     optionalDependencies:
-      '@remix-run/dev': 2.17.4(@remix-run/react@2.17.4(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3))(@remix-run/serve@2.17.4(typescript@6.0.3))(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(typescript@6.0.3)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))(wrangler@4.85.0(@cloudflare/workers-types@4.20260426.1))(yaml@2.8.3)
+      '@remix-run/dev': 2.17.4(@remix-run/react@2.17.4(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(typescript@6.0.3))(@remix-run/serve@2.17.4(typescript@6.0.3))(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(typescript@6.0.3)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))(wrangler@4.85.0(@cloudflare/workers-types@4.20260426.1))(yaml@2.8.4)
       '@vite-pwa/assets-generator': 1.0.2
 
   '@vitest/expect@4.1.5':
@@ -13340,13 +13340,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.5(vite@7.3.2(@types/node@24.12.2)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))':
+  '@vitest/mocker@4.1.5(vite@7.3.2(@types/node@24.12.2)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))':
     dependencies:
       '@vitest/spy': 4.1.5
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.3.2(@types/node@24.12.2)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)
+      vite: 7.3.2(@types/node@24.12.2)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)
 
   '@vitest/pretty-format@4.1.5':
     dependencies:
@@ -13661,7 +13661,7 @@ snapshots:
       tinyexec: 1.1.2
       tinyglobby: 0.2.16
       unconfig: 7.5.0
-      yaml: 2.8.3
+      yaml: 2.8.4
 
   bytes@3.1.2: {}
 
@@ -16316,18 +16316,18 @@ snapshots:
   postcss-load-config@4.0.2(postcss@8.5.13):
     dependencies:
       lilconfig: 3.1.3
-      yaml: 2.8.3
+      yaml: 2.8.4
     optionalDependencies:
       postcss: 8.5.13
 
-  postcss-load-config@6.0.1(jiti@1.21.7)(postcss@8.5.13)(tsx@4.21.0)(yaml@2.8.3):
+  postcss-load-config@6.0.1(jiti@1.21.7)(postcss@8.5.13)(tsx@4.21.0)(yaml@2.8.4):
     dependencies:
       lilconfig: 3.1.3
     optionalDependencies:
       jiti: 1.21.7
       postcss: 8.5.13
       tsx: 4.21.0
-      yaml: 2.8.3
+      yaml: 2.8.4
 
   postcss-merge-longhand@7.0.7(postcss@8.5.13):
     dependencies:
@@ -17543,11 +17543,11 @@ snapshots:
 
   tailwind-merge@2.6.1: {}
 
-  tailwindcss-animate@1.0.7(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.3)):
+  tailwindcss-animate@1.0.7(tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.4)):
     dependencies:
-      tailwindcss: 3.4.19(tsx@4.21.0)(yaml@2.8.3)
+      tailwindcss: 3.4.19(tsx@4.21.0)(yaml@2.8.4)
 
-  tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.3):
+  tailwindcss@3.4.19(tsx@4.21.0)(yaml@2.8.4):
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
@@ -17566,7 +17566,7 @@ snapshots:
       postcss: 8.5.13
       postcss-import: 15.1.0(postcss@8.5.13)
       postcss-js: 4.1.0(postcss@8.5.13)
-      postcss-load-config: 6.0.1(jiti@1.21.7)(postcss@8.5.13)(tsx@4.21.0)(yaml@2.8.3)
+      postcss-load-config: 6.0.1(jiti@1.21.7)(postcss@8.5.13)(tsx@4.21.0)(yaml@2.8.4)
       postcss-nested: 6.2.0(postcss@8.5.13)
       postcss-selector-parser: 6.1.2
       resolve: 1.22.12
@@ -17945,22 +17945,22 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unocss-preset-animations@1.3.0(@unocss/preset-wind3@66.6.8)(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))):
+  unocss-preset-animations@1.3.0(@unocss/preset-wind3@66.6.8)(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))):
     dependencies:
-      unocss: 66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))
+      unocss: 66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))
     optionalDependencies:
       '@unocss/preset-wind3': 66.6.8
 
-  unocss-preset-flowind@0.0.6(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))):
+  unocss-preset-flowind@0.0.6(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))):
     dependencies:
-      unocss: 66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))
+      unocss: 66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))
 
-  unocss-preset-shadcn@1.0.1(unocss-preset-animations@1.3.0(@unocss/preset-wind3@66.6.8)(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))))(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))):
+  unocss-preset-shadcn@1.0.1(unocss-preset-animations@1.3.0(@unocss/preset-wind3@66.6.8)(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))))(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))):
     dependencies:
-      unocss: 66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))
-      unocss-preset-animations: 1.3.0(@unocss/preset-wind3@66.6.8)(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)))
+      unocss: 66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))
+      unocss-preset-animations: 1.3.0(@unocss/preset-wind3@66.6.8)(unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)))
 
-  unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)):
+  unocss@66.6.8(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)):
     dependencies:
       '@unocss/cli': 66.6.8
       '@unocss/core': 66.6.8
@@ -17978,7 +17978,7 @@ snapshots:
       '@unocss/transformer-compile-class': 66.6.8
       '@unocss/transformer-directives': 66.6.8
       '@unocss/transformer-variant-group': 66.6.8
-      '@unocss/vite': 66.6.8(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))
+      '@unocss/vite': 66.6.8(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
@@ -17986,7 +17986,7 @@ snapshots:
 
   unpipe@1.0.0: {}
 
-  unplugin-analytics@0.0.13(esbuild@0.17.6)(rollup@2.80.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)):
+  unplugin-analytics@0.0.13(esbuild@0.17.6)(rollup@2.80.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)):
     dependencies:
       '@unplugin-analytics/core': 0.0.13
       defu: 6.1.7
@@ -17995,7 +17995,7 @@ snapshots:
     optionalDependencies:
       esbuild: 0.17.6
       rollup: 2.80.0
-      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)
+      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)
 
   unplugin-icons@23.0.1(@svgr/core@8.1.0(typescript@6.0.3)):
     dependencies:
@@ -18007,7 +18007,7 @@ snapshots:
     optionalDependencies:
       '@svgr/core': 8.1.0(typescript@6.0.3)
 
-  unplugin-info@1.3.2(esbuild@0.17.6)(rollup@2.80.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)):
+  unplugin-info@1.3.2(esbuild@0.17.6)(rollup@2.80.0)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)):
     dependencies:
       ci-info: 4.4.0
       git-url-parse: 16.1.0
@@ -18016,7 +18016,7 @@ snapshots:
     optionalDependencies:
       esbuild: 0.17.6
       rollup: 2.80.0
-      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)
+      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)
     transitivePeerDependencies:
       - supports-color
 
@@ -18136,13 +18136,13 @@ snapshots:
       - supports-color
       - terser
 
-  vite-node@3.2.4(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3):
+  vite-node@3.2.4(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4):
     dependencies:
       cac: 6.7.14
       debug: 4.4.3
       es-module-lexer: 1.7.0
       pathe: 2.0.3
-      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)
+      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)
     transitivePeerDependencies:
       - '@types/node'
       - jiti
@@ -18157,16 +18157,16 @@ snapshots:
       - tsx
       - yaml
 
-  vite-plugin-inline@0.1.0(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)):
+  vite-plugin-inline@0.1.0(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)):
     dependencies:
-      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)
+      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)
 
-  vite-plugin-pwa@1.2.0(@vite-pwa/assets-generator@1.0.2)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))(workbox-build@7.4.0)(workbox-window@7.4.0):
+  vite-plugin-pwa@1.2.0(@vite-pwa/assets-generator@1.0.2)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))(workbox-build@7.4.0)(workbox-window@7.4.0):
     dependencies:
       debug: 4.4.3
       pretty-bytes: 6.1.1
       tinyglobby: 0.2.16
-      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)
+      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)
       workbox-build: 7.4.0
       workbox-window: 7.4.0
     optionalDependencies:
@@ -18174,12 +18174,12 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-tsconfig-paths@6.1.1(typescript@6.0.3)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)):
+  vite-tsconfig-paths@6.1.1(typescript@6.0.3)(vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)):
     dependencies:
       debug: 4.4.3
       globrex: 0.1.2
       tsconfck: 3.1.6(typescript@6.0.3)
-      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)
+      vite: 7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -18194,7 +18194,7 @@ snapshots:
       fsevents: 2.3.3
       terser: 5.46.2
 
-  vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3):
+  vite@7.3.2(@types/node@24.12.2)(jiti@1.21.7)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4):
     dependencies:
       esbuild: 0.27.7
       fdir: 6.5.0(picomatch@4.0.4)
@@ -18208,9 +18208,9 @@ snapshots:
       jiti: 1.21.7
       terser: 5.46.2
       tsx: 4.21.0
-      yaml: 2.8.3
+      yaml: 2.8.4
 
-  vite@7.3.2(@types/node@24.12.2)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3):
+  vite@7.3.2(@types/node@24.12.2)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4):
     dependencies:
       esbuild: 0.27.7
       fdir: 6.5.0(picomatch@4.0.4)
@@ -18224,12 +18224,12 @@ snapshots:
       jiti: 2.6.1
       terser: 5.46.2
       tsx: 4.21.0
-      yaml: 2.8.3
+      yaml: 2.8.4
 
-  vitest@4.1.5(@types/node@24.12.2)(jsdom@29.1.1)(vite@7.3.2(@types/node@24.12.2)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)):
+  vitest@4.1.5(@types/node@24.12.2)(jsdom@29.1.1)(vite@7.3.2(@types/node@24.12.2)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)):
     dependencies:
       '@vitest/expect': 4.1.5
-      '@vitest/mocker': 4.1.5(vite@7.3.2(@types/node@24.12.2)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3))
+      '@vitest/mocker': 4.1.5(vite@7.3.2(@types/node@24.12.2)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4))
       '@vitest/pretty-format': 4.1.5
       '@vitest/runner': 4.1.5
       '@vitest/snapshot': 4.1.5
@@ -18246,7 +18246,7 @@ snapshots:
       tinyexec: 1.1.2
       tinyglobby: 0.2.16
       tinyrainbow: 3.1.0
-      vite: 7.3.2(@types/node@24.12.2)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.3)
+      vite: 7.3.2(@types/node@24.12.2)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(yaml@2.8.4)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 24.12.2
@@ -18536,7 +18536,7 @@ snapshots:
 
   yallist@4.0.0: {}
 
-  yaml@2.8.3: {}
+  yaml@2.8.4: {}
 
   yargs-parser@21.1.1: {}
 
