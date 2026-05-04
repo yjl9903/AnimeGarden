@@ -104,7 +104,7 @@ const QuickLinks = memo((props: { collection: Collection }) => {
         <span>所有资源</span>
       </NavLink>
       <a
-        href="https://animespace.onekuma.cn/animegarden/search"
+        href="https://docs.animes.garden/animegarden/search"
         className={clsx(className)}
         target="_blank"
       >

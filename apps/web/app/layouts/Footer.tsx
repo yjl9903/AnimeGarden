@@ -147,13 +147,13 @@ export const Footer = memo((props: FooterProps) => {
               GitHub
             </a>
             <a
-              href="https://animespace.onekuma.cn"
+              href="https://docs.animes.garden"
               target="_blank"
               className="ml-4 lt-sm:ml-2"
               onClick={onExternalLinkClick(
                 '关于',
                 'AnimeSpace 计划',
-                'https://animespace.onekuma.cn'
+                'https://docs.animes.garden'
               )}
             >
               AnimeSpace 计划
@@ -214,13 +214,13 @@ export const Footer = memo((props: FooterProps) => {
               问题反馈
             </a>
             <a
-              href="https://animespace.onekuma.cn/animegarden/search"
+              href="https://docs.animes.garden/animegarden/search"
               target="_blank"
               className="ml-4 lt-sm:ml-2"
               onClick={onExternalLinkClick(
                 '更多',
                 '帮助文档',
-                'https://animespace.onekuma.cn/animegarden/search'
+                'https://docs.animes.garden/animegarden/search'
               )}
             >
               帮助文档

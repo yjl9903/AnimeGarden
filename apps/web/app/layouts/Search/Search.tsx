@@ -41,7 +41,7 @@ import {
   stringifySearch
 } from './utils';
 
-const SEARCH_HELP_URL = `https://animespace.onekuma.cn/animegarden/search.html`;
+const SEARCH_HELP_URL = `https://docs.animes.garden/animegarden/search.html`;
 
 const SEARCH_SELECT_TRACK_WINDOW_MS = 300;
 
