@@ -52,7 +52,7 @@ export function tokenize(text: string) {
     if (Wrappers.has(char)) {
       if (!left) {
         if (cur) {
-          tokens.push(new Token(cur.trim()));
+          tokens.push(new Token(cur));
           cur = '';
         }
         left = char;
@@ -62,7 +62,7 @@ export function tokenize(text: string) {
         cur += char;
       }
     } else if (left && right && char === right) {
-      tokens.push(new Token(cur.trim(), left, right));
+      tokens.push(new Token(cur, left, right));
       cur = '';
       left = undefined;
       right = undefined;
@@ -72,7 +72,7 @@ export function tokenize(text: string) {
     cursor += 1;
   }
   if (cur) {
-    tokens.push(new Token(cur.trim()));
+    tokens.push(new Token(cur));
   }
 
   return tokens.filter((t) => t.text);

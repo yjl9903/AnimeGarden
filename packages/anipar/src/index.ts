@@ -1,3 +1,5 @@
-export * from './types';
+export type * from './types.js';
 
-export * from './parser';
+export { parse } from './parser.js';
+
+export { Fansub } from './fansub.js';

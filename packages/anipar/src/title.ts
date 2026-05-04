@@ -1,140 +1,126 @@
-import { Context } from './context';
-import { parseSuffixEpisodes } from './episodes';
-import { parseSuffixSeasonOrEpisodes } from './keyword';
+import type { Context } from './context.js';
 
-export function parseFansub(ctx: Context) {
-  // [fansub] title
-  if (ctx.left + 1 > ctx.right) {
-    return false;
-  }
+import { parseSuffixTextInlineTags } from './keyword.js';
+import { parseSuffixTextInlineSeason } from './episodes.js';
 
-  const token = ctx.tokens[ctx.left];
-  if (token.isWrapped) {
-    const text = token.text;
+interface SplitOptions {
+  // /**
+  //  * @default false
+  //  */
+  // nest?: boolean;
 
-    let found = false;
-    const seps = ['&', '·'];
-    for (const sep of seps) {
-      const [name, ...collab] = text.split(sep);
+  /**
+   * @default true
+   */
+  space?: boolean;
 
-      if (collab.length > 0) {
-        // Hack: [jibaketa合成&壓制]
-        if (collab.length === 1 && collab[0].endsWith('壓制')) {
-          break;
-        }
-
-        found = true;
-        ctx.update2('fansub', 'name', name);
-        ctx.update2('fansub', 'collab', collab);
-        break;
-      }
-    }
-
-    if (!found) {
-      ctx.update2('fansub', 'name', text);
-    }
-
-    ctx.left += 1;
-
-    return true;
-  }
-
-  return false;
+  /**
+   * @default "['/', '-']"
+   */
+  separators?: string[];
 }
 
-export function parseTitle(ctx: Context) {
-  // 1. Parse suffix episodes
-  parseSuffixEpisodes(ctx);
+function splitMultipleTitles(ctx: Context, options?: SplitOptions) {
+  const { space = true, separators = ['/', '-'] } = options ?? {};
 
-  // 2. Parse titles
   const rest = ctx.tokens.slice(ctx.left, ctx.right + 1);
-  if (rest.length === 0) return false;
+  if (rest.length === 0) return [];
 
-  // 2.1. Try split multiple titles
-  let found = false;
-
-  const matchParts = (parts: string[]) => {
-    const [title, ...other] = parts;
-
-    const trimmedTitle = parseSuffixSeasonOrEpisodes(ctx, title);
-    const trimmedOther = other
-      .map((t) => parseSuffixSeasonOrEpisodes(ctx, t))
-      .map((t) => t.trim())
-      .filter((t) => !!t && t !== trimmedTitle);
-
-    ctx.update('title', trimmedTitle);
-    if (trimmedOther.length > 0) {
-      ctx.update('titles', trimmedOther);
-    }
-  };
-
-  // [xxx][yyy]
+  // [xxx][yyy] 已经被分割好了
   if (rest.length > 1 && rest.every((t) => t.isWrapped)) {
-    matchParts(rest.map((t) => t.text));
-    found = true;
+    return rest.map((r) => r.text.trim());
   }
 
-  if (!found) {
-    const text = rest.length === 1 ? rest[0].text : rest.map((t) => t.toString()).join('');
+  // "xxx" 或者 "[xxx]" 内的内容为一个整体 或者 "xxx [yyy] zzz" 被当成一个整体
+  const fullText =
+    rest.length === 1
+      ? rest[0].text.trim()
+      : rest
+          .map((t) => t.toString())
+          .join('')
+          .trim();
 
-    const separators = ['/', '\\'];
+  if (!fullText) return [];
 
-    for (const sep of separators) {
-      const parts = splitText(text, sep)
-        .map((t) => t.trim())
-        .filter((t) => !!t);
-      if (parts.length > 1) {
-        matchParts(parts);
-        found = true;
-        break;
-      }
+  for (const separator of separators) {
+    const parts = space ? fullText.split(` ${separator} `) : fullText.split(separator);
+    const result: string[] = [];
+
+    if (fullText.startsWith(separator) && parts.length > 0) {
+      parts[0] += separator;
+    }
+    if (fullText.endsWith(separator) && parts.length > 0) {
+      parts[parts.length - 1] += separator;
     }
 
-    // @hack ANi
-    if (!found && ctx.options.fansub === 'ANi') {
-      const parts = splitOnce(text, ' - ')
-        .map((t) => t.trim())
-        .filter((t) => !!t);
-      if (parts.length > 1) {
-        matchParts(parts);
-        found = true;
+    for (let i = 0; i < parts.length; i += 1) {
+      if (!space && separator === '/' && i + 1 < parts.length) {
+        if (
+          // Fate/Grand Order 命运/冠位指定
+          parts[i].toUpperCase().endsWith('FATE') ||
+          parts[i].toUpperCase().endsWith('命运') ||
+          parts[i].toUpperCase().endsWith('命運') ||
+          // Ramma 1/2 22/7
+          (/\d$/.test(parts[i]) && /^\d/.test(parts[i + 1]))
+        ) {
+          result.push(parts[i] + separator + parts[i + 1]);
+          i += 1;
+          continue;
+        }
       }
+
+      result.push(parts[i]);
     }
 
-    if (!found) {
-      const trimmed = parseSuffixSeasonOrEpisodes(ctx, text);
-      ctx.update('title', trimmed);
+    if (result.length > 1) {
+      return result.map((t) => t.trim());
     }
   }
 
-  return true;
+  return [fullText.trim()];
 }
 
-function splitText(text: string, sep: string) {
-  const parts = text.split(sep);
-  const ans = [];
-  for (let i = 0; i < parts.length; i++) {
-    if (i === 0) {
-      ans.push(parts[i]);
-    } else {
-      // 【喵萌奶茶屋】★10月新番★[乱马 1/2 2024年版 / Ranma ½ / Ranma 1/2 (2024)][10][1080p][简日双语][招募翻译]
-      if (sep === '/' && /\d$/.test(parts[i - 1]) && /^\d/.test(parts[i])) {
-        ans.pop();
-        ans.push(parts[i - 1] + '/' + parts[i]);
-      } else {
-        ans.push(parts[i]);
-      }
-    }
-  }
-  return ans;
+export function parseSingleTitleText(ctx: Context, text: string) {
+  // [ANi]  ATRI -My Dear Moments-（僅限港澳台） - 07 [1080P][Bilibili][WEB-DL][AAC AVC][CHT CHS][MP4]
+  text = parseSuffixTextInlineTags(ctx, text).trimEnd();
+  text = parseSuffixTextInlineSeason(ctx, text).trimEnd();
+  text = parseSuffixTextInlineTags(ctx, text).trimEnd();
+  return text;
 }
 
-function splitOnce(text: string, separator: string): [string, string] {
-  const found = text.indexOf(separator);
-  if (found === -1) {
-    return [text, ''];
+export function parseMultipleTitles(ctx: Context, options?: SplitOptions) {
+  const titles = splitMultipleTitles(ctx, options);
+  if (titles.length === 0) return [];
+
+  const trimmedTitles = titles.map((t) => parseSingleTitleText(ctx, t)).filter(Boolean);
+  const trimmedTitle = trimmedTitles[0];
+
+  ctx.update('title', trimmedTitle);
+
+  const otherTitles = [...new Set(trimmedTitles)].filter((t) => t !== trimmedTitle);
+  if (otherTitles.length > 0) {
+    ctx.update('titles', otherTitles);
   }
-  const first = text.slice(0, found);
-  const second = text.slice(found + separator.length);
-  return [first, second];
+
+  return [trimmedTitle, ...otherTitles];
+}
+
+export function parseSingleTitle(ctx: Context) {
+  const rest = ctx.tokens.slice(ctx.left, ctx.right + 1);
+  if (rest.length === 0) return '';
+
+  const fullText =
+    rest.length === 1
+      ? rest[0].text.trim()
+      : rest
+          .map((t) => t.toString())
+          .join('')
+          .trim();
+
+  const title = parseSingleTitleText(ctx, fullText);
+  if (title) {
+    ctx.update('title', title);
+  }
+
+  return title;
 }

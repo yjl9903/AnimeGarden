@@ -4,7 +4,7 @@ import { Fansub, parse } from '../src/index.js';
 
 import { readTestAsset } from './utils.js';
 
-const fansub = Fansub.ANi;
+const fansub = Fansub.喵萌奶茶屋;
 
 const titles = readTestAsset(fansub);
 
