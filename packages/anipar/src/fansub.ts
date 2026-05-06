@@ -57,7 +57,7 @@ export function parseFansub(ctx: Context) {
     }
 
     let found = false;
-    const seps = ['&', '＆', '·'];
+    const seps = ['&', '＆', '·', '，'];
     for (const sep of seps) {
       const [name, ...collab] = text
         .split(sep)
