@@ -15,6 +15,7 @@ APP_HOST = 'animes.garden'
 FEED_HOST = 'api.animes.garden'
 TELEGRAM_TOKEN = ''
 TELEGRAM_CHAT_ID = '-1003904271816'
+KEEPSHARE_ID = 'gv78k1oi'
 
 [processes]
 server = './apps/server/manager.sh start'

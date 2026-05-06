@@ -59,14 +59,16 @@ RUN pnpm run build:server && pnpm prune --prod
 FROM base
 
 # Declare args
-ARG TELEGRAM_TOKEN
-ARG TELEGRAM_CHAT_ID
-
 ARG HOST=0.0.0.0
 ARG PORT=3000
 
+ARG KEEPSHARE_ID=gv78k1oi
+ARG TELEGRAM_TOKEN
+ARG TELEGRAM_CHAT_ID
+
 # Set environment variables
 ENV HOST=${HOST} PORT=${PORT} \
+    KEEPSHARE_ID=${KEEPSHARE_ID} \
     TELEGRAM_TOKEN=${TELEGRAM_TOKEN} TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
 
 # Copy built application
