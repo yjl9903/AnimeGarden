@@ -31,6 +31,9 @@ async function initialize(options: SystemOptions) {
     options.site = process.env.APP_HOST;
   }
 
+  if (process.env.KEEPSHARE_ID) {
+    options.keepshare = process.env.KEEPSHARE_ID;
+  }
   if (process.env.TELEGRAM_TOKEN) {
     if (!options.telegram) {
       options.telegram = {};

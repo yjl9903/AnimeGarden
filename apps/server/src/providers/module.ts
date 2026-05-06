@@ -4,9 +4,9 @@ import type { ProviderType } from '@animegarden/client';
 
 import type { System } from '../system';
 
-import { retryDatabaseFn } from '../utils/database';
 import { Module } from '../system/module';
 import { providers } from '../schema/providers';
+import { retryDatabaseFn } from '../utils/database';
 
 export class ProvidersModule extends Module<System['modules']> {
   public static name = 'providers';

@@ -18,7 +18,9 @@ import {
 } from 'drizzle-orm';
 
 import {
+  type Jsonify,
   type ProviderType,
+  type Resource,
   type ResolvedFilterOptions,
   type ResolvedPaginationOptions,
   normalizeTitle,
@@ -44,6 +46,13 @@ import type { DatabaseResource, RedisQueryResource, DatabaseFilterOptions } from
 import { transformDatabaseUser } from './transform';
 import { TitlePool, MagnetPool, TrackerPool } from './pool';
 import { BANGUMI_BANNED_FANSUBS, BANGUMI_BANNED_PUBLISHERS, buildFilterConds } from './filter';
+
+export type FoundResource = Omit<
+  Jsonify<Resource<{ tracker: true; metadata: true }>>,
+  'metadata'
+> & {
+  metadata: DatabaseResource['metadata'];
+};
 
 export const RESOURCE_SELECTOR = {
   id: resources.id,
@@ -170,7 +179,7 @@ export class QueryManager {
     };
   }
 
-  public async transform(r: DatabaseResource) {
+  public async transform(r: DatabaseResource): Promise<FoundResource> {
     const { users, teams } = this.system.modules;
 
     return {

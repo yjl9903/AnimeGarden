@@ -27,6 +27,8 @@ export interface SystemOptions {
 
   site?: string;
 
+  keepshare?: string;
+
   telegram?: {
     token?: string;
 

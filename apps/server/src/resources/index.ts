@@ -12,14 +12,14 @@ import { resources as resourceSchema } from '../schema/resources';
 import { retryDatabaseFn } from '../utils/database';
 
 import type {
-  DuplicateMaintenanceResult,
   NewResource,
+  DuplicateMaintenanceResult,
   SyncDeletedResourcesResult as MarkDeletedResourcesResult,
   UpsertResourcesOptions,
   UpsertResourcesResult
 } from './types';
 
-import { QueryManager } from './query';
+import { FoundResource, QueryManager, RESOURCE_SELECTOR } from './query';
 import { DetailsManager } from './details';
 import { buildTitleSearchSql, transformNewResources } from './transform';
 
@@ -122,6 +122,27 @@ export class ResourcesModule extends Module<System['modules']> {
           inArray(resourceSchema.providerId, ids)
         )
       );
+  }
+
+  public async getResourcesByIds(...ids: number[]): Promise<FoundResource[]> {
+    const uniqueIds = [...new Set(ids)];
+    if (uniqueIds.length === 0) return [];
+
+    const rows = await this.database
+      .select(RESOURCE_SELECTOR)
+      .from(resourceSchema)
+      .where(inArray(resourceSchema.id, uniqueIds));
+
+    const rowMap = new Map(
+      await Promise.all(
+        rows.map(async (resource) => [resource.id, await this.query.transform(resource)] as const)
+      )
+    );
+
+    return ids.flatMap((id) => {
+      const resource = rowMap.get(id);
+      return resource ? [resource] : [];
+    });
   }
 
   private async getExistingResources(resources: NewDbResource[]) {
