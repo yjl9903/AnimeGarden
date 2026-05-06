@@ -1,4 +1,4 @@
-import { APP_HOST, FEED_HOST, SERVER_URL } from '~build/env';
+import { APP_HOST, FEED_HOST, WEB_SERVER_URL } from '~build/env';
 
 import {
   type Collection,
@@ -16,8 +16,8 @@ import {
 } from '@animegarden/client';
 
 export const baseURL = import.meta.env.SSR
-  ? SERVER_URL
-    ? SERVER_URL
+  ? WEB_SERVER_URL
+    ? WEB_SERVER_URL
     : `https://${FEED_HOST}/`
   : `https://${FEED_HOST}/`;
 

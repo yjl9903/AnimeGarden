@@ -9,23 +9,11 @@ import Info from 'unplugin-info/vite';
 import Analytics from 'unplugin-analytics/vite';
 import Inline from 'vite-plugin-inline';
 
-import { env } from './node/env';
+import { bold, green, cyan } from 'breadc';
 
-declare module '@remix-run/node' {
-  // or cloudflare, deno, etc.
-  interface Future {
-    v3_singleFetch: true;
-  }
-}
+import { env } from './node/env.ts';
 
-const { APP_HOST, FEED_HOST, SERVER_URL, KEEPSHARE } = env();
-
-// Analytics Engines
-const UMAMI_HOST = process.env.UMAMI_HOST || `umami.animes.garden`;
-const UMAMI_ID = process.env.UMAMI_ID || `bcff225d-6590-498e-9b39-3a5fc5c2b4d1`;
-// const PLAUSIBLE_HOST = `animes.garden`;
-// const CLARITY = `nbvdca15ui`;
-// const CF_BEACON = `7307ee3d2d8f4bafac906844704dab10`;
+const { APP_HOST, FEED_HOST, WEB_SERVER_URL, KEEPSHARE_ID, UMAMI_HOST, UMAMI_ID } = env();
 
 export default defineConfig({
   ssr: {
@@ -47,7 +35,7 @@ export default defineConfig({
         /**
          * Keepshare id
          */
-        KEEPSHARE,
+        KEEPSHARE_ID,
         /**
          * The host of app
          */
@@ -59,7 +47,7 @@ export default defineConfig({
         /**
          * The URL of API server
          */
-        SERVER_URL
+        WEB_SERVER_URL
       },
       cloudflare: process.env.SSR_ADAPTER === 'cloudflare'
     }),
@@ -96,8 +84,15 @@ export default defineConfig({
     {
       name: 'animegarden-web:print',
       buildStart() {
-        console.log(`  ➜  APP host:   ${APP_HOST}`);
-        console.log(`  ➜  API Server: ${SERVER_URL}`);
+        const symbol = '__PRINT_ANIMEGARDEN_WEB_ENV__';
+        // @ts-expect-error
+        if (!globalThis[symbol]) {
+          // @ts-expect-error
+          globalThis[symbol] = true;
+          console.log(`  ${bold(green('➜'))}  ${bold('App')}:     ${cyan(APP_HOST)}`);
+          console.log(`  ${bold(green('➜'))}  ${bold('Feed')}:    ${cyan(FEED_HOST)}`);
+          console.log(`  ${bold(green('➜'))}  ${bold('Server')}:  ${cyan(WEB_SERVER_URL)}`);
+        }
       }
     }
   ]

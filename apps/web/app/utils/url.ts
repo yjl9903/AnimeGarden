@@ -1,4 +1,4 @@
-import { FEED_HOST, KEEPSHARE } from '~build/env';
+import { FEED_HOST, KEEPSHARE_ID } from '~build/env';
 
 export function splitMagnetURL(magnet: string) {
   return magnet?.split('&')[0] ?? '';
@@ -6,7 +6,7 @@ export function splitMagnetURL(magnet: string) {
 
 export function getPikPakUrlChecker(magnet: string) {
   const url = magnet.split('&')[0];
-  return `https://keepshare.org/${KEEPSHARE}/${encodeURIComponent(url)}`;
+  return `https://keepshare.org/${KEEPSHARE_ID}/${encodeURIComponent(url)}`;
 }
 
 export function getFeedURL(search?: string) {

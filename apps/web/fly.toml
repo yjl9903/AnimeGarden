@@ -11,10 +11,14 @@ dockerfile = 'Dockerfile'
 
 [build.args]
 NODE_VERSION = '24.15.0'
+HOST = '::'
+PORT = '3000'
 APP_HOST = 'animes.garden'
 FEED_HOST = 'api.animes.garden'
-SERVER_URL = 'http://animegarden-server-production.flycast/'
+WEB_SERVER_URL = 'http://animegarden-server-production.flycast/'
 FEED_SERVER_URL = 'http://animegarden-feed-production.flycast/'
+KEEPSHARE_ID = 'gv78k1oi'
+UMAMI_HOST = 'umami.animes.garden'
 UMAMI_ID = 'bcff225d-6590-498e-9b39-3a5fc5c2b4d1'
 
 [processes]

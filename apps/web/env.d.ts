@@ -7,13 +7,20 @@
 import type * as CSS from 'csstype';
 
 declare module '~build/env' {
-  export const KEEPSHARE: string;
-
   export const APP_HOST: string;
 
   export const FEED_HOST: string;
 
-  export const SERVER_URL: string;
+  export const WEB_SERVER_URL: string;
+
+  export const KEEPSHARE_ID: string;
+}
+
+declare module '@remix-run/node' {
+  // or cloudflare, deno, etc.
+  interface Future {
+    v3_singleFetch: true;
+  }
 }
 
 declare module 'csstype' {
