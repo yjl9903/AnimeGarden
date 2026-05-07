@@ -198,6 +198,14 @@ export const Footer = memo((props: FooterProps) => {
               Telegram
             </a>
             <a
+              href="https://t.me/animegarden_channel"
+              target="_blank"
+              className="ml-4 lt-sm:ml-2"
+              onClick={onExternalLinkClick('更多', 'Channel', 'https://t.me/animegarden_channel')}
+            >
+              Channel
+            </a>
+            <a
               href="https://github.com/yjl9903/AnimeGarden/issues"
               target="_blank"
               className="ml-4 lt-sm:ml-2"
