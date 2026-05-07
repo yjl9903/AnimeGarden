@@ -1,4 +1,5 @@
-import { type BasicSubject } from 'bgmd';
+import type { BasicSubject } from 'bgmd';
+
 import { type ParseResult, parse } from 'anipar';
 import { SupportProviders } from '@animegarden/client';
 
