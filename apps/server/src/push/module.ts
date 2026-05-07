@@ -1,9 +1,9 @@
-import { Bot } from 'grammy';
+import { Bot, GrammyError } from 'grammy';
 
 import type { ProviderType } from '@animegarden/client';
 
-import { newQueue } from '@animegarden/shared';
-import { and, eq, gte, inArray, lte } from 'drizzle-orm';
+import { newQueue, sleep } from '@animegarden/shared';
+import { and, eq, gte, inArray, lte, asc, or } from 'drizzle-orm';
 
 import type { System } from '../system/index.ts';
 import type { NewTelegramMessage, TelegramMessage } from '../schema/index.ts';
@@ -15,7 +15,7 @@ import { TelegramMessageStatus, telegramMessages } from '../schema/telegram.ts';
 
 import { PushContext } from './push.ts';
 import { buildResourceCardMessage } from './message.ts';
-import { TelegramMessageLockLostError } from './lock.ts';
+import { isUniqueTelegramMessageConflict, TelegramMessageLockLostError } from './error.ts';
 
 export class PushModule extends Module<System['modules']> {
   static readonly name = 'push';
@@ -131,14 +131,12 @@ export class PushModule extends Module<System['modules']> {
 
     const { resource } = context;
 
-    this.logger.info(`Start sending message of ${resource.provider}:${resource.providerId}`);
+    this.logger.info(`Start pushing message of ${resource.provider}:${resource.providerId}`);
 
     const validated = await context.prepare();
 
     if (!validated) {
-      this.logger.warn(
-        `Failed parsing "${resource.fansub?.name ?? resource.publisher.name}" "${resource.title}"`
-      );
+      this.logger.info(`Skip pushing message of ${resource.provider}:${resource.providerId}`);
       return undefined;
     }
 
@@ -165,7 +163,8 @@ export class PushModule extends Module<System['modules']> {
     const rows = await this.database
       .select({ id: resources.id })
       .from(resources)
-      .where(and(eq(resources.subjectId, subjectId), eq(resources.isDeleted, false)));
+      .where(and(eq(resources.subjectId, subjectId), eq(resources.isDeleted, false)))
+      .orderBy(asc(resources.createdAt));
 
     const ids = rows.map((resource) => resource.id);
 
@@ -174,7 +173,10 @@ export class PushModule extends Module<System['modules']> {
       return [];
     }
 
-    await this.enqueueResourceMessages(ids);
+    for (const id of ids) {
+      await this.enqueueResourceMessages([id]);
+    }
+
     return ids;
   }
 
@@ -187,18 +189,23 @@ export class PushModule extends Module<System['modules']> {
     return new PushContext(this.system, resource);
   }
 
+  // TODO: 目前 publisher_id 去重有问题, 需要先用 fansub_id
   public async findTelegramMessage(
     publisherId: number,
+    fansubId: number,
     subjectId: number,
     episode: string
   ): Promise<TelegramMessage | undefined> {
-    // 消息去重: publisherId + subjectId + 归一化的 episode key
+    // 消息去重: fansubId + subjectId + 归一化的 episode key
     const rows = await this.database
       .select()
       .from(telegramMessages)
       .where(
         and(
-          eq(telegramMessages.publisherId, publisherId),
+          or(
+            eq(telegramMessages.publisherId, publisherId),
+            eq(telegramMessages.fansubId, fansubId)
+          ),
           eq(telegramMessages.subjectId, subjectId),
           eq(telegramMessages.episode, episode)
         )
@@ -316,11 +323,17 @@ export class PushModule extends Module<System['modules']> {
 
     // Telegram 侧发送接口串行执行，避免并发请求触发机器人限流或打乱消息顺序。
     return await this.queue.add(async () => {
+      this.logger.info(`Start sending telegram message ${telegramMessageId} `);
+
       const sending = await this.markTelegramMessageSending(telegramMessageId, resourceId);
       if (!sending) {
         throw new TelegramMessageLockLostError(telegramMessageId, resourceId);
       }
-      return await this.sendPhoto(chatId, message.photo, message.text, message.options);
+      const resp = await this.sendPhoto(chatId, message.photo, message.text, message.options);
+
+      this.logger.success(`Finish sending telegram message ${telegramMessageId} `);
+
+      return resp;
     });
   }
 
@@ -333,11 +346,18 @@ export class PushModule extends Module<System['modules']> {
   ) {
     // 编辑和发送共用同一个队列，保证同一频道内的写操作按本进程提交顺序执行。
     return await this.queue.add(async () => {
+      this.logger.info(`Start editing telegram message ${telegramMessageId} `);
+
       const sending = await this.markTelegramMessageSending(telegramMessageId, resourceId);
       if (!sending) {
         throw new TelegramMessageLockLostError(telegramMessageId, resourceId);
       }
-      return await this.editMessageCaption(chatId, messageId, message.text, message.options);
+
+      const resp = await this.editMessageCaption(chatId, messageId, message.text, message.options);
+
+      this.logger.success(`Finish editing telegram message ${telegramMessageId} `);
+
+      return resp;
     });
   }
 
@@ -349,12 +369,26 @@ export class PushModule extends Module<System['modules']> {
   ) {
     if (!this.bot) throw new Error('telegram bot is not initialized');
 
-    const sent = await this.bot.api.sendPhoto(chatId, photo, {
-      ...options,
-      caption
-    });
+    try {
+      const sent = await this.bot.api.sendPhoto(chatId, photo, {
+        ...options,
+        caption
+      });
 
-    return sent;
+      return sent;
+    } catch (error) {
+      const policy = await this.handleGrammhyError(error);
+      if (policy === 'retry') {
+        const sent = await this.bot.api.sendPhoto(chatId, photo, {
+          ...options,
+          caption
+        });
+
+        return sent;
+      }
+
+      throw error;
+    }
   }
 
   public async editMessageCaption(
@@ -365,51 +399,59 @@ export class PushModule extends Module<System['modules']> {
   ) {
     if (!this.bot) throw new Error('telegram bot is not initialized');
 
-    const sent = await this.bot.api.editMessageCaption(chatId, messageId, {
-      ...options,
-      caption
-    });
+    try {
+      await this.bot.api.editMessageCaption(chatId, messageId, {
+        ...options,
+        caption
+      });
+      return true;
+    } catch (error) {
+      const policy = await this.handleGrammhyError(error);
+      if (policy === 'retry') {
+        await this.bot.api.editMessageCaption(chatId, messageId, {
+          ...options,
+          caption
+        });
+        return true;
+      } else if (policy === 'ignore') {
+        return true;
+      }
 
-    return sent;
+      throw error;
+    }
   }
 
   public async deleteMessage(chatId: string | number, messageId: number) {
     if (!this.bot) throw new Error('telegram bot is not initialized');
 
-    return await this.bot.api.deleteMessage(chatId, messageId);
+    try {
+      await this.bot.api.deleteMessage(chatId, messageId);
+      return true;
+    } catch (error) {
+      const policy = await this.handleGrammhyError(error);
+      if (policy === 'retry') {
+        await this.bot.api.deleteMessage(chatId, messageId);
+        return true;
+      }
+
+      throw error;
+    }
+  }
+
+  private async handleGrammhyError(error: unknown) {
+    if (error instanceof GrammyError) {
+      if (error.error_code === 429) {
+        const seconds = (error.parameters.retry_after ?? 60) + 1;
+        await sleep(seconds * 1000);
+        return 'retry' as const;
+      }
+      if (error.error_code === 400 && error.message.includes('message is not modified')) {
+        return 'ignore' as const;
+      }
+    }
   }
 
   private isConfigured() {
     return !!this.bot && !!this.system.options.telegram?.chatId;
   }
-}
-
-function isUniqueTelegramMessageConflict(error: unknown) {
-  let current = error;
-  while (typeof current === 'object' && current !== null) {
-    const code = 'code' in current && typeof current.code === 'string' ? current.code : undefined;
-    const message =
-      'message' in current && typeof current.message === 'string'
-        ? current.message.toLowerCase()
-        : '';
-    const constraint =
-      'constraint_name' in current && typeof current.constraint_name === 'string'
-        ? current.constraint_name
-        : 'constraint' in current && typeof current.constraint === 'string'
-          ? current.constraint
-          : '';
-
-    if (
-      code === '23505' &&
-      (constraint === 'unique_telegram_messages_publisher_subject_episode' ||
-        message.includes('unique_telegram_messages_publisher_subject_episode') ||
-        message.includes('telegram_messages'))
-    ) {
-      return true;
-    }
-
-    current = 'cause' in current ? current.cause : undefined;
-  }
-
-  return false;
 }

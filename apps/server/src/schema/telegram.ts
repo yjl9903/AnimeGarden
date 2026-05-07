@@ -23,7 +23,7 @@ export const telegramMessages = pgTable(
     id: serial('id').primaryKey(),
     resourceId: integer('resource_id').notNull(),
     publisherId: integer('publisher_id').notNull(),
-    fansubId: integer('fansub_id'),
+    fansubId: integer('fansub_id').notNull(),
     subjectId: integer('subject_id').notNull(),
     episode: varchar('episode', { length: 128 }).notNull(),
     telegramChatId: bigint('telegram_chat_id', { mode: 'number' }),
@@ -37,6 +37,11 @@ export const telegramMessages = pgTable(
     return [
       uniqueIndex('unique_telegram_messages_publisher_subject_episode').on(
         t.publisherId,
+        t.subjectId,
+        t.episode
+      ),
+      uniqueIndex('unique_telegram_messages_fansub_subject_episode').on(
+        t.fansubId,
         t.subjectId,
         t.episode
       ),

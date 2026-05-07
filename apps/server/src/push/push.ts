@@ -10,7 +10,7 @@ import { getSubjectById } from '../utils/bgmd.ts';
 import { TelegramMessageStatus } from '../schema/telegram.ts';
 
 import { buildResourceCardMessage } from './message.ts';
-import { TelegramMessageLockLostError } from './lock.ts';
+import { TelegramMessageLockLostError } from './error.ts';
 import { shouldSendFansubResource, shouldSendTypeResource } from './guard.ts';
 
 export class PushContext {
@@ -20,7 +20,7 @@ export class PushContext {
 
   public publisher!: FoundResource['publisher'];
 
-  public fansub!: FoundResource['fansub'];
+  public fansub!: NonNullable<FoundResource['fansub']>;
 
   public subject!: BasicSubject;
 
@@ -61,7 +61,10 @@ export class PushContext {
     const publisher = resource.publisher;
     const fansub = resource.fansub;
 
-    if (!subject || !parsed || !episode || !publisher || !resource.subjectId) {
+    if (!subject || !parsed || !episode || !publisher || !fansub || !resource.subjectId) {
+      this.logger.warn(
+        `Failed parsing "${resource.fansub?.name ?? resource.publisher.name}" "${resource.title}"`
+      );
       return undefined;
     }
 
@@ -92,10 +95,11 @@ export class PushContext {
   }
 
   public async run(): Promise<{ ok: boolean } | undefined> {
-    const { publisher, resource, subject, episode } = this;
+    const { publisher, fansub, resource, subject, episode } = this;
 
     const existing = await this.system.modules.push.findTelegramMessage(
       publisher.id,
+      fansub.id,
       subject.id,
       episode
     );
@@ -113,7 +117,7 @@ export class PushContext {
       const previous = await this.system.modules.push.makePushContext(existing.resourceId);
       if (previous && (await previous?.prepare()) && this.compare(previous) <= 0) {
         this.logger.info(
-          `Skip sending ${resource.provider}:${resource.providerId}, existing pending resource has higher priority`
+          `Skip pushing ${resource.provider}:${resource.providerId}, existing pending resource has higher priority`
         );
         return undefined;
       }
@@ -163,13 +167,13 @@ export class PushContext {
           {
             resourceId: resource.id,
             publisherId: publisher.id,
-            fansubId: fansub?.id ?? null
+            fansubId: fansub.id
           }
         )
       : await this.system.modules.push.createTelegramMessagePending({
           resourceId: resource.id,
           publisherId: publisher.id,
-          fansubId: fansub?.id ?? null,
+          fansubId: fansub.id,
           subjectId: subject.id,
           episode: episodeStr
         });
@@ -207,8 +211,8 @@ export class PushContext {
           return undefined;
         }
 
-        this.logger.info(
-          `Finish editing message ${existing.telegramMessageId} of ${resource.provider}:${resource.providerId}`
+        this.logger.success(
+          `Finish editing message ${telegramMessage.id} of ${resource.provider}:${resource.providerId}`
         );
 
         return {
@@ -235,13 +239,13 @@ export class PushContext {
         if (!marked) {
           await this.deleteStaleSentMessage(sent.chat?.id, sent.message_id);
           this.logger.warn(
-            `Deleted stale telegram message ${sent.message_id} of ${resource.provider}:${resource.providerId}`
+            `Deleted stale telegram message ${telegramMessage.id} of ${resource.provider}:${resource.providerId}`
           );
           return undefined;
         }
 
-        this.logger.info(
-          `Finish sending message ${sent.message_id} of ${resource.provider}:${resource.providerId}`
+        this.logger.success(
+          `Finish sending message ${telegramMessage.id} of ${resource.provider}:${resource.providerId}`
         );
 
         return {

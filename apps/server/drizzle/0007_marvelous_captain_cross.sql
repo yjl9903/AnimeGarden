@@ -1,0 +1,2 @@
+ALTER TABLE "telegram_messages" ALTER COLUMN "fansub_id" SET NOT NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX "unique_telegram_messages_fansub_subject_episode" ON "telegram_messages" USING btree ("fansub_id","subject_id","episode");

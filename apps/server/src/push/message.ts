@@ -41,7 +41,7 @@ export function buildResourceCardMessage(
     formatVideoLine(parsed),
     formatResourceSize(resource.size),
     formatPublishTime(resource.createdAt),
-    formatLabels(parsed, subjectName),
+    formatLabels(resource.fansub?.name ?? resource.publisher.name, subjectName),
     `<a href="${escapeHtml(detailUrl)}">查看详情</a> · <a href="${escapeHtml(playUrl)}">在线播放</a>`
   ].filter(Boolean);
 
@@ -189,8 +189,8 @@ function formatPublishTime(value: string) {
   return `<b>发布:</b> ${formatInTimeZone(new Date(value), 'Asia/Shanghai', 'yyyy 年 M 月 d 日 HH:mm')}`;
 }
 
-function formatLabels(parsed: ParseResult, subjectName: string) {
-  const fansub = getNormalizedFansubs(parsed)[0];
+function formatLabels(rawFansub: string, subjectName: string) {
+  const fansub = normalizeFansubName(rawFansub);
   if (!fansub) return undefined;
   return `<b>追踪:</b> ${formatHashTag(`${fansub}_${subjectName}`)}`;
 }
