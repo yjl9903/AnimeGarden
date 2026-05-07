@@ -5,6 +5,7 @@ import { subjects } from './subjects';
 import { tags } from './tags';
 import { users, teams } from './users';
 import { collections } from './collections';
+import { telegramMessages } from './telegram';
 
 export type { MagnetInfo, FileInfo } from './details';
 
@@ -39,3 +40,7 @@ export type Subject = typeof subjects.$inferSelect;
 export type NewCollection = typeof collections.$inferInsert;
 
 export type Collection = typeof collections.$inferSelect;
+
+export type NewTelegramMessage = typeof telegramMessages.$inferInsert;
+
+export type TelegramMessage = typeof telegramMessages.$inferSelect;

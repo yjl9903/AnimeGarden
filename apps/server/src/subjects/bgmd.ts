@@ -35,6 +35,7 @@ export async function updateCalendar(mod: SubjectsModule) {
   const { subs, errors } = transformSubjects(mod, onair, false);
   const { inserted, conflict } = await mod.insertSubjects(subs, {
     indexResources: true,
+    pushTelegramMessage: true,
     offset: 30,
     overwrite: false
   });

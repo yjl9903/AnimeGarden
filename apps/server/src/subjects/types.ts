@@ -19,4 +19,9 @@ export interface InsertSubjectOptions extends IndexOptions {
    * @default false
    */
   indexResources?: boolean;
+
+  /**
+   * @default false
+   */
+  pushTelegramMessage?: boolean;
 }

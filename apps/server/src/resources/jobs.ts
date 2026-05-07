@@ -80,6 +80,11 @@ export async function runFetchJob(sys: System, platform: ProviderType) {
     if (hasNotificationChanges(notification)) {
       await sys.modules.providers.updateRefreshTimestamp(platform, fetchedAt);
       await sys.notifyRefreshedResources(notification);
+
+      void sys.modules.push.enqueueResourceMessages(upsert.inserted.map((resource) => resource.id));
+      void sys.modules.push.enqueueFailedResourceMessages();
+    } else {
+      void sys.modules.push.enqueueFailedResourceMessages();
     }
 
     sys.logger.success(

@@ -9,6 +9,17 @@ import type { IndexOptions, InsertSubjectOptions } from './types';
 import { importFromBgmd, updateCalendar } from './bgmd';
 import { type NewSubject, type Subject, subjects, resources } from './schema';
 
+type IndexedResource = {
+  id: number;
+  title: string;
+};
+
+type InsertSubjectResult = {
+  id: number;
+  name: string;
+  matched: IndexedResource[];
+};
+
 export class SubjectsModule extends Module<System['modules']> {
   public static name = 'subjects';
 
@@ -84,6 +95,7 @@ export class SubjectsModule extends Module<System['modules']> {
         });
 
       const changed = resp.length > 0;
+      let matched: IndexedResource[] = [];
 
       if (
         changed &&
@@ -96,12 +108,18 @@ export class SubjectsModule extends Module<System['modules']> {
           `Start indexing subject ${subject.name} after ${start.toLocaleDateString()}`
         );
         const indexed = await this.indexSubject({ isArchived, ...subject, ...resp[0] }, options);
+        matched = indexed.matched;
         this.logger.success(
           `Finish inserting subject ${subject.name} with ${indexed.matched.length} related resources`
         );
       }
 
-      return resp[0];
+      return resp[0]
+        ? {
+            ...resp[0],
+            matched
+          }
+        : undefined;
     } catch (error) {
       this.logger.error(error);
       return undefined;
@@ -117,14 +135,32 @@ export class SubjectsModule extends Module<System['modules']> {
     }
 
     if (options.indexResources) {
-      const resp: Array<{ id: number; name: string } | undefined> = [];
+      const resp: Array<InsertSubjectResult | undefined> = [];
       for (const sub of subs) {
         const res = await this.insertSubject(sub, options);
         resp.push(res);
       }
-      const map = new Map(resp.filter(Boolean).map((s) => [s!.name, s!] as const));
+
+      // 推送 telegram channel 消息
+      const inserted = resp.filter((s): s is InsertSubjectResult => Boolean(s));
+      if (options.pushTelegramMessage) {
+        const resourceIds = [
+          ...new Set(
+            inserted
+              .flatMap((subject) => subject.matched)
+              .map((resource) => resource.id)
+              .filter((id) => Number.isFinite(id))
+          )
+        ];
+
+        if (resourceIds.length > 0) {
+          void this.system.modules.push.enqueueResourceMessages(resourceIds);
+        }
+      }
+
+      const map = new Map(inserted.map((s) => [s.name, s] as const));
       return {
-        inserted: resp.filter((s) => s),
+        inserted: inserted.map(({ id, name }) => ({ id, name })),
         conflict: subs.filter((s) => !map.has(s.name))
       };
     } else {
@@ -159,7 +195,7 @@ export class SubjectsModule extends Module<System['modules']> {
   public async indexSubject(
     subject: Subject,
     options: IndexOptions = {}
-  ): Promise<{ matched: Array<{ id: number; title: string }>; error?: any }> {
+  ): Promise<{ matched: IndexedResource[]; error?: any }> {
     if (subject.keywords.length === 0) {
       this.logger.warn(`Invalid keywords for ${subject.name} (id ${subject.id})`);
       return {

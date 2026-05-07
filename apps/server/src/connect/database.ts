@@ -7,6 +7,7 @@ import { tags } from '../schema/tags';
 import { subjects } from '../schema/subjects';
 import { resources } from '../schema/resources';
 import { details } from '../schema/details';
+import { telegramMessages } from '../schema/telegram';
 import {
   resourcesRelations,
   userRelations,
@@ -92,6 +93,7 @@ export function connectDatabase(
         teams,
         tags,
         subjects,
+        telegramMessages,
         resourcesRelations,
         userRelations,
         teamRelations,

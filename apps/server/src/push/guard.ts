@@ -1,5 +1,6 @@
 import { Fansub } from 'anipar';
 
+// 白名单控制推送入口
 const ALLOW_FANSUBS = new Set([
   Fansub.ANi,
   Fansub.LoliHouse,
@@ -11,6 +12,10 @@ const ALLOW_FANSUBS = new Set([
   Fansub.三明治摆烂组
 ]);
 
-export function shouldSendFansub(fansub: string) {
+export function shouldSendFansubResource(fansub: string) {
   return ALLOW_FANSUBS.has(fansub);
+}
+
+export function shouldSendTypeResource(type: string) {
+  return type === '动画';
 }

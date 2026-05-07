@@ -92,6 +92,7 @@ function formatFansubs(parsed: ParseResult) {
 }
 
 function getNormalizedFansubs(parsed: ParseResult) {
+  // anipar 可能解析出协作字幕组；去重后统一展示为可追踪的 hashtag。
   return [
     ...new Set(
       [parsed.fansub?.name, ...(parsed.fansub?.collab ?? [])]
@@ -102,6 +103,7 @@ function getNormalizedFansubs(parsed: ParseResult) {
 }
 
 function normalizeFansubName(name: string) {
+  // 常见别名先归一到站内展示名，避免同一字幕组生成多个追踪标签。
   const simplified = tradToSimple(name);
   const compacted = simplified.replace(/[\s_\-()（）]/g, '').toLowerCase();
 
@@ -204,6 +206,7 @@ function formatQuarter(subject: BasicSubject, resource: FoundResource) {
 }
 
 function formatHashTag(text: string) {
+  // Telegram hashtag 只保留字母、数字和下划线，中文属于 Unicode letter。
   const normalized = text.replace(/[^\p{L}\p{N}_]/gu, '');
   return normalized ? `#${normalized}` : '';
 }

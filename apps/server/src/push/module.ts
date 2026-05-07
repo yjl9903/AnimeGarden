@@ -1,105 +1,353 @@
-import { Bot, HttpError } from 'grammy';
+import { Bot } from 'grammy';
 
-import { parse } from 'anipar';
+import type { ProviderType } from '@animegarden/client';
+
+import { newQueue } from '@animegarden/shared';
+import { and, eq, gte, inArray, lte } from 'drizzle-orm';
 
 import type { System } from '../system/index.ts';
-import type { FoundResource } from '../resources/query.ts';
+import type { NewTelegramMessage, TelegramMessage } from '../schema/index.ts';
 
 import { Module } from '../system/module.ts';
 
-import { shouldSendFansub } from './fansub.ts';
+import { resources } from '../schema/resources.ts';
+import { TelegramMessageStatus, telegramMessages } from '../schema/telegram.ts';
+
+import { PushContext } from './push.ts';
 import { buildResourceCardMessage } from './message.ts';
-import { getSubjectById } from '../utils/bgmd.ts';
+import { TelegramMessageLockLostError } from './lock.ts';
 
 export class PushModule extends Module<System['modules']> {
   static readonly name = 'push';
 
+  // Telegram API
   public bot?: Bot;
+
+  // 串行化 Telegram API 调用
+  // 解析、查重、优先级比较等数据库前置逻辑允许并发执行, 避免服务中断
+  private readonly queue = newQueue(1);
+
+  // 单进程内去重，避免同一个 resource 在上一次 pushResourceMessage 完成前重复进入前置逻辑。
+  private readonly pendingResourceIds = new Set<number>();
 
   public async initialize(): Promise<void> {
     if (this.system.options.telegram?.token) {
       const bot = new Bot(this.system.options.telegram.token);
       this.bot = bot;
-
-      await this.pushResourceMessages([2429971]);
     }
   }
 
-  public async pushResourceMessages(ids: number[]) {
-    if (!this.bot || !this.system.options.telegram?.chatId) {
+  public enqueueResourceMessages(ids: number[]) {
+    if (!this.isConfigured()) {
       return;
     }
 
-    this.logger.info(`Start pushing resource messages`);
+    const promises: Promise<{ ok: boolean } | undefined>[] = [];
 
-    const resources = await this.system.modules.resources.getResourcesByIds(...ids);
-
-    let success = 0;
-
-    for (const resource of resources) {
-      try {
-        const resp = await this.pushResourceMessage(resource);
-        if (resp?.ok) {
-          success += 1;
-        }
-      } catch (error) {
-        this.logger.error(
-          `Failed pushing resource ${resource.provider}:${resource.providerId}`,
-          error
-        );
+    // 抓取任务不等待推送链路，真正的限流在 tg API 的 send/edit 方法内。
+    for (const id of [...new Set(ids)]) {
+      if (this.pendingResourceIds.has(id)) {
+        continue;
       }
+
+      this.pendingResourceIds.add(id);
+
+      const promise = this.pushResourceMessage(id)
+        .catch((error) => {
+          this.logger.error(`Failed running telegram push task for resource ${id}`, error);
+          return undefined;
+        })
+        .finally(() => {
+          this.pendingResourceIds.delete(id);
+        });
+
+      promises.push(promise);
     }
 
-    this.logger.info(`Finish pushing ${success} resource messages`);
+    return Promise.all(promises);
   }
 
-  private async pushResourceMessage(resource: FoundResource) {
+  public async enqueueFailedResourceMessages() {
+    if (!this.isConfigured()) {
+      return [];
+    }
+
+    try {
+      const failedUpdatedAfter = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      const pendingUpdatedBefore = new Date(Date.now() - 6 * 60 * 60 * 1000);
+
+      // 失败补偿只看近 7 天的记录，避免太旧的失败消息在每轮抓取后永久重试。
+      const failedRows = await this.database
+        .selectDistinct({ resourceId: telegramMessages.resourceId })
+        .from(telegramMessages)
+        .where(
+          and(
+            eq(telegramMessages.status, TelegramMessageStatus.Failed),
+            gte(telegramMessages.updatedAt, failedUpdatedAfter)
+          )
+        );
+
+      // Pending/Sending 超过 6h 基本可以认为进程崩溃或 Telegram 请求卡死，先转 Failed 再重试。
+      const stalePendingRows = await this.database
+        .update(telegramMessages)
+        .set({
+          status: TelegramMessageStatus.Failed,
+          updatedAt: new Date()
+        })
+        .where(
+          and(
+            inArray(telegramMessages.status, [
+              TelegramMessageStatus.Pending,
+              TelegramMessageStatus.Sending
+            ]),
+            lte(telegramMessages.updatedAt, pendingUpdatedBefore)
+          )
+        )
+        .returning({ resourceId: telegramMessages.resourceId });
+
+      const ids = [
+        ...new Set([
+          ...failedRows.map((row) => row.resourceId),
+          ...stalePendingRows.map((row) => row.resourceId)
+        ])
+      ];
+
+      void this.enqueueResourceMessages(ids);
+
+      return ids;
+    } catch (error) {
+      this.system.logger.error('Failed enqueueing failed telegram messages', error);
+      return [];
+    }
+  }
+
+  public async pushResourceMessage(id: number) {
+    if (!this.isConfigured()) {
+      return undefined;
+    }
+
+    const context = await this.makePushContext(id);
+    if (!context) return undefined;
+
+    const { resource } = context;
+
     this.logger.info(`Start sending message of ${resource.provider}:${resource.providerId}`);
 
-    const fansub = resource.fansub?.name;
-    if (!fansub || !shouldSendFansub(fansub)) {
+    const validated = await context.prepare();
+
+    if (!validated) {
+      this.logger.warn(
+        `Failed parsing "${resource.fansub?.name ?? resource.publisher.name}" "${resource.title}"`
+      );
       return undefined;
     }
 
-    const subject = resource.subjectId ? getSubjectById(resource.subjectId) : undefined;
-    const parsed = parse(resource.title, { fansub });
-    if (!subject || !parsed) {
-      this.logger.warn(`Failed parsing "${resource.fansub?.name}" "${resource.title}"`);
-      return undefined;
-    }
-
-    // TODO
-
-    const message = buildResourceCardMessage(resource, subject, parsed, this.system.options);
-
-    const sent = await this.sendPhoto(message.photo, message.text, message.options).catch(
-      async (error) => {
-        this.logger.warn(
-          `Failed sending photo of ${resource.provider}:${resource.providerId}, fallback to text message`
-        );
-        this.logTelegramNetworkError(error);
-        return await this.sendMessage(message.text, message.options);
-      }
-    );
-
-    this.logger.info(
-      `Finish sending message ${sent.message_id} of ${resource.provider}:${resource.providerId}`
-    );
-
-    return {
-      ok: true
-    };
+    return await validated.run();
   }
 
-  private async sendPhoto(
+  public async pushResourceMessageByProviderId(provider: ProviderType, providerId: string) {
+    const [resource] = await this.database
+      .select({ id: resources.id })
+      .from(resources)
+      .where(and(eq(resources.provider, provider), eq(resources.providerId, providerId)))
+      .limit(1);
+
+    if (!resource) {
+      this.logger.warn(`Resource ${provider}:${providerId} is not found`);
+      return [];
+    }
+
+    await this.enqueueResourceMessages([resource.id]);
+    return [resource.id];
+  }
+
+  public async pushSubjectResourceMessages(subjectId: number) {
+    const rows = await this.database
+      .select({ id: resources.id })
+      .from(resources)
+      .where(and(eq(resources.subjectId, subjectId), eq(resources.isDeleted, false)));
+
+    const ids = rows.map((resource) => resource.id);
+
+    if (ids.length === 0) {
+      this.logger.warn(`No resources found for subject ${subjectId}`);
+      return [];
+    }
+
+    await this.enqueueResourceMessages(ids);
+    return ids;
+  }
+
+  public async makePushContext(id: number) {
+    const [resource] = await this.system.modules.resources.getResourcesByIds(id);
+    if (!resource) {
+      return undefined;
+    }
+
+    return new PushContext(this.system, resource);
+  }
+
+  public async findTelegramMessage(
+    publisherId: number,
+    subjectId: number,
+    episode: string
+  ): Promise<TelegramMessage | undefined> {
+    // 消息去重: publisherId + subjectId + 归一化的 episode key
+    const rows = await this.database
+      .select()
+      .from(telegramMessages)
+      .where(
+        and(
+          eq(telegramMessages.publisherId, publisherId),
+          eq(telegramMessages.subjectId, subjectId),
+          eq(telegramMessages.episode, episode)
+        )
+      )
+      .limit(1);
+
+    return rows[0];
+  }
+
+  public async createTelegramMessagePending(
+    payload: Pick<
+      NewTelegramMessage,
+      'resourceId' | 'publisherId' | 'fansubId' | 'subjectId' | 'episode'
+    >
+  ) {
+    // Pending 表示前置逻辑已经选择了这条资源，但 Telegram API 还没真正开始调用。
+    try {
+      const [message] = await this.database
+        .insert(telegramMessages)
+        .values({
+          resourceId: payload.resourceId,
+          publisherId: payload.publisherId,
+          fansubId: payload.fansubId,
+          subjectId: payload.subjectId,
+          episode: payload.episode,
+          status: TelegramMessageStatus.Pending,
+          updatedAt: new Date()
+        })
+        .returning();
+
+      return message;
+    } catch (error) {
+      if (isUniqueTelegramMessageConflict(error)) {
+        return undefined;
+      }
+
+      throw error;
+    }
+  }
+
+  public async markTelegramMessagePending(
+    id: number,
+    expectedResourceId: number,
+    payload: Pick<NewTelegramMessage, 'resourceId' | 'publisherId' | 'fansubId'>
+  ) {
+    // 已有 Failed/Sent 记录被新资源接管时，先落 Pending，等待 send/edit 队列串行执行。
+    const [message] = await this.database
+      .update(telegramMessages)
+      .set({
+        resourceId: payload.resourceId,
+        publisherId: payload.publisherId,
+        fansubId: payload.fansubId,
+        status: TelegramMessageStatus.Pending,
+        updatedAt: new Date()
+      })
+      .where(and(eq(telegramMessages.id, id), eq(telegramMessages.resourceId, expectedResourceId)))
+      .returning();
+
+    return message;
+  }
+
+  public async markTelegramMessageSending(id: number, expectedResourceId: number) {
+    // Sending 只在 Telegram API 调用前一刻写入，便于区分“排队等待”和“正在请求”。
+    const [message] = await this.database
+      .update(telegramMessages)
+      .set({
+        status: TelegramMessageStatus.Sending,
+        updatedAt: new Date()
+      })
+      .where(and(eq(telegramMessages.id, id), eq(telegramMessages.resourceId, expectedResourceId)))
+      .returning();
+
+    return message;
+  }
+
+  public async markTelegramMessageSent(
+    id: number,
+    expectedResourceId: number,
+    payload: Pick<
+      NewTelegramMessage,
+      'telegramChatId' | 'telegramMessageId' | 'sentAt' | 'editedAt'
+    >
+  ) {
+    const resp = await this.database
+      .update(telegramMessages)
+      .set({
+        ...payload,
+        status: TelegramMessageStatus.Sent,
+        updatedAt: new Date()
+      })
+      .where(and(eq(telegramMessages.id, id), eq(telegramMessages.resourceId, expectedResourceId)))
+      .returning({ id: telegramMessages.id });
+    return resp[0];
+  }
+
+  public async markTelegramMessageFailed(id: number, expectedResourceId: number) {
+    const resp = await this.database
+      .update(telegramMessages)
+      .set({
+        status: TelegramMessageStatus.Failed,
+        updatedAt: new Date()
+      })
+      .where(and(eq(telegramMessages.id, id), eq(telegramMessages.resourceId, expectedResourceId)))
+      .returning({ id: telegramMessages.id });
+    return resp[0];
+  }
+
+  public async sendResourceMessage(
+    telegramMessageId: number,
+    resourceId: number,
+    message: ReturnType<typeof buildResourceCardMessage>
+  ) {
+    const chatId = this.system.options.telegram?.chatId;
+    if (!chatId) throw new Error('telegram chat is not configured');
+
+    // Telegram 侧发送接口串行执行，避免并发请求触发机器人限流或打乱消息顺序。
+    return await this.queue.add(async () => {
+      const sending = await this.markTelegramMessageSending(telegramMessageId, resourceId);
+      if (!sending) {
+        throw new TelegramMessageLockLostError(telegramMessageId, resourceId);
+      }
+      return await this.sendPhoto(chatId, message.photo, message.text, message.options);
+    });
+  }
+
+  public async editResourceMessage(
+    telegramMessageId: number,
+    resourceId: number,
+    chatId: number,
+    messageId: number,
+    message: ReturnType<typeof buildResourceCardMessage>
+  ) {
+    // 编辑和发送共用同一个队列，保证同一频道内的写操作按本进程提交顺序执行。
+    return await this.queue.add(async () => {
+      const sending = await this.markTelegramMessageSending(telegramMessageId, resourceId);
+      if (!sending) {
+        throw new TelegramMessageLockLostError(telegramMessageId, resourceId);
+      }
+      return await this.editMessageCaption(chatId, messageId, message.text, message.options);
+    });
+  }
+
+  public async sendPhoto(
+    chatId: string | number,
     photo: string,
     caption: string,
     options: Parameters<Bot['api']['sendPhoto']>[2]
   ) {
-    const chatId = this.system.options.telegram?.chatId;
-
     if (!this.bot) throw new Error('telegram bot is not initialized');
-    if (!chatId) throw new Error('telegram chat is not configured');
 
     const sent = await this.bot.api.sendPhoto(chatId, photo, {
       ...options,
@@ -109,40 +357,59 @@ export class PushModule extends Module<System['modules']> {
     return sent;
   }
 
-  private async sendMessage(text: string, options: Parameters<Bot['api']['sendMessage']>[2]) {
-    const chatId = this.system.options.telegram?.chatId;
-
-    if (!this.bot) throw new Error('telegram bot is not initialized');
-    if (!chatId) throw new Error('telegram chat is not configured');
-
-    const sent = await this.bot.api.sendMessage(chatId, text, options);
-
-    return sent;
-  }
-
-  private async editMessageText(
+  public async editMessageCaption(
+    chatId: number,
     messageId: number,
-    text: string,
-    options: Parameters<Bot['api']['editMessageText']>[3]
+    caption: string,
+    options: Parameters<Bot['api']['editMessageCaption']>[2]
   ) {
-    const chatId = this.system.options.telegram?.chatId;
-
     if (!this.bot) throw new Error('telegram bot is not initialized');
-    if (!chatId) throw new Error('telegram chat is not configured');
 
-    const sent = await this.bot.api.editMessageText(chatId, messageId, text, options);
+    const sent = await this.bot.api.editMessageCaption(chatId, messageId, {
+      ...options,
+      caption
+    });
 
     return sent;
   }
 
-  private logTelegramNetworkError(error: unknown) {
-    if (error instanceof HttpError) {
-      this.logger.warn(error.message);
-      if (error.error) {
-        this.logger.warn(error.error);
-      }
-      return;
-    }
-    this.logger.warn(error);
+  public async deleteMessage(chatId: string | number, messageId: number) {
+    if (!this.bot) throw new Error('telegram bot is not initialized');
+
+    return await this.bot.api.deleteMessage(chatId, messageId);
   }
+
+  private isConfigured() {
+    return !!this.bot && !!this.system.options.telegram?.chatId;
+  }
+}
+
+function isUniqueTelegramMessageConflict(error: unknown) {
+  let current = error;
+  while (typeof current === 'object' && current !== null) {
+    const code = 'code' in current && typeof current.code === 'string' ? current.code : undefined;
+    const message =
+      'message' in current && typeof current.message === 'string'
+        ? current.message.toLowerCase()
+        : '';
+    const constraint =
+      'constraint_name' in current && typeof current.constraint_name === 'string'
+        ? current.constraint_name
+        : 'constraint' in current && typeof current.constraint === 'string'
+          ? current.constraint
+          : '';
+
+    if (
+      code === '23505' &&
+      (constraint === 'unique_telegram_messages_publisher_subject_episode' ||
+        message.includes('unique_telegram_messages_publisher_subject_episode') ||
+        message.includes('telegram_messages'))
+    ) {
+      return true;
+    }
+
+    current = 'cause' in current ? current.cause : undefined;
+  }
+
+  return false;
 }

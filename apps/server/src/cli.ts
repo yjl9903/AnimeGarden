@@ -55,7 +55,7 @@ async function initialize(options: SystemOptions) {
   }
 }
 
-// --- Server ---
+// MARK: Server
 
 app
   .command('start', 'Start Anime Garden server')
@@ -103,7 +103,8 @@ app
     await listening;
   });
 
-// --- Admin ---
+// MARK: Admin
+
 for (const provider of SupportProviders) {
   app
     .command(`admin fetch ${provider}`, `Invoke server fetching ${provider} resources`)
@@ -135,7 +136,60 @@ for (const provider of SupportProviders) {
     });
 }
 
-// --- Migration ---
+app
+  .command('telegram push', 'Manually push telegram channel messages')
+  .option('--resource <key>', 'Push specified resource, e.g. dmhy:123 or dmhy/123')
+  .option('--subject <id>', 'Push resource messages with subject id')
+  .action(async (options) => {
+    const sys = await initialize(options);
+    try {
+      await sys.initialize();
+
+      if (options.resource) {
+        const { provider, providerId } = parseTelegramResourceSpecifier(options.resource);
+        await sys.modules.push.pushResourceMessageByProviderId(provider, providerId);
+        return;
+
+        function parseTelegramResourceSpecifier(value: string) {
+          const match = /^([^:/]+)[:/](.+)$/.exec(value);
+          if (!match) {
+            throw new Error(
+              'Expected --resource format: provider:provider_id or provider/provider_id'
+            );
+          }
+
+          const provider = match[1];
+          const providerId = match[2];
+          if (!SupportProviders.includes(provider as any)) {
+            throw new Error(`Unsupported resource provider "${provider}"`);
+          }
+          if (!providerId) {
+            throw new Error('Resource provider_id is empty');
+          }
+
+          return {
+            provider: provider as (typeof SupportProviders)[number],
+            providerId
+          };
+        }
+      }
+
+      if (options.subject) {
+        const subjectId = Number(options.subject);
+        if (!Number.isInteger(subjectId) || subjectId <= 0) {
+          throw new Error('Expected --subject to be a positive integer bgm id');
+        }
+        await sys.modules.push.pushSubjectResourceMessages(subjectId);
+        return;
+      }
+
+      throw new Error('Expected --resource or --subject');
+    } finally {
+      await sys.close();
+    }
+  });
+
+// MARK: Migration
 
 app.command('migrate', 'Migrate Postgres database schema').action(async (options) => {
   const { migrateDrizzle } = await import('./connect/migrate');
@@ -261,7 +315,7 @@ app
     }
   });
 
-// --- utils
+// MARK: utils
 app
   .command('detail dmhy <url>', 'Fetch resource detail from dmhy')
   .option('--retry <count>', 'Request retry times', { cast: (v) => (v ? +v : 5) })
@@ -301,6 +355,8 @@ app
     console.log(resp);
     return resp;
   });
+
+// MARK: main
 
 async function main() {
   setGlobalDispatcher(new EnvHttpProxyAgent());
