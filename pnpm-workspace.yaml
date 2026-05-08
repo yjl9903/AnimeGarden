@@ -2,19 +2,23 @@ packages:
   - apps/*
   - packages/*
 
-onlyBuiltDependencies:
-  - '@scarf/scarf'
-  - '@tree-sitter-grammars/tree-sitter-yaml'
-  - better-sqlite3
-  - bufferutil
-  - core-js-pure
-  - esbuild
-  - fs-native-extensions
-  - node-datachannel
-  - sharp
-  - tree-sitter
-  - tree-sitter-json
-  - tree-sitter-yaml
-  - utf-8-validate
-  - utp-native
-  - workerd
+shellEmulator: true
+ignoreWorkspaceRootCheck: true
+shamefullyHoist: true
+
+allowBuilds:
+  '@scarf/scarf': true
+  '@tree-sitter-grammars/tree-sitter-yaml': true
+  better-sqlite3: true
+  bufferutil: true
+  core-js-pure: true
+  esbuild: true
+  fs-native-extensions: true
+  node-datachannel: true
+  sharp: true
+  tree-sitter: true
+  tree-sitter-json: true
+  tree-sitter-yaml: true
+  utf-8-validate: true
+  utp-native: true
+  workerd: true

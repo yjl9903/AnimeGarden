@@ -15,3 +15,8 @@
 - 新增设计、审计、运维说明时，优先放入对应的 `docs/<module>/` 目录。
 - 文档文件名使用小写短横线，例如 `telegram-push-flow.md`。
 - 移动或重命名文档时，同步更新本索引和子目录索引。
+
+## 工具链约定
+
+- 本仓库使用 Node.js 24+ 与 pnpm 11。根目录 `package.json` 的 `packageManager` 字段固定 pnpm 版本。
+- pnpm 的工作区和安装策略配置集中维护在根目录 `pnpm-workspace.yaml`。

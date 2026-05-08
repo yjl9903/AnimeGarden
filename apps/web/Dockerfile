@@ -42,7 +42,7 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential node-gyp pkg-config python-is-python3 git
 
 # Install node modules
-COPY --link package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json .npmrc .node-version ./
+COPY --link package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json .node-version ./
 COPY ./patches/ ./patches/
 COPY ./packages/anipar/package.json ./packages/anipar/
 COPY ./packages/client/package.json ./packages/client/
