@@ -1,7 +1,7 @@
-export * from './cache';
+export * from './cache.ts';
 
-export * from './database';
+export * from './database.ts';
 
-export * from './jieba';
+export * from './jieba.ts';
 
-export * from './timer';
+export * from './timer.ts';

@@ -1,5 +1,5 @@
-import { defineHandler } from '../utils/hono';
-import { safeEtag as etag } from '../utils/etag';
+import { defineHandler } from '../utils/hono.ts';
+import { safeEtag as etag } from '../utils/etag.ts';
 
 export const defineUsersRoutes = defineHandler((sys, app) =>
   app

@@ -1,3 +1,3 @@
-export * from './module';
+export * from './module.ts';
 
-export * from './scraper';
+export * from './scraper/index.ts';

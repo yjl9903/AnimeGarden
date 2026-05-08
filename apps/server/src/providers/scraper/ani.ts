@@ -2,9 +2,9 @@ import type { ProviderType, ScrapedResource, ScrapedResourceDetail } from '@anim
 
 import { fetchLastestANi, fetchANiDetail } from '@animegarden/scraper';
 
-import type { System } from '../../system';
+import type { System } from '../../system/index.ts';
 
-import { Provider } from './base';
+import { Provider } from './base.ts';
 
 export class ANiProvider extends Provider {
   public static readonly name: ProviderType = 'ani';

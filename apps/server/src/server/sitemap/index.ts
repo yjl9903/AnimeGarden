@@ -2,7 +2,7 @@ import type { Context, MiddlewareHandler } from 'hono';
 
 import { SitemapIndexStream, streamToPromise } from 'sitemap';
 
-export * from './sitemap';
+export * from './sitemap.ts';
 
 export interface SitemapIndexOptions {
   getUrls: (ctx: Context) => Promise<string[] | undefined>;

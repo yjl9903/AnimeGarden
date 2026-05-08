@@ -10,12 +10,15 @@ import {
   varchar
 } from 'drizzle-orm/pg-core';
 
-export const enum TelegramMessageStatus {
-  Pending = 0,
-  Sending = 1,
-  Sent = 2,
-  Failed = -1
-}
+export const TelegramMessageStatus = {
+  Pending: 0,
+  Sending: 1,
+  Sent: 2,
+  Failed: -1
+} as const;
+
+export type TelegramMessageStatus =
+  (typeof TelegramMessageStatus)[keyof typeof TelegramMessageStatus];
 
 export const telegramMessages = pgTable(
   'telegram_messages',

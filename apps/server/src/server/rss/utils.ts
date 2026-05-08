@@ -1,6 +1,6 @@
 import type { z } from 'zod';
 
-import type { RSSOptions } from './';
+import type { RSSOptions } from './index.ts';
 
 /** Normalize URL to its canonical form */
 export function createCanonicalURL(

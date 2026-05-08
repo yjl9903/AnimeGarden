@@ -2,8 +2,8 @@ import type { BasicSubject, FullSubject } from 'bgmd';
 
 import { normalizeTitle } from '@animegarden/client';
 
-import type { SubjectsModule } from './index';
-import type { NewSubject, Subject } from './schema';
+import type { SubjectsModule } from './index.ts';
+import type { NewSubject, Subject } from './schema.ts';
 
 /**
  * Update yuc.wiki calendar

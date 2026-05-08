@@ -73,7 +73,13 @@ export class PushContext {
 
     if (!subject || !parsed || !episode || !publisher || !fansub || !resource.subjectId) {
       this.logger.warn(
-        `Failed parsing "${resource.fansub?.name ?? resource.publisher.name}" "${resource.title}"`
+        `Failed parsing "${resource.fansub?.name ?? resource.publisher.name}" "${resource.title}" during preparing push context`,
+        subject?.id,
+        parsed?.title,
+        episode,
+        publisher?.name,
+        fansub?.name,
+        resource.subjectId
       );
       return undefined;
     }

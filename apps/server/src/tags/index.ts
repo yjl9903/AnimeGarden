@@ -1,6 +1,6 @@
-import type { System } from '../system/system';
+import type { System } from '../system/system.ts';
 
-import { Module } from '../system/module';
+import { Module } from '../system/module.ts';
 
 export class TagsModule extends Module<System['modules']> {
   public static name = 'tags';

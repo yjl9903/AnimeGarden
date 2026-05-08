@@ -1,5 +1,6 @@
-import { Bot, GrammyError } from 'grammy';
 import type { Message, MessageOriginChannel } from 'grammy/types';
+
+import { Bot, GrammyError } from 'grammy';
 
 import type { ProviderType } from '@animegarden/client';
 
@@ -169,7 +170,9 @@ export class PushModule extends Module<System['modules']> {
     const validated = await context.prepare();
 
     if (!validated) {
-      this.logger.info(`Skip pushing message of ${resource.provider}:${resource.providerId}`);
+      this.logger.warn(
+        `Skip pushing invalid message of ${resource.provider}:${resource.providerId}`
+      );
       return undefined;
     }
 

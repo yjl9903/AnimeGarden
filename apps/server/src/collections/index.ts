@@ -1,14 +1,14 @@
 import { eq } from 'drizzle-orm';
 
-import type { System } from '../system';
+import type { System } from '../system/index.ts';
 
 import { type Collection, hashCollection } from '@animegarden/client';
 
-import { memo } from '../utils/cache';
-import { retryDatabaseFn } from '../utils/database';
-import { Module } from '../system/module';
-import { collections } from '../schema/collections';
-import { MAX_COLLECTION_COUNT } from '../constants';
+import { memo } from '../utils/cache.ts';
+import { retryDatabaseFn } from '../utils/database.ts';
+import { Module } from '../system/module.ts';
+import { collections } from '../schema/collections.ts';
+import { MAX_COLLECTION_COUNT } from '../constants.ts';
 
 export class CollectionsModule extends Module<System['modules']> {
   public static name = 'collections';

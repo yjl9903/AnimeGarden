@@ -1,8 +1,8 @@
 import { relations } from 'drizzle-orm';
 
-import { subjects } from './subjects';
-import { teams, users } from './users';
-import { resources } from './resources';
+import { subjects } from './subjects.ts';
+import { teams, users } from './users.ts';
+import { resources } from './resources.ts';
 
 export const resourcesRelations = relations(resources, ({ one }) => ({
   publisher: one(users, {

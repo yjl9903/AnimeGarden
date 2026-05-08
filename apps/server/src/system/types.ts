@@ -1,5 +1,6 @@
 import type { ProviderType } from '@animegarden/client';
-import type { RpcEventMap } from './rpc';
+
+import type { RpcEventMap } from './rpc.ts';
 
 export interface Notification {
   resources: {

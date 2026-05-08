@@ -1,28 +1,28 @@
-import { connectRedis } from '../connect/redis';
+import { connectRedis } from '../connect/redis.ts';
 import {
   connectDatabase,
   getDatabaseConnectOptions,
   getResourcesSlowDatabaseConnectOptions
-} from '../connect/database';
+} from '../connect/database.ts';
 
-import { TagsModule } from '../tags';
-import { PushModule } from '../push';
-import { SubjectsModule } from '../subjects';
-import { ResourcesModule } from '../resources';
-import { ProvidersModule } from '../providers';
-import { CollectionsModule } from '../collections';
-import { UsersModule, TeamsModule } from '../users';
+import { TagsModule } from '../tags/index.ts';
+import { PushModule } from '../push/index.ts';
+import { SubjectsModule } from '../subjects/index.ts';
+import { ResourcesModule } from '../resources/index.ts';
+import { ProvidersModule } from '../providers/index.ts';
+import { CollectionsModule } from '../collections/index.ts';
+import { UsersModule, TeamsModule } from '../users/index.ts';
 
-import { setSecret } from './secret';
-import { SystemError } from '../error';
-import { type SystemOptions, System as ISystem } from './system';
+import { setSecret } from './secret.ts';
+import { SystemError } from '../error.ts';
+import { type SystemOptions, System as ISystem } from './system.ts';
 
-export * from './types';
+export * from './types.ts';
 
-export * from './module';
-export * from '../error';
+export * from './module.ts';
+export * from '../error.ts';
 
-export { type SystemOptions } from './system';
+export { type SystemOptions } from './system.ts';
 
 export type System = ISystem<
   {
@@ -35,7 +35,7 @@ export type System = ISystem<
     collections: CollectionsModule;
     push: PushModule;
   },
-  import('./types').ResourcesRpcEventMap
+  import('./types.ts').ResourcesRpcEventMap
 >;
 
 export async function makeSystem(options: SystemOptions) {

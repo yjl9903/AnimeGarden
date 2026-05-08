@@ -1,8 +1,8 @@
 import { normalizeTitle } from '@animegarden/shared';
 
-import type { System } from '../system';
+import type { System } from '../system/index.ts';
 
-import type { DatabaseFilterOptions, DatabaseResource } from './types';
+import type { DatabaseFilterOptions, DatabaseResource } from './types.ts';
 
 export const BANGUMI_BANNED_FANSUBS = [
   'Kirara Fantasia', // RAWs 搬运组, 刷屏

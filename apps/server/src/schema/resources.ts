@@ -15,9 +15,9 @@ import {
   varchar
 } from 'drizzle-orm/pg-core';
 
-import { tsVector } from './drizzle';
+import { tsVector } from './drizzle/index.ts';
 
-import { providerEnum } from './providers';
+import { providerEnum } from './providers.ts';
 
 export const resources = pgTable(
   'resources',

@@ -2,8 +2,8 @@ import type { Context } from 'hono';
 
 import { parseCollection } from '@animegarden/client';
 
-import { safeEtag as etag } from '../utils/etag';
-import { defineHandler } from '../utils/hono';
+import { safeEtag as etag } from '../utils/etag.ts';
+import { defineHandler } from '../utils/hono.ts';
 
 export const defineCollectionsRoutes = defineHandler((sys, app) => {
   async function createCollection(c: Context) {

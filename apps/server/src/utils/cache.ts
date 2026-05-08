@@ -33,11 +33,13 @@ export interface MemoFunc<F extends AsyncFn> {
   stopGC: () => void;
 }
 
-enum Status {
-  Ok,
-  Error,
-  Waiting
-}
+const Status = {
+  Ok: 0,
+  Error: 1,
+  Waiting: 2
+} as const;
+
+type Status = (typeof Status)[keyof typeof Status];
 
 interface CacheItem {
   status: Status;

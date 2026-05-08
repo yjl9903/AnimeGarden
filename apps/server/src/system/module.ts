@@ -1,8 +1,8 @@
 import { type ConsolaInstance, createConsola } from 'consola';
 
-import type { System } from './system';
-import type { Notification } from './types';
-import type { RpcEventMap } from './rpc';
+import type { System } from './system.ts';
+import type { Notification } from './types.ts';
+import type { RpcEventMap } from './rpc.ts';
 
 export abstract class Module<M extends Record<string, Module> = {}, E extends RpcEventMap = any> {
   public readonly system: System<M, E>;

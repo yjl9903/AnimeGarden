@@ -7,12 +7,14 @@ import { setGlobalDispatcher, EnvHttpProxyAgent } from 'undici';
 
 import { SupportProviders, fetchAPI } from '@animegarden/client';
 
-import { version } from '../package.json';
+import packageJson from '../package.json' with { type: 'json' };
 
-import { makeServer, makeExecutor } from './server';
-import { type SystemOptions, makeSystem } from './system';
+import { makeServer, makeExecutor } from './server/index.ts';
+import { type SystemOptions, makeSystem } from './system/index.ts';
 
-export const app = breadc('animegarden-server', { version })
+const { description, version } = packageJson;
+
+export const app = breadc('animegarden-manager', { description, version })
   .option('--secret <string>', 'Admin auth secret')
   .option('--postgres-uri <string>', 'Postgres connection URI')
   .option('--redis-uri <string>', 'Redis connection URI');
@@ -202,7 +204,7 @@ app
 // MARK: Migration
 
 app.command('migrate', 'Migrate Postgres database schema').action(async (options) => {
-  const { migrateDrizzle } = await import('./connect/migrate');
+  const { migrateDrizzle } = await import('./connect/migrate.ts');
   const sys = await initialize(options);
   await migrateDrizzle(sys);
   await sys.close();
@@ -313,7 +315,7 @@ app
 
     try {
       await sys.initialize();
-      const { runImportResources } = await import('./resources/import');
+      const { runImportResources } = await import('./resources/import.ts');
       await runImportResources(sys, {
         dir,
         start: options.start,

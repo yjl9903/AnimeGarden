@@ -1,15 +1,15 @@
-import { providers } from './providers';
-import { resources } from './resources';
-import { details } from './details';
-import { subjects } from './subjects';
-import { tags } from './tags';
-import { users, teams } from './users';
-import { collections } from './collections';
-import { telegramMessages } from './telegram';
+import { providers } from './providers.ts';
+import { resources } from './resources.ts';
+import { details } from './details.ts';
+import { subjects } from './subjects.ts';
+import { tags } from './tags.ts';
+import { users, teams } from './users.ts';
+import { collections } from './collections.ts';
+import { telegramMessages } from './telegram.ts';
 
-export type { MagnetInfo, FileInfo } from './details';
+export type { MagnetInfo, FileInfo } from './details.ts';
 
-export * from './drizzle';
+export * from './drizzle/index.ts';
 
 export type Provider = typeof providers.$inferSelect;
 

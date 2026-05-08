@@ -1,6 +1,6 @@
 import type { ProviderType, ScrapedResource, ScrapedResourceDetail } from '@animegarden/client';
 
-import type { System } from '../../system';
+import type { System } from '../../system/index.ts';
 
 export abstract class Provider {
   public static readonly name: string;

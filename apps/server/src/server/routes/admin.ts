@@ -2,7 +2,7 @@ import { bearerAuth } from 'hono/bearer-auth';
 
 import { SupportProviders } from '@animegarden/client';
 
-import { defineHandler } from '../utils/hono';
+import { defineHandler } from '../utils/hono.ts';
 
 export const defineAdminRoutes = defineHandler((sys, app) => {
   const auth = bearerAuth({ token: sys.secret });

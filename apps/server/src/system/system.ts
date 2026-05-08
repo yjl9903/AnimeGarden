@@ -1,16 +1,16 @@
 import { type Redis as RedisStorage } from 'ioredis';
 import { type ConsolaInstance, createConsola } from 'consola';
 
-import type { Database, DatabaseConnection, SystemProfile } from '../connect/database';
+import type { Database, DatabaseConnection, SystemProfile } from '../connect/database.ts';
 
-import { NOTIFY_CHANNEL, RPC_INVOKE_CHANNEL } from '../constants';
-import { makeChannelMessageBus, subscribeRedisChannel } from '../connect/redis';
+import { NOTIFY_CHANNEL, RPC_INVOKE_CHANNEL } from '../constants.ts';
+import { makeChannelMessageBus, subscribeRedisChannel } from '../connect/redis.ts';
 
-import type { Notification } from './types';
+import type { Notification } from './types.ts';
 
-import { Module } from './module';
-import { getSecret } from './secret';
-import { type RpcEventMap, type RpcPayload, type RpcSender, type RpcBus, makeRpcBus } from './rpc';
+import { Module } from './module.ts';
+import { getSecret } from './secret.ts';
+import { type RpcEventMap, type RpcPayload, type RpcSender, type RpcBus, makeRpcBus } from './rpc.ts';
 
 export type { Database, DatabaseConnection, RedisStorage };
 

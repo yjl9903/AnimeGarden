@@ -4,8 +4,9 @@ import { fileURLToPath } from 'node:url';
 
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 
-import { System } from '../system';
-import { SystemError } from '../error';
+import type { System } from '../system/index.ts';
+
+import { SystemError } from '../error.ts';
 
 export async function migrateDrizzle(sys: System) {
   const db = sys.database;

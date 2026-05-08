@@ -11,26 +11,30 @@ import { Cron } from 'croner';
 
 import { SupportProviders } from '@animegarden/client';
 
-import { System } from '../system';
-import { registerResourcesJobRpc } from '../resources/jobs';
+import type { System } from '../system/index.ts';
 
-import type { AppEnv } from './utils/hono';
+import { registerResourcesJobRpc } from '../resources/jobs.ts';
 
-import { McpServer } from './mcp';
-import { defineUsersRoutes } from './routes/users';
-import { defineSubjectsRoutes } from './routes/subjects';
-import { defineResourcesRoutes } from './routes/resources';
-import { defineCollectionsRoutes } from './routes/collections';
-import { defineFeedRoutes } from './routes/feed';
-import { defineAdminRoutes } from './routes/admin';
-import { defineSitemapsRoutes } from './routes/sitemaps';
-import { getResourcesQueryErrorResponse, getResourcesQueryErrorXml } from './utils/resources-query';
+import type { AppEnv } from './utils/hono.ts';
 
-export * from './rss';
+import { McpServer } from './mcp/index.ts';
+import { defineUsersRoutes } from './routes/users.ts';
+import { defineSubjectsRoutes } from './routes/subjects.ts';
+import { defineResourcesRoutes } from './routes/resources.ts';
+import { defineCollectionsRoutes } from './routes/collections.ts';
+import { defineFeedRoutes } from './routes/feed.ts';
+import { defineAdminRoutes } from './routes/admin.ts';
+import { defineSitemapsRoutes } from './routes/sitemaps.ts';
+import {
+  getResourcesQueryErrorResponse,
+  getResourcesQueryErrorXml
+} from './utils/resources-query.ts';
 
-export * from './sitemap';
+export * from './rss/index.ts';
 
-export * from './utils/etag';
+export * from './sitemap/index.ts';
+
+export * from './utils/etag.ts';
 
 export interface ServerOptions {}
 

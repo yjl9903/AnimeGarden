@@ -28,24 +28,24 @@ import {
 } from '@animegarden/client';
 import { removePunctuations } from '@animegarden/shared';
 
-import type { Database } from '../connect/database';
-import type { System, Notification } from '../system';
+import type { Database } from '../connect/database.ts';
+import type { System, Notification } from '../system/index.ts';
 
-import { resources } from '../schema/resources';
-import { memo, jieba, nextTick } from '../utils';
-import { isDatabaseStatementTimeoutError, retryDatabaseFn } from '../utils/database';
+import { resources } from '../schema/resources.ts';
+import { memo, jieba, nextTick } from '../utils/index.ts';
+import { isDatabaseStatementTimeoutError, retryDatabaseFn } from '../utils/database.ts';
 import {
   MAX_RESOURCES_TASK_COUNT,
   RESOURCES_TASK_PREFETCH_COUNT,
   RESOURCES_TASK_PREFETCH_MAX_COUNT
-} from '../constants';
-import { ResourcesSlowQueryBusyError, ResourcesSlowQueryTimeoutError } from '../error';
+} from '../constants.ts';
+import { ResourcesSlowQueryBusyError, ResourcesSlowQueryTimeoutError } from '../error.ts';
 
-import type { DatabaseResource, RedisQueryResource, DatabaseFilterOptions } from './types';
+import type { DatabaseResource, RedisQueryResource, DatabaseFilterOptions } from './types.ts';
 
-import { transformDatabaseUser } from './transform';
-import { TitlePool, MagnetPool, TrackerPool } from './pool';
-import { BANGUMI_BANNED_FANSUBS, BANGUMI_BANNED_PUBLISHERS, buildFilterConds } from './filter';
+import { transformDatabaseUser } from './transform.ts';
+import { TitlePool, MagnetPool, TrackerPool } from './pool.ts';
+import { BANGUMI_BANNED_FANSUBS, BANGUMI_BANNED_PUBLISHERS, buildFilterConds } from './filter.ts';
 
 export type FoundResource = Omit<
   Jsonify<Resource<{ tracker: true; metadata: true }>>,

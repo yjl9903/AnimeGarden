@@ -2,9 +2,9 @@ import type { ProviderType, ScrapedResource, ScrapedResourceDetail } from '@anim
 
 import { fetchMikanDetail, fetchMikanPage } from '@animegarden/scraper';
 
-import type { System } from '../../system';
+import type { System } from '../../system/index.ts';
 
-import { Provider, fetchLatestPages, fetchResourcePages } from './base';
+import { Provider, fetchLatestPages, fetchResourcePages } from './base.ts';
 
 export class MikanProvider extends Provider {
   public static readonly name: ProviderType = 'mikan';

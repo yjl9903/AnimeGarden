@@ -1,13 +1,13 @@
 import { and, or, eq, gte, ilike, isNull, isNotNull, inArray } from 'drizzle-orm';
 
-import type { System } from '../system';
+import type { System } from '../system/index.ts';
 
-import { Module } from '../system/module';
+import { Module } from '../system/module.ts';
 
-import type { IndexOptions, InsertSubjectOptions } from './types';
+import type { IndexOptions, InsertSubjectOptions } from './types.ts';
 
-import { importFromBgmd, updateCalendar } from './bgmd';
-import { type NewSubject, type Subject, subjects, resources } from './schema';
+import { importFromBgmd, updateCalendar } from './bgmd.ts';
+import { type NewSubject, type Subject, subjects, resources } from './schema.ts';
 
 type IndexedResource = {
   id: number;

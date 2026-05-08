@@ -1,15 +1,15 @@
 import { eq } from 'drizzle-orm';
 import { memoAsync } from 'memofunc';
 
-import type { System } from '../system/system';
-import type { User, Team } from '../schema';
+import type { System } from '../system/system.ts';
+import type { User, Team } from '../schema/index.ts';
 
-import { Module } from '../system/module';
-import { users as userSchema, teams as teamSchema } from '../schema/users';
+import { Module } from '../system/module.ts';
+import { users as userSchema, teams as teamSchema } from '../schema/users.ts';
 
-import type { UserInfo, TeamInfo } from './types';
+import type { UserInfo, TeamInfo } from './types.ts';
 
-export * from './types';
+export * from './types.ts';
 
 export class UsersModule extends Module<System['modules']> {
   public static name = 'users';

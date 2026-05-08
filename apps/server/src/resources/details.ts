@@ -10,19 +10,19 @@ import {
 } from '@animegarden/client';
 import { splitOnce } from '@animegarden/shared';
 
-import type { System } from '../system';
-import type { Detail } from '../schema';
+import type { System } from '../system/index.ts';
+import type { Detail } from '../schema/index.ts';
 
-import { details } from '../schema/details';
-import { resources } from '../schema/resources';
-import { ScraperProviders } from '../providers';
-import { nextTick } from '../utils/timer';
-import { retryDatabaseFn } from '../utils/database';
-import { DETAIL_EXPIRE } from '../constants';
+import { details } from '../schema/details.ts';
+import { resources } from '../schema/resources.ts';
+import { ScraperProviders } from '../providers/index.ts';
+import { nextTick } from '../utils/timer.ts';
+import { retryDatabaseFn } from '../utils/database.ts';
+import { DETAIL_EXPIRE } from '../constants.ts';
 
-import type { DatabaseResource } from './types';
+import type { DatabaseResource } from './types.ts';
 
-import { RESOURCE_SELECTOR } from './query';
+import { RESOURCE_SELECTOR } from './query.ts';
 
 type RedisCache = {
   resource: DatabaseResource;

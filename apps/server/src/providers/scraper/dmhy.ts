@@ -2,9 +2,9 @@ import type { ProviderType, ScrapedResource, ScrapedResourceDetail } from '@anim
 
 import { fetchDmhyPage, fetchDmhyDetail } from '@animegarden/scraper';
 
-import type { System } from '../../system';
+import type { System } from '../../system/index.ts';
 
-import { Provider, fetchLatestPages, fetchResourcePages } from './base';
+import { Provider, fetchLatestPages, fetchResourcePages } from './base.ts';
 
 export class DmhyProvider extends Provider {
   public static readonly name: ProviderType = 'dmhy';

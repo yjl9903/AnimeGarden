@@ -3,13 +3,13 @@ import { and, desc, eq, inArray, lt, gt } from 'drizzle-orm';
 import { type ProviderType, SupportProviders } from '@animegarden/client';
 import { normalizeBtihToBase32, normalizeBtihToHex } from '@animegarden/shared';
 
-import type { NotifiedResource } from '../system/types';
-import type { System, Notification } from '../system';
-import type { NewResource as NewDbResource } from '../schema';
+import type { NotifiedResource } from '../system/types.ts';
+import type { System, Notification } from '../system/index.ts';
+import type { NewResource as NewDbResource } from '../schema/index.ts';
 
-import { Module } from '../system/module';
-import { resources as resourceSchema } from '../schema/resources';
-import { retryDatabaseFn } from '../utils/database';
+import { Module } from '../system/module.ts';
+import { resources as resourceSchema } from '../schema/resources.ts';
+import { retryDatabaseFn } from '../utils/database.ts';
 
 import type {
   NewResource,
@@ -17,13 +17,14 @@ import type {
   SyncDeletedResourcesResult as MarkDeletedResourcesResult,
   UpsertResourcesOptions,
   UpsertResourcesResult
-} from './types';
+} from './types.ts';
 
-import { FoundResource, QueryManager, RESOURCE_SELECTOR } from './query';
-import { DetailsManager } from './details';
-import { buildTitleSearchSql, transformNewResources } from './transform';
+import type { FoundResource } from './query.ts';
+import { QueryManager, RESOURCE_SELECTOR } from './query.ts';
+import { DetailsManager } from './details.ts';
+import { buildTitleSearchSql, transformNewResources } from './transform.ts';
 
-export * from './types';
+export * from './types.ts';
 
 const NOTIFIED_RESOURCE_SELECTOR = {
   id: resourceSchema.id,

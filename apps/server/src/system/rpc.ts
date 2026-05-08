@@ -1,6 +1,6 @@
 import { createConsola } from 'consola';
 
-import { RPC_REPLY_CHANNEL } from '../constants';
+import { RPC_REPLY_CHANNEL } from '../constants.ts';
 
 const logger = createConsola().withTag('rpc');
 

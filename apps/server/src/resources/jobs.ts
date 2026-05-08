@@ -1,17 +1,17 @@
 import { NetworkError } from '@animegarden/scraper';
 import type { ProviderType, ScrapedResource } from '@animegarden/client';
 
-import type { System } from '../system';
+import type { System } from '../system/index.ts';
 import type {
   Notification,
   ResourcesAdminAck,
   ResourcesFetchRpcPayload,
   ResourcesSyncRpcPayload
-} from '../system/types';
+} from '../system/types.ts';
 
-import type { NewResource } from './types';
+import type { NewResource } from './types.ts';
 
-import { ScraperProviders } from '../providers';
+import { ScraperProviders } from '../providers/index.ts';
 
 function toNewResource(resource: ScrapedResource, fetchedAt?: Date): NewResource {
   return {
@@ -163,7 +163,11 @@ export async function runSyncJob(
 class ResourcesJobCoordinator {
   private readonly running = new Map<ProviderType, 'fetch' | 'sync'>();
 
-  public constructor(private readonly system: System) {}
+  private readonly system: System;
+
+  public constructor(system: System) {
+    this.system = system;
+  }
 
   public queueFetch(provider: ProviderType): ResourcesAdminAck {
     return this.queue(provider, 'fetch', () => runFetchJob(this.system, provider));

@@ -4,10 +4,10 @@ import { and, eq, isNull } from 'drizzle-orm';
 
 import type { ProviderType, ScrapedResource } from '@animegarden/client';
 
-import type { System } from '../system';
-import { resources as resourceSchema } from '../schema/resources';
+import type { System } from '../system/index.ts';
+import { resources as resourceSchema } from '../schema/resources.ts';
 
-import type { NewResource } from './types';
+import type { NewResource } from './types.ts';
 
 const DUPLICATE_REPAIR_BATCH_SIZE = 1000;
 

@@ -1,8 +1,8 @@
-import type { System } from '../../system';
+import type { System } from '../../system/index.ts';
 
-import { memo } from '../../utils';
+import { memo } from '../../utils/index.ts';
 
-import { defineHandler } from '../utils/hono';
+import { defineHandler } from '../utils/hono.ts';
 
 export const defineSitemapsRoutes = defineHandler((sys, app) => {
   const fetchMonth = memo(

@@ -8,25 +8,27 @@ import {
 
 import { SupportProviders, parseURLSearch } from '@animegarden/client';
 
-import { version } from '../../../package.json';
+import packageJson from '../../../package.json' with { type: 'json' };
 
-import type { System } from '../../system';
+import type { System } from '../../system/index.ts';
 
-import { ScraperProviders } from '../../providers';
+import { ScraperProviders } from '../../providers/index.ts';
 
 import {
   safeJsonStringify,
   isSupportedProvider,
   decodeURIComponentSafe,
   buildResourceUri
-} from './utils';
-import { searchResourcesInputSchema } from './schema';
-import { getMcpClientInfo } from './log';
-import { Context } from 'hono';
+} from './utils.ts';
+import { searchResourcesInputSchema } from './schema.ts';
+import { getMcpClientInfo } from './log.ts';
+import type { Context } from 'hono';
 
 const MCP_RESOURCE_URI_TEMPLATE = 'animegarden://resources/{provider}/{providerId}';
 
 const MCP_PROVIDER_LIST = `[${SupportProviders.join(', ')}]`;
+
+const { version } = packageJson;
 
 const MCP_SERVER_DESCRIPTION = [
   'Anime Garden MCP for anime torrent discovery.',

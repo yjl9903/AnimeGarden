@@ -5,8 +5,8 @@
 import { z } from 'zod';
 import { XMLBuilder, XMLParser } from 'fast-xml-parser';
 
-import { rssSchema } from './schema';
-import { createCanonicalURL, errorMap, isValidURL } from './utils';
+import { rssSchema } from './schema.ts';
+import { createCanonicalURL, errorMap, isValidURL } from './utils.ts';
 
 export { rssSchema };
 

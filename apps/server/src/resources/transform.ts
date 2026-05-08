@@ -3,13 +3,13 @@ import { sql } from 'drizzle-orm';
 import { parse } from 'anipar';
 import { SupportProviders, normalizeTitle } from '@animegarden/client';
 
-import type { System } from '../system';
-import type { NewResource as NewDbResource, Team, User } from '../schema';
+import type { System } from '../system/index.ts';
+import type { NewResource as NewDbResource, Team, User } from '../schema/index.ts';
 
-import { jieba } from '../utils';
-import { anonymous } from '../constants';
+import { jieba } from '../utils/index.ts';
+import { anonymous } from '../constants.ts';
 
-import type { InsertResourcesOptions, NewResource } from './types';
+import type { InsertResourcesOptions, NewResource } from './types.ts';
 
 export function buildTitleSearchSql(resource: NewDbResource) {
   const search1 = resource.titleSearch[0] ? resource.titleSearch[0].join(' ') : undefined;

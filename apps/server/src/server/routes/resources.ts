@@ -2,14 +2,14 @@ import type { Context } from 'hono';
 
 import { type ProviderType, SupportProviders, parseURLSearch } from '@animegarden/client';
 
-import type { System } from '../../system';
+import type { System } from '../../system/index.ts';
 
-import { memo } from '../../utils';
-import { type Provider, ScraperProviders } from '../../providers';
+import { memo } from '../../utils/index.ts';
+import { type Provider, ScraperProviders } from '../../providers/index.ts';
 
-import { defineHandler } from '../utils/hono';
-import { MAX_DETAIL_CACHE_COUNT } from '../constants';
-import { safeEtag as etag } from '../utils/etag';
+import { defineHandler } from '../utils/hono.ts';
+import { MAX_DETAIL_CACHE_COUNT } from '../constants.ts';
+import { safeEtag as etag } from '../utils/etag.ts';
 
 export const defineResourcesRoutes = defineHandler((sys, app) => {
   async function listResources(ctx: Context, sys: System, provider?: ProviderType) {

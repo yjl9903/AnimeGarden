@@ -2,11 +2,11 @@ import { eq } from 'drizzle-orm';
 
 import type { ProviderType } from '@animegarden/client';
 
-import type { System } from '../system';
+import type { System } from '../system/index.ts';
 
-import { Module } from '../system/module';
-import { providers } from '../schema/providers';
-import { retryDatabaseFn } from '../utils/database';
+import { Module } from '../system/module.ts';
+import { providers } from '../schema/providers.ts';
+import { retryDatabaseFn } from '../utils/database.ts';
 
 export class ProvidersModule extends Module<System['modules']> {
   public static name = 'providers';

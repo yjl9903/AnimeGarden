@@ -1,19 +1,19 @@
 import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 
-import { providers } from '../schema/providers';
-import { users, teams } from '../schema/users';
-import { tags } from '../schema/tags';
-import { subjects } from '../schema/subjects';
-import { resources } from '../schema/resources';
-import { details } from '../schema/details';
-import { telegramMessages } from '../schema/telegram';
+import { providers } from '../schema/providers.ts';
+import { users, teams } from '../schema/users.ts';
+import { tags } from '../schema/tags.ts';
+import { subjects } from '../schema/subjects.ts';
+import { resources } from '../schema/resources.ts';
+import { details } from '../schema/details.ts';
+import { telegramMessages } from '../schema/telegram.ts';
 import {
   resourcesRelations,
   userRelations,
   teamRelations,
   subjectRelations
-} from '../schema/relations';
+} from '../schema/relations.ts';
 
 export interface ConnectDatabaseOptions extends postgres.Options<{}> {}
 

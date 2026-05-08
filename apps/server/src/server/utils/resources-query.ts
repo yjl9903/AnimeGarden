@@ -1,4 +1,4 @@
-import { ResourcesSlowQueryBusyError, ResourcesSlowQueryTimeoutError } from '../../error';
+import { ResourcesSlowQueryBusyError, ResourcesSlowQueryTimeoutError } from '../../error.ts';
 
 export interface ResourcesQueryErrorResponse {
   status: 503 | 504;

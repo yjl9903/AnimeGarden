@@ -1,6 +1,6 @@
 import type { Hono } from 'hono';
 
-import type { System } from '../../system';
+import type { System } from '../../system/index.ts';
 
 export type AppVariables = {
   requestId: string;

@@ -1,7 +1,7 @@
 import type { ParseResult } from 'anipar';
 import type { ResolvedFilterOptions } from '@animegarden/client';
 
-import type { NotifiedResource } from '../system/types';
+import type { NotifiedResource } from '../system/types.ts';
 
 export interface NewParty {
   providerId?: string;
