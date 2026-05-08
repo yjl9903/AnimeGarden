@@ -30,10 +30,6 @@ ENV CI=true NODE_ENV="production" HOST=${HOST} PORT=${PORT} \
 # Node.js app lives here
 WORKDIR /app
 
-# Enable corepack
-RUN corepack enable pnpm
-
-
 # Throw-away build stage to reduce size of final image
 FROM base AS build
 
@@ -51,6 +47,9 @@ COPY ./packages/shared/package.json ./packages/shared/
 COPY ./apps/server/package.json ./apps/server/
 COPY ./apps/web/package.json ./apps/web/
 COPY ./apps/worker/package.json ./apps/worker/
+
+# Install the package manager version declared by the workspace root.
+RUN npm install -g $(node -p "require('./package.json').packageManager")
 
 RUN pnpm install --frozen-lockfile --prod=false
 

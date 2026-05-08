@@ -7,9 +7,6 @@ FROM node:${NODE_VERSION}-slim AS base
 
 LABEL fly_launch_runtime="Node.js"
 
-# Declare args
-ARG PNPM_VERSION=10.33.2
-
 ARG APP_HOST=animes.garden
 ARG FEED_HOST=api.animes.garden
 
@@ -23,10 +20,6 @@ ENV CI=true NODE_ENV="production" \
 
 # Node.js app lives here
 WORKDIR /app    
-
-# Enable corepack
-RUN corepack enable pnpm
-
 
 # Throw-away build stage to reduce size of final image
 FROM base AS build
@@ -45,6 +38,9 @@ COPY ./packages/shared/package.json ./packages/shared/
 COPY ./apps/server/package.json ./apps/server/
 COPY ./apps/web/package.json ./apps/web/
 COPY ./apps/worker/package.json ./apps/worker/
+
+# Install the package manager version declared by the workspace root.
+RUN npm install -g $(node -p "require('./package.json').packageManager")
 
 RUN pnpm install --frozen-lockfile --prod=false
 
