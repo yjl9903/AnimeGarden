@@ -104,7 +104,7 @@ export async function fetchTimestamp(): Promise<{ timestamp: Date | undefined }>
       };
     }
   } catch (error) {
-    console.error('[ERROR]', 'fetchTimestamp', error);
+    console.error('fetchTimestamp', error);
   }
 
   return {
