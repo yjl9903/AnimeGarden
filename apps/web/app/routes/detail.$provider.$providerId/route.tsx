@@ -24,7 +24,7 @@ import './detail.css';
 
 import { FilesCard } from './FileTree';
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   try {
     const { provider, providerId } = params;
     if (provider && providerId && SupportProviders.includes(provider)) {
@@ -43,7 +43,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       }
     }
   } catch (error) {
-    console.error('[ERROR]', error);
+    console.error('[ERROR]', request.url, error);
   }
 
   return redirect('/');

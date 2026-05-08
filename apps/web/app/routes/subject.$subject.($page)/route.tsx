@@ -40,7 +40,7 @@ import { Error } from '../resources.($page)/Error';
 import { SubjectCard } from './subject';
 import { groupResourcesByFansub } from './utils';
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   // Redirect to the main page
   if (params.page !== undefined) {
     return redirect(`/subject/${params.subject}`);
@@ -58,7 +58,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
   });
 
   if (error) {
-    console.error('[ERROR]', error);
+    console.error('[ERROR]', request.url, error);
   }
 
   return data(

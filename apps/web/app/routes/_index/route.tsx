@@ -17,7 +17,7 @@ import {
 
 import { Error } from '../resources.($page)/Error';
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   try {
     const { ok, resources, timestamp, error } = await fetchResources({
       page: 1,
@@ -27,7 +27,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
     });
 
     if (error) {
-      console.error('[ERROR]', error);
+      console.error('[ERROR]', request.url, error);
     }
 
     return data(
@@ -40,7 +40,7 @@ export const loader = async ({ params }: LoaderFunctionArgs) => {
       { status: ok ? 200 : 500 }
     );
   } catch (error) {
-    console.error('[ERROR]', error);
+    console.error('[ERROR]', request.url, error);
 
     return data(
       {
