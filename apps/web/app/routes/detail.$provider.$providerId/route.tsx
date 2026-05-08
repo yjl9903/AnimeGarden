@@ -43,7 +43,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
       }
     }
   } catch (error) {
-    console.error('[ERROR]', request.url, error);
+    console.error(request.url, error);
   }
 
   return redirect('/');

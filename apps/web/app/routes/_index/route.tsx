@@ -27,7 +27,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     });
 
     if (error) {
-      console.error('[ERROR]', request.url, error);
+      console.error(request.url, error);
     }
 
     return data(
@@ -40,7 +40,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       { status: ok ? 200 : 500 }
     );
   } catch (error) {
-    console.error('[ERROR]', request.url, error);
+    console.error(request.url, error);
 
     return data(
       {

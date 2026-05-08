@@ -58,7 +58,7 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
   });
 
   if (error) {
-    console.error('[ERROR]', request.url, error);
+    console.error(request.url, error);
   }
 
   return data(
