@@ -184,7 +184,7 @@ export type FetchOptions = {
     /**
      * Sleep 100ms by default
      */
-    timeout?: () => Promise<void> | void;
+    timeout?: (signal?: AbortSignal) => Promise<void> | void;
   };
 };
 

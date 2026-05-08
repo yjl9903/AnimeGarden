@@ -30,8 +30,29 @@ export async function retryFn<T>(fn: () => Promise<T>, options: RetryOptions): P
   throw e;
 }
 
-export function sleep(timeout?: number) {
-  return new Promise<void>((res) => {
-    setTimeout(() => res(), timeout);
+export interface SleepOptions {
+  signal?: AbortSignal;
+}
+
+export function sleep(timeout?: number, options: SleepOptions = {}) {
+  const { signal } = options;
+
+  return new Promise<void>((res, rej) => {
+    if (signal?.aborted) {
+      rej(signal.reason);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      signal?.removeEventListener('abort', abort);
+      res();
+    }, timeout);
+
+    function abort() {
+      clearTimeout(timer);
+      rej(signal?.reason);
+    }
+
+    signal?.addEventListener('abort', abort, { once: true });
   });
 }

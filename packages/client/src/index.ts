@@ -12,6 +12,8 @@ export * from './utils';
 
 export * from './types';
 
+export * from './error';
+
 export * from './api/base';
 
 export * from './api/status';

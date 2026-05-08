@@ -2,6 +2,7 @@ import { retryFn, sleep } from '@animegarden/shared';
 
 import type { FetchOptions } from '../types';
 
+import { AnimeGardenError } from '../error';
 import { version, DefaultBaseURL } from '../constants';
 
 export type FetchAPIResult<T> = T extends Record<string, any> ? T & { timestamp?: Date } : T;
@@ -92,23 +93,26 @@ export async function fetchAPI<T>(
         } else {
           // 429 TOO MANY REQUEST
           if (resp.status === 429) {
-            await sleep(16 * 1000);
+            await sleep(16 * 1000, { signal });
           }
-          throw new Error(`${resp.status} ${resp.statusText} ${url.toString()}`, { cause: resp });
+          throw await AnimeGardenError.fromResponse(
+            `${resp.status} ${resp.statusText} ${url.toString()}`,
+            resp
+          );
         }
       } else {
         if (error?.name === 'AbortError') {
           throw error;
         }
         if (error?.name === 'TimeoutError') {
-          await (options.hooks?.timeout ? options.hooks?.timeout() : sleep(100));
+          await (options.hooks?.timeout ? options.hooks.timeout(signal) : sleep(100, { signal }));
           throw error;
         }
 
         if (error instanceof Error) {
-          throw error;
+          throw AnimeGardenError.fromOriginalError(error.message, error);
         } else {
-          throw new Error(error);
+          throw AnimeGardenError.fromOriginalError(String(error), error);
         }
       }
     },

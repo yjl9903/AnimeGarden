@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { fetchAPI } from '../src/api/base';
+import { AnimeGardenError } from '../src/error';
 import { fetchResources } from '../src/api/resources';
 
 function createResource(id: number) {
@@ -52,7 +54,10 @@ describe('fetchResources', () => {
 
     expect(result.ok).toBe(false);
     expect(result.resources).toEqual([]);
-    expect(result.error).toBeInstanceOf(Error);
+    expect(result.error).toBeInstanceOf(AnimeGardenError);
+    expect(result.error?.status).toBe(500);
+    expect(result.error?.body).toEqual({ status: 'ERROR' });
+    expect(result.error?.cause).toBeUndefined();
     expect(result.error?.message).toContain('500 Internal Server Error');
   });
 
@@ -83,6 +88,48 @@ describe('fetchResources', () => {
 
     expect(result.ok).toBe(false);
     expect(result.resources).toHaveLength(1);
+    expect(result.error).toBeInstanceOf(AnimeGardenError);
+    expect(result.error?.status).toBe(503);
+    expect(result.error?.body).toEqual({ status: 'ERROR' });
     expect(result.error?.message).toContain('503 Service Unavailable');
+  });
+
+  it('wraps original fetch errors in AnimeGardenError', async () => {
+    const original = new TypeError('network failed');
+
+    await expect(
+      fetchAPI('resources', undefined, {
+        fetch: vi.fn(async () => {
+          throw original;
+        }),
+        baseURL: 'https://example.com/',
+        retry: 0
+      })
+    ).rejects.toMatchObject({
+      name: 'AnimeGardenError',
+      message: 'network failed',
+      cause: original,
+      original
+    });
+  });
+
+  it('does not wait through a rate-limit sleep after aborting', async () => {
+    const reason = new DOMException('aborted', 'AbortError');
+    const controller = new AbortController();
+    controller.abort(reason);
+
+    await expect(
+      fetchAPI('resources', undefined, {
+        fetch: vi.fn(async () => {
+          return new Response(JSON.stringify({ status: 'ERROR' }), {
+            status: 429,
+            statusText: 'Too Many Requests'
+          });
+        }),
+        baseURL: 'https://example.com/',
+        retry: 0,
+        signal: controller.signal
+      })
+    ).rejects.toBe(reason);
   });
 });

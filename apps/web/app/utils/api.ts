@@ -38,12 +38,41 @@ export const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
   }
 };
 
+const transientAPIErrorStatuses = new Set([502, 503, 504]);
+
+function isRetryableRequest(init: RequestInit | undefined) {
+  const method = init?.method?.toUpperCase() ?? 'GET';
+  return method === 'GET' || method === 'HEAD';
+}
+
+function getRequestSignal(init: RequestInit | undefined) {
+  return init?.signal instanceof AbortSignal ? init.signal : undefined;
+}
+
+function withTransientAPIErrorRetry(fetcher: typeof ofetch = ofetch): typeof ofetch {
+  return async (url, init) => {
+    const response = await fetcher(url, init);
+    const signal = getRequestSignal(init);
+
+    if (
+      signal?.aborted ||
+      !isRetryableRequest(init) ||
+      !transientAPIErrorStatuses.has(response.status)
+    ) {
+      return response;
+    }
+
+    console.warn('[API]', 'retry transient response', response.status, url.toString());
+    return fetcher(url, init);
+  };
+}
+
 export async function fetchAPI<T>(path: string, request: RequestInit | undefined) {
   const timeout = 10 * 1000;
 
   try {
     const resp = await rawFetchAPI<T>(path, request, {
-      fetch: ofetch,
+      fetch: withTransientAPIErrorRetry(ofetch),
       baseURL,
       retry: 0,
       signal: AbortSignal.timeout(timeout)
@@ -61,7 +90,7 @@ let lastTimestamp!: Date;
 export async function fetchTimestamp(): Promise<{ timestamp: Date | undefined }> {
   try {
     const resp = await rawFetchStatus({
-      fetch: ofetch,
+      fetch: withTransientAPIErrorRetry(ofetch),
       baseURL,
       retry: 0,
       timeout: 10 * 1000,
@@ -95,11 +124,11 @@ export async function fetchResources(
   const timeout = options.timeout ?? 30 * 1000;
 
   const resp = await rawFetchResources<FetchResourcesOptions & { tracker: true; metadata: true }>({
-    fetch: options.fetch ?? ofetch,
+    fetch: withTransientAPIErrorRetry(options.fetch ?? ofetch),
     baseURL,
     timeout,
     signal: options.signal,
-    retry: options.retry ?? 1,
+    retry: options.retry ?? 0,
     ...filter,
     tracker: true,
     metadata: true
@@ -119,7 +148,7 @@ export async function fetchResourceDetail(provider: string, href: string) {
 
   try {
     const resp = await rawFetchResourceDetail(provider as ProviderType, href, {
-      fetch: ofetch,
+      fetch: withTransientAPIErrorRetry(ofetch),
       baseURL,
       retry: 0,
       timeout
@@ -149,7 +178,7 @@ export async function fetchCollection(hash: string) {
 
   try {
     const resp = await rawFetchCollection(hash, {
-      fetch: ofetch,
+      fetch: withTransientAPIErrorRetry(ofetch),
       baseURL,
       retry: 0,
       timeout
@@ -172,7 +201,7 @@ export async function fetchCollection(hash: string) {
 export async function generateCollection(collection: Collection<true>) {
   try {
     return await rawGenerateCollection(collection, {
-      fetch: ofetch,
+      fetch: withTransientAPIErrorRetry(ofetch),
       baseURL,
       retry: 0
     });

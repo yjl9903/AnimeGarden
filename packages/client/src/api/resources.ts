@@ -1,5 +1,6 @@
 import type { Resource, FetchResourcesOptions, ResolvedFilterOptions } from '../types';
 
+import { AnimeGardenError } from '../error';
 import { stringifyURLSearch } from '../resolver';
 
 import { fetchAPI } from './base';
@@ -187,7 +188,10 @@ async function fetchPage<T extends FetchResourcesOptions = FetchResourcesOptions
       timestamp: r.timestamp
     };
   } else {
-    throw new Error(`Invalid response /resources?${searchParams.toString()}`, { cause: r });
+    throw AnimeGardenError.fromOriginalError(
+      `Invalid response /resources?${searchParams.toString()}`,
+      r
+    );
   }
 }
 
