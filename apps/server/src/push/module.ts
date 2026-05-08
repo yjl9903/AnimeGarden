@@ -1,4 +1,5 @@
 import { Bot, GrammyError } from 'grammy';
+import type { Message, MessageOriginChannel } from 'grammy/types';
 
 import type { ProviderType } from '@animegarden/client';
 
@@ -13,8 +14,8 @@ import { Module } from '../system/module.ts';
 import { resources } from '../schema/resources.ts';
 import { TelegramMessageStatus, telegramMessages } from '../schema/telegram.ts';
 
-import { PushContext } from './push.ts';
 import { buildResourceCardMessage } from './message.ts';
+import { type PushOptions, PushContext } from './push.ts';
 import { isUniqueTelegramMessageConflict, TelegramMessageLockLostError } from './error.ts';
 
 export class PushModule extends Module<System['modules']> {
@@ -34,10 +35,40 @@ export class PushModule extends Module<System['modules']> {
     if (this.system.options.telegram?.token) {
       const bot = new Bot(this.system.options.telegram.token);
       this.bot = bot;
+      this.initializeMessageListener(bot);
     }
   }
 
-  public enqueueResourceMessages(ids: number[]) {
+  private initializeMessageListener(bot: Bot) {
+    const chatId = this.system.options.telegram?.chatId;
+
+    // cron 模式 或者 cli 模式下才监听这个消息
+    if (!chatId || !(this.system.options.cron || this.system.options.profile === 'cli')) {
+      return;
+    }
+
+    bot.on('message', async (ctx) => {
+      await this.handleMessage(ctx.message);
+    });
+
+    const polling = bot.start({ allowed_updates: ['message'] }).catch((error) => {
+      this.logger.error('Telegram message listener stopped', error);
+    });
+
+    this.system.disposables.push(async () => {
+      if (bot.isRunning()) {
+        await bot.stop();
+      }
+      await polling;
+    });
+  }
+
+  private async handleMessage(message: Message) {
+    await this.handleUnpin(message);
+  }
+
+  // 注册消息推送任务
+  public enqueueResourceMessages(ids: number[], options?: PushOptions) {
     if (!this.isConfigured()) {
       return;
     }
@@ -52,7 +83,9 @@ export class PushModule extends Module<System['modules']> {
 
       this.pendingResourceIds.add(id);
 
-      const promise = this.pushResourceMessage(id)
+      const promise = (
+        options === undefined ? this.pushResourceMessage(id) : this.pushResourceMessage(id, options)
+      )
         .catch((error) => {
           this.logger.error(`Failed running telegram push task for resource ${id}`, error);
           return undefined;
@@ -121,7 +154,7 @@ export class PushModule extends Module<System['modules']> {
     }
   }
 
-  public async pushResourceMessage(id: number) {
+  public async pushResourceMessage(id: number, options?: PushOptions) {
     if (!this.isConfigured()) {
       return undefined;
     }
@@ -140,10 +173,14 @@ export class PushModule extends Module<System['modules']> {
       return undefined;
     }
 
-    return await validated.run();
+    return await validated.run(options);
   }
 
-  public async pushResourceMessageByProviderId(provider: ProviderType, providerId: string) {
+  public async pushResourceMessageByProviderId(
+    provider: ProviderType,
+    providerId: string,
+    options?: PushOptions
+  ) {
     const [resource] = await this.database
       .select({ id: resources.id })
       .from(resources)
@@ -155,11 +192,21 @@ export class PushModule extends Module<System['modules']> {
       return [];
     }
 
-    await this.enqueueResourceMessages([resource.id]);
+    if (options === undefined) {
+      await this.enqueueResourceMessages([resource.id]);
+    } else {
+      await this.enqueueResourceMessages([resource.id], options);
+    }
+
     return [resource.id];
   }
 
-  public async pushSubjectResourceMessages(subjectId: number) {
+  /**
+   * 推送 subject 下的所有消息
+   */
+  public async pushSubjectResourceMessages(subjectId: number, options?: PushOptions) {
+    this.logger.info(`Start pushing resource messages with subject ${subjectId}`);
+
     const rows = await this.database
       .select({ id: resources.id })
       .from(resources)
@@ -173,11 +220,60 @@ export class PushModule extends Module<System['modules']> {
       return [];
     }
 
+    let succeed = 0;
     for (const id of ids) {
-      await this.enqueueResourceMessages([id]);
+      const result = await this.enqueueResourceMessages([id], options);
+      if (result?.[0]?.ok) {
+        succeed += 1;
+      }
     }
 
+    this.logger.success(`Finish pushing ${succeed} resource messages with subject ${subjectId}`);
+
     return ids;
+  }
+
+  /**
+   * Unpin forward channel 消息
+   */
+  private async handleUnpin(message: Message) {
+    if (!message.is_automatic_forward) {
+      return;
+    }
+
+    const origin = message.forward_origin;
+    if (origin?.type !== 'channel') {
+      return;
+    }
+
+    const isTelegramChannelOrigin = (chat: MessageOriginChannel['chat']) => {
+      const configuredChatId = this.system.options.telegram?.chatId;
+      if (!configuredChatId) {
+        return false;
+      }
+
+      const value = String(configuredChatId);
+      if (/^-?\d+$/.test(value)) {
+        return String(chat.id) === value;
+      }
+
+      const username = value.startsWith('@') ? value.slice(1) : value;
+      return !!chat.username && chat.username.toLowerCase() === username.toLowerCase();
+    };
+
+    if (!isTelegramChannelOrigin(origin.chat)) {
+      return;
+    }
+
+    try {
+      await this.unpinChatMessage(message.chat.id, message.message_id);
+      this.logger.info(`Unpinned discussion message ${message.chat.id}:${message.message_id}`);
+    } catch (error) {
+      this.logger.warn(
+        `Failed unpinning discussion message ${message.chat.id}:${message.message_id}`,
+        error
+      );
+    }
   }
 
   public async makePushContext(id: number) {
@@ -438,6 +534,25 @@ export class PushModule extends Module<System['modules']> {
     }
   }
 
+  public async unpinChatMessage(chatId: string | number, messageId: number) {
+    if (!this.bot) throw new Error('telegram bot is not initialized');
+
+    try {
+      await this.bot.api.unpinChatMessage(chatId, messageId);
+      return true;
+    } catch (error) {
+      const policy = await this.handleGrammhyError(error);
+      if (policy === 'retry') {
+        await this.bot.api.unpinChatMessage(chatId, messageId);
+        return true;
+      } else if (policy === 'ignore') {
+        return true;
+      }
+
+      throw error;
+    }
+  }
+
   private async handleGrammhyError(error: unknown) {
     if (error instanceof GrammyError) {
       if (error.error_code === 429) {
@@ -446,6 +561,13 @@ export class PushModule extends Module<System['modules']> {
         return 'retry' as const;
       }
       if (error.error_code === 400 && error.message.includes('message is not modified')) {
+        return 'ignore' as const;
+      }
+      if (
+        error.error_code === 400 &&
+        (error.message.includes('message to unpin not found') ||
+          error.message.includes('message is not pinned'))
+      ) {
         return 'ignore' as const;
       }
     }

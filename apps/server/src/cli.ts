@@ -138,16 +138,21 @@ for (const provider of SupportProviders) {
 
 app
   .command('telegram push', 'Manually push telegram channel messages')
-  .option('--resource <key>', 'Push specified resource, e.g. dmhy:123 or dmhy/123')
-  .option('--subject <id>', 'Push resource messages with subject id')
+  .option('--resource [...key]', 'Push specified resource message, e.g. dmhy:123 or dmhy/123')
+  .option('--subject [...id]', 'Push resource messages with subject id')
+  .option('--force', 'Force re-push sent telegram messages')
   .action(async (options) => {
     const sys = await initialize(options);
     try {
       await sys.initialize();
 
-      if (options.resource) {
-        const { provider, providerId } = parseTelegramResourceSpecifier(options.resource);
-        await sys.modules.push.pushResourceMessageByProviderId(provider, providerId);
+      if (options.resource && options.resource.length > 0) {
+        for (const key of options.resource) {
+          const { provider, providerId } = parseTelegramResourceSpecifier(key);
+          await sys.modules.push.pushResourceMessageByProviderId(provider, providerId, {
+            force: options.force
+          });
+        }
         return;
 
         function parseTelegramResourceSpecifier(value: string) {
@@ -174,12 +179,17 @@ app
         }
       }
 
-      if (options.subject) {
-        const subjectId = Number(options.subject);
-        if (!Number.isInteger(subjectId) || subjectId <= 0) {
-          throw new Error('Expected --subject to be a positive integer bgm id');
+      if (options.subject && options.subject.length > 0) {
+        for (const id of options.subject) {
+          const subjectId = Number(id);
+          if (!Number.isInteger(subjectId) || subjectId <= 0) {
+            console.log('Expected --subject to be a positive integer bgm id', id);
+            continue;
+          }
+          await sys.modules.push.pushSubjectResourceMessages(subjectId, {
+            force: options.force
+          });
         }
-        await sys.modules.push.pushSubjectResourceMessages(subjectId);
         return;
       }
 

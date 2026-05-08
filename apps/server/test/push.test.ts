@@ -277,15 +277,18 @@ describe('telegram resource card', () => {
     const message = buildResourceCardMessage(createResource(title), subject, parsed, {
       site: 'animes.garden'
     });
+    const lines = message.text.split('\n');
 
-    expect(message.text).toContain('#從前從前有隻貓世界喵童話 #2025年10月');
-    expect(message.text).toContain('<b>從前從前有隻貓！世界喵童話 · 第 1 集</b>');
-    expect(message.text).toContain('#KiraraFantasia');
+    expect(lines[0]).toBe('<b>從前從前有隻貓！世界喵童話 · 第 1 集</b>');
+    expect(lines[1]).toBe('#KiraraFantasia · #2025年10月新番');
+    expect(message.text).not.toContain('#從前從前有隻貓世界喵童話 #2025年10月');
     expect(message.text).toContain('<b>字幕:</b> 繁中 · 内封字幕');
     expect(message.text).toContain('<b>格式:</b> 1080p · AVC · mp4 · AAC');
     expect(message.text).toContain('499.18 MB');
     expect(message.text).toContain('<b>发布:</b> 2026 年 5 月 7 日 13:00');
-    expect(message.text).toContain('<b>追踪:</b> #KiraraFantasia_從前從前有隻貓世界喵童話');
+    expect(message.text).toContain(
+      '<b>追踪:</b> #從前從前有隻貓世界喵童話 #KiraraFantasia_從前從前有隻貓世界喵童話'
+    );
     expect(message.text).not.toContain('磁力链接');
     expect(message.text).toContain(
       '<a href="https://animes.garden/detail/dmhy/12345">查看详情</a> · <a href="https://keepshare.org/gv78k1oi/magnet%3A%3Fxt%3Durn%3Abtih%3A0123456789012345678901234567890123456789">在线播放</a>'
@@ -293,6 +296,26 @@ describe('telegram resource card', () => {
     expect(message.photo).toBe('https://example.com/poster.jpg');
     expect(message.options.parse_mode).toBe('HTML');
     expect('link_preview_options' in message.options).toBe(false);
+  });
+
+  it('aligns resources from the week before a new quarter to the next quarter label', () => {
+    const title = readAniparTitles('kirara_fantasia').find((title) =>
+      title.includes('(Baha 1920x1080 AVC AAC MP4)')
+    )!;
+    const parsed = parse(title, { fansub: 'Kirara Fantasia' })!;
+    const message = buildResourceCardMessage(
+      createResource(title),
+      {
+        ...subject,
+        onair_date: '2025-09-24'
+      },
+      parsed,
+      {
+        site: 'animes.garden'
+      }
+    );
+
+    expect(message.text.split('\n')[1]).toBe('#KiraraFantasia · #2025年10月新番');
   });
 
   it('sends card messages through grammy', async () => {
@@ -324,6 +347,26 @@ describe('telegram resource card', () => {
       telegramMessageId: 123
     });
     expect(records[0].sentAt).toBeInstanceOf(Date);
+  });
+
+  it('unpins discussion automatic forwards from configured channel', async () => {
+    const unpinChatMessage = vi.fn().mockResolvedValue(true);
+    const { mod } = createPushModule({
+      api: { unpinChatMessage }
+    });
+
+    await (mod as any).handleMessage({
+      is_automatic_forward: true,
+      chat: { id: -200001 },
+      message_id: 456,
+      forward_origin: {
+        type: 'channel',
+        chat: { id: -100001, username: 'animegarden_test' },
+        message_id: 123
+      }
+    });
+
+    expect(unpinChatMessage).toHaveBeenCalledWith(-200001, 456);
   });
 
   // TODO: skip for now

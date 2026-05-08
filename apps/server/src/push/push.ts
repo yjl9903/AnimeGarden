@@ -14,6 +14,15 @@ import { buildResourceCardMessage } from './message.ts';
 import { TelegramMessageLockLostError } from './error.ts';
 import { shouldSendFansubResource, shouldSendTypeResource } from './guard.ts';
 
+export interface PushOptions {
+  /**
+   * 强制重推之前已经成功的消息
+   *
+   * @default false
+   */
+  force?: boolean;
+}
+
 export class PushContext {
   public readonly system: System;
 
@@ -95,7 +104,7 @@ export class PushContext {
     return new Date(this.resource.createdAt).getTime() - new Date(rhs.resource.createdAt).getTime();
   }
 
-  public async run(): Promise<{ ok: boolean } | undefined> {
+  public async run(options?: PushOptions): Promise<{ ok: boolean } | undefined> {
     const { publisher, fansub, resource, subject, episode } = this;
 
     const existing = await this.system.modules.push.findTelegramMessage(
@@ -116,17 +125,22 @@ export class PushContext {
     ) {
       // Pending/Sending 也允许更高优先级资源抢占；真正发送前再用 resourceId 做乐观锁。
       const previous = await this.system.modules.push.makePushContext(existing.resourceId);
-      if (previous && (await previous?.prepare()) && this.compare(previous) <= 0) {
+      await previous?.prepare();
+
+      if (previous && this.compare(previous) <= 0) {
         this.logger.info(
           `Skip pushing ${resource.provider}:${resource.providerId}, existing pending resource has higher priority`
         );
         return undefined;
       }
+
       return await this.push(existing);
     } else if (existing.status === TelegramMessageStatus.Failed) {
       // Failed 记录会比较旧资源和当前资源；谁优先级高，就用谁重新发一条 Telegram 消息。
       const previous = await this.system.modules.push.makePushContext(existing.resourceId);
-      if (previous && (await previous?.prepare()) && this.compare(previous) < 0) {
+      await previous?.prepare();
+
+      if (previous && this.compare(previous) < 0) {
         return await previous.push(existing);
       } else {
         return await this.push(existing);
@@ -134,7 +148,14 @@ export class PushContext {
     } else if (existing.status === TelegramMessageStatus.Sent) {
       // Sent 记录只允许更高优先级的新资源接管；否则保持原 Telegram 消息不变。
       const previous = await this.system.modules.push.makePushContext(existing.resourceId);
-      if (previous && (await previous?.prepare()) && this.compare(previous) <= 0) {
+      await previous?.prepare();
+
+      // 强制重推之前已经推过的消息
+      if (options?.force && previous && previous.resource.id === resource.id) {
+        return await this.push(existing);
+      }
+
+      if (previous && this.compare(previous) <= 0) {
         this.logger.info(
           `Skip editing telegram message of ${resource.provider}:${resource.providerId}, existing resource has higher priority`
         );
@@ -151,13 +172,17 @@ export class PushContext {
           `Telegram message of ${resource.provider}:${resource.providerId}, message id is missing`
         );
       }
-      return await this.push(existing);
+
+      return await this.push(existing, options);
     }
 
-    return await this.push(existing);
+    return await this.push(existing, options);
   }
 
-  public async push(existing: TelegramMessage | undefined): Promise<{ ok: boolean } | undefined> {
+  public async push(
+    existing: TelegramMessage | undefined,
+    options?: PushOptions
+  ): Promise<{ ok: boolean } | undefined> {
     const { resource, publisher, fansub, subject, parsed, episode: episodeStr } = this;
 
     // 这里先写 Pending，真正进入 Telegram API 队列时再切 Sending。
@@ -181,7 +206,7 @@ export class PushContext {
 
     if (!telegramMessage) {
       // 同一去重键并发创建或抢占时，重新读取最新 owner 再比较优先级。
-      return await this.run();
+      return await this.run(options);
     }
 
     const message = buildResourceCardMessage(resource, subject, parsed, this.system.options);

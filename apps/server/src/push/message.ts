@@ -13,14 +13,13 @@ import { getKeepShareURL } from '../utils/keepshare.ts';
 /**
  * Telegram photo caption format:
  *
- * #SubjectName #yyyy年1/4/7/10月新番
  * <b>SubjectName · 第 x 集</b>
- * #Fansub1 #Fansub2
+ * #Fansub1 #Fansub2 · #yyyy年1/4/7/10月新番
  * <b>字幕:</b> 简中 / 繁中 · 内封字幕
  * <b>格式:</b> 1080p · AVC-10-bit · 24fps · mp4 · AAC
  * <b>大小:</b> 499.18 MB
  * <b>发布:</b> 2026 年 5 月 7 日 13:00
- * <b>追踪:</b> #Fansub_SubjectName
+ * <b>追踪:</b> #SubjectName #Fansub_SubjectName
  * <a href="...">查看详情</a> · <a href="...">在线播放</a>
  */
 export function buildResourceCardMessage(
@@ -34,9 +33,8 @@ export function buildResourceCardMessage(
   const playUrl = getKeepShareURL(options.keepshare, magnetUrl);
   const subjectName = subject.title;
   const lines = [
-    `${formatHashTag(subjectName)} ${formatHashTag(formatQuarter(subject, resource))}`,
     formatTitleLine(subjectName, parsed),
-    formatFansubs(parsed),
+    formatFansubs(parsed, subject, resource),
     formatSubtitleLine(parsed),
     formatVideoLine(parsed),
     formatResourceSize(resource.size),
@@ -85,10 +83,12 @@ function formatEpisodeNumber(number: number, numberSub?: number) {
   return numberSub !== undefined ? `${number}.${numberSub}` : `${number}`;
 }
 
-function formatFansubs(parsed: ParseResult) {
+function formatFansubs(parsed: ParseResult, subject: BasicSubject, resource: FoundResource) {
   const fansubs = getNormalizedFansubs(parsed);
   if (fansubs.length === 0) return undefined;
-  return fansubs.map((fansub) => escapeHtml(formatHashTag(fansub))).join(' ');
+  const labels = fansubs.map((fansub) => escapeHtml(formatHashTag(fansub)));
+  const quarter = formatQuarter(subject, resource);
+  return quarter ? `${labels.join(' ')} · ${escapeHtml(formatHashTag(quarter))}` : labels.join(' ');
 }
 
 function getNormalizedFansubs(parsed: ParseResult) {
@@ -192,17 +192,37 @@ function formatPublishTime(value: string) {
 function formatLabels(rawFansub: string, subjectName: string) {
   const fansub = normalizeFansubName(rawFansub);
   if (!fansub) return undefined;
-  return `<b>追踪:</b> ${formatHashTag(`${fansub}_${subjectName}`)}`;
+  return `<b>追踪:</b> ${formatHashTag(subjectName)} ${formatHashTag(`${fansub}_${subjectName}`)}`;
 }
 
 function formatQuarter(subject: BasicSubject, resource: FoundResource) {
-  const date = new Date(subject.onair_date || resource.createdAt);
+  const date = alignQuarterDate(new Date(subject.onair_date || resource.createdAt));
   if (Number.isNaN(date.getTime())) {
     return '';
   }
   const year = date.getFullYear();
   const quarterMonth = Math.floor(date.getMonth() / 3) * 3 + 1;
   return `${year}年${quarterMonth}月新番`;
+}
+
+function alignQuarterDate(date: Date) {
+  const year = date.getFullYear();
+  const candidates = [
+    new Date(year, 0, 1),
+    new Date(year, 3, 1),
+    new Date(year, 6, 1),
+    new Date(year, 9, 1),
+    new Date(year + 1, 0, 1)
+  ];
+
+  for (const start of candidates) {
+    const threshold = new Date(start.getTime() - 7 * 24 * 60 * 60 * 1000);
+    if (date >= threshold && date < start) {
+      return start;
+    }
+  }
+
+  return date;
 }
 
 function formatHashTag(text: string) {
