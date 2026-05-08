@@ -1,9 +1,7 @@
 # syntax = docker/dockerfile:1
 
-ARG NODE_VERSION=26.1.0
-
 # Base Image
-FROM node:${NODE_VERSION}-slim AS base
+FROM node:26.1.0-slim AS base
 
 LABEL fly_launch_runtime="Node.js"
 
