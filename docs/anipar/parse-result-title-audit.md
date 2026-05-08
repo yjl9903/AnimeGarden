@@ -10,7 +10,7 @@
 - `titles` 中是否混入集数、分辨率、字幕、source、tag 等非标题信息。
 - malformed bracket 是否导致标题边界错误。
 
-本报告不把 season、episode、source、file、subtitle、type 等字段缺失或归类问题计入标题问题；这些内容另见 [parse-result-metadata-audit.md](/Users/junliang.yan02/GitHub/AnimeGarden/packages/anipar/docs/parse-result-metadata-audit.md)。
+本报告不把 season、episode、source、file、subtitle、type 等字段缺失或归类问题计入标题问题；这些内容另见 [parse-result-metadata-audit.md](./parse-result-metadata-audit.md)。
 
 | 资产文件 | 逻辑用例数 | 标题专项结论 |
 | --- | ---: | --- |

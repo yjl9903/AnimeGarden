@@ -4,7 +4,7 @@
 
 ## 范围
 
-本文档用于承接非标题类问题，避免和 [parse-result-title-audit.md](/Users/junliang.yan02/GitHub/AnimeGarden/packages/anipar/docs/parse-result-title-audit.md) 的标题专项混在一起。
+本文档用于承接非标题类问题，避免和 [parse-result-title-audit.md](./parse-result-title-audit.md) 的标题专项混在一起。
 
 本轮复查重点：
 
