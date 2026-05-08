@@ -74,6 +74,7 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
   let pagination: PaginationResponse | undefined = undefined;
   let filter: ResolvedFilterOptions | undefined = undefined;
   let error: Error | any | undefined = undefined;
+  let failed = false;
 
   for (let page = startPage; map.size < count && !pagination?.complete; page++) {
     try {
@@ -125,7 +126,9 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
         error = currentError;
         break;
       } else {
+        failed = true;
         error = currentError;
+        break;
       }
     }
 
@@ -134,7 +137,7 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
     }
   }
 
-  if (!aborted) {
+  if (!aborted && !failed) {
     return {
       ok: true,
       resources: uniq([...map.values()]),

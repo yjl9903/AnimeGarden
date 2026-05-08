@@ -76,7 +76,9 @@ app.all('*', remix({ build, mode: process.env.NODE_ENV }));
 
 app.onError((err, c) => {
   console.error('[HONO]', err);
-  return c.text('Internal Error', 500);
+  return c.text('Internal Error', 500, {
+    'Cache-Control': 'no-store'
+  });
 });
 
 // Listening

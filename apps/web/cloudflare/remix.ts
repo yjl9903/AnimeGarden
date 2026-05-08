@@ -52,7 +52,19 @@ export const remix = <E extends Env = any>(options: RemixHandlerOptions): Handle
           env: ctx.env
         }
       };
-      return await handleRemixRequest(request, loadContext);
+      const response = await handleRemixRequest(request, loadContext);
+      if (response.status < 400) {
+        return response;
+      }
+
+      const headers = new Headers(response.headers);
+      headers.set('Cache-Control', 'no-store');
+
+      return new Response(response.body, {
+        headers,
+        status: response.status,
+        statusText: response.statusText
+      });
     } catch (error) {
       throw error;
     }

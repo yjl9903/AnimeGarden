@@ -115,36 +115,38 @@ export function ErrorBoundary() {
     };
   }, []);
 
-  <html lang="zh-CN">
-    <head>
-      <meta charSet="utf-8" />
-      <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
-      />
-      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-      <link rel="alternate icon" sizes="64x64" href="/favicon.ico" />
-      <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
-      <link rel="mask-icon" color="#FFFFFF" href="/favicon.svg" />
-      <meta name="msapplication-TileColor" content="#FFFFFF" />
-      <meta name="theme-color" content="#ffffff" />
-      <title>错误 | Anime Garden 動漫花園資源網第三方镜像站</title>
-      <Meta />
-      <Links />
-    </head>
-    <body
-      className="font-sans relative"
-      style={{
-        '--nav-height': `${NavHeight}px`,
-        '--search-top': `${SearchTop}px`,
-        '--hero-height': `${HeroHeight}px`
-      }}
-      suppressHydrationWarning={true}
-    >
-      <Scripts />
-      <Toaster />
-    </body>
-  </html>;
+  return (
+    <html lang="zh-CN">
+      <head>
+        <meta charSet="utf-8" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+        />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="alternate icon" sizes="64x64" href="/favicon.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
+        <link rel="mask-icon" color="#FFFFFF" href="/favicon.svg" />
+        <meta name="msapplication-TileColor" content="#FFFFFF" />
+        <meta name="theme-color" content="#ffffff" />
+        <title>错误 | Anime Garden 動漫花園資源網第三方镜像站</title>
+        <Meta />
+        <Links />
+      </head>
+      <body
+        className="font-sans relative"
+        style={{
+          '--nav-height': `${NavHeight}px`,
+          '--search-top': `${SearchTop}px`,
+          '--hero-height': `${HeroHeight}px`
+        }}
+        suppressHydrationWarning={true}
+      >
+        <Scripts />
+        <Toaster />
+      </body>
+    </html>
+  );
 }
 
 export default function App() {

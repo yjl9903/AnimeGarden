@@ -31,5 +31,7 @@ app.onError((err, c) => {
   if (err.stack) {
     console.log(...err.stack.trim().split('\n'));
   }
-  return c.json({ status: 500, messsage: err?.message ?? 'Internal Error' }, 500);
+  return c.json({ status: 500, message: err?.message ?? 'Internal Error' }, 500, {
+    'Cache-Control': 'no-store'
+  });
 });

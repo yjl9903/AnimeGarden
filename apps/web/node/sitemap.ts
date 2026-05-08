@@ -1,3 +1,5 @@
+import type { Context } from 'hono';
+
 import { Hono } from 'hono';
 
 import { fetchAPI } from '@animegarden/client';
@@ -35,11 +37,11 @@ const items = sitemap({
   sitemap: {
     hostname: `https://${APP_HOST}`,
     lastmodDateOnly: false,
-    errorHandler: (e) => {
+    errorHandler: (e: unknown) => {
       console.error(e);
     }
   },
-  async getURLs(ctx) {
+  async getURLs(ctx: Context) {
     const url = new URL(ctx.req.url);
 
     try {
