@@ -1,6 +1,6 @@
 # syntax = docker/dockerfile:1
 
-ARG NODE_VERSION=24.15.0
+ARG NODE_VERSION=26.1.0
 
 # Base Image
 FROM node:${NODE_VERSION}-slim AS base

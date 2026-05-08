@@ -10,7 +10,7 @@ primary_region = 'lax'
 dockerfile = 'Dockerfile'
 
 [build.args]
-NODE_VERSION = '24.15.0'
+NODE_VERSION = '26.1.0'
 HOST = '::'
 PORT = '3000'
 APP_HOST = 'animes.garden'
