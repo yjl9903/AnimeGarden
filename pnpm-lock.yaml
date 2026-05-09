@@ -75,8 +75,8 @@ importers:
         specifier: 2.0.2
         version: 2.0.2(hono@4.12.18)
       '@hono/zod-validator':
-        specifier: 0.7.6
-        version: 0.7.6(hono@4.12.18)(zod@3.25.76)
+        specifier: 0.8.0
+        version: 0.8.0(hono@4.12.18)(zod@3.25.76)
       '@modelcontextprotocol/sdk':
         specifier: 1.29.0
         version: 1.29.0(zod@3.25.76)
@@ -2253,10 +2253,10 @@ packages:
     peerDependencies:
       hono: ^4
 
-  '@hono/zod-validator@0.7.6':
-    resolution: {integrity: sha512-Io1B6d011Gj1KknV4rXYz4le5+5EubcWEU/speUjuw9XMMIaP3n78yXLhjd2A3PXaXaUwEAluOiAyLqhBEJgsw==}
+  '@hono/zod-validator@0.8.0':
+    resolution: {integrity: sha512-5uS4S1/LKtZQYvD4BtpPUFkOv8d1wNxHHrChm26buMiEYc1FrHWvDUaKVBwkiVtvSExHSpLGDvcnpI2Copyj9w==}
     peerDependencies:
-      hono: '>=3.9.0'
+      hono: '>=4.10.0'
       zod: ^3.25.0 || ^4.0.0
 
   '@iconify-json/ant-design@1.2.5':
@@ -10744,7 +10744,7 @@ snapshots:
     dependencies:
       hono: 4.12.18
 
-  '@hono/zod-validator@0.7.6(hono@4.12.18)(zod@3.25.76)':
+  '@hono/zod-validator@0.8.0(hono@4.12.18)(zod@3.25.76)':
     dependencies:
       hono: 4.12.18
       zod: 3.25.76
