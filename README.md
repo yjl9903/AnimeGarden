@@ -16,9 +16,9 @@
 + ⭐ 搜索条件收藏夹和生成聚合的 RSS 订阅链接
 + 👷‍♂️ 支持与 [AutoBangumi](https://www.autobangumi.org/) 和 [AnimeSpace](https://github.com/yjl9903/AnimeSpace) 集成
 
-> **讨论群**: [Telegram](https://t.me/animegarden_dev)
+> **讨论群**: [Telegram @animegarden_dev](https://t.me/animegarden_dev)
 >
-> **推送频道**: [Telegram](https://t.me/animegarden_channel)
+> **推送频道**: [Telegram @animegarden_channel](https://t.me/animegarden_channel)
 >
 > **项目文档**: [由 DeepWiki 生成](https://deepwiki.com/yjl9903/AnimeGarden)
 
