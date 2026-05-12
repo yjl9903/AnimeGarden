@@ -402,8 +402,8 @@ importers:
   packages/anipar:
     devDependencies:
       '@types/jsdom':
-        specifier: ^28.0.2
-        version: 28.0.2
+        specifier: ^28.0.3
+        version: 28.0.3
       '@types/parse-torrent':
         specifier: ^5.8.8
         version: 5.8.8
@@ -452,8 +452,8 @@ importers:
         specifier: workspace:*
         version: link:../shared
       '@types/jsdom':
-        specifier: ^28.0.2
-        version: 28.0.2
+        specifier: ^28.0.3
+        version: 28.0.3
       '@types/parse-torrent':
         specifier: ^5.8.8
         version: 5.8.8
@@ -4213,8 +4213,8 @@ packages:
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
 
-  '@types/jsdom@28.0.2':
-    resolution: {integrity: sha512-zZYItekplnGirFhVDrcB0+103TMakXfKfIp7uECxaFzFG3Ws5kYQSwVb1d4pQfJMMjQda6pfuZxueAv9CMiJbw==}
+  '@types/jsdom@28.0.3':
+    resolution: {integrity: sha512-/HQ2uFoetFTXuye8vzIcHw2z6Fwi7Hi/qcgC+RoS9NCyewiqxhVGqlG+ViGB6lkax481R6dmhf1I7lIGlzJStQ==}
 
   '@types/jsonfile@6.1.4':
     resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
@@ -12977,7 +12977,7 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  '@types/jsdom@28.0.2':
+  '@types/jsdom@28.0.3':
     dependencies:
       '@types/node': 24.12.3
       '@types/tough-cookie': 4.0.5
