@@ -402,8 +402,8 @@ importers:
   packages/anipar:
     devDependencies:
       '@types/jsdom':
-        specifier: ^28.0.1
-        version: 28.0.1
+        specifier: ^28.0.2
+        version: 28.0.2
       '@types/parse-torrent':
         specifier: ^5.8.8
         version: 5.8.8
@@ -452,8 +452,8 @@ importers:
         specifier: workspace:*
         version: link:../shared
       '@types/jsdom':
-        specifier: ^28.0.1
-        version: 28.0.1
+        specifier: ^28.0.2
+        version: 28.0.2
       '@types/parse-torrent':
         specifier: ^5.8.8
         version: 5.8.8
@@ -4213,8 +4213,8 @@ packages:
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
 
-  '@types/jsdom@28.0.1':
-    resolution: {integrity: sha512-GJq2QE4TAZ5ajSoCasn5DOFm8u1mI3tIFvM5tIq3W5U/RTB6gsHwc6Yhpl91X9VSDOUVblgXmG+2+sSvFQrdlw==}
+  '@types/jsdom@28.0.2':
+    resolution: {integrity: sha512-zZYItekplnGirFhVDrcB0+103TMakXfKfIp7uECxaFzFG3Ws5kYQSwVb1d4pQfJMMjQda6pfuZxueAv9CMiJbw==}
 
   '@types/jsonfile@6.1.4':
     resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
@@ -5300,10 +5300,6 @@ packages:
 
   entities@4.5.0:
     resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
-    engines: {node: '>=0.12'}
-
-  entities@6.0.1:
-    resolution: {integrity: sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g==}
     engines: {node: '>=0.12'}
 
   entities@8.0.0:
@@ -6827,9 +6823,6 @@ packages:
   parse-url@9.2.0:
     resolution: {integrity: sha512-bCgsFI+GeGWPAvAiUv63ZorMeif3/U0zaXABGJbOWt5OH2KCaPHF6S+0ok4aqM9RuIPGyZdx9tR9l13PsW4AYQ==}
     engines: {node: '>=14.13.0'}
-
-  parse5@7.3.0:
-    resolution: {integrity: sha512-IInvU7fabl34qmi9gY8XOVxhYyMyuH2xUNpb2q8/Y+7552KlejkRvqvD19nMoUW/uQGGbqNpA6Tufu5FL5BZgw==}
 
   parse5@8.0.1:
     resolution: {integrity: sha512-z1e/HMG90obSGeidlli3hj7cbocou0/wa5HacvI3ASx34PecNjNQeaHNo5WIZpWofN9kgkqV1q5YvXe3F0FoPw==}
@@ -12981,11 +12974,11 @@ snapshots:
     dependencies:
       '@types/unist': 3.0.3
 
-  '@types/jsdom@28.0.1':
+  '@types/jsdom@28.0.2':
     dependencies:
       '@types/node': 24.12.3
       '@types/tough-cookie': 4.0.5
-      parse5: 7.3.0
+      parse5: 8.0.1
       undici-types: 7.25.0
 
   '@types/jsonfile@6.1.4':
@@ -14107,8 +14100,6 @@ snapshots:
   entities@2.2.0: {}
 
   entities@4.5.0: {}
-
-  entities@6.0.1: {}
 
   entities@8.0.0: {}
 
@@ -16078,10 +16069,6 @@ snapshots:
     dependencies:
       '@types/parse-path': 7.1.0
       parse-path: 7.1.0
-
-  parse5@7.3.0:
-    dependencies:
-      entities: 6.0.1
 
   parse5@8.0.1:
     dependencies:
