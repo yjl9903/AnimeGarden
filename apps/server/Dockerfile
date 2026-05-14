@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 # Base Image
-FROM node:26.1.0-slim AS base
+FROM platformatic/node-caged:26.1.0-slim AS base
 
 LABEL fly_launch_runtime="Node.js"
 
@@ -17,7 +17,10 @@ ENV CI=true NODE_ENV="production" \
     APP_HOST=${APP_HOST} FEED_HOST=${FEED_HOST}
 
 # Node.js app lives here
-WORKDIR /app    
+WORKDIR /app
+
+# Verify node pointer compression
+RUN node -e "const v8 = require('node:v8'); const enabled = process.config.variables.v8_enable_pointer_compression; console.log('node', process.version, 'v8', process.versions.v8, 'heap_limit', v8.getHeapStatistics().heap_size_limit, 'pointer_compression', enabled); if (String(enabled) !== '1') process.exit(1);"
 
 # Throw-away build stage to reduce size of final image
 FROM base AS build
