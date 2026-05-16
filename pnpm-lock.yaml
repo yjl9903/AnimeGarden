@@ -117,8 +117,8 @@ importers:
         specifier: 11.3.5
         version: 11.3.5
       grammy:
-        specifier: 1.42.0
-        version: 1.42.0
+        specifier: 1.43.0
+        version: 1.43.0
       hono:
         specifier: 4.12.18
         version: 4.12.18
@@ -2346,8 +2346,8 @@ packages:
   '@formkit/auto-animate@0.9.0':
     resolution: {integrity: sha512-VhP4zEAacXS3dfTpJpJ88QdLqMTcabMg0jwpOSxZ/VzfQVfl3GkZSCZThhGC5uhq/TxPHPzW0dzr4H9Bb1OgKA==}
 
-  '@grammyjs/types@3.26.0':
-    resolution: {integrity: sha512-jlnyfxfev/2o68HlvAGRocAXgdPPX5QabG7jZlbqC2r9DZyWBfzTlg+nu3O3Fy4EhgLWu28hZ/8wr7DsNamP9A==}
+  '@grammyjs/types@3.27.3':
+    resolution: {integrity: sha512-yUKMLliGsGbnxu96YUJ7km7B0zy4PzeH/Jvti5705R/LeKDMqkDV4DckMSt+OrliWQpTwQljHE0QLol5zgxBkg==}
 
   '@hono/mcp@0.2.5':
     resolution: {integrity: sha512-JsaJes7VlNvUrUQ9j2b9C13xjFLvyKQY515aWtsdJ9cwhBmWz5od2yUCbDu7cX38GeADmlLmpu4BKNNAV6G27w==}
@@ -5669,8 +5669,8 @@ packages:
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
-  grammy@1.42.0:
-    resolution: {integrity: sha512-1AdCge+AkjSdp2FwfICSFnVbl8Mq3KVHJDy+DgTI9+D6keJ0zWALPRKas5jv/8psiCzL4N2cEOcGW7O45Kn39g==}
+  grammy@1.43.0:
+    resolution: {integrity: sha512-7dYm06A945mXuIk/5HUlSjeyIYChW8vCEiU2dkOKKqJJzwAWxTkCc91Eqbz7TgODh2rtFFKWI/fekowWHOkmjQ==}
     engines: {node: ^12.20.0 || >=14.13.1}
 
   gunzip-maybe@1.4.2:
@@ -10542,7 +10542,7 @@ snapshots:
 
   '@formkit/auto-animate@0.9.0': {}
 
-  '@grammyjs/types@3.26.0': {}
+  '@grammyjs/types@3.27.3': {}
 
   '@hono/mcp@0.2.5(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(hono-rate-limiter@0.4.2(hono@4.12.18))(hono@4.12.18)(zod@3.25.76)':
     dependencies:
@@ -14385,9 +14385,9 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
-  grammy@1.42.0:
+  grammy@1.43.0:
     dependencies:
-      '@grammyjs/types': 3.26.0
+      '@grammyjs/types': 3.27.3
       abort-controller: 3.0.0
       debug: 4.4.3
       node-fetch: 2.7.0
