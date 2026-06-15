@@ -117,8 +117,8 @@ importers:
         specifier: 11.3.5
         version: 11.3.5
       grammy:
-        specifier: 1.43.0
-        version: 1.43.0
+        specifier: 1.44.0
+        version: 1.44.0
       hono:
         specifier: 4.12.25
         version: 4.12.25
@@ -2335,8 +2335,8 @@ packages:
   '@formkit/auto-animate@0.9.0':
     resolution: {integrity: sha512-VhP4zEAacXS3dfTpJpJ88QdLqMTcabMg0jwpOSxZ/VzfQVfl3GkZSCZThhGC5uhq/TxPHPzW0dzr4H9Bb1OgKA==}
 
-  '@grammyjs/types@3.27.3':
-    resolution: {integrity: sha512-yUKMLliGsGbnxu96YUJ7km7B0zy4PzeH/Jvti5705R/LeKDMqkDV4DckMSt+OrliWQpTwQljHE0QLol5zgxBkg==}
+  '@grammyjs/types@3.28.0':
+    resolution: {integrity: sha512-4JvXCdxRZHCje0M4gHzLwtB4bLno3WD28xd8CNfk4POWIu73BFnSvGeW6OQ5gPem4eYTEwkD9yDaXssixl6tMQ==}
 
   '@hono/mcp@0.3.0':
     resolution: {integrity: sha512-UhSWFbZwRxHBdptOn2r1HyB8Vt6gU+BL3AbTis2t8TBW69ZhG4soJQ09yEL/t/ymxszJnWp5Rq6tOXXOjuK1qg==}
@@ -5599,8 +5599,8 @@ packages:
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
 
-  grammy@1.43.0:
-    resolution: {integrity: sha512-7dYm06A945mXuIk/5HUlSjeyIYChW8vCEiU2dkOKKqJJzwAWxTkCc91Eqbz7TgODh2rtFFKWI/fekowWHOkmjQ==}
+  grammy@1.44.0:
+    resolution: {integrity: sha512-gGVykS5+c5f1tPV97LuU6IDRMawE2NzpwM9pNz58HQ35IZXDnYL3VOLvNzYognPSeBIOSzQXRu5w96V0aY8y8A==}
     engines: {node: ^12.20.0 || >=14.13.1}
 
   gunzip-maybe@1.4.2:
@@ -7931,6 +7931,7 @@ packages:
   tsconfck@3.1.6:
     resolution: {integrity: sha512-ks6Vjr/jEw0P1gmOVwutM3B7fWxoWBL2KRDb1JfqGVawBmO5UsvmWOQFGHBPl5yxYz4eERr19E6L7NMv+Fej4w==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -10359,7 +10360,7 @@ snapshots:
 
   '@formkit/auto-animate@0.9.0': {}
 
-  '@grammyjs/types@3.27.3': {}
+  '@grammyjs/types@3.28.0': {}
 
   '@hono/mcp@0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.12.25))(hono@4.12.25)(zod@3.25.76)':
     dependencies:
@@ -12558,7 +12559,7 @@ snapshots:
       '@babel/plugin-syntax-typescript': 7.29.7(@babel/core@7.29.7)
       '@vanilla-extract/babel-plugin-debug-ids': 1.2.2
       '@vanilla-extract/css': 1.20.1
-      esbuild: 0.17.6
+      esbuild: 0.18.20
       eval: 0.1.8
       find-up: 5.0.0
       javascript-stringify: 2.1.0
@@ -14153,9 +14154,9 @@ snapshots:
 
   graceful-fs@4.2.11: {}
 
-  grammy@1.43.0:
+  grammy@1.44.0:
     dependencies:
-      '@grammyjs/types': 3.27.3
+      '@grammyjs/types': 3.28.0
       abort-controller: 3.0.0
       debug: 4.4.3
       node-fetch: 2.7.0
