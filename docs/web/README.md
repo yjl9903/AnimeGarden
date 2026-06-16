@@ -7,6 +7,7 @@
 | 文档 | 内容 | 适用场景 |
 | --- | --- | --- |
 | [architecture-overview.md](./architecture-overview.md) | Web 应用运行形态、Remix 路由、数据加载、API 代理、状态和样式目录导览 | 新介入前端代码、调整页面结构或评估影响范围时先读 |
+| [../server/deployment-topology.md](../server/deployment-topology.md) | 线上域名、Fly app、内网后端与 public API 服务关系 | 排查线上可用性或调整跨服务调用时先读 |
 
 ## 文档列表
 

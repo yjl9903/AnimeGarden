@@ -29,6 +29,8 @@ Remix loader 通过 `app/utils/api.ts` 调用 `@animegarden/client`，根据 SSR
 
 代理和 SSR 错误响应统一按不可缓存处理：`/api/*`、`/feed.xml` 会保留上游错误状态码并返回 `Cache-Control: no-store`；Remix 入口会对 `status >= 400` 的页面响应补 `Cache-Control: no-store`，避免 CDN 或边缘缓存规则保存错误页面。
 
+线上域名、Fly app、内网后端和 public API 的对应关系见 [server/deployment-topology.md](../server/deployment-topology.md)。
+
 ## 代码逻辑分类
 
 | 目录              | 主要职责                                                       |

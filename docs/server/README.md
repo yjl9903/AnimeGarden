@@ -7,6 +7,7 @@
 | 文档 | 内容 | 适用场景 |
 | --- | --- | --- |
 | [architecture-overview.md](./architecture-overview.md) | 后端应用运行形态、启动链路、模块划分、请求/任务路径和代码目录导览 | 新介入后端代码、拆分模块或评估影响范围时先读 |
+| [deployment-topology.md](./deployment-topology.md) | 线上域名、Fly app、内网后端与 public API 服务关系 | 排查线上可用性或调整服务部署职责时先读 |
 
 ## 服务与数据链路
 
