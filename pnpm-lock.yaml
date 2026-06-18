@@ -111,8 +111,8 @@ importers:
         specifier: 0.45.2
         version: 0.45.2(@cloudflare/workers-types@4.20260617.1)(@types/better-sqlite3@7.6.13)(postgres@3.4.9)
       fast-xml-parser:
-        specifier: 5.9.0
-        version: 5.9.0
+        specifier: 5.9.2
+        version: 5.9.2
       fs-extra:
         specifier: 11.3.5
         version: 11.3.5
@@ -235,8 +235,8 @@ importers:
         specifier: 2.0.1
         version: 2.0.1(date-fns@2.30.0)
       fast-xml-parser:
-        specifier: 5.9.0
-        version: 5.9.0
+        specifier: 5.9.2
+        version: 5.9.2
       hono:
         specifier: 4.12.25
         version: 4.12.25
@@ -5458,8 +5458,8 @@ packages:
     resolution: {integrity: sha512-C0AaNuC+mscy6vrAQKAc/rMq+zAPHodfHGZu4sGVehvAQt/JLG1O5zEcYcXSY5zSqr4YVgxsB+pHXTq0i7eDlg==}
     hasBin: true
 
-  fast-xml-parser@5.9.0:
-    resolution: {integrity: sha512-duBuXbyIhEeNO4GjFuVqr0nF047oNwr18aum+zJyqo0MUG/n7Afgs3Qv3D6VN3ONedUKxiuFlPiMGIa0Z11chA==}
+  fast-xml-parser@5.9.2:
+    resolution: {integrity: sha512-DYPkXnVSJHAGAkSBeVYhEo/seIpz2SLr9OQcX7m6lXaX3gvoB+DCKzFdZIEhZGI3I1DUhObBAUOT/v2xfoXz/w==}
     hasBin: true
 
   fault@1.0.4:
@@ -14063,7 +14063,7 @@ snapshots:
       path-expression-matcher: 1.5.0
       strnum: 2.4.0
 
-  fast-xml-parser@5.9.0:
+  fast-xml-parser@5.9.2:
     dependencies:
       '@nodable/entities': 2.2.0
       fast-xml-builder: 1.2.0
