@@ -70,13 +70,13 @@ importers:
         version: 3.1070.0
       '@hono/mcp':
         specifier: 0.3.0
-        version: 0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.12.25))(hono@4.12.25)(zod@3.25.76)
+        version: 0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.12.26))(hono@4.12.26)(zod@3.25.76)
       '@hono/node-server':
         specifier: 2.0.5
-        version: 2.0.5(hono@4.12.25)
+        version: 2.0.5(hono@4.12.26)
       '@hono/zod-validator':
         specifier: 0.8.0
-        version: 0.8.0(hono@4.12.25)(zod@3.25.76)
+        version: 0.8.0(hono@4.12.26)(zod@3.25.76)
       '@modelcontextprotocol/sdk':
         specifier: 1.29.0
         version: 1.29.0(zod@3.25.76)
@@ -120,8 +120,8 @@ importers:
         specifier: 1.44.0
         version: 1.44.0
       hono:
-        specifier: 4.12.25
-        version: 4.12.25
+        specifier: 4.12.26
+        version: 4.12.26
       ioredis:
         specifier: 5.11.1
         version: 5.11.1
@@ -238,8 +238,8 @@ importers:
         specifier: 5.9.2
         version: 5.9.2
       hono:
-        specifier: 4.12.25
-        version: 4.12.25
+        specifier: 4.12.26
+        version: 4.12.26
       isbot:
         specifier: 5.1.43
         version: 5.1.43
@@ -5743,6 +5743,10 @@ packages:
     resolution: {integrity: sha512-2NFaIyNVgJmBs/ecmtGzlmluTFs5cHEWGTdu0t1HBwYzoGXOL5nUQBRMXsXWla5i4KkG//QMzVP88m1+I3fdAQ==}
     engines: {node: '>=16.9.0'}
 
+  hono@4.12.26:
+    resolution: {integrity: sha512-uyZtpnYxM9CmQ7QsQknM4zN8EftNqhON1qYeIKM0Se67CCEe2c44xyGURwB0axX2fBDu1dqHrHAc1hmNT8ITkw==}
+    engines: {node: '>=16.9.0'}
+
   hookable@5.5.3:
     resolution: {integrity: sha512-Yc+BQe8SvoXH1643Qez1zqLRmbA5rCL+sSmk6TVos0LWVfNIB7PGncdlId77WzLGSIB5KaWgTaNTs2lNVEI6VQ==}
 
@@ -10439,11 +10443,11 @@ snapshots:
 
   '@grammyjs/types@3.28.0': {}
 
-  '@hono/mcp@0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.12.25))(hono@4.12.25)(zod@3.25.76)':
+  '@hono/mcp@0.3.0(@modelcontextprotocol/sdk@1.29.0(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.12.26))(hono@4.12.26)(zod@3.25.76)':
     dependencies:
       '@modelcontextprotocol/sdk': 1.29.0(zod@3.25.76)
-      hono: 4.12.25
-      hono-rate-limiter: 0.5.3(hono@4.12.25)
+      hono: 4.12.26
+      hono-rate-limiter: 0.5.3(hono@4.12.26)
       pkce-challenge: 5.0.1
       zod: 3.25.76
 
@@ -10451,13 +10455,13 @@ snapshots:
     dependencies:
       hono: 4.12.25
 
-  '@hono/node-server@2.0.5(hono@4.12.25)':
+  '@hono/node-server@2.0.5(hono@4.12.26)':
     dependencies:
-      hono: 4.12.25
+      hono: 4.12.26
 
-  '@hono/zod-validator@0.8.0(hono@4.12.25)(zod@3.25.76)':
+  '@hono/zod-validator@0.8.0(hono@4.12.26)(zod@3.25.76)':
     dependencies:
-      hono: 4.12.25
+      hono: 4.12.26
       zod: 3.25.76
 
   '@iconify-json/ant-design@1.2.5':
@@ -14387,11 +14391,13 @@ snapshots:
 
   highlightjs-vue@1.0.0: {}
 
-  hono-rate-limiter@0.5.3(hono@4.12.25):
+  hono-rate-limiter@0.5.3(hono@4.12.26):
     dependencies:
-      hono: 4.12.25
+      hono: 4.12.26
 
   hono@4.12.25: {}
+
+  hono@4.12.26: {}
 
   hookable@5.5.3: {}
 
