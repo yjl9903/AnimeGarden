@@ -90,8 +90,8 @@ importers:
         specifier: 0.20260509.0
         version: 0.20260509.0
       breadc:
-        specifier: 1.0.0-beta.16
-        version: 1.0.0-beta.16
+        specifier: 1.0.0-beta.17
+        version: 1.0.0-beta.17
       consola:
         specifier: 3.4.2
         version: 3.4.2
@@ -1132,17 +1132,17 @@ packages:
     resolution: {integrity: sha512-ctxtJ/eA+t+6q2++vj5j7FYX3nRu311q1wfYH3xjlLOsczhlhxAg2FWNUXhpGvAw3BWo1xBcvOV6/YLc2r5FJw==}
     hasBin: true
 
-  '@breadc/color@1.0.0-beta.16':
-    resolution: {integrity: sha512-XgneHnNbxruF6DT6MqzE5VyE6qiWfliGkUgJupjPBwP1sjclzdEHvudjpxSV48h7sFMWQacf8M3UqtFZ7+4aYQ==}
+  '@breadc/color@1.0.0-beta.17':
+    resolution: {integrity: sha512-dSYneiJL+nuMv7PcQ2ZnllSuggZX9vuyfYZ+AkB3+e0fUwBuhJsQvLoUDL+ok5MjtO2orV+NvsNxaVDxsXAMmA==}
 
-  '@breadc/core@1.0.0-beta.16':
-    resolution: {integrity: sha512-a+kdVzSvCdy3lQiqreC+apxEeGKKp42ymVnYCoTYm8h7DK0TNTUfUu1jxKUGqGb5VoRtfosxrhNaKjQ9+9oETQ==}
+  '@breadc/core@1.0.0-beta.17':
+    resolution: {integrity: sha512-c+8h+N58KjOhYgm1oA41yNNfwKhSglwEatQIpzZ81sR0N8jOUs7n6ohmXmNaR+Id/oZiZ7c1aum1L46jXqDP1Q==}
 
-  '@breadc/death@1.0.0-beta.16':
-    resolution: {integrity: sha512-5NXDjYi03fSqdPD1XtHIgUXAgd6D6a+KfJ9MdhMfbbICG5rXSAr+Pa54fpCurAwDoPOdGJAjcfhLcr17uT0oog==}
+  '@breadc/death@1.0.0-beta.17':
+    resolution: {integrity: sha512-4Gt0HRsul5RnBR2UVXiRHvI8cvqm88i04tVoNIMjlt+pc5EQdH7yvJF8/0YNWFAAvJnRjh81WM1fyWDPQTf7Qg==}
 
-  '@breadc/tui@1.0.0-beta.16':
-    resolution: {integrity: sha512-YYTbonrN6WoRw8YIeBfC21QLsuei6SEF46rsN6p/V1NBwWjqLeIrS3fmr6AiahgPyChJTl4K4RnmtXtEnfJDVg==}
+  '@breadc/tui@1.0.0-beta.17':
+    resolution: {integrity: sha512-whsiEmvXbvp0WofrYWyHJPjbv5xkMD1Qu02xgUvvwaCcS5paMonmyw9HZOpfEHJJoscrn/M6YWKszendaixxLA==}
 
   '@canvas/image-data@1.1.0':
     resolution: {integrity: sha512-QdObRRjRbcXGmM1tmJ+MrHcaz1MftF2+W7YI+MsphnsCrmtyfS0d5qJbk0MeSbUeyM/jCb0hmnkXPsy026L7dA==}
@@ -4451,8 +4451,8 @@ packages:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
 
-  breadc@1.0.0-beta.16:
-    resolution: {integrity: sha512-/0TelK4mt/rPPElFevn3X2v97kwKXICGNroYI3iHO7s9xV70At/GJFkQN6W4kVAfqvxONzJ3+LHPb5RBmTtGaQ==}
+  breadc@1.0.0-beta.17:
+    resolution: {integrity: sha512-xLmWETFx5SReU2WS453Y0dfOGXnihLnwQt+00clK8f4wrEzlqsUjdg39o7IxVW6+4IR2iK2eE3y0ljxF/gq9Mw==}
 
   browserify-zlib@0.1.4:
     resolution: {integrity: sha512-19OEpq7vWgsH6WkvkBJQDFvJS1uPcbFOQ4v9CU839dO+ZZXUZO6XpE6hNCqvlIIj+4fZvRiJ6DsAQ382GwiyTQ==}
@@ -9601,17 +9601,17 @@ snapshots:
     dependencies:
       css-tree: 3.2.1
 
-  '@breadc/color@1.0.0-beta.16': {}
+  '@breadc/color@1.0.0-beta.17': {}
 
-  '@breadc/core@1.0.0-beta.16':
+  '@breadc/core@1.0.0-beta.17':
     dependencies:
-      '@breadc/color': 1.0.0-beta.16
+      '@breadc/color': 1.0.0-beta.17
 
-  '@breadc/death@1.0.0-beta.16': {}
+  '@breadc/death@1.0.0-beta.17': {}
 
-  '@breadc/tui@1.0.0-beta.16':
+  '@breadc/tui@1.0.0-beta.17':
     dependencies:
-      '@breadc/color': 1.0.0-beta.16
+      '@breadc/color': 1.0.0-beta.17
       get-east-asian-width: 1.6.0
       std-env: 4.1.0
       strip-ansi: 7.2.0
@@ -12794,12 +12794,12 @@ snapshots:
     dependencies:
       fill-range: 7.1.1
 
-  breadc@1.0.0-beta.16:
+  breadc@1.0.0-beta.17:
     dependencies:
-      '@breadc/color': 1.0.0-beta.16
-      '@breadc/core': 1.0.0-beta.16
-      '@breadc/death': 1.0.0-beta.16
-      '@breadc/tui': 1.0.0-beta.16
+      '@breadc/color': 1.0.0-beta.17
+      '@breadc/core': 1.0.0-beta.17
+      '@breadc/death': 1.0.0-beta.17
+      '@breadc/tui': 1.0.0-beta.17
 
   browserify-zlib@0.1.4:
     dependencies:
