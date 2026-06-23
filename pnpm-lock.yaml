@@ -271,8 +271,8 @@ importers:
         specifier: 2.0.0
         version: 2.0.0
       swagger-ui-react:
-        specifier: 5.32.6
-        version: 5.32.6(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        specifier: 5.32.7
+        version: 5.32.7(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       swr:
         specifier: 2.4.1
         version: 2.4.1(react@19.2.7)
@@ -5879,10 +5879,6 @@ packages:
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
 
-  js-yaml@4.1.1:
-    resolution: {integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==}
-    hasBin: true
-
   js-yaml@4.2.0:
     resolution: {integrity: sha512-ePWsvanv0DWuDRsW8dnt+R4jQ31SCRCQ7hhNcPXZPsoBZiemuZNYGf7adZdqX2D86j6rvKp3RpCxVTSb8WQlOw==}
     hasBin: true
@@ -7631,8 +7627,8 @@ packages:
     resolution: {integrity: sha512-MuABJgD8vIsT5GVBTGj3HjmiEhArf58ng+YP4fo23NOJb/mKXOpKW3Rln90fnoi7ROt6IJsJy9d5kg8Yidn0/Q==}
     engines: {node: '>=22'}
 
-  swagger-ui-react@5.32.6:
-    resolution: {integrity: sha512-2q2kXd6eDR+syyWV5HE2CkWANyr2MHPkNezG4M7fC0FPlBUZEsNgyA/2dcb9dIwgE5xd995dO42h89fNMF5/ng==}
+  swagger-ui-react@5.32.7:
+    resolution: {integrity: sha512-lnT1A7wlj493InhPjdlnFe32cXO7LMEFIfB0frHBSpYK/r9VGVE8+fRGhOI9AIwLXgVRz6M/TO3+OrIOEwz2rw==}
     peerDependencies:
       react: '>=16.8.0 <20'
       react-dom: '>=16.8.0 <20'
@@ -14321,10 +14317,6 @@ snapshots:
 
   js-tokens@4.0.0: {}
 
-  js-yaml@4.1.1:
-    dependencies:
-      argparse: 2.0.1
-
   js-yaml@4.2.0:
     dependencies:
       argparse: 2.0.1
@@ -16377,7 +16369,7 @@ snapshots:
       - debug
       - supports-color
 
-  swagger-ui-react@5.32.6(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  swagger-ui-react@5.32.7(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
       '@babel/runtime-corejs3': 7.29.7
       '@scarf/scarf': 1.4.0
@@ -16390,7 +16382,7 @@ snapshots:
       ieee754: 1.2.1
       immutable: 3.8.3
       js-file-download: 0.4.12
-      js-yaml: 4.1.1
+      js-yaml: 4.2.0
       lodash: 4.18.1
       prop-types: 15.8.1
       randexp: 0.5.3
