@@ -25,24 +25,24 @@
     "preversion": "turbo run test:ci"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20260508.1",
+    "@cloudflare/workers-types": "4.20260621.1",
     "@flydotio/dockerfile": "0.7.10",
     "@total-typescript/ts-reset": "0.6.1",
     "@types/better-sqlite3": "7.6.13",
     "@types/fs-extra": "11.0.4",
-    "@types/node": "24.12.3",
+    "@types/node": "24.13.2",
     "@vite-pwa/assets-generator": "1.0.2",
     "bumpp": "latest",
     "drizzle-kit": "0.31.10",
-    "prettier": "3.8.3",
-    "tsx": "4.21.0",
-    "turbo": "2.9.10",
+    "prettier": "3.8.4",
+    "tsx": "4.22.4",
+    "turbo": "2.9.18",
     "typescript": "6.0.3",
     "unbuild": "3.6.1",
-    "vitest": "4.1.5",
-    "wrangler": "4.90.0"
+    "vitest": "4.1.9",
+    "wrangler": "4.103.0"
   },
-  "packageManager": "pnpm@11.0.8",
+  "packageManager": "pnpm@11.8.0",
   "engines": {
     "node": ">=v24.0.0"
   }

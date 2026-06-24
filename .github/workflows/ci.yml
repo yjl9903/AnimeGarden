@@ -14,15 +14,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v6.0.5
+        uses: pnpm/action-setup@v6.0.9
 
       - name: Setup node
         uses: actions/setup-node@v6
         with:
-          node-version: 26.1.0
+          node-version: 26.3.1
           cache: pnpm
 
       - name: Install

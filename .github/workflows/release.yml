@@ -14,16 +14,16 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v6.0.5
+        uses: pnpm/action-setup@v6.0.9
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 26.1.0
+          node-version: 26.3.1
           cache: pnpm
           registry-url: "https://registry.npmjs.org"
 
