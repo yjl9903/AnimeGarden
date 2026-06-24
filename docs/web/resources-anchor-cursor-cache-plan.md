@@ -1,6 +1,6 @@
 # 资源列表 Anchor + Cursor 缓存实现方案
 
-状态：方案草案，供 TanStack Start 迁移和后端资源接口改造时使用。
+状态：尚未实现, 方案草案，供 TanStack Start 迁移和后端资源接口改造时使用。
 
 对应 issue：[yjl9903/AnimeGarden#1752](https://github.com/yjl9903/AnimeGarden/issues/1752)
 
