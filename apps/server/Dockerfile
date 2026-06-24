@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
 # Base Image
-FROM platformatic/node-caged:26.1.0-slim AS base
+FROM platformatic/node-caged:26.3.1-slim AS base
 
 LABEL fly_launch_runtime="Node.js"
 
