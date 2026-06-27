@@ -4,7 +4,7 @@ import {
   generateCurlCode,
   generateJavaScriptCode,
   generatePythonCode
-} from '../app/utils/code-generator';
+} from '../src/utils/code-generator';
 
 describe('Code Generator', () => {
   const mockFilter = {

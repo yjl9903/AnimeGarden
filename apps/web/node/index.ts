@@ -1,6 +1,4 @@
-export * from './proxy';
-
-export * from './remix';
+export { feed } from './proxy';
 
 export * from './sitemap';
 

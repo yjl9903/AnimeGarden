@@ -4,7 +4,7 @@
 
 ## 实现入口
 
-统一封装在 `app/utils/umami.ts`, 主要有两种接入方式:
+统一封装在 `src/utils/umami.ts`, 主要有两种接入方式:
 
 - 直接调用 `track(event, payload)`
 - 给链接挂属性或事件
@@ -24,11 +24,11 @@
 
 当前接入位置：
 
-- 资源表格 `app/components/Resources/table.tsx`
-- 资源详情页 `app/routes/detail.$provider.$providerId/route.tsx`
-- Header RSS `app/layouts/Header.tsx`
-- Footer RSS `app/layouts/Footer.tsx`
-- Subject 分组 RSS `app/routes/subject.$subject.($page)/route.tsx`
+- 资源表格 `src/components/Resources/table.tsx`
+- 资源详情页 `src/routes/detail.$provider.$providerId/route.tsx`
+- Header RSS `src/layouts/Header.tsx`
+- Footer RSS `src/layouts/Footer.tsx`
+- Subject 分组 RSS `src/routes/subject.$subject.($page)/route.tsx`
 
 ### 导航和全局入口
 
@@ -42,8 +42,8 @@
 
 当前接入位置：
 
-- `app/layouts/Header.tsx`
-- `app/layouts/ThemeToggle.tsx`
+- `src/layouts/Header.tsx`
+- `src/layouts/ThemeToggle.tsx`
 
 ### 搜索框
 
@@ -64,7 +64,7 @@
 
 当前接入位置：
 
-- `app/layouts/Search/Search.tsx`
+- `src/layouts/Search/Search.tsx`
 
 ### 资源列表和筛选
 
@@ -83,9 +83,9 @@
 
 当前接入位置：
 
-- `app/components/Resources/table.tsx`
-- `app/routes/anime/route.tsx`
-- `app/routes/subject.$subject.($page)/route.tsx`
+- `src/components/Resources/table.tsx`
+- `src/routes/anime/route.tsx`
+- `src/routes/subject.$subject.($page)/route.tsx`
 
 ### 收藏夹和复制操作
 
@@ -104,9 +104,9 @@
 
 当前接入位置：
 
-- `app/layouts/Sidebar/Sidebar.tsx`
-- `app/layouts/Sidebar/Collection.tsx`
-- `app/routes/resources.($page)/Filter.tsx`
+- `src/layouts/Sidebar/Sidebar.tsx`
+- `src/layouts/Sidebar/Collection.tsx`
+- `src/routes/resources.($page)/Filter.tsx`
 
 ### Footer 外链
 
@@ -125,7 +125,7 @@
 
 当前接入位置：
 
-- `app/layouts/Footer.tsx`
+- `src/layouts/Footer.tsx`
 
 ### 错误埋点
 
@@ -136,11 +136,11 @@
 
 当前接入位置：
 
-- `app/routes/resources.($page)/Error.tsx`
-- `app/routes/_index/route.tsx`
-- `app/routes/resources.($page)/route.tsx`
-- `app/routes/iframe/route.tsx`
-- `app/routes/subject.$subject.($page)/route.tsx`
+- `src/routes/resources.($page)/Error.tsx`
+- `src/routes/_index/route.tsx`
+- `src/routes/resources.($page)/route.tsx`
+- `src/routes/iframe/route.tsx`
+- `src/routes/subject.$subject.($page)/route.tsx`
 
 ## 未覆盖点击埋点 TODO
 
@@ -149,92 +149,92 @@
 ### 高优先级
 
 - 分页点击
-  - 文件：`app/components/Resources/pagination.tsx`
+  - 文件：`src/components/Resources/pagination.tsx`
   - 场景：上一页、页码、下一页
   - 建议属性：`page`，`targetPage`，`kind`
 - 详情页原链接外跳
-  - 文件：`app/routes/detail.$provider.$providerId/route.tsx`
+  - 文件：`src/routes/detail.$provider.$providerId/route.tsx`
   - 场景：点击“原链接”
   - 建议属性：`resource`，`href`
 - 详情页发布者/字幕组跳转
-  - 文件：`app/routes/detail.$provider.$providerId/route.tsx`
+  - 文件：`src/routes/detail.$provider.$providerId/route.tsx`
   - 场景：点击发布者卡片、字幕组卡片
   - 建议属性：`filterType`，`value`，`resource`
 - 搜索结果页筛选摘要跳转
-  - 文件：`app/routes/resources.($page)/Filter.tsx`
+  - 文件：`src/routes/resources.($page)/Filter.tsx`
   - 场景：点击筛选摘要中的动画、发布者、字幕组
   - 建议属性：`filterType`，`value`
 - Subject 页分享按钮
-  - 文件：`app/routes/subject.$subject.($page)/subject.tsx`
+  - 文件：`src/routes/subject.$subject.($page)/subject.tsx`
   - 场景：复制主题页链接
   - 建议属性：`subjectId`，`title`
 - Subject 页 Bangumi 外链
-  - 文件：`app/routes/subject.$subject.($page)/subject.tsx`
+  - 文件：`src/routes/subject.$subject.($page)/subject.tsx`
   - 场景：点击外部 Bangumi 链接
   - 建议属性：`subjectId`，`href`
 - 收藏夹项管理操作
-  - 文件：`app/layouts/Sidebar/Collection.tsx`
+  - 文件：`src/layouts/Sidebar/Collection.tsx`
   - 场景：重命名、删除
   - 建议属性：`search`，必要时带 `name`
 
 ### 中优先级
 
 - 收藏夹侧栏快捷入口
-  - 文件：`app/layouts/Sidebar/Sidebar.tsx`
+  - 文件：`src/layouts/Sidebar/Sidebar.tsx`
   - 场景：动画周历、所有资源、高级搜索帮助
   - 建议属性：`item`
 - 收藏夹项主点击
-  - 文件：`app/layouts/Sidebar/Collection.tsx`
+  - 文件：`src/layouts/Sidebar/Collection.tsx`
   - 场景：点击某个收藏条件进入资源页
   - 建议属性：`search`
 - Subject 分组标题点击
-  - 文件：`app/routes/subject.$subject.($page)/route.tsx`
+  - 文件：`src/routes/subject.$subject.($page)/route.tsx`
   - 场景：点击分组标题里的字幕组/发布者名
   - 建议属性：`filterType`，`value`，`subjectId`
 - Subject 分组“搜索更多资源...”
-  - 文件：`app/routes/subject.$subject.($page)/route.tsx`
+  - 文件：`src/routes/subject.$subject.($page)/route.tsx`
   - 场景：点击分组下方查看更多
   - 建议属性：`filterType`，`value`，`subjectId`
 - 收藏夹详情页过滤块标题点击
-  - 文件：`app/routes/collection.$hash/route.tsx`
+  - 文件：`src/routes/collection.$hash/route.tsx`
   - 场景：点击每个块的标题跳到资源页
   - 建议属性：`hash`，`search`
 - 资源标题和发布时间点击
-  - 文件：`app/components/Resources/table.tsx`
+  - 文件：`src/components/Resources/table.tsx`
   - 场景：点击标题进入详情，点击发布时间进入详情
   - 建议属性：`resource`，`type`
 - 搜索框高级搜索帮助
-  - 文件：`app/layouts/Search/Search.tsx`
+  - 文件：`src/layouts/Search/Search.tsx`
   - 场景：点击“高级搜索帮助”
   - 建议属性：`href`
 - 搜索框高级搜索补全项
-  - 文件：`app/layouts/Search/Search.tsx`
+  - 文件：`src/layouts/Search/Search.tsx`
   - 场景：点击“包含关键词 / 排除关键词 / 字幕组 / 标题 / 晚于 / 早于 / 类型”
   - 建议属性：`item`
 
 ### 低优先级
 
 - 搜索框清空按钮
-  - 文件：`app/layouts/Search/Search.tsx`
+  - 文件：`src/layouts/Search/Search.tsx`
   - 建议属性：无或 `hasInput`
 - 动画周历左右滚动箭头
-  - 文件：`app/routes/anime/route.tsx`
+  - 文件：`src/routes/anime/route.tsx`
   - 建议属性：`weekday`，`direction`
 - 动画周历星期锚点
-  - 文件：`app/routes/anime/route.tsx`
+  - 文件：`src/routes/anime/route.tsx`
   - 建议属性：`weekday`
 - Hero 标题回首页
-  - 文件：`app/layouts/Layout.tsx`
+  - 文件：`src/layouts/Layout.tsx`
   - 建议属性：`item = hero-home`
 - Footer 内链
-  - 文件：`app/layouts/Footer.tsx`
+  - 文件：`src/layouts/Footer.tsx`
   - 场景：`API 文档`、`站点地图`
   - 建议属性：`label`
 - 收藏夹侧栏关闭按钮
-  - 文件：`app/layouts/Sidebar/Sidebar.tsx`
+  - 文件：`src/layouts/Sidebar/Sidebar.tsx`
   - 建议属性：无
 - 收藏夹空状态引导入口
-  - 文件：`app/layouts/Sidebar/Sidebar.tsx`
+  - 文件：`src/layouts/Sidebar/Sidebar.tsx`
   - 建议属性：`item = empty-state`
 
 ## 建议的补点原则

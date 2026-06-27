@@ -11,11 +11,9 @@ import { logger } from 'hono/logger';
 import { serve } from '@hono/node-server';
 import { serveStatic } from '@hono/node-server/serve-static';
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore This file won’t exist if it hasn’t yet been built
-import * as build from './build/server/index.js'; // eslint-disable-line import/no-unresolved
+import startEntry from './dist/server/server.js'; // eslint-disable-line import/no-unresolved
 
-import { api, feed, remix, sitemaps } from './dist/node/index.mjs';
+import { feed, sitemaps } from './node-dist/node/index.mjs';
 
 createConsola().withTag('Web').wrapConsole();
 
@@ -33,46 +31,40 @@ app.use(
 app.all('/health', cors(), (c) => {
   return c.json({ status: 'OK' });
 });
-app.all('/api/*', cors(), api());
+app.all('/api/*', cors(), (c) => {
+  return c.text('Not Found', 404, {
+    'Cache-Control': 'no-store'
+  });
+});
 app.all('/feed.xml', cors(), feed());
 app.all('/collection/*/feed.xml', cors(), feed());
 
 // Static assets
-const ClientRoot = path.join(__dirname, './build/client/');
-for (const file of fs.readdirSync(ClientRoot)) {
-  const filepath = path.join(ClientRoot, file);
-  const stat = fs.lstatSync(filepath);
-  if (stat && stat.isFile()) {
-    app.all(
-      `/${file}`,
-      // cache({
-      //   cacheName: 'assets',
-      //   cacheControl: 'max-age=86400',
-      //   wait: true,
-      //   caches: storage
-      // }),
-      serveStatic({
-        root: path.relative(process.cwd(), ClientRoot),
-        path: `/${file}`
-      })
-    );
+const ClientRoot = fs.existsSync(path.join(__dirname, './.output/public/'))
+  ? path.join(__dirname, './.output/public/')
+  : path.join(__dirname, './dist/client/');
+
+if (fs.existsSync(ClientRoot)) {
+  for (const file of fs.readdirSync(ClientRoot)) {
+    const filepath = path.join(ClientRoot, file);
+    const stat = fs.lstatSync(filepath);
+    if (stat && stat.isFile()) {
+      app.all(
+        `/${file}`,
+        serveStatic({
+          root: path.relative(process.cwd(), ClientRoot),
+          path: `/${file}`
+        })
+      );
+    }
   }
 }
 
-app.all(
-  '/assets/*',
-  // cache({
-  //   cacheName: 'assets',
-  //   cacheControl: 'max-age=86400',
-  //   wait: true,
-  //   caches: storage
-  // }),
-  serveStatic({ root: path.relative(process.cwd(), ClientRoot) })
-);
+app.all('/assets/*', serveStatic({ root: path.relative(process.cwd(), ClientRoot) }));
 
 app.route('/', sitemaps);
 
-app.all('*', remix({ build, mode: process.env.NODE_ENV }));
+app.all('*', (c) => startEntry.fetch(c.req.raw));
 
 app.onError((err, c) => {
   console.error('[HONO]', err);

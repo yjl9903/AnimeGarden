@@ -40,17 +40,30 @@ export default defineConfig({
         display: 'inline-block'
       }
     }),
+    /*
+     * Remote provider config kept for lookup. Do not enable it during build:
+     * it emits remote @import rules or fetches font CSS in UnoCSS.
+     *
+     * presetWebFonts({
+     *   provider: 'bunny',
+     *   inlineImports: false,
+     *   fonts: {
+     *     sans: ['IBM Plex Sans', 'Noto Sans Simplified Chinese'],
+     *     mono: 'Input Mono',
+     *     quicksand: {
+     *       provider: 'fontshare',
+     *       name: 'Quicksand',
+     *       weights: ['1', '300', '400', '500', '600', '700']
+     *     }
+     *   }
+     * })
+     */
     presetWebFonts({
-      provider: 'bunny',
-      inlineImports: false,
+      provider: 'none',
       fonts: {
         sans: ['IBM Plex Sans', 'Noto Sans Simplified Chinese'],
         mono: 'Input Mono',
-        quicksand: {
-          provider: 'fontshare',
-          name: 'Quicksand',
-          weights: ['1', '300', '400', '500', '600', '700']
-        }
+        quicksand: 'Quicksand'
       }
     }),
     presetTypography(),
