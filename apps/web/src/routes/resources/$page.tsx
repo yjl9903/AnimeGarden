@@ -8,6 +8,7 @@ import { stringifySearchText } from '~/layouts/Search/utils';
 import { generateTitleFromFilter } from '~/utils/server/meta';
 import { calendarQueryOptions, resourcesQueryOptions, subjectQueryOptions } from '~/query';
 import { getCanonicalURL, getFeedURL, getTrackingError, serializeError } from '~/utils';
+import { getResourcesRouteLink } from '~/utils/routes';
 import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
 
 function getResourcesQueryInput(url: URL, page: number) {
@@ -121,7 +122,7 @@ function ResourcesRoute() {
       data={pageData}
       feedURL={getFeedURL(location.searchStr)}
       path={`${location.pathname}${location.searchStr}`}
-      link={(page) => `/resources/${page}${location.searchStr}`}
+      link={(page) => getResourcesRouteLink(page, location.searchStr)}
       renderError={getTrackingError(pageData.error, 'resources-render-failed')}
     />
   );

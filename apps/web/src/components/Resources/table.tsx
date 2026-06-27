@@ -1,9 +1,4 @@
-import {
-  Link as NavLink,
-  useHydrated,
-  useLocation,
-  type ParsedLocation
-} from '@tanstack/react-router';
+import { Link, useHydrated, useLocation, type ParsedLocation } from '@tanstack/react-router';
 
 import CarbonError from '~icons/carbon/error';
 import CarbonLaunch from '~icons/carbon/launch';
@@ -25,14 +20,13 @@ import {
   trackResourceDetailClick,
   trackResourceRefineFilterClick
 } from '~/utils';
+import { toRouterSearch } from '~/utils/routes';
 
 import { Tag } from './tag';
 import { Pagination, PaginationProps } from './pagination';
 
 export interface ResourcesTableProps extends Partial<PaginationProps> {
   className?: string;
-
-  pathname?: string;
 
   resources: Resource<{ tracker: true }>[];
 
@@ -46,8 +40,11 @@ export interface ResourcesTableProps extends Partial<PaginationProps> {
   };
 }
 
-function getDetailHref(r: Pick<Resource, 'provider' | 'providerId'>) {
-  return `/detail/${r.provider}/${r.providerId}`;
+function getDetailRouteLink(r: Pick<Resource, 'provider' | 'providerId'>) {
+  return {
+    to: '/detail/$provider/$providerId' as const,
+    params: { provider: r.provider, providerId: r.providerId }
+  };
 }
 
 function followSearch(location: ParsedLocation, params: Record<string, string>) {
@@ -55,12 +52,12 @@ function followSearch(location: ParsedLocation, params: Record<string, string>) 
   for (const [key, value] of Object.entries(params)) {
     s.set(key, value);
   }
-  return s.toString();
+  return toRouterSearch(s);
 }
 
 export default function ResourcesTable(props: ResourcesTableProps) {
   const location = useLocation();
-  const { className, pathname, resources, link, columns } = props;
+  const { className, resources, link, columns } = props;
 
   const { fansub: isDisplayFansub = true } = columns ?? {};
 
@@ -95,7 +92,6 @@ export default function ResourcesTable(props: ResourcesTableProps) {
             {resources.map((r) => (
               <ResourceItem
                 key={`${r.provider}/${r.providerId}`}
-                pathname={pathname}
                 resource={r}
                 columns={columns}
               ></ResourceItem>
@@ -113,15 +109,15 @@ export default function ResourcesTable(props: ResourcesTableProps) {
             {/* <span className="">返回&nbsp;</span> */}
             {!location.pathname.endsWith('/1') && link && (
               <>
-                <NavLink to={link(1)} className="text-link">
+                <Link {...link(1)} className="text-link">
                   第 1 页
-                </NavLink>
+                </Link>
                 <span>&nbsp;/&nbsp;</span>
               </>
             )}
-            <NavLink to="/" className="text-link">
+            <Link to="/" className="text-link">
               主页
-            </NavLink>
+            </Link>
           </div>
         </div>
       )}
@@ -140,39 +136,29 @@ export default function ResourcesTable(props: ResourcesTableProps) {
 
 export const ResourceItem = memo(
   (props: {
-    pathname?: string;
     resource: ResourcesTableProps['resources'][number];
     columns?: ResourcesTableProps['columns'];
   }) => {
     const hydrated = useHydrated();
 
     const location = useLocation();
-    const { pathname, resource: r } = props;
+    const { resource: r } = props;
     const { fansub: isDisplayFansub = true } = props.columns ?? {};
 
     return (
       <tr className="">
-        {/* <td className="py2 text-center">
-    <a
-      href={getDetailHref(r)}
-      className="text-link-active"
-      aria-label={`Go to resource detail of ${r.title}`}
-    >
-      {formatInTimeZone(new Date(r.createdAt), 'Asia/Shanghai', 'yyyy-MM-dd HH:mm')}
-    </a>
-  </td> */}
         <td className="py2 pl3 lt-md:pl1">
           <div className="flex xl:min-w-[600px] lg:min-w-[480px] lt-lg:w-[calc(95vw-4px)]">
             <div className="flex-shrink-0 mr3 flex justify-center items-center">
-              <NavLink
-                to={
-                  `${pathname ?? '/resources'}/1?${followSearch(location, { type: r.type })}` as any
-                }
+              <Link
+                to="/resources/$page"
+                params={{ page: '1' }}
+                search={followSearch(location, { type: r.type })}
                 onClick={() => trackResourceRefineFilterClick('type', r.type)}
                 className={`flex items-center justify-center h-[32px] w-[32px] rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 ${DisplayTypeColor[r.type]}`}
               >
                 {DisplayTypeIcon[r.type]({})}
-              </NavLink>
+              </Link>
             </div>
             <div>
               <div className="flex items-center justify-start">
@@ -191,24 +177,24 @@ export const ResourceItem = memo(
                         </a>
                       </>
                     ) : (
-                      <NavLink
-                        to={getDetailHref(r)}
+                      <Link
+                        {...getDetailRouteLink(r)}
                         className="text-link"
                         aria-label={`Go to resource detail of ${r.title}`}
                       >
                         {r.title}
-                      </NavLink>
+                      </Link>
                     )}
                   </span>
                 </div>
               </div>
               <div className="mt1 flex items-center gap-4">
-                <NavLink
-                  to={getDetailHref(r)}
+                <Link
+                  {...getDetailRouteLink(r)}
                   className="text-link-secondary-hover-base text-xs text-zinc-400"
                 >
                   发布于 {formatChinaTime(new Date(r.createdAt))}
-                </NavLink>
+                </Link>
                 <a
                   href={r.magnet + (hydrated ? r.tracker : '')}
                   {...getDownloadTrackEvent(r.provider, r.providerId, 'size')}
@@ -218,8 +204,8 @@ export const ResourceItem = memo(
                 >
                   大小 {parseSize(r.size)}
                 </a>
-                <NavLink
-                  to={getDetailHref(r)}
+                <Link
+                  {...getDetailRouteLink(r)}
                   onClick={() =>
                     trackResourceDetailClick({
                       provider: r.provider,
@@ -233,7 +219,7 @@ export const ResourceItem = memo(
                   <CarbonLaunch className="vertical-middle relative bottom-[1px] inline-block"></CarbonLaunch>
                   <span> </span>
                   <span className="more">详情</span>
-                </NavLink>
+                </Link>
               </div>
             </div>
           </div>
@@ -242,10 +228,10 @@ export const ResourceItem = memo(
           <td className="py2 px2 lt-sm:px0">
             <div className="flex justify-center items-center">
               {r.fansub ? (
-                <NavLink
-                  to={
-                    `${pathname ?? '/resources'}/1?${followSearch(location, { fansub: r.fansub.name })}` as any
-                  }
+                <Link
+                  to="/resources/$page"
+                  params={{ page: '1' }}
+                  search={followSearch(location, { fansub: r.fansub.name })}
                   onClick={() => trackResourceRefineFilterClick('fansub', r.fansub!.name)}
                   className="block w-max"
                   aria-label={`Go to resources list of fansub ${r.fansub.name}`}
@@ -254,12 +240,12 @@ export const ResourceItem = memo(
                     text={r.fansub.name}
                     className={`text-xs hover:bg-gray-300 dark:hover:bg-gray-700`}
                   />
-                </NavLink>
+                </Link>
               ) : r.publisher ? (
-                <NavLink
-                  to={
-                    `${pathname ?? '/resources'}/1?${followSearch(location, { publisher: r.publisher.name })}` as any
-                  }
+                <Link
+                  to="/resources/$page"
+                  params={{ page: '1' }}
+                  search={followSearch(location, { publisher: r.publisher.name })}
                   onClick={() => trackResourceRefineFilterClick('publisher', r.publisher!.name)}
                   className="block w-max"
                   aria-label={`Go to resources list of publisher ${r.publisher.name}`}
@@ -268,7 +254,7 @@ export const ResourceItem = memo(
                     text={r.publisher.name}
                     className={`text-xs hover:bg-gray-300 dark:hover:bg-gray-700`}
                   />
-                </NavLink>
+                </Link>
               ) : null}
             </div>
           </td>

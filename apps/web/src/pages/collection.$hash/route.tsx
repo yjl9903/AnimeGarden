@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { memo } from 'react';
-import { Link as NavLink } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 
 import { Collection, Jsonify } from '@animegarden/client';
 
@@ -8,6 +8,7 @@ import Layout from '~/layouts/Layout';
 import ResourcesTable from '~/components/Resources';
 import { useInferCollectionItemName } from '~/layouts/Sidebar/Collection';
 import { getCollectionFeedURL } from '~/utils';
+import { getResourcesRouteLink } from '~/utils/routes';
 
 import { Error } from '../resources.($page)/Error';
 
@@ -33,12 +34,12 @@ export default function Collections({ data }: { data: any }) {
             <div key={filters[idx].searchParams} className={clsx('py-4 rounded-md border drop-md')}>
               <div className="mb-4 px-4 pb-4 border-b">
                 <h2 className="text-xl font-bold">
-                  <NavLink
-                    to={`/resources/1${filters[idx].searchParams}` as any}
+                  <Link
+                    {...getResourcesRouteLink(1, filters[idx].searchParams)}
                     className="text-link-active"
                   >
                     <CollectionItemTitle item={filters[idx]}></CollectionItemTitle>
-                  </NavLink>
+                  </Link>
                 </h2>
               </div>
               <div className="px-4">
@@ -46,7 +47,7 @@ export default function Collections({ data }: { data: any }) {
                   resources={item.resources}
                   page={1}
                   complete={item.complete}
-                  link={(page) => `/resources/${page}${filters[idx].searchParams}`}
+                  link={(page) => getResourcesRouteLink(page, filters[idx].searchParams)}
                 ></ResourcesTable>
               </div>
             </div>

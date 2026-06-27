@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { toast } from 'sonner';
-import { Link as NavLink } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { useQueries } from '@tanstack/react-query';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 
@@ -10,6 +10,7 @@ import { subjectQueryOptions } from '~/query';
 import { DisplayTypeColor, formatChinaTime, getFeedURL, track, trackCopyFeed } from '~/utils';
 import { deleteCollectionItem, updateCollectionItem } from '~/stores/collection';
 import { useAppStores } from '~/stores/hooks';
+import { getResourcesRouteLink } from '~/utils/routes';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -133,8 +134,8 @@ export const CollectionItemContent = memo(
           }}
         >
           <TooltipTrigger asChild>
-            <NavLink
-              to={`/resources/1${item.searchParams}` as any}
+            <Link
+              {...getResourcesRouteLink(1, item.searchParams)}
               key={item.searchParams}
               className={clsx(
                 'collection-item hover:bg-layer-subtle-overlay rounded-md text-base-800 text-xs',
@@ -186,8 +187,8 @@ export const CollectionItemContent = memo(
                   }}
                 >
                   <DropdownMenuItem asChild>
-                    <NavLink
-                      to={`/resources/1${item.searchParams}` as any}
+                    <Link
+                      {...getResourcesRouteLink(1, item.searchParams)}
                       target="_blank"
                       onClick={(e: React.MouseEvent) => {
                         e.preventDefault();
@@ -198,7 +199,7 @@ export const CollectionItemContent = memo(
                     >
                       <span className="i-ant-design:link-outlined mr1"></span>
                       <span>在新页面中打开</span>
-                    </NavLink>
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => copyRSS()}>
                     <span className="i-carbon-rss mr1"></span>
@@ -219,7 +220,7 @@ export const CollectionItemContent = memo(
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            </NavLink>
+            </Link>
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={20} align="start" alignOffset={-10}>
             <div>

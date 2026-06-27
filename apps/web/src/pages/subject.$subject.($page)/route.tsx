@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { Link as NavLink } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 
 import { stringifyURLSearch } from '@animegarden/client';
 
@@ -12,6 +12,7 @@ import {
   track,
   trackFetchResourcesError
 } from '~/utils';
+import { getResourcesRouteLink } from '~/utils/routes';
 import { getAllSubjectNames } from '~/utils/subject';
 
 import { Error } from '../resources.($page)/Error';
@@ -51,12 +52,11 @@ export default function SubjectIndex({
     search.sort();
     return getFeedURL(`?${search.toString()}`);
   }, [searchStr, subjectParam]);
-  const fallbackSearchURL = useMemo(() => {
-    if (!subject) return '/resources/1';
-    const search = stringifyURLSearch({
+  const fallbackSearch = useMemo(() => {
+    if (!subject) return '';
+    return stringifyURLSearch({
       include: getAllSubjectNames(subject!)
     });
-    return `/resources/1?${search.toString()}`;
   }, [subject]);
 
   useEffect(() => {
@@ -95,8 +95,8 @@ export default function SubjectIndex({
               <div className="h-20 text-2xl text-orange-700/80 flex items-center justify-center">
                 <span className="mr2 i-carbon-search" />
                 <span className="mr2">暂时未索引到相应资源</span>
-                <NavLink
-                  to={fallbackSearchURL}
+                <Link
+                  {...getResourcesRouteLink(1, fallbackSearch)}
                   className="text-link"
                   onClick={() => {
                     track('subject.fallback-search', {
@@ -105,7 +105,7 @@ export default function SubjectIndex({
                   }}
                 >
                   前往搜索
-                </NavLink>
+                </Link>
               </div>
             )}
           </>
@@ -151,14 +151,17 @@ function FansubGroupResources({
   return (
     <>
       <h2 className="text-2xl font-bold flex items-center gap-2 pr-2">
-        <NavLink
-          to={
-            `/resources/1?subject=${subject}&${group.fansub ? `fansub=${group.fansub.name}` : `publisher=${group.publisher.name}`}` as any
-          }
+        <Link
+          {...getResourcesRouteLink(
+            1,
+            group.fansub
+              ? { subject: String(subject), fansub: group.fansub.name }
+              : { subject: String(subject), publisher: group.publisher.name }
+          )}
           className="text-link-active"
         >
           {group.fansub?.name ?? group.publisher.name}
-        </NavLink>
+        </Link>
         <span className="block flex-auto"></span>
         <a
           href={feedURL}
@@ -173,14 +176,17 @@ function FansubGroupResources({
       <Resources resources={group.resources as any} columns={{ fansub: false }}></Resources>
       {!complete && (
         <div className="py-4 px-8 lt-xl:px-2 text-right border-b">
-          <NavLink
-            to={
-              `/resources/1?subject=${subject}&${group.fansub ? `fansub=${group.fansub.name}` : `publisher=${group.publisher.name}`}` as any
-            }
+          <Link
+            {...getResourcesRouteLink(
+              1,
+              group.fansub
+                ? { subject: String(subject), fansub: group.fansub.name }
+                : { subject: String(subject), publisher: group.publisher.name }
+            )}
             className="text-link"
           >
             搜索更多资源...
-          </NavLink>
+          </Link>
         </div>
       )}
     </>

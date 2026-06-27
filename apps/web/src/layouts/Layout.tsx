@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { memo, useEffect } from 'react';
-import { Link as NavLink } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { useSelector } from '@tanstack/react-store';
 import { useAppStores } from '~/stores/hooks';
 
@@ -77,23 +77,23 @@ const Hero = memo((props: { feedURL?: string; heading?: boolean }) => {
       >
         {props.heading === false ? (
           <div className="lg:z-12 lt-lg:z-10 w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none">
-            <NavLink
+            <Link
               to="/"
               data-header-collision-source
               className="pointer-events-auto cursor-pointer"
             >
               <span>🌸 Anime Garden</span>
-            </NavLink>
+            </Link>
           </div>
         ) : (
           <h1 className="lg:z-12 lt-lg:z-10 w-full pt-5rem pb-3rem text-4xl font-quicksand font-bold text-center select-none outline-none pointer-events-none">
-            <NavLink
+            <Link
               to="/"
               data-header-collision-source
               className="pointer-events-auto cursor-pointer"
             >
               <span>🌸 Anime Garden</span>
-            </NavLink>
+            </Link>
           </h1>
         )}
       </div>

@@ -171,8 +171,8 @@ export function subjectSearchQueryOptions(keywords: string[]) {
       // Keep keyword searches individually cached. The N here is bounded by parsed search terms,
       // while single-keyword hits are shared by suggestions across repeated input states.
       const responses = await Promise.all(
-        normalizeTexts(keywords).map((keyword) =>
-          client.ensureQueryData(subjectSearchKeywordQueryOptions(keyword, 20, signal)) // intention: suggestion-only truncation; move ranking server-side if recall matters.
+        normalizeTexts(keywords).map(
+          (keyword) => client.ensureQueryData(subjectSearchKeywordQueryOptions(keyword, 20, signal)) // intention: suggestion-only truncation; move ranking server-side if recall matters.
         )
       );
       return {

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { toast } from 'sonner';
-import { ClientOnly, Link as NavLink, useLocation, useNavigate } from '@tanstack/react-router';
+import { ClientOnly, Link, useLocation, useNavigate } from '@tanstack/react-router';
 import { useSelector } from '@tanstack/react-store';
 import { useMutation } from '@tanstack/react-query';
 import { type MouseEvent, memo, useCallback, useMemo } from 'react';
@@ -9,7 +9,7 @@ import type { Collection } from '@animegarden/client';
 
 import { generateCollectionMutationOptions } from '~/query';
 import { track } from '~/utils';
-import { getActivePageTab } from '~/utils/routes';
+import { getActivePageTab, getResourcesRouteLink } from '~/utils/routes';
 import { updateCollection } from '~/stores/collection';
 import { useAppStores } from '~/stores/hooks';
 
@@ -87,22 +87,22 @@ const QuickLinks = memo((props: { collection: Collection }) => {
 
   return (
     <>
-      <NavLink
+      <Link
         to="/anime"
         className={clsx(className, match === 'anime' && activeClassName)}
         resetScroll={false}
       >
         <span className="i-carbon-calendar mr1"></span>
         <span>动画周历</span>
-      </NavLink>
-      <NavLink
-        to={'/resources/1' as any}
+      </Link>
+      <Link
+        {...getResourcesRouteLink(1)}
         className={clsx(className, match === 'resources' && activeClassName)}
         resetScroll={false}
       >
         <span className="i-carbon-list mr1"></span>
         <span>所有资源</span>
-      </NavLink>
+      </Link>
       <a
         href="https://docs.animes.garden/animegarden/search"
         className={clsx(className)}
@@ -145,7 +145,7 @@ const Collection = memo((props: { collection: Collection<true> }) => {
       e.preventDefault();
       const resp = await createCollection();
       if (resp) {
-        navigate({ to: `/collection/${resp.hash}` });
+        navigate({ to: '/collection/$hash', params: { hash: resp.hash } });
         track('collection.open', { hash: resp.hash || '' });
       }
     },
@@ -183,13 +183,13 @@ const Collection = memo((props: { collection: Collection<true> }) => {
     <div>
       <div className="px2 flex items-center text-sm">
         {collection.hash ? (
-          <NavLink
+          <Link
             to="/collection/$hash"
             params={{ hash: collection.hash }}
             className={'block text-xs text-base-500 text-link-active'}
           >
             <span className="select-none">{collection.name}</span>
-          </NavLink>
+          </Link>
         ) : (
           <a
             href="/collection/"
@@ -221,13 +221,13 @@ const Collection = memo((props: { collection: Collection<true> }) => {
           ))}
         </div>
       ) : (
-        <NavLink
-          to={'/resources/1?search=败犬女主太多了&type=动画' as any}
+        <Link
+          {...getResourcesRouteLink(1, 'search=败犬女主太多了&type=动画')}
           className="h-[80px] px2 flex items-center justify-center text-base-700 text-link-active"
         >
           <span className="text-sm">收藏一个搜索条件吧</span>
           <span className="i-carbon:arrow-up-right"></span>
-        </NavLink>
+        </Link>
       )}
       <div className="mt2 px2 flex items-center">
         <div className="h-[1px] w-full bg-zinc-200"></div>
