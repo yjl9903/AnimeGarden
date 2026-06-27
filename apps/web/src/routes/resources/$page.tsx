@@ -1,23 +1,37 @@
 import { createFileRoute, redirect, useLocation } from '@tanstack/react-router';
+import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
 
 import Page from '~/pages/resources.($page)/route';
 import { APP_HOST } from '~build/env';
 import { stringifySearch } from '~/layouts/Search/utils';
 import { generateTitleFromFilter } from '~/utils/server/meta';
-import {
-  fetchResources,
-  getCanonicalURL,
-  getFeedURL,
-  getTrackingError,
-  serializeError
-} from '~/utils';
-import { setResponseStatus } from '~/utils/response';
+import { calendarQueryOptions, resourcesQueryOptions } from '~/query';
+import { getCanonicalURL, getFeedURL, getTrackingError, serializeError } from '~/utils';
+import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
+
+function getResourcesQueryInput(url: URL, page: number) {
+  const { filter: parsedFilter, pagination: parsedPagination } = parseURLSearch(url.searchParams, {
+    pageSize: 80
+  });
+
+  return {
+    parsedFilter,
+    queryInput: {
+      ...parsedFilter,
+      ...parsedPagination,
+      page,
+      pageSize: 30
+    }
+  };
+}
 
 const loader = async ({
+  context,
   location,
   params
 }: {
+  context: { queryClient: QueryClient };
   location: { href: string };
   params: { page?: string };
 }) => {
@@ -29,48 +43,31 @@ const loader = async ({
     throw redirect({ href: `${url.pathname}${url.search}` });
   }
 
-  const { filter: parsedFilter, pagination: parsedPagination } = parseURLSearch(url.searchParams, {
-    pageSize: 80
-  });
-  try {
-    const { ok, resources, pagination, filter, timestamp, error } = await fetchResources({
-      ...parsedFilter,
-      ...parsedPagination,
-      page: +(params.page ?? '1'),
-      pageSize: 30
-    });
+  const { queryInput } = getResourcesQueryInput(url, page);
+  const [{ ok, resources, pagination, filter, timestamp, error }] = await Promise.all([
+    context.queryClient.ensureQueryData(resourcesQueryOptions(queryInput)),
+    context.queryClient.ensureQueryData(calendarQueryOptions())
+  ]);
 
-    if (error) {
-      console.error(location.href, error);
-    }
-
-    if (!ok) {
-      await setResponseStatus(500);
-    }
-
-    return {
-      ok,
-      resources,
-      pagination,
-      page,
-      filter,
-      timestamp,
-      error: serializeError(error)
-    };
-  } catch (error) {
+  if (error) {
     console.error(location.href, error);
-    await setResponseStatus(500);
-
-    return {
-      ok: false,
-      resources: [],
-      pagination: undefined,
-      page,
-      filter: parsedFilter,
-      timestamp: undefined,
-      error: serializeError(error)
-    };
   }
+
+  if (!ok) {
+    await setErrorResponse(500);
+  } else {
+    await setCacheControl(ResponseCacheControl.List);
+  }
+
+  return {
+    ok,
+    resources,
+    pagination,
+    page,
+    filter,
+    timestamp,
+    error: serializeError(error)
+  };
 };
 
 export const Route = createFileRoute('/resources/$page')({
@@ -100,15 +97,23 @@ export const Route = createFileRoute('/resources/$page')({
 
 function ResourcesRoute() {
   const location = useLocation();
-  const data = Route.useLoaderData();
+  const { page } = Route.useLoaderData();
+  const url = new URL(location.href, `https://${APP_HOST}`);
+  const { queryInput } = getResourcesQueryInput(url, page);
+  const { data } = useSuspenseQuery(resourcesQueryOptions(queryInput));
+  const pageData = {
+    ...data,
+    page,
+    error: serializeError(data.error)
+  };
 
   return (
     <Page
-      data={data}
+      data={pageData}
       feedURL={getFeedURL(location.searchStr)}
       path={`${location.pathname}${location.searchStr}`}
       link={(page) => `/resources/${page}${location.searchStr}`}
-      renderError={getTrackingError(data.error, 'resources-render-failed')}
+      renderError={getTrackingError(pageData.error, 'resources-render-failed')}
     />
   );
 }

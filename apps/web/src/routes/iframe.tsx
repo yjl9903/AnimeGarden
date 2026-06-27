@@ -1,24 +1,47 @@
 import { createFileRoute, useLocation } from '@tanstack/react-router';
+import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
 
 import Page from '~/pages/iframe/route';
 import { APP_HOST } from '~build/env';
 import { stringifySearch } from '~/layouts/Search/utils';
 import { generateTitleFromFilter } from '~/utils/server/meta';
-import { fetchResources, getCanonicalURL, getTrackingError, serializeError } from '~/utils';
+import { calendarQueryOptions, resourcesQueryOptions } from '~/query';
+import { getCanonicalURL, getTrackingError, serializeError } from '~/utils';
+import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
 
-const loader = async ({ location }: { location: { href: string } }) => {
-  const url = new URL(location.href, `https://${APP_HOST}`);
-
+function getIframeQueryInput(url: URL) {
   const { filter: parsedFilter, pagination: parsedPagination } = parseURLSearch(url.searchParams);
-  const { ok, resources, pagination, filter, timestamp, error } = await fetchResources({
+
+  return {
     ...parsedFilter,
     ...parsedPagination,
     pageSize: 30
-  });
+  };
+}
+
+const loader = async ({
+  context,
+  location
+}: {
+  context: { queryClient: QueryClient };
+  location: { href: string };
+}) => {
+  const url = new URL(location.href, `https://${APP_HOST}`);
+
+  const [{ ok, resources, pagination, filter, timestamp, error }] = await Promise.all([
+    context.queryClient.ensureQueryData(resourcesQueryOptions(getIframeQueryInput(url))),
+    context.queryClient.ensureQueryData(calendarQueryOptions())
+  ]);
 
   if (error) {
     console.error(location.href, error);
+  }
+
+  if (!ok) {
+    await setErrorResponse(500);
+  } else {
+    await setCacheControl(ResponseCacheControl.List);
   }
 
   return {
@@ -58,14 +81,19 @@ export const Route = createFileRoute('/iframe')({
 
 function IframeRoute() {
   const location = useLocation();
-  const data = Route.useLoaderData();
+  const url = new URL(location.href, `https://${APP_HOST}`);
+  const { data } = useSuspenseQuery(resourcesQueryOptions(getIframeQueryInput(url)));
+  const pageData = {
+    ...data,
+    error: serializeError(data.error)
+  };
 
   return (
     <Page
-      data={data}
+      data={pageData}
       searchStr={location.searchStr}
       path={`${location.pathname}${location.searchStr}`}
-      renderError={getTrackingError(data.error, 'iframe-render-failed')}
+      renderError={getTrackingError(pageData.error, 'iframe-render-failed')}
     />
   );
 }

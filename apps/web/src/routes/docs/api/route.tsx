@@ -1,10 +1,23 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 
 import Page from '~/pages/docs.api/route';
-import { fetchTimestamp, getCanonicalURL } from '~/utils';
+import { calendarQueryOptions, timestampQueryOptions } from '~/query';
+import { getCanonicalURL } from '~/utils';
+import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
 
-const loader = async () => {
-  return await fetchTimestamp();
+const loader = async ({ context }: { context: { queryClient: QueryClient } }) => {
+  const [data] = await Promise.all([
+    context.queryClient.ensureQueryData(timestampQueryOptions()),
+    context.queryClient.ensureQueryData(calendarQueryOptions())
+  ]);
+  if (data.ok) {
+    await setCacheControl(ResponseCacheControl.List);
+  } else {
+    await setErrorResponse(500);
+  }
+
+  return data;
 };
 
 export const Route = createFileRoute('/docs/api')({
@@ -20,6 +33,7 @@ export const Route = createFileRoute('/docs/api')({
 });
 
 function DocsApiRoute() {
-  const { timestamp } = Route.useLoaderData();
+  const { data } = useSuspenseQuery(timestampQueryOptions());
+  const { timestamp } = data;
   return <Page timestamp={timestamp} />;
 }

@@ -1,11 +1,26 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 
 import Page from '~/pages/anime/route';
-import { fetchTimestamp, getCanonicalURL } from '~/utils';
+import { calendarQueryOptions, timestampQueryOptions } from '~/query';
+import { getCanonicalURL } from '~/utils';
+import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
 
-const loader = async () => {
+const loader = async ({ context }: { context: { queryClient: QueryClient } }) => {
+  const [timestamp, calendar] = await Promise.all([
+    context.queryClient.ensureQueryData(timestampQueryOptions()),
+    context.queryClient.ensureQueryData(calendarQueryOptions())
+  ]);
+
+  if (timestamp.ok && calendar.ok) {
+    await setCacheControl(ResponseCacheControl.List);
+  } else {
+    await setErrorResponse(500);
+  }
+
   return {
-    timestamp: (await fetchTimestamp()).timestamp
+    ...timestamp,
+    calendar: calendar.calendar
   };
 };
 
@@ -26,6 +41,7 @@ export const Route = createFileRoute('/anime')({
 });
 
 function AnimeRoute() {
-  const { timestamp } = Route.useLoaderData();
-  return <Page timestamp={timestamp} />;
+  const { data: timestamp } = useSuspenseQuery(timestampQueryOptions());
+  const { data: calendar } = useSuspenseQuery(calendarQueryOptions());
+  return <Page timestamp={timestamp.timestamp} calendar={calendar.calendar} />;
 }

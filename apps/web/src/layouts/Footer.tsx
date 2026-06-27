@@ -1,15 +1,16 @@
 import clsx from 'clsx';
 import { useSelector } from '@tanstack/react-store';
-import { memo, useEffect, useRef, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { memo } from 'react';
 import { Link as NavLink } from '@tanstack/react-router';
 
 import {
-  fetchTimestamp,
   formatChinaTime,
   getFeedURL,
   getOpenFeedTrackEvent,
   trackFooterExternalLinkClick
 } from '~/utils';
+import { timestampQueryOptions } from '~/query';
 import { useAppStores } from '~/stores/hooks';
 
 import { ThemeToggle } from './ThemeToggle';
@@ -26,36 +27,14 @@ export const Footer = memo((props: FooterProps) => {
 
   const { timestamp: timestampInput, feedURL } = props;
   const resolvedFeedURL = feedURL ?? getFeedURL();
-
-  const ref = useRef<{ timestamp?: string }>({});
-  if (timestampInput) {
-    if (!ref.current) ref.current = {};
-    ref.current.timestamp = timestampInput.toISOString();
-  }
-
-  const [timestamp, setTimestamp] = useState(
-    (timestampInput ?? ref.current?.timestamp)
-      ? new Date(timestampInput ?? ref.current.timestamp!)
-      : undefined
-  );
-
-  const [loading, setLoading] = useState(timestamp ? false : true);
-
-  useEffect(() => {
-    if (!timestamp) {
-      fetchTimestamp()
-        .then((t) => {
-          if (t.timestamp) {
-            ref.current.timestamp = t.timestamp.toISOString();
-            setTimestamp(new Date(t.timestamp));
-          }
-          setLoading(false);
-        })
-        .catch(() => {
-          setLoading(false);
-        });
-    }
-  }, [timestamp]);
+  const timestampQuery = useQuery({
+    ...timestampQueryOptions(),
+    enabled: !timestampInput,
+    initialData: timestampInput ? { ok: true, timestamp: timestampInput } : undefined
+  });
+  const timestampValue = timestampInput ?? timestampQuery.data?.timestamp;
+  const timestamp = timestampValue ? new Date(timestampValue) : undefined;
+  const loading = timestampQuery.isLoading;
 
   const onExternalLinkClick = (section: string, label: string, href: string) => () =>
     trackFooterExternalLinkClick({ section, label, href });

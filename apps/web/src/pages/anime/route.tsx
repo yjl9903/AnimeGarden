@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link as NavLink } from '@tanstack/react-router';
 
+import type { BasicSubject } from 'bgmd';
+
 import Layout from '~/layouts/Layout';
 import { getCalendar } from '~/utils/calendar';
 import { trackAnimeCalendarClick } from '~/utils';
@@ -8,8 +10,14 @@ import { getSubjectDisplayName, getSubjectURL } from '~/utils/subjects';
 
 import './anime.css';
 
-export default function Index({ timestamp }: { timestamp?: Date }) {
-  const calendar = getCalendar();
+export default function Index({
+  timestamp,
+  calendar
+}: {
+  timestamp?: Date;
+  calendar: BasicSubject[][];
+}) {
+  const resolvedCalendar = getCalendar(calendar);
 
   const [wrapperClassName, setWrapperClassName] = useState(calendar.map(() => ['scroll-begin']));
 
@@ -43,7 +51,7 @@ export default function Index({ timestamp }: { timestamp?: Date }) {
     });
   };
 
-  const scrollHandler = calendar.map(() => (ev: React.UIEvent<HTMLDivElement>) => {
+  const scrollHandler = resolvedCalendar.map(() => (ev: React.UIEvent<HTMLDivElement>) => {
     const container = ev.currentTarget;
     updateWrapperClassName(container);
   });
@@ -86,7 +94,7 @@ export default function Index({ timestamp }: { timestamp?: Date }) {
   return (
     <Layout timestamp={timestamp}>
       <div className="w-full pt-13 pb-24 space-y-8">
-        {calendar.map((cal) => (
+        {resolvedCalendar.map((cal) => (
           <div
             className="bgm-weekday w-full pt-4 bg-gray-100 dark:bg-gray-800 rounded-md"
             id={`星期${cal.text}`}

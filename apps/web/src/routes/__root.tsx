@@ -1,5 +1,5 @@
 import { kebabCase } from 'scule';
-import { type ReactNode, useEffect } from 'react';
+import { lazy, Suspense, type ReactNode, useEffect } from 'react';
 import {
   HeadContent,
   Outlet,
@@ -30,6 +30,24 @@ const WebFontStylesheets = [
   'https://fonts.bunny.net/css?family=ibm-plex-sans|noto-sans-simplified-chinese|input-mono&display=swap',
   'https://api.fontshare.com/v2/css?f[]=quicksand@1,300,400,500,600,700&display=swap'
 ];
+
+const DevtoolsContent = import.meta.env.DEV
+  ? lazy(async () => {
+      const [query, router] = await Promise.all([
+        import('@tanstack/react-query-devtools'),
+        import('@tanstack/react-router-devtools')
+      ]);
+
+      return {
+        default: () => (
+          <>
+            <router.TanStackRouterDevtools position="bottom-left" />
+            <query.ReactQueryDevtools buttonPosition="bottom-right" />
+          </>
+        )
+      };
+    })
+  : undefined;
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -123,8 +141,19 @@ function RootDocument({ children }: { children: ReactNode }) {
         />
         <Scripts />
         <Toaster />
+        <Devtools />
       </body>
     </html>
+  );
+}
+
+function Devtools() {
+  if (!DevtoolsContent) return null;
+
+  return (
+    <Suspense fallback={null}>
+      <DevtoolsContent />
+    </Suspense>
   );
 }
 

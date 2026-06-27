@@ -6,6 +6,19 @@ export interface SerializedError {
 export function serializeError(error: unknown): SerializedError | undefined {
   if (!error) return undefined;
 
+  if (
+    typeof error === 'object' &&
+    'name' in error &&
+    'message' in error &&
+    typeof error.name === 'string' &&
+    typeof error.message === 'string'
+  ) {
+    return {
+      name: error.name,
+      message: error.message
+    };
+  }
+
   if (error instanceof globalThis.Error) {
     return {
       name: error.name,

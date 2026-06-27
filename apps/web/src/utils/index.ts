@@ -2,8 +2,6 @@ export * from './constants';
 
 export * from './date';
 
-export * from './api';
-
 export * from './error';
 
 export * from './url';

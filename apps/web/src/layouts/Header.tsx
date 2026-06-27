@@ -1,9 +1,11 @@
 import clsx from 'clsx';
 import { Link as NavLink } from '@tanstack/react-router';
 import { useSelector } from '@tanstack/react-store';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { memo, useEffect, useMemo, useState } from 'react';
 
 import { useAppStores } from '~/stores/hooks';
+import { calendarQueryOptions } from '~/query';
 import { getCalendar } from '~/utils/calendar';
 import { getSubjectURL } from '~/utils/subjects';
 import { getOpenFeedTrackEvent, trackNavClick } from '~/utils/umami';
@@ -56,7 +58,8 @@ export const Header = memo((props: { feedURL?: string }) => {
 });
 
 const AnimeDropdown = memo(() => {
-  const calendar = useMemo(() => getCalendar(), []);
+  const { data } = useSuspenseQuery(calendarQueryOptions());
+  const calendar = useMemo(() => getCalendar(data.calendar), [data.calendar]);
 
   return (
     <Dropdown
