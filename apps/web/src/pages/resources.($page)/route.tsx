@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
+import type { PaginationLink } from '~/components/Resources/pagination';
 import { usePreferFansub } from '~/stores/fansubs';
 import { getTrackingError, trackFetchResourcesError } from '~/utils';
 
@@ -20,7 +21,7 @@ export interface ResourcesIndexProps {
   };
   feedURL: string;
   path: string;
-  link: (page: number) => string;
+  link: (page: number) => PaginationLink;
   renderError: string;
 }
 

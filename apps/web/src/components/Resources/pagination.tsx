@@ -1,6 +1,12 @@
 import clsx from 'clsx';
 
 import { Link } from '@tanstack/react-router';
+import type { LinkProps, RegisteredRouter } from '@tanstack/react-router';
+
+export type PaginationLink = Omit<
+  LinkProps<'a', RegisteredRouter, string, string>,
+  'children' | 'className'
+>;
 
 export interface PaginationProps {
   page: number;
@@ -9,7 +15,7 @@ export interface PaginationProps {
 
   timestamp?: Date;
 
-  link?: (page: number) => string;
+  link?: (page: number) => PaginationLink;
 
   navigate?: (page: number) => void | Promise<void>;
 }
@@ -81,8 +87,10 @@ const PageItem = (
   const className = 'px-2 py-1 rounded-md hover:bg-gray-100 select-none cursor-pointer';
 
   if (link) {
+    const linkProps = link(page);
+
     return (
-      <Link to={link(page)} className={clsx(className, props.className)}>
+      <Link {...linkProps} className={clsx(className, props.className)}>
         {props.children}
       </Link>
     );

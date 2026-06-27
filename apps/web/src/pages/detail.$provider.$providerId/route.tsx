@@ -8,6 +8,7 @@ import {
   getPikPakTrackEvent,
   getDownloadTrackEvent
 } from '~/utils';
+import { getResourcesRouteLink } from '~/utils/routes';
 
 import './detail.css';
 
@@ -110,7 +111,7 @@ export default function Resources({ data }: { data: any }) {
             <div className="flex gap8">
               <div>
                 <Link
-                  to={`/resources/1?publisher=${resource?.publisher.name}` as any}
+                  {...getResourcesRouteLink(1, { publisher: resource?.publisher.name ?? '' })}
                   className="block text-left"
                 >
                   <img
@@ -129,8 +130,8 @@ export default function Resources({ data }: { data: any }) {
               </div>
               {resource?.fansub && (
                 <div>
-                  <a
-                    href={`/resources/1?fansub=${resource.fansub.name}`}
+                  <Link
+                    {...getResourcesRouteLink(1, { fansub: resource.fansub.name })}
                     className="block w-auto text-left"
                   >
                     <img
@@ -145,7 +146,7 @@ export default function Resources({ data }: { data: any }) {
                       }}
                     />
                     <span className="text-link block mt2">{resource.fansub.name}</span>
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>

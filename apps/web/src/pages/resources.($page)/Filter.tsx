@@ -1,5 +1,5 @@
 import { toast } from 'sonner';
-import { Link as NavLink } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { useQueries } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useSelector } from '@tanstack/react-store';
@@ -33,7 +33,8 @@ import {
   trackCopyIframe
 } from '~/utils';
 import { subjectQueryOptions } from '~/query';
-import { getSubjectDisplayName, getSubjectURL } from '~/utils/subject';
+import { getSubjectDisplayName, getSubjectRouteLink } from '~/utils/subject';
+import { getResourcesRouteLink } from '~/utils/routes';
 import { Button } from '~/components/ui/button';
 import { SearchTooltip } from '~/components/Help';
 import {
@@ -137,7 +138,7 @@ export function FilterCard(props: Props) {
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">动画</span>
           {realSubjects.map((subject) => (
             <span key={subject.id} className={`text-4 select-text text-base-900 text-link`}>
-              <NavLink to={getSubjectURL(subject)}>{getSubjectDisplayName(subject)}</NavLink>
+              <Link {...getSubjectRouteLink(subject)}>{getSubjectDisplayName(subject)}</Link>
             </span>
           ))}
         </div>
@@ -159,13 +160,13 @@ export function FilterCard(props: Props) {
         <div className="space-x-2 text-0">
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">发布者</span>
           {publishers.map((publisher) => (
-            <NavLink
+            <Link
               key={publisher}
-              to={`/resources/1?publisher=${publisher}` as any}
+              {...getResourcesRouteLink(1, { publisher })}
               className="text-4 select-text text-link"
             >
               {publisher}
-            </NavLink>
+            </Link>
           ))}
         </div>
       )}
@@ -173,13 +174,13 @@ export function FilterCard(props: Props) {
         <div className="space-x-2 text-0">
           <span className="text-4 text-base-800 font-bold mr2 select-none keyword">字幕组</span>
           {fansubs.map((fansub) => (
-            <NavLink
+            <Link
               key={fansub}
-              to={`/resources/1?fansub=${fansub}` as any}
+              {...getResourcesRouteLink(1, { fansub })}
               className="text-4 select-text text-link"
             >
               {fansub}
-            </NavLink>
+            </Link>
           ))}
         </div>
       )}

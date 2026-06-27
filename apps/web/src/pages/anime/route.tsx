@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Link as NavLink } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 
 import type { BasicSubject } from 'bgmd';
 
 import Layout from '~/layouts/Layout';
 import { getCalendar } from '~/utils/calendar';
 import { trackAnimeCalendarClick } from '~/utils';
-import { getSubjectDisplayName, getSubjectURL } from '~/utils/subject';
+import { getSubjectDisplayName, getSubjectRouteLink } from '~/utils/subject';
 
 import './anime.css';
 
@@ -112,8 +112,8 @@ export default function Index({
                 onScroll={scrollHandler[cal.index - 1]}
               >
                 {cal.bangumis.map((bgm) => (
-                  <NavLink
-                    to={getSubjectURL(bgm)}
+                  <Link
+                    {...getSubjectRouteLink(bgm)}
                     className="block w-max"
                     key={bgm.id}
                     onClick={() =>
@@ -136,7 +136,7 @@ export default function Index({
                         {getSubjectDisplayName(bgm)}
                       </span>
                     </div>
-                  </NavLink>
+                  </Link>
                 ))}
               </div>
 

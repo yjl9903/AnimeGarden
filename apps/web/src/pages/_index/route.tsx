@@ -5,6 +5,7 @@ import type { Resource } from '@animegarden/client';
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
 import { getTrackingError, trackFetchResourcesError } from '~/utils';
+import { getResourcesRouteLink } from '~/utils/routes';
 
 import { Error } from '../resources.($page)/Error';
 
@@ -41,7 +42,7 @@ export default function Index({ data, feedURL, path, renderError }: IndexProps) 
             page={1}
             timestamp={new Date(timestamp!)}
             complete={false}
-            link={(page) => `/resources/${page}?type=动画&type=合集&preset=bangumi`}
+            link={(page) => getResourcesRouteLink(page, 'type=动画&type=合集&preset=bangumi')}
           ></Resources>
         ) : (
           <Error

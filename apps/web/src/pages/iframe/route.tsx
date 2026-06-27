@@ -4,6 +4,7 @@ import { useEffect, useMemo } from 'react';
 
 import Resources from '~/components/Resources';
 import { getTrackingError, trackFetchResourcesError } from '~/utils';
+import { toRouterSearch } from '~/utils/routes';
 
 import { Error } from '../resources.($page)/Error';
 
@@ -51,7 +52,10 @@ export default function ResourcesIndex({
             link={(page) => {
               const newSearchParams = new URLSearchParams(searchStr);
               newSearchParams.set('page', page.toString());
-              return `/iframe?${newSearchParams.toString()}`;
+              return {
+                to: '/iframe',
+                search: toRouterSearch(newSearchParams)
+              };
             }}
           ></Resources>
         </>

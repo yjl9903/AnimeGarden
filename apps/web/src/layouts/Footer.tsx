@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useSelector } from '@tanstack/react-store';
 import { useQuery } from '@tanstack/react-query';
 import { memo } from 'react';
-import { Link as NavLink } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 
 import {
   formatChinaTime,
@@ -162,9 +162,9 @@ export const Footer = memo((props: FooterProps) => {
             >
               MCP
             </a>
-            <NavLink to="/docs/api" className="ml-4 lt-sm:ml-2">
+            <Link to="/docs/api" className="ml-4 lt-sm:ml-2">
               API 文档
-            </NavLink>
+            </Link>
           </div>
           <div className="flex mt-2">
             <span className="text-base-900 font-bold select-none">更多</span>

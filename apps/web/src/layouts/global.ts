@@ -180,6 +180,7 @@ function handleScriptError(e: Event) {
   if (e?.target?.tagName === 'SCRIPT') {
     // 避免无限刷新
     if (!sessionStorage.getItem('script_error_reloaded')) {
+      console.error('[global]', 'trigger reload', e);
       sessionStorage.setItem('script_error_reloaded', 'true');
       location.reload();
     }

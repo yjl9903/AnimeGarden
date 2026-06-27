@@ -2,13 +2,13 @@ import type { FullSubject } from 'bgmd';
 
 import clsx from 'clsx';
 import { toast } from 'sonner';
-import { Link as NavLink } from '@tanstack/react-router';
+import { Link } from '@tanstack/react-router';
 import { useCallback } from 'react';
 
 import type { Jsonify } from '@animegarden/client';
 
 import { getWeekday } from '~/utils/date';
-import { getSubjectDisplayName, getSubjectURL } from '~/utils/subject';
+import { getSubjectDisplayName, getSubjectRouteLink } from '~/utils/subject';
 
 export function SubjectCard({ subject }: { subject: Jsonify<FullSubject> }) {
   const onClickShare = useCallback(
@@ -39,9 +39,9 @@ export function SubjectCard({ subject }: { subject: Jsonify<FullSubject> }) {
       )}
       <div className="info-box space-y-8">
         <h1 className="text-2xl font-bold flex items-center gap-2 pr-2">
-          <NavLink to={getSubjectURL(subject)} className="text-link-active">
+          <Link {...getSubjectRouteLink(subject)} className="text-link-active">
             {getSubjectDisplayName(subject)}
-          </NavLink>
+          </Link>
           <span
             className="h-[30px] px-1.5 py-1.5 w-auto rounded-md flex items-center cursor-pointer hover:bg-layer-muted"
             onClick={onClickShare}
