@@ -1,7 +1,7 @@
 import { Command } from 'cmdk';
 import { useSelector } from '@tanstack/react-store';
 import { useLocation, useNavigate } from '@tanstack/react-router';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   type CompositionEvent,
   type InputEvent as ReactInputEvent,
@@ -23,23 +23,17 @@ import {
   trackSearchTrigger,
   type SearchTriggerSource
 } from '~/utils';
-import { resourcesQueryOptions } from '~/query';
-import {
-  getSubjectDisplayName,
-  getSubjectURL,
-  searchSubjects,
-  waitForSubjectsLoaded
-} from '~/utils/subjects';
-import { useAppStores } from '~/stores/hooks';
-import { useActiveElement, useDocument, useEventListener } from '~/hooks';
-
+import { resourcesQueryOptions, subjectSearchQueryOptions } from '~/query';
 import {
   debounce,
   isDirectDetailURL,
   parseSearchInput,
   resolveSearchURL,
-  stringifySearch
+  stringifySearchTextAsync
 } from './utils';
+import { getSubjectDisplayName, getSubjectURL } from '~/utils/subject';
+import { useAppStores } from '~/stores/hooks';
+import { useActiveElement, useDocument, useEventListener } from '~/hooks';
 
 const SEARCH_HELP_URL = `https://docs.animes.garden/animegarden/search.html`;
 
@@ -65,6 +59,7 @@ function trackOnceWithinWindow(trackedRef: RecentTrackRef, key: string, action: 
 
 export const Search = memo(() => {
   const location = useLocation();
+  const queryClient = useQueryClient();
   const { inputStore, historiesStore } = useAppStores();
   const locationState = location.state as {
     trigger?: string;
@@ -98,6 +93,8 @@ export const Search = memo(() => {
     navigate({ to: url, state: { trigger: 'search', input: text } as any });
 
   useEffect(() => {
+    const abort = new AbortController();
+
     if (locationState.trigger !== 'search') {
       const search = new URLSearchParams(location.searchStr);
       // @hack handle route /subject/:id
@@ -107,22 +104,29 @@ export const Search = memo(() => {
           search.set('subject', id);
         }
       }
-      waitForSubjectsLoaded().then(() => {
-        const content = stringifySearch(search);
-        inputStore.setState(() => content);
-      });
+
+      stringifySearchTextAsync(queryClient, search, abort.signal)
+        .then((content) => {
+          inputStore.setState(() => content);
+        })
+        .catch((error) => {
+          if (abort.signal.aborted) return;
+          console.error('[Search]', 'stringify search failed', error);
+          inputStore.setState(() => '');
+        });
     } else if (locationState.trigger === 'search' && typeof locationState.input === 'string') {
-      const nextInput = locationState.input;
-      if (nextInput !== input) {
-        inputStore.setState(() => nextInput);
-      }
+      inputStore.setState(() => locationState.input!);
     }
 
     // 清除 location.state
     if (locationState.state?.trigger === 'search') {
       history.replaceState(null, '');
     }
-  }, [location]);
+
+    return () => {
+      abort.abort();
+    };
+  }, [location, queryClient]);
 
   const setDebounceSearch = debounce((value: string) => {
     if (value !== search) {
@@ -198,12 +202,11 @@ export const Search = memo(() => {
         });
 
         stopFetch();
-        await waitForSubjectsLoaded();
-        goTo(resolveSearchURL(target));
+        goTo(await resolveSearchURL(queryClient, target));
         disable();
       }
     },
-    [histories, input]
+    [histories, input, queryClient, stopFetch]
   );
 
   const selectStatic = useCallback((key: string, text = input, isCleanUp = true) => {
@@ -305,13 +308,16 @@ function SearchSubject(props: {
   const { search, onInputChange, onSelect } = props;
   const trackedRef = useRef<{ key?: string; timestamp?: number }>({});
 
-  const [dirty, setDirty] = useState(false);
-
-  const bangumis = useMemo(() => {
+  const keywords = useMemo(() => {
     const filter = parseSearchInput(search);
-    const keywors = [...filter.search, ...filter.include];
-    return searchSubjects(keywors).slice(0, 3);
+    return [...filter.search, ...filter.include];
   }, [search]);
+
+  const { data } = useQuery({
+    ...subjectSearchQueryOptions(keywords),
+    enabled: keywords.length > 0
+  });
+  const bangumis = data?.subjects ?? [];
 
   const handleSuggestionSelect = useCallback(
     (bgm: (typeof bangumis)[number]) => {
@@ -329,15 +335,6 @@ function SearchSubject(props: {
     },
     [bangumis, onInputChange, onSelect]
   );
-
-  useEffect(() => {
-    if (bangumis.length > 0) return;
-    waitForSubjectsLoaded().then(() => {
-      if (!dirty) {
-        setDirty(true);
-      }
-    });
-  }, [bangumis, dirty]);
 
   return (
     bangumis.length > 0 && (

@@ -10,6 +10,8 @@ export * from './string';
 
 export * from './string';
 
+export * from './subject';
+
 export * from './routes';
 
 export * from './umami';

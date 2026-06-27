@@ -4,9 +4,9 @@ import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
 
 import Page from '~/pages/iframe/route';
 import { APP_HOST } from '~build/env';
-import { stringifySearch } from '~/layouts/Search/utils';
+import { stringifySearchText } from '~/layouts/Search/utils';
 import { generateTitleFromFilter } from '~/utils/server/meta';
-import { calendarQueryOptions, resourcesQueryOptions } from '~/query';
+import { calendarQueryOptions, resourcesQueryOptions, subjectQueryOptions } from '~/query';
 import { getCanonicalURL, getTrackingError, serializeError } from '~/utils';
 import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
 
@@ -14,9 +14,12 @@ function getIframeQueryInput(url: URL) {
   const { filter: parsedFilter, pagination: parsedPagination } = parseURLSearch(url.searchParams);
 
   return {
-    ...parsedFilter,
-    ...parsedPagination,
-    pageSize: 30
+    parsedFilter,
+    queryInput: {
+      ...parsedFilter,
+      ...parsedPagination,
+      pageSize: 30
+    }
   };
 }
 
@@ -28,11 +31,18 @@ const loader = async ({
   location: { href: string };
 }) => {
   const url = new URL(location.href, `https://${APP_HOST}`);
+  const { parsedFilter, queryInput } = getIframeQueryInput(url);
 
-  const [{ ok, resources, pagination, filter, timestamp, error }] = await Promise.all([
-    context.queryClient.ensureQueryData(resourcesQueryOptions(getIframeQueryInput(url))),
-    context.queryClient.ensureQueryData(calendarQueryOptions())
-  ]);
+  const [{ ok, resources, pagination, filter, timestamp, error }, , subjectResponses] =
+    await Promise.all([
+      context.queryClient.ensureQueryData(resourcesQueryOptions(queryInput)),
+      context.queryClient.ensureQueryData(calendarQueryOptions()),
+      Promise.all(
+        (parsedFilter.subjects ?? []).map((id) =>
+          context.queryClient.ensureQueryData(subjectQueryOptions(id))
+        )
+      )
+    ]);
 
   if (error) {
     console.error(location.href, error);
@@ -49,6 +59,9 @@ const loader = async ({
     resources,
     pagination,
     filter,
+    subjects: Object.fromEntries(
+      subjectResponses.flatMap(({ subject }) => (subject ? [[subject.id, subject]] : []))
+    ),
     timestamp,
     error: serializeError(error)
   };
@@ -57,7 +70,7 @@ const loader = async ({
 export const Route = createFileRoute('/iframe')({
   loader,
   head: ({ loaderData }) => {
-    const title = generateTitleFromFilter(loaderData?.filter ?? {});
+    const title = generateTitleFromFilter(loaderData?.filter ?? {}, loaderData?.subjects ?? {});
     const search = stringifyURLSearch(loaderData?.filter ?? {});
 
     return {
@@ -65,7 +78,7 @@ export const Route = createFileRoute('/iframe')({
         { title: title + ' | Anime Garden 動漫花園資源網第三方镜像站' },
         {
           name: 'description',
-          content: `最新资源 ${stringifySearch(search)}`
+          content: `最新资源 ${stringifySearchText(search, loaderData?.subjects ?? {})}`
         }
       ],
       links: [
@@ -82,7 +95,8 @@ export const Route = createFileRoute('/iframe')({
 function IframeRoute() {
   const location = useLocation();
   const url = new URL(location.href, `https://${APP_HOST}`);
-  const { data } = useSuspenseQuery(resourcesQueryOptions(getIframeQueryInput(url)));
+  const { queryInput } = getIframeQueryInput(url);
+  const { data } = useSuspenseQuery(resourcesQueryOptions(queryInput));
   const pageData = {
     ...data,
     error: serializeError(data.error)

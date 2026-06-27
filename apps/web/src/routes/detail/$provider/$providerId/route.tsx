@@ -1,15 +1,16 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 
-import Page from '~/pages/detail.$provider.$providerId/route';
 import { parse } from 'anipar';
 import { truncate } from '@animegarden/shared';
 import { SupportProviders } from '@animegarden/client';
+
 import { APP_HOST } from '~build/env';
-import { calendarQueryOptions, resourceDetailQueryOptions } from '~/query';
+
+import Page from '~/pages/detail.$provider.$providerId/route';
 import { getCanonicalURL } from '~/utils';
 import { ResponseCacheControl, setCacheControl } from '~/utils/response';
-import { getSubjectById } from '~/utils/subjects';
+import { calendarQueryOptions, resourceDetailQueryOptions, subjectQueryOptions } from '~/query';
 
 const loader = async ({
   context,
@@ -25,8 +26,13 @@ const loader = async ({
       context.queryClient.ensureQueryData(calendarQueryOptions())
     ]);
     if (data?.ok && data?.resource) {
+      const subject = data.resource.subjectId
+        ? (await context.queryClient.ensureQueryData(subjectQueryOptions(data.resource.subjectId)))
+            .subject
+        : undefined;
+
       await setCacheControl(ResponseCacheControl.Detail);
-      return data;
+      return { ...data, subject };
     }
   }
 
@@ -93,8 +99,7 @@ export const Route = createFileRoute('/detail/$provider/$providerId')({
       : [];
 
     const cover = description?.images[0]?.src;
-    const subject = resource?.subjectId ? getSubjectById(resource.subjectId) : undefined;
-    const subjectImage = subject?.poster;
+    const subjectImage = loaderData?.subject?.poster;
     if (cover || subjectImage) {
       og.push({
         name: 'og:image',

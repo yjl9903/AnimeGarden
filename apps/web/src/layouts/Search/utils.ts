@@ -1,7 +1,14 @@
-import { type PresetType, parseURLSearch, stringifyURLSearch } from '@animegarden/client';
+import {
+  type FilterOptions,
+  type PresetType,
+  parseURLSearch,
+  stringifyURLSearch
+} from '@animegarden/client';
+import type { QueryClient } from '@tanstack/react-query';
 
-import { PRESET_DISPLAY_NAME } from '~/utils/constants';
-import { getSubjectById, getSubjectByName, getSubjectDisplayName } from '~/utils/subjects';
+import { PRESET_DISPLAY_NAME } from '../../utils/constants';
+import type { SubjectInfo } from '../../utils/subject';
+import { subjectQueryOptions, subjectsByNameQueryOptions } from '../../query/subject';
 
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
 
@@ -166,23 +173,12 @@ export function parseSearchInput(input: string) {
     search.splice(0, search.length);
   }
 
-  // Map from subject name -> subject id
-  const subjectIds = [];
-  if (subjects.length > 0) {
-    for (const subject of subjects) {
-      const bgm = getSubjectByName(subject);
-      if (bgm) {
-        subjectIds.push(bgm.id);
-      }
-    }
-  }
-
   return {
     search,
     include,
     keywords,
     exclude,
-    subjects: subjectIds,
+    subjects,
     publishers,
     fansubs,
     after: after.at(-1),
@@ -192,13 +188,15 @@ export function parseSearchInput(input: string) {
   };
 }
 
-export function stringifySearch(search: URLSearchParams) {
+export function stringifySearchText(
+  search: URLSearchParams,
+  subjects: Record<number, Pick<SubjectInfo, 'title'>>
+) {
   const { filter } = parseURLSearch(search, { pageSize: 80 });
   const content: string[] = [];
 
   if (filter.subjects && filter.subjects.length === 1) {
-    const bgm = getSubjectById(filter.subjects[0]);
-    const name = getSubjectDisplayName(bgm);
+    const name = subjects[filter.subjects[0]]?.title;
     if (name) {
       content.push('动画:' + (name.indexOf(' ') === -1 ? name : `"${name}"`));
     }
@@ -261,7 +259,34 @@ export function stringifySearch(search: URLSearchParams) {
   }
 }
 
-export function resolveSearchURL(search: string) {
+export async function stringifySearchTextAsync(
+  queryClient: QueryClient,
+  search: URLSearchParams,
+  signal?: AbortSignal
+) {
+  signal?.throwIfAborted();
+  const { filter } = parseURLSearch(search, { pageSize: 80 });
+  const subjects = await Promise.all(
+    (filter.subjects ?? []).map((id) =>
+      queryClient.ensureQueryData(subjectQueryOptions(id, signal))
+    )
+  );
+  signal?.throwIfAborted();
+
+  return stringifySearchText(
+    search,
+    Object.fromEntries(
+      subjects.flatMap(({ subject }) => (subject ? [[subject.id, { title: subject.title }]] : []))
+    )
+  );
+}
+
+export async function resolveSearchURL(
+  queryClient: QueryClient,
+  search: string,
+  signal?: AbortSignal
+) {
+  signal?.throwIfAborted();
   if (search.startsWith(location.origin)) {
     return search.slice(location.origin.length);
   } else if (search.startsWith(location.host)) {
@@ -271,7 +296,17 @@ export function resolveSearchURL(search: string) {
     if (match) {
       return `/detail/${match.provider}/${match.providerId}`;
     } else {
-      const filter = parseSearchInput(search);
+      const { subjects, ...parsed } = parseSearchInput(search);
+      const subjectIds =
+        subjects.length > 0
+          ? (
+              await queryClient.ensureQueryData(subjectsByNameQueryOptions(subjects, signal))
+            ).subjects.map((subject) => subject.id)
+          : [];
+      const filter: FilterOptions =
+        subjects.length > 0 ? { ...parsed, subjects: subjectIds } : parsed; // intention: unresolved subject names intentionally drop the subject filter.
+      signal?.throwIfAborted();
+
       const searchParams = stringifyURLSearch(filter);
       if (searchParams.size === 1 && searchParams.get('subject')) {
         return `/subject/${searchParams.get('subject')}`;

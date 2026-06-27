@@ -12,7 +12,7 @@ import {
   track,
   trackFetchResourcesError
 } from '~/utils';
-import { getAllSubjectNames } from '~/utils/subjects';
+import { getAllSubjectNames } from '~/utils/subject';
 
 import { Error } from '../resources.($page)/Error';
 

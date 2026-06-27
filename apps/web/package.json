@@ -12,6 +12,8 @@
     "format": "prettier --write '**/*.{mjs,ts,tsx}'",
     "preview": "node server.mjs",
     "start:node": "node server.mjs",
+    "test": "vitest",
+    "test:ci": "vitest --run",
     "typecheck": "tsc"
   },
   "dependencies": {

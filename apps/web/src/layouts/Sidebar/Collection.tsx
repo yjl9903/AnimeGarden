@@ -1,11 +1,12 @@
 import clsx from 'clsx';
 import { toast } from 'sonner';
 import { Link as NavLink } from '@tanstack/react-router';
-import { memo, useCallback, useRef, useState } from 'react';
+import { useQueries } from '@tanstack/react-query';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 
-import type { Collection, Jsonify } from '@animegarden/client';
+import { type Collection, type Jsonify } from '@animegarden/client';
 
-import { getSubjectById } from '~/utils/subjects';
+import { subjectQueryOptions } from '~/query';
 import { DisplayTypeColor, formatChinaTime, getFeedURL, track, trackCopyFeed } from '~/utils';
 import { deleteCollectionItem, updateCollectionItem } from '~/stores/collection';
 import { useAppStores } from '~/stores/hooks';
@@ -18,7 +19,7 @@ import {
 } from '~/components/ui/dropdown-menu';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/components/ui/tooltip';
 
-import { stringifySearch } from '../Search/utils';
+import { stringifySearchText } from '../Search/utils';
 
 type CollectionItem = Collection<true>['filters'][0];
 
@@ -27,7 +28,7 @@ export const CollectionItemContent = memo(
     const { collection, item, active } = props;
     const stores = useAppStores();
 
-    const name = inferCollectionItemName(props.item);
+    const name = useInferCollectionItemName(props.item);
 
     const fansub = name.fansubs?.join(' ');
     const title = item.name
@@ -235,7 +236,9 @@ export const CollectionItemContent = memo(
 const CollectionItemFilter = memo((props: { item: CollectionItem }) => {
   const display = props.item;
 
-  const subjects = display?.subjects?.map((id) => getSubjectById(id)).filter(Boolean);
+  const subjects = useQueries({
+    queries: (display.subjects ?? []).map((id) => subjectQueryOptions(id))
+  });
 
   return (
     <div className="space-y-1 py-1 text-sm">
@@ -245,13 +248,12 @@ const CollectionItemFilter = memo((props: { item: CollectionItem }) => {
           <span className={`select-text text-base-600`}>{display.name}</span>
         </div>
       )}
-      {subjects && subjects.length > 0 && (
+      {display.subjects && display.subjects.length > 0 && (
         <div>
           <span className="font-bold mr2 select-none">动画</span>
-          {subjects.map((subject) => (
-            <span key={subject.id} className={``}>
-              {subject.title}
-              {/* (Bangumi: {subject.id}) */}
+          {subjects.map(({ data }, index) => (
+            <span key={display.subjects![index]} className={``}>
+              {data?.subject?.title}
             </span>
           ))}
         </div>
@@ -341,11 +343,22 @@ const CollectionItemFilter = memo((props: { item: CollectionItem }) => {
   );
 });
 
-export function inferCollectionItemName(item: CollectionItem | Jsonify<CollectionItem>) {
+export function useInferCollectionItemName(item: CollectionItem | Jsonify<CollectionItem>) {
+  const subjectIds = useMemo(() => {
+    return [...new Set(item.subjects ?? [])];
+  }, [item.subjects]);
+
+  const subjects = useQueries({
+    queries: subjectIds.map((id) => subjectQueryOptions(id))
+  });
+
+  const subjectMap = Object.fromEntries(
+    subjects.flatMap(({ data }) => (data?.subject ? [[data.subject.id, data.subject]] : []))
+  );
   let title;
 
   if (item.subjects && item.subjects.length === 1) {
-    const bgm = getSubjectById(item.subjects[0]);
+    const bgm = subjectMap[item.subjects[0]];
     if (bgm) {
       title = bgm.title;
     }
@@ -361,6 +374,6 @@ export function inferCollectionItemName(item: CollectionItem | Jsonify<Collectio
   }
 
   return {
-    text: stringifySearch(new URLSearchParams(item.searchParams))
+    text: stringifySearchText(new URLSearchParams(item.searchParams), subjectMap)
   };
 }

@@ -8,7 +8,7 @@ import { generateTitleFromFilter } from '~/utils/server/meta';
 import { calendarQueryOptions, resourcesQueryOptions, subjectQueryOptions } from '~/query';
 import { getCanonicalURL, getTrackingError, serializeError } from '~/utils';
 import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
-import { getSubjectDisplayName } from '~/utils/subjects';
+import { getSubjectDisplayName } from '~/utils/subject';
 import { groupResourcesByFansub } from '~/pages/subject.$subject.($page)/utils';
 
 function getSubjectResourcesFilter(subjectId: number) {
@@ -120,8 +120,12 @@ export const Route = createFileRoute('/subject/$subject')({
       meta: [
         {
           title:
-            (name ? name + ' 最新资源' : generateTitleFromFilter(loaderData?.filter ?? {})) +
-            ' | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站'
+            (name
+              ? name + ' 最新资源'
+              : generateTitleFromFilter(
+                  loaderData?.filter ?? {},
+                  subject ? { [subject.id]: subject } : {}
+                )) + ' | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站'
         },
         {
           name: 'description',

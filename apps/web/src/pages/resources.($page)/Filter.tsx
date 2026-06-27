@@ -1,9 +1,8 @@
 import { toast } from 'sonner';
 import { Link as NavLink } from '@tanstack/react-router';
+import { useQueries } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { useSelector } from '@tanstack/react-store';
-
-import type { FullSubject } from 'bgmd';
 
 import {
   type PresetOptions,
@@ -33,7 +32,8 @@ import {
   trackCopyFetchPython,
   trackCopyIframe
 } from '~/utils';
-import { getSubjectById, getSubjectDisplayName, getSubjectURL } from '~/utils/subjects';
+import { subjectQueryOptions } from '~/query';
+import { getSubjectDisplayName, getSubjectURL } from '~/utils/subject';
 import { Button } from '~/components/ui/button';
 import { SearchTooltip } from '~/components/Help';
 import {
@@ -46,6 +46,9 @@ import { addCollectionItem } from '~/stores/collection';
 import { useAppStores } from '~/stores/hooks';
 
 export type DisplayResolvedFilterOptions = ReturnType<typeof resolveFilterOptions>;
+export type ResourceFilter =
+  | Jsonify<ResolvedFilterOptions & PresetOptions>
+  | (ResolvedFilterOptions & PresetOptions);
 
 export function resolveFilterOptions(
   filter: Jsonify<ResolvedFilterOptions> | ResolvedFilterOptions
@@ -70,9 +73,7 @@ export function resolveFilterOptions(
 }
 
 interface Props {
-  filter?: Jsonify<ResolvedFilterOptions & PresetOptions>;
-
-  subject?: FullSubject;
+  filter?: ResourceFilter;
 
   feedURL?: string;
 
@@ -99,6 +100,9 @@ export function FilterCard(props: Props) {
     keywords = [],
     exclude = []
   } = resolved;
+  const subjectQueries = useQueries({
+    queries: subjects.map((id) => subjectQueryOptions(id))
+  });
 
   if (!filter) return;
 
@@ -118,10 +122,7 @@ export function FilterCard(props: Props) {
     return;
   }
 
-  const realSubjects =
-    subjects.length === 1 && props.subject
-      ? [props.subject]
-      : subjects.map((sub) => getSubjectById(sub)).filter(Boolean);
+  const realSubjects = subjectQueries.flatMap(({ data }) => data?.subject ?? []);
 
   return (
     <div className="mb4 p-4 lt-sm:px-3 w-full bg-zinc-50 dark:bg-zinc-800 drop-shadow rounded-md space-y-2">
@@ -341,7 +342,7 @@ const CopyResourcesDropdown = (props: Props) => {
 
   const copyFetchCurl = useToastCallback(
     async () => {
-      const code = generateCurlCode({ filter, subject: props.subject });
+      const code = generateCurlCode({ filter });
       await navigator.clipboard.writeText(code);
     },
     {
@@ -349,12 +350,12 @@ const CopyResourcesDropdown = (props: Props) => {
       error: '复制 cURL 命令失败',
       onFinally: () => trackCopyFetchCurl()
     },
-    [filter, props.subject]
+    [filter]
   );
 
   const copyFetchJS = useToastCallback(
     async () => {
-      const code = generateJavaScriptCode({ filter, subject: props.subject });
+      const code = generateJavaScriptCode({ filter });
       await navigator.clipboard.writeText(code);
     },
     {
@@ -362,12 +363,12 @@ const CopyResourcesDropdown = (props: Props) => {
       error: '复制 @animegarden/client JavaScript 代码失败',
       onFinally: () => trackCopyFetchJS()
     },
-    [filter, props.subject]
+    [filter]
   );
 
   const copyFetchPython = useToastCallback(
     async () => {
-      const code = generatePythonCode({ filter, subject: props.subject });
+      const code = generatePythonCode({ filter });
       await navigator.clipboard.writeText(code);
     },
     {
@@ -375,12 +376,12 @@ const CopyResourcesDropdown = (props: Props) => {
       error: '复制 Python 代码失败',
       onFinally: () => trackCopyFetchPython()
     },
-    [filter, props.subject]
+    [filter]
   );
 
   const copyIframe = useToastCallback(
     async () => {
-      const code = generateIframeCode({ filter, subject: props.subject });
+      const code = generateIframeCode({ filter });
       await navigator.clipboard.writeText(code);
     },
     {
@@ -388,7 +389,7 @@ const CopyResourcesDropdown = (props: Props) => {
       error: '复制网页嵌入代码失败',
       onFinally: () => trackCopyIframe()
     },
-    [filter, props.subject]
+    [filter]
   );
 
   return (
@@ -455,14 +456,10 @@ export function FilterOperations(props: Props) {
     if (!filter) return;
     if (!collection) return;
 
-    const realFilter = {
-      ...resolved,
-      subjects: props.subject ? [props.subject.id] : resolved.subjects
-    };
-    const searchParams = '?' + stringifyURLSearch(realFilter).toString();
+    const searchParams = '?' + stringifyURLSearch(resolved).toString();
 
     if (!collection.filters.find((i) => i.searchParams === searchParams)) {
-      addCollectionItem(stores, collection, { ...realFilter, name: '', searchParams });
+      addCollectionItem(stores, collection, { ...resolved, name: '', searchParams });
 
       toast.success(`成功添加到 ${collection.name}`, {
         dismissible: true,

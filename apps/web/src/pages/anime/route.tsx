@@ -6,7 +6,7 @@ import type { BasicSubject } from 'bgmd';
 import Layout from '~/layouts/Layout';
 import { getCalendar } from '~/utils/calendar';
 import { trackAnimeCalendarClick } from '~/utils';
-import { getSubjectDisplayName, getSubjectURL } from '~/utils/subjects';
+import { getSubjectDisplayName, getSubjectURL } from '~/utils/subject';
 
 import './anime.css';
 
