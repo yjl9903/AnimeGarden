@@ -31,6 +31,19 @@ const WebFontStylesheets = [
   'https://api.fontshare.com/v2/css?f[]=quicksand@1,300,400,500,600,700&display=swap'
 ];
 
+const WebFontStylesheetSelector = 'link[data-web-font-stylesheet]';
+
+const WebFontLoadScript = `
+document.querySelectorAll('${WebFontStylesheetSelector}').forEach(function(link) {
+  link.addEventListener('load', function() { this.media = 'all'; }, { once: true });
+  if (link.sheet) link.media = 'all';
+});
+`;
+
+const WebFontNoScriptLinks = WebFontStylesheets.map(
+  (href) => `<link rel="stylesheet" href="${href}">`
+).join('');
+
 const DevtoolsContent = import.meta.env.DEV
   ? lazy(async () => {
       const [query, router] = await Promise.all([
@@ -72,7 +85,12 @@ export const Route = createRootRouteWithContext<{
       { rel: 'mask-icon', color: '#FFFFFF', href: '/favicon.svg' },
       { rel: 'preconnect', href: 'https://fonts.bunny.net' },
       { rel: 'preconnect', href: 'https://api.fontshare.com' },
-      ...WebFontStylesheets.map((href) => ({ rel: 'stylesheet', href }))
+      ...WebFontStylesheets.map((href) => ({
+        rel: 'stylesheet',
+        href,
+        media: 'print',
+        'data-web-font-stylesheet': ''
+      }))
     ]
   }),
   component: RootComponent,
@@ -98,6 +116,8 @@ function RootDocument({ children }: { children: ReactNode }) {
     <html lang="zh-CN" suppressHydrationWarning={true}>
       <head>
         <HeadContent />
+        <script dangerouslySetInnerHTML={{ __html: WebFontLoadScript }} />
+        <noscript dangerouslySetInnerHTML={{ __html: WebFontNoScriptLinks }} />
         {!import.meta.env.DEV &&
           Tags.map((t) =>
             'src' in t ? (
