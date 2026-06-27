@@ -13,6 +13,7 @@ ARG PORT=3000
 
 # Set environment variables
 ENV CI=true NODE_ENV="production" \
+    TZ=Asia/Shanghai \
     HOST=${HOST} PORT=${PORT} \
     APP_HOST=${APP_HOST} FEED_HOST=${FEED_HOST}
 
