@@ -188,7 +188,7 @@ export function FilterCard(props: Props) {
         <div className="space-x-2 select-none text-0">
           <span className="text-4 text-base-800 font-bold mr2 keyword">搜索开始于</span>
           <span className="text-4 select-text">
-            {formatChinaTime(after, 'yyyy 年 M 月 d 日 hh:mm')}
+            {formatChinaTime(after, 'yyyy 年 M 月 d 日 HH:mm')}
           </span>
         </div>
       )}
@@ -196,7 +196,7 @@ export function FilterCard(props: Props) {
         <div className="space-x-2 select-none text-0">
           <span className="text-4 text-base-800 font-bold mr2 keyword">搜索结束于</span>
           <span className="text-4 select-text">
-            {formatChinaTime(before, 'yyyy 年 M 月 d 日 hh:mm')}
+            {formatChinaTime(before, 'yyyy 年 M 月 d 日 HH:mm')}
           </span>
         </div>
       )}

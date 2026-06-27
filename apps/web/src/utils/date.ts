@@ -16,13 +16,14 @@ export function formatChinaTime(date: Date, formatStr = 'yyyy-MM-dd HH:mm') {
  */
 export function getWeekday(dateString: string): string {
   try {
-    const date = new Date(dateString);
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day));
     if (isNaN(date.getTime())) {
       return '';
     }
 
     const weekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
-    return weekdays[date.getDay()];
+    return weekdays[date.getUTCDay()];
   } catch (error) {
     console.log(error);
     return '';
