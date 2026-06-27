@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { Link } from '@tanstack/react-router';
 import { useSelector } from '@tanstack/react-store';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { memo, useEffect, useMemo, useState } from 'react';
 
 import { useAppStores } from '~/stores/hooks';
@@ -59,8 +59,8 @@ export const Header = memo((props: { feedURL?: string }) => {
 });
 
 const AnimeDropdown = memo(() => {
-  const { data } = useSuspenseQuery(calendarQueryOptions());
-  const calendar = useMemo(() => getCalendar(data.calendar), [data.calendar]);
+  const { data } = useQuery(calendarQueryOptions());
+  const calendar = useMemo(() => getCalendar(data?.calendar ?? []), [data?.calendar]);
 
   return (
     <Dropdown
