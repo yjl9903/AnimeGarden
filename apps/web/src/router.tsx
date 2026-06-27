@@ -4,6 +4,7 @@ import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query
 
 import { routeTree } from './routeTree.gen';
 import { createAppStores } from './stores';
+import { PendingPage } from './pages/PendingPage';
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -22,7 +23,8 @@ export function getRouter() {
       stores: createAppStores()
     },
     scrollRestoration: true,
-    defaultPreload: 'intent'
+    defaultPreload: 'intent',
+    defaultPendingComponent: PendingPage
   });
 
   setupRouterSsrQueryIntegration({ router, queryClient });

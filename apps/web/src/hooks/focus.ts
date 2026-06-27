@@ -18,8 +18,8 @@ export const useActiveElement = () => {
       setListenersReady(true);
 
       return () => {
-        window.removeEventListener('focus', onFocus);
-        window.removeEventListener('blur', onBlur);
+        window.removeEventListener('focus', onFocus, true);
+        window.removeEventListener('blur', onBlur, true);
       };
     }, []);
   }

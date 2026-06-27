@@ -70,9 +70,11 @@ export const Search = memo(() => {
 
   const ref = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const document = useDocument();
   const { active } = useActiveElement();
 
-  useEventListener(useDocument(), 'keypress', (ev: KeyboardEvent) => {
+  useEventListener(document, 'keypress', (ev: KeyboardEvent) => {
+    if (!document) return;
     if (ev.key === 's' || ev.key === '/' || (ev.key === 'k' && (ev.metaKey || ev.ctrlKey))) {
       const input = document.querySelector('#animegarden-search input');
       if (document.activeElement !== input) {
@@ -142,7 +144,7 @@ export const Search = memo(() => {
     signals.current.clear();
   }, []);
 
-  const enable = active === inputRef.current;
+  const enable = active === inputRef.current && document?.activeElement === inputRef.current;
   const disable = useCallback(() => inputRef.current?.blur(), []);
 
   // Handle input change

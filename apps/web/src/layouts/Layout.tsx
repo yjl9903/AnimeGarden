@@ -27,10 +27,15 @@ export interface LayoutProps {
    * @default true
    */
   heading?: boolean;
+
+  /**
+   * @default true
+   */
+  footer?: boolean;
 }
 
 export default function Layout(props: LayoutProps) {
-  const { timestamp, feedURL, heading } = props;
+  const { timestamp, feedURL, heading, footer = true } = props;
   const { currentThemeStore, isOpenSidebarStore } = useAppStores();
   const isOpen = useSelector(isOpenSidebarStore);
   const theme = useSelector(currentThemeStore);
@@ -48,7 +53,7 @@ export default function Layout(props: LayoutProps) {
           <main className="main">{props.children}</main>
         </div>
       </div>
-      <Footer timestamp={timestamp} feedURL={feedURL}></Footer>
+      {footer && <Footer timestamp={timestamp} feedURL={feedURL}></Footer>}
       <Loading></Loading>
     </>
   );

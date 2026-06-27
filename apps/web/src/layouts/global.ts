@@ -143,6 +143,11 @@ function updateHeader() {
   setHeaderCollisionFrom(null);
 
   const boundary = getCollisionBoundary();
+  if (boundary.bottom <= boundary.top) {
+    resetHeaderCollision();
+    return;
+  }
+
   const collisionLeft = Array.from(
     document.querySelectorAll<HTMLElement>(HeaderCollisionSourceSelector)
   )
@@ -151,7 +156,10 @@ function updateHeader() {
     .filter((rect) => rect.top <= boundary.bottom && rect.bottom >= boundary.top)
     .reduce((left, rect) => Math.min(left, rect.left), Number.POSITIVE_INFINITY);
 
-  if (!Number.isFinite(collisionLeft)) return;
+  if (!Number.isFinite(collisionLeft)) {
+    resetHeaderCollision();
+    return;
+  }
 
   const firstCollidingTarget = targets.find(
     (target) => collisionLeft <= target.getBoundingClientRect().right
@@ -172,7 +180,7 @@ function handleDOMContentLoaded() {
 }
 
 function handleBodyResize() {
-  updateHeader();
+  updateHero();
 }
 
 function handleScriptError(e: Event) {
