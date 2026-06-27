@@ -16,13 +16,6 @@ declare module '~build/env' {
   export const KEEPSHARE_ID: string;
 }
 
-declare module '@remix-run/node' {
-  // or cloudflare, deno, etc.
-  interface Future {
-    v3_singleFetch: true;
-  }
-}
-
 declare module 'csstype' {
   interface Properties {
     '--nav-height'?: string;
@@ -38,5 +31,8 @@ declare global {
      * Update hero scroll layout
      */
     updateHeroLayout?: (y?: number) => void;
+    __animegardenLayoutController?: {
+      update: () => void;
+    };
   }
 }

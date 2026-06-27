@@ -10,7 +10,13 @@ import type { Notification } from './types.ts';
 
 import { Module } from './module.ts';
 import { getSecret } from './secret.ts';
-import { type RpcEventMap, type RpcPayload, type RpcSender, type RpcBus, makeRpcBus } from './rpc.ts';
+import {
+  type RpcEventMap,
+  type RpcPayload,
+  type RpcSender,
+  type RpcBus,
+  makeRpcBus
+} from './rpc.ts';
 
 export type { Database, DatabaseConnection, RedisStorage };
 

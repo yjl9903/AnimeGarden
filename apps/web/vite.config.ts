@@ -1,7 +1,8 @@
 import path from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vite';
-import { vitePlugin as remix } from '@remix-run/dev';
+import viteReact from '@vitejs/plugin-react';
+import { tanstackStart } from '@tanstack/react-start/plugin/vite';
 
 import Icons from 'unplugin-icons/vite';
 import UnoCSS from 'unocss/vite';
@@ -16,14 +17,9 @@ import { env } from './node/env.ts';
 const { APP_HOST, FEED_HOST, WEB_SERVER_URL, KEEPSHARE_ID, UMAMI_HOST, UMAMI_ID } = env();
 
 export default defineConfig({
-  ssr: {
-    resolve: {
-      conditions: ['workerd', 'worker', 'browser']
-    }
-  },
   resolve: {
     mainFields: ['browser', 'module', 'main'],
-    alias: { '@': path.resolve(__dirname, './app') }
+    alias: { '@': path.resolve(__dirname, './src') }
   },
   build: {
     minify: true,
@@ -49,7 +45,7 @@ export default defineConfig({
          */
         WEB_SERVER_URL
       },
-      cloudflare: process.env.SSR_ADAPTER === 'cloudflare'
+      cloudflare: false
     }),
     Analytics({
       analytics: {
@@ -69,15 +65,8 @@ export default defineConfig({
       }
     }),
     UnoCSS(),
-    remix({
-      future: {
-        v3_fetcherPersist: true,
-        v3_relativeSplatPath: true,
-        v3_throwAbortReason: true,
-        v3_singleFetch: true,
-        v3_lazyRouteDiscovery: true
-      }
-    }),
+    tanstackStart(),
+    viteReact(),
     Icons({ compiler: 'jsx', jsx: 'react' }),
     tsconfigPaths(),
     Inline(),

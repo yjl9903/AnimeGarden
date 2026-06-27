@@ -1,74 +1,73 @@
 # @animegarden/web 架构总览
 
-检查日期：2026-05-08
+检查日期：2026-06-24
 
 ## 定位
 
-`apps/web` 是 AnimeGarden 的前端 Remix 应用，同时带有一层 Hono 运行时外壳。它负责页面 SSR / hydration、资源浏览和筛选、搜索、收藏夹、详情页、RSS / API 代理、sitemap 输出、OpenAPI 文档页和前端埋点。
+`apps/web` 是 AnimeGarden 的 TanStack Start 前端应用，外层保留一层 Hono Node server。它负责页面 SSR / hydration、资源浏览和筛选、搜索、收藏夹、详情页、feed / sitemap 输出、OpenAPI 文档页和前端埋点。
+
+Web 不再提供 `/api/*` 代理；API 读写由独立 server/feed 服务承担，前端数据读取继续通过 `@animegarden/client` 指向 `WEB_SERVER_URL` / `FEED_HOST`。
 
 ## 运行形态
 
-| 入口              | 代码                          | 职责                                                                 |
-| ----------------- | ----------------------------- | -------------------------------------------------------------------- |
-| Node server       | `server.mjs` + `node/`        | Fly / Node 环境运行 Hono，托管静态资源、代理 API / feed、挂载 Remix  |
-| Cloudflare Worker | `worker.ts` + `cloudflare/`   | Cloudflare 环境运行 Hono，优先从 KV 取静态资源，再 fallback 到 Remix |
-| Remix app         | `app/root.tsx`、`app/routes/` | 页面路由、loader、meta、React 组件和客户端状态                       |
+| 入口           | 代码                                                    | 职责                                                                                          |
+| -------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| TanStack Start | `src/router.tsx`、`src/routes/`、`src/routeTree.gen.ts` | 文件路由、SSR、head/meta、loader 和 hydration                                                 |
+| Node server    | `server.mjs` + `node/`                                  | Fly / Node 环境运行 Hono，托管静态资源、保留 `/health`、feed、sitemap，并把页面请求交给 Start |
+| 页面组件       | `src/pages/`                                            | 纯前端页面渲染和页面局部交互；数据由 `routes/` 透传为 props                                   |
 
-`vite.config.ts` 注入构建环境、Analytics、UnoCSS、Remix、Icons、tsconfig paths 和 inline 插件。`SSR_ADAPTER` 会影响构建面向 Cloudflare 还是 Node。
+`vite.config.ts` 使用 `tanstackStart()`、React Vite plugin、UnoCSS、Icons、Info、Analytics、Inline 和 tsconfig paths。Cloudflare Worker 构建入口、wrangler 配置和 Worker 静态资源适配已移除，Web 只支持 Node/Fly 部署。
 
 ## 请求与数据流
 
 浏览器请求先进入 Hono 外壳：
 
-1. `/api/*` 由 `node/proxy.ts` 转发到 `FEED_SERVER_URL`，并补 CORS / cache headers。
-2. `/feed.xml` 和收藏夹 feed 同样通过代理读取后端 feed 服务。
-3. `/sitemap-*.xml` 由 `node/sitemap.ts` 生成，必要时请求 feed server 获取 teams、subjects、detail URL。
-4. 其他请求交给 Remix `createRequestHandler()`。
+1. `/health` 直接返回健康状态。
+2. `/api/*` 明确返回 404，避免 Web 被当作 API 代理。
+3. `/feed.xml` 和 `/collection/:hash/feed.xml` 代理到 `FEED_SERVER_URL`。
+4. `/sitemap-*.xml` 由 `node/sitemap.ts` 生成，必要时请求 feed server 获取 teams、subjects、detail URL。
+5. 其他请求交给 TanStack Start server entry。
 
-Remix loader 通过 `app/utils/api.ts` 调用 `@animegarden/client`，根据 SSR / client 环境选择 `WEB_SERVER_URL` 或 `FEED_HOST`。资源列表、详情、收藏夹等页面共享这层 API 封装和 `lastTimestamp` 回退逻辑。
-
-代理和 SSR 错误响应统一按不可缓存处理：`/api/*`、`/feed.xml` 会保留上游错误状态码并返回 `Cache-Control: no-store`；Remix 入口会对 `status >= 400` 的页面响应补 `Cache-Control: no-store`，避免 CDN 或边缘缓存规则保存错误页面。
-
-线上域名、Fly app、内网后端和 public API 的对应关系见 [server/deployment-topology.md](../server/deployment-topology.md)。
+页面 loader 复用 `src/utils/api.ts` 和 `@animegarden/client`。远端资源数据不放入 TanStack Store；Store 只承载主题、收藏夹、搜索历史、fansub 偏好和 sidebar/UI 状态，并由 `createRouter()` 为每个 router 实例创建。
 
 ## 代码逻辑分类
 
-| 目录              | 主要职责                                                       |
-| ----------------- | -------------------------------------------------------------- |
-| `app/routes/`     | Remix 文件路由和 loader/meta/page 组件                         |
-| `app/layouts/`    | 全局布局、Header、Footer、Search、Sidebar、Theme、Loading      |
-| `app/components/` | 可复用 UI 和业务组件，资源表格在 `components/Resources/`       |
-| `app/states/`     | Jotai 状态：收藏夹、搜索、主题、字幕组偏好                     |
-| `app/utils/`      | API、URL、canonical、日期、错误、埋点、subject、代码生成等工具 |
-| `app/styles/`     | 全局 CSS、布局、侧栏、toast 样式                               |
-| `node/`           | Node / Hono 适配层、API / feed 代理、sitemap、env、etag        |
-| `cloudflare/`     | Cloudflare Worker Remix 适配和静态资源读取                     |
-| `public/`         | favicon、PWA 和公开静态资源                                    |
+| 目录              | 主要职责                                                                                                                         |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `src/routes/`     | TanStack file routes；定义 `createFileRoute`、loader/head、URL/params/search 归一化，并用 `Route.useLoaderData()` 组装页面 props |
+| `src/pages/`      | 纯前端页面渲染和页面局部组件；不导出 loader/head，也不直接读取 TanStack route loader 数据                                        |
+| `src/layouts/`    | 全局布局、Header、Footer、Search、Sidebar、Theme、Loading                                                                        |
+| `src/components/` | 可复用 UI 和业务组件，资源表格在 `components/Resources/`                                                                         |
+| `src/stores/`     | 基于 TanStack Store 的本地 UI 状态 factory：收藏夹、搜索、主题、字幕组偏好、sidebar                                              |
+| `src/utils/`      | API、URL、canonical、日期、错误、埋点、subject、代码生成等工具                                                                   |
+| `node/`           | Node / Hono feed 代理、sitemap、env、etag                                                                                        |
+| `public/`         | favicon、PWA 和公开静态资源                                                                                                      |
 
 ## 主要页面分组
 
-| 路由                            | 文件                                            | 职责                                        |
-| ------------------------------- | ----------------------------------------------- | ------------------------------------------- |
-| `/`                             | `routes/_index/route.tsx`                       | 首页，默认展示 Bangumi 动画 / 合集资源      |
-| `/resources/:page?`             | `routes/resources.($page)/route.tsx`            | 资源列表、筛选、分页、feed URL              |
-| `/detail/:provider/:providerId` | `routes/detail.$provider.$providerId/route.tsx` | 资源详情、磁力链接、PikPak、结构化 metadata |
-| `/subject/:subject/:page?`      | `routes/subject.$subject.($page)/`              | subject 资源分组和主题信息                  |
-| `/collection/:hash`             | `routes/collection.$hash/route.tsx`             | 收藏夹分享页                                |
-| `/anime`                        | `routes/anime/route.tsx`                        | 动画周历                                    |
-| `/docs/api`                     | `routes/docs.api/route.tsx`                     | OpenAPI / Swagger UI                        |
-| `/iframe`                       | `routes/iframe/route.tsx`                       | 嵌入展示入口                                |
-
-## 布局、状态和交互
-
-`app/root.tsx` 提供 HTML shell、字体、analytics script、UnoCSS / preset CSS、Jotai Provider、scroll handler 和 error boundary。业务页面通常包在 `layouts/Layout.tsx` 中，统一包含 Hero search、Header、Sidebar、Footer 和 Loading。
-
-搜索逻辑集中在 `layouts/Search/`，收藏夹侧栏集中在 `layouts/Sidebar/`，资源表格集中在 `components/Resources/`。主题切换、收藏夹、搜索历史和 fansub 偏好通过 `app/states/` 的 Jotai atom 管理。
+| URL                              | Route module                                    | Page                                           |
+| -------------------------------- | ----------------------------------------------- | ---------------------------------------------- |
+| `/`                              | `routes/index.tsx`                              | `pages/_index/route.tsx`                       |
+| `/resources`、`/resources/:page` | `routes/resources/`                             | `pages/resources.($page)/route.tsx`            |
+| `/detail/:provider/:providerId`  | `routes/detail/$provider/$providerId/route.tsx` | `pages/detail.$provider.$providerId/route.tsx` |
+| `/subject/:subject`              | `routes/subject/$subject/route.tsx`             | `pages/subject.$subject.($page)/route.tsx`     |
+| `/collection/:hash`              | `routes/collection/$hash/route.tsx`             | `pages/collection.$hash/route.tsx`             |
+| `/anime`                         | `routes/anime/route.tsx`                        | `pages/anime/route.tsx`                        |
+| `/docs/api`                      | `routes/docs/api/route.tsx`                     | `pages/docs.api/route.tsx`                     |
+| `/iframe`                        | `routes/iframe.tsx`                             | `pages/iframe/route.tsx`                       |
 
 ## 修改入口建议
 
-- 改页面数据加载：先看对应 `app/routes/**/route.tsx` 的 loader，再看 `app/utils/api.ts`。
-- 改资源表格或分页：先看 `app/components/Resources/` 和 `routes/resources.($page)/`。
-- 改搜索体验：先看 `app/layouts/Search/`、`app/states/search.ts`。
-- 改收藏夹：先看 `app/layouts/Sidebar/`、`app/states/collection.ts`、`routes/collection.$hash/route.tsx`。
-- 改部署或代理：先看 `server.mjs`、`node/proxy.ts`、`cloudflare/`、`vite.config.ts`。
-- 改埋点：先看 `app/utils/umami.ts` 和 `docs/web/umami-tracking.md`。
+- 改页面数据加载、head 或 canonical：先看 `src/routes/**`，页面组件只接收 route 传入的 props。
+- 改资源表格或分页：先看 `src/components/Resources/` 和 `src/pages/resources.($page)/`。
+- 改搜索体验：先看 `src/layouts/Search/`、`src/stores/search.ts`。
+- 改收藏夹：先看 `src/layouts/Sidebar/`、`src/stores/collection.ts`、`src/pages/collection.$hash/route.tsx`。
+- 改部署、feed 或 sitemap：先看 `server.mjs`、`node/proxy.ts`、`node/sitemap.ts`、`vite.config.ts`。
+
+## Route / Page 边界
+
+`src/routes/**` 是 TanStack Start 原生边界。每个页面 route 应在这里声明 loader、head、params/search 解析、redirect 和 canonical 等 SSR 相关逻辑；组件内部使用对应的 `Route.useLoaderData()`、`Route.useParams()`、`useLocation()` 等 route API 组装出稳定 props，再传给 `src/pages/**`。
+
+loader 是 route 的数据入口，但不是 server-only 边界：SSR 首次渲染会在服务端执行，客户端导航、预加载和缓存失效时也可能从浏览器侧触发。需要使用 Node-only 依赖、私密环境变量或只应在服务端运行的逻辑时，应包进 TanStack Start `createServerFn()`，再由 loader 调用。
+
+`src/pages/**` 只负责浏览器侧页面展示、局部交互和组合业务组件。页面文件不再导出 loader/head/meta，不直接调用 `useLoaderData()`，也不承担 URL 到数据模型的转换；需要的数据都通过 route props 传入。

@@ -6,7 +6,7 @@
 
 | 文档 | 内容 | 适用场景 |
 | --- | --- | --- |
-| [architecture-overview.md](./architecture-overview.md) | Web 应用运行形态、Remix 路由、数据加载、API 代理、状态和样式目录导览 | 新介入前端代码、调整页面结构或评估影响范围时先读 |
+| [architecture-overview.md](./architecture-overview.md) | Web 应用运行形态、TanStack Start 路由、数据加载、feed/sitemap、状态和样式目录导览 | 新介入前端代码、调整页面结构或评估影响范围时先读 |
 | [../server/deployment-topology.md](../server/deployment-topology.md) | 线上域名、Fly app、内网后端与 public API 服务关系 | 排查线上可用性或调整跨服务调用时先读 |
 
 ## 文档列表
@@ -14,6 +14,7 @@
 | 文档 | 内容 | 适用场景 |
 | --- | --- | --- |
 | [umami-tracking.md](./umami-tracking.md) | Umami 已接入事件、事件属性、接入位置和未覆盖点击埋点 TODO | 修改前端导航、资源列表、搜索、收藏夹、详情页或埋点时先读 |
+| [tanstack-start-parity-test-paths.md](./tanstack-start-parity-test-paths.md) | TanStack Start 迁移期间本地与线上对齐验证路径、已发现差异和自动化断言建议 | 做迁移回归、补 e2e 测试或核对页面行为时先读 |
 
 ## 维护约定
 

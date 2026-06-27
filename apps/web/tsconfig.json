@@ -6,10 +6,8 @@
       "ES2022"
     ],
     "types": [
-      "@remix-run/node",
       "vite/client",
-      "vite-plugin-pwa/client",
-      "@vite-pwa/remix/remix-sw"
+      "vite-plugin-pwa/client"
     ],
     "isolatedModules": true,
     "esModuleInterop": true,
@@ -25,10 +23,10 @@
     "forceConsistentCasingInFileNames": true,
     "paths": {
       "@/*": [
-        "./app/*"
+        "./src/*"
       ],
       "~/*": [
-        "./app/*"
+        "./src/*"
       ],
       "@animegarden/client": [
         "../../packages/client/src/index.ts"
