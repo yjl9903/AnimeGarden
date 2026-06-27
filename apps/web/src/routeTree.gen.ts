@@ -20,6 +20,7 @@ import { Route as ResourcesPageRouteImport } from './routes/resources/$page'
 import { Route as SubjectSubjectRouteRouteImport } from './routes/subject/$subject/route'
 import { Route as DocsApiRouteRouteImport } from './routes/docs/api/route'
 import { Route as CollectionHashRouteRouteImport } from './routes/collection/$hash/route'
+import { Route as SubjectSubjectPageRouteImport } from './routes/subject/$subject/$page'
 import { Route as DetailProviderProviderIdRouteRouteImport } from './routes/detail/$provider/$providerId/route'
 
 const IframeRoute = IframeRouteImport.update({
@@ -77,6 +78,11 @@ const CollectionHashRouteRoute = CollectionHashRouteRouteImport.update({
   path: '/collection/$hash',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SubjectSubjectPageRoute = SubjectSubjectPageRouteImport.update({
+  id: '/$page',
+  path: '/$page',
+  getParentRoute: () => SubjectSubjectRouteRoute,
+} as any)
 const DetailProviderProviderIdRouteRoute =
   DetailProviderProviderIdRouteRouteImport.update({
     id: '/detail/$provider/$providerId',
@@ -93,10 +99,11 @@ export interface FileRoutesByFullPath {
   '/iframe': typeof IframeRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
-  '/subject/$subject': typeof SubjectSubjectRouteRoute
+  '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
   '/resources/$page': typeof ResourcesPageRoute
   '/resources/': typeof ResourcesIndexRoute
   '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
+  '/subject/$subject/$page': typeof SubjectSubjectPageRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -106,10 +113,11 @@ export interface FileRoutesByTo {
   '/iframe': typeof IframeRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
-  '/subject/$subject': typeof SubjectSubjectRouteRoute
+  '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
   '/resources/$page': typeof ResourcesPageRoute
   '/resources': typeof ResourcesIndexRoute
   '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
+  '/subject/$subject/$page': typeof SubjectSubjectPageRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -121,10 +129,11 @@ export interface FileRoutesById {
   '/iframe': typeof IframeRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
-  '/subject/$subject': typeof SubjectSubjectRouteRoute
+  '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
   '/resources/$page': typeof ResourcesPageRoute
   '/resources/': typeof ResourcesIndexRoute
   '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
+  '/subject/$subject/$page': typeof SubjectSubjectPageRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -141,6 +150,7 @@ export interface FileRouteTypes {
     | '/resources/$page'
     | '/resources/'
     | '/detail/$provider/$providerId'
+    | '/subject/$subject/$page'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -154,6 +164,7 @@ export interface FileRouteTypes {
     | '/resources/$page'
     | '/resources'
     | '/detail/$provider/$providerId'
+    | '/subject/$subject/$page'
   id:
     | '__root__'
     | '/'
@@ -168,6 +179,7 @@ export interface FileRouteTypes {
     | '/resources/$page'
     | '/resources/'
     | '/detail/$provider/$providerId'
+    | '/subject/$subject/$page'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -179,7 +191,7 @@ export interface RootRouteChildren {
   IframeRoute: typeof IframeRoute
   CollectionHashRouteRoute: typeof CollectionHashRouteRoute
   DocsApiRouteRoute: typeof DocsApiRouteRoute
-  SubjectSubjectRouteRoute: typeof SubjectSubjectRouteRoute
+  SubjectSubjectRouteRoute: typeof SubjectSubjectRouteRouteWithChildren
   DetailProviderProviderIdRouteRoute: typeof DetailProviderProviderIdRouteRoute
 }
 
@@ -262,6 +274,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CollectionHashRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/subject/$subject/$page': {
+      id: '/subject/$subject/$page'
+      path: '/$page'
+      fullPath: '/subject/$subject/$page'
+      preLoaderRoute: typeof SubjectSubjectPageRouteImport
+      parentRoute: typeof SubjectSubjectRouteRoute
+    }
     '/detail/$provider/$providerId': {
       id: '/detail/$provider/$providerId'
       path: '/detail/$provider/$providerId'
@@ -286,6 +305,17 @@ const ResourcesRouteRouteWithChildren = ResourcesRouteRoute._addFileChildren(
   ResourcesRouteRouteChildren,
 )
 
+interface SubjectSubjectRouteRouteChildren {
+  SubjectSubjectPageRoute: typeof SubjectSubjectPageRoute
+}
+
+const SubjectSubjectRouteRouteChildren: SubjectSubjectRouteRouteChildren = {
+  SubjectSubjectPageRoute: SubjectSubjectPageRoute,
+}
+
+const SubjectSubjectRouteRouteWithChildren =
+  SubjectSubjectRouteRoute._addFileChildren(SubjectSubjectRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AnimeRouteRoute: AnimeRouteRoute,
@@ -295,7 +325,7 @@ const rootRouteChildren: RootRouteChildren = {
   IframeRoute: IframeRoute,
   CollectionHashRouteRoute: CollectionHashRouteRoute,
   DocsApiRouteRoute: DocsApiRouteRoute,
-  SubjectSubjectRouteRoute: SubjectSubjectRouteRoute,
+  SubjectSubjectRouteRoute: SubjectSubjectRouteRouteWithChildren,
   DetailProviderProviderIdRouteRoute: DetailProviderProviderIdRouteRoute,
 }
 export const routeTree = rootRouteImport
