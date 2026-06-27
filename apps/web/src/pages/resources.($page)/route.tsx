@@ -6,14 +6,14 @@ import { usePreferFansub } from '~/stores/fansubs';
 import { getTrackingError, trackFetchResourcesError } from '~/utils';
 
 import { Error } from './Error';
-import { FilterCard } from './Filter';
+import { FilterCard, type ResourceFilter } from './Filter';
 
 export interface ResourcesIndexProps {
   data: {
     ok: boolean;
     resources: any[];
     pagination?: { complete?: boolean };
-    filter?: any;
+    filter?: ResourceFilter;
     page: number;
     timestamp?: Date;
     error: any;
@@ -33,7 +33,7 @@ export default function ResourcesIndex({
 }: ResourcesIndexProps) {
   const { ok, resources, pagination, filter, page, timestamp, error } = data;
 
-  usePreferFansub(filter?.fansubs);
+  usePreferFansub(filter?.fansubs ?? undefined);
 
   useEffect(() => {
     if (!error || !ok) return;
@@ -50,7 +50,7 @@ export default function ResourcesIndex({
         {ok ? (
           <>
             <FilterCard
-              filter={filter as any}
+              filter={filter}
               feedURL={feedURL}
               resources={resources}
               complete={pagination?.complete ?? false}

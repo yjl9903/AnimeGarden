@@ -17,6 +17,7 @@ import { serializeError } from '~/utils/error';
 import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
 
 import type { ResourcesQueryInput } from './animegarden';
+import { resolveSubjectsByName } from './subject.server';
 
 const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
   if (import.meta.env.DEV && import.meta.env.SSR && import.meta.env.HTTPS_PROXY) {
@@ -76,6 +77,31 @@ async function normalizeResourceDescription(description: string) {
   return normalizeDescription(description);
 }
 
+async function resolveResourcesFilter(filter: ResourcesQueryInput) {
+  const { subject, subjects, ...rest } = filter;
+  const subjectIds: number[] = [];
+  const names: string[] = [];
+
+  for (const value of [subject, ...(subjects ?? [])]) {
+    if (value === undefined) continue;
+    if (typeof value === 'number') {
+      subjectIds.push(value);
+    } else {
+      names.push(value);
+    }
+  }
+
+  const resolvedSubjects = names.length > 0 ? await resolveSubjectsByName(names) : [];
+  const resolvedIds = [
+    ...new Set([...subjectIds, ...resolvedSubjects.map((subject) => subject.id)])
+  ];
+
+  return {
+    ...rest,
+    subjects: resolvedIds.length > 0 ? resolvedIds : undefined // Unknown subject names are intentionally dropped; the returned filter should not echo them.
+  } as FetchResourcesOptions;
+}
+
 export const fetchTimestampFn = createServerFn({ method: 'GET' }).handler(async () => {
   try {
     const resp = await rawFetchStatus({
@@ -107,14 +133,13 @@ export const fetchResourcesFn = createServerFn({ method: 'GET' })
   .validator((filter: ResourcesQueryInput) => filter)
   .handler(async ({ data: filter = {} }) => {
     try {
-      const resp = await rawFetchResources<
-        FetchResourcesOptions & { tracker: true; metadata: true }
-      >({
+      const resolvedFilter = await resolveResourcesFilter(filter);
+      const resp = await rawFetchResources({
         ...getProxyFetchOptions(30 * 1000),
-        ...filter,
+        ...resolvedFilter,
         tracker: true,
         metadata: true
-      } as const);
+      });
 
       setTimestamp(resp);
       resp.error = serializeError(resp.error);

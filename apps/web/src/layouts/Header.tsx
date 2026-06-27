@@ -7,7 +7,7 @@ import { memo, useEffect, useMemo, useState } from 'react';
 import { useAppStores } from '~/stores/hooks';
 import { calendarQueryOptions } from '~/query';
 import { getCalendar } from '~/utils/calendar';
-import { getSubjectURL } from '~/utils/subjects';
+import { getSubjectURL } from '~/utils/subject';
 import { getOpenFeedTrackEvent, trackNavClick } from '~/utils/umami';
 import { fansubs as AllFansubs, types, DisplayTypeColor } from '~/utils/constants';
 import {

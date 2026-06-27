@@ -6,7 +6,7 @@ import { Collection, Jsonify } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import ResourcesTable from '~/components/Resources';
-import { inferCollectionItemName } from '~/layouts/Sidebar/Collection';
+import { useInferCollectionItemName } from '~/layouts/Sidebar/Collection';
 import { getCollectionFeedURL } from '~/utils';
 
 import { Error } from '../resources.($page)/Error';
@@ -59,7 +59,7 @@ export default function Collections({ data }: { data: any }) {
 
 const CollectionItemTitle = memo((props: { item: Collection<true>['filters'][0] }) => {
   const item = props.item;
-  const name = inferCollectionItemName(props.item);
+  const name = useInferCollectionItemName(props.item);
 
   const fansub = name.fansubs?.join(' ');
   const title = item.name

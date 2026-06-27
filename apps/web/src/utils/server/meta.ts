@@ -1,16 +1,16 @@
 import type { Jsonify, ResolvedFilterOptions } from '@animegarden/client';
 
-import { getSubjectById, getSubjectDisplayName, waitForSubjectsLoaded } from '../subjects';
-
-await waitForSubjectsLoaded();
+import type { SubjectInfo } from '../subject';
+import { getSubjectDisplayName } from '../subject';
 
 export function generateTitleFromFilter(
-  filter: Jsonify<ResolvedFilterOptions> | ResolvedFilterOptions
+  filter: Jsonify<ResolvedFilterOptions> | ResolvedFilterOptions,
+  subjects: Record<number, Pick<SubjectInfo, 'title'>>
 ) {
   if (filter.subjects) {
     const names = [];
     for (const id of filter.subjects) {
-      const bgm = getSubjectById(id);
+      const bgm = subjects[id];
       const name = getSubjectDisplayName(bgm);
       if (name) {
         names.push(name);

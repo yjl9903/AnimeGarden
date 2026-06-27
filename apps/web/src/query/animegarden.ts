@@ -14,7 +14,14 @@ import * as serverBackend from './server';
 
 type BackendMode = 'proxy' | 'embedded';
 
-export type ResourcesQueryInput = FilterOptions & PaginationOptions & PresetOptions;
+type ResourceSubjectInput = number | string;
+
+export type ResourcesQueryInput = Omit<FilterOptions, 'subject' | 'subjects'> &
+  PaginationOptions &
+  PresetOptions & {
+    subject?: ResourceSubjectInput;
+    subjects?: ResourceSubjectInput[];
+  };
 
 const backendMode: BackendMode = 'proxy';
 

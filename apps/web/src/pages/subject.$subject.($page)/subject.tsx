@@ -8,7 +8,7 @@ import { useCallback } from 'react';
 import type { Jsonify } from '@animegarden/client';
 
 import { getWeekday } from '~/utils/date';
-import { getSubjectDisplayName, getSubjectURL } from '~/utils/subjects';
+import { getSubjectDisplayName, getSubjectURL } from '~/utils/subject';
 
 export function SubjectCard({ subject }: { subject: Jsonify<FullSubject> }) {
   const onClickShare = useCallback(
