@@ -1,25 +1,28 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
+import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 
 import Page from '~/pages/collection.$hash/route';
-import { fetchCollection, getCanonicalURL } from '~/utils';
+import { calendarQueryOptions, collectionQueryOptions } from '~/query';
+import { getCanonicalURL } from '~/utils';
+import { ResponseCacheControl, setCacheControl } from '~/utils/response';
 
 const loader = async ({
-  location,
+  context,
   params
 }: {
-  location: { href: string };
+  context: { queryClient: QueryClient };
   params: { hash?: string };
 }) => {
-  try {
-    const hash = params.hash!;
-    if (!hash) throw redirect({ to: '/' });
+  const hash = params.hash!;
+  if (!hash) throw redirect({ to: '/' });
 
-    const resp = await fetchCollection(hash);
-    if (resp?.ok) {
-      return resp;
-    }
-  } catch (error) {
-    console.error(location.href, error);
+  const [resp] = await Promise.all([
+    context.queryClient.ensureQueryData(collectionQueryOptions(hash)),
+    context.queryClient.ensureQueryData(calendarQueryOptions())
+  ]);
+  if (resp?.ok) {
+    await setCacheControl(ResponseCacheControl.List);
+    return resp;
   }
 
   throw redirect({ to: '/' });
@@ -45,6 +48,7 @@ export const Route = createFileRoute('/collection/$hash')({
 });
 
 function CollectionRoute() {
-  const data = Route.useLoaderData();
+  const params = Route.useParams();
+  const { data } = useSuspenseQuery(collectionQueryOptions(params.hash!));
   return <Page data={data} />;
 }

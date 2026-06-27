@@ -1,8 +1,6 @@
 import type { BasicSubject } from 'bgmd';
 
-import { calendar as rawCalendar } from 'bgmd/calendar';
-
-export const getCalendar = () => {
+export const getCalendar = (rawCalendar: BasicSubject[][]) => {
   // Before 6:00
   const Weekday = (new Date(new Date().getTime() - 6 * 60 * 60 * 1000).getDay() + 6) % 7;
 

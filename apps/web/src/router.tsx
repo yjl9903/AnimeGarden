@@ -34,7 +34,9 @@ function createQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 1000 * 60 * 5,
+        // Data prefetched by route hover/navigation stays fresh for 1 minute by default.
+        staleTime: 1000 * 60,
+        // Unused query cache is retained for 10 minutes before garbage collection.
         gcTime: 1000 * 60 * 10
       }
     }

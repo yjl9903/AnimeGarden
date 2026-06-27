@@ -2,11 +2,13 @@ import clsx from 'clsx';
 import { toast } from 'sonner';
 import { ClientOnly, Link as NavLink, useLocation, useNavigate } from '@tanstack/react-router';
 import { useSelector } from '@tanstack/react-store';
+import { useMutation } from '@tanstack/react-query';
 import { type MouseEvent, memo, useCallback, useMemo } from 'react';
 
 import type { Collection } from '@animegarden/client';
 
-import { generateCollection, track } from '~/utils';
+import { generateCollectionMutationOptions } from '~/query';
+import { track } from '~/utils';
 import { getActivePageTab } from '~/utils/routes';
 import { updateCollection } from '~/stores/collection';
 import { useAppStores } from '~/stores/hooks';
@@ -119,6 +121,7 @@ const Collection = memo((props: { collection: Collection<true> }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const stores = useAppStores();
+  const generateCollectionMutation = useMutation(generateCollectionMutationOptions());
 
   const match = useMemo(() => getActivePageTab(location, collection), [location, collection]);
 
@@ -128,14 +131,14 @@ const Collection = memo((props: { collection: Collection<true> }) => {
       updateCollection(stores, collection, { authorization });
     }
 
-    const resp = await generateCollection(collection);
+    const resp = await generateCollectionMutation.mutateAsync(collection);
     console.log('创建收藏夹', resp);
 
     if (resp) {
       updateCollection(stores, collection, { hash: resp.hash });
       return resp;
     }
-  }, [collection, stores]);
+  }, [collection, generateCollectionMutation, stores]);
 
   const onClickCollection = useCallback(
     async (e: MouseEvent) => {

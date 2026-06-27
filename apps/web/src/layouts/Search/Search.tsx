@@ -16,7 +16,6 @@ import {
 } from 'react';
 
 import {
-  fetchResources,
   trackSearchHistoryClick,
   trackSearchHistoryDelete,
   trackSearchResultClick,
@@ -24,6 +23,7 @@ import {
   trackSearchTrigger,
   type SearchTriggerSource
 } from '~/utils';
+import { resourcesQueryOptions } from '~/query';
 import {
   getSubjectDisplayName,
   getSubjectURL,
@@ -449,7 +449,7 @@ function SearchResult(props: {
   onSelect: (text: string) => void;
   selectGoToSearch: () => void;
 }) {
-  const { search, signals, onSelect, selectGoToSearch } = props;
+  const { search, onSelect, selectGoToSearch } = props;
   const trackedRef = useRef<{ key?: string; timestamp?: number }>({});
 
   const handleResultSelect = useCallback(
@@ -487,25 +487,9 @@ function SearchResult(props: {
   }, [search]);
 
   const { data: searchResult, isLoading } = useQuery({
-    queryKey: ['search-result', filter],
+    ...resourcesQueryOptions({ ...filter!, page: 1, pageSize: 5 }),
     enabled: filter !== null,
-    queryFn: async () => {
-      const abort = new AbortController();
-      signals.add(abort);
-      try {
-        const res = await fetchResources(
-          { ...filter!, page: 1, pageSize: 5 },
-          {
-            signal: abort.signal
-          }
-        );
-        return res.resources;
-      } catch {
-        return undefined;
-      } finally {
-        signals.delete(abort);
-      }
-    }
+    select: (res) => res.resources
   });
 
   if (isLoading || searchResult) {

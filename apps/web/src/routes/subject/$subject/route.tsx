@@ -1,18 +1,32 @@
 import { createFileRoute, redirect, useLocation } from '@tanstack/react-router';
+import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 import { truncate } from '@animegarden/shared';
 
 import Page from '~/pages/subject.$subject.($page)/route';
 import { APP_HOST } from '~build/env';
 import { generateTitleFromFilter } from '~/utils/server/meta';
-import { fetchResources, getCanonicalURL, getTrackingError, serializeError } from '~/utils';
-import { setResponseStatus } from '~/utils/response';
-import { getSubjectById, getSubjectDisplayName } from '~/utils/subjects';
+import { calendarQueryOptions, resourcesQueryOptions, subjectQueryOptions } from '~/query';
+import { getCanonicalURL, getTrackingError, serializeError } from '~/utils';
+import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
+import { getSubjectDisplayName } from '~/utils/subjects';
 import { groupResourcesByFansub } from '~/pages/subject.$subject.($page)/utils';
 
+function getSubjectResourcesFilter(subjectId: number) {
+  return {
+    subject: subjectId,
+    subjects: undefined,
+    page: 1,
+    pageSize: 1000,
+    types: ['动画', '合集']
+  };
+}
+
 const loader = async ({
+  context,
   location,
   params
 }: {
+  context: { queryClient: QueryClient };
   location: { href: string };
   params: { subject?: string; page?: string };
 }) => {
@@ -21,53 +35,50 @@ const loader = async ({
   }
 
   const subjectId = +params.subject!;
-  const subject = getSubjectById(subjectId);
+  const resourceFilter = getSubjectResourcesFilter(subjectId);
+  const [subjectResp, resourcesResp] = await Promise.all([
+    context.queryClient.ensureQueryData(subjectQueryOptions(subjectId)),
+    context.queryClient.ensureQueryData(resourcesQueryOptions(resourceFilter)),
+    context.queryClient.ensureQueryData(calendarQueryOptions())
+  ]);
 
-  const resourceFilter = {
-    subject: subjectId,
-    subjects: undefined,
-    page: 1,
-    pageSize: 1000,
-    types: ['动画', '合集']
-  };
-
-  try {
-    const { ok, resources, pagination, filter, timestamp, error } =
-      await fetchResources(resourceFilter);
-
-    if (error) {
-      console.error(location.href, error);
-    }
-
-    if (!ok) {
-      await setResponseStatus(500);
-    }
-
-    return {
-      ok,
-      subjectId,
-      subject,
-      resources: groupResourcesByFansub(resources),
-      pagination,
-      filter,
-      timestamp,
-      error: serializeError(error)
-    };
-  } catch (error) {
-    console.error(location.href, error);
-    await setResponseStatus(500);
-
+  const subject = subjectResp.subject;
+  if (!subjectResp.ok || !subject) {
+    await setErrorResponse(404);
     return {
       ok: false,
       subjectId,
       subject,
-      resources: groupResourcesByFansub([]),
+      resources: [],
       pagination: undefined,
-      filter: resourceFilter,
+      filter: undefined,
       timestamp: undefined,
-      error: serializeError(error)
+      error: undefined
     };
   }
+
+  const { ok, resources, pagination, filter, timestamp, error } = resourcesResp;
+
+  if (error) {
+    console.error(location.href, error);
+  }
+
+  if (!ok) {
+    await setErrorResponse(500);
+  } else {
+    await setCacheControl(ResponseCacheControl.List);
+  }
+
+  return {
+    ok,
+    subjectId,
+    subject,
+    resources: groupResourcesByFansub(resources),
+    pagination,
+    filter,
+    timestamp,
+    error: serializeError(error)
+  };
 };
 
 export const Route = createFileRoute('/subject/$subject')({
@@ -131,8 +142,20 @@ export const Route = createFileRoute('/subject/$subject')({
 
 function SubjectRoute() {
   const location = useLocation();
-  const data = Route.useLoaderData();
+  const loaderData = Route.useLoaderData();
   const params = Route.useParams();
+  const { data: subjectData } = useSuspenseQuery(subjectQueryOptions(loaderData.subjectId));
+  const { data: resourcesData } = useSuspenseQuery(
+    resourcesQueryOptions(getSubjectResourcesFilter(loaderData.subjectId))
+  );
+  const data = {
+    ...loaderData,
+    ...resourcesData,
+    subjectId: loaderData.subjectId,
+    subject: subjectData.subject,
+    resources: groupResourcesByFansub(resourcesData.resources),
+    error: serializeError(resourcesData.error)
+  };
 
   return (
     <Page

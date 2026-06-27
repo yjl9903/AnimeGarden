@@ -1,45 +1,33 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
-import { createServerFn } from '@tanstack/react-start';
+import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 
 import Page from '~/pages/detail.$provider.$providerId/route';
 import { parse } from 'anipar';
 import { truncate } from '@animegarden/shared';
 import { SupportProviders } from '@animegarden/client';
 import { APP_HOST } from '~build/env';
-import { fetchResourceDetail, getCanonicalURL } from '~/utils';
+import { calendarQueryOptions, resourceDetailQueryOptions } from '~/query';
+import { getCanonicalURL } from '~/utils';
+import { ResponseCacheControl, setCacheControl } from '~/utils/response';
 import { getSubjectById } from '~/utils/subjects';
 
-const normalizeDescription = createServerFn({ method: 'POST' })
-  .validator((description: string) => description)
-  .handler(async ({ data: description }) => {
-    const { normalizeDescription } = await import('@animegarden/scraper');
-    return normalizeDescription(description);
-  });
-
 const loader = async ({
-  location,
+  context,
   params
 }: {
-  location: { href: string };
+  context: { queryClient: QueryClient };
   params: { provider?: string; providerId?: string };
 }) => {
-  try {
-    const { provider, providerId } = params;
-    if (provider && providerId && SupportProviders.includes(provider)) {
-      const data = await fetchResourceDetail(provider, providerId);
-      if (data?.ok && data?.resource) {
-        const description = data?.detail?.description
-          ? await normalizeDescription({ data: data.detail.description })
-          : undefined;
-
-        return {
-          ...data,
-          description
-        };
-      }
+  const { provider, providerId } = params;
+  if (provider && providerId && SupportProviders.includes(provider)) {
+    const [data] = await Promise.all([
+      context.queryClient.ensureQueryData(resourceDetailQueryOptions(provider, providerId)),
+      context.queryClient.ensureQueryData(calendarQueryOptions())
+    ]);
+    if (data?.ok && data?.resource) {
+      await setCacheControl(ResponseCacheControl.Detail);
+      return data;
     }
-  } catch (error) {
-    console.error(location.href, error);
   }
 
   throw redirect({ to: '/' });
@@ -140,6 +128,9 @@ export const Route = createFileRoute('/detail/$provider/$providerId')({
 });
 
 function DetailRoute() {
-  const data = Route.useLoaderData();
+  const params = Route.useParams();
+  const { data } = useSuspenseQuery(
+    resourceDetailQueryOptions(params.provider!, params.providerId!)
+  );
   return <Page data={data} />;
 }
