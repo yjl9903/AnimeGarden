@@ -8,7 +8,7 @@ import { SupportProviders } from '@animegarden/client';
 import { APP_HOST } from '~build/env';
 
 import Page from '~/pages/detail.$provider.$providerId/route';
-import { getCanonicalURL } from '~/utils';
+import { formatChinaTime, getCanonicalURL } from '~/utils';
 import { ResponseCacheControl, setCacheControl } from '~/utils/response';
 import { calendarQueryOptions, resourceDetailQueryOptions, subjectQueryOptions } from '~/query';
 
@@ -59,7 +59,7 @@ export const Route = createFileRoute('/detail/$provider/$providerId')({
             seasonNumber: `${info.season?.number ?? 1}`
           },
           episodeNumber: info.episode?.number !== undefined ? `${info.episode.number}` : undefined,
-          datePublished: resource ? new Date(resource.createdAt).toLocaleDateString() : undefined,
+          datePublished: resource ? formatChinaTime(new Date(resource.createdAt), 'yyyy-MM-dd') : undefined,
           url: `https://${APP_HOST}/detail/${params.provider}/${params.providerId}`
         })
       : undefined;

@@ -328,7 +328,7 @@ const CollectionItemFilter = memo((props: { item: CollectionItem }) => {
         <div>
           <span className="font-bold mr2 select-none">搜索开始于</span>
           <span className="select-text">
-            {formatChinaTime(display.after, 'yyyy 年 M 月 d 日 hh:mm')}
+            {formatChinaTime(display.after, 'yyyy 年 M 月 d 日 HH:mm')}
           </span>
         </div>
       )}
@@ -336,7 +336,7 @@ const CollectionItemFilter = memo((props: { item: CollectionItem }) => {
         <div>
           <span className="font-bold mr2 select-none">搜索结束于</span>
           <span className="select-text">
-            {formatChinaTime(display.before, 'yyyy 年 M 月 d 日 hh:mm')}
+            {formatChinaTime(display.before, 'yyyy 年 M 月 d 日 HH:mm')}
           </span>
         </div>
       )}
