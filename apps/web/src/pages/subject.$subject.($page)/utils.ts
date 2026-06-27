@@ -45,9 +45,13 @@ export function groupResourcesByFansub(resources: Resource<{ tracker: true }>[])
     const publisher = resource.publisher;
     const fansub = resource.fansub;
     if (fansub) {
-      fansubMap.set(fansub.id, [...(fansubMap.get(fansub.id) || []), resource]);
+      const group = fansubMap.get(fansub.id);
+      if (group) group.push(resource);
+      else fansubMap.set(fansub.id, [resource]);
     } else {
-      otherMap.set(publisher.id, [...(otherMap.get(publisher.id) || []), resource]);
+      const group = otherMap.get(publisher.id);
+      if (group) group.push(resource);
+      else otherMap.set(publisher.id, [resource]);
     }
   }
   const groups = [
