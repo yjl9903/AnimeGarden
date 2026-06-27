@@ -27,11 +27,11 @@ const loader = async ({
   params
 }: {
   context: { queryClient: QueryClient };
-  location: { href: string };
+  location: { href: string; searchStr: string };
   params: { subject?: string; page?: string };
 }) => {
   if (params.page !== undefined) {
-    throw redirect({ href: `/subject/${params.subject}` });
+    throw redirect({ href: `/subject/${params.subject}${location.searchStr}` });
   }
 
   const subjectId = +params.subject!;
