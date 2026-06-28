@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as OpenapiDotjsonRouteImport } from './routes/openapi[.]json'
+import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
 import { Route as IframeRouteImport } from './routes/iframe'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as SplatRouteImport } from './routes/$'
@@ -35,6 +36,11 @@ const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
 const OpenapiDotjsonRoute = OpenapiDotjsonRouteImport.update({
   id: '/openapi.json',
   path: '/openapi.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
+  id: '/llms.txt',
+  path: '/llms.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IframeRoute = IframeRouteImport.update({
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
   '/iframe': typeof IframeRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/openapi.json': typeof OpenapiDotjsonRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
@@ -140,6 +147,7 @@ export interface FileRoutesByTo {
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
   '/iframe': typeof IframeRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/openapi.json': typeof OpenapiDotjsonRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
@@ -160,6 +168,7 @@ export interface FileRoutesById {
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
   '/iframe': typeof IframeRoute
+  '/llms.txt': typeof LlmsDottxtRoute
   '/openapi.json': typeof OpenapiDotjsonRoute
   '/robots.txt': typeof RobotsDottxtRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
@@ -181,6 +190,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/about'
     | '/iframe'
+    | '/llms.txt'
     | '/openapi.json'
     | '/robots.txt'
     | '/collection/$hash'
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/about'
     | '/iframe'
+    | '/llms.txt'
     | '/openapi.json'
     | '/robots.txt'
     | '/collection/$hash'
@@ -218,6 +229,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/about'
     | '/iframe'
+    | '/llms.txt'
     | '/openapi.json'
     | '/robots.txt'
     | '/collection/$hash'
@@ -238,6 +250,7 @@ export interface RootRouteChildren {
   SplatRoute: typeof SplatRoute
   AboutRoute: typeof AboutRoute
   IframeRoute: typeof IframeRoute
+  LlmsDottxtRoute: typeof LlmsDottxtRoute
   OpenapiDotjsonRoute: typeof OpenapiDotjsonRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   CollectionHashRouteRoute: typeof CollectionHashRouteRoute
@@ -262,6 +275,13 @@ declare module '@tanstack/react-router' {
       path: '/openapi.json'
       fullPath: '/openapi.json'
       preLoaderRoute: typeof OpenapiDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/llms.txt': {
+      id: '/llms.txt'
+      path: '/llms.txt'
+      fullPath: '/llms.txt'
+      preLoaderRoute: typeof LlmsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/iframe': {
@@ -404,6 +424,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplatRoute: SplatRoute,
   AboutRoute: AboutRoute,
   IframeRoute: IframeRoute,
+  LlmsDottxtRoute: LlmsDottxtRoute,
   OpenapiDotjsonRoute: OpenapiDotjsonRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   CollectionHashRouteRoute: CollectionHashRouteRoute,

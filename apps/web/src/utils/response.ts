@@ -17,7 +17,7 @@ export const enum ResponseStaleTime {
 }
 
 export const AgentDiscoveryLinkHeader =
-  '</openapi.json>; rel="service-desc", </sitemap-index.xml>; rel="sitemap"; type="application/xml"';
+  '</openapi.json>; rel="service-desc", </sitemap-index.xml>; rel="sitemap"; type="application/xml", </llms.txt>; rel="alternate"; type="text/plain"; title="llms.txt"';
 
 /** Sets HTTP response status during SSR while staying safe for client navigations. */
 export const setResponseStatus = createIsomorphicFn()
