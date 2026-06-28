@@ -37,7 +37,7 @@ Hono 入口在 `src/server/index.ts`。`registerHono()` 统一绑定：
 - `users`、`subjects`、`resources`、`collections`、`feed`、`admin`、`sitemaps` 路由。
 - 查询错误到 JSON / XML 的统一转换。
 
-`makeServer()` 额外注册 `/mcp`；`makeExecutor()` 额外注册资源任务 RPC，并由 `Executor.start()` 注册每 5 分钟 fetch、每小时 sync 的 cron job。
+`makeServer()` 额外注册 `/mcp`，并将 `/.well-known/mcp/server-card.json` 重定向到 Web 站点；`makeExecutor()` 额外注册资源任务 RPC，并由 `Executor.start()` 注册每 5 分钟 fetch、每小时 sync 的 cron job。
 
 ## 代码逻辑分类
 
