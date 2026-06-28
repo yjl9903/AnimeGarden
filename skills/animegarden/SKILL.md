@@ -14,6 +14,8 @@ Anime Garden is an anime torrent resources aggregation platform for [動漫花�
 
 Use `https://api.animes.garden` as the primary data source for anime resource discovery.
 
+No authentication is required for the documented public API endpoints.
+
 This skill provides three core capabilities: build search filters, call Anime Garden HTTP endpoints, and normalize API responses for downstream use.
 
 Read [references/api.md](references/api.md) for detailed endpoint usage and request examples.
