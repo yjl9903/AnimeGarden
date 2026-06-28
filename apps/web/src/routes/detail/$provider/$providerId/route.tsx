@@ -47,7 +47,7 @@ export const Route = createFileRoute('/detail/$provider/$providerId')({
 
     const info = resource ? parse(resource.title) : undefined;
     const schema = info
-      ? JSON.stringify({
+      ? {
           '@context': 'http://schema.org',
           '@type': 'TVEpisode',
           partOfTVSeries: {
@@ -61,7 +61,7 @@ export const Route = createFileRoute('/detail/$provider/$providerId')({
           episodeNumber: info.episode?.number !== undefined ? `${info.episode.number}` : undefined,
           datePublished: resource ? formatChinaTime(new Date(resource.createdAt), 'yyyy-MM-dd') : undefined,
           url: `https://${APP_HOST}/detail/${params.provider}/${params.providerId}`
-        })
+        }
       : undefined;
 
     const title = info?.title ?? resourceTitle;
@@ -118,6 +118,7 @@ export const Route = createFileRoute('/detail/$provider/$providerId')({
           name: 'description',
           content: descriptionText
         },
+        ...(schema ? [{ 'script:ld+json': schema }] : []),
         ...og
       ],
       links: [
@@ -125,8 +126,7 @@ export const Route = createFileRoute('/detail/$provider/$providerId')({
           rel: 'canonical',
           href: getCanonicalURL(`/detail/${params.provider}/${params.providerId}`)
         }
-      ],
-      scripts: schema ? [{ type: 'application/ld+json', children: schema }] : []
+      ]
     };
   },
   component: DetailRoute
