@@ -61,6 +61,7 @@ if (fs.existsSync(ClientRoot)) {
 }
 
 app.all('/assets/*', serveStatic({ root: path.relative(process.cwd(), ClientRoot) }));
+app.all('/.well-known/*', serveStatic({ root: path.relative(process.cwd(), ClientRoot) }));
 
 app.route('/', sitemaps);
 
