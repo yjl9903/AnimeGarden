@@ -18,6 +18,7 @@ import { Route as AnimeRouteRouteImport } from './routes/anime/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ResourcesIndexRouteImport } from './routes/resources/index'
 import { Route as ResourcesPageRouteImport } from './routes/resources/$page'
+import { Route as DotwellKnownApiCatalogRouteImport } from './routes/[.]well-known/api-catalog'
 import { Route as SubjectSubjectRouteRouteImport } from './routes/subject/$subject/route'
 import { Route as DocsApiRouteRouteImport } from './routes/docs/api/route'
 import { Route as CollectionHashRouteRouteImport } from './routes/collection/$hash/route'
@@ -70,6 +71,11 @@ const ResourcesPageRoute = ResourcesPageRouteImport.update({
   path: '/$page',
   getParentRoute: () => ResourcesRouteRoute,
 } as any)
+const DotwellKnownApiCatalogRoute = DotwellKnownApiCatalogRouteImport.update({
+  id: '/.well-known/api-catalog',
+  path: '/.well-known/api-catalog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SubjectSubjectRouteRoute = SubjectSubjectRouteRouteImport.update({
   id: '/subject/$subject',
   path: '/subject/$subject',
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
+  '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute
   '/resources/$page': typeof ResourcesPageRoute
   '/resources/': typeof ResourcesIndexRoute
   '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
+  '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute
   '/resources/$page': typeof ResourcesPageRoute
   '/resources': typeof ResourcesIndexRoute
   '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
+  '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute
   '/resources/$page': typeof ResourcesPageRoute
   '/resources/': typeof ResourcesIndexRoute
   '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
+    | '/.well-known/api-catalog'
     | '/resources/$page'
     | '/resources/'
     | '/detail/$provider/$providerId'
@@ -183,6 +193,7 @@ export interface FileRouteTypes {
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
+    | '/.well-known/api-catalog'
     | '/resources/$page'
     | '/resources'
     | '/detail/$provider/$providerId'
@@ -200,6 +211,7 @@ export interface FileRouteTypes {
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
+    | '/.well-known/api-catalog'
     | '/resources/$page'
     | '/resources/'
     | '/detail/$provider/$providerId'
@@ -218,6 +230,7 @@ export interface RootRouteChildren {
   CollectionHashRouteRoute: typeof CollectionHashRouteRoute
   DocsApiRouteRoute: typeof DocsApiRouteRoute
   SubjectSubjectRouteRoute: typeof SubjectSubjectRouteRouteWithChildren
+  DotwellKnownApiCatalogRoute: typeof DotwellKnownApiCatalogRoute
   DetailProviderProviderIdRouteRoute: typeof DetailProviderProviderIdRouteRoute
   DotwellKnownMcpServerCardDotjsonRoute: typeof DotwellKnownMcpServerCardDotjsonRoute
 }
@@ -286,6 +299,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/resources/$page'
       preLoaderRoute: typeof ResourcesPageRouteImport
       parentRoute: typeof ResourcesRouteRoute
+    }
+    '/.well-known/api-catalog': {
+      id: '/.well-known/api-catalog'
+      path: '/.well-known/api-catalog'
+      fullPath: '/.well-known/api-catalog'
+      preLoaderRoute: typeof DotwellKnownApiCatalogRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/subject/$subject': {
       id: '/subject/$subject'
@@ -368,6 +388,7 @@ const rootRouteChildren: RootRouteChildren = {
   CollectionHashRouteRoute: CollectionHashRouteRoute,
   DocsApiRouteRoute: DocsApiRouteRoute,
   SubjectSubjectRouteRoute: SubjectSubjectRouteRouteWithChildren,
+  DotwellKnownApiCatalogRoute: DotwellKnownApiCatalogRoute,
   DetailProviderProviderIdRouteRoute: DetailProviderProviderIdRouteRoute,
   DotwellKnownMcpServerCardDotjsonRoute: DotwellKnownMcpServerCardDotjsonRoute,
 }

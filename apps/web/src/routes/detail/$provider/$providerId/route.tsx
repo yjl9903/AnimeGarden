@@ -59,7 +59,9 @@ export const Route = createFileRoute('/detail/$provider/$providerId')({
             seasonNumber: `${info.season?.number ?? 1}`
           },
           episodeNumber: info.episode?.number !== undefined ? `${info.episode.number}` : undefined,
-          datePublished: resource ? formatChinaTime(new Date(resource.createdAt), 'yyyy-MM-dd') : undefined,
+          datePublished: resource
+            ? formatChinaTime(new Date(resource.createdAt), 'yyyy-MM-dd')
+            : undefined,
           url: `https://${APP_HOST}/detail/${params.provider}/${params.providerId}`
         }
       : undefined;

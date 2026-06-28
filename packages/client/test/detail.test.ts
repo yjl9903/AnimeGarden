@@ -19,10 +19,13 @@ describe('fetchResourceDetailByInfoHash', () => {
       );
     });
 
-    const result = await fetchResourceDetailByInfoHash(' 0123456789012345678901234567890123456789 ', {
-      fetch,
-      baseURL: 'https://example.com/'
-    });
+    const result = await fetchResourceDetailByInfoHash(
+      ' 0123456789012345678901234567890123456789 ',
+      {
+        fetch,
+        baseURL: 'https://example.com/'
+      }
+    );
 
     expect(result.ok).toBe(true);
     expect(fetch).toHaveBeenCalledWith(
