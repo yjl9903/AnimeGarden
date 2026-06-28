@@ -1,16 +1,16 @@
 ---
 name: animegarden
-description: Anime Garden is a anime torrent resources aggregation platform, which is also a third-party mirror of 動漫花園, 萌番组, and ANi. Use when required task is searching anime resources.
+description: Anime Garden is an anime torrent resources aggregation platform for 動漫花園, 蜜柑计划, 萌番组, and ANi. Use when required task is searching anime resources.
 metadata:
   author: yjl9903
-  version: "2026.03.07"
+  version: "2026.06.29"
 ---
 
 # AnimeGarden
 
 ## Overview
 
-Anime Garden is a anime torrent resources aggregation platform, which is also a third-party mirror of [動漫花園](https://share.dmhy.org/), [萌番组](https://bangumi.moe/), and ANi.
+Anime Garden is an anime torrent resources aggregation platform for [動漫花園](https://share.dmhy.org/), [蜜柑计划](https://mikanani.me/), [萌番组](https://bangumi.moe/), and ANi.
 
 Use `https://api.animes.garden` as the primary data source for anime resource discovery.
 
@@ -20,7 +20,7 @@ Read [references/api.md](references/api.md) for detailed endpoint usage and requ
 
 ## API Capabilities
 
-1. Search resources: `GET /resources` or `POST /resources`.
+1. Search resources: `GET /resources`.
 2. Fetch resource details: `GET /detail/{provider}/{id}`.
 3. Query metadata: `GET /subjects`, `GET /teams`, `GET /users`.
 4. Check service status: `GET /`.
@@ -28,7 +28,7 @@ Read [references/api.md](references/api.md) for detailed endpoint usage and requ
 ## How To Use
 
 1. Convert user intent into structured filters: `search/include/keywords/exclude/types/fansubs/publishers/subjects/after/before`.
-2. Use `GET /resources` for simple queries; use `POST /resources` for complex filter combinations.
+2. Use `GET /resources` for queries.
 3. Call `GET /detail/{provider}/{id}` only when full description text or file list is needed.
 4. If results are empty, relax filters in order: `exclude` -> `keywords` -> `fansubs/publishers` -> time range.
 
