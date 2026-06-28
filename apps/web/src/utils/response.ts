@@ -5,6 +5,7 @@ export const enum ResponseCacheControl {
   Detail = 'public, max-age=3600, s-maxage=86400',
   Subject = 'public, max-age=3600, s-maxage=86400',
   Calendar = 'public, max-age=3600, s-maxage=86400',
+  Docs = 'public, max-age=3600, s-maxage=86400',
   Error = 'no-store'
 }
 
@@ -14,6 +15,8 @@ export const enum ResponseStaleTime {
   Subject = 1000 * 60 * 60,
   Calendar = 1000 * 60 * 60
 }
+
+export const AgentDiscoveryLinkHeader = '</openapi.json>; rel="service-desc"';
 
 /** Sets HTTP response status during SSR while staying safe for client navigations. */
 export const setResponseStatus = createIsomorphicFn()
@@ -31,6 +34,14 @@ export const setCacheControl = createIsomorphicFn()
     getResponseHeaders().set('Cache-Control', value);
   })
   .client(async (_value: ResponseCacheControl) => {});
+
+/** Appends RFC 8288 Link headers for homepage agent discovery. */
+export const appendLinkHeader = createIsomorphicFn()
+  .server(async (value: string) => {
+    const { getResponseHeaders } = await import('@tanstack/react-start/server');
+    getResponseHeaders().append('Link', value);
+  })
+  .client(async (_value: string) => {});
 
 /** Marks an upstream failure response as non-cacheable. */
 export const setErrorResponse = createIsomorphicFn()
