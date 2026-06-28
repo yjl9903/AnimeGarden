@@ -1,8 +1,12 @@
 import type { BasicSubject } from 'bgmd';
 
-export const getCalendar = (rawCalendar: BasicSubject[][]) => {
+import { formatInTimeZone } from 'date-fns-tz';
+
+export const getCalendar = (rawCalendar: BasicSubject[][], now = new Date()) => {
   // Before 6:00
-  const Weekday = (new Date(new Date().getTime() - 6 * 60 * 60 * 1000).getDay() + 6) % 7;
+  const Weekday =
+    Number(formatInTimeZone(new Date(now.getTime() - 6 * 60 * 60 * 1000), 'Asia/Shanghai', 'i')) -
+    1;
 
   return rawCalendar.map((_, idx) => {
     const index = (idx + Weekday) % 7;
