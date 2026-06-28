@@ -6,6 +6,8 @@ const robotsTxt = `User-agent: *
 Disallow: /api/
 Disallow: /feed.xml
 
+Content-Signal: ai-train=yes, search=yes, ai-input=yes
+
 Sitemap: https://animes.garden/sitemap-index.xml
 `;
 
