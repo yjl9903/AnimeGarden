@@ -12,7 +12,7 @@ const loader = async ({ context }: { context: { queryClient: QueryClient } }) =>
     context.queryClient.ensureQueryData(calendarQueryOptions())
   ]);
   if (data.ok) {
-    await setCacheControl(ResponseCacheControl.List);
+    await setCacheControl(ResponseCacheControl.Docs);
   } else {
     await setErrorResponse(500);
   }

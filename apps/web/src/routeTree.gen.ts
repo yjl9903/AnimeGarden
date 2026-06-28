@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OpenapiDotjsonRouteImport } from './routes/openapi[.]json'
 import { Route as IframeRouteImport } from './routes/iframe'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as SplatRouteImport } from './routes/$'
@@ -23,6 +24,11 @@ import { Route as CollectionHashRouteRouteImport } from './routes/collection/$ha
 import { Route as SubjectSubjectPageRouteImport } from './routes/subject/$subject/$page'
 import { Route as DetailProviderProviderIdRouteRouteImport } from './routes/detail/$provider/$providerId/route'
 
+const OpenapiDotjsonRoute = OpenapiDotjsonRouteImport.update({
+  id: '/openapi.json',
+  path: '/openapi.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IframeRoute = IframeRouteImport.update({
   id: '/iframe',
   path: '/iframe',
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
   '/iframe': typeof IframeRoute
+  '/openapi.json': typeof OpenapiDotjsonRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
@@ -111,6 +118,7 @@ export interface FileRoutesByTo {
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
   '/iframe': typeof IframeRoute
+  '/openapi.json': typeof OpenapiDotjsonRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
@@ -127,6 +135,7 @@ export interface FileRoutesById {
   '/$': typeof SplatRoute
   '/about': typeof AboutRoute
   '/iframe': typeof IframeRoute
+  '/openapi.json': typeof OpenapiDotjsonRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
@@ -144,6 +153,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/about'
     | '/iframe'
+    | '/openapi.json'
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/about'
     | '/iframe'
+    | '/openapi.json'
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/$'
     | '/about'
     | '/iframe'
+    | '/openapi.json'
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
@@ -189,6 +201,7 @@ export interface RootRouteChildren {
   SplatRoute: typeof SplatRoute
   AboutRoute: typeof AboutRoute
   IframeRoute: typeof IframeRoute
+  OpenapiDotjsonRoute: typeof OpenapiDotjsonRoute
   CollectionHashRouteRoute: typeof CollectionHashRouteRoute
   DocsApiRouteRoute: typeof DocsApiRouteRoute
   SubjectSubjectRouteRoute: typeof SubjectSubjectRouteRouteWithChildren
@@ -197,6 +210,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/openapi.json': {
+      id: '/openapi.json'
+      path: '/openapi.json'
+      fullPath: '/openapi.json'
+      preLoaderRoute: typeof OpenapiDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/iframe': {
       id: '/iframe'
       path: '/iframe'
@@ -323,6 +343,7 @@ const rootRouteChildren: RootRouteChildren = {
   SplatRoute: SplatRoute,
   AboutRoute: AboutRoute,
   IframeRoute: IframeRoute,
+  OpenapiDotjsonRoute: OpenapiDotjsonRoute,
   CollectionHashRouteRoute: CollectionHashRouteRoute,
   DocsApiRouteRoute: DocsApiRouteRoute,
   SubjectSubjectRouteRoute: SubjectSubjectRouteRouteWithChildren,

@@ -12,6 +12,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import { Toaster } from '~/components/ui/sonner';
 import { NavHeight, SearchTop, HeroHeight } from '~/layouts/Layout';
 import type { AppStores } from '~/stores';
+import { AgentDiscoveryLinkHeader, appendLinkHeader } from '~/utils/response';
 
 import Tags from '~analytics/scripts';
 
@@ -66,6 +67,9 @@ export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
   stores: AppStores;
 }>()({
+  loader: async () => {
+    await appendLinkHeader(AgentDiscoveryLinkHeader);
+  },
   head: () => ({
     meta: [
       { charSet: 'utf-8' },
