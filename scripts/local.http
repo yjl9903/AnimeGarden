@@ -132,3 +132,27 @@ Content-Type: application/json
     }
   ]
 }
+
+### Markdown: /
+GET http://localhost:5173/
+Accept: text/markdown
+
+### Markdown: /anime
+GET http://localhost:5173/anime
+Accept: text/markdown
+
+### Markdown: /subject/
+GET http://localhost:5173/subject/377130
+Accept: text/markdown
+
+### Markdown: /resources
+GET http://localhost:5173/resources/1?type=%E5%8A%A8%E7%94%BB&preset=bangumi
+Accept: text/markdown
+
+### Markdown: /detail
+GET http://localhost:5173/detail/dmhy/720266
+Accept: text/markdown
+
+### Markdown: /collection
+GET http://localhost:5173/collection/83ff02e889eca5f630c0a5f15070e23329b36ed2
+Accept: text/markdown

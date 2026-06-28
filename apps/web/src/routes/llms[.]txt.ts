@@ -18,6 +18,7 @@ const llmsTxt = `# Anime Garden
 - Search supports anime resources, fansub groups, subjects, resource types, keywords, and publish time filters.
 - Users can create custom RSS feeds from resource search filters.
 - Anime Garden provides an MCP endpoint for AI clients.
+- Site pages support Markdown negotiation: send \`Accept: text/markdown\` to receive \`Content-Type: text/markdown; charset=utf-8\`; normal browser requests still receive HTML.
 
 ## Important Links
 - Resource search: ${appUrl}/resources
