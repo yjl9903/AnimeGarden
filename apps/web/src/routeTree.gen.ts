@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as OpenapiDotjsonRouteImport } from './routes/openapi[.]json'
 import { Route as IframeRouteImport } from './routes/iframe'
 import { Route as AboutRouteImport } from './routes/about'
@@ -26,6 +27,11 @@ import { Route as SubjectSubjectPageRouteImport } from './routes/subject/$subjec
 import { Route as DotwellKnownMcpServerCardDotjsonRouteImport } from './routes/[.]well-known/mcp/server-card[.]json'
 import { Route as DetailProviderProviderIdRouteRouteImport } from './routes/detail/$provider/$providerId/route'
 
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OpenapiDotjsonRoute = OpenapiDotjsonRouteImport.update({
   id: '/openapi.json',
   path: '/openapi.json',
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/iframe': typeof IframeRoute
   '/openapi.json': typeof OpenapiDotjsonRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
@@ -134,6 +141,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/iframe': typeof IframeRoute
   '/openapi.json': typeof OpenapiDotjsonRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
@@ -153,6 +161,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/iframe': typeof IframeRoute
   '/openapi.json': typeof OpenapiDotjsonRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
@@ -173,6 +182,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/iframe'
     | '/openapi.json'
+    | '/robots.txt'
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
@@ -190,6 +200,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/iframe'
     | '/openapi.json'
+    | '/robots.txt'
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
@@ -208,6 +219,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/iframe'
     | '/openapi.json'
+    | '/robots.txt'
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
@@ -227,6 +239,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   IframeRoute: typeof IframeRoute
   OpenapiDotjsonRoute: typeof OpenapiDotjsonRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   CollectionHashRouteRoute: typeof CollectionHashRouteRoute
   DocsApiRouteRoute: typeof DocsApiRouteRoute
   SubjectSubjectRouteRoute: typeof SubjectSubjectRouteRouteWithChildren
@@ -237,6 +250,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/openapi.json': {
       id: '/openapi.json'
       path: '/openapi.json'
@@ -385,6 +405,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   IframeRoute: IframeRoute,
   OpenapiDotjsonRoute: OpenapiDotjsonRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   CollectionHashRouteRoute: CollectionHashRouteRoute,
   DocsApiRouteRoute: DocsApiRouteRoute,
   SubjectSubjectRouteRoute: SubjectSubjectRouteRouteWithChildren,
