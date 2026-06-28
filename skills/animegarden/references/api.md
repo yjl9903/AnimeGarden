@@ -4,6 +4,10 @@
 
 - `https://api.animes.garden`
 
+## Authentication
+
+No authentication is required for the public endpoints documented here.
+
 ## Response Conventions
 
 - Success responses usually include `status: "OK"`.

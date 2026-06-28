@@ -4,12 +4,11 @@ import SwaggerUI from 'swagger-ui-react';
 import Layout from '~/layouts/Layout';
 import { version, license } from '~build/package';
 
-import spec from './spec.json';
-
-spec.info.version = version;
-spec.info.license.name = license;
+import { getPublicOpenApiSpec } from './spec';
 
 export default function About({ timestamp }: { timestamp?: Date }) {
+  const spec = getPublicOpenApiSpec(version, license);
+
   return (
     <Layout timestamp={timestamp}>
       <div className="w-full pt-13 pb-24">
