@@ -22,6 +22,7 @@ import { Route as SubjectSubjectRouteRouteImport } from './routes/subject/$subje
 import { Route as DocsApiRouteRouteImport } from './routes/docs/api/route'
 import { Route as CollectionHashRouteRouteImport } from './routes/collection/$hash/route'
 import { Route as SubjectSubjectPageRouteImport } from './routes/subject/$subject/$page'
+import { Route as DotwellKnownMcpServerCardDotjsonRouteImport } from './routes/[.]well-known/mcp/server-card[.]json'
 import { Route as DetailProviderProviderIdRouteRouteImport } from './routes/detail/$provider/$providerId/route'
 
 const OpenapiDotjsonRoute = OpenapiDotjsonRouteImport.update({
@@ -89,6 +90,12 @@ const SubjectSubjectPageRoute = SubjectSubjectPageRouteImport.update({
   path: '/$page',
   getParentRoute: () => SubjectSubjectRouteRoute,
 } as any)
+const DotwellKnownMcpServerCardDotjsonRoute =
+  DotwellKnownMcpServerCardDotjsonRouteImport.update({
+    id: '/.well-known/mcp/server-card.json',
+    path: '/.well-known/mcp/server-card.json',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const DetailProviderProviderIdRouteRoute =
   DetailProviderProviderIdRouteRouteImport.update({
     id: '/detail/$provider/$providerId',
@@ -110,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/resources/$page': typeof ResourcesPageRoute
   '/resources/': typeof ResourcesIndexRoute
   '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
+  '/.well-known/mcp/server-card.json': typeof DotwellKnownMcpServerCardDotjsonRoute
   '/subject/$subject/$page': typeof SubjectSubjectPageRoute
 }
 export interface FileRoutesByTo {
@@ -125,6 +133,7 @@ export interface FileRoutesByTo {
   '/resources/$page': typeof ResourcesPageRoute
   '/resources': typeof ResourcesIndexRoute
   '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
+  '/.well-known/mcp/server-card.json': typeof DotwellKnownMcpServerCardDotjsonRoute
   '/subject/$subject/$page': typeof SubjectSubjectPageRoute
 }
 export interface FileRoutesById {
@@ -142,6 +151,7 @@ export interface FileRoutesById {
   '/resources/$page': typeof ResourcesPageRoute
   '/resources/': typeof ResourcesIndexRoute
   '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
+  '/.well-known/mcp/server-card.json': typeof DotwellKnownMcpServerCardDotjsonRoute
   '/subject/$subject/$page': typeof SubjectSubjectPageRoute
 }
 export interface FileRouteTypes {
@@ -160,6 +170,7 @@ export interface FileRouteTypes {
     | '/resources/$page'
     | '/resources/'
     | '/detail/$provider/$providerId'
+    | '/.well-known/mcp/server-card.json'
     | '/subject/$subject/$page'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -175,6 +186,7 @@ export interface FileRouteTypes {
     | '/resources/$page'
     | '/resources'
     | '/detail/$provider/$providerId'
+    | '/.well-known/mcp/server-card.json'
     | '/subject/$subject/$page'
   id:
     | '__root__'
@@ -191,6 +203,7 @@ export interface FileRouteTypes {
     | '/resources/$page'
     | '/resources/'
     | '/detail/$provider/$providerId'
+    | '/.well-known/mcp/server-card.json'
     | '/subject/$subject/$page'
   fileRoutesById: FileRoutesById
 }
@@ -206,6 +219,7 @@ export interface RootRouteChildren {
   DocsApiRouteRoute: typeof DocsApiRouteRoute
   SubjectSubjectRouteRoute: typeof SubjectSubjectRouteRouteWithChildren
   DetailProviderProviderIdRouteRoute: typeof DetailProviderProviderIdRouteRoute
+  DotwellKnownMcpServerCardDotjsonRoute: typeof DotwellKnownMcpServerCardDotjsonRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -301,6 +315,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubjectSubjectPageRouteImport
       parentRoute: typeof SubjectSubjectRouteRoute
     }
+    '/.well-known/mcp/server-card.json': {
+      id: '/.well-known/mcp/server-card.json'
+      path: '/.well-known/mcp/server-card.json'
+      fullPath: '/.well-known/mcp/server-card.json'
+      preLoaderRoute: typeof DotwellKnownMcpServerCardDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/detail/$provider/$providerId': {
       id: '/detail/$provider/$providerId'
       path: '/detail/$provider/$providerId'
@@ -348,6 +369,7 @@ const rootRouteChildren: RootRouteChildren = {
   DocsApiRouteRoute: DocsApiRouteRoute,
   SubjectSubjectRouteRoute: SubjectSubjectRouteRouteWithChildren,
   DetailProviderProviderIdRouteRoute: DetailProviderProviderIdRouteRoute,
+  DotwellKnownMcpServerCardDotjsonRoute: DotwellKnownMcpServerCardDotjsonRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

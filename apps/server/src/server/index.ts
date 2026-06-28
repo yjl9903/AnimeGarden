@@ -170,7 +170,7 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
   );
 
   app.use('*', async (ctx, next) => {
-    if (ctx.req.url === '/health') {
+    if (ctx.req.path === '/health' || ctx.req.path === '/.well-known/mcp/server-card.json') {
       await next();
     } else {
       await sys.initialize();
@@ -262,6 +262,13 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
 
 function registerMcp(sys: System, app: Hono<AppEnv>) {
   const mcp = new McpServer(sys);
+
+  app.get('/.well-known/mcp/server-card.json', async (c) => {
+    return c.redirect(
+      `https://${sys.options.site ?? 'animes.garden'}/.well-known/mcp/server-card.json`,
+      302
+    );
+  });
 
   app.all('/mcp', async (c) => {
     return mcp.handleRequest(c);
