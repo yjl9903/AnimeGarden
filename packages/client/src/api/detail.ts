@@ -46,7 +46,7 @@ export async function fetchResourceDetailByInfoHash(
   }
 
   const resp = await fetchAPI<any>(
-    `detail/info-hash/${encodeURIComponent(hash)}`,
+    `detail/infohash/${encodeURIComponent(hash)}`,
     undefined,
     options
   ).catch((_err) => {
