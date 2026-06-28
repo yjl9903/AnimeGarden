@@ -16,7 +16,8 @@ export const enum ResponseStaleTime {
   Calendar = 1000 * 60 * 60
 }
 
-export const AgentDiscoveryLinkHeader = '</openapi.json>; rel="service-desc"';
+export const AgentDiscoveryLinkHeader =
+  '</openapi.json>; rel="service-desc", </sitemap-index.xml>; rel="sitemap"; type="application/xml"';
 
 /** Sets HTTP response status during SSR while staying safe for client navigations. */
 export const setResponseStatus = createIsomorphicFn()
