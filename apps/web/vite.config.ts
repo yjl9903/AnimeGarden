@@ -14,9 +14,19 @@ import Inline from 'vite-plugin-inline';
 
 import { bold, green, cyan } from 'breadc';
 
-import { env } from './node/env.ts';
+const KNOWN_ENV = {
+  APP_HOST: 'animes.garden',
+  FEED_HOST: 'api.animes.garden',
+  WEB_SERVER_URL: 'https://api.animes.garden/',
+  KEEPSHARE_ID: 'gv78k1oi',
+  UMAMI_HOST: 'umami.animes.garden',
+  UMAMI_ID: 'bcff225d-6590-498e-9b39-3a5fc5c2b4d1'
+};
 
-const { APP_HOST, FEED_HOST, WEB_SERVER_URL, KEEPSHARE_ID, UMAMI_HOST, UMAMI_ID } = env();
+const { APP_HOST, FEED_HOST, WEB_SERVER_URL, KEEPSHARE_ID, UMAMI_HOST, UMAMI_ID } =
+  Object.fromEntries(
+    Object.entries(KNOWN_ENV).map(([key, value]) => [key, process.env[key] ?? value])
+  ) as typeof KNOWN_ENV;
 
 function publishAgentSkills(outDir: string) {
   const skillName = 'animegarden';

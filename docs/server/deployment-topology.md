@@ -14,10 +14,9 @@
 
 ## Web 配置关系
 
-`apps/web/fly.toml` 的线上构建参数表达了两类后端入口：
+`apps/web/fly.toml` 的线上构建参数表达了页面服务端和浏览器公开入口：
 
 - `WEB_SERVER_URL` 指向 `animegarden-server-production.flycast`，供 Web app 服务端渲染和 loader 访问内网后端。
-- `FEED_SERVER_URL` 指向 `animegarden-feed-production.flycast`，供 Web app 内的 `/api/*`、`/feed.xml` 等代理路径访问 public API / feed 服务。
 - `FEED_HOST` 指向 `api.animes.garden`，用于浏览器侧和页面展示的公开 API / feed 地址。
 
 ## 排查边界

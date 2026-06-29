@@ -5,10 +5,8 @@
   "sideEffects": false,
   "type": "module",
   "scripts": {
-    "build": "VIRTUAL_PWA_MODULE=true vite build && unbuild",
-    "build:node": "unbuild",
+    "build": "VIRTUAL_PWA_MODULE=true vite build",
     "dev": "VIRTUAL_PWA_MODULE=true vite dev",
-    "dev:node": "unbuild --stub",
     "format": "prettier --write '**/*.{mjs,ts,tsx}'",
     "preview": "node server.mjs",
     "start:node": "node server.mjs",

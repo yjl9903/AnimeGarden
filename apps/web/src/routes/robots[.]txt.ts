@@ -4,7 +4,6 @@ import { ResponseCacheControl } from '~/utils/response';
 
 const robotsTxt = `User-agent: *
 Disallow: /api/
-Disallow: /feed.xml
 
 Content-Signal: ai-train=yes, search=yes, ai-input=yes
 
