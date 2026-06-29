@@ -87,8 +87,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/anipar
       bgmd:
-        specifier: 0.20260630.0
-        version: 0.20260630.0
+        specifier: 0.20260630.1
+        version: 0.20260630.1
       breadc:
         specifier: 1.0.0-beta.17
         version: 1.0.0-beta.17
@@ -214,8 +214,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/anipar
       bgmd:
-        specifier: 0.20260630.0
-        version: 0.20260630.0
+        specifier: 0.20260630.1
+        version: 0.20260630.1
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1
@@ -4063,8 +4063,8 @@ packages:
     resolution: {integrity: sha512-VWN7j7sqUssWD6ROZe2m709YL3u5A1IAx1qvAbH3DAhszHt4WPvCzJLRJ+mzmZn1qWIb4mpflwdn95qezz3n8g==}
     engines: {node: '>=12.20.0'}
 
-  bgmd@0.20260630.0:
-    resolution: {integrity: sha512-698MV4mmilRsGXP3NSdH+CYgcBlBwK9dPQe4G4lh6CQzVc9Q301uuEci+fDy292xRaRDTqKwSDotuJoIbjl/1Q==}
+  bgmd@0.20260630.1:
+    resolution: {integrity: sha512-Q/1e0JS20Ocp0nlbSOP9Hq350GiVB4syza/3NE1oR2j8xwR03WiDxwFDjtfoJ0eo7wtTJlI7nA3jARzFw6BvLw==}
     engines: {node: '>=v24.0.0'}
 
   bidi-js@1.0.3:
@@ -11045,7 +11045,7 @@ snapshots:
 
   bep53-range@2.0.1: {}
 
-  bgmd@0.20260630.0: {}
+  bgmd@0.20260630.1: {}
 
   bidi-js@1.0.3:
     dependencies:
