@@ -13,7 +13,7 @@ import { serveStatic } from '@hono/node-server/serve-static';
 
 import startEntry from './dist/server/server.js'; // eslint-disable-line import/no-unresolved
 
-import { feed, sitemaps } from './node-dist/node/index.mjs';
+import { feed } from './node-dist/node/index.mjs';
 
 createConsola().withTag('Web').wrapConsole();
 
@@ -62,8 +62,6 @@ if (fs.existsSync(ClientRoot)) {
 
 app.all('/assets/*', serveStatic({ root: path.relative(process.cwd(), ClientRoot) }));
 app.all('/.well-known/*', serveStatic({ root: path.relative(process.cwd(), ClientRoot) }));
-
-app.route('/', sitemaps);
 
 app.all('*', (c) => startEntry.fetch(c.req.raw));
 

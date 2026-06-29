@@ -9,6 +9,8 @@ const RETAINED_304_HEADERS = [
   'vary'
 ] as const;
 
+const DEFAULT_ETAG_STATUS = 200;
+
 const stripWeak = (tag: string) => tag.replace(/^W\//, '');
 
 function etagMatches(etag: string, ifNoneMatch: string | null) {
@@ -97,11 +99,86 @@ function isConsumedBodyError(error: unknown) {
 }
 
 export interface SafeEtagOptions {
+  /** Headers copied from the original response when returning 304. */
   retainedHeaders?: string[];
 
+  /** Generates weak validators when true; strong validators are the default. */
   weak?: boolean;
 
+  /** Overrides the default SHA-1 digest generator for tests and runtimes. */
   generateDigest?: (body: ArrayBuffer | Uint8Array) => Promise<ArrayBuffer>;
+}
+
+/**
+ * Applies guarded ETag generation and conditional request handling to a Fetch response.
+ */
+export async function safeEtagResponse(
+  request: Request,
+  response: Response,
+  options?: SafeEtagOptions
+) {
+  const retainedHeaders = options?.retainedHeaders ?? [...RETAINED_304_HEADERS];
+  const weak = options?.weak ?? false;
+  const generator = initializeGenerator(options?.generateDigest);
+  const ifNoneMatch = request.headers.get('If-None-Match');
+
+  if (response.status !== DEFAULT_ETAG_STATUS) {
+    return response;
+  }
+
+  let etag = response.headers.get('ETag');
+  let generatedEtag = false;
+  if (!etag) {
+    if (!generator || response.bodyUsed) {
+      return response;
+    }
+
+    try {
+      const hash = await generateHexDigest(response.clone().body, generator);
+      if (hash === null) {
+        return response;
+      }
+
+      etag = weak ? `W/"${hash}"` : `"${hash}"`;
+      generatedEtag = true;
+    } catch (error) {
+      // Treat consumed bodies as a cache miss instead of failing the request.
+      if (isConsumedBodyError(error)) {
+        return response;
+      }
+
+      throw error;
+    }
+  }
+
+  if (etagMatches(etag, ifNoneMatch)) {
+    const headers = new Headers();
+    response.headers.forEach((value, key) => {
+      if (retainedHeaders.includes(key.toLowerCase())) {
+        headers.append(key, value);
+      }
+    });
+    headers.set('ETag', etag);
+
+    return new Response(null, {
+      status: 304,
+      statusText: 'Not Modified',
+      headers
+    });
+  }
+
+  if (!generatedEtag) {
+    return response;
+  }
+
+  const headers = new Headers(response.headers);
+  headers.set('ETag', etag);
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers
+  });
 }
 
 // Hono's built-in etag middleware clones the response body to hash it.
@@ -109,55 +186,11 @@ export interface SafeEtagOptions {
 // request into a 500. This wrapper preserves normal etag behavior but skips
 // hashing for already-consumed responses.
 export function safeEtag(options?: SafeEtagOptions): MiddlewareHandler {
-  const retainedHeaders = options?.retainedHeaders ?? [...RETAINED_304_HEADERS];
-  const weak = options?.weak ?? false;
-  const generator = initializeGenerator(options?.generateDigest);
-
   return async function safeEtagMiddleware(c, next) {
-    const ifNoneMatch = c.req.header('If-None-Match') ?? null;
-
     await next();
-
-    const res = c.res;
-    let etag = res.headers.get('ETag');
-    if (!etag) {
-      if (!generator || res.bodyUsed) {
-        return;
-      }
-
-      try {
-        const hash = await generateHexDigest(res.clone().body, generator);
-        if (hash === null) {
-          return;
-        }
-
-        etag = weak ? `W/"${hash}"` : `"${hash}"`;
-      } catch (error) {
-        // Treat consumed bodies as a cache miss instead of failing the request.
-        if (isConsumedBodyError(error)) {
-          return;
-        }
-
-        throw error;
-      }
-    }
-
-    if (etagMatches(etag, ifNoneMatch)) {
-      c.res = new Response(null, {
-        status: 304,
-        statusText: 'Not Modified',
-        headers: {
-          ETag: etag
-        }
-      });
-
-      c.res.headers.forEach((_, key) => {
-        if (!retainedHeaders.includes(key.toLowerCase())) {
-          c.res.headers.delete(key);
-        }
-      });
-    } else {
-      c.res.headers.set('ETag', etag);
+    const response = await safeEtagResponse(c.req.raw, c.res, options);
+    if (response !== c.res) {
+      c.res = response;
     }
   };
 }

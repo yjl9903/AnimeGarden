@@ -1,5 +1,26 @@
 import { createCsrfMiddleware, createMiddleware, createStart } from '@tanstack/react-start';
 
+import { safeEtagResponse } from '@animegarden/server';
+
+const etagMiddleware = createMiddleware({ type: 'request' }).server(
+  async ({ handlerType, next, request }) => {
+    if (handlerType !== 'router' || request.method !== 'GET') {
+      return next();
+    }
+
+    const result = await next();
+    const contentType = result.response.headers.get('content-type')?.toLowerCase();
+    if (contentType?.startsWith('text/html')) {
+      return result;
+    }
+
+    return {
+      ...result,
+      response: await safeEtagResponse(request, result.response)
+    };
+  }
+);
+
 const markdownNegotiation = createMiddleware({ type: 'request' }).server(
   async ({ handlerType, next, request }) => {
     if (handlerType !== 'router' || !['GET', 'HEAD'].includes(request.method)) {
@@ -49,6 +70,7 @@ export const startInstance = createStart(() => ({
     createCsrfMiddleware({
       filter: (ctx) => ctx.handlerType === 'serverFn'
     }),
+    etagMiddleware,
     markdownNegotiation
   ]
 }));

@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapChar123sitemapChar125DotxmlRouteImport } from './routes/sitemap-{$sitemap}[.]xml'
+import { Route as SitemapIndexDotxmlRouteImport } from './routes/sitemap-index[.]xml'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as OpenapiDotjsonRouteImport } from './routes/openapi[.]json'
 import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
@@ -28,6 +30,17 @@ import { Route as SubjectSubjectPageRouteImport } from './routes/subject/$subjec
 import { Route as DotwellKnownMcpServerCardDotjsonRouteImport } from './routes/[.]well-known/mcp/server-card[.]json'
 import { Route as DetailProviderProviderIdRouteRouteImport } from './routes/detail/$provider/$providerId/route'
 
+const SitemapChar123sitemapChar125DotxmlRoute =
+  SitemapChar123sitemapChar125DotxmlRouteImport.update({
+    id: '/sitemap-{$sitemap}.xml',
+    path: '/sitemap-{$sitemap}.xml',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const SitemapIndexDotxmlRoute = SitemapIndexDotxmlRouteImport.update({
+  id: '/sitemap-index.xml',
+  path: '/sitemap-index.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
@@ -131,6 +144,8 @@ export interface FileRoutesByFullPath {
   '/llms.txt': typeof LlmsDottxtRoute
   '/openapi.json': typeof OpenapiDotjsonRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
+  '/sitemap-{$sitemap}.xml': typeof SitemapChar123sitemapChar125DotxmlRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
@@ -150,6 +165,8 @@ export interface FileRoutesByTo {
   '/llms.txt': typeof LlmsDottxtRoute
   '/openapi.json': typeof OpenapiDotjsonRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
+  '/sitemap-{$sitemap}.xml': typeof SitemapChar123sitemapChar125DotxmlRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
@@ -171,6 +188,8 @@ export interface FileRoutesById {
   '/llms.txt': typeof LlmsDottxtRoute
   '/openapi.json': typeof OpenapiDotjsonRoute
   '/robots.txt': typeof RobotsDottxtRoute
+  '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
+  '/sitemap-{$sitemap}.xml': typeof SitemapChar123sitemapChar125DotxmlRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
@@ -193,6 +212,8 @@ export interface FileRouteTypes {
     | '/llms.txt'
     | '/openapi.json'
     | '/robots.txt'
+    | '/sitemap-index.xml'
+    | '/sitemap-{$sitemap}.xml'
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
@@ -212,6 +233,8 @@ export interface FileRouteTypes {
     | '/llms.txt'
     | '/openapi.json'
     | '/robots.txt'
+    | '/sitemap-index.xml'
+    | '/sitemap-{$sitemap}.xml'
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
@@ -232,6 +255,8 @@ export interface FileRouteTypes {
     | '/llms.txt'
     | '/openapi.json'
     | '/robots.txt'
+    | '/sitemap-index.xml'
+    | '/sitemap-{$sitemap}.xml'
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
@@ -253,6 +278,8 @@ export interface RootRouteChildren {
   LlmsDottxtRoute: typeof LlmsDottxtRoute
   OpenapiDotjsonRoute: typeof OpenapiDotjsonRoute
   RobotsDottxtRoute: typeof RobotsDottxtRoute
+  SitemapIndexDotxmlRoute: typeof SitemapIndexDotxmlRoute
+  SitemapChar123sitemapChar125DotxmlRoute: typeof SitemapChar123sitemapChar125DotxmlRoute
   CollectionHashRouteRoute: typeof CollectionHashRouteRoute
   DocsApiRouteRoute: typeof DocsApiRouteRoute
   SubjectSubjectRouteRoute: typeof SubjectSubjectRouteRouteWithChildren
@@ -263,6 +290,20 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap-{$sitemap}.xml': {
+      id: '/sitemap-{$sitemap}.xml'
+      path: '/sitemap-{$sitemap}.xml'
+      fullPath: '/sitemap-{$sitemap}.xml'
+      preLoaderRoute: typeof SitemapChar123sitemapChar125DotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap-index.xml': {
+      id: '/sitemap-index.xml'
+      path: '/sitemap-index.xml'
+      fullPath: '/sitemap-index.xml'
+      preLoaderRoute: typeof SitemapIndexDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/robots.txt': {
       id: '/robots.txt'
       path: '/robots.txt'
@@ -427,6 +468,9 @@ const rootRouteChildren: RootRouteChildren = {
   LlmsDottxtRoute: LlmsDottxtRoute,
   OpenapiDotjsonRoute: OpenapiDotjsonRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
+  SitemapIndexDotxmlRoute: SitemapIndexDotxmlRoute,
+  SitemapChar123sitemapChar125DotxmlRoute:
+    SitemapChar123sitemapChar125DotxmlRoute,
   CollectionHashRouteRoute: CollectionHashRouteRoute,
   DocsApiRouteRoute: DocsApiRouteRoute,
   SubjectSubjectRouteRoute: SubjectSubjectRouteRouteWithChildren,
