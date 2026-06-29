@@ -2,10 +2,6 @@ packages:
   - apps/*
   - packages/*
 
-shellEmulator: true
-ignoreWorkspaceRootCheck: true
-shamefullyHoist: true
-
 allowBuilds:
   '@scarf/scarf': true
   '@tree-sitter-grammars/tree-sitter-yaml': true
@@ -22,3 +18,10 @@ allowBuilds:
   utf-8-validate: true
   utp-native: true
   workerd: true
+
+minimumReleaseAgeExclude:
+  - bgmd@0.20260630.0
+
+shellEmulator: true
+ignoreWorkspaceRootCheck: true
+shamefullyHoist: true
