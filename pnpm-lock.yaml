@@ -287,8 +287,8 @@ importers:
         version: 3.25.76
     devDependencies:
       '@iconify-json/ant-design':
-        specifier: 1.2.5
-        version: 1.2.5
+        specifier: 1.2.6
+        version: 1.2.6
       '@iconify-json/carbon':
         specifier: 1.2.23
         version: 1.2.23
@@ -296,8 +296,8 @@ importers:
         specifier: 1.2.62
         version: 1.2.62
       '@iconify-json/fluent':
-        specifier: 1.2.51
-        version: 1.2.51
+        specifier: 1.2.52
+        version: 1.2.52
       '@iconify-json/mage':
         specifier: 1.2.4
         version: 1.2.4
@@ -2052,8 +2052,8 @@ packages:
       hono: '>=4.10.0'
       zod: ^3.25.0 || ^4.0.0
 
-  '@iconify-json/ant-design@1.2.5':
-    resolution: {integrity: sha512-SYxhrx1AFq2MBcXk77AERYz2mPhLQes1F0vtvG64+dJZWyge9studXo7MiR8PPeLjRjZdWRrReRbxiwdRMf70Q==}
+  '@iconify-json/ant-design@1.2.6':
+    resolution: {integrity: sha512-EOWj67KaWXhq6ed7QRrh9CYjrbLS22Dr4Z+pjT67wyBywSpWgmb8yf6Ev0ykysHcsypEoBZyIsyXjxvKFjWZOQ==}
 
   '@iconify-json/carbon@1.2.23':
     resolution: {integrity: sha512-7apXetbRmEiWDXIQyikFJZyq7pCVBKHYRzmeLdtT7wWoHYdWHwnFcBAzpuLoSh+ZEAfXZapSWEe8iuS6dUqf+Q==}
@@ -2061,8 +2061,8 @@ packages:
   '@iconify-json/devicon@1.2.62':
     resolution: {integrity: sha512-X0o0+fOJL2t5JTbDCGLRzrmvf8Pv5q8dr86+fW+F/VJ9qvXTtny6lqGIwjE9AY4VTLm3i8f/N+VtRheSW6OkEg==}
 
-  '@iconify-json/fluent@1.2.51':
-    resolution: {integrity: sha512-9yvCpC3uk1ZpSWNPnlSy/Rd+6HNT5/eyRwgZ42GSBbWzqnzo2GNpmDhVt3587sVrXNStI0KmU+K0ptIAqDgpPw==}
+  '@iconify-json/fluent@1.2.52':
+    resolution: {integrity: sha512-EyI5HVqpr7zhmpo3W+H/msF6iipYY29Y5fPAWXEp4GhI85e9GN3l0Aznip26oqSmtJL0lodIFwkTJ3s3Zd8CNA==}
 
   '@iconify-json/mage@1.2.4':
     resolution: {integrity: sha512-QZnjHtV/RP9/bF6n7bHSnXMPX/MW5dpHqOH2pEHiEytUx76OKrUZ55YBFwrAxPz5f3BoCeWMY1wyEQQD36Bkkw==}
@@ -6686,10 +6686,6 @@ packages:
   postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
 
-  postcss@8.5.15:
-    resolution: {integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==}
-    engines: {node: ^10 || ^12 || >=14}
-
   postcss@8.5.16:
     resolution: {integrity: sha512-vuwillviilfKZsg0VGj5R/YwwcHx4SLsIOI/7K6mQkWx+l5cUHTjj5g0AasTBcyXsbfTgrwsUNmVUb5xVwyPwg==}
     engines: {node: ^10 || ^12 || >=14}
@@ -9911,7 +9907,7 @@ snapshots:
       hono: 4.12.26
       zod: 3.25.76
 
-  '@iconify-json/ant-design@1.2.5':
+  '@iconify-json/ant-design@1.2.6':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -9923,7 +9919,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify-json/fluent@1.2.51':
+  '@iconify-json/fluent@1.2.52':
     dependencies:
       '@iconify/types': 2.0.0
 
@@ -15181,12 +15177,6 @@ snapshots:
 
   postcss-value-parser@4.2.0: {}
 
-  postcss@8.5.15:
-    dependencies:
-      nanoid: 3.3.15
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
-
   postcss@8.5.16:
     dependencies:
       nanoid: 3.3.15
@@ -16782,7 +16772,7 @@ snapshots:
       esbuild: 0.28.1
       fdir: 6.5.0(picomatch@4.0.4)
       picomatch: 4.0.4
-      postcss: 8.5.15
+      postcss: 8.5.16
       rollup: 4.62.2
       tinyglobby: 0.2.17
     optionalDependencies:
