@@ -13,7 +13,6 @@ ARG APP_HOST=animes.garden
 ARG FEED_HOST=api.animes.garden
 
 ARG WEB_SERVER_URL=https://api.animes.garden/
-ARG FEED_SERVER_URL=https://api.animes.garden/
 
 ARG KEEPSHARE_ID=gv78k1oi
 ARG UMAMI_HOST=umami.animes.garden
@@ -23,7 +22,7 @@ ARG UMAMI_ID=bcff225d-6590-498e-9b39-3a5fc5c2b4d1
 ENV CI=true NODE_ENV="production" HOST=${HOST} PORT=${PORT} \
     TZ=Asia/Shanghai \
     APP_HOST=${APP_HOST} FEED_HOST=${FEED_HOST} \
-    WEB_SERVER_URL=${WEB_SERVER_URL} FEED_SERVER_URL=${FEED_SERVER_URL} \
+    WEB_SERVER_URL=${WEB_SERVER_URL} \
     KEEPSHARE_ID=${KEEPSHARE_ID} UMAMI_HOST=${UMAMI_HOST} UMAMI_ID=${UMAMI_ID}
 
 # Node.js app lives here

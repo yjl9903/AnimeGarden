@@ -13,8 +13,6 @@ import { serveStatic } from '@hono/node-server/serve-static';
 
 import startEntry from './dist/server/server.js'; // eslint-disable-line import/no-unresolved
 
-import { feed } from './node-dist/node/index.mjs';
-
 createConsola().withTag('Web').wrapConsole();
 
 const __dirname = fileURLToPath(new URL('./', import.meta.url));
@@ -36,8 +34,6 @@ app.all('/api/*', cors(), (c) => {
     'Cache-Control': 'no-store'
   });
 });
-app.all('/feed.xml', cors(), feed());
-app.all('/collection/*/feed.xml', cors(), feed());
 
 // Static assets
 const ClientRoot = fs.existsSync(path.join(__dirname, './.output/public/'))
