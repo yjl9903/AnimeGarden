@@ -36,8 +36,8 @@ importers:
         specifier: 0.31.10
         version: 0.31.10
       prettier:
-        specifier: 3.9.3
-        version: 3.9.3
+        specifier: 3.9.4
+        version: 3.9.4
       tsx:
         specifier: 4.22.4
         version: 4.22.4
@@ -5919,8 +5919,8 @@ packages:
     resolution: {integrity: sha512-GD3qdB0x1z9xgFI6cdRD6xu2Sp2WCOEoe3mtnyB5Ee0XrrL5Pe+e4CCnJrRMnL1zYtRDZmQQVbvOttLnKDLnaw==}
     engines: {node: '>=12'}
 
-  prettier@3.9.3:
-    resolution: {integrity: sha512-HWmu+K+zvHNpaMfSnYeqdqrDbR16cuIXaPx8WoHaviQkDJh1/0BNtOZmHVQI5jc3wXv0H1yXc9wjvFdXh+n3hQ==}
+  prettier@3.9.4:
+    resolution: {integrity: sha512-yWG/o/4oJfo036EKAfK6ACAoDOfHeRHx4tuxkfBZiauURiaSmYwlpOr5LQqKtIkRD2z1PLteme2WoxEnj4tHTg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -10444,7 +10444,7 @@ snapshots:
       '@tanstack/virtual-file-routes': 1.162.0
       jiti: 2.7.0
       magic-string: 0.30.21
-      prettier: 3.9.3
+      prettier: 3.9.4
       zod: 4.4.3
     transitivePeerDependencies:
       - supports-color
@@ -12963,7 +12963,7 @@ snapshots:
 
   postgres@3.4.9: {}
 
-  prettier@3.9.3: {}
+  prettier@3.9.4: {}
 
   pretty-bytes@5.6.0: {}
 
