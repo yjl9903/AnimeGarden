@@ -25,7 +25,7 @@
     "preversion": "turbo run test:ci"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20260621.1",
+    "@cloudflare/workers-types": "4.20260701.1",
     "@flydotio/dockerfile": "0.7.10",
     "@total-typescript/ts-reset": "0.6.1",
     "@types/better-sqlite3": "7.6.13",
@@ -34,13 +34,13 @@
     "@vite-pwa/assets-generator": "1.0.2",
     "bumpp": "latest",
     "drizzle-kit": "0.31.10",
-    "prettier": "3.8.4",
+    "prettier": "3.9.4",
     "tsx": "4.22.4",
-    "turbo": "2.9.18",
+    "turbo": "2.10.2",
     "typescript": "6.0.3",
     "unbuild": "3.6.1",
     "vitest": "4.1.9",
-    "wrangler": "4.103.0"
+    "wrangler": "4.106.0"
   },
   "packageManager": "pnpm@11.9.0",
   "engines": {
