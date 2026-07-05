@@ -85,7 +85,7 @@ No authentication is required for the public endpoints documented here.
 - Parameters:
   - Path: `hash` (40-character hex info hash or 32-character base32 info hash)
 - Response:
-  - `200` object with `status`, `resource`, `detail`, `isDeleted`, `duplicatedId`, `timestamp`.
+  - `200` object with `status`, `resource`, `detail`, `timestamp`.
   - Invalid or unknown hashes return `status: "ERROR"`.
 
 ## 3. Metadata APIs
