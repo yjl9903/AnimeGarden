@@ -1,7 +1,27 @@
 import { FEED_HOST, KEEPSHARE_ID } from '~build/env';
 
+import { track } from './umami';
+
+type MagnetClickEvent = {
+  preventDefault: () => void;
+  stopPropagation: () => void;
+};
+
 export function splitMagnetURL(magnet: string) {
   return magnet?.split('&')[0] ?? '';
+}
+
+/** Opens magnet links without letting analytics/router code treat them as page navigation. */
+export function openMagnetLink(
+  event: MagnetClickEvent,
+  href: string,
+  resource: string,
+  source: string
+) {
+  event.preventDefault();
+  event.stopPropagation();
+  track('download', { resource, source });
+  window.location.assign(href);
 }
 
 export function getPikPakUrlChecker(magnet: string) {

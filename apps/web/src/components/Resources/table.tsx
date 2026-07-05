@@ -13,10 +13,10 @@ import { CarbonTypes, DisplayTypeIcon } from '~/components/Icons';
 import {
   DisplayTypeColor,
   getPikPakUrlChecker,
+  openMagnetLink,
   formatChinaTime,
   parseSize,
   getPikPakTrackEvent,
-  getDownloadTrackEvent,
   trackResourceDetailClick,
   trackResourceRefineFilterClick
 } from '~/utils';
@@ -144,6 +144,7 @@ export const ResourceItem = memo(
     const location = useLocation();
     const { resource: r } = props;
     const { fansub: isDisplayFansub = true } = props.columns ?? {};
+    const magnetHref = r.magnet + (hydrated ? r.tracker : '');
 
     return (
       <tr className="">
@@ -196,8 +197,10 @@ export const ResourceItem = memo(
                   发布于 {formatChinaTime(new Date(r.createdAt))}
                 </Link>
                 <a
-                  href={r.magnet + (hydrated ? r.tracker : '')}
-                  {...getDownloadTrackEvent(r.provider, r.providerId, 'size')}
+                  href={magnetHref}
+                  onClick={(event) =>
+                    openMagnetLink(event, magnetHref, `${r.provider}:${r.providerId}`, 'size')
+                  }
                   data-resource-title={r.title}
                   className="text-link-secondary-hover-base text-xs text-zinc-400"
                   aria-label="Download resource"
@@ -272,8 +275,10 @@ export const ResourceItem = memo(
               <CarbonPlay />
             </a>
             <a
-              href={r.magnet + (hydrated ? r.tracker : '')}
-              {...getDownloadTrackEvent(r.provider, r.providerId, 'download')}
+              href={magnetHref}
+              onClick={(event) =>
+                openMagnetLink(event, magnetHref, `${r.provider}:${r.providerId}`, 'download')
+              }
               data-resource-title={r.title}
               className="download text-xl text-base-500 hover:text-base-900"
               aria-label="Download resource"

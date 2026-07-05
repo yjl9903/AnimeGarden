@@ -2,12 +2,7 @@ import { Link } from '@tanstack/react-router';
 import { formatInTimeZone } from 'date-fns-tz';
 
 import Layout from '~/layouts/Layout';
-import {
-  splitMagnetURL,
-  getPikPakUrlChecker,
-  getPikPakTrackEvent,
-  getDownloadTrackEvent
-} from '~/utils';
+import { splitMagnetURL, openMagnetLink, getPikPakUrlChecker, getPikPakTrackEvent } from '~/utils';
 import { getResourcesRouteLink } from '~/utils/routes';
 
 import './detail.css';
@@ -26,7 +21,7 @@ export default function Resources({ data }: { data: any }) {
 
   const magnets =
     (detail?.magnets ?? resource)
-      ? [{ name: '磁力链接', url: resource!.magnet + resource?.tracker }]
+      ? [{ name: '磁力链接', url: resource!.magnet + (resource?.tracker ?? '') }]
       : [];
 
   return (
@@ -78,7 +73,9 @@ export default function Resources({ data }: { data: any }) {
                   <span>{magnet.name}</span>
                   <a
                     href={magnet.url}
-                    {...getDownloadTrackEvent(provider, providerId, 'detail')}
+                    onClick={(event) =>
+                      openMagnetLink(event, magnet.url, `${provider}:${providerId}`, 'detail')
+                    }
                     className="download text-link"
                   >
                     {splitMagnetURL(magnet.url)}

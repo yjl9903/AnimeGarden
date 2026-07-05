@@ -8,7 +8,7 @@
 
 - 直接调用 `track(event, payload)`
 - 给链接挂属性或事件
-  - `getDownloadTrackEvent(provider, providerId)`
+  - `openMagnetLink(event, href, resource, source)`
   - `getPikPakTrackEvent(provider, providerId)`
   - `getOpenFeedTrackEvent(href)`
 
@@ -16,11 +16,11 @@
 
 ### 资源下载和播放
 
-| 事件名 | 触发场景 | 属性 |
-| --- | --- | --- |
-| `download` | 资源下载链接点击 | `resource = {provider}:{providerId}`，通过 `data-umami-event-resource` 上报 |
-| `pikpak` | PikPak 播放/在线播放点击 | `resource = {provider}:{providerId}`，通过 `data-umami-event-resource` 上报 |
-| `feed.open` | RSS 链接点击 | `href` |
+| 事件名      | 触发场景                 | 属性                                                                        |
+| ----------- | ------------------------ | --------------------------------------------------------------------------- |
+| `download`  | 资源下载链接点击         | `resource = {provider}:{providerId}`，`source`                              |
+| `pikpak`    | PikPak 播放/在线播放点击 | `resource = {provider}:{providerId}`，通过 `data-umami-event-resource` 上报 |
+| `feed.open` | RSS 链接点击             | `href`                                                                      |
 
 当前接入位置：
 
@@ -32,13 +32,13 @@
 
 ### 导航和全局入口
 
-| 事件名 | 触发场景 | 属性 |
-| --- | --- | --- |
-| `nav.click.home` | Header 首页按钮点击 | `item` |
-| `nav.click.anime` | Header 动画入口及其子项点击 | `item`，部分场景带 `group` |
-| `nav.click.fansub` | Header 字幕组入口及其子项点击 | `item` |
-| `nav.click.type` | Header 资源入口及其子项点击 | `item` |
-| `theme.switch` | 主题切换 | `mode` |
+| 事件名             | 触发场景                      | 属性                       |
+| ------------------ | ----------------------------- | -------------------------- |
+| `nav.click.home`   | Header 首页按钮点击           | `item`                     |
+| `nav.click.anime`  | Header 动画入口及其子项点击   | `item`，部分场景带 `group` |
+| `nav.click.fansub` | Header 字幕组入口及其子项点击 | `item`                     |
+| `nav.click.type`   | Header 资源入口及其子项点击   | `item`                     |
+| `theme.switch`     | 主题切换                      | `mode`                     |
 
 当前接入位置：
 
@@ -47,13 +47,13 @@
 
 ### 搜索框
 
-| 事件名 | 触发场景 | 属性 |
-| --- | --- | --- |
-| `search.trigger` | 搜索触发 | `text`，`source` |
-| `search.history.click` | 点击搜索历史 | `text` |
-| `search.history.delete` | 删除搜索历史 / 清空搜索历史 | `action`，可选 `text`，可选 `count` |
-| `search.suggestion.click` | 点击搜索联想项 | `text`，`subjectId` |
-| `search.result.click` | 点击搜索结果详情项 | `text`，`resource` |
+| 事件名                    | 触发场景                    | 属性                                |
+| ------------------------- | --------------------------- | ----------------------------------- |
+| `search.trigger`          | 搜索触发                    | `text`，`source`                    |
+| `search.history.click`    | 点击搜索历史                | `text`                              |
+| `search.history.delete`   | 删除搜索历史 / 清空搜索历史 | `action`，可选 `text`，可选 `count` |
+| `search.suggestion.click` | 点击搜索联想项              | `text`，`subjectId`                 |
+| `search.result.click`     | 点击搜索结果详情项          | `text`，`resource`                  |
 
 `search.trigger.source` 当前取值：
 
@@ -68,12 +68,12 @@
 
 ### 资源列表和筛选
 
-| 事件名 | 触发场景 | 属性 |
-| --- | --- | --- |
-| `resources.more.click` | 资源表格点击“更多” | `resource`，`type` |
-| `resources.filter.click` | 资源表格精化筛选 | `filterType`，`value` |
-| `anime.calendar.click` | 动画周历卡片点击 | `subjectId`，`title`，`weekday` |
-| `subject.fallback-search` | Subject 页无资源时点击“前往搜索” | `subject` |
+| 事件名                    | 触发场景                         | 属性                            |
+| ------------------------- | -------------------------------- | ------------------------------- |
+| `resources.more.click`    | 资源表格点击“更多”               | `resource`，`type`              |
+| `resources.filter.click`  | 资源表格精化筛选                 | `filterType`，`value`           |
+| `anime.calendar.click`    | 动画周历卡片点击                 | `subjectId`，`title`，`weekday` |
+| `subject.fallback-search` | Subject 页无资源时点击“前往搜索” | `subject`                       |
 
 `resources.filter.click.filterType` 当前取值：
 
@@ -89,18 +89,18 @@
 
 ### 收藏夹和复制操作
 
-| 事件名 | 触发场景 | 属性 |
-| --- | --- | --- |
-| `collection.open-sidebar` | 打开收藏夹侧栏 | 无 |
-| `collection.add` | 添加当前筛选到收藏夹 | 无 |
-| `collection.open` | 打开收藏夹页 | `hash` |
-| `collection.share` | 复制收藏夹分享链接 | `hash` |
-| `copy.feed` | 复制 RSS 链接 | 无 |
-| `copy.magnet-links` | 复制所有磁力链接 | 无 |
-| `copy.json` | 复制 JSON 数据 | 无 |
-| `copy.fetch` | 复制 cURL / Python / JavaScript 请求代码 | `language` |
-| `copy.iframe` | 复制 iframe 嵌入代码 | 无 |
-| `collection.open-resources` | 收藏项菜单里“在新页面中打开” | `search` |
+| 事件名                      | 触发场景                                 | 属性       |
+| --------------------------- | ---------------------------------------- | ---------- |
+| `collection.open-sidebar`   | 打开收藏夹侧栏                           | 无         |
+| `collection.add`            | 添加当前筛选到收藏夹                     | 无         |
+| `collection.open`           | 打开收藏夹页                             | `hash`     |
+| `collection.share`          | 复制收藏夹分享链接                       | `hash`     |
+| `copy.feed`                 | 复制 RSS 链接                            | 无         |
+| `copy.magnet-links`         | 复制所有磁力链接                         | 无         |
+| `copy.json`                 | 复制 JSON 数据                           | 无         |
+| `copy.fetch`                | 复制 cURL / Python / JavaScript 请求代码 | `language` |
+| `copy.iframe`               | 复制 iframe 嵌入代码                     | 无         |
+| `collection.open-resources` | 收藏项菜单里“在新页面中打开”             | `search`   |
 
 当前接入位置：
 
@@ -110,8 +110,8 @@
 
 ### Footer 外链
 
-| 事件名 | 触发场景 | 属性 |
-| --- | --- | --- |
+| 事件名              | 触发场景        | 属性                       |
+| ------------------- | --------------- | -------------------------- |
 | `footer.link.click` | Footer 外链点击 | `section`，`label`，`href` |
 
 当前覆盖的 section：
@@ -129,9 +129,9 @@
 
 ### 错误埋点
 
-| 事件名 | 触发场景 | 属性 |
-| --- | --- | --- |
-| `error.render` | 页面渲染错误 | `path`，`error` |
+| 事件名                  | 触发场景     | 属性            |
+| ----------------------- | ------------ | --------------- |
+| `error.render`          | 页面渲染错误 | `path`，`error` |
 | `error.fetch-resources` | 拉取资源失败 | `path`，`error` |
 
 当前接入位置：
