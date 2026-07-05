@@ -262,8 +262,8 @@ importers:
         specifier: 2.0.7
         version: 2.0.7(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       style-to-object:
-        specifier: 2.0.0
-        version: 2.0.0
+        specifier: 2.0.1
+        version: 2.0.1
       swagger-ui-react:
         specifier: 5.32.8
         version: 5.32.8(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -5007,8 +5007,8 @@ packages:
   inherits@2.0.4:
     resolution: {integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==}
 
-  inline-style-parser@0.2.7:
-    resolution: {integrity: sha512-Nb2ctOyNR8DqQoR0OwRG95uNWIC0C1lCgf5Naz5H6Ji72KZ8OcFZLz2P5sNgwlyoJ8Yif11oMuYs5pBQa86csA==}
+  inline-style-parser@0.2.8:
+    resolution: {integrity: sha512-oxlr9nnFcVME2TFJRnvwmLWsNtTsJs5pkCetUsISrLc/81EYpEu32A5LAdAWqk7OCDzuTFZdA7KXnw72vZwJpw==}
 
   inquirer@12.11.1:
     resolution: {integrity: sha512-9VF7mrY+3OmsAfjH3yKz/pLbJ5z22E23hENKw3/LNSaA/sAt3v49bDRY+Ygct1xwuKT+U+cBfTzjCPySna69Qw==}
@@ -6425,8 +6425,8 @@ packages:
   strnum@2.4.1:
     resolution: {integrity: sha512-M9eUSMT2dCB2cTNPG7UYj6KuK7RJR2SN2+yCV/fTW3xzTCS6EaGZ5pSMgDIjB7r8zSfTGk+dvvn9rTjpVS9Mwg==}
 
-  style-to-object@2.0.0:
-    resolution: {integrity: sha512-3zaRtBpwCy9AnYQYfgZ8tIMPn/PlQpW3wtRMB+w0xVtBzo8/m7KKGi7cR56yQ6udLz5MPzwRqfKOZ3O+Oc6VpA==}
+  style-to-object@2.0.1:
+    resolution: {integrity: sha512-NOTjzoUkWfIkNQ9C9t1cLJJyt5wDEM2q8rfXhUy03HoE/Uls9JL+Z4oCgZRJC2VKMt123wFaFYRRs1b5PoqwBA==}
 
   stylehacks@7.0.11:
     resolution: {integrity: sha512-iODNfhXVLqc5LADs+Y6Oh5wJuK5ZcHbVng8aiK3y9pjMQdc5hLrBW0eFU6FtnpNrE6PoEg/MmFTU4waotj5WNg==}
@@ -12000,7 +12000,7 @@ snapshots:
 
   inherits@2.0.4: {}
 
-  inline-style-parser@0.2.7: {}
+  inline-style-parser@0.2.8: {}
 
   inquirer@12.11.1(@types/node@24.13.2):
     dependencies:
@@ -13491,9 +13491,9 @@ snapshots:
     dependencies:
       anynum: 1.0.1
 
-  style-to-object@2.0.0:
+  style-to-object@2.0.1:
     dependencies:
-      inline-style-parser: 0.2.7
+      inline-style-parser: 0.2.8
 
   stylehacks@7.0.11(postcss@8.5.16):
     dependencies:
