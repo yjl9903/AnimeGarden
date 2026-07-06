@@ -1,5 +1,6 @@
 import type { ParsedLocation } from '@tanstack/react-router';
 
+import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
 import type { Collection } from '@animegarden/client';
 
 export type RouterSearch = Record<string, string | string[]>;
@@ -28,6 +29,27 @@ export function toRouterSearch(input: string | URLSearchParams | RouterSearch): 
   return search;
 }
 
+/** Keeps only resource-list query params understood by the API client. */
+export function toResourcesRouterSearch(
+  input: string | URLSearchParams | RouterSearch
+): RouterSearch {
+  if (!(typeof input === 'string') && !(input instanceof URLSearchParams)) {
+    return input;
+  }
+
+  const params =
+    typeof input === 'string'
+      ? new URLSearchParams(input.startsWith('?') ? input.slice(1) : input)
+      : input;
+  const { filter, pagination } = parseURLSearch(params);
+  const searchParams = stringifyURLSearch({
+    ...filter,
+    ...(params.has('pageSize') ? { pageSize: pagination.pageSize } : {})
+  });
+
+  return toRouterSearch(searchParams);
+}
+
 /** Builds typed link props for the paged resources route. */
 export function getResourcesRouteLink(
   page: number,
@@ -36,7 +58,7 @@ export function getResourcesRouteLink(
   return {
     to: '/resources/$page' as const,
     params: { page: String(page) },
-    search: toRouterSearch(search)
+    search: toResourcesRouterSearch(search)
   };
 }
 

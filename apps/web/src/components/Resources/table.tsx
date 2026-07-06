@@ -20,7 +20,7 @@ import {
   trackResourceDetailClick,
   trackResourceRefineFilterClick
 } from '~/utils';
-import { toRouterSearch } from '~/utils/routes';
+import { toResourcesRouterSearch } from '~/utils/routes';
 
 import { Tag } from './tag';
 import { Pagination, PaginationProps } from './pagination';
@@ -52,7 +52,7 @@ function followSearch(location: ParsedLocation, params: Record<string, string>) 
   for (const [key, value] of Object.entries(params)) {
     s.set(key, value);
   }
-  return toRouterSearch(s);
+  return toResourcesRouterSearch(s);
 }
 
 export default function ResourcesTable(props: ResourcesTableProps) {
