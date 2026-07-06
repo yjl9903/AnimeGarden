@@ -106,7 +106,7 @@ Telegram API 抛错
 当前有两类入口会触发 Telegram 推送：
 
 1. `runFetchJob` 插入新资源后触发。
-2. cron 初始化 / 手动更新 bgmd calendar 时，新 subject 补偿绑定到历史资源后触发。
+2. cron 初始化 / 手动更新 bgmx calendar 时，新 subject 或搜索条件变化的 subject 补偿绑定到历史资源后触发。
 
 `runSyncJob` 不触发 Telegram 推送。
 
@@ -124,7 +124,7 @@ Telegram API 抛错
 
 推送入口使用 `void` 调用，不 `await`。这保证抓取任务不会等待 Telegram 网络请求，也不会因为 Telegram 失败影响资源写入主链路。
 
-### 2. bgmd subject 绑定补偿触发
+### 2. bgmx subject 绑定补偿触发
 
 cron 服务启动时，如果没有关闭 `--import`，会在初始化完成后执行：
 
@@ -136,19 +136,18 @@ cli cron
   -> updateCalendar(mod)
 ```
 
-`updateCalendar()` 会读取 `bgmd/calendar`，对当前季度 subject 做增量更新：
+`updateCalendar()` 会通过 `bgmx` 读取 `bgm.animes.garden` calendar，对当前季度 subject 做增量更新：
 
-1. 对比 bgmd calendar 和本地 active subjects。
+1. 对比 bgmx calendar 和本地 active subjects。
 2. 归档不再活跃的 subject。
 3. 插入 / 更新当前 calendar 中的 subjects。
-4. 对这些 subject 执行 `indexResources: true`，把历史 resources 中尚未绑定 subject 的记录补上 `subject_id`。
-5. 因为这里开启了 `pushTelegramMessage: true`，`insertSubjects()` 会收集每个 `indexSubject()` 返回的 matched resources。
-6. 将这些新绑定 subject 的 resource ids 去重后传给 `enqueueResourceMessages`。
+4. 新 subject，或 `keywords` / `activedAt` 变化的 subject，会执行 `indexResources: true`，把历史 resources 中尚未绑定 subject 的记录补上 `subject_id`。
+5. 将这些新绑定 subject 的 resource ids 去重后传给 `enqueueResourceMessages`。
 
 这条链路用于补偿一个常见时间差：
 
 - 资源先被抓到，但当时本地还没有对应 subject，因此 `subject_id` 为空，不能推送。
-- 之后 cron 初始化或 calendar 更新引入了新 subject。
+- 之后 cron 初始化或 calendar 更新引入了新 subject，或 bgmx 更新了 subject 搜索条件。
 - `indexSubject()` 将这些历史资源补上 `subject_id`。
 - 补上 subject 后，这些资源已经具备 `PushContext.prepare()` 所需的 subject 条件，因此需要触发 Telegram 推送。
 
@@ -379,7 +378,7 @@ caption 使用 Telegram HTML parse mode，因此业务文本需要 HTML escape�
 
 ### 不在 runSyncJob 触发推送
 
-同步任务主要用于修正历史资源、删标和补洞。当前推送只由增量 fetch 的 inserted 资源，以及 bgmd calendar 更新时新绑定 subject 的 resources 触发，避免 sync 扫描历史数据时产生大量非预期推送。
+同步任务主要用于修正历史资源、删标和补洞。当前推送只由增量 fetch 的 inserted 资源，以及 bgmx calendar 更新时新绑定 subject 的 resources 触发，避免 sync 扫描历史数据时产生大量非预期推送。
 
 ### 不持久化消息体和请求参数
 
@@ -408,7 +407,7 @@ caption 使用 Telegram HTML parse mode，因此业务文本需要 HTML escape�
 - `Sent`：低优先级跳过，高优先级编辑。
 - 队列：resource 前置逻辑并发执行，Telegram API 调用串行执行。
 - 补偿：最近 `Failed`、超时 `Pending/Sending` 都会重新 enqueue。
-- bgmd subject 绑定：`insertSubjects(..., { indexResources: true, pushTelegramMessage: true })` 会把本次 `indexSubject()` 新绑定的 resource ids 去重后 enqueue；关闭 `pushTelegramMessage` 时不触发。
+- bgmx subject 绑定：calendar 同步会把本次 `indexSubject()` 新绑定的 resource ids 去重后 enqueue；未触发 subject 重索引时不触发。
 
 ## 后续风险与扩展点
 

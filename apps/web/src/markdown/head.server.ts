@@ -1,11 +1,10 @@
 import { parse } from 'anipar';
 import { stringifyURLSearch, type Resource, type ResolvedFilterOptions } from '@animegarden/client';
 import { truncate } from '@animegarden/shared';
-import type { FullSubject } from 'bgmd';
 
 import { stringifySearchText } from '~/layouts/Search/utils';
 import { generateTitleFromFilter } from '~/utils/server/meta';
-import { getSubjectDisplayName } from '~/utils/subject';
+import { getSubjectDisplayName, type WebBgmSubject } from '~/utils/subject';
 
 import type { DescriptionResult } from '@animegarden/scraper';
 
@@ -27,7 +26,7 @@ export const CollectionDescription =
 
 export function resourcesHead(
   filter: ResolvedFilterOptions | undefined,
-  subjects: Record<number, Pick<FullSubject, 'title'>>
+  subjects: Record<number, Pick<WebBgmSubject, 'title'>>
 ) {
   const resolvedFilter = filter ?? {};
   const title = generateTitleFromFilter(resolvedFilter, subjects);
@@ -58,7 +57,7 @@ export function detailHead(
   };
 }
 
-export function subjectHead(subject: FullSubject | undefined, filter?: ResolvedFilterOptions) {
+export function subjectHead(subject: WebBgmSubject | undefined, filter?: ResolvedFilterOptions) {
   const name = getSubjectDisplayName(subject);
 
   return {

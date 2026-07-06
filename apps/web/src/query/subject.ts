@@ -1,14 +1,13 @@
 import { createServerFn } from '@tanstack/react-start';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 
-import type { FullSubject } from 'bgmd';
-
 import {
   ResponseCacheControl,
   ResponseStaleTime,
   setCacheControl,
   setErrorResponse
 } from '../utils/response';
+import type { WebBgmSubject } from '../utils/subject';
 
 import {
   getCalendar,
@@ -19,12 +18,12 @@ import {
 
 type SubjectsResponse = {
   ok: boolean;
-  subjects: FullSubject[];
+  subjects: WebBgmSubject[];
 };
 
 type SubjectResponse = {
   ok: boolean;
-  subject?: FullSubject;
+  subject?: WebBgmSubject;
 };
 
 const fetchCalendarFn = createServerFn({ method: 'GET' }).handler(async () => {
@@ -185,7 +184,7 @@ export function subjectSearchQueryOptions(keywords: string[]) {
 }
 
 function rankSubjectsByKeywordMatches(responses: SubjectsResponse[]) {
-  const subjectHits = new Map<number, { subject: FullSubject; count: number }>();
+  const subjectHits = new Map<number, { subject: WebBgmSubject; count: number }>();
 
   for (const response of responses) {
     const seen = new Set<number>();
@@ -210,7 +209,7 @@ function rankSubjectsByKeywordMatches(responses: SubjectsResponse[]) {
     .sort((a, b) => b.id - a.id);
 }
 
-function seedSubjectQueries(queryClient: QueryClient, subjects: FullSubject[]) {
+function seedSubjectQueries(queryClient: QueryClient, subjects: WebBgmSubject[]) {
   for (const subject of subjects) {
     queryClient.setQueryData(subjectQueryOptions(subject.id).queryKey, { ok: true, subject });
   }

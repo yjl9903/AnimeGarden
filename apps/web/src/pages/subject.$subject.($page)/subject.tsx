@@ -1,5 +1,3 @@
-import type { FullSubject } from 'bgmd';
-
 import clsx from 'clsx';
 import { toast } from 'sonner';
 import { Link } from '@tanstack/react-router';
@@ -8,9 +6,9 @@ import { useCallback } from 'react';
 import type { Jsonify } from '@animegarden/client';
 
 import { getWeekday } from '~/utils/date';
-import { getSubjectDisplayName, getSubjectRouteLink } from '~/utils/subject';
+import { getSubjectDisplayName, getSubjectRouteLink, type WebBgmSubject } from '~/utils/subject';
 
-export function SubjectCard({ subject }: { subject: Jsonify<FullSubject> }) {
+export function SubjectCard({ subject }: { subject: Jsonify<WebBgmSubject> }) {
   const onClickShare = useCallback(
     async (e: React.MouseEvent) => {
       e.preventDefault();
@@ -32,7 +30,11 @@ export function SubjectCard({ subject }: { subject: Jsonify<FullSubject> }) {
     <div className="mb-12 p-4 w-full bg-zinc-50 dark:bg-zinc-800 drop-shadow rounded-md flex gap-8 lt-md:flex-col">
       {subject.poster ? (
         <div className="w-[300px] flex-shrink-0 lt-md:w-full">
-          <img src={subject.poster} alt={subject.title} className="rounded-md hover:drop-shadow" />
+          <img
+            src={subject.poster}
+            alt={getSubjectDisplayName(subject)}
+            className="rounded-md hover:drop-shadow"
+          />
         </div>
       ) : (
         <div className="w-[300px] flex-shrink-0 lt-md:w-full"></div>

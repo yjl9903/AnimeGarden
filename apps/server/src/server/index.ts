@@ -117,12 +117,23 @@ export class Executor extends Server {
         })
     );
 
+    const calendar = new Cron(`17 * * * *`, { timezone: 'Asia/Shanghai', protect: true }, async () => {
+      try {
+        await this.system.modules.subjects.updateCalendar();
+      } catch (error) {
+        this.system.logger.error(error);
+      }
+    });
+
     this.disposables.push(() => {
       fetching.forEach((f) => f.stop());
       syncing.forEach((f) => f.stop());
+      calendar.stop();
     });
 
-    this.system.logger.info(`Finish registering ${fetching.length + syncing.length} cron jobs`);
+    this.system.logger.info(
+      `Finish registering ${fetching.length + syncing.length + 1} cron jobs`
+    );
   }
 
   public async stop() {

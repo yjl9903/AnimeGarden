@@ -258,6 +258,7 @@ const subject: BasicSubject = {
   },
   poster: 'https://example.com/poster.jpg',
   tags: [],
+  alias: {},
   search: {
     include: []
   }

@@ -11,6 +11,7 @@ import { DisplayTypeColor, formatChinaTime, getFeedURL, track, trackCopyFeed } f
 import { deleteCollectionItem, updateCollectionItem } from '~/stores/collection';
 import { useAppStores } from '~/stores/hooks';
 import { getResourcesRouteLink } from '~/utils/routes';
+import { getSubjectDisplayName } from '~/utils/subject';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -254,7 +255,7 @@ const CollectionItemFilter = memo((props: { item: CollectionItem }) => {
           <span className="font-bold mr2 select-none">动画</span>
           {subjects.map(({ data }, index) => (
             <span key={display.subjects![index]} className={``}>
-              {data?.subject?.title}
+              {getSubjectDisplayName(data?.subject)}
             </span>
           ))}
         </div>
@@ -361,7 +362,7 @@ export function useInferCollectionItemName(item: CollectionItem | Jsonify<Collec
   if (item.subjects && item.subjects.length === 1) {
     const bgm = subjectMap[item.subjects[0]];
     if (bgm) {
-      title = bgm.title;
+      title = getSubjectDisplayName(bgm);
     }
   } else if (item.search && item.search.length > 0) {
     title = item.search.join(' ');

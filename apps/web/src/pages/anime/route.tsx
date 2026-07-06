@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
 
-import type { BasicSubject } from 'bgmd';
-
 import Layout from '~/layouts/Layout';
 import { getCalendar } from '~/utils/calendar';
 import { trackAnimeCalendarClick } from '~/utils';
-import { getSubjectDisplayName, getSubjectRouteLink } from '~/utils/subject';
+import { getSubjectDisplayName, getSubjectRouteLink, type WebBgmSubject } from '~/utils/subject';
 
 import './anime.css';
 
@@ -15,7 +13,7 @@ export default function Index({
   calendar
 }: {
   timestamp?: Date;
-  calendar: BasicSubject[][];
+  calendar: WebBgmSubject[][];
 }) {
   const resolvedCalendar = getCalendar(calendar);
 

@@ -1,8 +1,8 @@
-import type { BasicSubject } from 'bgmd';
-
 import { formatInTimeZone } from 'date-fns-tz';
 
-export const getCalendar = (rawCalendar: BasicSubject[][], now = new Date()) => {
+import type { WebBgmSubject } from './subject';
+
+export const getCalendar = (rawCalendar: WebBgmSubject[][], now = new Date()) => {
   // Before 6:00
   const Weekday =
     Number(formatInTimeZone(new Date(now.getTime() - 6 * 60 * 60 * 1000), 'Asia/Shanghai', 'i')) -
@@ -11,7 +11,7 @@ export const getCalendar = (rawCalendar: BasicSubject[][], now = new Date()) => 
   return rawCalendar.map((_, idx) => {
     const index = (idx + Weekday) % 7;
 
-    const isChina = (bgm: BasicSubject) => {
+    const isChina = (bgm: WebBgmSubject) => {
       const cn = ['国创', '国产', '国产动画', '国漫', '中国'];
       return bgm.tags.some((t) => cn.includes(t)) ? 1 : 0;
     };

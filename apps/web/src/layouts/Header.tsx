@@ -7,7 +7,7 @@ import { memo, useEffect, useMemo, useState } from 'react';
 import { useAppStores } from '~/stores/hooks';
 import { calendarQueryOptions } from '~/query';
 import { getCalendar } from '~/utils/calendar';
-import { getSubjectRouteLink } from '~/utils/subject';
+import { getSubjectDisplayName, getSubjectRouteLink } from '~/utils/subject';
 import { getResourcesRouteLink } from '~/utils/routes';
 import { getOpenFeedTrackEvent, trackNavClick } from '~/utils/umami';
 import { fansubs as AllFansubs, types, DisplayTypeColor } from '~/utils/constants';
@@ -105,7 +105,7 @@ const AnimeDropdown = memo(() => {
                       key={bgm.id}
                       onClick={() =>
                         trackNavClick('anime', {
-                          item: bgm.title,
+                          item: getSubjectDisplayName(bgm),
                           group: `周${day.text}`
                         })
                       }
@@ -115,7 +115,7 @@ const AnimeDropdown = memo(() => {
                         index === day.bangumis.length - 1 && 'rounded-b-md'
                       )}
                     >
-                      {bgm.title}
+                      {getSubjectDisplayName(bgm)}
                     </Link>
                   ))}
                 </div>

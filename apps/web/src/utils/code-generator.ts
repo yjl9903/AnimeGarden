@@ -1,16 +1,16 @@
-import type { BasicSubject } from 'bgmd';
-
 import type { ResolvedFilterOptions, PresetOptions, Jsonify } from '@animegarden/client';
 
 import { stringifyURLSearch } from '@animegarden/client';
 
 import { FEED_HOST, APP_HOST } from '~build/env';
 
+import type { SubjectInfo } from '~/utils/subject';
+
 import { resolveFilterOptions } from '~/pages/resources.($page)/Filter';
 
 export interface CodeGeneratorOptions {
   filter?: Jsonify<ResolvedFilterOptions & PresetOptions> | (ResolvedFilterOptions & PresetOptions);
-  subject?: BasicSubject;
+  subject?: SubjectInfo;
 }
 
 export function generateCurlCode(options: CodeGeneratorOptions): string {

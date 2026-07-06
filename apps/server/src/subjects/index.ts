@@ -270,19 +270,19 @@ export class SubjectsModule extends Module<System['modules']> {
   }
 
   public async updateCalendar() {
-    this.logger.info('Start updating bangumi calendar from bgmd');
+    this.logger.info('Start updating bangumi calendar from bgmx');
     try {
       const resp = await updateCalendar(this);
-      this.logger.success('Finish updating bangumi calendar from bgmd');
+      this.logger.success('Finish updating bangumi calendar from bgmx');
       return resp;
     } catch (error) {
       this.logger.error('Failed update bangumi calendar');
-      this.logger.error(error);
+      throw error;
     }
   }
 
   public async importFromBgmd() {
-    this.logger.info('Start importing bangumis from bgmd');
+    this.logger.info('Start importing bangumis from bgmx');
     try {
       const resp = await importFromBgmd(this);
       if (resp.conflict.length > 0) {

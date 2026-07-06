@@ -7,7 +7,7 @@ import {
 import type { QueryClient } from '@tanstack/react-query';
 
 import { PRESET_DISPLAY_NAME } from '../../utils/constants';
-import type { SubjectInfo } from '../../utils/subject';
+import { getSubjectDisplayName, type SubjectInfo } from '../../utils/subject';
 import { subjectQueryOptions, subjectsByNameQueryOptions } from '../../query/subject';
 
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
@@ -190,13 +190,13 @@ export function parseSearchInput(input: string) {
 
 export function stringifySearchText(
   search: URLSearchParams,
-  subjects: Record<number, Pick<SubjectInfo, 'title'>>
+  subjects: Record<number, Pick<SubjectInfo, 'title' | 'display_title'>>
 ) {
   const { filter } = parseURLSearch(search, { pageSize: 80 });
   const content: string[] = [];
 
   if (filter.subjects && filter.subjects.length === 1) {
-    const name = subjects[filter.subjects[0]]?.title;
+    const name = getSubjectDisplayName(subjects[filter.subjects[0]]);
     if (name) {
       content.push('动画:' + (name.indexOf(' ') === -1 ? name : `"${name}"`));
     }
@@ -276,7 +276,11 @@ export async function stringifySearchTextAsync(
   return stringifySearchText(
     search,
     Object.fromEntries(
-      subjects.flatMap(({ subject }) => (subject ? [[subject.id, { title: subject.title }]] : []))
+      subjects.flatMap(({ subject }) =>
+        subject
+          ? [[subject.id, { title: subject.title, display_title: subject.display_title }]]
+          : []
+      )
     )
   );
 }

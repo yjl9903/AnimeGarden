@@ -34,7 +34,7 @@ Web 不再提供 `/api/*`、`/feed.xml` 或 `/collection/:hash/feed.xml` 代理�
 
 GET server function 和 SSR loader 的公开缓存头统一由 `src/utils/response.ts` 设置：timestamp、资源列表和 collection 页面使用 `public, max-age=30, s-maxage=60`，详情页使用 `public, max-age=3600, s-maxage=86400`。上游失败或 `ok: false` 时返回错误状态并设置 `Cache-Control: no-store`，避免浏览器或 CDN 缓存错误响应。
 
-`bgmd` 的 subject/full/calendar 数据不应新增到客户端运行时依赖；需要读取这类数据的页面应通过 `src/query/subject.ts` 的 TanStack Query options 和 `createServerFn()` 访问。现有搜索、筛选展示和收藏夹中仍有 basic subject 客户端依赖，后续迁移时应收敛到同一条 serverFn 查询链路。
+Bangumi subject/full/calendar 数据不应进入客户端运行时依赖；需要读取这类数据的页面应通过 `src/query/subject.ts` 的 TanStack Query options 和 `createServerFn()` 访问。当前 serverFn 通过 `bgmx` 读取 `bgm.animes.garden`，按需做 subject、calendar 和标题搜索查询，并只在 subject detail 失败时 fallback 到 `bgmd/full`。
 
 ## 代码逻辑分类
 

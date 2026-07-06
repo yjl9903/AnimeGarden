@@ -1,7 +1,6 @@
-import type { BasicSubject } from 'bgmd';
-
 import { getCalendar } from '~/query/subject.server';
 import { ResponseCacheControl } from '~/utils/response';
+import { getSubjectDisplayName, type WebBgmSubject } from '~/utils/subject';
 
 import { AnimeHead } from './head.server';
 import {
@@ -29,7 +28,9 @@ export async function renderAnimeMarkdown(): Promise<MarkdownResult> {
           (bangumis.length
             ? bangumis
                 .map((item) =>
-                  listItem(`${escapeMarkdown(item.title || '未命名动画')} - /subject/${item.id}`)
+                  listItem(
+                    `${escapeMarkdown(getSubjectDisplayName(item) || '未命名动画')} - /subject/${item.id}`
+                  )
                 )
                 .join('') + '\n'
             : '暂无动画。\n\n')
@@ -40,7 +41,7 @@ export async function renderAnimeMarkdown(): Promise<MarkdownResult> {
   return { body, cacheControl: ResponseCacheControl.List };
 }
 
-function sortSubjects(subjects: BasicSubject[]) {
+function sortSubjects(subjects: WebBgmSubject[]) {
   return subjects
     .filter((subject) => !!subject.poster)
     .filter((subject) => !isChina(subject))
@@ -51,7 +52,7 @@ function sortSubjects(subjects: BasicSubject[]) {
     });
 }
 
-function isChina(subject: BasicSubject) {
+function isChina(subject: WebBgmSubject) {
   const names = ['国创', '国产', '国产动画', '国漫', '中国'];
   return subject.tags.some((tag) => names.includes(tag));
 }

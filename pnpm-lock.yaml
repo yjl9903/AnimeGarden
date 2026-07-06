@@ -87,11 +87,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/anipar
       bgmd:
-        specifier: 0.20260703.1
-        version: 0.20260703.1
+        specifier: 0.20260707.0
+        version: 0.20260707.0
       bgmx:
-        specifier: 0.2.1
-        version: 0.2.1(bangumi-data@0.3.212)
+        specifier: 0.3.0
+        version: 0.3.0(bangumi-data@0.3.212)
       breadc:
         specifier: 1.0.0-beta.17
         version: 1.0.0-beta.17
@@ -217,11 +217,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/anipar
       bgmd:
-        specifier: 0.20260703.1
-        version: 0.20260703.1
+        specifier: 0.20260707.0
+        version: 0.20260707.0
       bgmx:
-        specifier: 0.2.1
-        version: 0.2.1(bangumi-data@0.3.212)
+        specifier: 0.3.0
+        version: 0.3.0(bangumi-data@0.3.212)
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1
@@ -4093,16 +4093,16 @@ packages:
     engines: {node: '>=v24.0.0'}
     hasBin: true
 
-  bgmd@0.20260703.1:
-    resolution: {integrity: sha512-/NFUAp+k+dffkxBaUNVzh+sWMP/apKOXP4nySYs2mEsrjQrhoKo6BmTnULpcPpnyG/QYLXrcdBv/hTuVl0F0bw==}
+  bgmd@0.20260707.0:
+    resolution: {integrity: sha512-GCMOYgAB7GAHNkxFAd2LET0TqyzT/uZ2J0Mojrj1QwX94hOr4k0o2aGhIFDrNVE57EO3utJfc2Ca9Bvv8iLN8A==}
     engines: {node: '>=v24.0.0'}
 
-  bgmt@0.2.0:
-    resolution: {integrity: sha512-Vi4CZ5CSZt54Qh4ns0f9pBiiIgGP4+KiA81NNFA8OrTjtUYhaQRRtUEh9x/FNyb1RAl1y9ov6DQAxL/2LrrqrQ==}
+  bgmt@0.3.0:
+    resolution: {integrity: sha512-R37b2PfKFnpKw/p+zfkLFJk0mjCsKw4a/WjyXY1bzI2MCDwWHh8uruLEhINiu952iWIDsTZSGpKDEL/UcA2moQ==}
     engines: {node: '>=v24.0.0'}
 
-  bgmx@0.2.1:
-    resolution: {integrity: sha512-Xr75IOS3A38QLcspycaO/Ddakzlnx8vE5XiW8OjvCOQ1yPlhTUMsj/yRYqfzJde0G5wuJh830BOjwIJbxr1eZg==}
+  bgmx@0.3.0:
+    resolution: {integrity: sha512-EjTg4UVpp+k0ltixQAw84A7eetB7WWW/4H2VMI7zeCqazmsTm9SMYG4raToglDdv37h2IX2RqenHpqvK/oBtKA==}
     engines: {node: '>=v24.0.0'}
     hasBin: true
     peerDependencies:
@@ -11154,20 +11154,20 @@ snapshots:
     dependencies:
       breadc: 1.0.0-beta.17
 
-  bgmd@0.20260703.1: {}
+  bgmd@0.20260707.0: {}
 
-  bgmt@0.2.0:
+  bgmt@0.3.0:
     dependencies:
       bgmc: 0.3.0
       simptrad: 0.2.0
 
-  bgmx@0.2.1(bangumi-data@0.3.212):
+  bgmx@0.3.0(bangumi-data@0.3.212):
     dependencies:
       '@animegarden/client': 0.5.4
       '@clack/prompts': 1.7.0
       bangumi-data: 0.3.212
       bgmc: 0.3.0
-      bgmt: 0.2.0
+      bgmt: 0.3.0
       breadc: 1.0.0-beta.17
       consola: 3.4.2
       date-fns: 4.4.0

@@ -77,6 +77,9 @@ export default defineConfig({
     minify: true,
     target: 'es2022'
   },
+  optimizeDeps: {
+    exclude: ['@animegarden/server', '@node-rs/jieba', '@node-rs/jieba-wasm32-wasi']
+  },
   plugins: [
     Info({
       env: {
