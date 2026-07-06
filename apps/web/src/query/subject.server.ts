@@ -16,6 +16,7 @@ type BgmSubject = DatabaseSubject | CalendarSubject;
 
 const SubjectCache = new Map<string, CacheItem<unknown>>();
 const MaxCacheSize = 1024;
+const MaxSearchResults = 100;
 
 function normalizeTexts(texts: string[]) {
   return [...new Set(texts.map((text) => text.trim()).filter(Boolean))];
@@ -126,12 +127,13 @@ export async function searchSubjects(keyword: string, limit?: number) {
         retry: 1
       })) {
         result.push(transformBgmSubject(subject));
+        if (result.length >= MaxSearchResults) break;
       }
       return result;
     }
   );
 
-  return limit === undefined ? subjects : subjects.slice(0, limit);
+  return limit === undefined ? subjects : subjects.slice(0, Math.min(limit, MaxSearchResults));
 }
 
 function getSubjectNames(subject: WebBgmSubject) {

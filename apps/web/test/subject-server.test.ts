@@ -100,6 +100,20 @@ describe('subject.server BGM client', () => {
     );
   });
 
+  it('caps bgmx subject searches at 100 results', async () => {
+    let yielded = 0;
+    fetchSubjects.mockImplementation(async function* () {
+      for (let id = 1; id <= 101; id++) {
+        yielded++;
+        yield subject(id);
+      }
+    });
+    const { searchSubjects } = await import('../src/query/subject.server');
+
+    await expect(searchSubjects('上伊那')).resolves.toHaveLength(100);
+    expect(yielded).toBe(100);
+  });
+
   it('resolves subject names without a fixed result limit', async () => {
     fetchSubjects.mockImplementation(() => subjects([subject(1)]));
     const { resolveSubjectByName } = await import('../src/query/subject.server');
