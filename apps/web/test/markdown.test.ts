@@ -20,6 +20,38 @@ const resource = {
   metadata: {}
 };
 
+const markdownCalendar = [
+  [
+    {
+      id: 100,
+      title: 'Subject Title',
+      platform: 'TV',
+      onair_date: '2026-01-01',
+      rating: { score: 7.5, rank: 1 },
+      poster: 'https://example.com/poster.jpg',
+      tags: [],
+      search: { include: ['Subject Title'] }
+    }
+  ],
+  [
+    {
+      id: 101,
+      title: 'Another Title',
+      platform: 'TV',
+      onair_date: '2026-01-02',
+      rating: { score: 7.4, rank: 2 },
+      poster: 'https://example.com/another.jpg',
+      tags: [],
+      search: { include: ['Another Title'] }
+    }
+  ],
+  [],
+  [],
+  [],
+  [],
+  []
+];
+
 vi.mock('@animegarden/client', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@animegarden/client')>();
 
@@ -64,37 +96,12 @@ vi.mock('../src/query/subject.server', () => ({
     search: { include: ['Subject Title'] }
   })),
   resolveSubjectsByName: vi.fn(async () => []),
-  getCalendar: vi.fn(async () => [
-    [
-      {
-        id: 100,
-        title: 'Subject Title',
-        platform: 'TV',
-        onair_date: '2026-01-01',
-        rating: { score: 7.5, rank: 1 },
-        poster: 'https://example.com/poster.jpg',
-        tags: [],
-        search: { include: ['Subject Title'] }
-      }
-    ],
-    [
-      {
-        id: 101,
-        title: 'Another Title',
-        platform: 'TV',
-        onair_date: '2026-01-02',
-        rating: { score: 7.4, rank: 2 },
-        poster: 'https://example.com/another.jpg',
-        tags: [],
-        search: { include: ['Another Title'] }
-      }
-    ],
-    [],
-    [],
-    [],
-    [],
-    []
-  ])
+  getCalendar: vi.fn(async () => markdownCalendar),
+  getCalendars: vi.fn(async () => [
+    { season: '2026-10', is_active: false, updated_at: new Date('2026-07-01') },
+    { season: '2026-07', is_active: true, updated_at: new Date('2026-07-01') }
+  ]),
+  getLatestCalendar: vi.fn(async () => ({ season: '2026-07', calendar: markdownCalendar }))
 }));
 
 vi.mock('@animegarden/scraper', () => ({
@@ -237,6 +244,18 @@ describe('markdown responses', () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it('does not render unpublished calendar markdown seasons', async () => {
+    const response = await handleMarkdownRequest(
+      new Request('https://animes.garden/calendar/2026-10', {
+        headers: { Accept: 'text/markdown' }
+      })
+    );
+    const body = await response.text();
+
+    expect(response.status).toBe(404);
+    expect(body).toContain('# 动画周历不存在');
   });
 
   it('omits the body for HEAD markdown requests', async () => {

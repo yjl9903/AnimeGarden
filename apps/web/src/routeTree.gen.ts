@@ -22,6 +22,7 @@ import { Route as AnimeRouteRouteImport } from './routes/anime/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ResourcesIndexRouteImport } from './routes/resources/index'
 import { Route as ResourcesPageRouteImport } from './routes/resources/$page'
+import { Route as CalendarSeasonRouteImport } from './routes/calendar/$season'
 import { Route as DotwellKnownApiCatalogRouteImport } from './routes/[.]well-known/api-catalog'
 import { Route as SubjectSubjectRouteRouteImport } from './routes/subject/$subject/route'
 import { Route as DocsApiRouteRouteImport } from './routes/docs/api/route'
@@ -96,6 +97,11 @@ const ResourcesPageRoute = ResourcesPageRouteImport.update({
   path: '/$page',
   getParentRoute: () => ResourcesRouteRoute,
 } as any)
+const CalendarSeasonRoute = CalendarSeasonRouteImport.update({
+  id: '/calendar/$season',
+  path: '/calendar/$season',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DotwellKnownApiCatalogRoute = DotwellKnownApiCatalogRouteImport.update({
   id: '/.well-known/api-catalog',
   path: '/.well-known/api-catalog',
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
   '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute
+  '/calendar/$season': typeof CalendarSeasonRoute
   '/resources/$page': typeof ResourcesPageRoute
   '/resources/': typeof ResourcesIndexRoute
   '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
@@ -171,6 +178,7 @@ export interface FileRoutesByTo {
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
   '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute
+  '/calendar/$season': typeof CalendarSeasonRoute
   '/resources/$page': typeof ResourcesPageRoute
   '/resources': typeof ResourcesIndexRoute
   '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
   '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute
+  '/calendar/$season': typeof CalendarSeasonRoute
   '/resources/$page': typeof ResourcesPageRoute
   '/resources/': typeof ResourcesIndexRoute
   '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
@@ -218,6 +227,7 @@ export interface FileRouteTypes {
     | '/docs/api'
     | '/subject/$subject'
     | '/.well-known/api-catalog'
+    | '/calendar/$season'
     | '/resources/$page'
     | '/resources/'
     | '/detail/$provider/$providerId'
@@ -239,6 +249,7 @@ export interface FileRouteTypes {
     | '/docs/api'
     | '/subject/$subject'
     | '/.well-known/api-catalog'
+    | '/calendar/$season'
     | '/resources/$page'
     | '/resources'
     | '/detail/$provider/$providerId'
@@ -261,6 +272,7 @@ export interface FileRouteTypes {
     | '/docs/api'
     | '/subject/$subject'
     | '/.well-known/api-catalog'
+    | '/calendar/$season'
     | '/resources/$page'
     | '/resources/'
     | '/detail/$provider/$providerId'
@@ -284,6 +296,7 @@ export interface RootRouteChildren {
   DocsApiRouteRoute: typeof DocsApiRouteRoute
   SubjectSubjectRouteRoute: typeof SubjectSubjectRouteRouteWithChildren
   DotwellKnownApiCatalogRoute: typeof DotwellKnownApiCatalogRoute
+  CalendarSeasonRoute: typeof CalendarSeasonRoute
   DetailProviderProviderIdRouteRoute: typeof DetailProviderProviderIdRouteRoute
   DotwellKnownMcpServerCardDotjsonRoute: typeof DotwellKnownMcpServerCardDotjsonRoute
 }
@@ -381,6 +394,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResourcesPageRouteImport
       parentRoute: typeof ResourcesRouteRoute
     }
+    '/calendar/$season': {
+      id: '/calendar/$season'
+      path: '/calendar/$season'
+      fullPath: '/calendar/$season'
+      preLoaderRoute: typeof CalendarSeasonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/.well-known/api-catalog': {
       id: '/.well-known/api-catalog'
       path: '/.well-known/api-catalog'
@@ -475,6 +495,7 @@ const rootRouteChildren: RootRouteChildren = {
   DocsApiRouteRoute: DocsApiRouteRoute,
   SubjectSubjectRouteRoute: SubjectSubjectRouteRouteWithChildren,
   DotwellKnownApiCatalogRoute: DotwellKnownApiCatalogRoute,
+  CalendarSeasonRoute: CalendarSeasonRoute,
   DetailProviderProviderIdRouteRoute: DetailProviderProviderIdRouteRoute,
   DotwellKnownMcpServerCardDotjsonRoute: DotwellKnownMcpServerCardDotjsonRoute,
 }

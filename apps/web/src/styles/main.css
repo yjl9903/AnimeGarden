@@ -1,5 +1,14 @@
 html {
   overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
+body {
+  --removed-body-scroll-bar-size: 0px !important;
+}
+
+html body[data-scroll-locked] {
+  margin-right: 0 !important;
 }
 
 .text-link {

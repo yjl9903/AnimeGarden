@@ -1,14 +1,154 @@
-.bgm-list-wrapper.scroll-begin .scroll-left {
+.anime-page {
+  padding-left: 1rem;
+}
+
+.anime-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.anime-toc {
+  grid-area: 1 / 1;
+  position: sticky;
+  top: calc(var(--nav-height) + 4rem);
+  align-self: start;
+  width: 4.5rem;
+  margin-left: calc((100vw - 100%) / -2 + 1.375rem);
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.25rem;
+
+  color: #71717a;
+}
+
+.anime-days {
+  grid-area: 1 / 1;
+}
+
+.anime-season-emoji {
+  display: inline-flex;
+  width: 1em;
+  margin-right: 16px;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-0.12em);
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.anime-toc a {
+  color: inherit !important;
+  transition: color 0.15s ease;
+}
+
+.anime-toc a:hover,
+.anime-toc a.is-active {
+  font-weight: 600;
+  color: #18181b !important;
+}
+
+:root.dark .anime-toc {
+  color: #a1a1aa;
+}
+
+:root.dark .anime-toc a:hover,
+:root.dark .anime-toc a.is-active {
+  color: #fafafa !important;
+}
+
+.anime-bgm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(132px, 1fr));
+  gap: 2rem 1.5rem;
+}
+
+.bgm-weekday {
+  scroll-margin-top: var(--nav-height);
+  padding-top: 2rem;
+  border-top: 1px solid rgb(187 187 187 / 20%);
+}
+
+.anime-card {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.anime-poster {
+  aspect-ratio: 2 / 3;
+  width: 100%;
+  overflow: hidden;
+
+  @apply: rounded-md bg-layer-muted;
+}
+
+.anime-poster img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  @apply: transition-shadow group-hover:shadow-box;
+}
+
+.anime-title {
+  padding-top: 0.625rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.25rem;
+
+  @apply: text-link-active;
+}
+
+.anime-title span {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.anime-season-menu-item {
+  padding-left: 0.5rem;
+}
+
+.anime-season-menu-item > span:first-child {
   display: none;
 }
 
-.bgm-list-wrapper.scroll-end .scroll-right {
-  display: none;
+.anime-season-menu-item[data-state='checked'] {
+  font-weight: 700;
+  color: #18181b;
 }
 
-@media (hover: none) {
-  .scroll-left,
-  .scroll-right {
+:root.dark .anime-season-menu-item[data-state='checked'] {
+  color: #fafafa;
+}
+
+@media (max-width: 767.98px) {
+  .anime-page {
+    padding-left: 0;
+  }
+
+  .anime-page > header {
+    margin-left: 0;
+  }
+
+  .anime-layout {
+    display: block;
+    margin-left: 0;
+  }
+
+  .anime-toc {
     display: none;
+  }
+
+  .anime-bgm-grid {
+    grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+    gap: 1.5rem 1rem;
   }
 }

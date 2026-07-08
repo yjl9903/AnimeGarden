@@ -2,6 +2,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { fetchAPI } from '@animegarden/client';
 
+import { getCalendars } from '../src/query/subject.server';
+
 import {
   handleSitemapHeadRequest,
   handleSitemapIndexHeadRequest,
@@ -31,6 +33,13 @@ vi.mock('@animegarden/client', async (importOriginal) => {
     })
   };
 });
+
+vi.mock('../src/query/subject.server', () => ({
+  getCalendars: vi.fn(async () => [
+    { season: '2026-10', is_active: false, updated_at: new Date('2026-07-01') },
+    { season: '2026-07', is_active: true, updated_at: new Date('2026-07-01') }
+  ])
+}));
 
 const request = (pathname: string) => new Request(`https://animes.garden${pathname}`);
 
@@ -109,6 +118,14 @@ describe('sitemap server routes', () => {
       undefined,
       expect.objectContaining({ baseURL: 'https://api.animes.garden/', retry: 5 })
     );
+  });
+
+  it('maps active calendar seasons', async () => {
+    const calendar = await (await handleSitemapRequest(request('/sitemap-calendar.xml'))).text();
+
+    expect(calendar).toContain('<loc>https://animes.garden/calendar/2026-07</loc>');
+    expect(calendar).not.toContain('<loc>https://animes.garden/calendar/2026-10</loc>');
+    expect(getCalendars).toHaveBeenCalled();
   });
 
   it('returns 404 for unknown sitemap names', async () => {

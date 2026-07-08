@@ -1,5 +1,6 @@
 import { createServerFn } from '@tanstack/react-start';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
+import type { Calendar } from 'bgmx/client';
 
 import {
   ResponseCacheControl,
@@ -11,6 +12,8 @@ import type { WebBgmSubject } from '../utils/subject';
 
 import {
   getCalendar,
+  getCalendars,
+  getLatestCalendar,
   getSubjectById,
   resolveSubjectByName,
   searchSubjects
@@ -26,21 +29,83 @@ type SubjectResponse = {
   subject?: WebBgmSubject;
 };
 
-const fetchCalendarFn = createServerFn({ method: 'GET' }).handler(async () => {
-  try {
-    await setCacheControl(ResponseCacheControl.Calendar);
-    return { ok: true, calendar: await getCalendar() };
-  } catch (error) {
-    console.error('[API]', 'fetchCalendar', error);
-    await setErrorResponse();
-    return { ok: false, calendar: [] };
-  }
-});
+type CalendarResponse = {
+  ok: boolean;
+  calendar: WebBgmSubject[][];
+  season?: string;
+};
 
-export function calendarQueryOptions() {
+type CalendarsResponse = {
+  ok: boolean;
+  calendars: Calendar[];
+};
+
+const fetchCalendarsFn = createServerFn({ method: 'GET' }).handler(
+  async (): Promise<CalendarsResponse> => {
+    try {
+      await setCacheControl(ResponseCacheControl.Calendar);
+      return {
+        ok: true,
+        calendars: [...(await getCalendars())]
+          .filter((calendar) => calendar.is_active)
+          .sort((lhs, rhs) => rhs.season.localeCompare(lhs.season))
+      };
+    } catch (error) {
+      console.error('[API]', 'fetchCalendars', error);
+      await setErrorResponse();
+      return { ok: false, calendars: [] };
+    }
+  }
+);
+
+const fetchCalendarFn = createServerFn({ method: 'GET' })
+  .validator((input?: { season?: string }) => ({
+    season: input?.season
+  }))
+  .handler(async ({ data: { season } }): Promise<CalendarResponse> => {
+    try {
+      if (
+        season &&
+        !(await getCalendars()).some((calendar) => calendar.season === season && calendar.is_active)
+      ) {
+        await setErrorResponse(404);
+        return { ok: false, calendar: [], season };
+      }
+
+      const calendar = season
+        ? { season, calendar: await getCalendar(season) }
+        : await getLatestCalendar();
+      await setCacheControl(ResponseCacheControl.Calendar);
+      return {
+        ok: true,
+        calendar: calendar.calendar,
+        season: calendar.season
+      };
+    } catch (error) {
+      console.error('[API]', 'fetchCalendar', error);
+      await setErrorResponse();
+      return { ok: false, calendar: [] };
+    }
+  });
+
+export function calendarsQueryOptions() {
   return queryOptions({
-    queryKey: ['api', 'calendar'] as const,
-    queryFn: ({ signal }) => fetchCalendarFn({ signal }),
+    queryKey: ['api', 'calendars'] as const,
+    queryFn: ({ signal }) => fetchCalendarsFn({ signal }),
+    staleTime: ResponseStaleTime.Calendar
+  });
+}
+
+export function calendarQueryOptions(season?: string) {
+  return queryOptions({
+    queryKey: ['api', 'calendar', season ?? 'latest'] as const,
+    queryFn: async ({ signal, client }) => {
+      const resp = await fetchCalendarFn({ data: { season }, signal });
+      if (!season && resp.ok && resp.season) {
+        client.setQueryData(['api', 'calendar', resp.season] as const, resp);
+      }
+      return resp;
+    },
     staleTime: ResponseStaleTime.Calendar
   });
 }

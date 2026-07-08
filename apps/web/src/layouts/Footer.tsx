@@ -50,7 +50,7 @@ export const Footer = memo((props: FooterProps) => {
         'border-t border-t-1 py-6 h-[252px] bg-hero'
       )}
     >
-      <div className={clsx('main', 'w-full')}>
+      <div className={clsx('main', 'w-full', 'pl-4 lt-md:pl-0')}>
         <div className={clsx('[&_a:hover]:underline', 'lt-sm:text-sm')}>
           <div className="flex">
             <span className="text-base-900 font-bold select-none">状态</span>

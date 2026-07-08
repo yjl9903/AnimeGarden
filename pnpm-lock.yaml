@@ -90,8 +90,8 @@ importers:
         specifier: 0.20260707.0
         version: 0.20260707.0
       bgmx:
-        specifier: 0.3.0
-        version: 0.3.0(bangumi-data@0.3.212)
+        specifier: 0.3.2
+        version: 0.3.2(bangumi-data@0.3.212)
       breadc:
         specifier: 1.0.0-beta.17
         version: 1.0.0-beta.17
@@ -220,8 +220,8 @@ importers:
         specifier: 0.20260707.0
         version: 0.20260707.0
       bgmx:
-        specifier: 0.3.0
-        version: 0.3.0(bangumi-data@0.3.212)
+        specifier: 0.3.2
+        version: 0.3.2(bangumi-data@0.3.212)
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1
@@ -4097,12 +4097,12 @@ packages:
     resolution: {integrity: sha512-GCMOYgAB7GAHNkxFAd2LET0TqyzT/uZ2J0Mojrj1QwX94hOr4k0o2aGhIFDrNVE57EO3utJfc2Ca9Bvv8iLN8A==}
     engines: {node: '>=v24.0.0'}
 
-  bgmt@0.3.0:
-    resolution: {integrity: sha512-R37b2PfKFnpKw/p+zfkLFJk0mjCsKw4a/WjyXY1bzI2MCDwWHh8uruLEhINiu952iWIDsTZSGpKDEL/UcA2moQ==}
+  bgmt@0.3.1:
+    resolution: {integrity: sha512-gULUQmeFvnw2Y1uWJOX7qYW1rl3jBpRXOQLnxBftsGMdyep9hsklGcbPCw0l1eU2qdEOYBBORwKNZzRTiu7TjQ==}
     engines: {node: '>=v24.0.0'}
 
-  bgmx@0.3.0:
-    resolution: {integrity: sha512-EjTg4UVpp+k0ltixQAw84A7eetB7WWW/4H2VMI7zeCqazmsTm9SMYG4raToglDdv37h2IX2RqenHpqvK/oBtKA==}
+  bgmx@0.3.2:
+    resolution: {integrity: sha512-vjbRoHiNEhbj/vCpllz93mqZk2HX39bwazwv2w2UK60jUDyeRT/qzbQxrdPSwHqhin/FenNiVxHYbO1vU2Uy+A==}
     engines: {node: '>=v24.0.0'}
     hasBin: true
     peerDependencies:
@@ -6423,6 +6423,9 @@ packages:
 
   simptrad@0.2.0:
     resolution: {integrity: sha512-SADENHX3KNuTLThG/LQCZvIywDOwCFTC2aLufwmSgjVbHUEZKIjRzleb28J856kL4ozkKptv08eR3GyJFRCnMg==}
+
+  simptrad@0.3.0:
+    resolution: {integrity: sha512-ppFu4RuncoKhXj0wvD2SDZbYKDTGp5JdJrF02AxhUpBsTc8ga5bCYaHZ/QxuZftcsCCoW9tGiMQhhVLQ5euMcw==}
 
   sirv@3.0.2:
     resolution: {integrity: sha512-2wcC/oGxHis/BoHkkPwldgiPSYcpZK3JU28WoMVv55yHJgcZ8rlXvuG9iZggz+sU1d4bRgIGASwyWqjxu3FM0g==}
@@ -11156,18 +11159,18 @@ snapshots:
 
   bgmd@0.20260707.0: {}
 
-  bgmt@0.3.0:
+  bgmt@0.3.1:
     dependencies:
       bgmc: 0.3.0
-      simptrad: 0.2.0
+      simptrad: 0.3.0
 
-  bgmx@0.3.0(bangumi-data@0.3.212):
+  bgmx@0.3.2(bangumi-data@0.3.212):
     dependencies:
       '@animegarden/client': 0.5.4
       '@clack/prompts': 1.7.0
       bangumi-data: 0.3.212
       bgmc: 0.3.0
-      bgmt: 0.3.0
+      bgmt: 0.3.1
       breadc: 1.0.0-beta.17
       consola: 3.4.2
       date-fns: 4.4.0
@@ -13646,6 +13649,8 @@ snapshots:
       is-arrayish: 0.3.4
 
   simptrad@0.2.0: {}
+
+  simptrad@0.3.0: {}
 
   sirv@3.0.2:
     dependencies:

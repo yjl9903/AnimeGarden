@@ -3,6 +3,7 @@ import { stringifyURLSearch, type Resource, type ResolvedFilterOptions } from '@
 import { truncate } from '@animegarden/shared';
 
 import { stringifySearchText } from '~/layouts/Search/utils';
+import { getCalendarSeasonHead } from '~/utils/calendar-season';
 import { generateTitleFromFilter } from '~/utils/server/meta';
 import { getSubjectDisplayName, type WebBgmSubject } from '~/utils/subject';
 
@@ -20,6 +21,10 @@ export const AnimeHead = {
   title: `动画周历 | ${SiteTitle}`,
   description: `动画每周播出时间表, 动画周历, ${SiteTitle}`
 };
+
+export function calendarHead(season?: string) {
+  return getCalendarSeasonHead(season);
+}
 
 export const CollectionDescription =
   'Anime Garden 资源收藏夹, 動漫花園資源網镜像站, 动漫花园动画 BT 资源聚合站';

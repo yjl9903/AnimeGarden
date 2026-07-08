@@ -1,18 +1,18 @@
 import type { FullSubject } from 'bgmd';
 import type { CalendarSubject, DatabaseSubject } from 'bgmx/client';
 
-import { fetchCalendar, fetchSubject, fetchSubjects } from 'bgmx/client';
+import { fetchCalendar, fetchCalendars, fetchSubject, fetchSubjects } from 'bgmx/client';
 
 import type { WebBgmSubject } from '~/utils/subject';
 
 import { ResponseStaleTime } from '~/utils/response';
 
+type BgmSubject = DatabaseSubject | CalendarSubject;
+
 type CacheItem<T> = {
   expires: number;
   value: Promise<T>;
 };
-
-type BgmSubject = DatabaseSubject | CalendarSubject;
 
 const SubjectCache = new Map<string, CacheItem<unknown>>();
 const MaxCacheSize = 1024;
@@ -164,12 +164,33 @@ export async function resolveSubjectByName(name: string) {
   return (await resolveSubjectsByName([name]))[0];
 }
 
-export async function getCalendar() {
-  return getCached('calendar', ResponseStaleTime.Calendar, async () => {
+export async function getCalendars() {
+  return getCached('calendars', ResponseStaleTime.Calendar, () =>
+    fetchCalendars({
+      timeout: 10 * 1000,
+      retry: 1
+    })
+  );
+}
+
+export async function getCalendar(season: string) {
+  return getCached(`calendar:${season}`, ResponseStaleTime.Calendar, async () => {
     const { calendar } = await fetchCalendar({
+      seasons: [season],
       timeout: 10 * 1000,
       retry: 1
     });
     return calendar.map((subjects) => subjects.map(transformBgmSubject));
   });
+}
+
+export async function getLatestCalendar() {
+  const season = [...(await getCalendars())]
+    .filter((calendar) => calendar.is_active)
+    .sort((lhs, rhs) => rhs.season.localeCompare(lhs.season))[0]?.season;
+
+  return {
+    season,
+    calendar: season ? await getCalendar(season) : []
+  };
 }

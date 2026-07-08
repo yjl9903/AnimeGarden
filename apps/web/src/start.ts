@@ -50,6 +50,7 @@ const markdownNegotiation = createMiddleware({ type: 'request' }).server(
     const supportsMarkdownPage =
       pathname === '/' ||
       pathname === '/anime' ||
+      /^\/calendar\/\d{4}-\d{2}$/.test(pathname) ||
       pathname === '/resources' ||
       /^\/resources\/-?\d+(?:\.\d*)?$/.test(pathname) ||
       /^\/detail\/[^/]+\/[^/]+$/.test(pathname) ||

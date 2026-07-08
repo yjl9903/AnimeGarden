@@ -1,14 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { fetchSubject, fetchCalendar, fetchSubjects } = vi.hoisted(() => ({
+const { fetchSubject, fetchCalendar, fetchCalendars, fetchSubjects } = vi.hoisted(() => ({
   fetchSubject: vi.fn(),
   fetchCalendar: vi.fn(),
+  fetchCalendars: vi.fn(),
   fetchSubjects: vi.fn()
 }));
 
 vi.mock('bgmx/client', () => ({
   fetchSubject,
   fetchCalendar,
+  fetchCalendars,
   fetchSubjects
 }));
 
@@ -63,6 +65,7 @@ describe('subject.server BGM client', () => {
     vi.resetModules();
     fetchSubject.mockReset();
     fetchCalendar.mockReset();
+    fetchCalendars.mockReset();
     fetchSubjects.mockReset();
   });
 
@@ -137,6 +140,20 @@ describe('subject.server BGM client', () => {
     fetchCalendar.mockRejectedValue(new Error('offline'));
     const { getCalendar } = await import('../src/query/subject.server');
 
-    await expect(getCalendar()).rejects.toThrow('offline');
+    await expect(getCalendar('2026-07')).rejects.toThrow('offline');
+  });
+
+  it('uses the latest active calendar season', async () => {
+    fetchCalendars.mockResolvedValue([
+      { season: '2026-10', is_active: false, updated_at: new Date('2026-07-01') },
+      { season: '2026-07', is_active: true, updated_at: new Date('2026-07-01') }
+    ]);
+    fetchCalendar.mockResolvedValue({ calendar: [[subject(1)]], web: [] });
+    const { getLatestCalendar } = await import('../src/query/subject.server');
+
+    await expect(getLatestCalendar()).resolves.toMatchObject({ season: '2026-07' });
+    expect(fetchCalendar).toHaveBeenCalledWith(
+      expect.objectContaining({ seasons: ['2026-07'] })
+    );
   });
 });

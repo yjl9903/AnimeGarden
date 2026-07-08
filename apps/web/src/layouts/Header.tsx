@@ -8,7 +8,7 @@ import { useAppStores } from '~/stores/hooks';
 import { calendarQueryOptions } from '~/query';
 import { getCalendar } from '~/utils/calendar';
 import { getSubjectDisplayName, getSubjectRouteLink } from '~/utils/subject';
-import { getResourcesRouteLink } from '~/utils/routes';
+import { getCalendarRouteLink, getResourcesRouteLink } from '~/utils/routes';
 import { getOpenFeedTrackEvent, trackNavClick } from '~/utils/umami';
 import { fansubs as AllFansubs, types, DisplayTypeColor } from '~/utils/constants';
 import {
@@ -24,7 +24,7 @@ export const Header = memo((props: { feedURL?: string }) => {
 
   return (
     <header
-      className="fixed z-13 pt-[1px] flex justify-center items-center w-[calc(100%-var(--removed-body-scroll-bar-size,0px))] h-$nav-height pointer-events-none text-base-500"
+      className="fixed z-13 pt-[1px] flex justify-center items-center w-full h-$nav-height pointer-events-none text-base-500"
       suppressHydrationWarning={true}
     >
       <nav className="main flex gap-1 [&>div]:(leading-$nav-height)">
@@ -61,25 +61,46 @@ export const Header = memo((props: { feedURL?: string }) => {
 const AnimeDropdown = memo(() => {
   const { data } = useQuery(calendarQueryOptions());
   const calendar = useMemo(() => getCalendar(data?.calendar ?? []), [data?.calendar]);
+  const calendarRouteLink = data?.season ? getCalendarRouteLink(data.season) : undefined;
 
   return (
     <Dropdown
       className="nav-animes pointer-events-auto [&:hover>a]:bg-zinc-100! dark:[&:hover>a]:bg-zinc-800!"
       data-nav-collision-target="anime"
       trigger={
-        <Link to="/anime" className="rounded-md p-2" onClick={() => trackNavClick('anime')}>
-          动画
-        </Link>
+        calendarRouteLink ? (
+          <Link
+            {...calendarRouteLink}
+            className="rounded-md p-2"
+            onClick={() => trackNavClick('anime')}
+          >
+            动画
+          </Link>
+        ) : (
+          <a href="/anime" className="rounded-md p-2" onClick={() => trackNavClick('anime')}>
+            动画
+          </a>
+        )
       }
     >
       <DropdownMenu className="mt-[-10px] w-[80px] max-h-[600px] lt-sm:max-h-[360px] rounded-md shadow-box divide-y bg-light-100 dark:bg-dark-100 leading-normal">
-        <Link
-          to="/anime"
-          className="block px2 py1 rounded-t-md hover:bg-basis-100 dark:hover:bg-basis-800"
-          onClick={() => trackNavClick('anime')}
-        >
-          周历
-        </Link>
+        {calendarRouteLink ? (
+          <Link
+            {...calendarRouteLink}
+            className="block px2 py1 rounded-t-md hover:bg-basis-100 dark:hover:bg-basis-800"
+            onClick={() => trackNavClick('anime')}
+          >
+            周历
+          </Link>
+        ) : (
+          <a
+            href="/anime"
+            className="block px2 py1 rounded-t-md hover:bg-basis-100 dark:hover:bg-basis-800"
+            onClick={() => trackNavClick('anime')}
+          >
+            周历
+          </a>
+        )}
         {calendar
           .sort((l, r) => l.index - r.index)
           .map((day, index) => (

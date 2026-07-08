@@ -1,162 +1,253 @@
 import { useEffect, useState } from 'react';
 import { Link } from '@tanstack/react-router';
+import type { Calendar } from 'bgmx/client';
+import { ChevronDown } from 'lucide-react';
 
+import { Button } from '~/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger
+} from '~/components/ui/dropdown-menu';
 import Layout from '~/layouts/Layout';
-import { getCalendar } from '~/utils/calendar';
 import { trackAnimeCalendarClick } from '~/utils';
+import { getCalendar } from '~/utils/calendar';
+import { CalendarSeasonMonths, getCalendarSeason } from '~/utils/calendar-season';
 import { getSubjectDisplayName, getSubjectRouteLink, type WebBgmSubject } from '~/utils/subject';
 
 import './anime.css';
 
+/**
+ * Renders the anime calendar as a season header plus weekday sections.
+ */
 export default function Index({
   timestamp,
-  calendar
+  calendar,
+  calendars,
+  season,
+  onSeasonChange
 }: {
   timestamp?: Date;
   calendar: WebBgmSubject[][];
+  calendars: Calendar[];
+  season?: string;
+  onSeasonChange: (season: string) => void;
 }) {
   const resolvedCalendar = getCalendar(calendar);
+  const [activeWeekday, setActiveWeekday] = useState(resolvedCalendar[0]?.index ?? 1);
+  const selectedSeasonId = season ?? calendars[0]?.season ?? '';
+  const selectedSeason = getCalendarSeason(selectedSeasonId);
+  const years = [...new Set(calendars.map((calendar) => calendar.season.split('-')[0]))];
+  const seasonOptions = calendars
+    .filter((calendar) => calendar.season.startsWith(`${selectedSeason.year}-`))
+    .map((calendar) => getCalendarSeason(calendar.season))
+    .sort(
+      (left, right) =>
+        CalendarSeasonMonths.indexOf(left.month) - CalendarSeasonMonths.indexOf(right.month)
+    );
 
-  const [wrapperClassName, setWrapperClassName] = useState(calendar.map(() => ['scroll-begin']));
+  const updateSeason = (year: string, month: number) => {
+    const candidates = calendars
+      .map((calendar) => getCalendarSeason(calendar.season))
+      .filter((calendar) => calendar.year === year)
+      .sort(
+        (left, right) =>
+          CalendarSeasonMonths.indexOf(left.month) - CalendarSeasonMonths.indexOf(right.month)
+      );
+    const nextSeason =
+      candidates.find((calendar) => calendar.month === month)?.season ??
+      [...candidates].reverse().find((calendar) => calendar.month <= month)?.season ??
+      candidates[0]?.season;
 
-  const updateWrapperClassName = (container: HTMLDivElement) => {
-    const index =
-      +(
-        [...container.classList.values()]
-          .find((key) => key.startsWith('cal-'))
-          ?.replace('cal-', '') ?? 1
-      ) - 1;
-
-    const newClassName = [...wrapperClassName[index]];
-    if (container.scrollLeft <= 1) {
-      newClassName.push('scroll-begin');
-    } else {
-      const idx = newClassName.indexOf('scroll-begin');
-      idx !== -1 && newClassName.splice(idx, 1);
-    }
-
-    if (Math.abs(container.scrollWidth - container.clientWidth - container.scrollLeft) <= 1) {
-      newClassName.push('scroll-end');
-    } else {
-      const idx = newClassName.indexOf('scroll-end');
-      idx !== -1 && newClassName.splice(idx, 1);
-    }
-
-    setWrapperClassName((prev) => {
-      const newWrapperClassName = [...prev];
-      newWrapperClassName[index] = newClassName;
-      return newWrapperClassName;
-    });
+    if (nextSeason) onSeasonChange(nextSeason);
   };
-
-  const scrollHandler = resolvedCalendar.map(() => (ev: React.UIEvent<HTMLDivElement>) => {
-    const container = ev.currentTarget;
-    updateWrapperClassName(container);
-  });
 
   useEffect(() => {
     if (import.meta.env.SSR) return;
 
-    const container = document.querySelectorAll('.bgm-list');
-    container.forEach((item) => {
-      updateWrapperClassName(item as HTMLDivElement);
-    });
-  }, []);
+    let frame = 0;
 
-  const scrollLeftHandler = (ev: React.MouseEvent<HTMLDivElement>) => {
-    const container = ev.currentTarget
-      .closest('.bgm-list-wrapper')
-      ?.querySelector('.bgm-list') as HTMLDivElement;
-    if (!container) return;
-    if (container.scrollLeft - 500 < 51) {
-      container.scrollBy({ left: -550, behavior: 'smooth' });
-    } else {
-      container.scrollBy({ left: -500, behavior: 'smooth' });
-    }
-  };
+    const updateActiveWeekday = () => {
+      if (frame) return;
 
-  const scrollRightHandler = (ev: React.MouseEvent<HTMLDivElement>) => {
-    const container = ev.currentTarget
-      .closest('.bgm-list-wrapper')
-      ?.querySelector('.bgm-list') as HTMLDivElement;
-    if (!container) return;
-    if (
-      Math.abs(container.scrollWidth - container.clientWidth - (container.scrollLeft + 500)) < 50
-    ) {
-      container.scrollBy({ left: 550, behavior: 'smooth' });
-    } else {
-      container.scrollBy({ left: 500, behavior: 'smooth' });
-    }
-  };
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const anchorY = Math.min(window.innerHeight * 0.35, 180);
+        let nextActive = resolvedCalendar[0]?.index ?? 1;
+
+        for (const cal of resolvedCalendar) {
+          const section = document.getElementById(`星期${cal.text}`);
+          if (!section) continue;
+          if (section.getBoundingClientRect().top <= anchorY) {
+            nextActive = cal.index;
+          }
+        }
+
+        setActiveWeekday((prev) => (prev === nextActive ? prev : nextActive));
+      });
+    };
+
+    updateActiveWeekday();
+    window.addEventListener('scroll', updateActiveWeekday, { passive: true });
+    window.addEventListener('resize', updateActiveWeekday);
+
+    return () => {
+      if (frame) cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', updateActiveWeekday);
+      window.removeEventListener('resize', updateActiveWeekday);
+    };
+  }, [calendar]);
 
   return (
     <Layout timestamp={timestamp}>
-      <div className="w-full pt-13 pb-24 space-y-8">
-        {resolvedCalendar.map((cal) => (
-          <div
-            className="bgm-weekday w-full pt-4 bg-gray-100 dark:bg-gray-800 rounded-md"
-            id={`星期${cal.text}`}
-            key={cal.index}
-          >
-            <h2 className="block px-6 text-xl font-bold mb-4 select-none border-l-[4px] border-[#0ca]">
-              <a href={`#星期${cal.text}`}>星期{cal.text}</a>
-              <span className="hidden">放送动画</span>
-            </h2>
-            <div
-              className={`relative bgm-list-wrapper ${wrapperClassName[cal.index - 1].join(' ')}`}
-            >
-              <div
-                className={`bgm-list px-6 pb-2 flex w-full space-x-6 overflow-x-auto cal-${cal.index}`}
-                onScroll={scrollHandler[cal.index - 1]}
+      <div className="anime-page w-full pt-13 pb-24">
+        <header className="mb-12 flex items-end justify-between gap-4 lt-sm:flex-col lt-sm:items-start">
+          <div>
+            <h1 className="text-3xl lt-sm:text-2xl font-bold leading-tight tracking-normal select-none">
+              <span
+                className="anime-season-emoji text-2xl font-quicksand font-bold"
+                aria-hidden="true"
               >
-                {cal.bangumis.map((bgm) => (
-                  <Link
-                    {...getSubjectRouteLink(bgm)}
-                    className="block w-max"
-                    key={bgm.id}
-                    onClick={() =>
-                      trackAnimeCalendarClick({
-                        subjectId: String(bgm.id),
-                        title: getSubjectDisplayName(bgm),
-                        weekday: `星期${cal.text}`
-                      })
-                    }
-                  >
-                    <div className="w-150px h-225px flex items-center select-none">
-                      <img
-                        src={bgm.poster}
-                        alt={`${getSubjectDisplayName(bgm)} poster`}
-                        className="rounded-md max-h-225px hover:shadow-box"
-                      />
-                    </div>
-                    <div className="w-150px truncate py-2">
-                      <span className="font-bold text-sm text-link-active">
-                        {getSubjectDisplayName(bgm)}
-                      </span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-
-              <div
-                className="scroll-left absolute top-[50%] translate-y-[-100%] left-7 select-none cursor-pointer"
-                onClick={scrollLeftHandler}
-              >
-                <div className="h-[40px] w-[40px] rounded-full bg-gray-300 dark:bg-gray-700 op-90 flex items-center justify-center">
-                  <i className="i-carbon-arrow-left text-2xl font-bold" />
-                </div>
-              </div>
-              <div
-                className="scroll-right absolute top-[50%] translate-y-[-100%] right-7 select-none cursor-pointer"
-                onClick={scrollRightHandler}
-              >
-                <div className="h-[40px] w-[40px] rounded-full bg-gray-300 dark:bg-gray-700 op-90 flex items-center justify-center">
-                  <i className="i-carbon-arrow-right text-2xl font-bold" />
-                </div>
-              </div>
-            </div>
+                {selectedSeason.emoji}
+              </span>
+              {selectedSeason.title}
+            </h1>
           </div>
-        ))}
+          <div className="flex gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-10 w-[112px] justify-between rounded-md px-3 text-base font-bold"
+                  disabled={calendars.length === 0}
+                >
+                  {selectedSeason.year} 年
+                  <ChevronDown className="ml-2 h-4 w-4 opacity-60" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                style={{
+                  width: 'var(--radix-dropdown-menu-trigger-width)',
+                  minWidth: 'var(--radix-dropdown-menu-trigger-width)'
+                }}
+              >
+                <DropdownMenuRadioGroup
+                  value={selectedSeason.year}
+                  onValueChange={(nextYear) => updateSeason(nextYear, selectedSeason.month)}
+                >
+                  {years.map((year) => (
+                    <DropdownMenuRadioItem
+                      key={year}
+                      value={year}
+                      className="anime-season-menu-item"
+                    >
+                      {year} 年
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-10 w-[112px] justify-between rounded-md px-3 text-base font-bold"
+                  disabled={calendars.length === 0}
+                >
+                  <span>
+                    <span className="mr-1.5">{selectedSeason.emoji}</span>
+                    {selectedSeason.label}
+                  </span>
+                  <ChevronDown className="ml-2 h-4 w-4 opacity-60" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                align="end"
+                style={{
+                  width: 'var(--radix-dropdown-menu-trigger-width)',
+                  minWidth: 'var(--radix-dropdown-menu-trigger-width)'
+                }}
+              >
+                <DropdownMenuRadioGroup
+                  value={String(selectedSeason.month)}
+                  onValueChange={(nextMonth) =>
+                    updateSeason(selectedSeason.year, Number(nextMonth))
+                  }
+                >
+                  {seasonOptions.map((option) => (
+                    <DropdownMenuRadioItem
+                      key={option.month}
+                      value={String(option.month)}
+                      className="anime-season-menu-item"
+                    >
+                      <span className="mr-1.5">{option.emoji}</span>
+                      {option.label}
+                    </DropdownMenuRadioItem>
+                  ))}
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </header>
+
+        <div className="anime-layout">
+          <nav className="anime-toc" aria-label="星期目录">
+            {resolvedCalendar.map((cal) => (
+              <a
+                className={activeWeekday === cal.index ? 'is-active' : undefined}
+                href={`#星期${cal.text}`}
+                key={cal.index}
+                onClick={() => setActiveWeekday(cal.index)}
+              >
+                星期{cal.text}
+              </a>
+            ))}
+          </nav>
+
+          <div className="anime-days space-y-14">
+            {resolvedCalendar.map((cal) => (
+              <section className="bgm-weekday" id={`星期${cal.text}`} key={cal.index}>
+                <h2 className="mb-6 select-none">
+                  <a
+                    className="text-2xl lt-sm:text-xl font-bold leading-tight"
+                    href={`#星期${cal.text}`}
+                  >
+                    星期{cal.text}
+                  </a>
+                </h2>
+                <div className="anime-bgm-grid">
+                  {cal.bangumis.map((bgm) => (
+                    <Link
+                      {...getSubjectRouteLink(bgm)}
+                      className="anime-card group"
+                      key={bgm.id}
+                      onClick={() =>
+                        trackAnimeCalendarClick({
+                          subjectId: String(bgm.id),
+                          title: getSubjectDisplayName(bgm),
+                          weekday: `星期${cal.text}`
+                        })
+                      }
+                    >
+                      <div className="anime-poster select-none">
+                        <img src={bgm.poster} alt={`${getSubjectDisplayName(bgm)} poster`} />
+                      </div>
+                      <div className="anime-title">
+                        <span>{getSubjectDisplayName(bgm)}</span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        </div>
       </div>
     </Layout>
   );

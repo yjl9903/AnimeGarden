@@ -1,0 +1,51 @@
+import { describe, expect, it, vi } from 'vitest';
+import type { QueryClient } from '@tanstack/react-query';
+
+const { setErrorResponse } = vi.hoisted(() => ({
+  setErrorResponse: vi.fn()
+}));
+
+vi.mock('~/pages/anime/route', () => ({
+  default: () => null
+}));
+
+vi.mock('~/utils/response', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../src/utils/response')>()),
+  setErrorResponse
+}));
+
+import { loader } from '../src/routes/calendar/$season';
+
+describe('calendar season route loader', () => {
+  it('returns 404 for unpublished calendar seasons', async () => {
+    const queryClient = {
+      ensureQueryData: vi.fn(async (options: { queryKey: readonly unknown[] }) => {
+        if (options.queryKey[1] === 'timestamp') {
+          return { ok: true, timestamp: new Date('2026-07-01T00:00:00.000Z') };
+        }
+
+        if (options.queryKey[1] === 'calendars') {
+          return {
+            ok: true,
+            calendars: [{ season: '2026-07', is_active: true, updated_at: new Date() }]
+          };
+        }
+
+        throw new Error(`Unexpected query: ${options.queryKey.join('/')}`);
+      })
+    };
+
+    await expect(
+      loader({
+        context: { queryClient: queryClient as unknown as QueryClient },
+        params: { season: '2026-10' }
+      })
+    ).resolves.toMatchObject({
+      calendar: [],
+      calendars: [{ season: '2026-07' }],
+      season: '2026-10'
+    });
+    expect(setErrorResponse).toHaveBeenCalledWith(404);
+    expect(queryClient.ensureQueryData).toHaveBeenCalledTimes(2);
+  });
+});

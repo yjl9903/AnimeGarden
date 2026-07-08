@@ -7,6 +7,7 @@ import {
 } from '@animegarden/server';
 
 import { APP_HOST, WEB_SERVER_URL } from '~build/env';
+import { getCalendars } from '~/query/subject.server';
 
 const SITE = `https://${APP_HOST}`;
 const START_YEAR = 2020;
@@ -37,6 +38,7 @@ function isValidMonth(year: number, month: number) {
 function isValidSitemapPathname(pathname: string) {
   if (
     pathname === '/sitemap-0.xml' ||
+    pathname === '/sitemap-calendar.xml' ||
     pathname === '/sitemap-fansubs.xml' ||
     pathname === '/sitemap-subjects.xml'
   ) {
@@ -48,7 +50,12 @@ function isValidSitemapPathname(pathname: string) {
 }
 
 async function getSitemapIndexUrls() {
-  const pages = ['sitemap-0.xml', 'sitemap-fansubs.xml', 'sitemap-subjects.xml'];
+  const pages = [
+    'sitemap-0.xml',
+    'sitemap-calendar.xml',
+    'sitemap-fansubs.xml',
+    'sitemap-subjects.xml'
+  ];
   const months: string[] = [];
   const now = new Date();
 
@@ -79,6 +86,16 @@ async function getSitemapUrls(pathname: string): Promise<SitemapItemLoose[] | un
         { url: `${SITE}/resources/1?type=其他` },
         { url: `${SITE}/docs/api` }
       ];
+    }
+
+    if (pathname === '/sitemap-calendar.xml') {
+      const calendars = await getCalendars();
+      return [...calendars]
+        .filter((calendar) => calendar.is_active)
+        .sort((lhs, rhs) => rhs.season.localeCompare(lhs.season))
+        .map((calendar) => ({
+          url: `${SITE}/calendar/${calendar.season}`
+        }));
     }
 
     if (pathname === '/sitemap-fansubs.xml') {

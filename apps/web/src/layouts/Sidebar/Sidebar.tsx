@@ -2,14 +2,14 @@ import clsx from 'clsx';
 import { toast } from 'sonner';
 import { ClientOnly, Link, useLocation, useNavigate } from '@tanstack/react-router';
 import { useSelector } from '@tanstack/react-store';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { type MouseEvent, memo, useCallback, useMemo } from 'react';
 
 import type { Collection } from '@animegarden/client';
 
-import { generateCollectionMutationOptions } from '~/query';
+import { calendarQueryOptions, generateCollectionMutationOptions } from '~/query';
 import { track } from '~/utils';
-import { getActivePageTab, getResourcesRouteLink } from '~/utils/routes';
+import { getActivePageTab, getCalendarRouteLink, getResourcesRouteLink } from '~/utils/routes';
 import { updateCollection } from '~/stores/collection';
 import { useAppStores } from '~/stores/hooks';
 
@@ -80,21 +80,30 @@ const SidebarContent = memo(() => {
 const QuickLinks = memo((props: { collection: Collection }) => {
   const { collection } = props;
   const location = useLocation();
+  const { data } = useQuery(calendarQueryOptions());
   const match = useMemo(() => getActivePageTab(location, collection), [location, collection]);
+  const calendarRouteLink = data?.season ? getCalendarRouteLink(data.season) : undefined;
   const className =
     'ml1 mr2 px1 py2 cursor-pointer select-none text-sm text-base-700 flex items-center hover:bg-layer-subtle-overlay rounded-md';
   const activeClassName = 'bg-layer-muted';
 
   return (
     <>
-      <Link
-        to="/anime"
-        className={clsx(className, match === 'anime' && activeClassName)}
-        resetScroll={false}
-      >
-        <span className="i-carbon-calendar mr1"></span>
-        <span>动画周历</span>
-      </Link>
+      {calendarRouteLink ? (
+        <Link
+          {...calendarRouteLink}
+          className={clsx(className, match === 'anime' && activeClassName)}
+          resetScroll={false}
+        >
+          <span className="i-carbon-calendar mr1"></span>
+          <span>动画周历</span>
+        </Link>
+      ) : (
+        <a href="/anime" className={clsx(className, match === 'anime' && activeClassName)}>
+          <span className="i-carbon-calendar mr1"></span>
+          <span>动画周历</span>
+        </a>
+      )}
       <Link
         {...getResourcesRouteLink(1)}
         className={clsx(className, match === 'resources' && activeClassName)}

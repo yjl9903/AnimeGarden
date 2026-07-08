@@ -29,6 +29,9 @@ async function dispatchMarkdown(url: URL): Promise<MarkdownResult | Response> {
   if (pathname === '/anime') return renderAnimeMarkdown();
   if (pathname === '/resources') return renderResourcesMarkdown(url, 1);
 
+  const calendarMatch = pathname.match(/^\/calendar\/(\d{4}-\d{2})$/);
+  if (calendarMatch) return renderAnimeMarkdown(calendarMatch[1]);
+
   const resourcesMatch = pathname.match(/^\/resources\/(-?\d+(?:\.\d*)?)$/);
   if (resourcesMatch) {
     const page = Math.floor(+resourcesMatch[1]);

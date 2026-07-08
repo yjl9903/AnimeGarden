@@ -1,10 +1,12 @@
-import { getCalendar } from '~/query/subject.server';
+import { getCalendar, getCalendars, getLatestCalendar } from '~/query/subject.server';
+import { getCalendarSeason } from '~/utils/calendar-season';
 import { ResponseCacheControl } from '~/utils/response';
 import { getSubjectDisplayName, type WebBgmSubject } from '~/utils/subject';
 
-import { AnimeHead } from './head.server';
+import { AnimeHead, calendarHead } from './head.server';
 import {
   escapeMarkdown,
+  errorMarkdown,
   frontmatter,
   heading,
   listItem,
@@ -13,13 +15,26 @@ import {
 
 const Weekdays = ['一', '二', '三', '四', '五', '六', '日'];
 
-export async function renderAnimeMarkdown(): Promise<MarkdownResult> {
-  const calendar = await getCalendar();
+export async function renderAnimeMarkdown(season?: string): Promise<MarkdownResult> {
+  if (
+    season &&
+    !(await getCalendars()).some((calendar) => calendar.season === season && calendar.is_active)
+  ) {
+    return errorMarkdown('动画周历不存在', '请求的动画周历不存在或尚未发布。', 404);
+  }
+
+  const resolved = season
+    ? { season, calendar: await getCalendar(season) }
+    : await getLatestCalendar();
+  const calendarSeason = getCalendarSeason(resolved.season);
+  const head = season ? calendarHead(resolved.season) : AnimeHead;
+  const title = season ? `${calendarSeason.title}动画周历` : '动画周历';
+
   // Markdown keeps a stable Monday-Sunday order instead of the UI's current-day rotation.
   const body =
-    frontmatter(AnimeHead) +
-    heading(1, '动画周历') +
-    calendar
+    frontmatter(head) +
+    heading(1, title) +
+    resolved.calendar
       .map((subjects, index) => {
         const bangumis = sortSubjects(subjects);
 

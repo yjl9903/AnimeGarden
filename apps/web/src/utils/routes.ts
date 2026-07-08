@@ -62,6 +62,14 @@ export function getResourcesRouteLink(
   };
 }
 
+/** Builds typed link props for a concrete calendar season. */
+export function getCalendarRouteLink(season: string) {
+  return {
+    to: '/calendar/$season' as const,
+    params: { season }
+  };
+}
+
 export function getActivePageTab(
   location: Pick<ParsedLocation, 'pathname' | 'searchStr'>,
   collection: Collection
@@ -75,7 +83,7 @@ export function getActivePageTab(
     }
     return 'resources';
   }
-  if (pathname.startsWith('/anime/')) {
+  if (pathname === '/anime' || pathname.startsWith('/calendar/')) {
     return 'anime';
   }
   if (pathname === '/' || pathname === '') {
