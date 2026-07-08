@@ -90,8 +90,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/anipar
       bgmd:
-        specifier: 0.20260707.0
-        version: 0.20260707.0
+        specifier: 0.20260707.1
+        version: 0.20260707.1
       bgmx:
         specifier: 0.3.2
         version: 0.3.2(bangumi-data@0.3.212)
@@ -220,8 +220,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/anipar
       bgmd:
-        specifier: 0.20260707.0
-        version: 0.20260707.0
+        specifier: 0.20260707.1
+        version: 0.20260707.1
       bgmx:
         specifier: 0.3.2
         version: 0.3.2(bangumi-data@0.3.212)
@@ -4020,8 +4020,8 @@ packages:
     engines: {node: '>=v24.0.0'}
     hasBin: true
 
-  bgmd@0.20260707.0:
-    resolution: {integrity: sha512-GCMOYgAB7GAHNkxFAd2LET0TqyzT/uZ2J0Mojrj1QwX94hOr4k0o2aGhIFDrNVE57EO3utJfc2Ca9Bvv8iLN8A==}
+  bgmd@0.20260707.1:
+    resolution: {integrity: sha512-T36UFwslJvERzf7rE0d7WXGJZeLpmlvoz2c00nkL+gk0aKbFJh+A4dovGXiX2X4E5YylcTM7l9xk3MpM4UV4Ow==}
     engines: {node: '>=v24.0.0'}
 
   bgmt@0.3.1:
@@ -11005,7 +11005,7 @@ snapshots:
     dependencies:
       breadc: 1.0.0-beta.17
 
-  bgmd@0.20260707.0: {}
+  bgmd@0.20260707.1: {}
 
   bgmt@0.3.1:
     dependencies:
