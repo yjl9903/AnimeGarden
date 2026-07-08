@@ -36,16 +36,16 @@
   "scripts": {
     "build": "unbuild",
     "format": "prettier --write 'src/**/*.ts' 'test/**/*.ts'",
+    "start:fetch": "tsx scripts/fetch.ts",
     "test": "vitest",
     "test:ci": "vitest --run",
-    "start:fetch": "tsx scripts/fetch.ts",
     "typecheck": "tsc --noEmit"
-  },
-  "engines": {
-    "node": ">=v24.0.0"
   },
   "devDependencies": {
     "@types/jsdom": "^28.0.3",
     "@types/parse-torrent": "^5.8.8"
+  },
+  "engines": {
+    "node": ">=v24.0.0"
   }
 }
