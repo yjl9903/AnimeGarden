@@ -42,7 +42,7 @@ export default function Index({ data, feedURL, latestSeason, path, renderError }
     <Layout feedURL={feedURL} timestamp={timestamp}>
       <div className="w-full pt-13 pb-24">
         {latestSeason && (
-          <header className="mb-12 flex min-h-10 items-end justify-between gap-4 pl-4 lt-md:pl-0 lt-sm:flex-col lt-sm:items-start">
+          <header className="mb-12 lt-sm:mb-6 flex min-h-10 items-end justify-between gap-4 pl-4 lt-md:pl-0 lt-sm:flex-col lt-sm:items-start">
             <div>
               <div className="flex items-baseline gap-4 lt-sm:flex-col lt-sm:items-start lt-sm:gap-2">
                 <h1 className="text-3xl lt-sm:text-2xl font-bold leading-tight tracking-normal select-none">
