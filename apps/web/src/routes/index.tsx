@@ -63,6 +63,7 @@ export const Route = createFileRoute('/')({
 function IndexRoute() {
   const location = useLocation();
   const { data } = useSuspenseQuery(resourcesQueryOptions(indexResourcesFilter));
+  const { data: calendar } = useSuspenseQuery(calendarQueryOptions());
   const pageData = {
     ...data,
     error: serializeError(data.error)
@@ -72,6 +73,7 @@ function IndexRoute() {
     <Page
       data={pageData}
       feedURL={getFeedURL(location.searchStr)}
+      latestSeason={calendar.season}
       path={`${location.pathname}${location.searchStr}`}
       renderError={getTrackingError(pageData.error, 'index-render-failed')}
     />
