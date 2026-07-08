@@ -1,6 +1,6 @@
 # @animegarden/web 架构总览
 
-检查日期：2026-06-28
+检查日期：2026-07-09
 
 ## 定位
 
@@ -18,7 +18,7 @@ Web 不再提供 `/api/*`、`/feed.xml` 或 `/collection/:hash/feed.xml` 代理�
 
 `vite.config.ts` 使用 `tanstackStart()`、React Vite plugin、UnoCSS、Icons、Info、Analytics、Inline 和 tsconfig paths。Cloudflare Worker 构建入口、wrangler 配置和 Worker 静态资源适配已移除，Web 只支持 Node/Fly 部署。
 
-`src/start.ts` 注册 TanStack Start 全局 request middleware。普通浏览器请求继续走 SSR；`GET` / `HEAD` 且 `Accept: text/markdown` 的已支持页面路径会在进入 HTML SSR 前由 `src/markdown/` 返回应用侧拼装的 Markdown，避免 TanStack Start 的 HTML-only Accept 检查把 agent 请求返回 500。非 HTML 的 `router` 类型 `GET` 200 响应会统一生成强 ETag，并在 `If-None-Match` 命中时返回 304；HTML 页面和 `serverFn` 不进入这层 ETag 处理，避免干扰 SSR streaming、TanStack RPC、CSRF 和序列化响应。Sitemap server routes 另外提供显式 `HEAD` handler，用 GET 同源内容生成一致的 ETag / 304。`/llms.txt`、`/openapi.json`、`/.well-known/*` 等 handler route 不进入 Markdown negotiation，但仍属于非 HTML GET 的 ETag 覆盖范围。
+`src/start.ts` 注册 TanStack Start 全局 request middleware。普通浏览器请求继续走 SSR；`GET` / `HEAD` 且 `Accept: text/markdown` 的已支持页面路径会在进入 HTML SSR 前由 `src/markdown/` 返回应用侧拼装的 Markdown，避免 TanStack Start 的 HTML-only Accept 检查把 agent 请求返回 500。Markdown negotiation 支持 `/anime` 和 `/calendar/:season` 等已登记页面。非 HTML 的 `router` 类型 `GET` 200 响应会统一生成强 ETag，并在 `If-None-Match` 命中时返回 304；HTML 页面和 `serverFn` 不进入这层 ETag 处理，避免干扰 SSR streaming、TanStack RPC、CSRF 和序列化响应。Sitemap server routes 另外提供显式 `HEAD` handler，用 GET 同源内容生成一致的 ETag / 304。`/llms.txt`、`/openapi.json`、`/.well-known/*` 等 handler route 不进入 Markdown negotiation，但仍属于非 HTML GET 的 ETag 覆盖范围。
 
 ## 请求与数据流
 
@@ -35,6 +35,14 @@ Web 不再提供 `/api/*`、`/feed.xml` 或 `/collection/:hash/feed.xml` 代理�
 GET server function 和 SSR loader 的公开缓存头统一由 `src/utils/response.ts` 设置：timestamp、资源列表和 collection 页面使用 `public, max-age=30, s-maxage=60`，详情页使用 `public, max-age=3600, s-maxage=86400`。上游失败或 `ok: false` 时返回错误状态并设置 `Cache-Control: no-store`，避免浏览器或 CDN 缓存错误响应。
 
 Bangumi subject/full/calendar 数据不应进入客户端运行时依赖；需要读取这类数据的页面应通过 `src/query/subject.ts` 的 TanStack Query options 和 `createServerFn()` 访问。当前 serverFn 通过 `bgmx` 读取 `bgm.animes.garden`，按需做 subject、calendar 和标题搜索查询，并只在 subject detail 失败时 fallback 到 `bgmd/full`。
+
+### 动画周历 Calendar 语义
+
+`bgmx` 返回的 `Calendar` 列表是周历索引，核心字段包括 `season`、`is_active` 和 `updated_at`。`season` 使用 `YYYY-MM` 表示季度月份，例如 `2026-07` 表示 2026 年夏季周历。
+
+`is_active` 仅表示“当前默认正在播出中的周历”，用于 `/anime` 默认入口和 `getLatestCalendar()` 选择当前季度。它不是数据有效性、发布状态或历史可见性标记。`getCalendars()` 返回的每一个 calendar 都应视为有效周历，并出现在年份/季度下拉列表、`/calendar/:season` 直达页面、`/sitemap-calendar.xml` 和 `/calendar/:season` Markdown 输出中。
+
+如果请求的 `season` 不存在于 `getCalendars()` 返回值中，周历页面和 Markdown 输出应返回 404 或 no-store 错误响应。若 calendar 数据源本身请求失败，应按上游错误处理，不用 `is_active` 兜底隐藏其他季度。
 
 ## 代码逻辑分类
 
@@ -59,7 +67,8 @@ Bangumi subject/full/calendar 数据不应进入客户端运行时依赖；需�
 | `/detail/:provider/:providerId`  | `routes/detail/$provider/$providerId/route.tsx` | `pages/detail.$provider.$providerId/route.tsx` |
 | `/subject/:subject`              | `routes/subject/$subject/route.tsx`             | `pages/subject.$subject.($page)/route.tsx`     |
 | `/collection/:hash`              | `routes/collection/$hash/route.tsx`             | `pages/collection.$hash/route.tsx`             |
-| `/anime`                         | `routes/anime/route.tsx`                        | `pages/anime/route.tsx`                        |
+| `/anime`                         | `routes/anime/route.tsx`                        | 重定向到当前 active `/calendar/:season`        |
+| `/calendar/:season`              | `routes/calendar/$season.tsx`                   | `pages/anime/route.tsx`                        |
 | `/docs/api`                      | `routes/docs/api/route.tsx`                     | `pages/docs.api/route.tsx`                     |
 | `/iframe`                        | `routes/iframe.tsx`                             | `pages/iframe/route.tsx`                       |
 
@@ -69,6 +78,7 @@ Bangumi subject/full/calendar 数据不应进入客户端运行时依赖；需�
 - 改资源表格或分页：先看 `src/components/Resources/` 和 `src/pages/resources.($page)/`。
 - 改搜索体验：先看 `src/layouts/Search/`、`src/stores/search.ts`。
 - 改收藏夹：先看 `src/layouts/Sidebar/`、`src/stores/collection.ts`、`src/pages/collection.$hash/route.tsx`。
+- 改动画周历：先看 `src/routes/anime/route.tsx`、`src/routes/calendar/$season.tsx`、`src/pages/anime/route.tsx` 和 `src/query/subject.ts`；`is_active` 只用于默认季度选择，不能用来过滤历史周历。
 - 改部署：先看 `server.mjs`、`vite.config.ts` 和 Fly/Docker 配置；改 feed 链接：先看 `src/utils/url.ts`；改 sitemap：先看 `src/sitemap/index.server.ts` 和 `src/routes/sitemap-*.ts`。
 
 ## Route / Page 边界

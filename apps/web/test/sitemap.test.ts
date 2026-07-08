@@ -120,11 +120,11 @@ describe('sitemap server routes', () => {
     );
   });
 
-  it('maps active calendar seasons', async () => {
+  it('maps calendar seasons', async () => {
     const calendar = await (await handleSitemapRequest(request('/sitemap-calendar.xml'))).text();
 
+    expect(calendar).toContain('<loc>https://animes.garden/calendar/2026-10</loc>');
     expect(calendar).toContain('<loc>https://animes.garden/calendar/2026-07</loc>');
-    expect(calendar).not.toContain('<loc>https://animes.garden/calendar/2026-10</loc>');
     expect(getCalendars).toHaveBeenCalled();
   });
 

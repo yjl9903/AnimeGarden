@@ -16,10 +16,7 @@ import {
 const Weekdays = ['一', '二', '三', '四', '五', '六', '日'];
 
 export async function renderAnimeMarkdown(season?: string): Promise<MarkdownResult> {
-  if (
-    season &&
-    !(await getCalendars()).some((calendar) => calendar.season === season && calendar.is_active)
-  ) {
+  if (season && !(await getCalendars()).some((calendar) => calendar.season === season)) {
     return errorMarkdown('动画周历不存在', '请求的动画周历不存在或尚未发布。', 404);
   }
 

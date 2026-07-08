@@ -117,14 +117,18 @@
 
 ### 动画周历
 
-路径：`/anime`
+路径：`/anime`、`/calendar/:season`
 
 断言：
 
-- title 包含 `动画周历`。
+- `/anime` 重定向到当前 `is_active` calendar 对应的 `/calendar/YYYY-MM`。
+- 直达 `/calendar/2026-07` 等已返回的历史或当前季度时，页面正常渲染；不存在于 `getCalendars()` 的季度返回 404。
+- title 包含对应季度标题和 `动画周历`。
+- 年份和季度下拉包含 `getCalendars()` 返回的所有 calendar；`is_active` 只决定 `/anime` 默认跳转，不影响历史季度出现在列表里。
 - 页面存在 `星期一` 到 `星期日` 中的周历分组。
 - 每个可见动画卡片包含海报图和跳转到 `/subject/:id` 的链接。
-- 横向滚动按钮点击后列表滚动位置变化。
+- 星期目录锚点点击后跳转到对应 weekday section，滚动时当前星期高亮随视口更新。
+- `Accept: text/markdown` 请求 `/calendar/:season` 时返回该季度的 Markdown 周历。
 
 ### 静态页和 API 文档
 

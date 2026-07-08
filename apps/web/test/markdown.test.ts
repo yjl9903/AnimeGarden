@@ -246,7 +246,7 @@ describe('markdown responses', () => {
     }
   });
 
-  it('does not render unpublished calendar markdown seasons', async () => {
+  it('renders historical calendar markdown seasons', async () => {
     const response = await handleMarkdownRequest(
       new Request('https://animes.garden/calendar/2026-10', {
         headers: { Accept: 'text/markdown' }
@@ -254,8 +254,8 @@ describe('markdown responses', () => {
     );
     const body = await response.text();
 
-    expect(response.status).toBe(404);
-    expect(body).toContain('# 动画周历不存在');
+    expect(response.status).toBe(200);
+    expect(body).toContain('# 2026 · 秋季新番动画周历');
   });
 
   it('omits the body for HEAD markdown requests', async () => {

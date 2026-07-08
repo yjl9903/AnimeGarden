@@ -48,9 +48,9 @@ const fetchCalendarsFn = createServerFn({ method: 'GET' }).handler(
       await setCacheControl(ResponseCacheControl.Calendar);
       return {
         ok: true,
-        calendars: [...(await getCalendars())]
-          .filter((calendar) => calendar.is_active)
-          .sort((lhs, rhs) => rhs.season.localeCompare(lhs.season))
+        calendars: [...(await getCalendars())].sort((lhs, rhs) =>
+          rhs.season.localeCompare(lhs.season)
+        )
       };
     } catch (error) {
       console.error('[API]', 'fetchCalendars', error);
@@ -66,10 +66,7 @@ const fetchCalendarFn = createServerFn({ method: 'GET' })
   }))
   .handler(async ({ data: { season } }): Promise<CalendarResponse> => {
     try {
-      if (
-        season &&
-        !(await getCalendars()).some((calendar) => calendar.season === season && calendar.is_active)
-      ) {
+      if (season && !(await getCalendars()).some((calendar) => calendar.season === season)) {
         await setErrorResponse(404);
         return { ok: false, calendar: [], season };
       }

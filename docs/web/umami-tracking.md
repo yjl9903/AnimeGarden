@@ -84,7 +84,7 @@
 当前接入位置：
 
 - `src/components/Resources/table.tsx`
-- `src/routes/anime/route.tsx`
+- `src/pages/anime/route.tsx`
 - `src/routes/subject.$subject.($page)/route.tsx`
 
 ### 收藏夹和复制操作
@@ -217,12 +217,12 @@
 - 搜索框清空按钮
   - 文件：`src/layouts/Search/Search.tsx`
   - 建议属性：无或 `hasInput`
-- 动画周历左右滚动箭头
-  - 文件：`src/routes/anime/route.tsx`
-  - 建议属性：`weekday`，`direction`
 - 动画周历星期锚点
-  - 文件：`src/routes/anime/route.tsx`
-  - 建议属性：`weekday`
+  - 文件：`src/pages/anime/route.tsx`
+  - 建议属性：`weekday`，`season`
+- 动画周历季度切换
+  - 文件：`src/pages/anime/route.tsx`
+  - 建议属性：`fromSeason`，`toSeason`
 - Hero 标题回首页
   - 文件：`src/layouts/Layout.tsx`
   - 建议属性：`item = hero-home`

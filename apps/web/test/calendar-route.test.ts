@@ -1,7 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { QueryClient } from '@tanstack/react-query';
 
-const { setErrorResponse } = vi.hoisted(() => ({
+const { setCacheControl, setErrorResponse } = vi.hoisted(() => ({
+  setCacheControl: vi.fn(),
   setErrorResponse: vi.fn()
 }));
 
@@ -11,13 +12,14 @@ vi.mock('~/pages/anime/route', () => ({
 
 vi.mock('~/utils/response', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../src/utils/response')>()),
+  setCacheControl,
   setErrorResponse
 }));
 
 import { loader } from '../src/routes/calendar/$season';
 
 describe('calendar season route loader', () => {
-  it('returns 404 for unpublished calendar seasons', async () => {
+  it('loads historical calendar seasons', async () => {
     const queryClient = {
       ensureQueryData: vi.fn(async (options: { queryKey: readonly unknown[] }) => {
         if (options.queryKey[1] === 'timestamp') {
@@ -27,8 +29,15 @@ describe('calendar season route loader', () => {
         if (options.queryKey[1] === 'calendars') {
           return {
             ok: true,
-            calendars: [{ season: '2026-07', is_active: true, updated_at: new Date() }]
+            calendars: [
+              { season: '2026-10', is_active: false, updated_at: new Date() },
+              { season: '2026-07', is_active: true, updated_at: new Date() }
+            ]
           };
+        }
+
+        if (options.queryKey[1] === 'calendar') {
+          return { ok: true, calendar: [[{ id: 1 }]], season: '2026-10' };
         }
 
         throw new Error(`Unexpected query: ${options.queryKey.join('/')}`);
@@ -41,11 +50,11 @@ describe('calendar season route loader', () => {
         params: { season: '2026-10' }
       })
     ).resolves.toMatchObject({
-      calendar: [],
-      calendars: [{ season: '2026-07' }],
+      calendar: [[{ id: 1 }]],
+      calendars: [{ season: '2026-10' }, { season: '2026-07' }],
       season: '2026-10'
     });
-    expect(setErrorResponse).toHaveBeenCalledWith(404);
-    expect(queryClient.ensureQueryData).toHaveBeenCalledTimes(2);
+    expect(setErrorResponse).not.toHaveBeenCalled();
+    expect(queryClient.ensureQueryData).toHaveBeenCalledTimes(3);
   });
 });

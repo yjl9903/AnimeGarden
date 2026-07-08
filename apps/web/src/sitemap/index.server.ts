@@ -91,7 +91,6 @@ async function getSitemapUrls(pathname: string): Promise<SitemapItemLoose[] | un
     if (pathname === '/sitemap-calendar.xml') {
       const calendars = await getCalendars();
       return [...calendars]
-        .filter((calendar) => calendar.is_active)
         .sort((lhs, rhs) => rhs.season.localeCompare(lhs.season))
         .map((calendar) => ({
           url: `${SITE}/calendar/${calendar.season}`
