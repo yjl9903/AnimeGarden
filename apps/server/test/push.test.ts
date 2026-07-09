@@ -281,14 +281,14 @@ describe('telegram resource card', () => {
     const lines = message.text.split('\n');
 
     expect(lines[0]).toBe('<b>從前從前有隻貓！世界喵童話 · 第 1 集</b>');
-    expect(lines[1]).toBe('#KiraraFantasia · #2025年10月新番');
+    expect(lines[1]).toBe('#Kirara_Fantasia · #2025年10月新番');
     expect(message.text).not.toContain('#從前從前有隻貓世界喵童話 #2025年10月');
     expect(message.text).toContain('<b>字幕:</b> 繁中 · 内封字幕');
     expect(message.text).toContain('<b>格式:</b> 1080p · AVC · mp4 · AAC');
     expect(message.text).toContain('499.18 MB');
     expect(message.text).toContain('<b>发布:</b> 2026 年 5 月 7 日 13:00');
     expect(message.text).toContain(
-      '<b>追踪:</b> #從前從前有隻貓世界喵童話 #KiraraFantasia_從前從前有隻貓世界喵童話'
+      '<b>追踪:</b> #從前從前有隻貓世界喵童話 #Kirara_Fantasia_從前從前有隻貓世界喵童話'
     );
     expect(message.text).not.toContain('磁力链接');
     expect(message.text).toContain(
@@ -316,7 +316,7 @@ describe('telegram resource card', () => {
       }
     );
 
-    expect(message.text.split('\n')[1]).toBe('#KiraraFantasia · #2025年10月新番');
+    expect(message.text.split('\n')[1]).toBe('#Kirara_Fantasia · #2025年10月新番');
   });
 
   it('uses the first Chinese subject alias as the display name', () => {
@@ -341,7 +341,7 @@ describe('telegram resource card', () => {
 
     expect(message.text.split('\n')[0]).toBe('<b>從前從前有隻貓！世界喵童話 · 第 1 集</b>');
     expect(message.text).toContain(
-      '<b>追踪:</b> #從前從前有隻貓世界喵童話 #KiraraFantasia_從前從前有隻貓世界喵童話'
+      '<b>追踪:</b> #從前從前有隻貓世界喵童話 #Kirara_Fantasia_從前從前有隻貓世界喵童話'
     );
     expect(message.text).not.toContain('Mukashi');
   });
@@ -1088,5 +1088,35 @@ describe('telegram resource card', () => {
     );
 
     expect(message.text).toContain('#雪飘工作室 #喵萌奶茶屋 #桜都字幕组');
+  });
+
+  it('replaces hashtag spaces with single underscores', () => {
+    const title = readAniparTitles('kirara_fantasia')[0];
+    const parsed = parse(title, { fansub: 'Kirara Fantasia' })!;
+    const message = buildResourceCardMessage(
+      {
+        ...createResource(title),
+        fansub: {
+          id: 1,
+          name: 'Team  Name'
+        }
+      },
+      {
+        ...subject,
+        alias: {
+          zh: ['Foo  -  Bar']
+        }
+      },
+      {
+        ...parsed,
+        fansub: {
+          name: 'Team  Name'
+        }
+      },
+      { site: 'animes.garden' }
+    );
+
+    expect(message.text).toContain('#Team_Name · #2025年10月新番');
+    expect(message.text).toContain('<b>追踪:</b> #Foo_Bar #Team_Name_Foo_Bar');
   });
 });

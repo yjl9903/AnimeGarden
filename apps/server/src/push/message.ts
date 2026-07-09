@@ -230,8 +230,13 @@ function alignQuarterDate(date: Date) {
 }
 
 function formatHashTag(text: string) {
-  // Telegram hashtag 只保留字母、数字和下划线，中文属于 Unicode letter。
-  const normalized = text.replace(/[^\p{L}\p{N}_]/gu, '');
+  // Telegram hashtag 只保留字母、数字和下划线；空白转下划线，避免多词标签被挤在一起。
+  const normalized = text
+    .trim()
+    .replace(/\s+/gu, '_')
+    .replace(/[^\p{L}\p{N}_]/gu, '')
+    .replace(/_+/g, '_')
+    .replace(/^_+|_+$/g, '');
   return normalized ? `#${normalized}` : '';
 }
 
