@@ -1,4 +1,4 @@
-import { createFileRoute, useLocation } from '@tanstack/react-router';
+import { createFileRoute, redirect, useLocation } from '@tanstack/react-router';
 import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 
 import type { Resource } from '@animegarden/client';
@@ -15,20 +15,36 @@ const indexResourcesFilter = {
   preset: 'bangumi'
 } satisfies ResourcesQueryInput;
 
-const loader = async ({
+export const loader = async ({
   context,
   location
 }: {
   context: { queryClient: QueryClient };
   location: { href: string };
 }) => {
-  const [{ ok, resources, timestamp, error }] = await Promise.all([
+  const [resourcesData, calendar] = await Promise.all([
     context.queryClient.ensureQueryData(resourcesQueryOptions(indexResourcesFilter)),
     context.queryClient.ensureQueryData(calendarQueryOptions())
   ]);
+  const { ok, resources, timestamp, error } = resourcesData;
 
   if (error) {
     console.error(location.href, error);
+  }
+
+  if (
+    (!ok || resources.length === 0) &&
+    calendar.ok &&
+    calendar.season &&
+    calendar.calendar.some((day) => day.length > 0)
+  ) {
+    console.warn('[Home]', 'redirect to calendar fallback', {
+      path: location.href,
+      season: calendar.season,
+      resourcesOk: ok,
+      resourcesCount: resources.length
+    });
+    throw redirect({ href: `/calendar/${calendar.season}` });
   }
 
   if (!ok) {

@@ -31,6 +31,7 @@
 - 前几条资源行包含标题、发布时间、大小、详情、发布者/字幕组。
 - 每条资源有播放链接和 `magnet:` 下载链接。
 - `magnet:` 下载链接在 hydration 后包含 tracker `&tr=`。
+- 当首页资源列表不可用或为空，但最新动画周历有数据时，首页重定向到 `/calendar/YYYY-MM`。
 - 浏览器 console 不应出现 `Hydration failed`。
 
 ### 首页分页
