@@ -23,6 +23,15 @@ export type ResourcesQueryInput = Omit<FilterOptions, 'subject' | 'subjects'> &
     subjects?: ResourceSubjectInput[];
   };
 
+export type ResourcesQueryRequest = {
+  filter?: ResourcesQueryInput;
+  timeout?: number;
+};
+
+type ResourcesQueryOptions = {
+  timeout?: number;
+};
+
 const backendMode: BackendMode = 'proxy';
 
 function getBackend() {
@@ -41,10 +50,14 @@ export function timestampQueryOptions() {
   });
 }
 
-export function resourcesQueryOptions(filter: ResourcesQueryInput = {}) {
+export function resourcesQueryOptions(
+  filter: ResourcesQueryInput = {},
+  options: ResourcesQueryOptions = {}
+) {
   return queryOptions({
     queryKey: ['api', 'resources', filter] as const,
-    queryFn: ({ signal }) => getBackend().fetchResourcesFn({ data: filter, signal }),
+    queryFn: ({ signal }) =>
+      getBackend().fetchResourcesFn({ data: { filter, timeout: options.timeout }, signal }),
     staleTime: ResponseStaleTime.List
   });
 }

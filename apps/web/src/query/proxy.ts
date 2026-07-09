@@ -16,7 +16,7 @@ import {
 import { serializeError } from '~/utils/error';
 import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
 
-import type { ResourcesQueryInput } from './animegarden';
+import type { ResourcesQueryInput, ResourcesQueryRequest } from './animegarden';
 
 import { resolveSubjectsByName } from './subject.server';
 
@@ -131,12 +131,15 @@ export const fetchTimestampFn = createServerFn({ method: 'GET' }).handler(async 
 });
 
 export const fetchResourcesFn = createServerFn({ method: 'GET' })
-  .validator((filter: ResourcesQueryInput) => filter)
-  .handler(async ({ data: filter = {} }) => {
+  .validator((input?: ResourcesQueryRequest) => ({
+    filter: input?.filter ?? {},
+    timeout: input?.timeout
+  }))
+  .handler(async ({ data: { filter, timeout } }) => {
     try {
       const resolvedFilter = await resolveResourcesFilter(filter);
       const resp = await rawFetchResources({
-        ...getProxyFetchOptions(30 * 1000),
+        ...getProxyFetchOptions(timeout ?? 30 * 1000),
         ...resolvedFilter,
         tracker: true,
         metadata: true

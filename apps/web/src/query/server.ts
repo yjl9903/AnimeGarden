@@ -2,7 +2,7 @@ import { createServerFn } from '@tanstack/react-start';
 
 import type { Collection } from '@animegarden/client';
 
-import type { ResourcesQueryInput } from './animegarden';
+import type { ResourcesQueryRequest } from './animegarden';
 
 function todoEmbeddedServer(): never {
   // ponytail: inline backend hook, replace with direct server calls when server moves into Start.
@@ -14,7 +14,7 @@ export const fetchTimestampFn = createServerFn({ method: 'GET' }).handler(() =>
 );
 
 export const fetchResourcesFn = createServerFn({ method: 'GET' })
-  .validator((filter: ResourcesQueryInput) => filter)
+  .validator((input?: ResourcesQueryRequest) => input)
   .handler(() => todoEmbeddedServer());
 
 export const fetchResourceDetailFn = createServerFn({ method: 'GET' })

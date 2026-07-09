@@ -15,6 +15,8 @@ const indexResourcesFilter = {
   preset: 'bangumi'
 } satisfies ResourcesQueryInput;
 
+const indexResourcesQueryOptions = { timeout: 5 * 1000 } as const;
+
 export const loader = async ({
   context,
   location
@@ -23,7 +25,9 @@ export const loader = async ({
   location: { href: string };
 }) => {
   const [resourcesData, calendar] = await Promise.all([
-    context.queryClient.ensureQueryData(resourcesQueryOptions(indexResourcesFilter)),
+    context.queryClient.ensureQueryData(
+      resourcesQueryOptions(indexResourcesFilter, indexResourcesQueryOptions)
+    ),
     context.queryClient.ensureQueryData(calendarQueryOptions())
   ]);
   const { ok, resources, timestamp, error } = resourcesData;
