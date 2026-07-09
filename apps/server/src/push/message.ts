@@ -31,7 +31,7 @@ export function buildResourceCardMessage(
   const detailUrl = getResourceDetailUrl(resource, options.site);
   const magnetUrl = resource.magnet + (resource.tracker ?? '');
   const playUrl = getKeepShareURL(options.keepshare, magnetUrl);
-  const subjectName = subject.title;
+  const subjectName = getSubjectDisplayName(subject);
   const lines = [
     formatTitleLine(subjectName, parsed),
     formatFansubs(parsed, subject, resource),
@@ -57,6 +57,10 @@ export function buildResourceCardMessage(
 function formatTitleLine(subjectName: string, parsed: ParseResult) {
   const episode = formatEpisode(parsed);
   return `<b>${escapeHtml(subjectName)}${episode ? ` · ${escapeHtml(episode)}` : ''}</b>`;
+}
+
+function getSubjectDisplayName(subject: BasicSubject) {
+  return subject.alias.zh?.[0] || subject.title;
 }
 
 export function getResourceDetailUrl(

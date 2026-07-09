@@ -356,7 +356,7 @@ publisherId + subjectId + episode
 caption 包含：
 
 - subject hashtag 和季度 hashtag。
-- subject 标题和 episode。
+- subject 展示名和 episode；展示名优先使用 `alias.zh[0]`，缺失时回退 `title`。
 - 字幕组 / 协作字幕组 hashtag。
 - 字幕语言和字幕格式。
 - 视频格式。

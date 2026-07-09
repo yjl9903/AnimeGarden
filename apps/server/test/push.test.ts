@@ -319,6 +319,33 @@ describe('telegram resource card', () => {
     expect(message.text.split('\n')[1]).toBe('#KiraraFantasia · #2025年10月新番');
   });
 
+  it('uses the first Chinese subject alias as the display name', () => {
+    const title = readAniparTitles('kirara_fantasia').find((title) =>
+      title.includes('(Baha 1920x1080 AVC AAC MP4)')
+    )!;
+    const parsed = parse(title, { fansub: 'Kirara Fantasia' })!;
+    const message = buildResourceCardMessage(
+      createResource(title),
+      {
+        ...subject,
+        title: 'Mukashi Mukashi Neko',
+        alias: {
+          zh: ['從前從前有隻貓！世界喵童話']
+        }
+      },
+      parsed,
+      {
+        site: 'animes.garden'
+      }
+    );
+
+    expect(message.text.split('\n')[0]).toBe('<b>從前從前有隻貓！世界喵童話 · 第 1 集</b>');
+    expect(message.text).toContain(
+      '<b>追踪:</b> #從前從前有隻貓世界喵童話 #KiraraFantasia_從前從前有隻貓世界喵童話'
+    );
+    expect(message.text).not.toContain('Mukashi');
+  });
+
   it('sends card messages through grammy', async () => {
     const resource = createPushResource();
     const sendPhoto = vi.fn().mockResolvedValue({ message_id: 123 });
