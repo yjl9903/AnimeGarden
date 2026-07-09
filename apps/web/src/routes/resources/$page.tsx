@@ -11,6 +11,8 @@ import { getCanonicalURL, getFeedURL, getTrackingError, serializeError } from '~
 import { getResourcesRouteLink } from '~/utils/routes';
 import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
 
+const deepPaginationMessage = 'Resources pagination is too deep.';
+
 function getResourcesQueryInput(url: URL, page: number) {
   const { filter: parsedFilter, pagination: parsedPagination } = parseURLSearch(url.searchParams, {
     pageSize: 80
@@ -27,7 +29,7 @@ function getResourcesQueryInput(url: URL, page: number) {
   };
 }
 
-const loader = async ({
+export const loader = async ({
   context,
   location,
   params
@@ -45,7 +47,7 @@ const loader = async ({
   }
 
   const { parsedFilter, queryInput } = getResourcesQueryInput(url, page);
-  const [{ ok, resources, pagination, filter, timestamp, error }, , subjectResponses] =
+  const [{ ok, resources, pagination, filter, timestamp, error }, calendar, subjectResponses] =
     await Promise.all([
       context.queryClient.ensureQueryData(resourcesQueryOptions(queryInput)),
       context.queryClient.ensureQueryData(calendarQueryOptions()),
@@ -56,8 +58,15 @@ const loader = async ({
       )
     ]);
 
-  if (error) {
+  const isDeepPagination = !ok && error?.message?.includes(deepPaginationMessage);
+  if (error && !isDeepPagination) {
     console.error(location.href, error);
+  }
+
+  if (isDeepPagination) {
+    throw redirect({
+      href: calendar.ok && calendar.season ? `/calendar/${calendar.season}` : '/anime'
+    });
   }
 
   if (!ok) {

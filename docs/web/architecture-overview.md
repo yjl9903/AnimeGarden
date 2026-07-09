@@ -83,6 +83,8 @@ Bangumi subject/full/calendar 数据不应进入客户端运行时依赖；需�
 
 ## Route / Page 边界
 
+资源页如果收到后端深分页拒绝响应，会重定向到当前周历 `/calendar/:season`，避免继续请求超出 API 上限的页码。
+
 `src/routes/**` 是 TanStack Start 原生边界。每个页面 route 应在这里声明 loader、head、params/search 解析、redirect 和 canonical 等 SSR 相关逻辑；组件内部使用对应的 `Route.useLoaderData()`、`Route.useParams()`、`useLocation()` 等 route API 组装出稳定 props，再传给 `src/pages/**`。
 
 loader 是 route 的数据入口，但不是 server-only 边界：SSR 首次渲染会在服务端执行，客户端导航、预加载和缓存失效时也可能从浏览器侧触发。需要使用 Node-only 依赖、私密环境变量或只应在服务端运行的逻辑时，应包进 TanStack Start `createServerFn()`，再由 loader 调用。

@@ -1,14 +1,36 @@
-import { ResourcesSlowQueryBusyError, ResourcesSlowQueryTimeoutError } from '../../error.ts';
+import {
+  ResourcesDeepPaginationError,
+  ResourcesSlowQueryBusyError,
+  ResourcesSlowQueryTimeoutError
+} from '../../error.ts';
+
+import type { ResolvedPaginationOptions } from '@animegarden/client';
+
+export const MAX_RESOURCES_OFFSET_LIMIT = 10000;
 
 export interface ResourcesQueryErrorResponse {
-  status: 503 | 504;
+  status: 400 | 503 | 504;
 
   message: string;
+}
+
+export function assertResourcesPagination(pagination: ResolvedPaginationOptions) {
+  const offset = (pagination.page - 1) * pagination.pageSize;
+  if (offset + pagination.pageSize > MAX_RESOURCES_OFFSET_LIMIT) {
+    throw new ResourcesDeepPaginationError(MAX_RESOURCES_OFFSET_LIMIT);
+  }
 }
 
 export function getResourcesQueryErrorResponse(
   error: unknown
 ): ResourcesQueryErrorResponse | undefined {
+  if (error instanceof ResourcesDeepPaginationError) {
+    return {
+      status: 400,
+      message: error.message
+    };
+  }
+
   if (error instanceof ResourcesSlowQueryBusyError) {
     return {
       status: 503,

@@ -6,6 +6,7 @@ import { getRssString } from '../rss/index.ts';
 import { safeEtag as etag } from '../utils/etag.ts';
 import { defineHandler } from '../utils/hono.ts';
 import { generateTitleFromFilter } from '../utils/meta.ts';
+import { assertResourcesPagination } from '../utils/resources-query.ts';
 
 export const defineFeedRoutes = defineHandler((sys, app) =>
   app
@@ -17,6 +18,7 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
         url.searchParams,
         await ctx.req.json().catch(() => undefined)
       );
+      assertResourcesPagination(pagination);
 
       const resp = await sys.modules.resources.query.find(filter, pagination);
 

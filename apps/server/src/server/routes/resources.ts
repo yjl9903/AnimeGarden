@@ -10,6 +10,7 @@ import { type Provider, ScraperProviders } from '../../providers/index.ts';
 import { defineHandler } from '../utils/hono.ts';
 import { MAX_DETAIL_CACHE_COUNT } from '../constants.ts';
 import { safeEtag as etag } from '../utils/etag.ts';
+import { assertResourcesPagination } from '../utils/resources-query.ts';
 
 export const defineResourcesRoutes = defineHandler((sys, app) => {
   async function listResources(ctx: Context, sys: System, provider?: ProviderType) {
@@ -20,6 +21,7 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
       url.searchParams,
       await ctx.req.json().catch(() => undefined)
     );
+    assertResourcesPagination(pagination);
 
     if (provider) {
       filter.provider = provider;

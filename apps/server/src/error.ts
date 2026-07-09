@@ -13,3 +13,10 @@ export class ResourcesSlowQueryTimeoutError extends Error {
     this.name = ResourcesSlowQueryTimeoutError.name;
   }
 }
+
+export class ResourcesDeepPaginationError extends Error {
+  public constructor(maxOffsetLimit: number) {
+    super(`Resources pagination is too deep. Please keep offset + limit <= ${maxOffsetLimit}.`);
+    this.name = ResourcesDeepPaginationError.name;
+  }
+}

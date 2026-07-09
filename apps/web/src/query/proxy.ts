@@ -4,6 +4,7 @@ import { APP_HOST, FEED_HOST, WEB_SERVER_URL } from '~build/env';
 
 import {
   type Collection,
+  AnimeGardenError,
   type FetchResourcesOptions,
   type ProviderType,
   fetchCollection as rawFetchCollection,
@@ -35,6 +36,7 @@ const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
 };
 
 const transientAPIErrorStatuses = new Set([502, 503, 504]);
+const deepPaginationMessage = 'Resources pagination is too deep.';
 
 function getProxyFetchOptions(timeout?: number) {
   return {
@@ -76,6 +78,21 @@ function setTimestamp<T extends { timestamp?: Date } | undefined>(resp: T) {
 async function normalizeResourceDescription(description: string) {
   const { normalizeDescription } = await import('@animegarden/scraper');
   return normalizeDescription(description);
+}
+
+function normalizeResourcesError(error: unknown) {
+  if (
+    error instanceof AnimeGardenError &&
+    typeof error.body === 'object' &&
+    error.body !== null &&
+    'message' in error.body &&
+    typeof error.body.message === 'string' &&
+    error.body.message.includes(deepPaginationMessage)
+  ) {
+    return new Error(error.body.message);
+  }
+
+  return error;
 }
 
 async function resolveResourcesFilter(filter: ResourcesQueryInput) {
@@ -146,7 +163,7 @@ export const fetchResourcesFn = createServerFn({ method: 'GET' })
       });
 
       setTimestamp(resp);
-      resp.error = serializeError(resp.error);
+      resp.error = serializeError(normalizeResourcesError(resp.error));
       if (resp.ok) {
         await setCacheControl(ResponseCacheControl.List);
       } else {
@@ -164,7 +181,7 @@ export const fetchResourcesFn = createServerFn({ method: 'GET' })
         pagination: undefined,
         filter: undefined,
         timestamp: lastTimestamp,
-        error: serializeError(error)
+        error: serializeError(normalizeResourcesError(error))
       };
     }
   });

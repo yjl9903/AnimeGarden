@@ -71,6 +71,24 @@ function createResourcesApp(error: Error) {
   return app;
 }
 
+function createResourcesAppWithFind(find: ReturnType<typeof vi.fn>) {
+  const app = new Hono<AppEnv>();
+  const sys = {
+    modules: {
+      resources: {
+        query: {
+          find
+        }
+      }
+    }
+  } as any;
+
+  defineResourcesRoutes(sys, app);
+  bindSlowQueryErrorHandler(app);
+
+  return app;
+}
+
 describe('server slow query errors', () => {
   it('returns XML 503 when the slow query lane is busy', async () => {
     const app = createFeedApp(new ResourcesSlowQueryBusyError());
@@ -104,6 +122,20 @@ describe('server slow query errors', () => {
     await expect(response.json()).resolves.toMatchObject({
       status: 'ERROR',
       message: 'Resources slow database query is busy. Please retry later.'
+    });
+  });
+
+  it('rejects deep /resources pagination before querying', async () => {
+    const find = vi.fn();
+    const app = createResourcesAppWithFind(find);
+
+    const response = await app.request('http://localhost/resources?page=101&pageSize=100');
+
+    expect(response.status).toBe(400);
+    expect(find).not.toHaveBeenCalled();
+    await expect(response.json()).resolves.toMatchObject({
+      status: 'ERROR',
+      message: 'Resources pagination is too deep. Please keep offset + limit <= 10000.'
     });
   });
 });
