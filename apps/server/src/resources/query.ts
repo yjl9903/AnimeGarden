@@ -421,7 +421,7 @@ export class QueryManager {
   );
 
   private async readRedisQueryCache(filter: DatabaseFilterOptions, offset: number, limit: number) {
-    const redis = this.system.publisherRedis ?? this.system.redis;
+    const redis = this.system.publisherRedis;
     const timestamp = this.system.modules.providers.timestamp.getTime().toString();
 
     if (!redis) {
@@ -447,7 +447,7 @@ export class QueryManager {
     limit: number,
     resp: DatabaseResource[]
   ) {
-    const redis = this.system.publisherRedis ?? this.system.redis;
+    const redis = this.system.publisherRedis;
     const timestamp = this.system.modules.providers.timestamp.getTime().toString();
 
     if (!redis) {

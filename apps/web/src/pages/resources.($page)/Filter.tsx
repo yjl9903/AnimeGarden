@@ -48,8 +48,7 @@ import { useAppStores } from '~/stores/hooks';
 
 export type DisplayResolvedFilterOptions = ReturnType<typeof resolveFilterOptions>;
 export type ResourceFilter =
-  | Jsonify<ResolvedFilterOptions & PresetOptions>
-  | (ResolvedFilterOptions & PresetOptions);
+  Jsonify<ResolvedFilterOptions & PresetOptions> | (ResolvedFilterOptions & PresetOptions);
 
 export function resolveFilterOptions(
   filter: Jsonify<ResolvedFilterOptions> | ResolvedFilterOptions
@@ -107,19 +106,17 @@ export function FilterCard(props: Props) {
 
   if (!filter) return;
 
-  if (
-    !(
-      types.length > 0 ||
-      subjects.length > 0 ||
-      fansubs.length > 0 ||
-      publishers.length > 0 ||
-      search.length > 0 ||
-      include.length > 0 ||
-      keywords.length > 0 ||
-      before ||
-      after
-    )
-  ) {
+  if (!(
+    types.length > 0 ||
+    subjects.length > 0 ||
+    fansubs.length > 0 ||
+    publishers.length > 0 ||
+    search.length > 0 ||
+    include.length > 0 ||
+    keywords.length > 0 ||
+    before ||
+    after
+  )) {
     return;
   }
 

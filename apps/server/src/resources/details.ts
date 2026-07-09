@@ -338,7 +338,7 @@ export class DetailsManager {
     provider: ProviderType,
     providerId: string
   ): Promise<RedisCache | undefined> {
-    const { redis } = this.system;
+    const redis = this.system.publisherRedis;
     if (!redis) return undefined;
     try {
       const key = `details:${provider}:${providerId}`;
@@ -361,7 +361,7 @@ export class DetailsManager {
     cache: RedisCache,
     ttl?: number
   ) {
-    const { redis } = this.system;
+    const redis = this.system.publisherRedis;
     if (!redis) return undefined;
 
     const key = `details:${provider}:${providerId}`;

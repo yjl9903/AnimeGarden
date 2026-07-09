@@ -92,8 +92,7 @@ function transformBgmdSubject(subject: FullSubject): WebBgmSubject {
 async function getFallbackSubjectById(subjectId: number) {
   const { default: bgmd } = await import('bgmd/full');
   const subject = bgmd.subjects.find((subject) => subject.id === subjectId) as
-    | FullSubject
-    | undefined;
+    FullSubject | undefined;
   return subject ? transformBgmdSubject(subject) : undefined;
 }
 

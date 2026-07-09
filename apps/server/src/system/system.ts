@@ -4,7 +4,7 @@ import { type ConsolaInstance, createConsola } from 'consola';
 import type { Database, DatabaseConnection, SystemProfile } from '../connect/database.ts';
 
 import { NOTIFY_CHANNEL, RPC_INVOKE_CHANNEL } from '../constants.ts';
-import { makeChannelMessageBus, subscribeRedisChannel } from '../connect/redis.ts';
+import { makeChannelMessageBus, subscribeRedisChannelLoose } from '../connect/redis.ts';
 
 import type { Notification } from './types.ts';
 
@@ -120,9 +120,15 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
           return true;
         }
       : async (event) => {
-          if (!redis) return false;
-          await redis.publish(RPC_INVOKE_CHANNEL, JSON.stringify(event));
-          return true;
+          if (!publisherRedis) return false;
+
+          try {
+            await publisherRedis.publish(RPC_INVOKE_CHANNEL, JSON.stringify(event));
+            return true;
+          } catch (error) {
+            this.channelMessageBus.logger.error(`Publish to ${RPC_INVOKE_CHANNEL} failed`, error);
+            return false;
+          }
         };
 
     if (!redis || !publisherRedis) return;
@@ -131,32 +137,29 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
 
     if (this.options.cron) {
       // Handle rpc invoke
-      const sub = subscribeRedisChannel(redis, RPC_INVOKE_CHANNEL);
-
       this.channelMessageBus.addListener<RpcPayload>(RPC_INVOKE_CHANNEL, async (notification) => {
         this.channelMessageBus.logger.info(`Recive rpc invoke: ${notification}`);
 
         const { channel, type, gid, payload } = notification;
         const resp = await this.rpc.run(type, payload);
-        await publisherRedis.publish(
-          channel,
-          JSON.stringify({
+        try {
+          await publisherRedis.publish(
             channel,
-            type,
-            gid,
-            payload: resp
-          })
-        );
+            JSON.stringify({
+              channel,
+              type,
+              gid,
+              payload: resp
+            })
+          );
+        } catch (error) {
+          this.channelMessageBus.logger.error(`Publish to ${channel} failed`, error);
+        }
       });
 
-      await sub;
+      this.disposables.push(subscribeRedisChannelLoose(redis, RPC_INVOKE_CHANNEL));
     } else {
       // Only server processes subscribe notification event
-      const subs = [
-        subscribeRedisChannel(redis, NOTIFY_CHANNEL),
-        subscribeRedisChannel(redis, this.rpcSender.channel)
-      ];
-
       this.channelMessageBus.addListener<Notification>(NOTIFY_CHANNEL, async (notification) => {
         await this.onNotification(notification);
       });
@@ -170,7 +173,8 @@ export class System<M extends Record<string, Module> = {}, E extends RpcEventMap
         }
       );
 
-      await Promise.all(subs);
+      this.disposables.push(subscribeRedisChannelLoose(redis, NOTIFY_CHANNEL));
+      this.disposables.push(subscribeRedisChannelLoose(redis, this.rpcSender.channel));
     }
   }
 

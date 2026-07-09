@@ -83,7 +83,7 @@ export async function makeSystem(options: SystemOptions) {
       system.publisherRedis = connectRedis(options.redisUri);
       system.disposables.push(() => system.redis?.disconnect());
       system.disposables.push(() => system.publisherRedis?.disconnect());
-      system.logger.success('Connect to Redis');
+      system.logger.info('Redis configured');
     } catch (error) {
       throw error;
     }

@@ -126,11 +126,7 @@ export async function importFromBgmd(mod: SubjectsModule) {
   };
 }
 
-function transformSubjects(
-  mod: SubjectsModule,
-  bangumis: SourceSubject[],
-  isArchived = true
-) {
+function transformSubjects(mod: SubjectsModule, bangumis: SourceSubject[], isArchived = true) {
   const subs: NewSubject[] = [];
   const errors: typeof bangumis = [];
 

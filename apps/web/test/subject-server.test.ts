@@ -152,8 +152,6 @@ describe('subject.server BGM client', () => {
     const { getLatestCalendar } = await import('../src/query/subject.server');
 
     await expect(getLatestCalendar()).resolves.toMatchObject({ season: '2026-07' });
-    expect(fetchCalendar).toHaveBeenCalledWith(
-      expect.objectContaining({ seasons: ['2026-07'] })
-    );
+    expect(fetchCalendar).toHaveBeenCalledWith(expect.objectContaining({ seasons: ['2026-07'] }));
   });
 });

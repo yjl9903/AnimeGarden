@@ -15,7 +15,7 @@
 | `migrate` | `src/cli.ts` -> `connect/migrate.ts` | 执行 Drizzle 迁移 |
 | `telegram push` | `src/cli.ts` -> `modules.push` | 手动推送指定资源或 subject |
 
-`makeSystem()` 负责连接 Postgres、Redis，注册模块，并按 `profile` 配置连接参数。普通 `server` 进程会额外创建 `resources-slow` 数据库连接，用于资源慢查询隔离。
+`makeSystem()` 负责连接 Postgres、配置 Redis client、注册模块，并按 `profile` 配置连接参数。普通 `server` 进程会额外创建 `resources-slow` 数据库连接，用于资源慢查询隔离。Redis 是松耦合依赖：配置 `redisUri` 后会后台连接和订阅，连接失败不阻塞服务启动，并会定期重试。
 
 ## 核心运行模型
 
@@ -23,7 +23,7 @@
 
 - 保存数据库、Redis、logger、运行选项和模块实例。
 - 统一执行模块 `initialize()`、`import()`、`refresh()`。
-- 在 `cron` 与普通 `server` 之间通过 Redis 发布资源变更通知。
+- 在 `cron` 与普通 `server` 之间通过 Redis 发布资源变更通知；Redis 离线期间通知、跨进程 RPC 和 Redis 缓存会降级为不可用，主进程继续运行。
 - 提供 RPC bus，让普通服务可以请求 `cron` 执行资源任务。
 
 模块都继承 `src/system/module.ts` 的 `Module`，当前注册模块包括 `providers`、`users`、`teams`、`resources`、`collections`、`tags`、`subjects`、`push`。
