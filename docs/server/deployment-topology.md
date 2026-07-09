@@ -24,7 +24,7 @@
 排查线上可用性时，需要分别观察：
 
 - `animegarden-web-production`：页面请求、SSR、静态资源、Web 健康检查。
-- `animegarden-server-production`：Web 内网后端、资源查询、详情查询、cron RPC 相关链路。
+- `animegarden-server-production`：Web 内网后端、资源查询、详情查询、cron RPC 相关链路；health check timeout 为 30 秒，避免慢查询高峰时 10 秒探活误判。
 - `animegarden-feed-production`：`api.animes.garden` public API 和 feed 链路。
 
 常用 Fly CLI 只读命令：

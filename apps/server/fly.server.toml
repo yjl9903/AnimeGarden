@@ -35,8 +35,8 @@ soft_limit = 4
 
 [[http_service.checks]]
 grace_period = "30s"
-interval = "60s"
-timeout = "10s"
+interval = "120s"
+timeout = "30s"
 method = "GET"
 path = "/health"
 processes = ['server', 'cron']
