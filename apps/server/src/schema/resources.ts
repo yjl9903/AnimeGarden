@@ -38,6 +38,7 @@ export const resources = pgTable(
     // Timestamp
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     fetchedAt: timestamp('fetched_at', { withTimezone: true }).notNull().defaultNow(),
+    indexedAt: timestamp('indexed_at', { withTimezone: true }).notNull().defaultNow(),
     // Authors
     publisherId: integer('publisher_id').notNull(),
     fansubId: integer('fansub_id'),
@@ -50,46 +51,44 @@ export const resources = pgTable(
     isDeleted: boolean('is_deleted').default(false)
   },
   (t) => {
-    const liveRootCondition = sql`${t.isDeleted} = false AND ${t.duplicatedId} IS NULL`;
+    const activeCondition = sql`${t.isDeleted} = false`;
+    const liveRootCondition = sql`${activeCondition} AND ${t.duplicatedId} IS NULL`;
 
     return [
       uniqueIndex('unique_resources_provider_id').on(t.provider, t.providerId),
-      index('resources_title_index').on(t.title),
-      index('resources_title_alt_index').on(t.titleAlt),
       index('resources_magnet_index').on(t.magnet),
       index('resources_publisher_id_index').on(t.publisherId),
       index('resources_fansub_id_index').on(t.fansubId),
       index('resources_subject_id_index').on(t.subjectId),
-      index('resources_sort_by_created_at').on(t.createdAt.desc()),
+      index('resources_sort_by_created_at').on(
+        t.createdAt.desc().nullsFirst(),
+        t.id.desc().nullsFirst()
+      ),
+      index('resources_provider_created_at_id_index')
+        .on(t.provider, t.createdAt.desc().nullsFirst(), t.id.desc().nullsFirst())
+        .where(activeCondition),
       index('resources_title_search_index').using('gin', t.titleSearch),
-      index('resources_live_created_at_index').on(t.createdAt.desc()).where(liveRootCondition),
+      index('resources_live_created_at_index')
+        .on(t.createdAt.desc().nullsFirst(), t.id.desc().nullsFirst())
+        .where(liveRootCondition),
       index('resources_live_title_alt_trgm_index')
         .using('gin', t.titleAlt.op('gin_trgm_ops'))
         .where(liveRootCondition),
       index('resources_live_subject_created_at_index')
-        .on(t.subjectId, t.createdAt.desc())
+        .on(t.subjectId, t.createdAt.desc().nullsFirst(), t.id.desc().nullsFirst())
         .where(sql`${liveRootCondition} AND ${t.subjectId} IS NOT NULL`),
       index('resources_live_type_created_at_index')
-        .on(t.type, t.createdAt.desc())
+        .on(t.type, t.createdAt.desc().nullsFirst(), t.id.desc().nullsFirst())
         .where(liveRootCondition),
       index('resources_live_fansub_created_at_index')
-        .on(t.fansubId, t.createdAt.desc())
+        .on(t.fansubId, t.createdAt.desc().nullsFirst(), t.id.desc().nullsFirst())
         .where(sql`${liveRootCondition} AND ${t.fansubId} IS NOT NULL`),
       index('resources_live_publisher_created_at_index')
-        .on(t.publisherId, t.createdAt.desc())
+        .on(t.publisherId, t.createdAt.desc().nullsFirst(), t.id.desc().nullsFirst())
         .where(liveRootCondition),
       index('resources_live_title_search_index')
         .using('gin', t.titleSearch)
-        .where(liveRootCondition),
-      index('resources_live_title_created_at_index')
-        .on(t.title, t.createdAt)
-        .where(liveRootCondition),
-      index('resources_live_magnet_created_at_index')
-        .on(t.magnet, t.createdAt)
-        .where(liveRootCondition),
-      index('resources_duplicated_id_not_null_index')
-        .on(t.duplicatedId)
-        .where(sql`${t.duplicatedId} IS NOT NULL`)
+        .where(liveRootCondition)
     ];
   }
 );

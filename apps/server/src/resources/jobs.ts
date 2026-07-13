@@ -138,7 +138,7 @@ export async function runSyncJob(
     };
 
     if (hasNotificationChanges(notification)) {
-      await sys.modules.providers.updateRefreshTimestamp(platform, new Date());
+      await sys.modules.providers.updateRefreshTimestamp(platform, fetchedAt);
       await sys.notifyRefreshedResources(notification);
     }
 

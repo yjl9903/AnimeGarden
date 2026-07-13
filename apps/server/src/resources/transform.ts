@@ -72,6 +72,8 @@ export function transformNewResources(
         .filter(Boolean)
     ];
 
+    const fetchedAt = res.fetchedAt ?? new Date();
+
     return {
       result: {
         provider: res.provider as NewDbResource['provider'],
@@ -85,7 +87,8 @@ export function transformNewResources(
         tracker: res.tracker,
         size: !Number.isNaN(size) ? size : 0,
         createdAt: res.createdAt,
-        fetchedAt: res.fetchedAt ?? new Date(),
+        fetchedAt,
+        indexedAt: fetchedAt,
         publisherId: publisher!.id,
         fansubId: fansub?.id,
         subjectId: indexSubject ? matchActiveSubjects(sys, titleAlt) : null,
