@@ -85,6 +85,23 @@ function getResourceKey(resource: { provider: string; providerId: string }) {
   return `${resource.provider}:${resource.providerId}`;
 }
 
+/**
+ * Determines whether an upsert should persist the newly matched subject id.
+ * Existing bindings survive an unmatched re-index unless clearing is explicitly enabled.
+ */
+export function shouldOverwriteSubjectId(
+  existingSubjectId: number | null,
+  nextSubjectId: number | null | undefined,
+  resetSubjectId = false
+) {
+  return (
+    existingSubjectId !== nextSubjectId &&
+    (nextSubjectId !== null && nextSubjectId !== undefined
+      ? true
+      : nextSubjectId === null && resetSubjectId)
+  );
+}
+
 export class ResourcesModule extends Module<System['modules']> {
   public static name = 'resources';
 
@@ -262,7 +279,9 @@ export class ResourcesModule extends Module<System['modules']> {
           set.tracker = resource.tracker;
         }
 
-        if (resource.subjectId !== existed.subjectId) {
+        if (
+          shouldOverwriteSubjectId(existed.subjectId, resource.subjectId, options.resetSubjectId)
+        ) {
           changed = true;
           set.subjectId = resource.subjectId;
         }

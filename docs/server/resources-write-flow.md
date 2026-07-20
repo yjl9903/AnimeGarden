@@ -137,6 +137,8 @@
    - `title`
    - `titleAlt`
    - `titleSearch`
+   - 重新匹配不到 subject 时，默认保留已有的非空 `subjectId`；只有显式传入
+     `resetSubjectId: true` 才会把它清空
 7. 同时强制重算当前资源的 `duplicatedId`。
 8. 然后清空指向当前资源的旧重复链，再把更晚的同标题 / 同 magnet 资源重新挂到当前资源下。
 9. 所有资源更新完成后，路由层汇总 `updated / inserted / duplicated`，并发送一次 resources 更新通知。

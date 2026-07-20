@@ -88,6 +88,13 @@ export interface UpsertResourcesOptions {
    * @default true
    */
   indexSubject?: boolean;
+
+  /**
+   * Whether a failed subject match may overwrite an existing subject id with null.
+   *
+   * @default false
+   */
+  resetSubjectId?: boolean;
 }
 
 export type InsertResourcesOptions = UpsertResourcesOptions;
