@@ -1,0 +1,233 @@
+name: Renovate
+
+on:
+  push:
+    branches:
+      - main
+      - deps
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: renovate
+  queue: max
+
+env:
+  MAIN_BRANCH: main
+  DEPS_BRANCH: deps
+
+jobs:
+  sync-deps:
+    name: Rebase deps onto main
+
+    runs-on: ubuntu-latest
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout deps
+        uses: actions/checkout@v7
+        with:
+          ref: deps
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.0.9
+
+      - name: Setup node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24.18.0
+          cache: pnpm
+
+      - name: Rebase deps and refresh the lockfile
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          rebase_in_progress() {
+            test -d "$(git rev-parse --git-path rebase-merge)" ||
+              test -d "$(git rev-parse --git-path rebase-apply)"
+          }
+
+          rebase_with_main_winning() {
+            if git rebase "origin/${MAIN_BRANCH}"; then
+              return
+            fi
+
+            while rebase_in_progress; do
+              conflicts=()
+              while IFS= read -r -d '' path; do
+                conflicts+=("$path")
+              done < <(git diff --name-only --diff-filter=U -z)
+
+              if (( ${#conflicts[@]} == 0 )); then
+                echo "::error::Rebase stopped without conflicted files."
+                git status --short
+                return 1
+              fi
+
+              # During a rebase, "ours" is the upstream branch (main).
+              for path in "${conflicts[@]}"; do
+                if ! git checkout --ours -- "$path"; then
+                  git rm --force --ignore-unmatch -- "$path"
+                fi
+                git add -A -- "$path"
+              done
+
+              if git diff --cached --quiet; then
+                if ! git rebase --skip; then
+                  rebase_in_progress || return 1
+                fi
+              elif ! GIT_EDITOR=true git rebase --continue; then
+                rebase_in_progress || return 1
+              fi
+            done
+          }
+
+          # A lease protects Renovate commits that may arrive while this job runs.
+          for attempt in 1 2 3; do
+            git fetch --prune origin \
+              '+refs/heads/*:refs/remotes/origin/*'
+
+            expected_deps="$(git rev-parse "origin/${DEPS_BRANCH}")"
+            git checkout -B "${DEPS_BRANCH}" "origin/${DEPS_BRANCH}"
+
+            if git diff --quiet "origin/${MAIN_BRANCH}" "origin/${DEPS_BRANCH}"; then
+              # This is the common squash-merge case: make deps point at main.
+              git reset --hard "origin/${MAIN_BRANCH}"
+            else
+              rebase_with_main_winning
+            fi
+
+            # CI defaults to a frozen lockfile, so explicitly allow regeneration.
+            pnpm install --no-frozen-lockfile
+
+            if ! git diff --quiet -- . ':(exclude)pnpm-lock.yaml'; then
+              echo "::error::pnpm install changed files other than pnpm-lock.yaml."
+              git status --short
+              exit 1
+            fi
+
+            git add pnpm-lock.yaml
+            if ! git diff --cached --quiet; then
+              git commit -m "chore(deps): refresh lockfile after syncing main"
+            fi
+
+            if git push \
+              --force-with-lease="refs/heads/${DEPS_BRANCH}:${expected_deps}" \
+              origin "HEAD:refs/heads/${DEPS_BRANCH}"; then
+              exit 0
+            fi
+
+            echo "::warning::deps changed during attempt ${attempt}; retrying."
+          done
+
+          echo "::error::deps kept changing while it was being synchronized."
+          exit 1
+
+  reset-deps:
+    name: Reset deps after rollup merge
+
+    runs-on: ubuntu-latest
+
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'deps'
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Reset deps to main
+        env:
+          MERGED_DEPS_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git fetch --prune origin \
+            '+refs/heads/*:refs/remotes/origin/*'
+
+          current_deps="$(git rev-parse "origin/${DEPS_BRANCH}")"
+          if [[ "${current_deps}" != "${MERGED_DEPS_SHA}" ]]; then
+            echo "::notice::deps advanced after the PR was merged; leaving the newer commits intact."
+            exit 0
+          fi
+
+          git push \
+            --force-with-lease="refs/heads/${DEPS_BRANCH}:${current_deps}" \
+            origin "origin/${MAIN_BRANCH}:refs/heads/${DEPS_BRANCH}"
+
+  open-rollup-pr:
+    name: Open deps to main pull request
+
+    runs-on: ubuntu-latest
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/deps'
+
+    steps:
+      - name: Checkout deps
+        uses: actions/checkout@v7
+        with:
+          ref: deps
+          fetch-depth: 0
+
+      - name: Create the pull request if needed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git fetch --prune origin \
+            '+refs/heads/*:refs/remotes/origin/*'
+
+          if git diff --quiet "origin/${MAIN_BRANCH}" "origin/${DEPS_BRANCH}"; then
+            echo "deps and main have identical content; no pull request is needed."
+            exit 0
+          fi
+
+          existing_pr="$(
+            gh pr list \
+              --state open \
+              --base "${MAIN_BRANCH}" \
+              --head "${DEPS_BRANCH}" \
+              --json number \
+              --jq '.[0].number // empty'
+          )"
+
+          if [[ -n "${existing_pr}" ]]; then
+            echo "Pull request #${existing_pr} already rolls deps into main."
+            exit 0
+          fi
+
+          # Backticks in the PR body are Markdown, not shell substitutions.
+          # shellcheck disable=SC2016
+          body="$(
+            printf '%s\n' \
+              'This PR collects the dependency updates merged into `deps`.' \
+              '' \
+              'Review the combined changes and squash-merge this PR when the rollup is ready.'
+          )"
+
+          gh pr create \
+            --base "${MAIN_BRANCH}" \
+            --head "${DEPS_BRANCH}" \
+            --title "chore: update deps" \
+            --body "${body}"
