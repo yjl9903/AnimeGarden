@@ -147,8 +147,8 @@ importers:
         specifier: 9.0.1
         version: 9.0.1
       undici:
-        specifier: 8.7.0
-        version: 8.7.0
+        specifier: 8.9.0
+        version: 8.9.0
       zod:
         specifier: 3.25.76
         version: 3.25.76
@@ -6917,8 +6917,8 @@ packages:
     resolution: {integrity: sha512-cRZYrTDwWznlnRiPjggAGxZXanty6M8RV1ff8Wm4LWXBp7/IG8v5DnOm74DtUBp9OONpK75YlPnIjQqX0dBDtA==}
     engines: {node: '>=20.18.1'}
 
-  undici@8.7.0:
-    resolution: {integrity: sha512-N7iQtfyLhIMOFgQubvmLV26svHpO0bqKnAiWotTQCVKCmWrcGbBotPuW1x+xwYZ2VHdSTVUfPQQnlEt1/LouTQ==}
+  undici@8.9.0:
+    resolution: {integrity: sha512-aWZpUj7XoGonMClx4gdDRfgBjqeA+F473aDmROQQbM9n6PRfK/u1q/a0X4wMTgcHfT8H6fpbt98PFuDUwFg2YA==}
     engines: {node: '>=22.19.0'}
 
   unenv@2.0.0-rc.24:
@@ -11713,7 +11713,7 @@ snapshots:
       p-limit: 7.3.0
       rimraf: 6.1.3
       tmdbc: 0.1.0
-      undici: 8.7.0
+      undici: 8.9.0
       yaml: 2.9.0
     transitivePeerDependencies:
       - '@noble/hashes'
@@ -14685,7 +14685,7 @@ snapshots:
 
   undici@7.28.0: {}
 
-  undici@8.7.0: {}
+  undici@8.9.0: {}
 
   unenv@2.0.0-rc.24:
     dependencies:
