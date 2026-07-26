@@ -345,6 +345,8 @@ export class DetailsManager {
       const resp = await redis.get(key);
       if (resp) {
         const json = JSON.parse(resp) as RedisCache;
+        json.resource.createdAt = new Date(json.resource.createdAt);
+        json.resource.fetchedAt = new Date(json.resource.fetchedAt);
         json.detail.fetchedAt = new Date(json.detail.fetchedAt);
         return json;
       } else {
