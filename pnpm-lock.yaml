@@ -75,8 +75,8 @@ importers:
         specifier: 0.3.1
         version: 0.3.1(@modelcontextprotocol/sdk@1.29.0(supports-color@10.2.2)(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.12.32))(hono@4.12.32)(zod@3.25.76)
       '@hono/node-server':
-        specifier: 2.0.11
-        version: 2.0.11(hono@4.12.32)
+        specifier: 2.0.12
+        version: 2.0.12(hono@4.12.32)
       '@hono/zod-validator':
         specifier: 0.9.0
         version: 0.9.0(hono@4.12.32)(zod@3.25.76)
@@ -1735,8 +1735,8 @@ packages:
     peerDependencies:
       hono: ^4
 
-  '@hono/node-server@2.0.11':
-    resolution: {integrity: sha512-bjD221KPLoJTWUwso1J6fGKiTXEUFedG/s0visavY4zakFPkeGURMRNly+FhBHs7T8Dz4qHaZIMX9ZoJHSJtKA==}
+  '@hono/node-server@2.0.12':
+    resolution: {integrity: sha512-eWpQYr67tqJLeaSUl0Q+TquuYfUdTibpOJlUMV2FfUP7+KqCC5TufnwnlXL6mobZBJbGAYRd7ZvEBDCbLInjhg==}
     engines: {node: '>=20'}
     peerDependencies:
       hono: ^4
@@ -8760,7 +8760,7 @@ snapshots:
     dependencies:
       hono: 4.12.32
 
-  '@hono/node-server@2.0.11(hono@4.12.32)':
+  '@hono/node-server@2.0.12(hono@4.12.32)':
     dependencies:
       hono: 4.12.32
 
