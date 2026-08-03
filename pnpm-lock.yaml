@@ -73,7 +73,7 @@ importers:
         version: 3.1095.0
       '@hono/mcp':
         specifier: 0.3.1
-        version: 0.3.1(@modelcontextprotocol/sdk@1.29.0(supports-color@10.2.2)(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.12.33))(hono@4.12.33)(zod@3.25.76)
+        version: 0.3.1(@modelcontextprotocol/sdk@1.30.0(supports-color@10.2.2)(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.12.33))(hono@4.12.33)(zod@3.25.76)
       '@hono/node-server':
         specifier: 2.0.12
         version: 2.0.12(hono@4.12.33)
@@ -81,8 +81,8 @@ importers:
         specifier: 0.9.0
         version: 0.9.0(hono@4.12.33)(zod@3.25.76)
       '@modelcontextprotocol/sdk':
-        specifier: 1.29.0
-        version: 1.29.0(supports-color@10.2.2)(zod@3.25.76)
+        specifier: 1.30.0
+        version: 1.30.0(supports-color@10.2.2)(zod@3.25.76)
       '@node-rs/jieba':
         specifier: 2.0.1
         version: 2.0.1
@@ -1763,12 +1763,6 @@ packages:
       hono-rate-limiter: ^0.5.3
       zod: ^3.25.0 || ^4.0.0
 
-  '@hono/node-server@1.19.14':
-    resolution: {integrity: sha512-GwtvgtXxnWsucXvbQXkRgqksiH2Qed37H9xHZocE5sA3N8O8O8/8FA3uclQXxXVzc9XBZuEOMK7+r02FmSpHtw==}
-    engines: {node: '>=18.14.1'}
-    peerDependencies:
-      hono: ^4
-
   '@hono/node-server@2.0.12':
     resolution: {integrity: sha512-eWpQYr67tqJLeaSUl0Q+TquuYfUdTibpOJlUMV2FfUP7+KqCC5TufnwnlXL6mobZBJbGAYRd7ZvEBDCbLInjhg==}
     engines: {node: '>=20'}
@@ -2414,8 +2408,8 @@ packages:
   '@kwsites/promise-deferred@1.1.1':
     resolution: {integrity: sha512-GaHYm+c0O9MjZRu0ongGBRbinu8gVAMd2UZjji6jVmqKtZluZnptXGWhz1E8j8D2HJ3f/yMxKAUC0b+57wncIw==}
 
-  '@modelcontextprotocol/sdk@1.29.0':
-    resolution: {integrity: sha512-zo37mZA9hJWpULgkRpowewez1y6ML5GsXJPY8FI0tBBCd77HEvza4jDqRKOXgHNn867PVGCyTdzqpz0izu5ZjQ==}
+  '@modelcontextprotocol/sdk@1.30.0':
+    resolution: {integrity: sha512-xKd8OIzlqNzcqcNumGAa6g+PW2kjD5vrpcKOnfldAUPP3j7lnqMPwlTXQm8gF+UwH72z0lqaRbjr9hqGz0eITA==}
     engines: {node: '>=18'}
     peerDependencies:
       '@cfworker/json-schema': ^4.1.1
@@ -8819,17 +8813,13 @@ snapshots:
 
   '@grammyjs/types@4.0.0': {}
 
-  '@hono/mcp@0.3.1(@modelcontextprotocol/sdk@1.29.0(supports-color@10.2.2)(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.12.33))(hono@4.12.33)(zod@3.25.76)':
+  '@hono/mcp@0.3.1(@modelcontextprotocol/sdk@1.30.0(supports-color@10.2.2)(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.12.33))(hono@4.12.33)(zod@3.25.76)':
     dependencies:
-      '@modelcontextprotocol/sdk': 1.29.0(supports-color@10.2.2)(zod@3.25.76)
+      '@modelcontextprotocol/sdk': 1.30.0(supports-color@10.2.2)(zod@3.25.76)
       hono: 4.12.33
       hono-rate-limiter: 0.5.3(hono@4.12.33)
       pkce-challenge: 5.0.1
       zod: 3.25.76
-
-  '@hono/node-server@1.19.14(hono@4.12.33)':
-    dependencies:
-      hono: 4.12.33
 
   '@hono/node-server@2.0.12(hono@4.12.33)':
     dependencies:
@@ -9329,9 +9319,9 @@ snapshots:
 
   '@kwsites/promise-deferred@1.1.1': {}
 
-  '@modelcontextprotocol/sdk@1.29.0(supports-color@10.2.2)(zod@3.25.76)':
+  '@modelcontextprotocol/sdk@1.30.0(supports-color@10.2.2)(zod@3.25.76)':
     dependencies:
-      '@hono/node-server': 1.19.14(hono@4.12.33)
+      '@hono/node-server': 2.0.12(hono@4.12.33)
       ajv: 8.20.0
       ajv-formats: 3.0.1(ajv@8.20.0)
       content-type: 1.0.5
