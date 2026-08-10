@@ -408,8 +408,8 @@ importers:
         specifier: ^28.0.3
         version: 28.0.3
       '@types/parse-torrent':
-        specifier: ^5.8.8
-        version: 5.8.8
+        specifier: ^5.8.9
+        version: 5.8.9
 
   packages/client:
     dependencies:
@@ -458,8 +458,8 @@ importers:
         specifier: ^28.0.3
         version: 28.0.3
       '@types/parse-torrent':
-        specifier: ^5.8.8
-        version: 5.8.8
+        specifier: ^5.8.9
+        version: 5.8.9
 
   packages/shared:
     dependencies:
@@ -4024,8 +4024,8 @@ packages:
   '@types/parse-torrent-file@4.0.6':
     resolution: {integrity: sha512-SxqVth0Iv0WuEkqWS5MaY4S4Tlyi+QHkElQREvsUPw2xHcPgKyQ2dkJRRv5vAxmLzH+tnMdOj1Nws/wsenbzUw==}
 
-  '@types/parse-torrent@5.8.8':
-    resolution: {integrity: sha512-CInK3z3BxMXUeO/UiUeSfpQ0CkjOAWZUCUigVn3ZkppeLZTm32/TepolcxzgYuk6q3z91gdWsmOW2S6fYx326w==}
+  '@types/parse-torrent@5.8.9':
+    resolution: {integrity: sha512-Ej2enMoFKlg6Vp0Kf93F3XbhlKxJicrkQ8vMAEo3GHToNukXNr3BheNc2vEv81jyzMWS4Cnta1lhuKTYNgzWUg==}
 
   '@types/prismjs@1.26.6':
     resolution: {integrity: sha512-vqlvI7qlMvcCBbVe0AKAb4f97//Hy0EBTaiW8AalRnG/xAN5zOiWWyrNqNXeq8+KAuvRewjCVY1+IPxk4RdNYw==}
@@ -11550,7 +11550,7 @@ snapshots:
     dependencies:
       '@types/node': 24.13.3
 
-  '@types/parse-torrent@5.8.8':
+  '@types/parse-torrent@5.8.9':
     dependencies:
       '@types/magnet-uri': 5.1.5
       '@types/node': 24.13.3
