@@ -80,7 +80,7 @@ describe('subject.server BGM client', () => {
       title: '上伊那ぼたん、酔へる姿は百合の花',
       display_title: '上伊那牡丹，酒醉身姿似百合花般',
       onair_date: '2026-04-10',
-      poster: 'poster.jpg',
+      poster: 'https://bgm.animes.garden/bangumi/subject/1/poster.jpeg?quality=large',
       tags: ['TV', '百合'],
       search: { include: ['上伊那ぼたん、酔へる姿は百合の花'] }
     });
@@ -132,7 +132,8 @@ describe('subject.server BGM client', () => {
 
     await expect(getSubjectById(2)).resolves.toMatchObject({
       id: 2,
-      title: 'Fallback Title'
+      title: 'Fallback Title',
+      poster: 'https://bgm.animes.garden/bangumi/subject/2/poster.jpeg?quality=large'
     });
   });
 

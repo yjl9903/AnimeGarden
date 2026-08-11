@@ -6,6 +6,7 @@ import { fetchCalendar, fetchCalendars, fetchSubject, fetchSubjects } from 'bgmx
 import type { WebBgmSubject } from '~/utils/subject';
 
 import { ResponseStaleTime } from '~/utils/response';
+import { getSubjectPosterURL } from '~/utils/subject';
 
 type BgmSubject = DatabaseSubject | CalendarSubject;
 
@@ -59,7 +60,8 @@ function transformBgmSubject(subject: BgmSubject): WebBgmSubject {
     display_title: displayTitle,
     platform: subject.bangumi.platform,
     onair_date: subject.onair_date || subject.bangumi.date,
-    poster: subject.poster || subject.bangumi.images.large || '',
+    poster:
+      subject.poster || subject.bangumi.images.large ? getSubjectPosterURL(subject.id) : '',
     summary: subject.bangumi.summary,
     alias: subject.alias,
     tags: [...new Set([...(subject.bangumi.meta_tags ?? []), ...(subject.bangumi.tags ?? [])])],
@@ -74,7 +76,7 @@ function transformBgmdSubject(subject: FullSubject): WebBgmSubject {
     display_title: subject.title,
     platform: subject.platform,
     onair_date: subject.onair_date,
-    poster: subject.poster,
+    poster: subject.poster ? getSubjectPosterURL(subject.id) : '',
     summary: subject.summary ?? '',
     alias: subject.alias,
     tags: subject.tags,

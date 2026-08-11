@@ -16,6 +16,11 @@ export type WebBgmSubject = SubjectInfo & {
   tags: string[];
 };
 
+/** Returns the canonical large poster URL served by the Anime Garden Bangumi mirror. */
+export function getSubjectPosterURL(subjectId: number) {
+  return `https://bgm.animes.garden/bangumi/subject/${subjectId}/poster.jpeg?quality=large`;
+}
+
 export function getSubjectDisplayName(subject?: Pick<SubjectInfo, 'title' | 'display_title'>) {
   return subject?.display_title || subject?.title || '';
 }
