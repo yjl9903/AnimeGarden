@@ -73,13 +73,13 @@ importers:
         version: 3.1095.0
       '@hono/mcp':
         specifier: 0.3.1
-        version: 0.3.1(@modelcontextprotocol/sdk@1.30.0(supports-color@10.2.2)(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.12.33))(hono@4.12.33)(zod@3.25.76)
+        version: 0.3.1(@modelcontextprotocol/sdk@1.30.0(supports-color@10.2.2)(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.13.2))(hono@4.13.2)(zod@3.25.76)
       '@hono/node-server':
-        specifier: 2.0.12
-        version: 2.0.12(hono@4.12.33)
+        specifier: 2.1.1
+        version: 2.1.1(hono@4.13.2)
       '@hono/zod-validator':
         specifier: 0.9.0
-        version: 0.9.0(hono@4.12.33)(zod@3.25.76)
+        version: 0.9.0(hono@4.13.2)(zod@3.25.76)
       '@modelcontextprotocol/sdk':
         specifier: 1.30.0
         version: 1.30.0(supports-color@10.2.2)(zod@3.25.76)
@@ -126,8 +126,8 @@ importers:
         specifier: 1.45.1
         version: 1.45.1(supports-color@10.2.2)
       hono:
-        specifier: 4.12.33
-        version: 4.12.33
+        specifier: 4.13.2
+        version: 4.13.2
       ioredis:
         specifier: 5.11.1
         version: 5.11.1(supports-color@10.2.2)
@@ -247,8 +247,8 @@ importers:
         specifier: 5.10.1
         version: 5.10.1
       hono:
-        specifier: 4.12.33
-        version: 4.12.33
+        specifier: 4.13.2
+        version: 4.13.2
       idb:
         specifier: 8.0.3
         version: 8.0.3
@@ -1763,8 +1763,8 @@ packages:
       hono-rate-limiter: ^0.5.3
       zod: ^3.25.0 || ^4.0.0
 
-  '@hono/node-server@2.0.12':
-    resolution: {integrity: sha512-eWpQYr67tqJLeaSUl0Q+TquuYfUdTibpOJlUMV2FfUP7+KqCC5TufnwnlXL6mobZBJbGAYRd7ZvEBDCbLInjhg==}
+  '@hono/node-server@2.1.1':
+    resolution: {integrity: sha512-ELuehkj5VCBdgEw9zs+ivkKwyzzUCSQuE96YmiPvn1ECBoZCczbFXJLeEGMTYjphP6gydh4pHMqEYPVMYUVgQg==}
     engines: {node: '>=20'}
     peerDependencies:
       hono: ^4
@@ -5192,8 +5192,8 @@ packages:
       unstorage:
         optional: true
 
-  hono@4.12.33:
-    resolution: {integrity: sha512-+SwvkaiJtxsiPjhy9LivY/1m7UsNqCJetM1BrZl9A5DkQhlbHQDU730mMiDPWjnoCYOM8Chf3WrCJw27kNTPFQ==}
+  hono@4.13.2:
+    resolution: {integrity: sha512-JydRilDRkYBQMt9qR9U92mXxmbGqsqSn/IKOrh4e7/gEbn+0zSr8igTu0obwJoNGN4sez28DIql7FBHWydoJpA==}
     engines: {node: '>=16.9.0'}
 
   hookable@5.5.3:
@@ -8816,21 +8816,21 @@ snapshots:
 
   '@grammyjs/types@4.0.0': {}
 
-  '@hono/mcp@0.3.1(@modelcontextprotocol/sdk@1.30.0(supports-color@10.2.2)(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.12.33))(hono@4.12.33)(zod@3.25.76)':
+  '@hono/mcp@0.3.1(@modelcontextprotocol/sdk@1.30.0(supports-color@10.2.2)(zod@3.25.76))(hono-rate-limiter@0.5.3(hono@4.13.2))(hono@4.13.2)(zod@3.25.76)':
     dependencies:
       '@modelcontextprotocol/sdk': 1.30.0(supports-color@10.2.2)(zod@3.25.76)
-      hono: 4.12.33
-      hono-rate-limiter: 0.5.3(hono@4.12.33)
+      hono: 4.13.2
+      hono-rate-limiter: 0.5.3(hono@4.13.2)
       pkce-challenge: 5.0.1
       zod: 3.25.76
 
-  '@hono/node-server@2.0.12(hono@4.12.33)':
+  '@hono/node-server@2.1.1(hono@4.13.2)':
     dependencies:
-      hono: 4.12.33
+      hono: 4.13.2
 
-  '@hono/zod-validator@0.9.0(hono@4.12.33)(zod@3.25.76)':
+  '@hono/zod-validator@0.9.0(hono@4.13.2)(zod@3.25.76)':
     dependencies:
-      hono: 4.12.33
+      hono: 4.13.2
       zod: 3.25.76
 
   '@iconify-json/ant-design@1.2.8':
@@ -9324,7 +9324,7 @@ snapshots:
 
   '@modelcontextprotocol/sdk@1.30.0(supports-color@10.2.2)(zod@3.25.76)':
     dependencies:
-      '@hono/node-server': 2.0.12(hono@4.12.33)
+      '@hono/node-server': 2.1.1(hono@4.13.2)
       ajv: 8.20.0
       ajv-formats: 3.0.1(ajv@8.20.0)
       content-type: 1.0.5
@@ -9334,7 +9334,7 @@ snapshots:
       eventsource-parser: 3.1.0
       express: 5.2.1(supports-color@10.2.2)
       express-rate-limit: 8.5.2(express@5.2.1(supports-color@10.2.2))
-      hono: 4.12.33
+      hono: 4.13.2
       jose: 6.2.3
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.1
@@ -12791,11 +12791,11 @@ snapshots:
 
   highlightjs-vue@1.0.0: {}
 
-  hono-rate-limiter@0.5.3(hono@4.12.33):
+  hono-rate-limiter@0.5.3(hono@4.13.2):
     dependencies:
-      hono: 4.12.33
+      hono: 4.13.2
 
-  hono@4.12.33: {}
+  hono@4.13.2: {}
 
   hookable@5.5.3: {}
 
