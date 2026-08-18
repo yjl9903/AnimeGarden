@@ -31,7 +31,7 @@ importers:
         version: 1.0.2
       bumpp:
         specifier: latest
-        version: 12.2.0
+        version: 12.2.1
       drizzle-kit:
         specifier: 0.31.10
         version: 0.31.10
@@ -214,8 +214,8 @@ importers:
         specifier: 0.11.0
         version: 0.11.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tanstack/store':
-        specifier: 0.11.0
-        version: 0.11.0
+        specifier: 0.11.1
+        version: 0.11.1
       anipar:
         specifier: workspace:*
         version: link:../../packages/anipar
@@ -3907,6 +3907,9 @@ packages:
   '@tanstack/store@0.11.0':
     resolution: {integrity: sha512-WlzzCt3xi0G6pCAJu1U+2jiECwabETDpQDi3hfkFZvJii9AuZqEKbOiVarX1/bWhTNjU486yQtJCCasi/0q+Cw==}
 
+  '@tanstack/store@0.11.1':
+    resolution: {integrity: sha512-mzTOBhypOuDJAy/D8n2MfUZ1HFkXnmSETviRyhqEC8LUE7/IZQExOTxMANj3KjTofYTkFNpBY67qaVrT41YccA==}
+
   '@tanstack/store@0.9.3':
     resolution: {integrity: sha512-8reSzl/qGWGGVKhBoxXPMWzATSbZLZFWhwBAFO9NAyp0TxzfBP0mIrGb8CP8KrQTmvzXlR/vFPPUrHTLBGyFyw==}
 
@@ -4396,8 +4399,8 @@ packages:
   buffer@6.0.3:
     resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
 
-  bumpp@12.2.0:
-    resolution: {integrity: sha512-pQuDUxqHpxxjfie/KABu0fppefIthnC/ZEIzcoSDy3RVxhascgsl+NI21+wQec6tTLr+wNQTLcjSeTSGr80qAw==}
+  bumpp@12.2.1:
+    resolution: {integrity: sha512-8inGPx8PC/BaEOWhzfxrNHGj/x5Srt0EeJatAcTJ9N7AZpQG/HlH4kGp5JWbEL8zffYXI5iBkMjG8SHnJ9e/6g==}
     engines: {node: ^22.18.0 || ^24.11.0 || >=26.0.0}
     hasBin: true
 
@@ -11417,6 +11420,8 @@ snapshots:
 
   '@tanstack/store@0.11.0': {}
 
+  '@tanstack/store@0.11.1': {}
+
   '@tanstack/store@0.9.3': {}
 
   '@tanstack/virtual-file-routes@1.162.0': {}
@@ -12025,7 +12030,7 @@ snapshots:
       base64-js: 1.5.1
       ieee754: 1.2.1
 
-  bumpp@12.2.0:
+  bumpp@12.2.1:
     dependencies:
       args-tokenizer: 0.3.0
       cac: 7.0.0
