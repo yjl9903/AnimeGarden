@@ -83,9 +83,15 @@ export const Route = createRootRouteWithContext<{
     ],
     links: [
       { rel: 'sitemap', type: 'application/xml', title: 'Sitemap', href: '/sitemap-index.xml' },
-      { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
-      { rel: 'alternate icon', sizes: '64x64', href: '/favicon.ico' },
-      { rel: 'apple-touch-icon', sizes: '180x180', href: '/apple-touch-icon-180x180.png' },
+      { rel: 'icon', type: 'image/x-icon', sizes: '64x64', href: '/favicon.ico' },
+      { rel: 'icon', type: 'image/svg+xml', sizes: 'any', href: '/favicon.svg' },
+      { rel: 'icon', type: 'image/png', sizes: '64x64', href: '/pwa-64x64.png' },
+      {
+        rel: 'apple-touch-icon',
+        type: 'image/png',
+        sizes: '180x180',
+        href: '/apple-touch-icon-180x180.png'
+      },
       { rel: 'mask-icon', color: '#FFFFFF', href: '/favicon.svg' },
       { rel: 'preconnect', href: 'https://fonts.bunny.net' },
       { rel: 'preconnect', href: 'https://api.fontshare.com' },

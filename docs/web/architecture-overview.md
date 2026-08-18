@@ -58,6 +58,10 @@ Bangumi subject/full/calendar 数据不应进入客户端运行时依赖；需�
 | `vite.config.ts`  | Vite / TanStack Start 构建配置、环境变量默认值、插件配置                                                                          |
 | `public/`         | favicon、PWA 和公开静态资源                                                                                                      |
 
+全站图标声明集中在 `src/routes/__root.tsx`。搜索引擎和传统浏览器使用 64×64
+ICO/PNG，现代浏览器可使用可缩放 SVG，Apple 设备使用 180×180 touch icon；对应文件统一放在
+`public/`，图标 URL 应保持稳定，避免搜索引擎频繁重新抓取。
+
 ## 主要页面分组
 
 | URL                              | Route module                                    | Page                                           |
