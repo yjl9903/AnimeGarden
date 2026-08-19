@@ -33,6 +33,7 @@ export const DisplayTypeColor: Record<string, string> = {
 
 export const fansubs = [
   'ANi',
+  'Nix-Raws',
   'LoliHouse',
   '喵萌奶茶屋',
   'Prejudice-Studio',
