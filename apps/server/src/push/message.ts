@@ -184,9 +184,10 @@ function normalizeSubtitleFormat(format: string) {
 function formatResourceSize(size: number) {
   const label = '<b>大小:</b> ';
   if (size <= 0) return label + '未知';
-  if (size < 1024) return label + `${size} KB`;
-  if (size < 1024 * 1024) return label + `${(size / 1024).toFixed(2)} MB`;
-  return label + `${(size / 1024 / 1024).toFixed(2)} GB`;
+  if (size < 1024) return label + `${size} B`;
+  if (size < 1024 * 1024) return label + `${(size / 1024).toFixed(2)} KB`;
+  if (size < 1024 * 1024 * 1024) return label + `${(size / 1024 / 1024).toFixed(2)} MB`;
+  return label + `${(size / 1024 / 1024 / 1024).toFixed(2)} GB`;
 }
 
 function formatPublishTime(value: string) {

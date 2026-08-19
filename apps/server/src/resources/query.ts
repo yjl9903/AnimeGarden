@@ -179,6 +179,7 @@ export class QueryManager {
     };
   }
 
+  /** Converts a database resource into the byte-based representation exposed to consumers. */
   public async transform(r: DatabaseResource): Promise<FoundResource> {
     const { users, teams } = this.system.modules;
 
@@ -191,7 +192,7 @@ export class QueryManager {
       type: r.type,
       magnet: MagnetPool.get(r.magnet),
       tracker: TrackerPool.get(r.tracker),
-      size: r.size,
+      size: r.size * 1024,
       createdAt: r.createdAt.toISOString(),
       fetchedAt: r.fetchedAt.toISOString(),
       publisher: transformDatabaseUser(await users.getById(r.publisherId))!,

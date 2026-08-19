@@ -7,10 +7,13 @@ export function parseSize(num: number) {
     return '';
   }
   if (num < 1024) {
-    return `${num} KB`;
+    return `${num} B`;
   }
   if (num < 1024 * 1024) {
-    return `${(num / 1024).toFixed(2)} MB`;
+    return `${(num / 1024).toFixed(2)} KB`;
   }
-  return `${(num / 1024 / 1024).toFixed(2)} GB`;
+  if (num < 1024 * 1024 * 1024) {
+    return `${(num / 1024 / 1024).toFixed(2)} MB`;
+  }
+  return `${(num / 1024 / 1024 / 1024).toFixed(2)} GB`;
 }

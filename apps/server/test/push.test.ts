@@ -36,7 +36,7 @@ function createResource(title: string): FoundResource {
     type: '动画',
     magnet: 'magnet:?xt=urn:btih:0123456789012345678901234567890123456789',
     tracker: '&tr=https%3A%2F%2Ftracker.example.com%2Fannounce',
-    size: 511160,
+    size: 511160 * 1024,
     createdAt: '2026-05-07T05:00:00.000Z',
     fetchedAt: '2026-05-07T05:00:00.000Z',
     publisher: {

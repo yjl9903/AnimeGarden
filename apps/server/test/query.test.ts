@@ -172,6 +172,22 @@ describe('Task prefetch', () => {
   });
 });
 
+describe('resource response transform', () => {
+  it('converts the database KiB size to bytes', async () => {
+    const { manager } = createManager();
+    (manager.system as any).modules.users = {
+      getById: vi.fn().mockResolvedValue({ id: 1, name: 'publisher' })
+    };
+    (manager.system as any).modules.teams = {
+      getById: vi.fn()
+    };
+
+    const resource = await manager.transform(createResource(1536));
+
+    expect(resource.size).toBe(1572864);
+  });
+});
+
 describe('resources slow query fallback', () => {
   it('coalesces concurrent downgraded queries on the accurate path', async () => {
     const { manager } = createManager();

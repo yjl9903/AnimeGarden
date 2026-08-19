@@ -89,6 +89,65 @@ function createResourcesAppWithFind(find: ReturnType<typeof vi.fn>) {
   return app;
 }
 
+function createResource(sizeInBytes: number) {
+  return {
+    provider: 'dmhy',
+    providerId: '12345',
+    title: 'Test resource',
+    magnet: 'magnet:?xt=urn:btih:test',
+    tracker: '',
+    size: sizeInBytes,
+    createdAt: new Date('2026-08-19T00:00:00Z')
+  };
+}
+
+function createSuccessfulFeedApp(sizeInBytes: number) {
+  const app = new Hono<AppEnv>();
+  const resource = createResource(sizeInBytes);
+  const sys = {
+    options: {
+      site: 'animes.garden'
+    },
+    modules: {
+      resources: {
+        query: {
+          find: vi.fn().mockResolvedValue({ resources: [resource] })
+        }
+      },
+      collections: {
+        getCollection: vi.fn().mockResolvedValue({
+          name: 'Test collection',
+          results: [{ resources: [resource] }]
+        })
+      }
+    }
+  } as any;
+
+  defineFeedRoutes(sys, app);
+
+  return app;
+}
+
+describe('feed enclosure length', () => {
+  it('emits the byte size returned by the query layer for the resources feed', async () => {
+    const app = createSuccessfulFeedApp(1572864);
+
+    const response = await app.request('http://localhost/feed.xml');
+
+    expect(response.status).toBe(200);
+    await expect(response.text()).resolves.toContain('length="1572864"');
+  });
+
+  it('emits the byte size returned by the query layer for the collection feed', async () => {
+    const app = createSuccessfulFeedApp(1572864);
+
+    const response = await app.request('http://localhost/collection/test/feed.xml');
+
+    expect(response.status).toBe(200);
+    await expect(response.text()).resolves.toContain('length="1572864"');
+  });
+});
+
 describe('server slow query errors', () => {
   it('returns XML 503 when the slow query lane is busy', async () => {
     const app = createFeedApp(new ResourcesSlowQueryBusyError());

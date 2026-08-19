@@ -57,6 +57,7 @@ export interface DatabaseResource {
 
   tracker: string;
 
+  /** Resource size stored internally in KiB. */
   size: number;
 
   createdAt: Date;

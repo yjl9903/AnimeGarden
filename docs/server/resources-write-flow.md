@@ -71,6 +71,11 @@
 
 因此主写链路实际上完全发生在 `cron` 进程内部，只是写完以后会通过 Redis 把变更广播给其他读服务。
 
+资源大小在存储与输出时采用不同单位：`resources.size` 在 Postgres 和内部查询缓存中以
+KiB 保存；`QueryManager.transform()` 在数据库资源离开查询层时统一转换为 bytes。因此
+REST API、详情、收藏夹、RSS 和 MCP 对外返回的 `size` 或 `enclosure.length` 均以 bytes
+表示。
+
 ## 主写链路一：增量插入
 
 ### 触发位置

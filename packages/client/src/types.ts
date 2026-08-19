@@ -44,6 +44,7 @@ export interface Resource<T extends { tracker?: boolean; metadata?: boolean } = 
       ? null | undefined
       : string | null | undefined;
 
+  /** Resource size in bytes. */
   size: number;
 
   fansub?:
