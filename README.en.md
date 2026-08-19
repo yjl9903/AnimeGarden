@@ -28,20 +28,10 @@
 
 **Anime Garden skill**: lookup anime torrent resources using Anime Garden open API.
 
-**Yuc's Anime List skill**: scrape quarterly anime lineups from yuc.wiki.
-
-For openclaw, use clawhub to add [Anime Garden skill](https://clawhub.ai/yjl9903/animegarden) and [Yuc's Anime List Skill](https://clawhub.ai/yjl9903/yuc).
-
-```bash
-npx clawhub install animegarden
-npx clawhub install yuc
-```
-
-Use Vercel skills CLI to install [Anime Garden skill](https://skills.sh/yjl9903/animegarden/animegarden) and [Yuc's Anime List Skill](https://skills.sh/yjl9903/animegarden/yuc).
+Use Vercel skills CLI to install [Anime Garden skill](https://skills.sh/yjl9903/animegarden/animegarden).
 
 ```bash
 npx skills add https://github.com/yjl9903/AnimeGarden --skill animegarden
-npx skills add https://github.com/yjl9903/AnimeGarden --skill yuc
 ```
 
 ## MCP Server Usage
