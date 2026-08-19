@@ -63,6 +63,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - run: |
+          flyctl secrets sync --app animegarden-server-production
           flyctl deploy --config ./apps/server/fly.server.toml \
             --app animegarden-server-production --remote-only
         env:
@@ -85,6 +86,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - run: |
+          flyctl secrets sync --app animegarden-feed-production
           flyctl deploy --config ./apps/server/fly.feed.toml \
             --app animegarden-feed-production --remote-only
         env:
