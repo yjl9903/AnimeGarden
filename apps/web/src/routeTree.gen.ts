@@ -8,209 +8,207 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapChar123sitemapChar125DotxmlRouteImport } from './routes/sitemap-{$sitemap}[.]xml'
-import { Route as SitemapIndexDotxmlRouteImport } from './routes/sitemap-index[.]xml'
-import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
-import { Route as OpenapiDotjsonRouteImport } from './routes/openapi[.]json'
-import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
-import { Route as IframeRouteImport } from './routes/iframe'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as SplatRouteImport } from './routes/$'
-import { Route as ResourcesRouteRouteImport } from './routes/resources/route'
-import { Route as AnimeRouteRouteImport } from './routes/anime/route'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as ResourcesIndexRouteImport } from './routes/resources/index'
-import { Route as ResourcesPageRouteImport } from './routes/resources/$page'
-import { Route as CalendarSeasonRouteImport } from './routes/calendar/$season'
-import { Route as DotwellKnownApiCatalogRouteImport } from './routes/[.]well-known/api-catalog'
-import { Route as SubjectSubjectRouteRouteImport } from './routes/subject/$subject/route'
-import { Route as DocsApiRouteRouteImport } from './routes/docs/api/route'
-import { Route as CollectionHashRouteRouteImport } from './routes/collection/$hash/route'
-import { Route as SubjectSubjectPageRouteImport } from './routes/subject/$subject/$page'
-import { Route as DotwellKnownMcpServerCardDotjsonRouteImport } from './routes/[.]well-known/mcp/server-card[.]json'
-import { Route as DetailProviderProviderIdRouteRouteImport } from './routes/detail/$provider/$providerId/route'
+import { Route as rootRouteImport } from './routes/__root';
+import { Route as SitemapChar123sitemapChar125DotxmlRouteImport } from './routes/sitemap-{$sitemap}[.]xml';
+import { Route as SitemapIndexDotxmlRouteImport } from './routes/sitemap-index[.]xml';
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt';
+import { Route as OpenapiDotjsonRouteImport } from './routes/openapi[.]json';
+import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt';
+import { Route as IframeRouteImport } from './routes/iframe';
+import { Route as AboutRouteImport } from './routes/about';
+import { Route as SplatRouteImport } from './routes/$';
+import { Route as ResourcesRouteRouteImport } from './routes/resources/route';
+import { Route as AnimeRouteRouteImport } from './routes/anime/route';
+import { Route as IndexRouteImport } from './routes/index';
+import { Route as ResourcesIndexRouteImport } from './routes/resources/index';
+import { Route as ResourcesPageRouteImport } from './routes/resources/$page';
+import { Route as CalendarSeasonRouteImport } from './routes/calendar/$season';
+import { Route as DotwellKnownApiCatalogRouteImport } from './routes/[.]well-known/api-catalog';
+import { Route as SubjectSubjectRouteRouteImport } from './routes/subject/$subject/route';
+import { Route as DocsApiRouteRouteImport } from './routes/docs/api/route';
+import { Route as CollectionHashRouteRouteImport } from './routes/collection/$hash/route';
+import { Route as SubjectSubjectPageRouteImport } from './routes/subject/$subject/$page';
+import { Route as DotwellKnownMcpServerCardDotjsonRouteImport } from './routes/[.]well-known/mcp/server-card[.]json';
+import { Route as DetailProviderProviderIdRouteRouteImport } from './routes/detail/$provider/$providerId/route';
 
 const SitemapChar123sitemapChar125DotxmlRoute =
   SitemapChar123sitemapChar125DotxmlRouteImport.update({
     id: '/sitemap-{$sitemap}.xml',
     path: '/sitemap-{$sitemap}.xml',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+    getParentRoute: () => rootRouteImport
+  } as any);
 const SitemapIndexDotxmlRoute = SitemapIndexDotxmlRouteImport.update({
   id: '/sitemap-index.xml',
   path: '/sitemap-index.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   id: '/robots.txt',
   path: '/robots.txt',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const OpenapiDotjsonRoute = OpenapiDotjsonRouteImport.update({
   id: '/openapi.json',
   path: '/openapi.json',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
   id: '/llms.txt',
   path: '/llms.txt',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const IframeRoute = IframeRouteImport.update({
   id: '/iframe',
   path: '/iframe',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const SplatRoute = SplatRouteImport.update({
   id: '/$',
   path: '/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const ResourcesRouteRoute = ResourcesRouteRouteImport.update({
   id: '/resources',
   path: '/resources',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const AnimeRouteRoute = AnimeRouteRouteImport.update({
   id: '/anime',
   path: '/anime',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const ResourcesIndexRoute = ResourcesIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => ResourcesRouteRoute,
-} as any)
+  getParentRoute: () => ResourcesRouteRoute
+} as any);
 const ResourcesPageRoute = ResourcesPageRouteImport.update({
   id: '/$page',
   path: '/$page',
-  getParentRoute: () => ResourcesRouteRoute,
-} as any)
+  getParentRoute: () => ResourcesRouteRoute
+} as any);
 const CalendarSeasonRoute = CalendarSeasonRouteImport.update({
   id: '/calendar/$season',
   path: '/calendar/$season',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const DotwellKnownApiCatalogRoute = DotwellKnownApiCatalogRouteImport.update({
   id: '/.well-known/api-catalog',
   path: '/.well-known/api-catalog',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const SubjectSubjectRouteRoute = SubjectSubjectRouteRouteImport.update({
   id: '/subject/$subject',
   path: '/subject/$subject',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const DocsApiRouteRoute = DocsApiRouteRouteImport.update({
   id: '/docs/api',
   path: '/docs/api',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const CollectionHashRouteRoute = CollectionHashRouteRouteImport.update({
   id: '/collection/$hash',
   path: '/collection/$hash',
-  getParentRoute: () => rootRouteImport,
-} as any)
+  getParentRoute: () => rootRouteImport
+} as any);
 const SubjectSubjectPageRoute = SubjectSubjectPageRouteImport.update({
   id: '/$page',
   path: '/$page',
-  getParentRoute: () => SubjectSubjectRouteRoute,
-} as any)
-const DotwellKnownMcpServerCardDotjsonRoute =
-  DotwellKnownMcpServerCardDotjsonRouteImport.update({
-    id: '/.well-known/mcp/server-card.json',
-    path: '/.well-known/mcp/server-card.json',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DetailProviderProviderIdRouteRoute =
-  DetailProviderProviderIdRouteRouteImport.update({
-    id: '/detail/$provider/$providerId',
-    path: '/detail/$provider/$providerId',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+  getParentRoute: () => SubjectSubjectRouteRoute
+} as any);
+const DotwellKnownMcpServerCardDotjsonRoute = DotwellKnownMcpServerCardDotjsonRouteImport.update({
+  id: '/.well-known/mcp/server-card.json',
+  path: '/.well-known/mcp/server-card.json',
+  getParentRoute: () => rootRouteImport
+} as any);
+const DetailProviderProviderIdRouteRoute = DetailProviderProviderIdRouteRouteImport.update({
+  id: '/detail/$provider/$providerId',
+  path: '/detail/$provider/$providerId',
+  getParentRoute: () => rootRouteImport
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/anime': typeof AnimeRouteRoute
-  '/resources': typeof ResourcesRouteRouteWithChildren
-  '/$': typeof SplatRoute
-  '/about': typeof AboutRoute
-  '/iframe': typeof IframeRoute
-  '/llms.txt': typeof LlmsDottxtRoute
-  '/openapi.json': typeof OpenapiDotjsonRoute
-  '/robots.txt': typeof RobotsDottxtRoute
-  '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
-  '/sitemap-{$sitemap}.xml': typeof SitemapChar123sitemapChar125DotxmlRoute
-  '/collection/$hash': typeof CollectionHashRouteRoute
-  '/docs/api': typeof DocsApiRouteRoute
-  '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
-  '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute
-  '/calendar/$season': typeof CalendarSeasonRoute
-  '/resources/$page': typeof ResourcesPageRoute
-  '/resources/': typeof ResourcesIndexRoute
-  '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
-  '/.well-known/mcp/server-card.json': typeof DotwellKnownMcpServerCardDotjsonRoute
-  '/subject/$subject/$page': typeof SubjectSubjectPageRoute
+  '/': typeof IndexRoute;
+  '/anime': typeof AnimeRouteRoute;
+  '/resources': typeof ResourcesRouteRouteWithChildren;
+  '/$': typeof SplatRoute;
+  '/about': typeof AboutRoute;
+  '/iframe': typeof IframeRoute;
+  '/llms.txt': typeof LlmsDottxtRoute;
+  '/openapi.json': typeof OpenapiDotjsonRoute;
+  '/robots.txt': typeof RobotsDottxtRoute;
+  '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute;
+  '/sitemap-{$sitemap}.xml': typeof SitemapChar123sitemapChar125DotxmlRoute;
+  '/collection/$hash': typeof CollectionHashRouteRoute;
+  '/docs/api': typeof DocsApiRouteRoute;
+  '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren;
+  '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute;
+  '/calendar/$season': typeof CalendarSeasonRoute;
+  '/resources/$page': typeof ResourcesPageRoute;
+  '/resources/': typeof ResourcesIndexRoute;
+  '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute;
+  '/.well-known/mcp/server-card.json': typeof DotwellKnownMcpServerCardDotjsonRoute;
+  '/subject/$subject/$page': typeof SubjectSubjectPageRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/anime': typeof AnimeRouteRoute
-  '/$': typeof SplatRoute
-  '/about': typeof AboutRoute
-  '/iframe': typeof IframeRoute
-  '/llms.txt': typeof LlmsDottxtRoute
-  '/openapi.json': typeof OpenapiDotjsonRoute
-  '/robots.txt': typeof RobotsDottxtRoute
-  '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
-  '/sitemap-{$sitemap}.xml': typeof SitemapChar123sitemapChar125DotxmlRoute
-  '/collection/$hash': typeof CollectionHashRouteRoute
-  '/docs/api': typeof DocsApiRouteRoute
-  '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
-  '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute
-  '/calendar/$season': typeof CalendarSeasonRoute
-  '/resources/$page': typeof ResourcesPageRoute
-  '/resources': typeof ResourcesIndexRoute
-  '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
-  '/.well-known/mcp/server-card.json': typeof DotwellKnownMcpServerCardDotjsonRoute
-  '/subject/$subject/$page': typeof SubjectSubjectPageRoute
+  '/': typeof IndexRoute;
+  '/anime': typeof AnimeRouteRoute;
+  '/$': typeof SplatRoute;
+  '/about': typeof AboutRoute;
+  '/iframe': typeof IframeRoute;
+  '/llms.txt': typeof LlmsDottxtRoute;
+  '/openapi.json': typeof OpenapiDotjsonRoute;
+  '/robots.txt': typeof RobotsDottxtRoute;
+  '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute;
+  '/sitemap-{$sitemap}.xml': typeof SitemapChar123sitemapChar125DotxmlRoute;
+  '/collection/$hash': typeof CollectionHashRouteRoute;
+  '/docs/api': typeof DocsApiRouteRoute;
+  '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren;
+  '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute;
+  '/calendar/$season': typeof CalendarSeasonRoute;
+  '/resources/$page': typeof ResourcesPageRoute;
+  '/resources': typeof ResourcesIndexRoute;
+  '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute;
+  '/.well-known/mcp/server-card.json': typeof DotwellKnownMcpServerCardDotjsonRoute;
+  '/subject/$subject/$page': typeof SubjectSubjectPageRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/anime': typeof AnimeRouteRoute
-  '/resources': typeof ResourcesRouteRouteWithChildren
-  '/$': typeof SplatRoute
-  '/about': typeof AboutRoute
-  '/iframe': typeof IframeRoute
-  '/llms.txt': typeof LlmsDottxtRoute
-  '/openapi.json': typeof OpenapiDotjsonRoute
-  '/robots.txt': typeof RobotsDottxtRoute
-  '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
-  '/sitemap-{$sitemap}.xml': typeof SitemapChar123sitemapChar125DotxmlRoute
-  '/collection/$hash': typeof CollectionHashRouteRoute
-  '/docs/api': typeof DocsApiRouteRoute
-  '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
-  '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute
-  '/calendar/$season': typeof CalendarSeasonRoute
-  '/resources/$page': typeof ResourcesPageRoute
-  '/resources/': typeof ResourcesIndexRoute
-  '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute
-  '/.well-known/mcp/server-card.json': typeof DotwellKnownMcpServerCardDotjsonRoute
-  '/subject/$subject/$page': typeof SubjectSubjectPageRoute
+  __root__: typeof rootRouteImport;
+  '/': typeof IndexRoute;
+  '/anime': typeof AnimeRouteRoute;
+  '/resources': typeof ResourcesRouteRouteWithChildren;
+  '/$': typeof SplatRoute;
+  '/about': typeof AboutRoute;
+  '/iframe': typeof IframeRoute;
+  '/llms.txt': typeof LlmsDottxtRoute;
+  '/openapi.json': typeof OpenapiDotjsonRoute;
+  '/robots.txt': typeof RobotsDottxtRoute;
+  '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute;
+  '/sitemap-{$sitemap}.xml': typeof SitemapChar123sitemapChar125DotxmlRoute;
+  '/collection/$hash': typeof CollectionHashRouteRoute;
+  '/docs/api': typeof DocsApiRouteRoute;
+  '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren;
+  '/.well-known/api-catalog': typeof DotwellKnownApiCatalogRoute;
+  '/calendar/$season': typeof CalendarSeasonRoute;
+  '/resources/$page': typeof ResourcesPageRoute;
+  '/resources/': typeof ResourcesIndexRoute;
+  '/detail/$provider/$providerId': typeof DetailProviderProviderIdRouteRoute;
+  '/.well-known/mcp/server-card.json': typeof DotwellKnownMcpServerCardDotjsonRoute;
+  '/subject/$subject/$page': typeof SubjectSubjectPageRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
     | '/'
     | '/anime'
@@ -232,8 +230,8 @@ export interface FileRouteTypes {
     | '/resources/'
     | '/detail/$provider/$providerId'
     | '/.well-known/mcp/server-card.json'
-    | '/subject/$subject/$page'
-  fileRoutesByTo: FileRoutesByTo
+    | '/subject/$subject/$page';
+  fileRoutesByTo: FileRoutesByTo;
   to:
     | '/'
     | '/anime'
@@ -254,7 +252,7 @@ export interface FileRouteTypes {
     | '/resources'
     | '/detail/$provider/$providerId'
     | '/.well-known/mcp/server-card.json'
-    | '/subject/$subject/$page'
+    | '/subject/$subject/$page';
   id:
     | '__root__'
     | '/'
@@ -277,206 +275,207 @@ export interface FileRouteTypes {
     | '/resources/'
     | '/detail/$provider/$providerId'
     | '/.well-known/mcp/server-card.json'
-    | '/subject/$subject/$page'
-  fileRoutesById: FileRoutesById
+    | '/subject/$subject/$page';
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AnimeRouteRoute: typeof AnimeRouteRoute
-  ResourcesRouteRoute: typeof ResourcesRouteRouteWithChildren
-  SplatRoute: typeof SplatRoute
-  AboutRoute: typeof AboutRoute
-  IframeRoute: typeof IframeRoute
-  LlmsDottxtRoute: typeof LlmsDottxtRoute
-  OpenapiDotjsonRoute: typeof OpenapiDotjsonRoute
-  RobotsDottxtRoute: typeof RobotsDottxtRoute
-  SitemapIndexDotxmlRoute: typeof SitemapIndexDotxmlRoute
-  SitemapChar123sitemapChar125DotxmlRoute: typeof SitemapChar123sitemapChar125DotxmlRoute
-  CollectionHashRouteRoute: typeof CollectionHashRouteRoute
-  DocsApiRouteRoute: typeof DocsApiRouteRoute
-  SubjectSubjectRouteRoute: typeof SubjectSubjectRouteRouteWithChildren
-  DotwellKnownApiCatalogRoute: typeof DotwellKnownApiCatalogRoute
-  CalendarSeasonRoute: typeof CalendarSeasonRoute
-  DetailProviderProviderIdRouteRoute: typeof DetailProviderProviderIdRouteRoute
-  DotwellKnownMcpServerCardDotjsonRoute: typeof DotwellKnownMcpServerCardDotjsonRoute
+  IndexRoute: typeof IndexRoute;
+  AnimeRouteRoute: typeof AnimeRouteRoute;
+  ResourcesRouteRoute: typeof ResourcesRouteRouteWithChildren;
+  SplatRoute: typeof SplatRoute;
+  AboutRoute: typeof AboutRoute;
+  IframeRoute: typeof IframeRoute;
+  LlmsDottxtRoute: typeof LlmsDottxtRoute;
+  OpenapiDotjsonRoute: typeof OpenapiDotjsonRoute;
+  RobotsDottxtRoute: typeof RobotsDottxtRoute;
+  SitemapIndexDotxmlRoute: typeof SitemapIndexDotxmlRoute;
+  SitemapChar123sitemapChar125DotxmlRoute: typeof SitemapChar123sitemapChar125DotxmlRoute;
+  CollectionHashRouteRoute: typeof CollectionHashRouteRoute;
+  DocsApiRouteRoute: typeof DocsApiRouteRoute;
+  SubjectSubjectRouteRoute: typeof SubjectSubjectRouteRouteWithChildren;
+  DotwellKnownApiCatalogRoute: typeof DotwellKnownApiCatalogRoute;
+  CalendarSeasonRoute: typeof CalendarSeasonRoute;
+  DetailProviderProviderIdRouteRoute: typeof DetailProviderProviderIdRouteRoute;
+  DotwellKnownMcpServerCardDotjsonRoute: typeof DotwellKnownMcpServerCardDotjsonRoute;
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/sitemap-{$sitemap}.xml': {
-      id: '/sitemap-{$sitemap}.xml'
-      path: '/sitemap-{$sitemap}.xml'
-      fullPath: '/sitemap-{$sitemap}.xml'
-      preLoaderRoute: typeof SitemapChar123sitemapChar125DotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/sitemap-{$sitemap}.xml';
+      path: '/sitemap-{$sitemap}.xml';
+      fullPath: '/sitemap-{$sitemap}.xml';
+      preLoaderRoute: typeof SitemapChar123sitemapChar125DotxmlRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/sitemap-index.xml': {
-      id: '/sitemap-index.xml'
-      path: '/sitemap-index.xml'
-      fullPath: '/sitemap-index.xml'
-      preLoaderRoute: typeof SitemapIndexDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/sitemap-index.xml';
+      path: '/sitemap-index.xml';
+      fullPath: '/sitemap-index.xml';
+      preLoaderRoute: typeof SitemapIndexDotxmlRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/robots.txt': {
-      id: '/robots.txt'
-      path: '/robots.txt'
-      fullPath: '/robots.txt'
-      preLoaderRoute: typeof RobotsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/robots.txt';
+      path: '/robots.txt';
+      fullPath: '/robots.txt';
+      preLoaderRoute: typeof RobotsDottxtRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/openapi.json': {
-      id: '/openapi.json'
-      path: '/openapi.json'
-      fullPath: '/openapi.json'
-      preLoaderRoute: typeof OpenapiDotjsonRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/openapi.json';
+      path: '/openapi.json';
+      fullPath: '/openapi.json';
+      preLoaderRoute: typeof OpenapiDotjsonRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/llms.txt': {
-      id: '/llms.txt'
-      path: '/llms.txt'
-      fullPath: '/llms.txt'
-      preLoaderRoute: typeof LlmsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/llms.txt';
+      path: '/llms.txt';
+      fullPath: '/llms.txt';
+      preLoaderRoute: typeof LlmsDottxtRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/iframe': {
-      id: '/iframe'
-      path: '/iframe'
-      fullPath: '/iframe'
-      preLoaderRoute: typeof IframeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/iframe';
+      path: '/iframe';
+      fullPath: '/iframe';
+      preLoaderRoute: typeof IframeRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/about';
+      path: '/about';
+      fullPath: '/about';
+      preLoaderRoute: typeof AboutRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/$': {
-      id: '/$'
-      path: '/$'
-      fullPath: '/$'
-      preLoaderRoute: typeof SplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/$';
+      path: '/$';
+      fullPath: '/$';
+      preLoaderRoute: typeof SplatRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/resources': {
-      id: '/resources'
-      path: '/resources'
-      fullPath: '/resources'
-      preLoaderRoute: typeof ResourcesRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/resources';
+      path: '/resources';
+      fullPath: '/resources';
+      preLoaderRoute: typeof ResourcesRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/anime': {
-      id: '/anime'
-      path: '/anime'
-      fullPath: '/anime'
-      preLoaderRoute: typeof AnimeRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/anime';
+      path: '/anime';
+      fullPath: '/anime';
+      preLoaderRoute: typeof AnimeRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/';
+      path: '/';
+      fullPath: '/';
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/resources/': {
-      id: '/resources/'
-      path: '/'
-      fullPath: '/resources/'
-      preLoaderRoute: typeof ResourcesIndexRouteImport
-      parentRoute: typeof ResourcesRouteRoute
-    }
+      id: '/resources/';
+      path: '/';
+      fullPath: '/resources/';
+      preLoaderRoute: typeof ResourcesIndexRouteImport;
+      parentRoute: typeof ResourcesRouteRoute;
+    };
     '/resources/$page': {
-      id: '/resources/$page'
-      path: '/$page'
-      fullPath: '/resources/$page'
-      preLoaderRoute: typeof ResourcesPageRouteImport
-      parentRoute: typeof ResourcesRouteRoute
-    }
+      id: '/resources/$page';
+      path: '/$page';
+      fullPath: '/resources/$page';
+      preLoaderRoute: typeof ResourcesPageRouteImport;
+      parentRoute: typeof ResourcesRouteRoute;
+    };
     '/calendar/$season': {
-      id: '/calendar/$season'
-      path: '/calendar/$season'
-      fullPath: '/calendar/$season'
-      preLoaderRoute: typeof CalendarSeasonRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/calendar/$season';
+      path: '/calendar/$season';
+      fullPath: '/calendar/$season';
+      preLoaderRoute: typeof CalendarSeasonRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/.well-known/api-catalog': {
-      id: '/.well-known/api-catalog'
-      path: '/.well-known/api-catalog'
-      fullPath: '/.well-known/api-catalog'
-      preLoaderRoute: typeof DotwellKnownApiCatalogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/.well-known/api-catalog';
+      path: '/.well-known/api-catalog';
+      fullPath: '/.well-known/api-catalog';
+      preLoaderRoute: typeof DotwellKnownApiCatalogRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/subject/$subject': {
-      id: '/subject/$subject'
-      path: '/subject/$subject'
-      fullPath: '/subject/$subject'
-      preLoaderRoute: typeof SubjectSubjectRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/subject/$subject';
+      path: '/subject/$subject';
+      fullPath: '/subject/$subject';
+      preLoaderRoute: typeof SubjectSubjectRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/docs/api': {
-      id: '/docs/api'
-      path: '/docs/api'
-      fullPath: '/docs/api'
-      preLoaderRoute: typeof DocsApiRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/docs/api';
+      path: '/docs/api';
+      fullPath: '/docs/api';
+      preLoaderRoute: typeof DocsApiRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/collection/$hash': {
-      id: '/collection/$hash'
-      path: '/collection/$hash'
-      fullPath: '/collection/$hash'
-      preLoaderRoute: typeof CollectionHashRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/collection/$hash';
+      path: '/collection/$hash';
+      fullPath: '/collection/$hash';
+      preLoaderRoute: typeof CollectionHashRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/subject/$subject/$page': {
-      id: '/subject/$subject/$page'
-      path: '/$page'
-      fullPath: '/subject/$subject/$page'
-      preLoaderRoute: typeof SubjectSubjectPageRouteImport
-      parentRoute: typeof SubjectSubjectRouteRoute
-    }
+      id: '/subject/$subject/$page';
+      path: '/$page';
+      fullPath: '/subject/$subject/$page';
+      preLoaderRoute: typeof SubjectSubjectPageRouteImport;
+      parentRoute: typeof SubjectSubjectRouteRoute;
+    };
     '/.well-known/mcp/server-card.json': {
-      id: '/.well-known/mcp/server-card.json'
-      path: '/.well-known/mcp/server-card.json'
-      fullPath: '/.well-known/mcp/server-card.json'
-      preLoaderRoute: typeof DotwellKnownMcpServerCardDotjsonRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/.well-known/mcp/server-card.json';
+      path: '/.well-known/mcp/server-card.json';
+      fullPath: '/.well-known/mcp/server-card.json';
+      preLoaderRoute: typeof DotwellKnownMcpServerCardDotjsonRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
     '/detail/$provider/$providerId': {
-      id: '/detail/$provider/$providerId'
-      path: '/detail/$provider/$providerId'
-      fullPath: '/detail/$provider/$providerId'
-      preLoaderRoute: typeof DetailProviderProviderIdRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
+      id: '/detail/$provider/$providerId';
+      path: '/detail/$provider/$providerId';
+      fullPath: '/detail/$provider/$providerId';
+      preLoaderRoute: typeof DetailProviderProviderIdRouteRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 
 interface ResourcesRouteRouteChildren {
-  ResourcesPageRoute: typeof ResourcesPageRoute
-  ResourcesIndexRoute: typeof ResourcesIndexRoute
+  ResourcesPageRoute: typeof ResourcesPageRoute;
+  ResourcesIndexRoute: typeof ResourcesIndexRoute;
 }
 
 const ResourcesRouteRouteChildren: ResourcesRouteRouteChildren = {
   ResourcesPageRoute: ResourcesPageRoute,
-  ResourcesIndexRoute: ResourcesIndexRoute,
-}
+  ResourcesIndexRoute: ResourcesIndexRoute
+};
 
 const ResourcesRouteRouteWithChildren = ResourcesRouteRoute._addFileChildren(
-  ResourcesRouteRouteChildren,
-)
+  ResourcesRouteRouteChildren
+);
 
 interface SubjectSubjectRouteRouteChildren {
-  SubjectSubjectPageRoute: typeof SubjectSubjectPageRoute
+  SubjectSubjectPageRoute: typeof SubjectSubjectPageRoute;
 }
 
 const SubjectSubjectRouteRouteChildren: SubjectSubjectRouteRouteChildren = {
-  SubjectSubjectPageRoute: SubjectSubjectPageRoute,
-}
+  SubjectSubjectPageRoute: SubjectSubjectPageRoute
+};
 
-const SubjectSubjectRouteRouteWithChildren =
-  SubjectSubjectRouteRoute._addFileChildren(SubjectSubjectRouteRouteChildren)
+const SubjectSubjectRouteRouteWithChildren = SubjectSubjectRouteRoute._addFileChildren(
+  SubjectSubjectRouteRouteChildren
+);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -489,26 +488,25 @@ const rootRouteChildren: RootRouteChildren = {
   OpenapiDotjsonRoute: OpenapiDotjsonRoute,
   RobotsDottxtRoute: RobotsDottxtRoute,
   SitemapIndexDotxmlRoute: SitemapIndexDotxmlRoute,
-  SitemapChar123sitemapChar125DotxmlRoute:
-    SitemapChar123sitemapChar125DotxmlRoute,
+  SitemapChar123sitemapChar125DotxmlRoute: SitemapChar123sitemapChar125DotxmlRoute,
   CollectionHashRouteRoute: CollectionHashRouteRoute,
   DocsApiRouteRoute: DocsApiRouteRoute,
   SubjectSubjectRouteRoute: SubjectSubjectRouteRouteWithChildren,
   DotwellKnownApiCatalogRoute: DotwellKnownApiCatalogRoute,
   CalendarSeasonRoute: CalendarSeasonRoute,
   DetailProviderProviderIdRouteRoute: DetailProviderProviderIdRouteRoute,
-  DotwellKnownMcpServerCardDotjsonRoute: DotwellKnownMcpServerCardDotjsonRoute,
-}
+  DotwellKnownMcpServerCardDotjsonRoute: DotwellKnownMcpServerCardDotjsonRoute
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
+import type { getRouter } from './router.tsx';
+import type { startInstance } from './start.ts';
 declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+    ssr: true;
+    router: Awaited<ReturnType<typeof getRouter>>;
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>;
   }
 }

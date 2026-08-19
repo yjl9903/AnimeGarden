@@ -1,4 +1,5 @@
 import type { System } from '../../system/index.ts';
+import type { Subject } from '../../schema/index.ts';
 
 import { memo } from '../../utils/index.ts';
 
@@ -38,7 +39,7 @@ export const defineSitemapsRoutes = defineHandler((sys, app) => {
       return c.json({
         status: 'OK',
         subjects: [...sys.modules.subjects.subjects]
-          .sort((lhs, rhs) => rhs.activedAt.getTime() - lhs.activedAt.getTime())
+          .sort(compareSubjectsByActivedAt)
           .map((sub) => ({ id: sub.id, activedAt: sub.activedAt, isArchived: sub.isArchived }))
       });
     })
@@ -66,6 +67,17 @@ export const defineSitemapsRoutes = defineHandler((sys, app) => {
       return c.json({ status: 'ERROR', resources: [] });
     });
 });
+
+/** Sort dated subjects newest-first and keep undated subjects stable at the end by id. */
+export function compareSubjectsByActivedAt(
+  lhs: Pick<Subject, 'id' | 'activedAt'>,
+  rhs: Pick<Subject, 'id' | 'activedAt'>
+) {
+  const dateDiff =
+    (rhs.activedAt?.getTime() ?? Number.NEGATIVE_INFINITY) -
+    (lhs.activedAt?.getTime() ?? Number.NEGATIVE_INFINITY);
+  return dateDiff || rhs.id - lhs.id;
+}
 
 function getShanghai(year: number, month: number, day: number) {
   // 创建一个 UTC 时间的 Date 对象

@@ -136,13 +136,32 @@ cli cron
   -> updateCalendar(mod)
 ```
 
-`updateCalendar()` 会通过 `bgmx` 读取 `bgm.animes.garden` calendar，对当前季度 subject 做增量更新：
+`updateCalendar()` 每小时通过 `bgmx` 扫描 `bgm.animes.garden` 的完整 subjects 列表，并读取
+`calendar + web` 计算最终归档状态：
 
-1. 对比 bgmx calendar 和本地 active subjects。
-2. 归档不再活跃的 subject。
-3. 插入 / 更新当前 calendar 中的 subjects。
-4. 新 subject，或 `keywords` / `activedAt` 变化的 subject，会执行 `indexResources: true`，把历史 resources 中尚未绑定 subject 的记录补上 `subject_id`。
-5. 将这些新绑定 subject 的 resource ids 去重后传给 `enqueueResourceMessages`。
+1. 拉取完整 subjects，并默认转换为归档状态。
+2. 用 `calendar + web` 中的条目覆盖同 ID 数据，保持 `is_archived = false`。
+3. 将本地仍为 active、但已不在当前 calendar 的条目合并为归档状态。
+4. 在内存得到每个 subject 的唯一最终状态后，通过单个事务分批 upsert；active subject 不会经历先归档再恢复的中间状态。
+5. 新 active subject，或完整 `search` 筛选条件变化的 active subject，会补偿绑定历史 resources 中尚未绑定的记录。
+6. 将这些新绑定 subject 的 resource ids 去重后传给 `enqueueResourceMessages`。
+
+本地 `subjects.search` 直接保存 bgmx 的筛选对象。资源绑定与 bgmx 查询语义一致：
+
+- `include` 中任意标题命中即可。
+- `keywords` 必须全部命中。
+- `exclude` 中任意词命中都会排除资源。
+- `after` / `before` 按资源发布时间做包含边界判断；没有 `after` 时不再根据开播日期添加隐式下界。
+
+资源与 subject 的自动绑定是单向补偿：calendar 同步只为 `subject_id IS NULL` 的资源补充绑定。
+即使 bgmx 后续收窄 `search`（例如新增 `exclude` 或调整时间边界），自动任务也不会解除或改绑
+已经存在的 `subject_id`。旧关联只有通过显式人工维护（例如数据库修正或全量重导）才能移除，
+每小时同步不会隐式改写历史归属。
+
+历史资源回填只处理 `is_deleted = false AND duplicated_id IS NULL` 的可展示根资源，这也使标题
+匹配可以使用现有的 live partial index；新抓资源的内存匹配仍使用上述相同搜索规则。
+`actived_at` 只保留作品开播日期，允许为空，不再参与资源匹配。`/subjects` 返回 `search` 而非
+旧的 `keywords` 字段。
 
 这条链路用于补偿一个常见时间差：
 

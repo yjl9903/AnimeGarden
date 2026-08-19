@@ -60,8 +60,7 @@ function transformBgmSubject(subject: BgmSubject): WebBgmSubject {
     display_title: displayTitle,
     platform: subject.bangumi.platform,
     onair_date: subject.onair_date || subject.bangumi.date,
-    poster:
-      subject.poster || subject.bangumi.images.large ? getSubjectPosterURL(subject.id) : '',
+    poster: subject.poster || subject.bangumi.images.large ? getSubjectPosterURL(subject.id) : '',
     summary: subject.bangumi.summary,
     alias: subject.alias,
     tags: [...new Set([...(subject.bangumi.meta_tags ?? []), ...(subject.bangumi.tags ?? [])])],

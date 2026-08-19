@@ -1,42 +1,50 @@
 import type { CalendarSubject, DatabaseSubject } from 'bgmx';
 
-import { normalizeTitle } from '@animegarden/client';
 import { fetchCalendar, fetchSubjects } from 'bgmx';
 
 import type { SubjectsModule } from './index.ts';
 import type { NewSubject, Subject } from './schema.ts';
 
+import { isSameSubjectSearch } from './filter.ts';
+
 type SourceSubject = CalendarSubject | DatabaseSubject;
 
 /**
- * Update bgmx calendar from bgm.animes.garden.
+ * Synchronize the full bgmx subject list and overlay the active calendar.
  */
 export async function updateCalendar(mod: SubjectsModule) {
+  const allSubjects = await fetchAllSubjects();
   const { calendar, web } = await fetchCalendar({
     timeout: 30 * 1000,
     retry: 1
   });
   const onair = [...calendar, web].flat();
 
-  const insertMap = new Map<number, SourceSubject>();
-  const archiveMap = new Map<number, Subject>();
-  for (const bgm of onair) {
-    const id = bgm.id;
-    insertMap.set(id, bgm);
-  }
-  for (const sub of mod.activeSubjects) {
-    if (insertMap.has(sub.id)) {
-      insertMap.delete(sub.id);
-    } else {
-      archiveMap.set(sub.id, sub);
-    }
+  const activeSubjects = new Map(mod.activeSubjects.map((subject) => [subject.id, subject]));
+  const { subs: archivedSubs, errors: subjectErrors } = transformSubjects(mod, allSubjects, true);
+  const { subs: activeSubs, errors: calendarErrors } = transformSubjects(mod, onair, false);
+  const activeIds = new Set(activeSubs.map((subject) => subject.id));
+  const mergedSubjects = new Map(archivedSubs.map((subject) => [subject.id, subject]));
+
+  // Overlay the active calendar before writing so an active row is never temporarily archived.
+  for (const subject of activeSubs) {
+    mergedSubjects.set(subject.id, subject);
   }
 
-  const archived = await mod.archiveSubjects([...archiveMap.keys()]);
-  const { subs, errors } = transformSubjects(mod, onair, false);
-  const activeSubjects = new Map(mod.activeSubjects.map((subject) => [subject.id, subject]));
+  // Preserve local-only rows while moving any stale active subject to its final archived state.
+  const archived = mod.activeSubjects
+    .filter((subject) => !activeIds.has(subject.id))
+    .map((subject) => {
+      if (!mergedSubjects.has(subject.id)) {
+        mergedSubjects.set(subject.id, { ...subject, isArchived: true });
+      }
+      return { id: subject.id };
+    });
+
+  await mod.upsertSubjects([...mergedSubjects.values()]);
+
   const shouldIndex = new Set(
-    subs
+    activeSubs
       .filter((subject) => {
         const active = activeSubjects.get(subject.id);
         return !active || hasSearchConditionChanged(active, subject);
@@ -48,18 +56,22 @@ export async function updateCalendar(mod: SubjectsModule) {
   const conflict: NewSubject[] = [];
   const matchedResourceIds: number[] = [];
 
-  for (const sub of subs) {
-    const result = await mod.insertSubject(sub, {
-      indexResources: shouldIndex.has(sub.id),
-      offset: 30,
-      overwrite: false
-    });
-
-    if (result) {
-      inserted.push({ id: result.id, name: result.name });
+  for (const subject of activeSubs) {
+    inserted.push({ id: subject.id, name: subject.name });
+    if (shouldIndex.has(subject.id)) {
+      // Automatic calendar sync only fills unbound resources. Narrower search conditions never
+      // detach or reassign an existing subject id; that requires explicit manual maintenance.
+      const result = await mod.indexSubject(
+        {
+          id: subject.id,
+          name: subject.name,
+          search: subject.search,
+          activedAt: subject.activedAt ?? null,
+          isArchived: false
+        },
+        { overwrite: false }
+      );
       matchedResourceIds.push(...result.matched.map((resource) => resource.id));
-    } else {
-      conflict.push(sub);
     }
   }
 
@@ -74,7 +86,7 @@ export async function updateCalendar(mod: SubjectsModule) {
     inserted,
     archived,
     conflict,
-    errors
+    errors: [...subjectErrors, ...calendarErrors]
   };
 }
 
@@ -83,20 +95,14 @@ export async function updateCalendar(mod: SubjectsModule) {
  * 重置所有 resources 的 subject id
  */
 export async function importFromBgmd(mod: SubjectsModule) {
-  const subjects: DatabaseSubject[] = [];
-  for await (const subject of fetchSubjects({
-    timeout: 30 * 1000,
-    retry: 1
-  })) {
-    subjects.push(subject);
-  }
+  const subjects = await fetchAllSubjects();
 
   const { subs, errors } = transformSubjects(mod, subjects, true);
 
   // 时间倒序排序
   subs.sort((lhs, rhs) => {
-    const l = lhs.activedAt.getTime();
-    const r = rhs.activedAt.getTime();
+    const l = lhs.activedAt?.getTime() ?? Number.NEGATIVE_INFINITY;
+    const r = rhs.activedAt?.getTime() ?? Number.NEGATIVE_INFINITY;
     if (l < r) {
       return 1;
     } else if (l > r) {
@@ -112,7 +118,6 @@ export async function importFromBgmd(mod: SubjectsModule) {
   // 插入 subject 并生成索引
   const { inserted, conflict } = await mod.insertSubjects(subs, {
     indexResources: true,
-    offset: 30,
     overwrite: false
   });
 
@@ -126,6 +131,17 @@ export async function importFromBgmd(mod: SubjectsModule) {
   };
 }
 
+async function fetchAllSubjects() {
+  const subjects: DatabaseSubject[] = [];
+  for await (const subject of fetchSubjects({
+    timeout: 30 * 1000,
+    retry: 1
+  })) {
+    subjects.push(subject);
+  }
+  return subjects;
+}
+
 function transformSubjects(mod: SubjectsModule, bangumis: SourceSubject[], isArchived = true) {
   const subs: NewSubject[] = [];
   const errors: typeof bangumis = [];
@@ -133,16 +149,15 @@ function transformSubjects(mod: SubjectsModule, bangumis: SourceSubject[], isArc
   for (const bgm of bangumis) {
     const bgmId = bgm.id;
     const onairDate = bgm.onair_date || bgm.bangumi.date;
-    const activedAt = onairDate ? toShanghai(onairDate) : undefined;
-    const keywords = normalizeSearchInclude(bgm);
+    const activedAt = onairDate ? (toShanghai(onairDate) ?? null) : null;
     const title = getSubjectTitle(bgm);
 
-    if (bgmId && activedAt) {
+    if (bgmId) {
       subs.push({
         id: bgmId,
         name: title,
         activedAt,
-        keywords,
+        search: bgm.search,
         isArchived
       });
     } else {
@@ -173,24 +188,10 @@ function toShanghai(str: string) {
   return !Number.isNaN(shanghaiTime.getTime()) ? shanghaiTime : undefined;
 }
 
-function normalizeSearchInclude(bgm: SourceSubject) {
-  const keywords = [
-    getSubjectTitle(bgm),
-    bgm.title,
-    ...Object.values(bgm.alias).flat(),
-    ...bgm.search.include
-  ].map(normalizeTitle);
-  return [...new Set(keywords)];
-}
-
 function getSubjectTitle(bgm: SourceSubject) {
   return bgm.alias.zh?.[0] || bgm.title;
 }
 
 function hasSearchConditionChanged(active: Subject, next: NewSubject) {
-  return (
-    active.activedAt.getTime() !== next.activedAt.getTime() ||
-    active.keywords.length !== next.keywords.length ||
-    active.keywords.some((keyword, index) => keyword !== next.keywords[index])
-  );
+  return !isSameSubjectSearch(active.search, next.search);
 }

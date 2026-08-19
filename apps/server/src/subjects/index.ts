@@ -1,4 +1,4 @@
-import { and, or, eq, gte, ilike, isNull, isNotNull, inArray } from 'drizzle-orm';
+import { and, eq, isNull, isNotNull, inArray, or, sql } from 'drizzle-orm';
 
 import type { System } from '../system/index.ts';
 
@@ -7,6 +7,7 @@ import { Module } from '../system/module.ts';
 import type { IndexOptions, InsertSubjectOptions } from './types.ts';
 
 import { importFromBgmd, updateCalendar } from './bgmd.ts';
+import { buildSubjectSearchSql, normalizeSubjectSearch } from './filter.ts';
 import { type NewSubject, type Subject, subjects, resources } from './schema.ts';
 
 type IndexedResource = {
@@ -19,6 +20,8 @@ type InsertSubjectResult = {
   name: string;
   matched: IndexedResource[];
 };
+
+const SubjectUpsertBatchSize = 1000;
 
 export class SubjectsModule extends Module<System['modules']> {
   public static name = 'subjects';
@@ -68,7 +71,7 @@ export class SubjectsModule extends Module<System['modules']> {
   public async insertSubject(subject: NewSubject, options: InsertSubjectOptions = {}) {
     try {
       this.logger.info(
-        `Insert subject ${subject.name} (id: ${subject.id}, ${subject.activedAt.toLocaleDateString()}) -> ${subject.keywords.map((t) => `"${t}"`).join(' ')}`
+        `Insert subject ${subject.name} (id: ${subject.id}, ${subject.activedAt?.toLocaleDateString() ?? 'unknown date'}) -> ${subject.search.include.map((t) => `"${t}"`).join(' ')}`
       );
       const isArchived =
         subject.isArchived === null || subject.isArchived === undefined ? true : subject.isArchived;
@@ -81,7 +84,7 @@ export class SubjectsModule extends Module<System['modules']> {
           set: {
             name: subject.name,
             activedAt: subject.activedAt,
-            keywords: subject.keywords,
+            search: subject.search,
             isArchived
           }
         })
@@ -97,17 +100,12 @@ export class SubjectsModule extends Module<System['modules']> {
       const changed = resp.length > 0;
       let matched: IndexedResource[] = [];
 
-      if (
-        changed &&
-        options.indexResources &&
-        subject.activedAt.getTime() >= new Date('2000-01-01').getTime()
-      ) {
-        const offset = (options.offset ?? 31) * 24 * 60 * 60 * 1000;
-        const start = new Date(subject.activedAt.getTime() - offset);
-        this.logger.info(
-          `Start indexing subject ${subject.name} after ${start.toLocaleDateString()}`
+      if (changed && options.indexResources) {
+        this.logger.info(`Start indexing subject ${subject.name}`);
+        const indexed = await this.indexSubject(
+          { isArchived, ...subject, activedAt: subject.activedAt ?? null, ...resp[0] },
+          options
         );
-        const indexed = await this.indexSubject({ isArchived, ...subject, ...resp[0] }, options);
         matched = indexed.matched;
         this.logger.success(
           `Finish inserting subject ${subject.name} with ${indexed.matched.length} related resources`
@@ -185,6 +183,50 @@ export class SubjectsModule extends Module<System['modules']> {
     }
   }
 
+  /** Upsert subjects atomically in bounded batches without running resource indexing. */
+  public async upsertSubjects(subs: NewSubject[]) {
+    if (subs.length === 0) return [];
+
+    try {
+      return await this.database.transaction(async (tx) => {
+        const upserted: Array<{ id: number; name: string }> = [];
+
+        for (let offset = 0; offset < subs.length; offset += SubjectUpsertBatchSize) {
+          const batch = subs.slice(offset, offset + SubjectUpsertBatchSize).map((subject) => ({
+            ...subject,
+            activedAt: subject.activedAt ?? null,
+            isArchived: subject.isArchived ?? true
+          }));
+          const resp = await tx
+            .insert(subjects)
+            .values(batch)
+            .onConflictDoUpdate({
+              target: [subjects.id],
+              set: {
+                name: sql.raw(`excluded.${subjects.name.name}`),
+                search: sql.raw(`excluded.${subjects.search.name}`),
+                activedAt: sql.raw(`excluded.${subjects.activedAt.name}`),
+                isArchived: sql.raw(`excluded.${subjects.isArchived.name}`)
+              },
+              setWhere: or(
+                sql`${subjects.name} IS DISTINCT FROM ${sql.raw(`excluded.${subjects.name.name}`)}`,
+                sql`${subjects.search}::jsonb IS DISTINCT FROM ${sql.raw(`excluded.${subjects.search.name}`)}::jsonb`,
+                sql`${subjects.activedAt} IS DISTINCT FROM ${sql.raw(`excluded.${subjects.activedAt.name}`)}`,
+                sql`${subjects.isArchived} IS DISTINCT FROM ${sql.raw(`excluded.${subjects.isArchived.name}`)}`
+              )
+            })
+            .returning({ id: subjects.id, name: subjects.name });
+          upserted.push(...resp);
+        }
+
+        return upserted;
+      });
+    } catch (error) {
+      this.logger.error(error);
+      throw error;
+    }
+  }
+
   /**
    * Index resources with subject
    *
@@ -196,19 +238,15 @@ export class SubjectsModule extends Module<System['modules']> {
     subject: Subject,
     options: IndexOptions = {}
   ): Promise<{ matched: IndexedResource[]; error?: any }> {
-    if (subject.keywords.length === 0) {
-      this.logger.warn(`Invalid keywords for ${subject.name} (id ${subject.id})`);
+    const search = normalizeSubjectSearch(subject.search);
+    if (search.include.length === 0) {
+      this.logger.warn(`Invalid search.include for ${subject.name} (id ${subject.id})`);
       return {
         matched: []
       };
     }
 
     try {
-      const offset = (options.offset ?? 31) * 24 * 60 * 60 * 1000;
-      const start = new Date(subject.activedAt.getTime() - offset);
-
-      const keywords = subject.keywords.map((k) => ilike(resources.titleAlt, `%${k}%`));
-
       const resp = await this.database
         .update(resources)
         .set({ subjectId: subject.id })
@@ -216,12 +254,12 @@ export class SubjectsModule extends Module<System['modules']> {
           and(
             // 未被删除
             eq(resources.isDeleted, false),
-            // 是否覆盖
+            // 重复资源不会展示，也不需要参与 subject 历史回填
+            isNull(resources.duplicatedId),
+            // 默认只补偿空绑定；覆盖仅供显式维护调用，自动同步不会解除或改绑旧关联
             options.overwrite ? undefined : isNull(resources.subjectId),
-            // 资源时间 >= 开播时间 - 30d
-            gte(resources.createdAt, start),
-            // 匹配关键词
-            or(...keywords)
+            // 匹配 bgmx search 条件
+            buildSubjectSearchSql(subject.search)
           )
         )
         .returning({
@@ -270,13 +308,13 @@ export class SubjectsModule extends Module<System['modules']> {
   }
 
   public async updateCalendar() {
-    this.logger.info('Start updating bangumi calendar from bgmx');
+    this.logger.info('Start updating subjects and bangumi calendar from bgmx');
     try {
       const resp = await updateCalendar(this);
-      this.logger.success('Finish updating bangumi calendar from bgmx');
+      this.logger.success('Finish updating subjects and bangumi calendar from bgmx');
       return resp;
     } catch (error) {
-      this.logger.error('Failed update bangumi calendar');
+      this.logger.error('Failed updating subjects and bangumi calendar');
       throw error;
     }
   }

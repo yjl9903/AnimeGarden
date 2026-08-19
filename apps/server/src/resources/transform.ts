@@ -8,6 +8,7 @@ import type { NewResource as NewDbResource, Team, User } from '../schema/index.t
 
 import { jieba } from '../utils/index.ts';
 import { anonymous } from '../constants.ts';
+import { matchesSubjectSearch } from '../subjects/filter.ts';
 
 import type { InsertResourcesOptions, NewResource } from './types.ts';
 
@@ -91,7 +92,7 @@ export function transformNewResources(
         indexedAt: fetchedAt,
         publisherId: publisher!.id,
         fansubId: fansub?.id,
-        subjectId: indexSubject ? matchActiveSubjects(sys, titleAlt) : null,
+        subjectId: indexSubject ? matchActiveSubjects(sys, titleAlt, res.createdAt) : null,
         metadata: {},
         isDeleted: res.isDeleted ?? false
       }
@@ -136,14 +137,11 @@ function parseSize(size: string) {
   }
 }
 
-function matchActiveSubjects(sys: System, titleAlt: string) {
+function matchActiveSubjects(sys: System, titleAlt: string, createdAt: Date) {
   const active = sys.modules.subjects.activeSubjects;
-  const title = titleAlt.toLowerCase();
   for (const sub of active) {
-    for (const key of sub.keywords) {
-      if (title.indexOf(key.toLowerCase()) !== -1) {
-        return sub.id;
-      }
+    if (matchesSubjectSearch(sub.search, titleAlt, createdAt)) {
+      return sub.id;
     }
   }
   return null;
