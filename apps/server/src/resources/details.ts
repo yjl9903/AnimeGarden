@@ -31,6 +31,10 @@ type RedisCache = {
   duplicatedId: number | undefined;
 };
 
+export interface GetResourceDetailOptions {
+  force?: boolean;
+}
+
 export class DetailsManager {
   private readonly system: System;
 
@@ -46,19 +50,22 @@ export class DetailsManager {
   public async getByProviderId(
     provider: ProviderType,
     providerId: string,
-    scraper: () => Promise<ScrapedResourceDetail | undefined>
+    scraper: () => Promise<ScrapedResourceDetail | undefined>,
+    options: GetResourceDetailOptions = {}
   ) {
     const { query } = this.system.modules.resources;
 
     // 1. Get from redis
-    const cache = await this.getByProviderIdFromRedis(provider, providerId);
-    if (cache) {
-      return {
-        resource: await query.transform(cache.resource),
-        detail: cache.detail,
-        isDeleted: cache.isDeleted,
-        duplicatedId: cache.duplicatedId
-      };
+    if (!options.force) {
+      const cache = await this.getByProviderIdFromRedis(provider, providerId);
+      if (cache) {
+        return {
+          resource: await query.transform(cache.resource),
+          detail: cache.detail,
+          isDeleted: cache.isDeleted,
+          duplicatedId: cache.duplicatedId
+        };
+      }
     }
 
     // 2. Get resource from database
@@ -83,6 +90,7 @@ export class DetailsManager {
     const resp2 = await this.system.database.select().from(details).where(eq(details.id, found.id));
     const detail = resp2[0];
     if (
+      options.force ||
       found.isDeleted ||
       !detail ||
       new Date().getTime() - detail.fetchedAt.getTime() > DETAIL_EXPIRE * 1000
@@ -100,10 +108,17 @@ export class DetailsManager {
             this.logger.success(`Finish fetching resource detail of ${provider}:${providerId}`);
 
             // Fix resource
-            void this.fixResourceWithDetail(provider, found, resource, scraped).catch((error) => {
-              this.logger.warn(`Fail fixing resource detail of ${provider}:${providerId}`);
-              this.logger.error(error);
-            });
+            const fixing = this.fixResourceWithDetail(provider, found, resource, scraped).catch(
+              (error) => {
+                this.logger.warn(`Fail fixing resource detail of ${provider}:${providerId}`);
+                this.logger.error(error);
+              }
+            );
+            if (options.force) {
+              await fixing;
+            } else {
+              void fixing;
+            }
 
             return {
               resource,
@@ -132,6 +147,23 @@ export class DetailsManager {
         duplicatedId: found.duplicatedId
       };
     }
+  }
+
+  /** Refetches one provider detail even when its database or Redis cache is still fresh. */
+  public async forceRefreshByProviderId(provider: ProviderType, providerId: string) {
+    const providerInstance = ScraperProviders.get(provider);
+    if (!providerInstance) return false;
+
+    const detailURL = await providerInstance.getDetailURL(this.system, providerId);
+    if (!detailURL) return false;
+
+    const result = await this.getByProviderId(
+      providerInstance.name,
+      detailURL.providerId,
+      () => providerInstance.fetchResourceDetail(this.system, detailURL.href),
+      { force: true }
+    );
+    return result.detail !== undefined;
   }
 
   public async getByInfoHash(infoHash: string) {
@@ -378,6 +410,19 @@ export class DetailsManager {
       }
     } catch {
       return undefined;
+    }
+  }
+
+  /** Deletes one shared Redis detail cache without affecting the route-level memo cache. */
+  public async deleteRedisCache(provider: ProviderType, providerId: string) {
+    const redis = this.system.publisherRedis;
+    if (!redis) return;
+
+    try {
+      await redis.del(`details:${provider}:${providerId}`);
+    } catch (error) {
+      this.logger.warn(`Failed deleting detail cache of ${provider}:${providerId}`);
+      this.logger.error(error);
     }
   }
 }

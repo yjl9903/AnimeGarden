@@ -4,8 +4,10 @@ import type { ProviderType, ScrapedResource } from '@animegarden/client';
 import type { System } from '../system/index.ts';
 import type {
   Notification,
+  ResourcePatchAck,
   ResourcesAdminAck,
   ResourcesFetchRpcPayload,
+  ResourcePatchRpcPayload,
   ResourcesSyncRpcPayload
 } from '../system/types.ts';
 
@@ -208,6 +210,67 @@ class ResourcesJobCoordinator {
   }
 }
 
+/** Applies a validated manual subject correction and broadcasts the resource change. */
+export async function patchResource(
+  sys: System,
+  payload: ResourcePatchRpcPayload
+): Promise<ResourcePatchAck> {
+  const subjectId = payload.patch.subjectId;
+  if (subjectId !== undefined && !sys.modules.subjects.getSubject(subjectId)) {
+    return {
+      status: 'ERROR',
+      code: 'SUBJECT_NOT_FOUND',
+      message: `Subject ${subjectId} not found`
+    };
+  }
+
+  let detailRefreshed: boolean | undefined;
+  if (payload.patch.detail) {
+    await sys.modules.resources.details.deleteRedisCache(payload.provider, payload.providerId);
+    detailRefreshed = await sys.modules.resources.details.forceRefreshByProviderId(
+      payload.provider,
+      payload.providerId
+    );
+  }
+
+  const result = await sys.modules.resources.patchResource(
+    payload.provider,
+    payload.providerId,
+    payload.patch
+  );
+  if (!result) {
+    return {
+      status: 'ERROR',
+      code: 'RESOURCE_NOT_FOUND',
+      message: `Resource ${payload.provider}:${payload.providerId} not found`
+    };
+  }
+
+  if (result.changed) {
+    await sys.modules.resources.details.deleteRedisCache(payload.provider, payload.providerId);
+  }
+
+  if (result.changed) {
+    await sys.notifyRefreshedResources({
+      resources: {
+        inserted: [],
+        updated: [result.resource],
+        deleted: []
+      },
+      duplicated: {
+        attached: [],
+        detached: []
+      }
+    });
+  }
+
+  return {
+    status: 'OK',
+    ...result,
+    ...(detailRefreshed === undefined ? {} : { detailRefreshed })
+  };
+}
+
 export function registerResourcesJobRpc(sys: System) {
   const coordinator = new ResourcesJobCoordinator(sys);
 
@@ -217,6 +280,10 @@ export function registerResourcesJobRpc(sys: System) {
 
   sys.rpc.define('resources.sync', async (payload: ResourcesSyncRpcPayload) => {
     return coordinator.queueSync(payload.provider, payload);
+  });
+
+  sys.rpc.define('resources.patch', async (payload: ResourcePatchRpcPayload) => {
+    return await patchResource(sys, payload);
   });
 
   return coordinator;

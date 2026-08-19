@@ -3,7 +3,7 @@ import { and, desc, eq, inArray, lt, gt } from 'drizzle-orm';
 import { type ProviderType, SupportProviders } from '@animegarden/client';
 import { normalizeBtihToBase32, normalizeBtihToHex } from '@animegarden/shared';
 
-import type { NotifiedResource } from '../system/types.ts';
+import type { NotifiedResource, ResourcePatch } from '../system/types.ts';
 import type { System, Notification } from '../system/index.ts';
 import type { NewResource as NewDbResource } from '../schema/index.ts';
 
@@ -161,6 +161,66 @@ export class ResourcesModule extends Module<System['modules']> {
       const resource = rowMap.get(id);
       return resource ? [resource] : [];
     });
+  }
+
+  /**
+   * Manually replaces one resource's subject id without re-indexing any other resource fields.
+   */
+  public async patchResource(provider: ProviderType, providerId: string, patch: ResourcePatch) {
+    const found = await retryDatabaseFn(
+      () =>
+        this.database
+          .select({
+            ...NOTIFIED_RESOURCE_SELECTOR,
+            subjectId: resourceSchema.subjectId
+          })
+          .from(resourceSchema)
+          .where(
+            and(eq(resourceSchema.provider, provider), eq(resourceSchema.providerId, providerId))
+          ),
+      { count: 5 }
+    );
+    const current = found[0];
+    if (!current) return undefined;
+
+    if (patch.subjectId === undefined || current.subjectId === patch.subjectId) {
+      return {
+        changed: false,
+        previous: {
+          subjectId: current.subjectId
+        },
+        resource: {
+          id: current.id,
+          provider: current.provider,
+          providerId: current.providerId,
+          title: current.title,
+          subjectId: current.subjectId
+        }
+      };
+    }
+
+    const updated = await retryDatabaseFn(
+      () =>
+        this.database
+          .update(resourceSchema)
+          .set({ subjectId: patch.subjectId })
+          .where(eq(resourceSchema.id, current.id))
+          .returning(NOTIFIED_RESOURCE_SELECTOR),
+      { count: 5 }
+    );
+    const resource = updated[0];
+    if (!resource) return undefined;
+
+    return {
+      changed: true,
+      previous: {
+        subjectId: current.subjectId
+      },
+      resource: {
+        ...resource,
+        subjectId: patch.subjectId
+      }
+    };
   }
 
   private async getExistingResources(resources: NewDbResource[]) {

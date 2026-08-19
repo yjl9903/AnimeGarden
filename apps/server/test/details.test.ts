@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { ScraperProviders } from '../src/providers/index.ts';
 import { DetailsManager } from '../src/resources/details.ts';
 
 describe('DetailsManager Redis cache', () => {
@@ -76,5 +77,56 @@ describe('DetailsManager Redis cache', () => {
     );
     expect(result.resource).toEqual({ createdAt, fetchedAt });
     expect(result.detail?.fetchedAt).toEqual(new Date(detailFetchedAt));
+  });
+
+  it('deletes one resource detail cache by provider id', async () => {
+    const del = vi.fn().mockResolvedValue(1);
+    const logger = {
+      withTag: vi.fn(() => logger),
+      warn: vi.fn(),
+      error: vi.fn()
+    };
+    const manager = new DetailsManager({ publisherRedis: { del } } as any, logger as any);
+
+    await manager.deleteRedisCache('dmhy', '723509');
+
+    expect(del).toHaveBeenCalledWith('details:dmhy:723509');
+  });
+
+  it('forces a provider detail refetch through the normal detail URL resolution', async () => {
+    const previousProvider = ScraperProviders.get('ani');
+    const getDetailURL = vi.fn().mockResolvedValue({
+      provider: 'ani',
+      providerId: '12345',
+      href: '12345'
+    });
+    const fetchResourceDetail = vi.fn().mockResolvedValue({ description: 'fresh' });
+    ScraperProviders.set('ani', { name: 'ani', getDetailURL, fetchResourceDetail } as any);
+
+    const logger = {
+      withTag: vi.fn(() => logger)
+    };
+    const manager = new DetailsManager({} as any, logger as any);
+    const getByProviderId = vi
+      .spyOn(manager, 'getByProviderId')
+      .mockResolvedValue({ detail: { description: 'fresh' } } as any);
+
+    try {
+      await expect(manager.forceRefreshByProviderId('ani', '12345')).resolves.toBe(true);
+      expect(getDetailURL).toHaveBeenCalledWith(expect.anything(), '12345');
+      expect(getByProviderId).toHaveBeenCalledWith('ani', '12345', expect.any(Function), {
+        force: true
+      });
+
+      const scraper = getByProviderId.mock.calls[0][2];
+      await scraper();
+      expect(fetchResourceDetail).toHaveBeenCalledWith(expect.anything(), '12345');
+    } finally {
+      if (previousProvider) {
+        ScraperProviders.set('ani', previousProvider);
+      } else {
+        ScraperProviders.delete('ani');
+      }
+    }
   });
 });

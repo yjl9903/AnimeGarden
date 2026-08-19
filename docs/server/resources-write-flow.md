@@ -254,6 +254,36 @@ REST API、详情、收藏夹、RSS 和 MCP 对外返回的 `size` 或 `enclosur
 
 但这条路径不是资源主同步链路，只是 detail 请求触发的数据修正链路。
 
+## 手工修正资源 Subject ID
+
+管理员可以通过受 Bearer secret 保护的接口修正单个资源的 Bangumi subject：
+
+```http
+PATCH /admin/resources/:provider/:providerId
+Content-Type: application/json
+
+{ "subjectId": 123, "detail": true }
+```
+
+manager CLI 提供对应命令：
+
+```bash
+pnpm manager --secret <secret> admin patch <provider> <provider-id> \
+  [--subject <subject-id>] [--detail] --url <api-base-url>
+```
+
+`--url` 可选，用于指定本地或其他环境的 API 地址；不传时使用 client 的默认线上地址。
+`--subject` 和 `--detail` 至少传一个，也可以同时使用。`detail: true` 会让 cron 绕过已有
+Redis detail cache 和详情过期时间，立即从上游重新抓取并覆盖 detail。
+请求由收到 HTTP 调用的 server 转交给 cron RPC 执行。传入 `subjectId` 时，cron 会确认
+subject 已存在于本地 `subjects` 表，再更新目标资源的 `subject_id`。修改成功后会广播 `resources.updated`
+通知并刷新资源查询缓存，同时由 cron 删除对应的 Redis detail cache。详情路由的进程内 memo
+不会主动失效，允许继续返回最长 1 小时的既有缓存。cron 不可用时接口返回 `503`，不会降级为
+server 直接写库。
+
+该修改不是永久锁定。后续资源同步如果自动匹配到另一个非空 subject，仍可能覆盖手工设置的值；
+接口也不支持把 subject ID 清空。
+
 ## 三类服务的职责边界
 
 按当前部署约定，可以把职责理解为：

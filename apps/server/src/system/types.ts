@@ -50,6 +50,47 @@ export interface ResourcesSyncRpcPayload {
   end: number;
 }
 
+/** Fields currently supported by the resource patch operation. */
+export interface ResourcePatch {
+  subjectId?: number;
+
+  detail?: true;
+}
+
+export interface ResourcePatchRpcPayload {
+  provider: ProviderType;
+
+  providerId: string;
+
+  patch: ResourcePatch;
+}
+
+export interface ResourcePatchSuccess {
+  status: 'OK';
+
+  changed: boolean;
+
+  previous: {
+    subjectId: number | null;
+  };
+
+  resource: NotifiedResource & {
+    subjectId: number | null;
+  };
+
+  detailRefreshed?: boolean;
+}
+
+export interface ResourcePatchError {
+  status: 'ERROR';
+
+  code: 'RESOURCE_NOT_FOUND' | 'SUBJECT_NOT_FOUND';
+
+  message: string;
+}
+
+export type ResourcePatchAck = ResourcePatchSuccess | ResourcePatchError;
+
 export interface ResourcesRpcEventMap extends RpcEventMap {
   'resources.fetch': {
     payload: ResourcesFetchRpcPayload;
@@ -58,5 +99,9 @@ export interface ResourcesRpcEventMap extends RpcEventMap {
   'resources.sync': {
     payload: ResourcesSyncRpcPayload;
     reply: ResourcesAdminAck;
+  };
+  'resources.patch': {
+    payload: ResourcePatchRpcPayload;
+    reply: ResourcePatchAck;
   };
 }

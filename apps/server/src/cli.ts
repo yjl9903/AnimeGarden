@@ -5,12 +5,13 @@ import path from 'path';
 import { breadc } from 'breadc';
 import { setGlobalDispatcher, EnvHttpProxyAgent } from 'undici';
 
-import { SupportProviders, fetchAPI } from '@animegarden/client';
+import { SupportProviders } from '@animegarden/client';
 
 import packageJson from '../package.json' with { type: 'json' };
 
 import { makeServer, makeExecutor } from './server/index.ts';
 import { type SystemOptions, makeSystem } from './system/index.ts';
+import { parseAdminPatchArguments, requestAdminAPI } from './manager/admin.ts';
 
 const { description, version } = packageJson;
 
@@ -112,10 +113,10 @@ for (const provider of SupportProviders) {
     .command(`admin fetch ${provider}`, `Invoke server fetching ${provider} resources`)
     .option('--url <url>', 'API Base URL')
     .action(async (options) => {
-      const resp = await fetchAPI(
+      const resp = await requestAdminAPI(
         `/admin/resources/${provider}`,
-        { method: 'POST', headers: { authorization: `Bearer ${options.secret}` } },
-        { baseURL: options.url }
+        { method: 'POST' },
+        options
       );
       console.log(resp);
     });
@@ -128,15 +129,37 @@ for (const provider of SupportProviders) {
     .option('--start <page>', 'Start page')
     .option('--end <page>', 'End page')
     .action(async (options) => {
-      const resp = await fetchAPI(
+      const resp = await requestAdminAPI<{ resources: unknown }>(
         `/admin/resources/${provider}/sync?start=${options.start}&end=${options.end}`,
-        { method: 'POST', headers: { authorization: `Bearer ${options.secret}` } },
-        { baseURL: options.url }
+        { method: 'POST' },
+        options
       );
-      // @ts-ignore
       console.log(resp.resources);
     });
 }
+
+app
+  .command('admin patch <provider> <provider-id>', 'Manually patch one resource')
+  .option('--subject <subject-id>', 'Positive Bangumi subject id')
+  .option('--detail', 'Force refetch and update the resource detail')
+  .option('--url <url>', 'API Base URL')
+  .action(async (provider, providerId, options) => {
+    const resource = parseAdminPatchArguments(
+      provider,
+      providerId,
+      options.subject,
+      options.detail
+    );
+    const resp = await requestAdminAPI(
+      `/admin/resources/${resource.provider}/${encodeURIComponent(resource.providerId)}`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify(resource.patch)
+      },
+      options
+    );
+    console.log(resp);
+  });
 
 app
   .command('telegram push', 'Manually push telegram channel messages')
@@ -372,7 +395,10 @@ app
 
 async function main() {
   setGlobalDispatcher(new EnvHttpProxyAgent());
-  await app.run(process.argv.slice(2)).catch((err) => console.error(err));
+  await app.run(process.argv.slice(2));
 }
 
-main();
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});
