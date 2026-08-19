@@ -32,6 +32,7 @@ const FansubNames = [
   '极影字幕社',
   '猎户发布组',
   'ANi',
+  'Nix-Raws',
   'DBD制作组',
   'VCB-Studio'
 ];
