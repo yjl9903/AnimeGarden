@@ -84,8 +84,8 @@ importers:
         specifier: 1.30.0
         version: 1.30.0(supports-color@10.2.2)(zod@3.25.76)
       '@node-rs/jieba':
-        specifier: 2.0.1
-        version: 2.0.1
+        specifier: 2.0.2
+        version: 2.0.2
       anipar:
         specifier: workspace:*
         version: link:../../packages/anipar
@@ -1234,9 +1234,6 @@ packages:
   '@emnapi/core@1.10.0':
     resolution: {integrity: sha512-yq6OkJ4p82CAfPl0u9mQebQHKPJkY7WrIuk205cTYnYe+k2Z8YBh11FrbRG/H6ihirqcacOgl2BIO8oyMQLeXw==}
 
-  '@emnapi/core@1.11.1':
-    resolution: {integrity: sha512-RSvbQmHzdKzNsLYa/wHrbc3KN4sYLKAdPZxqiM2HATqv/SBk2/ENSHpvXGaLOMcsAyz0poEGqkmmKYG3OWiJEQ==}
-
   '@emnapi/core@2.0.0-alpha.3':
     resolution: {integrity: sha512-AZypUeJ/yByuxyS7BlSNRDOMLMlROYtjYdIAuBmJssVz1UJDSeYxLrdizhXCFYhedC5bqd/ASy8EuNXbVVXp9g==}
 
@@ -1251,9 +1248,6 @@ packages:
 
   '@emnapi/wasi-threads@1.2.1':
     resolution: {integrity: sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w==}
-
-  '@emnapi/wasi-threads@1.2.2':
-    resolution: {integrity: sha512-c95qOXkHdydNKhscBTebqEC1CVAZpyqOfVfBzQ1qgzyl3gfeldUjIggDbIZgDKsHLgnsM+igH7TJ/eAasaVuMA==}
 
   '@emnapi/wasi-threads@2.0.1':
     resolution: {integrity: sha512-9DsSk+o5NBX0CCJT8s0EROGSGxjR/tKu6aBTaVyq+SjAEQH4XcdcRxPBRzsBLizTTJ49MJjF+jgu3qnO9GLQcQ==}
@@ -2414,9 +2408,6 @@ packages:
       '@cfworker/json-schema':
         optional: true
 
-  '@napi-rs/wasm-runtime@0.2.12':
-    resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
-
   '@napi-rs/wasm-runtime@1.2.1':
     resolution: {integrity: sha512-KjZdi8Q1wh89gsVmghvbrMgWl6ZWmRmHV6wjB7/g4Zf0dyO+hH3neZUtuDNPO00qq5YE5RITVWvrIZKRaAmzGQ==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=23.5.0}
@@ -2427,95 +2418,90 @@ packages:
   '@nodable/entities@3.0.0':
     resolution: {integrity: sha512-8L9xFeTYKhm49xfIypoe2W5wV1m/3Z58kT+7kR9A8OyFxcPduI4VmxaUMQyKYrRjUoLLSXv6EKKID5Tvj9cUVw==}
 
-  '@node-rs/jieba-android-arm-eabi@2.0.1':
-    resolution: {integrity: sha512-tavsIaxybnlA9tRbJ+oc3NW3zhx0d5rNiCGdpIdGWjflwS7HyeUTVAZmAFDlg58Mc6EjTdVKZH+RolBbAJtgcQ==}
+  '@node-rs/jieba-android-arm-eabi@2.0.2':
+    resolution: {integrity: sha512-5w+349/6X+0MkW0DMCLmtmjbCx9YXKMqMzSGH9A/XMP3sSy+MgzgMQ5UwEteu2YFnRve8V0mJzKQpG0R7TmT7A==}
     engines: {node: '>= 10'}
     cpu: [arm]
     os: [android]
 
-  '@node-rs/jieba-android-arm64@2.0.1':
-    resolution: {integrity: sha512-AwdyqKvVNuSDnDq3anUfq+nJ5J/kzXjkfbr/1WY6TfaAlTNuuGVskuQv72/wIx/jn7NoXfm/UPuJrWYG16NC6w==}
+  '@node-rs/jieba-android-arm64@2.0.2':
+    resolution: {integrity: sha512-tqNVsZ6VVzkbwWZAQ7zcOwJLtRKANW+Oa+uj8R+PWQSVXjy8Xs6KzfpDC5r+euFdNOiSjKPuZv4VbYSSTXed8g==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [android]
 
-  '@node-rs/jieba-darwin-arm64@2.0.1':
-    resolution: {integrity: sha512-10+nwGQ6KzXXJlIL/sELA6Fi6m7eJ7xJksBiKuw1kxKUgaJwtVfAG0iqRF+NRQv0Sdq7r3k5ew9K9y0+IYaEcA==}
+  '@node-rs/jieba-darwin-arm64@2.0.2':
+    resolution: {integrity: sha512-JIpC+9p3E67OPzvvLcxI9TUHfQL6Xuti+e4zbio8Kc7gUZ3EYJ+USRHGS6EixhsWDDZKFhNThl3ztTk9ZqBjzg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@node-rs/jieba-darwin-x64@2.0.1':
-    resolution: {integrity: sha512-IJ5RK0X/uPQa1XRmTvwKSieya+w1IJeiKLw0EekoBFJKybXQdvo8/uqM/8z2eVJ8vQxW9X6K2vkVGFvYQa9dYA==}
+  '@node-rs/jieba-darwin-x64@2.0.2':
+    resolution: {integrity: sha512-E7xPjd3L4oSPl9VSZJC6yN8niFYYL9NmmxKRHW14kAoa9TOr07xeiXtfRWajq95bgfvxHB9ymMkYKHCzGlTR4Q==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
-  '@node-rs/jieba-freebsd-x64@2.0.1':
-    resolution: {integrity: sha512-yg7vyhqzP2weJu5DJ3q9q4pb0b4GWWRwcv54zK7MSSA6KNJ/uQv2a4R9/qmptLU/fZv14gWuJBEMFdL7y1Dv2w==}
+  '@node-rs/jieba-freebsd-x64@2.0.2':
+    resolution: {integrity: sha512-FHfveI/E/uLNgVGWLobFhWLrh09+DM2g3UBq8YuDJ22tnBefjGaakoTIjd9NHQ03sxAAkhlucR8QLTrFN6cMUg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [freebsd]
 
-  '@node-rs/jieba-linux-arm-gnueabihf@2.0.1':
-    resolution: {integrity: sha512-fxQYunS7w2tv8XV9GigkWJPzHnbcw6tjrUdDu5/qU0FdQVEzGuEYG85DjlNf8lZTDGSUKHBVyAQs7bBIvq8yqg==}
+  '@node-rs/jieba-linux-arm-gnueabihf@2.0.2':
+    resolution: {integrity: sha512-Hl2+3GOff5WmUkialLs0HXwUycacxIJlygMTvGnl3au6UnAxdj9KyF9+n+HQpRRLZqE0aExPQEBxvnshlwl/mg==}
     engines: {node: '>= 10'}
     cpu: [arm]
     os: [linux]
 
-  '@node-rs/jieba-linux-arm64-gnu@2.0.1':
-    resolution: {integrity: sha512-VnLU630hQIyO/fwyxh2vqZi72mO+hXkVUC3jVLPfOAlppinmsGX9N81tpTPUK3840hbV8WLtbYTWN1XodI38eg==}
+  '@node-rs/jieba-linux-arm64-gnu@2.0.2':
+    resolution: {integrity: sha512-tM0Gdh37ZhHpol8O3REGaWILdPYYoXfDuw+XfXhq1ppNbfwG5fm+DmoW7n4qg4nQM7jGM2t67BbmlENwxiAlCQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@node-rs/jieba-linux-arm64-musl@2.0.1':
-    resolution: {integrity: sha512-K4EDyNixSLVdTNYnHwD+7I/ytvzpo7tt+vdCLqwQViiek2PMpL/FFRvA39uU2tk99jXIxvkczdxARG20BRZppg==}
+  '@node-rs/jieba-linux-arm64-musl@2.0.2':
+    resolution: {integrity: sha512-7BrJjtsiuHdKzaVedWusiMzS9dUJXPTZBAunuRly/dyTvQyJqRJ3/N6RdgNRXaF49zuEz8JrtA9+aCn0t+ajTg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [musl]
 
-  '@node-rs/jieba-linux-x64-gnu@2.0.1':
-    resolution: {integrity: sha512-sq3J6L2ANTE25I9eVFq/nb57OtXcvUIeUD1CTKJxwgTKIVmcB2LyOZpWf20AjHRUfbMER9Klqg5dgyyO+Six+w==}
+  '@node-rs/jieba-linux-x64-gnu@2.0.2':
+    resolution: {integrity: sha512-514+0NFGCZp2e9lrnVRmyfe1/Cd+zUV3IUD0pWYB2gHfmowNrHPHL95WZosJMDp96C6LYbJZuNTRKifm0PyVBA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@node-rs/jieba-linux-x64-musl@2.0.1':
-    resolution: {integrity: sha512-0zfP9Qy68yEXrhBFknfhF6WUJDPU/8eRuyIrkMGdMjfRpxhpSbr2fMfnsqhOQLvhuK4w3iDFvTy4t5d0s6JKMA==}
+  '@node-rs/jieba-linux-x64-musl@2.0.2':
+    resolution: {integrity: sha512-KFlbnGoGoX58qLKeWutPyupTbbYPGgC4DAGVjEu8ctYVh4UyjeRHCxlY7ipC7NIW8I3YzKQRZ/yFMzmiDYX7UQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [musl]
 
-  '@node-rs/jieba-wasm32-wasi@2.0.1':
-    resolution: {integrity: sha512-7I5rJya5rlQNJIhv8PvPzIVT1/gVc0vFzHmlfRGwCPGDJ3tHVxkSPW34dDx3OgDmbIeadNpmgIyC1RaS9djPJg==}
-    engines: {node: '>=14.0.0'}
-    cpu: [wasm32]
-
-  '@node-rs/jieba-win32-arm64-msvc@2.0.1':
-    resolution: {integrity: sha512-Aj/2EwYSaPgAbKnSl+vKM/2kOaZNMZWnShiZzbSNyzlLy3eIOyOYVLbYRDno4547KngRxer8uzROhIQIwXwkvw==}
+  '@node-rs/jieba-win32-arm64-msvc@2.0.2':
+    resolution: {integrity: sha512-EI3JLL01kf6pP3mAUoYnDrt8S+FY2W2nWpjtiK7ucs46tITLkYDx9wmAwDsOnoCkxs4CETzLytPhLZ12lzR5Qw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@node-rs/jieba-win32-ia32-msvc@2.0.1':
-    resolution: {integrity: sha512-tpJt3uuBlGrcOInQLTYvcgamQgfadl5cwExLYU+CX9rXKpXLDO31dIujUDBgNWoiQq3tOiU1/AKbT7ZdNd4lBQ==}
+  '@node-rs/jieba-win32-ia32-msvc@2.0.2':
+    resolution: {integrity: sha512-FtTx1cth53zZqdZTCsTDTlg0rTGDvFZyaMCLEa3FcjrDD8DeWNavNcJbLmProS9YlZPdCvArPzH/etaoiTKimA==}
     engines: {node: '>= 10'}
     cpu: [ia32]
     os: [win32]
 
-  '@node-rs/jieba-win32-x64-msvc@2.0.1':
-    resolution: {integrity: sha512-LDOyo2/2CO8UnpSGLJdgqtH8mOnsABPhNxkfIky7UT9cyLEzOaU44nbA5YzPGpBI3qzMbWcwJYQsjBcgK2VqAg==}
+  '@node-rs/jieba-win32-x64-msvc@2.0.2':
+    resolution: {integrity: sha512-9c08mSvOoluteKy0AiyAy+x4uvWB45Q3fheg51gcIxYGxl+Lk0+Xq8JnQxs/f6nLH+mNaOWAmX4DtORQMWabxA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
 
-  '@node-rs/jieba@2.0.1':
-    resolution: {integrity: sha512-tnfzXOMqzVQF2dSKMhPC9HrHzzWmN6KheL/zYtGenhOpq/bCKHJWVASSggEnHlkmHgXGeIJHR2N/IuPzewz1BQ==}
+  '@node-rs/jieba@2.0.2':
+    resolution: {integrity: sha512-aONN6nwpbwHKenEzCcYUbm6ZFHWEs7N5eas7zwWFs3c4MmEdN79m9Si4PvOxCp285I2M+g4MfLyUm9WcYaQi7Q==}
     engines: {node: '>= 10'}
 
   '@onekuma/preset.css@0.1.11':
@@ -3962,9 +3948,6 @@ packages:
     resolution: {integrity: sha512-m8tJkIrTrbQ9O1uHxV0GUq623Zg1678xGna8eMsy4KbygUX/wVFgdZDYV/AxyoyaW/U7nyKoBvaDVwm22p9xqA==}
     cpu: [arm64]
     os: [win32]
-
-  '@tybys/wasm-util@0.10.2':
-    resolution: {integrity: sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg==}
 
   '@tybys/wasm-util@0.10.3':
     resolution: {integrity: sha512-F3fo1MYrRJYL3zER0OUOmkutjr1Vp23m7OsSgp7nq4SP6OqX6C/56XFIPAl5bt3zaBRjmW7SGz3u/6LwFpYcOg==}
@@ -8623,12 +8606,6 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
-  '@emnapi/core@1.11.1':
-    dependencies:
-      '@emnapi/wasi-threads': 1.2.2
-      tslib: 2.8.1
-    optional: true
-
   '@emnapi/core@2.0.0-alpha.3':
     dependencies:
       '@emnapi/wasi-threads': 2.0.1
@@ -8651,11 +8628,6 @@ snapshots:
     optional: true
 
   '@emnapi/wasi-threads@1.2.1':
-    dependencies:
-      tslib: 2.8.1
-    optional: true
-
-  '@emnapi/wasi-threads@1.2.2':
     dependencies:
       tslib: 2.8.1
     optional: true
@@ -9467,13 +9439,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@napi-rs/wasm-runtime@0.2.12':
-    dependencies:
-      '@emnapi/core': 1.11.1
-      '@emnapi/runtime': 1.11.1
-      '@tybys/wasm-util': 0.10.2
-    optional: true
-
   '@napi-rs/wasm-runtime@1.2.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)':
     dependencies:
       '@emnapi/core': 1.10.0
@@ -9490,66 +9455,60 @@ snapshots:
 
   '@nodable/entities@3.0.0': {}
 
-  '@node-rs/jieba-android-arm-eabi@2.0.1':
+  '@node-rs/jieba-android-arm-eabi@2.0.2':
     optional: true
 
-  '@node-rs/jieba-android-arm64@2.0.1':
+  '@node-rs/jieba-android-arm64@2.0.2':
     optional: true
 
-  '@node-rs/jieba-darwin-arm64@2.0.1':
+  '@node-rs/jieba-darwin-arm64@2.0.2':
     optional: true
 
-  '@node-rs/jieba-darwin-x64@2.0.1':
+  '@node-rs/jieba-darwin-x64@2.0.2':
     optional: true
 
-  '@node-rs/jieba-freebsd-x64@2.0.1':
+  '@node-rs/jieba-freebsd-x64@2.0.2':
     optional: true
 
-  '@node-rs/jieba-linux-arm-gnueabihf@2.0.1':
+  '@node-rs/jieba-linux-arm-gnueabihf@2.0.2':
     optional: true
 
-  '@node-rs/jieba-linux-arm64-gnu@2.0.1':
+  '@node-rs/jieba-linux-arm64-gnu@2.0.2':
     optional: true
 
-  '@node-rs/jieba-linux-arm64-musl@2.0.1':
+  '@node-rs/jieba-linux-arm64-musl@2.0.2':
     optional: true
 
-  '@node-rs/jieba-linux-x64-gnu@2.0.1':
+  '@node-rs/jieba-linux-x64-gnu@2.0.2':
     optional: true
 
-  '@node-rs/jieba-linux-x64-musl@2.0.1':
+  '@node-rs/jieba-linux-x64-musl@2.0.2':
     optional: true
 
-  '@node-rs/jieba-wasm32-wasi@2.0.1':
-    dependencies:
-      '@napi-rs/wasm-runtime': 0.2.12
+  '@node-rs/jieba-win32-arm64-msvc@2.0.2':
     optional: true
 
-  '@node-rs/jieba-win32-arm64-msvc@2.0.1':
+  '@node-rs/jieba-win32-ia32-msvc@2.0.2':
     optional: true
 
-  '@node-rs/jieba-win32-ia32-msvc@2.0.1':
+  '@node-rs/jieba-win32-x64-msvc@2.0.2':
     optional: true
 
-  '@node-rs/jieba-win32-x64-msvc@2.0.1':
-    optional: true
-
-  '@node-rs/jieba@2.0.1':
+  '@node-rs/jieba@2.0.2':
     optionalDependencies:
-      '@node-rs/jieba-android-arm-eabi': 2.0.1
-      '@node-rs/jieba-android-arm64': 2.0.1
-      '@node-rs/jieba-darwin-arm64': 2.0.1
-      '@node-rs/jieba-darwin-x64': 2.0.1
-      '@node-rs/jieba-freebsd-x64': 2.0.1
-      '@node-rs/jieba-linux-arm-gnueabihf': 2.0.1
-      '@node-rs/jieba-linux-arm64-gnu': 2.0.1
-      '@node-rs/jieba-linux-arm64-musl': 2.0.1
-      '@node-rs/jieba-linux-x64-gnu': 2.0.1
-      '@node-rs/jieba-linux-x64-musl': 2.0.1
-      '@node-rs/jieba-wasm32-wasi': 2.0.1
-      '@node-rs/jieba-win32-arm64-msvc': 2.0.1
-      '@node-rs/jieba-win32-ia32-msvc': 2.0.1
-      '@node-rs/jieba-win32-x64-msvc': 2.0.1
+      '@node-rs/jieba-android-arm-eabi': 2.0.2
+      '@node-rs/jieba-android-arm64': 2.0.2
+      '@node-rs/jieba-darwin-arm64': 2.0.2
+      '@node-rs/jieba-darwin-x64': 2.0.2
+      '@node-rs/jieba-freebsd-x64': 2.0.2
+      '@node-rs/jieba-linux-arm-gnueabihf': 2.0.2
+      '@node-rs/jieba-linux-arm64-gnu': 2.0.2
+      '@node-rs/jieba-linux-arm64-musl': 2.0.2
+      '@node-rs/jieba-linux-x64-gnu': 2.0.2
+      '@node-rs/jieba-linux-x64-musl': 2.0.2
+      '@node-rs/jieba-win32-arm64-msvc': 2.0.2
+      '@node-rs/jieba-win32-ia32-msvc': 2.0.2
+      '@node-rs/jieba-win32-x64-msvc': 2.0.2
 
   '@onekuma/preset.css@0.1.11': {}
 
@@ -11454,11 +11413,6 @@ snapshots:
     optional: true
 
   '@turbo/windows-arm64@2.10.11':
-    optional: true
-
-  '@tybys/wasm-util@0.10.2':
-    dependencies:
-      tslib: 2.8.1
     optional: true
 
   '@tybys/wasm-util@0.10.3':
