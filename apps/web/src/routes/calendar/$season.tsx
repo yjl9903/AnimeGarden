@@ -2,9 +2,8 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 
 import Page from '~/pages/anime/route';
+import { buildAnimePageHead } from '~/pages/anime/seo';
 import { calendarQueryOptions, calendarsQueryOptions, timestampQueryOptions } from '~/query';
-import { getCanonicalURL } from '~/utils';
-import { getCalendarSeasonHead } from '~/utils/calendar-season';
 import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
 
 export const loader = async ({
@@ -58,15 +57,7 @@ export const loader = async ({
 
 export const Route = createFileRoute('/calendar/$season')({
   loader,
-  head: ({ loaderData, params }) => {
-    const season = loaderData?.season ?? params.season;
-    const head = getCalendarSeasonHead(season);
-
-    return {
-      meta: [{ title: head.title }, { name: 'description', content: head.description }],
-      links: [{ rel: 'canonical', href: getCanonicalURL(`/calendar/${season}`) }]
-    };
-  },
+  head: ({ loaderData, params }) => buildAnimePageHead(loaderData?.season ?? params.season),
   component: CalendarRoute
 });
 

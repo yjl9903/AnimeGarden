@@ -14,6 +14,7 @@
 | 文档 | 内容 | 适用场景 |
 | --- | --- | --- |
 | [umami-tracking.md](./umami-tracking.md) | Umami 已接入事件、事件属性、接入位置和未覆盖点击埋点 TODO | 修改前端导航、资源列表、搜索、收藏夹、详情页或埋点时先读 |
+| [google-search-seo-plan.md](./google-search-seo-plan.md) | Google Search 当前实现进度、方案概述、逐页面 SEO 配置、robots.txt 和 Sitemap 范围 | 修改 title/description、canonical、robots、JSON-LD、Sitemap 或搜索展示时先读 |
 | [tanstack-start-parity-test-paths.md](./tanstack-start-parity-test-paths.md) | TanStack Start 迁移期间本地与线上对齐验证路径、已发现差异和自动化断言建议 | 做迁移回归、补 e2e 测试或核对页面行为时先读 |
 
 ## 维护约定

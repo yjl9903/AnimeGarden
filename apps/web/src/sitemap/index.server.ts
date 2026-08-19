@@ -68,22 +68,28 @@ async function getSitemapIndexUrls() {
   return [...pages, ...months.reverse()].map((url) => `${SITE}/${url}`);
 }
 
+/** Builds a stable, correctly encoded resources landing-page URL. */
+function getResourcesUrl(params: Record<string, string>) {
+  const url = new URL('/resources/1', SITE);
+  for (const [name, value] of Object.entries(params)) url.searchParams.set(name, value);
+  return url.toString();
+}
+
 async function getSitemapUrls(pathname: string): Promise<SitemapItemLoose[] | undefined> {
   try {
     if (pathname === '/sitemap-0.xml') {
       return [
         { url: SITE },
-        { url: `${SITE}/anime` },
-        { url: `${SITE}/resources/1?preset=bangumi&type=动画` },
-        { url: `${SITE}/resources/1?type=动画` },
-        { url: `${SITE}/resources/1?type=合集` },
-        { url: `${SITE}/resources/1?type=音乐` },
-        { url: `${SITE}/resources/1?type=日剧` },
-        { url: `${SITE}/resources/1?type=RAW` },
-        { url: `${SITE}/resources/1?type=漫画` },
-        { url: `${SITE}/resources/1?type=游戏` },
-        { url: `${SITE}/resources/1?type=特摄` },
-        { url: `${SITE}/resources/1?type=其他` },
+        { url: getResourcesUrl({ preset: 'bangumi', type: '动画' }) },
+        { url: getResourcesUrl({ type: '动画' }) },
+        { url: getResourcesUrl({ type: '合集' }) },
+        { url: getResourcesUrl({ type: '音乐' }) },
+        { url: getResourcesUrl({ type: '日剧' }) },
+        { url: getResourcesUrl({ type: 'RAW' }) },
+        { url: getResourcesUrl({ type: '漫画' }) },
+        { url: getResourcesUrl({ type: '游戏' }) },
+        { url: getResourcesUrl({ type: '特摄' }) },
+        { url: getResourcesUrl({ type: '其他' }) },
         { url: `${SITE}/docs/api` }
       ];
     }
@@ -103,7 +109,7 @@ async function getSitemapUrls(pathname: string): Promise<SitemapItemLoose[] | un
         retry: 5
       });
       return data.teams.map((team) => ({
-        url: `${SITE}/resources/1?fansub=${team.name}`
+        url: getResourcesUrl({ fansub: team.name })
       }));
     }
 

@@ -1,7 +1,7 @@
 import { SupportProviders, fetchResourceDetail, type ProviderType } from '@animegarden/client';
 import { normalizeDescription } from '@animegarden/scraper';
 
-import { detailHead } from './head.server';
+import { buildDetailPageSeo } from '~/pages/detail.$provider.$providerId/seo';
 import { getSubjectById } from '~/query/subject.server';
 import { formatChinaTime } from '~/utils/date';
 import { ResponseCacheControl } from '~/utils/response';
@@ -37,13 +37,10 @@ export async function renderDetailMarkdown(
   const resource = resp.resource;
   const description = normalizeDescription(resp.detail.description);
   const subject = resource.subjectId ? await getSubjectById(resource.subjectId) : undefined;
-  const head = detailHead(resource, description, resp.detail.description);
+  const head = buildDetailPageSeo(resource, description, resp.detail.description, subject?.poster);
 
   const body =
-    frontmatter({
-      ...head,
-      image: description.images[0]?.src ?? subject?.poster
-    }) +
+    frontmatter(head) +
     heading(1, resource.title) +
     metadataList([
       ['类型', resource.type],

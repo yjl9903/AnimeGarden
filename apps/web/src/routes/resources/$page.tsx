@@ -3,11 +3,10 @@ import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
 
 import Page from '~/pages/resources.($page)/route';
+import { buildResourcesPageHead } from '~/pages/resources.($page)/seo';
 import { APP_HOST } from '~build/env';
-import { stringifySearchText } from '~/layouts/Search/utils';
-import { generateTitleFromFilter } from '~/utils/server/meta';
 import { calendarQueryOptions, resourcesQueryOptions, subjectQueryOptions } from '~/query';
-import { getCanonicalURL, getFeedURL, getTrackingError, serializeError } from '~/utils';
+import { getFeedURL, getTrackingError, serializeError } from '~/utils';
 import { getResourcesRouteLink } from '~/utils/routes';
 import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
 
@@ -91,32 +90,19 @@ export const loader = async ({
 
 export const Route = createFileRoute('/resources/$page')({
   loader,
-  head: ({ loaderData }) => {
-    const title = generateTitleFromFilter(loaderData?.filter ?? {}, loaderData?.subjects ?? {});
-    const search = stringifyURLSearch(loaderData?.filter ?? {});
-
-    return {
-      meta: [
-        { title: title + ' | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站' },
-        {
-          name: 'description',
-          content: `最新资源 ${stringifySearchText(search, loaderData?.subjects ?? {})}`
-        }
-      ],
-      links: [
-        {
-          rel: 'canonical',
-          href: getCanonicalURL(`/resources/${loaderData?.page ?? 1}`, search.toString())
-        }
-      ]
-    };
-  },
+  head: ({ loaderData }) =>
+    buildResourcesPageHead(
+      loaderData?.filter,
+      loaderData?.subjects,
+      loaderData?.page ?? 1,
+      loaderData?.resources ? loaderData.resources.length > 0 : undefined
+    ),
   component: ResourcesRoute
 });
 
 function ResourcesRoute() {
   const location = useLocation();
-  const { page } = Route.useLoaderData();
+  const { page, filter } = Route.useLoaderData();
   const url = new URL(location.href, `https://${APP_HOST}`);
   const { queryInput } = getResourcesQueryInput(url, page);
   const { data } = useSuspenseQuery(resourcesQueryOptions(queryInput));
@@ -125,13 +111,15 @@ function ResourcesRoute() {
     page,
     error: serializeError(data.error)
   };
+  const normalizedSearch = stringifyURLSearch(filter ?? {}).toString();
+  const normalizedSearchStr = normalizedSearch ? `?${normalizedSearch}` : '';
 
   return (
     <Page
       data={pageData}
-      feedURL={getFeedURL(location.searchStr)}
+      feedURL={getFeedURL(normalizedSearchStr)}
       path={`${location.pathname}${location.searchStr}`}
-      link={(page) => getResourcesRouteLink(page, location.searchStr)}
+      link={(page) => getResourcesRouteLink(page, normalizedSearchStr)}
       renderError={getTrackingError(pageData.error, 'resources-render-failed')}
     />
   );

@@ -24,7 +24,8 @@ export function openMagnetLink(
   window.location.assign(href);
 }
 
-export function getPikPakUrlChecker(magnet: string) {
+/** Builds the KeepShare player URL for a magnet link. */
+export function getKeepShareURL(magnet: string) {
   const url = magnet.split('&')[0];
   return `https://keepshare.org/${KEEPSHARE_ID}/${encodeURIComponent(url)}`;
 }

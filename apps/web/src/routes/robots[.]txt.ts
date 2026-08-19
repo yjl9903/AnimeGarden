@@ -2,9 +2,13 @@ import { createFileRoute } from '@tanstack/react-router';
 
 import { ResponseCacheControl } from '~/utils/response';
 
-const robotsTxt = `User-agent: *
-Disallow: /api/
+export const RobotsDisallowPaths = ['/api/', '/iframe', '/collection/'] as const;
 
+export const robotsTxt = `# Crawl rules for Robots Exclusion Protocol compliant crawlers.
+User-agent: *
+${RobotsDisallowPaths.map((path) => `Disallow: ${path}`).join('\n')}
+
+# This is a separate content-use signal; unsupported robots.txt parsers ignore it.
 Content-Signal: ai-train=yes, search=yes, ai-input=yes
 
 Sitemap: https://animes.garden/sitemap-index.xml

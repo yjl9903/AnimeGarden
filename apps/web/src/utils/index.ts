@@ -17,3 +17,5 @@ export * from './routes';
 export * from './umami';
 
 export * from './canonical';
+
+export * from './seo';

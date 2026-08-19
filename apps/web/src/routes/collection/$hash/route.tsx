@@ -2,8 +2,8 @@ import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 
 import Page from '~/pages/collection.$hash/route';
+import { buildCollectionPageHead } from '~/pages/collection.$hash/seo';
 import { calendarQueryOptions, collectionQueryOptions } from '~/query';
-import { getCanonicalURL } from '~/utils';
 import { ResponseCacheControl, setCacheControl } from '~/utils/response';
 
 const loader = async ({
@@ -30,20 +30,7 @@ const loader = async ({
 
 export const Route = createFileRoute('/collection/$hash')({
   loader,
-  head: ({ loaderData, params }) => ({
-    meta: [
-      {
-        title:
-          (loaderData?.name ? loaderData.name + ' | ' : '') +
-          'Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站'
-      },
-      {
-        name: 'description',
-        content: 'Anime Garden 资源收藏夹, 動漫花園資源網镜像站, 动漫花园动画 BT 资源聚合站'
-      }
-    ],
-    links: [{ rel: 'canonical', href: getCanonicalURL(`/collection/${params.hash}`) }]
-  }),
+  head: ({ loaderData, params }) => buildCollectionPageHead(loaderData?.name, params.hash!),
   component: CollectionRoute
 });
 

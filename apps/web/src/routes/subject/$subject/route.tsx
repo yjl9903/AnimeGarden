@@ -1,14 +1,11 @@
 import { createFileRoute, redirect, useLocation } from '@tanstack/react-router';
 import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
-import { truncate } from '@animegarden/shared';
 
 import Page from '~/pages/subject.$subject.($page)/route';
-import { APP_HOST } from '~build/env';
-import { generateTitleFromFilter } from '~/utils/server/meta';
+import { buildSubjectPageHead } from '~/pages/subject.$subject.($page)/seo';
 import { calendarQueryOptions, resourcesQueryOptions, subjectQueryOptions } from '~/query';
-import { getCanonicalURL, getTrackingError, serializeError } from '~/utils';
+import { getTrackingError, serializeError } from '~/utils';
 import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
-import { getSubjectDisplayName } from '~/utils/subject';
 import { groupResourcesByFansub } from '~/pages/subject.$subject.($page)/utils';
 
 function getSubjectResourcesFilter(subjectId: number) {
@@ -83,64 +80,8 @@ const loader = async ({
 
 export const Route = createFileRoute('/subject/$subject')({
   loader,
-  head: ({ loaderData, params }) => {
-    const subject = loaderData?.subject;
-    const name = getSubjectDisplayName(subject);
-
-    const og = subject
-      ? [
-          {
-            name: 'og:title',
-            content: name + ' 最新资源'
-          },
-          {
-            name: 'og:url',
-            content: `https://${APP_HOST}/subject/${subject.id}`
-          },
-          {
-            name: 'og:type',
-            content: 'video.episode'
-          },
-          {
-            name: 'og:logo',
-            content: '/favicon.svg'
-          }
-        ]
-      : [];
-
-    const subjectImage = subject?.poster;
-    if (subjectImage) {
-      og.push({
-        name: 'og:image',
-        content: subjectImage
-      });
-    }
-
-    return {
-      meta: [
-        {
-          title:
-            (name
-              ? name + ' 最新资源'
-              : generateTitleFromFilter(
-                  loaderData?.filter ?? {},
-                  subject ? { [subject.id]: subject } : {}
-                )) + ' | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站'
-        },
-        {
-          name: 'description',
-          content:
-            name && subject?.summary
-              ? `${name}: ${truncate(subject.summary.replace(/\n/g, ' '), 120)}`
-              : name
-                ? `${name} | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站`
-                : `最新动画资源 | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站`
-        },
-        ...og
-      ],
-      links: [{ rel: 'canonical', href: getCanonicalURL(`/subject/${params.subject}`) }]
-    };
-  },
+  head: ({ loaderData, params }) =>
+    buildSubjectPageHead(loaderData?.subject, loaderData?.filter, params.subject!),
   component: SubjectRoute
 });
 

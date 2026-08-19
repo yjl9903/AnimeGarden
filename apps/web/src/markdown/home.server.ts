@@ -1,9 +1,9 @@
 import { fetchResources } from '@animegarden/client';
 
 import { ResponseCacheControl } from '~/utils/response';
-import { getFeedURL } from '~/utils/url';
+import { getFeedURL } from '~/utils';
+import { buildHomePageSeo } from '~/pages/_index/seo';
 
-import { HomeHead } from './head.server';
 import {
   formatResources,
   frontmatter,
@@ -28,10 +28,11 @@ export async function renderHomeMarkdown(): Promise<MarkdownResult> {
     throw new Error('获取最新资源失败');
   }
 
+  const seo = buildHomePageSeo();
   const body =
-    frontmatter(HomeHead) +
+    frontmatter(seo) +
     heading(1, 'Anime Garden') +
-    paragraph('動漫花園資源網镜像站, 动漫花园动画 BT 资源聚合站。') +
+    paragraph('動漫花園第三方镜像站以及动画 BT 资源聚合站。') +
     `RSS 订阅：${getFeedURL()}\n\n` +
     heading(2, '最新资源') +
     formatResources(resp.resources);

@@ -4,8 +4,9 @@ import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 import type { Resource } from '@animegarden/client';
 
 import Page from '~/pages/_index/route';
+import { buildHomePageHead } from '~/pages/_index/seo';
 import { calendarQueryOptions, resourcesQueryOptions, type ResourcesQueryInput } from '~/query';
-import { getCanonicalURL, getFeedURL, serializeError, getTrackingError } from '~/utils';
+import { getFeedURL, getTrackingError, serializeError } from '~/utils';
 import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
 
 const indexResourcesFilter = {
@@ -67,16 +68,7 @@ export const loader = async ({
 
 export const Route = createFileRoute('/')({
   loader,
-  head: () => ({
-    meta: [
-      { title: 'Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站' },
-      {
-        name: 'description',
-        content: 'Anime Garden 動漫花園資源網镜像站, 动漫花园动画 BT 资源聚合站'
-      }
-    ],
-    links: [{ rel: 'canonical', href: getCanonicalURL('/') }]
-  }),
+  head: () => buildHomePageHead(),
   component: IndexRoute
 });
 

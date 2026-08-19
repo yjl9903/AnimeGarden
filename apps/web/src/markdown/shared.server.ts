@@ -80,10 +80,9 @@ export function errorMarkdown(title: string, message: string, status = 502): Mar
   };
 }
 
-export function frontmatter(values: { title: string; description?: string; image?: string }) {
+export function frontmatter(values: { title: string; description?: string }) {
   const lines = [`title: ${yamlString(values.title)}`];
   if (values.description) lines.push(`description: ${yamlString(values.description)}`);
-  if (values.image) lines.push(`image: ${yamlString(values.image)}`);
   return `---\n${lines.join('\n')}\n---\n\n`;
 }
 

@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router';
 import { formatInTimeZone } from 'date-fns-tz';
 
 import Layout from '~/layouts/Layout';
-import { splitMagnetURL, openMagnetLink, getPikPakUrlChecker, getPikPakTrackEvent } from '~/utils';
+import { splitMagnetURL, openMagnetLink, getKeepShareURL, getPikPakTrackEvent } from '~/utils';
 import { getResourcesRouteLink } from '~/utils/routes';
 
 import './detail.css';
@@ -15,7 +15,7 @@ export default function Resources({ data }: { data: any }) {
   const magnet =
     resource?.magnet ||
     detail?.magnets.find((m: { url: string }) => m.url.startsWith('magnet:'))?.url;
-  const pikpakUrl = magnet ? getPikPakUrlChecker(magnet) : '';
+  const keepShareUrl = magnet ? getKeepShareURL(magnet) : '';
 
   const { provider, providerId } = resource!;
 
@@ -34,7 +34,7 @@ export default function Resources({ data }: { data: any }) {
           <div className="download-link rounded-md shadow-box">
             <h2 className="text-lg font-bold border-b px4 py2 flex items-center">
               <a
-                href={pikpakUrl}
+                href={keepShareUrl}
                 {...getPikPakTrackEvent(provider, providerId, 'detail')}
                 className="play text-link-active underline underline-dotted underline-offset-6"
                 target="_blank"
@@ -51,7 +51,7 @@ export default function Resources({ data }: { data: any }) {
               <div>
                 <span>
                   <a
-                    href={pikpakUrl}
+                    href={keepShareUrl}
                     {...getPikPakTrackEvent(provider, providerId, 'detail')}
                     className="play text-link-active underline underline-dotted underline-offset-6"
                     target="_blank"
@@ -60,7 +60,7 @@ export default function Resources({ data }: { data: any }) {
                   </a>
                 </span>
                 <a
-                  href={pikpakUrl}
+                  href={keepShareUrl}
                   {...getPikPakTrackEvent(provider, providerId, 'detail')}
                   className="play text-link"
                   target="_blank"

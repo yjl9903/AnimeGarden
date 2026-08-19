@@ -1,8 +1,8 @@
 import { fetchCollection } from '@animegarden/client';
 
 import { ResponseCacheControl } from '~/utils/response';
+import { buildCollectionPageSeo } from '~/pages/collection.$hash/seo';
 
-import { collectionHead } from './head.server';
 import {
   errorMarkdown,
   formatFilter,
@@ -20,7 +20,7 @@ export async function renderCollectionMarkdown(hash: string): Promise<MarkdownRe
     return errorMarkdown('收藏夹不存在', '请求的收藏夹不存在。', 404);
   }
 
-  const head = collectionHead(resp.name);
+  const head = buildCollectionPageSeo(resp.name);
   const body =
     frontmatter(head) +
     heading(1, resp.name || '收藏夹') +

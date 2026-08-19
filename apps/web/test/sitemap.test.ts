@@ -91,7 +91,7 @@ describe('sitemap server routes', () => {
 
     expect(response.status).toBe(200);
     expect(xml).toContain('<loc>https://animes.garden/</loc>');
-    expect(xml).toContain('<loc>https://animes.garden/anime</loc>');
+    expect(xml).not.toContain('<loc>https://animes.garden/anime</loc>');
     expect(xml).toContain('<loc>https://animes.garden/docs/api</loc>');
   });
 

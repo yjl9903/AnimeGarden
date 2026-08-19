@@ -1,14 +1,10 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 
-import { parse } from 'anipar';
-import { truncate } from '@animegarden/shared';
 import { SupportProviders } from '@animegarden/client';
 
-import { APP_HOST } from '~build/env';
-
 import Page from '~/pages/detail.$provider.$providerId/route';
-import { formatChinaTime, getCanonicalURL } from '~/utils';
+import { buildDetailPageHead } from '~/pages/detail.$provider.$providerId/seo';
 import { ResponseCacheControl, setCacheControl } from '~/utils/response';
 import { calendarQueryOptions, resourceDetailQueryOptions, subjectQueryOptions } from '~/query';
 
@@ -41,96 +37,15 @@ const loader = async ({
 
 export const Route = createFileRoute('/detail/$provider/$providerId')({
   loader,
-  head: ({ loaderData, params }) => {
-    const resource = loaderData?.resource;
-    const resourceTitle = resource?.title;
-
-    const info = resource ? parse(resource.title) : undefined;
-    const schema = info
-      ? {
-          '@context': 'http://schema.org',
-          '@type': 'TVEpisode',
-          partOfTVSeries: {
-            '@type': 'TVSeries',
-            name: info.title
-          },
-          partOfSeason: {
-            '@type': 'TVSeason',
-            seasonNumber: `${info.season?.number ?? 1}`
-          },
-          episodeNumber: info.episode?.number !== undefined ? `${info.episode.number}` : undefined,
-          datePublished: resource
-            ? formatChinaTime(new Date(resource.createdAt), 'yyyy-MM-dd')
-            : undefined,
-          url: `https://${APP_HOST}/detail/${params.provider}/${params.providerId}`
-        }
-      : undefined;
-
-    const title = info?.title ?? resourceTitle;
-    const description = loaderData?.description;
-    const descriptionText =
-      description && title
-        ? description.summary.startsWith(title)
-          ? description.summary
-          : `${title}: ${description.summary}`
-        : `${title}: ${description?.summary ?? loaderData?.detail?.description}`;
-
-    const og = resource
-      ? [
-          {
-            name: 'og:title',
-            content: title
-          },
-          {
-            name: 'og:url',
-            content: `https://${APP_HOST}/detail/${resource.provider}/${resource.providerId}`
-          },
-          {
-            name: 'og:type',
-            content: ['动画', '合集', '日剧', '特摄'].includes(resource.type)
-              ? 'video.episode'
-              : ['音乐'].includes(resource.type)
-                ? 'music.song'
-                : 'website'
-          },
-          {
-            name: 'og:logo',
-            content: '/favicon.svg'
-          }
-        ]
-      : [];
-
-    const cover = description?.images[0]?.src;
-    const subjectImage = loaderData?.subject?.poster;
-    if (cover || subjectImage) {
-      og.push({
-        name: 'og:image',
-        content: cover ?? subjectImage
-      });
-    }
-
-    return {
-      meta: [
-        {
-          title: resourceTitle
-            ? truncate(resourceTitle, 70)
-            : '资源详情 | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站'
-        },
-        {
-          name: 'description',
-          content: descriptionText
-        },
-        ...(schema ? [{ 'script:ld+json': schema }] : []),
-        ...og
-      ],
-      links: [
-        {
-          rel: 'canonical',
-          href: getCanonicalURL(`/detail/${params.provider}/${params.providerId}`)
-        }
-      ]
-    };
-  },
+  head: ({ loaderData, params }) =>
+    buildDetailPageHead({
+      resource: loaderData?.resource,
+      description: loaderData?.description,
+      fallbackDescription: loaderData?.detail?.description,
+      subject: loaderData?.subject,
+      provider: params.provider!,
+      providerId: params.providerId!
+    }),
   component: DetailRoute
 });
 

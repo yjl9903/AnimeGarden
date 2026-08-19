@@ -13,6 +13,7 @@ import { Toaster } from '~/components/ui/sonner';
 import { NavHeight, SearchTop, HeroHeight } from '~/layouts/Layout';
 import type { AppStores } from '~/stores';
 import { AgentDiscoveryLinkHeader, appendLinkHeader } from '~/utils/response';
+import { DefaultRobotsContent } from '~/utils';
 
 import Tags from '~analytics/scripts';
 
@@ -79,6 +80,7 @@ export const Route = createRootRouteWithContext<{
       },
       { name: 'msapplication-TileColor', content: '#FFFFFF' },
       { name: 'theme-color', content: '#ffffff' },
+      { name: 'robots', content: DefaultRobotsContent },
       { name: 'yandex-verification', content: 'ff51c9d16e597b3c' }
     ],
     links: [
@@ -86,13 +88,13 @@ export const Route = createRootRouteWithContext<{
       { rel: 'icon', type: 'image/x-icon', sizes: '64x64', href: '/favicon.ico' },
       { rel: 'icon', type: 'image/svg+xml', sizes: 'any', href: '/favicon.svg' },
       { rel: 'icon', type: 'image/png', sizes: '64x64', href: '/pwa-64x64.png' },
+      { rel: 'manifest', href: '/site.webmanifest' },
       {
         rel: 'apple-touch-icon',
         type: 'image/png',
         sizes: '180x180',
         href: '/apple-touch-icon-180x180.png'
       },
-      { rel: 'mask-icon', color: '#FFFFFF', href: '/favicon.svg' },
       { rel: 'preconnect', href: 'https://fonts.bunny.net' },
       { rel: 'preconnect', href: 'https://api.fontshare.com' },
       ...WebFontStylesheets.map((href) => ({

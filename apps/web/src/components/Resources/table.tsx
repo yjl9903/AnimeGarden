@@ -12,7 +12,7 @@ import type { Resource, Jsonify } from '@animegarden/client';
 import { CarbonTypes, DisplayTypeIcon } from '~/components/Icons';
 import {
   DisplayTypeColor,
-  getPikPakUrlChecker,
+  getKeepShareURL,
   openMagnetLink,
   formatChinaTime,
   parseSize,
@@ -168,7 +168,7 @@ export const ResourceItem = memo(
                     {['动画', '合集', '日剧', '特摄'].includes(r.type) ? (
                       <>
                         <a
-                          href={getPikPakUrlChecker(r.magnet)}
+                          href={getKeepShareURL(r.magnet)}
                           {...getPikPakTrackEvent(r.provider, r.providerId, 'title')}
                           className="text-link mr1"
                           aria-label={`Go to download resource of ${r.title}`}
@@ -265,7 +265,7 @@ export const ResourceItem = memo(
         <td className="py2 px2 w-[72px]">
           <div className="flex gap1 items-center justify-start">
             <a
-              href={getPikPakUrlChecker(r.magnet)}
+              href={getKeepShareURL(r.magnet)}
               {...getPikPakTrackEvent(r.provider, r.providerId, 'play')}
               data-resource-title={r.title}
               className="play text-xl text-base-500 hover:text-base-900"

@@ -1,5 +1,4 @@
 export const CalendarSeasonMonths = [1, 4, 7, 10];
-const SiteTitle = 'Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站';
 
 const CalendarSeasonMap = {
   1: { emoji: '❄️', name: '冬季新番', label: '冬季' },
@@ -35,15 +34,5 @@ export function getCalendarSeason(season?: string) {
     month,
     ...meta,
     title: `${year} · ${meta.name}`
-  };
-}
-
-export function getCalendarSeasonHead(season?: string) {
-  const calendarSeason = getCalendarSeason(season);
-  const titlePrefix = calendarSeason.season ? `${calendarSeason.title}动画周历` : '动画周历';
-
-  return {
-    title: `${titlePrefix} | ${SiteTitle}`,
-    description: `${titlePrefix}, 动画每周播出时间表, ${SiteTitle}`
   };
 }

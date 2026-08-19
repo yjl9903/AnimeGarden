@@ -4,8 +4,8 @@ import { groupResourcesByFansub } from '~/pages/subject.$subject.($page)/utils';
 import { getSubjectById } from '~/query/subject.server';
 import { ResponseCacheControl } from '~/utils/response';
 import { getSubjectDisplayName } from '~/utils/subject';
+import { buildSubjectPageSeo } from '~/pages/subject.$subject.($page)/seo';
 
-import { subjectHead } from './head.server';
 import {
   errorMarkdown,
   formatResources,
@@ -37,12 +37,9 @@ export async function renderSubjectMarkdown(subjectId: number): Promise<Markdown
   }
 
   const title = getSubjectDisplayName(subject);
-  const head = subjectHead(subject, resp.filter);
+  const head = buildSubjectPageSeo(subject, resp.filter);
   const body =
-    frontmatter({
-      ...head,
-      image: subject.poster
-    }) +
+    frontmatter(head) +
     heading(1, title) +
     paragraph(subject.summary) +
     renderGroups(groupResourcesByFansub(resp.resources));

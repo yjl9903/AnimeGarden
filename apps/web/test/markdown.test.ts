@@ -113,6 +113,11 @@ vi.mock('@animegarden/scraper', () => ({
   }))
 }));
 
+function expectMinimalSeoFrontmatter(body: string) {
+  const frontmatter = body.split('---')[1] ?? '';
+  expect(frontmatter).not.toMatch(/^(canonical|robots|image|image_alt):/m);
+}
+
 describe('markdown responses', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -128,10 +133,9 @@ describe('markdown responses', () => {
     expect(response.headers.get('content-type')).toContain('text/markdown');
     expect(response.headers.get('vary')).toBe('Accept');
     expect(response.headers.get('x-markdown-tokens')).toMatch(/^\d+$/);
-    expect(body).toContain('title: "Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站"');
-    expect(body).toContain(
-      'description: "Anime Garden 動漫花園資源網镜像站, 动漫花园动画 BT 资源聚合站"'
-    );
+    expect(body).toContain('title: "Anime Garden 動漫花園第三方镜像站以及动画 BT 资源聚合站"');
+    expect(body).toContain('description: "動漫花園第三方镜像站以及动画 BT 资源聚合站。"');
+    expectMinimalSeoFrontmatter(body);
     expect(body).toContain('# Anime Garden');
     expect(body).toContain('RSS 订阅：https://api.animes.garden/feed.xml');
     expect(body).toContain('Test \\[Anime\\] \\*01\\*');
@@ -147,7 +151,9 @@ describe('markdown responses', () => {
 
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toContain('s-maxage=86400');
-    expect(body).toContain('description: "Test [Anime] *01*: Hello markdown"');
+    expect(body).toContain('title: "Test [Anime] *01* | Anime Garden"');
+    expect(body).toContain('description: "Test [Anime] *01*：Hello markdown"');
+    expectMinimalSeoFrontmatter(body);
     expect(body).toContain('# Test \\[Anime\\] \\*01\\*');
     expect(body).toContain('magnet:?xt=urn:btih:test');
     expect(body).toContain('Episode 01\\.mkv');
@@ -172,27 +178,23 @@ describe('markdown responses', () => {
       ).then((response) => response.text())
     ]);
 
-    expect(resources).toContain(
-      'title: "最新动画资源 | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站"'
-    );
+    expect(resources).toContain('title: "最新动画资源 | Anime Garden"');
+    expect(resources).toContain('description: "最新动画资源。筛选条件：资源类型“动画”。"');
+    expectMinimalSeoFrontmatter(resources);
     expect(resources).toContain('# 最新动画资源');
     expect(resources).toContain('RSS 订阅：https://api.animes.garden/feed.xml?');
-    expect(resources).not.toContain(
-      '# 最新动画资源 \\| Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站'
-    );
-    expect(subject).toContain(
-      'title: "Subject Title 最新资源 | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站"'
-    );
-    expect(subject).toContain('description: "Subject Title: Subject summary"');
+    expect(resources).not.toContain('# 最新动画资源 \\| Anime Garden');
+    expect(subject).toContain('title: "Subject Title 最新动画资源 | Anime Garden"');
+    expect(subject).toContain('description: "Subject summary"');
+    expectMinimalSeoFrontmatter(subject);
     expect(subject).toContain('# Subject Title');
     expect(subject).not.toContain('# Subject Title 最新资源');
     expect(subject).toContain('## Test/Sub字幕组 最新资源');
+    expect(collection).toContain('title: "My Collection | Anime Garden"');
     expect(collection).toContain(
-      'title: "My Collection | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站"'
+      'description: "查看 Anime Garden 收藏夹“My Collection”中的动画资源。"'
     );
-    expect(collection).toContain(
-      'description: "Anime Garden 资源收藏夹, 動漫花園資源網镜像站, 动漫花园动画 BT 资源聚合站"'
-    );
+    expectMinimalSeoFrontmatter(collection);
   });
 
   it('redirects invalid resources page numbers like the HTML route', async () => {
@@ -231,12 +233,11 @@ describe('markdown responses', () => {
 
       expect(response.status).toBe(200);
       expect(response.headers.get('content-type')).toContain('text/markdown');
+      expect(body).toContain('title: "2026 · 夏季新番动画周历 | Anime Garden"');
       expect(body).toContain(
-        'title: "动画周历 | Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站"'
+        'description: "2026 · 夏季新番动画周历, 动画每周播出时间表, Anime Garden"'
       );
-      expect(body).toContain(
-        'description: "动画每周播出时间表, 动画周历, Anime Garden 動漫花園資源網镜像站 动漫花园动画 BT 资源聚合站"'
-      );
+      expectMinimalSeoFrontmatter(body);
       expect(body).toContain('# 动画周历');
       expect(body.indexOf('## 星期一')).toBeLessThan(body.indexOf('## 星期二'));
       expect(body).toContain('Subject Title - /subject/100');
@@ -255,6 +256,8 @@ describe('markdown responses', () => {
     const body = await response.text();
 
     expect(response.status).toBe(200);
+    expect(body).toContain('title: "2026 · 秋季新番动画周历 | Anime Garden"');
+    expectMinimalSeoFrontmatter(body);
     expect(body).toContain('# 2026 · 秋季新番动画周历');
   });
 

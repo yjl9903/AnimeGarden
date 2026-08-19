@@ -2,9 +2,10 @@ import { fetchResources, parseURLSearch, stringifyURLSearch } from '@animegarden
 
 import { getSubjectById } from '~/query/subject.server';
 import { ResponseCacheControl } from '~/utils/response';
-import { getFeedURL } from '~/utils/url';
+import { getFeedURL } from '~/utils';
+import { buildResourcesPageSeo } from '~/pages/resources.($page)/seo';
+import { withoutSiteTitleSuffix } from '~/utils/seo';
 
-import { resourcesHead, withoutSiteTitleSuffix } from './head.server';
 import {
   formatFilter,
   formatResources,
@@ -18,7 +19,9 @@ import {
 } from './shared.server';
 
 export async function renderResourcesMarkdown(url: URL, page: number): Promise<MarkdownResult> {
-  const { filter: parsedFilter, pagination } = parseURLSearch(url.searchParams, { pageSize: 80 });
+  const { filter: parsedFilter, pagination } = parseURLSearch(url.searchParams, {
+    pageSize: 80
+  });
   const resolvedFilter = await resolveResourcesFilter({
     ...parsedFilter,
     ...pagination,
@@ -38,7 +41,7 @@ export async function renderResourcesMarkdown(url: URL, page: number): Promise<M
 
   const search = stringifyURLSearch(resp.filter ?? {}).toString();
   const feedURL = getFeedURL(search ? `?${search}` : undefined);
-  const head = resourcesHead(resp.filter, await getSubjects(resp.filter?.subjects ?? []));
+  const head = buildResourcesPageSeo(resp.filter, await getSubjects(resp.filter?.subjects ?? []));
 
   const body =
     frontmatter(head) +
@@ -49,7 +52,7 @@ export async function renderResourcesMarkdown(url: URL, page: number): Promise<M
     `RSS 订阅：${feedURL}\n\n` +
     heading(2, '资源列表') +
     formatResources(resp.resources) +
-    paginationLinks(page, resp.pagination?.complete, url.search);
+    paginationLinks(page, resp.pagination?.complete, search ? `?${search}` : '');
 
   return { body, cacheControl: ResponseCacheControl.List };
 }

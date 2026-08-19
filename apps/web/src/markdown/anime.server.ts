@@ -2,8 +2,8 @@ import { getCalendar, getCalendars, getLatestCalendar } from '~/query/subject.se
 import { getCalendarSeason } from '~/utils/calendar-season';
 import { ResponseCacheControl } from '~/utils/response';
 import { getSubjectDisplayName, type WebBgmSubject } from '~/utils/subject';
+import { buildAnimePageSeo } from '~/pages/anime/seo';
 
-import { AnimeHead, calendarHead } from './head.server';
 import {
   escapeMarkdown,
   errorMarkdown,
@@ -24,7 +24,7 @@ export async function renderAnimeMarkdown(season?: string): Promise<MarkdownResu
     ? { season, calendar: await getCalendar(season) }
     : await getLatestCalendar();
   const calendarSeason = getCalendarSeason(resolved.season);
-  const head = season ? calendarHead(resolved.season) : AnimeHead;
+  const head = buildAnimePageSeo(resolved.season);
   const title = season ? `${calendarSeason.title}动画周历` : '动画周历';
 
   // Markdown keeps a stable Monday-Sunday order instead of the UI's current-day rotation.
