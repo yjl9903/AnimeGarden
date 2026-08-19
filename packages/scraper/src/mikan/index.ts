@@ -129,7 +129,8 @@ function parseTitleFromHead(document: Document) {
   return title.endsWith(TITLE_SUFFIX) ? title.slice(0, -TITLE_SUFFIX.length) : title;
 }
 
-function parseDetailDescription(element: Element) {
+/** Cleans Mikan's detail HTML and makes embedded image URLs safe to render off-site. */
+function parseDetailDescription(element: Element, baseUrl: string) {
   const clone = element.cloneNode(true) as Element;
 
   for (const ad of clone.querySelectorAll('div')) {
@@ -141,7 +142,21 @@ function parseDetailDescription(element: Element) {
     }
   }
 
-  return clone.innerHTML.trim();
+  // Mikan descriptions often use root-relative image paths, which break outside its origin.
+  for (const image of clone.querySelectorAll<HTMLImageElement>('img[src]')) {
+    const src = image.getAttribute('src')?.trim();
+    if (!src) {
+      continue;
+    }
+
+    try {
+      image.setAttribute('src', new URL(src, baseUrl).href);
+    } catch {
+      // Keep malformed URLs unchanged so one bad image does not discard the whole description.
+    }
+  }
+
+  return `<h2 class="text-xl font-bold">简介</h2>${clone.innerHTML.trim()}`;
 }
 
 function findBangumiInfoValue(document: Document, label: string) {
@@ -327,7 +342,7 @@ export async function fetchMikanDetail(
     providerId,
     title,
     href: url.href,
-    description: parseDetailDescription(descriptionElement),
+    description: parseDetailDescription(descriptionElement, url.href),
     type: '动画',
     size,
     publisher: group,

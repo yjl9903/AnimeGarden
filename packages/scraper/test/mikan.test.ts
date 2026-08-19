@@ -111,6 +111,7 @@ const DETAIL_HTML = `
             </a>
           </div>
         </div>
+        <p><img alt="相对路径图片" src="/images/Uploads/example.png" /></p>
         <p><img alt="" src="https://i.loli.net/2021/07/14/NVgM7KsRaDljU3d.png" /></p>
         <p>──────────────────────────────</p>
         <p><strong>你可以</strong></p>
@@ -268,7 +269,11 @@ describe('mikan', () => {
         url: 'magnet:?xt=urn:btih:22ab4969f1aa0c058bfbd014be802b6cc1956eb2&tr=http%3a%2f%2ft.nyaatracker.com%2fannounce&tr=http%3a%2f%2ftracker.kamigami.org%3a2710%2fannounce'
       }
     ]);
+    expect(detail?.description.startsWith('<h2 class="text-xl font-bold">简介</h2>')).toBe(true);
     expect(detail?.description).toContain('801237938');
+    expect(detail?.description).toContain(
+      'src="https://mikanani.kas.pub/images/Uploads/example.png"'
+    );
     expect(detail?.description).toContain('NVgM7KsRaDljU3d.png');
     expect(detail?.description).not.toContain('SSWJ');
   });
