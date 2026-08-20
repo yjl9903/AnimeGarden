@@ -109,17 +109,24 @@ export class QueryManager {
     // LRU 垃圾回收, 每小时 1 次
     {
       let ev: NodeJS.Timeout;
+      let stopped = false;
       const TIMEOUT = 60 * 60 * 1000;
       const handler = async () => {
         try {
           await this.clearDeadTasks();
-          ev = setTimeout(handler, TIMEOUT);
         } catch (error) {
           this.logger.error(error);
+        } finally {
+          if (!stopped) {
+            ev = setTimeout(handler, TIMEOUT);
+          }
         }
       };
       ev = setTimeout(handler, TIMEOUT);
-      this.system.disposables.push(() => clearTimeout(ev));
+      this.system.disposables.push(() => {
+        stopped = true;
+        clearTimeout(ev);
+      });
     }
 
     // 垃圾回收
@@ -135,19 +142,26 @@ export class QueryManager {
     // 清空字符串常量池
     {
       let ev: NodeJS.Timeout;
+      let stopped = false;
       const TIMEOUT = 24 * 60 * 60 * 1000;
       const handler = async () => {
         try {
           TitlePool.clear();
           MagnetPool.clear();
           TrackerPool.clear();
-          ev = setTimeout(handler, TIMEOUT);
         } catch (error) {
           this.logger.error(error);
+        } finally {
+          if (!stopped) {
+            ev = setTimeout(handler, TIMEOUT);
+          }
         }
       };
       ev = setTimeout(handler, TIMEOUT);
-      this.system.disposables.push(() => clearTimeout(ev));
+      this.system.disposables.push(() => {
+        stopped = true;
+        clearTimeout(ev);
+      });
     }
   }
 
@@ -292,18 +306,19 @@ export class QueryManager {
   }
 
   private async clearDeadTasks() {
-    const tasks = [...this.tasks.values()];
+    let tasks = [...this.tasks.values()];
 
     // 1. 重试过期的缓存
     const now = new Date();
     for (const task of tasks) {
       const delta = now.getTime() - task.fetchedAt.getTime();
       if (delta > 2 * 60 * 60 * 1000) {
-        task.clear();
+        this.deleteTask(task);
       }
     }
 
     // 2. 清理多余的缓存
+    tasks = [...this.tasks.values()];
     if (tasks.length > MAX_RESOURCES_TASK_COUNT) {
       tasks.sort((lhs, rhs) => {
         if (lhs.visited.count !== rhs.visited.count) {
@@ -313,20 +328,36 @@ export class QueryManager {
         }
       });
       for (let i = MAX_RESOURCES_TASK_COUNT; i < tasks.length; i++) {
-        const task = tasks[i];
-        if (this.tasks.has(task.key)) {
-          this.tasks.delete(task.key);
-          for (const r of task.resources) {
-            // 清除 intern resource object 缓存
-            this.resources.get(r.provider as ProviderType)?.delete(r.providerId);
-          }
-          task.clear();
-        }
+        this.deleteTask(tasks[i]);
       }
     }
 
     // 3. 恢复 downgrade task
     this.downgrade.clear();
+  }
+
+  /** Deletes one live task and releases only intern entries still owned by its resource objects. */
+  private deleteTask(task: Task) {
+    // A stale task must not delete a newer task that already replaced the same key.
+    if (this.tasks.get(task.key) !== task) {
+      return false;
+    }
+
+    this.tasks.delete(task.key);
+    for (const resource of task.resources) {
+      const provider = resource.provider as ProviderType;
+      const providerResources = this.resources.get(provider);
+
+      // Another task may have interned a fresher object for this resource already.
+      if (providerResources?.get(resource.providerId) === resource) {
+        providerResources.delete(resource.providerId);
+        if (providerResources.size === 0) {
+          this.resources.delete(provider);
+        }
+      }
+    }
+    task.clear();
+    return true;
   }
 
   private normalizeDatabaseFilterOptions(filter: ResolvedFilterOptions): DatabaseFilterOptions {

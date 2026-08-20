@@ -1,8 +1,9 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { hash } from 'ohash';
 
 import { RESOURCES_TASK_PREFETCH_MAX_COUNT } from '../src/constants';
 import { ResourcesSlowQueryBusyError } from '../src/error';
+import { TitlePool } from '../src/resources/pool';
 import { QueryManager, Task } from '../src/resources/query';
 
 import type { DatabaseFilterOptions, DatabaseResource } from '../src/resources/types';
@@ -66,6 +67,7 @@ function createManager() {
       slowDatabase: undefined,
       slowQueryConnection: undefined,
       options: {},
+      disposables: [],
       modules: {
         providers: {
           timestamp: new Date('2026-01-01T00:00:00.000Z')
@@ -82,6 +84,106 @@ function createManager() {
     findFromRedis: manager.findFromRedis
   };
 }
+
+afterEach(() => {
+  vi.useRealTimers();
+  vi.restoreAllMocks();
+});
+
+describe('query cache garbage collection', () => {
+  it('keeps scheduling task GC after a failed run', async () => {
+    vi.useFakeTimers();
+    const { manager } = createManager();
+    (manager.system as any).options.cron = true;
+    (manager.findFromRedis as any).startGC = vi.fn();
+    (manager.findFromRedis as any).stopGC = vi.fn();
+
+    const clearDeadTasks = vi
+      .spyOn(manager as any, 'clearDeadTasks')
+      .mockRejectedValueOnce(new Error('task GC failed'))
+      .mockResolvedValue(undefined);
+
+    await manager.initialize();
+    await vi.advanceTimersByTimeAsync(60 * 60 * 1000);
+    await vi.advanceTimersByTimeAsync(60 * 60 * 1000);
+
+    expect(clearDeadTasks).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps scheduling string pool cleanup after a failed run', async () => {
+    vi.useFakeTimers();
+    const { manager } = createManager();
+    (manager.system as any).options.cron = true;
+    (manager.findFromRedis as any).startGC = vi.fn();
+    (manager.findFromRedis as any).stopGC = vi.fn();
+
+    const clearTitlePool = vi
+      .spyOn(TitlePool, 'clear')
+      .mockImplementationOnce(() => {
+        throw new Error('string pool cleanup failed');
+      })
+      .mockImplementation(() => undefined);
+
+    await manager.initialize();
+    await vi.advanceTimersByTimeAsync(24 * 60 * 60 * 1000);
+    await vi.advanceTimersByTimeAsync(24 * 60 * 60 * 1000);
+
+    expect(clearTitlePool).toHaveBeenCalledTimes(2);
+  });
+
+  it('deletes expired tasks without removing a newer interned resource object', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-08-20T12:00:00.000Z'));
+    const { manager } = createManager();
+    const task = new Task(manager, 'expired-task', {});
+    const staleResource = createResource(1);
+    const freshResource = { ...staleResource, subjectId: 638497 };
+
+    task.ok = true;
+    task.fetchedAt = new Date('2026-08-20T09:00:00.000Z');
+    task.resources = [staleResource];
+    task.prefetchCount = task.resources.length;
+    (manager.tasks as Map<string, Task>).set(task.key, task);
+    (manager.resources as Map<string, Map<string, DatabaseResource>>).set(
+      staleResource.provider,
+      new Map([[staleResource.providerId, freshResource]])
+    );
+
+    await (manager as any).clearDeadTasks();
+
+    expect((manager.tasks as Map<string, Task>).has(task.key)).toBe(false);
+    expect(
+      (manager.resources as Map<string, Map<string, DatabaseResource>>)
+        .get(staleResource.provider)
+        ?.get(staleResource.providerId)
+    ).toBe(freshResource);
+  });
+
+  it('releases an expired task intern entry when the object is still current', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2026-08-20T12:00:00.000Z'));
+    const { manager } = createManager();
+    const task = new Task(manager, 'expired-task', {});
+    const resource = createResource(1);
+
+    task.ok = true;
+    task.fetchedAt = new Date('2026-08-20T09:00:00.000Z');
+    task.resources = [resource];
+    task.prefetchCount = task.resources.length;
+    (manager.tasks as Map<string, Task>).set(task.key, task);
+    (manager.resources as Map<string, Map<string, DatabaseResource>>).set(
+      resource.provider,
+      new Map([[resource.providerId, resource]])
+    );
+
+    await (manager as any).clearDeadTasks();
+
+    expect((manager.tasks as Map<string, Task>).has(task.key)).toBe(false);
+    expect(
+      (manager.resources as Map<string, Map<string, DatabaseResource>>).has(resource.provider)
+    ).toBe(false);
+  });
+});
 
 describe('Task prefetch', () => {
   it('checks the current cache before expanding an already warm task', async () => {
