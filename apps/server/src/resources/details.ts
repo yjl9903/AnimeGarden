@@ -257,7 +257,8 @@ export class DetailsManager {
             provider: provider,
             providerId: publisher.id,
             name: publisher.name,
-            avatar: publisher.avatar
+            avatar: publisher.avatar,
+            usedAt: new Date(scraped.createdAt)
           }
         ]);
       });
@@ -270,7 +271,8 @@ export class DetailsManager {
             provider: provider,
             providerId: fansub.id,
             name: fansub.name,
-            avatar: fansub.avatar
+            avatar: fansub.avatar,
+            usedAt: new Date(scraped.createdAt)
           }
         ]);
       });

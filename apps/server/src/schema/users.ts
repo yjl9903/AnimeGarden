@@ -4,6 +4,9 @@ export interface ProviderInfo {
   providerId: string;
 
   avatar?: string;
+
+  /** Old names observed from this provider. */
+  aliases?: string[];
 }
 
 export const users = pgTable(

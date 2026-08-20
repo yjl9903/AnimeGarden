@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, max } from 'drizzle-orm';
 import { memoAsync } from 'memofunc';
 
 import type { System } from '../system/system.ts';
@@ -6,17 +6,32 @@ import type { User, Team } from '../schema/index.ts';
 
 import { Module } from '../system/module.ts';
 import { users as userSchema, teams as teamSchema } from '../schema/users.ts';
+import { resources as resourceSchema } from '../schema/resources.ts';
 
 import type { UserInfo, TeamInfo } from './types.ts';
 
+import { appendProviderAliases, normalizePartyName } from './normalize.ts';
+
 export * from './types.ts';
+
+function providerIdentity(provider: string, providerId: string) {
+  return `${provider}:${providerId}`;
+}
 
 export class UsersModule extends Module<System['modules']> {
   public static name = 'users';
 
+  /** Canonical name or provider alias -> user. */
   public readonly users: Map<string, User> = new Map();
 
+  /** Database users.id -> user. */
   public readonly ids: Map<number, User> = new Map();
+
+  /** "provider:providerId" -> user. */
+  private readonly providerIds: Map<string, User> = new Map();
+
+  /** Database users.id -> latest resource timestamp used to select the canonical name. */
+  private readonly latestUsedAt: Map<number, number> = new Map();
 
   public async initialize() {
     this.logger.info('Initializing Users module');
@@ -31,46 +46,63 @@ export class UsersModule extends Module<System['modules']> {
   }
 
   public async fetchUsers() {
-    const users = await this.database.query.users.findMany();
-    this.getById.clear();
-    for (const user of users) {
-      if (this.users.get(user.name)) {
-        const c = this.users.get(user.name)!;
-        c.avatar = user.avatar;
-        c.name = user.name;
-        c.providers = user.providers;
-      } else {
-        this.users.set(user.name, user);
-      }
+    const [users, latest] = await Promise.all([
+      this.database.query.users.findMany(),
+      this.database
+        .select({
+          id: resourceSchema.publisherId,
+          createdAt: max(resourceSchema.createdAt)
+        })
+        .from(resourceSchema)
+        .groupBy(resourceSchema.publisherId)
+    ]);
 
-      if (this.ids.get(user.id)) {
-        const c = this.ids.get(user.id)!;
-        c.avatar = user.avatar;
-        c.name = user.name;
-        c.providers = user.providers;
-      } else {
-        this.ids.set(user.id, user);
+    this.getById.clear();
+    this.users.clear();
+    this.ids.clear();
+    this.providerIds.clear();
+    this.latestUsedAt.clear();
+    for (const row of latest) {
+      if (row.createdAt) {
+        this.latestUsedAt.set(row.id, new Date(row.createdAt).getTime());
       }
     }
+    for (const user of users) {
+      this.indexUser(user);
+    }
+
     return users;
+  }
+
+  /** Adds one user to the name, database-id, and provider-id caches. */
+  private indexUser(user: User) {
+    this.users.set(user.name, user);
+    this.ids.set(user.id, user);
+    for (const [provider, info] of Object.entries(user.providers ?? {})) {
+      this.providerIds.set(providerIdentity(provider, info.providerId), user);
+      for (const alias of info.aliases ?? []) {
+        this.users.set(alias, user);
+      }
+    }
   }
 
   public async insertUsers(users: UserInfo[]) {
     this.logger.info(`Start inserting ${users.length} users`);
 
-    const dbUsers = [...this.users.values()];
-    const map = new Map<string, (typeof dbUsers)[0]>();
-    for (const user of dbUsers) {
-      map.set(user.name, user);
-    }
-
     const insertions: Map<string, Omit<User, 'id'>> = new Map();
-    const updations: Map<string, User> = new Map();
-    for (const user of users) {
-      const dbUser = map.get(user.name);
+    const insertionProviders = new Map<string, string>();
+    const updations: Map<number, User> = new Map();
+    const sorted = [...users].sort((lhs, rhs) => rhs.usedAt.getTime() - lhs.usedAt.getTime());
+
+    for (const input of sorted) {
+      const rawName = input.name;
+      const user = { ...input, name: normalizePartyName(input.name, 'user') };
+      const providerKey = providerIdentity(user.provider, user.providerId);
+      const dbUser = this.providerIds.get(providerKey) ?? this.getByName(user.name);
       if (!dbUser) {
         // Insert user
-        const insertUser = insertions.get(user.name);
+        const insertionName = insertionProviders.get(providerKey) ?? user.name;
+        const insertUser = insertions.get(insertionName);
         if (!insertUser) {
           const newUser = {
             name: user.name,
@@ -78,35 +110,66 @@ export class UsersModule extends Module<System['modules']> {
             providers: {
               [user.provider]: {
                 providerId: user.providerId,
-                avatar: user.avatar || undefined
+                avatar: user.avatar || undefined,
+                aliases: rawName !== user.name ? [rawName] : undefined
               }
             }
           };
           insertions.set(user.name, newUser);
+          insertionProviders.set(providerKey, user.name);
         } else {
           insertUser.avatar ??= user.avatar || null;
-          insertUser.providers![user.provider] = {
-            providerId: user.providerId,
-            avatar: user.avatar || undefined
-          };
+          const info = insertUser.providers![user.provider] ?? { providerId: user.providerId };
+          info.avatar ??= user.avatar || undefined;
+          insertUser.providers![user.provider] = appendProviderAliases(
+            info,
+            insertUser.name,
+            rawName,
+            user.name
+          );
+          insertionProviders.set(providerKey, insertionName);
         }
       } else {
         // Update user
         dbUser.providers ??= {};
-        // 1. Update avatar
-        // 2. Insert new provider
-        // 3. Update exisiting provider
-        if (
-          !dbUser.providers[user.provider] ||
-          (user.avatar && !dbUser.avatar) ||
-          (user.avatar && dbUser.providers[user.provider].avatar !== user.avatar)
-        ) {
-          dbUser.avatar ??= user.avatar || null;
-          dbUser.providers[user.provider] = {
-            providerId: user.providerId,
-            avatar: user.avatar || undefined
-          };
-          updations.set(user.name, dbUser);
+        const usedAt = user.usedAt.getTime();
+        const isLatest = usedAt >= (this.latestUsedAt.get(dbUser.id) ?? 0);
+        const occupied = this.users.get(user.name);
+        const oldName = dbUser.name;
+        const oldAvatar = dbUser.avatar;
+
+        // A newly observed name becomes canonical only when its resource is the newest one.
+        if (oldName !== user.name && isLatest && (!occupied || occupied.id === dbUser.id)) {
+          this.users.delete(oldName);
+          dbUser.name = user.name;
+          this.users.set(dbUser.name, dbUser);
+        }
+
+        const currentInfo = dbUser.providers[user.provider];
+        const info = currentInfo ?? { providerId: user.providerId };
+        const oldProviderAvatar = info.avatar;
+        const oldAliases = info.aliases?.join('\0');
+        info.avatar = user.avatar || info.avatar;
+        dbUser.avatar ??= user.avatar || null;
+        dbUser.providers[user.provider] = appendProviderAliases(
+          info,
+          dbUser.name,
+          rawName,
+          user.name,
+          oldName
+        );
+
+        this.latestUsedAt.set(dbUser.id, Math.max(usedAt, this.latestUsedAt.get(dbUser.id) ?? 0));
+
+        const changed =
+          oldName !== dbUser.name ||
+          oldAvatar !== dbUser.avatar ||
+          !currentInfo ||
+          oldProviderAvatar !== info.avatar ||
+          oldAliases !== info.aliases?.join('\0');
+        if (changed) {
+          this.indexUser(dbUser);
+          updations.set(dbUser.id, dbUser);
         }
       }
     }
@@ -131,15 +194,14 @@ export class UsersModule extends Module<System['modules']> {
 
       for (const user of inserted) {
         const newUser = { ...insertions.get(user.name)!, ...user };
-        this.users.set(user.name, Object.assign(this.users.get(user.name) ?? newUser, newUser));
-        this.ids.set(user.id, Object.assign(this.ids.get(user.id) ?? newUser, newUser));
+        this.indexUser(Object.assign(this.users.get(user.name) ?? newUser, newUser));
       }
 
       const updated = await Promise.all(
         [...updations.values()].map(async (u) => {
           return await tx
             .update(userSchema)
-            .set({ avatar: u.avatar, providers: u.providers })
+            .set({ name: u.name, avatar: u.avatar, providers: u.providers })
             .where(eq(userSchema.id, u.id))
             .returning({ id: userSchema.id, name: userSchema.name });
         })
@@ -152,7 +214,16 @@ export class UsersModule extends Module<System['modules']> {
   // ---
 
   public getByName(name: string) {
-    return this.users.get(name);
+    const normalized = normalizePartyName(name, 'user');
+    return this.users.get(normalized) ?? this.users.get(name);
+  }
+
+  /** Resolves a scraped user by stable provider identity before falling back to its name. */
+  public resolve(provider: string, providerId: string | undefined, name: string) {
+    return (
+      (providerId ? this.providerIds.get(providerIdentity(provider, providerId)) : undefined) ??
+      this.getByName(name)
+    );
   }
 
   public getById = memoAsync(async (id: number) => {
@@ -163,8 +234,7 @@ export class UsersModule extends Module<System['modules']> {
       where: (users, { eq }) => eq(users.id, id)
     });
     if (resp) {
-      this.users.set(resp.name, resp);
-      this.ids.set(resp.id, resp);
+      this.indexUser(resp);
     }
     return resp;
   });
@@ -173,9 +243,17 @@ export class UsersModule extends Module<System['modules']> {
 export class TeamsModule extends Module<System['modules']> {
   public static name = 'teams';
 
+  /** Canonical name or provider alias -> team. */
   public teams: Map<string, Team> = new Map();
 
+  /** Database teams.id -> team. */
   public ids: Map<number, Team> = new Map();
+
+  /** "provider:providerId" -> team. */
+  private readonly providerIds: Map<string, Team> = new Map();
+
+  /** Database teams.id -> latest resource timestamp used to select the canonical name. */
+  private readonly latestUsedAt: Map<number, number> = new Map();
 
   public async initialize() {
     this.logger.info('Initializing Teams module');
@@ -190,46 +268,63 @@ export class TeamsModule extends Module<System['modules']> {
   }
 
   public async fetchTeams() {
-    const teams = await this.database.query.teams.findMany();
-    this.getById.clear();
-    for (const team of teams) {
-      if (this.teams.get(team.name)) {
-        const c = this.teams.get(team.name)!;
-        c.avatar = team.avatar;
-        c.name = team.name;
-        c.providers = team.providers;
-      } else {
-        this.teams.set(team.name, team);
-      }
+    const [teams, latest] = await Promise.all([
+      this.database.query.teams.findMany(),
+      this.database
+        .select({
+          id: resourceSchema.fansubId,
+          createdAt: max(resourceSchema.createdAt)
+        })
+        .from(resourceSchema)
+        .groupBy(resourceSchema.fansubId)
+    ]);
 
-      if (this.ids.get(team.id)) {
-        const c = this.ids.get(team.id)!;
-        c.avatar = team.avatar;
-        c.name = team.name;
-        c.providers = team.providers;
-      } else {
-        this.ids.set(team.id, team);
+    this.getById.clear();
+    this.teams.clear();
+    this.ids.clear();
+    this.providerIds.clear();
+    this.latestUsedAt.clear();
+    for (const row of latest) {
+      if (row.id !== null && row.createdAt) {
+        this.latestUsedAt.set(row.id, new Date(row.createdAt).getTime());
       }
     }
+    for (const team of teams) {
+      this.indexTeam(team);
+    }
+
     return teams;
+  }
+
+  /** Adds one team to the name, database-id, and provider-id caches. */
+  private indexTeam(team: Team) {
+    this.teams.set(team.name, team);
+    this.ids.set(team.id, team);
+    for (const [provider, info] of Object.entries(team.providers ?? {})) {
+      this.providerIds.set(providerIdentity(provider, info.providerId), team);
+      for (const alias of info.aliases ?? []) {
+        this.teams.set(alias, team);
+      }
+    }
   }
 
   public async insertTeams(teams: TeamInfo[]) {
     this.logger.info(`Start inserting ${teams.length} teams`);
 
-    const dbTeams = [...this.teams.values()];
-    const map = new Map<string, (typeof dbTeams)[0]>();
-    for (const team of dbTeams) {
-      map.set(team.name, team);
-    }
-
     const insertions: Map<string, Omit<Team, 'id'>> = new Map();
-    const updations: Map<string, Team> = new Map();
-    for (const team of teams) {
-      const dbTeam = map.get(team.name);
+    const insertionProviders = new Map<string, string>();
+    const updations: Map<number, Team> = new Map();
+    const sorted = [...teams].sort((lhs, rhs) => rhs.usedAt.getTime() - lhs.usedAt.getTime());
+
+    for (const input of sorted) {
+      const rawName = input.name;
+      const team = { ...input, name: normalizePartyName(input.name, 'team') };
+      const providerKey = providerIdentity(team.provider, team.providerId);
+      const dbTeam = this.providerIds.get(providerKey) ?? this.getByName(team.name);
       if (!dbTeam) {
         // Insert team
-        const insertTeam = insertions.get(team.name);
+        const insertionName = insertionProviders.get(providerKey) ?? team.name;
+        const insertTeam = insertions.get(insertionName);
         if (!insertTeam) {
           const newTeam = {
             name: team.name,
@@ -237,35 +332,65 @@ export class TeamsModule extends Module<System['modules']> {
             providers: {
               [team.provider]: {
                 providerId: team.providerId,
-                avatar: team.avatar || undefined
+                avatar: team.avatar || undefined,
+                aliases: rawName !== team.name ? [rawName] : undefined
               }
             }
           };
           insertions.set(team.name, newTeam);
+          insertionProviders.set(providerKey, team.name);
         } else {
           insertTeam.avatar ??= team.avatar || null;
-          insertTeam.providers![team.provider] = {
-            providerId: team.providerId,
-            avatar: team.avatar || undefined
-          };
+          const info = insertTeam.providers![team.provider] ?? { providerId: team.providerId };
+          info.avatar ??= team.avatar || undefined;
+          insertTeam.providers![team.provider] = appendProviderAliases(
+            info,
+            insertTeam.name,
+            rawName,
+            team.name
+          );
+          insertionProviders.set(providerKey, insertionName);
         }
       } else {
         // Update team
         dbTeam.providers ??= {};
-        // 1. Update avatar
-        // 2. Insert new provider
-        // 3. Update exisiting provider
-        if (
-          !dbTeam.providers[team.provider] ||
-          (team.avatar && !dbTeam.avatar) ||
-          (team.avatar && dbTeam.providers[team.provider].avatar !== team.avatar)
-        ) {
-          dbTeam.avatar ??= team.avatar || null;
-          dbTeam.providers[team.provider] = {
-            providerId: team.providerId,
-            avatar: team.avatar || undefined
-          };
-          updations.set(team.name, dbTeam);
+        const usedAt = team.usedAt.getTime();
+        const isLatest = usedAt >= (this.latestUsedAt.get(dbTeam.id) ?? 0);
+        const occupied = this.teams.get(team.name);
+        const oldName = dbTeam.name;
+        const oldAvatar = dbTeam.avatar;
+
+        if (oldName !== team.name && isLatest && (!occupied || occupied.id === dbTeam.id)) {
+          this.teams.delete(oldName);
+          dbTeam.name = team.name;
+          this.teams.set(dbTeam.name, dbTeam);
+        }
+
+        const currentInfo = dbTeam.providers[team.provider];
+        const info = currentInfo ?? { providerId: team.providerId };
+        const oldProviderAvatar = info.avatar;
+        const oldAliases = info.aliases?.join('\0');
+        info.avatar = team.avatar || info.avatar;
+        dbTeam.avatar ??= team.avatar || null;
+        dbTeam.providers[team.provider] = appendProviderAliases(
+          info,
+          dbTeam.name,
+          rawName,
+          team.name,
+          oldName
+        );
+
+        this.latestUsedAt.set(dbTeam.id, Math.max(usedAt, this.latestUsedAt.get(dbTeam.id) ?? 0));
+
+        const changed =
+          oldName !== dbTeam.name ||
+          oldAvatar !== dbTeam.avatar ||
+          !currentInfo ||
+          oldProviderAvatar !== info.avatar ||
+          oldAliases !== info.aliases?.join('\0');
+        if (changed) {
+          this.indexTeam(dbTeam);
+          updations.set(dbTeam.id, dbTeam);
         }
       }
     }
@@ -289,15 +414,14 @@ export class TeamsModule extends Module<System['modules']> {
           : [];
       for (const team of inserted) {
         const newTeam = { ...insertions.get(team.name)!, ...team };
-        this.teams.set(team.name, Object.assign(this.teams.get(team.name) ?? newTeam, newTeam));
-        this.ids.set(team.id, Object.assign(this.ids.get(team.id) ?? newTeam, newTeam));
+        this.indexTeam(Object.assign(this.teams.get(team.name) ?? newTeam, newTeam));
       }
 
       const updated = await Promise.all(
         [...updations.values()].map(async (u) => {
           return await tx
             .update(teamSchema)
-            .set({ avatar: u.avatar, providers: u.providers })
+            .set({ name: u.name, avatar: u.avatar, providers: u.providers })
             .where(eq(teamSchema.id, u.id))
             .returning({ id: teamSchema.id, name: teamSchema.name });
         })
@@ -310,7 +434,16 @@ export class TeamsModule extends Module<System['modules']> {
   // ---
 
   public getByName(name: string) {
-    return this.teams.get(name);
+    const normalized = normalizePartyName(name, 'team');
+    return this.teams.get(normalized) ?? this.teams.get(name);
+  }
+
+  /** Resolves a scraped team by stable provider identity before falling back to its name. */
+  public resolve(provider: string, providerId: string | undefined, name: string) {
+    return (
+      (providerId ? this.providerIds.get(providerIdentity(provider, providerId)) : undefined) ??
+      this.getByName(name)
+    );
   }
 
   public getById = memoAsync(async (id: number) => {
@@ -321,8 +454,7 @@ export class TeamsModule extends Module<System['modules']> {
       where: (teams, { eq }) => eq(teams.id, id)
     });
     if (resp) {
-      this.teams.set(resp.name, resp);
-      this.ids.set(resp.id, resp);
+      this.indexTeam(resp);
       return resp;
     }
   });

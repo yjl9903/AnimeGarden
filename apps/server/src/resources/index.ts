@@ -6,10 +6,11 @@ import { normalizeBtihToBase32, normalizeBtihToHex } from '@animegarden/shared';
 import type { NotifiedResource, ResourcePatch } from '../system/types.ts';
 import type { System, Notification } from '../system/index.ts';
 import type { NewResource as NewDbResource } from '../schema/index.ts';
+import type { TeamInfo, UserInfo } from '../users/types.ts';
 
 import { Module } from '../system/module.ts';
-import { resources as resourceSchema } from '../schema/resources.ts';
 import { retryDatabaseFn } from '../utils/database.ts';
+import { resources as resourceSchema } from '../schema/resources.ts';
 
 import type {
   NewResource,
@@ -641,33 +642,32 @@ export class ResourcesModule extends Module<System['modules']> {
   }
 
   private async ensureParties(resources: NewResource[]) {
-    await this.system.modules.users.insertUsers(
-      resources
-        .map((resource) =>
-          resource.publisher && resource.publisher.providerId
-            ? {
-                provider: resource.provider,
-                providerId: resource.publisher.providerId,
-                name: resource.publisher.name,
-                avatar: resource.publisher.avatar
-              }
-            : undefined
-        )
-        .filter(Boolean)
-    );
-    await this.system.modules.teams.insertTeams(
-      resources
-        .map((resource) =>
-          resource.fansub && resource.fansub.providerId
-            ? {
-                provider: resource.provider,
-                providerId: resource.fansub.providerId,
-                name: resource.fansub.name,
-                avatar: resource.fansub.avatar
-              }
-            : undefined
-        )
-        .filter(Boolean)
-    );
+    const publishers: UserInfo[] = [];
+    const fansubs: TeamInfo[] = [];
+    for (const resource of resources) {
+      if (resource.publisher?.providerId) {
+        publishers.push({
+          provider: resource.provider,
+          providerId: resource.publisher.providerId,
+          name: resource.publisher.name,
+          avatar: resource.publisher.avatar,
+          usedAt: resource.createdAt
+        });
+      }
+      if (resource.fansub?.providerId) {
+        fansubs.push({
+          provider: resource.provider,
+          providerId: resource.fansub.providerId,
+          name: resource.fansub.name,
+          avatar: resource.fansub.avatar,
+          usedAt: resource.createdAt
+        });
+      }
+    }
+
+    await Promise.all([
+      this.system.modules.users.insertUsers(publishers),
+      this.system.modules.teams.insertTeams(fansubs)
+    ]);
   }
 }

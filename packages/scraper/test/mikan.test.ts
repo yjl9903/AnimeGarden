@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { fetchMikanDetail, fetchMikanPage } from '../src/mikan';
+import { fetchMikanDetail, fetchMikanPage, normalizeMikanPublishGroupName } from '../src/mikan';
 
 const LIST_HTML = `
 <!doctype html>
@@ -176,6 +176,31 @@ describe('mikan', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+  });
+
+  it('should normalize joint group names without splitting verified single groups', () => {
+    expect(normalizeMikanPublishGroupName('〇酱字幕组＆HKACG字幕组')).toBe('〇酱字幕组');
+    expect(normalizeMikanPublishGroupName('紫音动漫&发布组')).toBe('紫音动漫&发布组');
+    expect(normalizeMikanPublishGroupName('K&W-RAWS')).toBe('K&W-RAWS');
+    expect(normalizeMikanPublishGroupName('指原x樱花字幕组')).toBe('指原');
+    expect(normalizeMikanPublishGroupName('得宗字幕组×拾月出云')).toBe('得宗字幕组');
+  });
+
+  it('should prefer the current publish-group page name for a joint list label', async () => {
+    const list = LIST_HTML.replace(
+      '<a href="/Home/PublishGroup/392" target="_blank" class="magnet-link-wrap">Kirara Fantasia</a>',
+      '<a href="/Home/PublishGroup/392" target="_blank" class="magnet-link-wrap">旧组&amp;联合组</a>'
+    );
+    const fetch = createFetch({
+      'https://mikanani.kas.pub/Home/Classic/1': list,
+      'https://mikanani.kas.pub/Home/PublishGroup/392':
+        '<html><head><title>当前组 - Mikan Project</title></head></html>'
+    });
+
+    const resources = await fetchMikanPage(fetch, { page: 1, retry: 0 });
+
+    expect(resources[0]?.publisher).toEqual({ id: '392', name: '当前组' });
+    expect(resources[0]?.fansub).toEqual({ id: '392', name: '当前组' });
   });
 
   it('should parse list page and keep the first publish group when multiple groups exist', async () => {

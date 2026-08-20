@@ -6,6 +6,9 @@ export interface UserInfo {
   provider: string;
 
   providerId: string;
+
+  /** Time when this name was used by a resource. */
+  usedAt: Date;
 }
 
 export interface TeamInfo extends UserInfo {}

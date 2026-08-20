@@ -11,6 +11,22 @@ const BASE_URL = 'https://mikanani.kas.pub';
 const SHANGHAI_TIME_ZONE = 'Asia/Shanghai';
 const TITLE_SUFFIX = ' - Mikan Project';
 
+/** Names containing an ampersand that are one Mikan group rather than a joint release. */
+const MIKAN_AMPERSAND_GROUPS = new Set([
+  '紫音动漫&发布组',
+  '紫音動漫&發佈組',
+  '天月动漫&发布组',
+  '天月動漫&發佈組',
+  'K&W-RAWS'
+]);
+
+/** Joint names that use a separator other than an ampersand in current Mikan data. */
+const MIKAN_SPECIAL_JOINT_GROUPS = new Map([
+  ['指原x樱花字幕组', '指原'],
+  ['指原x櫻花字幕組', '指原'],
+  ['得宗字幕组×拾月出云', '得宗字幕组']
+]);
+
 export interface FetchMikanPageOptions {
   page?: number;
 
@@ -129,6 +145,66 @@ function parseTitleFromHead(document: Document) {
   return title.endsWith(TITLE_SUFFIX) ? title.slice(0, -TITLE_SUFFIX.length) : title;
 }
 
+function cleanMikanPublishGroupName(name: string) {
+  return name
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .replaceAll('＆', '&')
+    .trim();
+}
+
+/**
+ * Resolves a Mikan joint release to its first group.
+ * Known single-group names keep their ampersand and are normalized later by the server.
+ */
+export function normalizeMikanPublishGroupName(name: string) {
+  const cleaned = cleanMikanPublishGroupName(name);
+  if (MIKAN_AMPERSAND_GROUPS.has(cleaned)) {
+    return cleaned;
+  }
+
+  const special = MIKAN_SPECIAL_JOINT_GROUPS.get(cleaned);
+  if (special) {
+    return special;
+  }
+
+  return cleaned.split('&', 1)[0].trim();
+}
+
+function shouldResolveMikanPublishGroup(name: string) {
+  const cleaned = cleanMikanPublishGroupName(name);
+  return cleaned.includes('&') || MIKAN_SPECIAL_JOINT_GROUPS.has(cleaned);
+}
+
+/** Fetches Mikan's current group name without making a failed lookup discard the resource row. */
+async function fetchMikanPublishGroupName(
+  ofetch: (request: string, init?: RequestInit) => Promise<Response>,
+  group: { id: string; name: string },
+  retry: number
+) {
+  if (!shouldResolveMikanPublishGroup(group.name)) {
+    return normalizeMikanPublishGroupName(group.name);
+  }
+
+  const url = `${BASE_URL}/Home/PublishGroup/${group.id}`;
+  try {
+    const resp = await retryFn(
+      async () => {
+        const response = await ofetch(url);
+        if (!response.ok) {
+          throw new NetworkError('mikan', url, response);
+        }
+        return response;
+      },
+      { count: retry }
+    );
+    const { document } = new JSDOM(await resp.text()).window;
+    const currentName = parseTitleFromHead(document);
+    return normalizeMikanPublishGroupName(currentName ?? group.name);
+  } catch {
+    return normalizeMikanPublishGroupName(group.name);
+  }
+}
+
 /** Cleans Mikan's detail HTML and makes embedded image URLs safe to render off-site. */
 function parseDetailDescription(element: Element, baseUrl: string) {
   const clone = element.cloneNode(true) as Element;
@@ -193,6 +269,7 @@ export async function fetchMikanPage(
   const { document } = new JSDOM(await resp.text()).window;
 
   const result: ScrapedResource[] = [];
+  const groupNames = new Map<string, Promise<string>>();
   for (const row of document.querySelectorAll('table.table tbody tr')) {
     const tds = [...row.querySelectorAll('td')];
     if (tds.length < 4) {
@@ -226,7 +303,19 @@ export async function fetchMikanPage(
       continue;
     }
 
-    const group = parseFirstPublishGroup(tds[1]);
+    const parsedGroup = parseFirstPublishGroup(tds[1]);
+    let group = parsedGroup;
+    if (parsedGroup) {
+      let resolved = groupNames.get(parsedGroup.id);
+      if (!resolved) {
+        resolved = fetchMikanPublishGroupName(ofetch, parsedGroup, retry);
+        groupNames.set(parsedGroup.id, resolved);
+      }
+      group = {
+        ...parsedGroup,
+        name: await resolved
+      };
+    }
 
     // 剔除零宽空格, 清洗字幕组笔误
     title = title
@@ -324,7 +413,15 @@ export async function fetchMikanDetail(
 
   const size = findBangumiInfoValue(document, '文件大小') ?? '';
 
-  const group = parseFirstPublishGroup(document.querySelector('.leftbar-container') ?? document);
+  const parsedGroup = parseFirstPublishGroup(
+    document.querySelector('.leftbar-container') ?? document
+  );
+  const group = parsedGroup
+    ? {
+        ...parsedGroup,
+        name: await fetchMikanPublishGroupName(ofetch, parsedGroup, retry)
+      }
+    : undefined;
   const fullMagnet = document.querySelector<HTMLAnchorElement>(
     '.leftbar-nav a[href^="magnet:"]'
   )?.href;

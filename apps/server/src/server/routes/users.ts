@@ -7,14 +7,14 @@ export const defineUsersRoutes = defineHandler((sys, app) =>
       c.res.headers.set('Cache-Control', `public, max-age=${24 * 60 * 60}`);
       return c.json({
         status: 'OK',
-        users: [...sys.modules.users.users.values()]
+        users: [...sys.modules.users.ids.values()]
       });
     })
     .get('/teams', etag(), (c) => {
       c.res.headers.set('Cache-Control', `public, max-age=${24 * 60 * 60}`);
       return c.json({
         status: 'OK',
-        teams: [...sys.modules.teams.teams.values()]
+        teams: [...sys.modules.teams.ids.values()]
       });
     })
 );

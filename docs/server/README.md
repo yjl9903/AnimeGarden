@@ -14,6 +14,7 @@
 | 文档 | 内容 | 适用场景 |
 | --- | --- | --- |
 | [resources-write-flow.md](./resources-write-flow.md) | `server`、`cron`、feed 服务职责，以及 resources 插入、更新、删标、detail 回填链路 | 修改资源写入、同步任务、服务部署职责或 Redis 通知时先读 |
+| [party-normalization.md](./party-normalization.md) | 用户、字幕组别名归一化、Mikan 联合发布和存量刷数约束 | 修改用户/字幕组写入、别名或存量合并时先读 |
 | [telegram-push-flow.md](./telegram-push-flow.md) | Telegram 资源推送状态机、去重键、入队、补偿和测试关注点 | 修改 `apps/server/src/push`、推送触发点或 Telegram 表结构时先读 |
 
 ## 查询与索引

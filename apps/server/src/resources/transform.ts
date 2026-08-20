@@ -45,8 +45,12 @@ export function transformNewResources(
 
   const titleAlt = normalizeTitle(res.title);
   const size = typeof res.size === 'string' ? Math.floor(parseSize(res.size)) : res.size;
-  const publisher = sys.modules.users.getByName(publisherName);
-  const fansub = fansubName ? sys.modules.teams.getByName(fansubName) : undefined;
+  const publisher = res.publisher
+    ? sys.modules.users.resolve(res.provider, res.publisher.providerId, res.publisher.name)
+    : sys.modules.users.getByName(anonymous);
+  const fansub = res.fansub
+    ? sys.modules.teams.resolve(res.provider, res.fansub.providerId, res.fansub.name)
+    : undefined;
 
   if (!publisher) {
     errors.push(`Unknown publisher: ${publisherName}`);
