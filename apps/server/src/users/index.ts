@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, inArray, max } from 'drizzle-orm';
 import { memoAsync } from 'memofunc';
 
 import type { System } from '../system/system.ts';
@@ -6,12 +6,15 @@ import type { User, Team } from '../schema/index.ts';
 
 import { Module } from '../system/module.ts';
 import { users as userSchema, teams as teamSchema } from '../schema/users.ts';
+import { resources as resourceSchema } from '../schema/resources.ts';
 
 import type { UserInfo, TeamInfo } from './types.ts';
 
 import { appendProviderAliases, normalizePartyName } from './normalize.ts';
 
 export * from './types.ts';
+
+const USED_AT_BATCH_SIZE = 500;
 
 function providerIdentity(provider: string, providerId: string) {
   return `${provider}:${providerId}`;
@@ -32,15 +35,29 @@ export class UsersModule extends Module<System['modules']> {
   /** Database users.id -> latest resource timestamp used to select the canonical name. */
   private readonly latestUsedAt: Map<number, number> = new Map();
 
+  /** Background task shared by cron initialization and party insertion. */
+  private latestUsedAtTask?: Promise<void>;
+
   public async initialize() {
     this.logger.info('Initializing Users module');
     await this.fetchUsers();
+    if (this.system.options.cron) {
+      void this.ensureLatestUsedAt().catch((error) =>
+        this.logger.error('Failed to load latest user usage', error)
+      );
+    }
     this.logger.success('Initialize Users module OK');
   }
 
   public async refresh() {
     this.logger.info('Refreshing Users module');
     await this.fetchUsers();
+    this.latestUsedAtTask = undefined;
+    if (this.system.options.cron) {
+      void this.ensureLatestUsedAt().catch((error) =>
+        this.logger.error('Failed to load latest user usage', error)
+      );
+    }
     this.logger.success('Refresh Users module OK');
   }
 
@@ -71,8 +88,36 @@ export class UsersModule extends Module<System['modules']> {
     }
   }
 
+  /** Starts the batched load once and returns the shared task. */
+  private ensureLatestUsedAt() {
+    this.latestUsedAtTask ??= (async () => {
+      this.logger.info('Loading latest user usage');
+      this.latestUsedAt.clear();
+      const ids = [...this.ids.keys()];
+      for (let index = 0; index < ids.length; index += USED_AT_BATCH_SIZE) {
+        const batch = ids.slice(index, index + USED_AT_BATCH_SIZE);
+        const latest = await this.database
+          .select({ id: resourceSchema.publisherId, usedAt: max(resourceSchema.createdAt) })
+          .from(resourceSchema)
+          .where(inArray(resourceSchema.publisherId, batch))
+          .groupBy(resourceSchema.publisherId);
+        for (const row of latest) {
+          if (row.usedAt) {
+            this.latestUsedAt.set(row.id, new Date(row.usedAt).getTime());
+          }
+        }
+      }
+      this.logger.success('Load latest user usage OK');
+    })().catch((error) => {
+      this.latestUsedAtTask = undefined;
+      throw error;
+    });
+    return this.latestUsedAtTask;
+  }
+
   public async insertUsers(users: UserInfo[]) {
     this.logger.info(`Start inserting ${users.length} users`);
+    await this.ensureLatestUsedAt();
 
     const insertions: Map<string, Omit<User, 'id'>> = new Map();
     const insertionProviders = new Map<string, string>();
@@ -118,11 +163,11 @@ export class UsersModule extends Module<System['modules']> {
         // Update user
         dbUser.providers ??= {};
         const usedAt = user.usedAt.getTime();
-        const latestUsedAt = this.latestUsedAt.get(dbUser.id);
-        const isLatest = latestUsedAt !== undefined && usedAt >= latestUsedAt;
-        const occupied = this.users.get(user.name);
         const oldName = dbUser.name;
         const oldAvatar = dbUser.avatar;
+        const latestUsedAt = this.latestUsedAt.get(dbUser.id) ?? 0;
+        const isLatest = usedAt >= latestUsedAt;
+        const occupied = this.users.get(user.name);
 
         // A newly observed name becomes canonical only when its resource is the newest one.
         if (oldName !== user.name && isLatest && (!occupied || occupied.id === dbUser.id)) {
@@ -145,7 +190,7 @@ export class UsersModule extends Module<System['modules']> {
           oldName
         );
 
-        this.latestUsedAt.set(dbUser.id, Math.max(usedAt, this.latestUsedAt.get(dbUser.id) ?? 0));
+        this.latestUsedAt.set(dbUser.id, Math.max(usedAt, latestUsedAt));
 
         const changed =
           oldName !== dbUser.name ||
@@ -241,15 +286,29 @@ export class TeamsModule extends Module<System['modules']> {
   /** Database teams.id -> latest resource timestamp used to select the canonical name. */
   private readonly latestUsedAt: Map<number, number> = new Map();
 
+  /** Background task shared by cron initialization and party insertion. */
+  private latestUsedAtTask?: Promise<void>;
+
   public async initialize() {
     this.logger.info('Initializing Teams module');
     await this.fetchTeams();
+    if (this.system.options.cron) {
+      void this.ensureLatestUsedAt().catch((error) =>
+        this.logger.error('Failed to load latest team usage', error)
+      );
+    }
     this.logger.success('Initialize Teams module OK');
   }
 
   public async refresh() {
     this.logger.info('Refreshing Teams module');
     await this.fetchTeams();
+    this.latestUsedAtTask = undefined;
+    if (this.system.options.cron) {
+      void this.ensureLatestUsedAt().catch((error) =>
+        this.logger.error('Failed to load latest team usage', error)
+      );
+    }
     this.logger.success('Refresh Teams module OK');
   }
 
@@ -280,8 +339,36 @@ export class TeamsModule extends Module<System['modules']> {
     }
   }
 
+  /** Starts the batched load once and returns the shared task. */
+  private ensureLatestUsedAt() {
+    this.latestUsedAtTask ??= (async () => {
+      this.logger.info('Loading latest team usage');
+      this.latestUsedAt.clear();
+      const ids = [...this.ids.keys()];
+      for (let index = 0; index < ids.length; index += USED_AT_BATCH_SIZE) {
+        const batch = ids.slice(index, index + USED_AT_BATCH_SIZE);
+        const latest = await this.database
+          .select({ id: resourceSchema.fansubId, usedAt: max(resourceSchema.createdAt) })
+          .from(resourceSchema)
+          .where(inArray(resourceSchema.fansubId, batch))
+          .groupBy(resourceSchema.fansubId);
+        for (const row of latest) {
+          if (row.id !== null && row.usedAt) {
+            this.latestUsedAt.set(row.id, new Date(row.usedAt).getTime());
+          }
+        }
+      }
+      this.logger.success('Load latest team usage OK');
+    })().catch((error) => {
+      this.latestUsedAtTask = undefined;
+      throw error;
+    });
+    return this.latestUsedAtTask;
+  }
+
   public async insertTeams(teams: TeamInfo[]) {
     this.logger.info(`Start inserting ${teams.length} teams`);
+    await this.ensureLatestUsedAt();
 
     const insertions: Map<string, Omit<Team, 'id'>> = new Map();
     const insertionProviders = new Map<string, string>();
@@ -327,11 +414,11 @@ export class TeamsModule extends Module<System['modules']> {
         // Update team
         dbTeam.providers ??= {};
         const usedAt = team.usedAt.getTime();
-        const latestUsedAt = this.latestUsedAt.get(dbTeam.id);
-        const isLatest = latestUsedAt !== undefined && usedAt >= latestUsedAt;
-        const occupied = this.teams.get(team.name);
         const oldName = dbTeam.name;
         const oldAvatar = dbTeam.avatar;
+        const latestUsedAt = this.latestUsedAt.get(dbTeam.id) ?? 0;
+        const isLatest = usedAt >= latestUsedAt;
+        const occupied = this.teams.get(team.name);
 
         if (oldName !== team.name && isLatest && (!occupied || occupied.id === dbTeam.id)) {
           this.teams.delete(oldName);
@@ -353,7 +440,7 @@ export class TeamsModule extends Module<System['modules']> {
           oldName
         );
 
-        this.latestUsedAt.set(dbTeam.id, Math.max(usedAt, this.latestUsedAt.get(dbTeam.id) ?? 0));
+        this.latestUsedAt.set(dbTeam.id, Math.max(usedAt, latestUsedAt));
 
         const changed =
           oldName !== dbTeam.name ||
