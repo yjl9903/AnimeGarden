@@ -1,4 +1,4 @@
-import { eq, max } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { memoAsync } from 'memofunc';
 
 import type { System } from '../system/system.ts';
@@ -6,7 +6,6 @@ import type { User, Team } from '../schema/index.ts';
 
 import { Module } from '../system/module.ts';
 import { users as userSchema, teams as teamSchema } from '../schema/users.ts';
-import { resources as resourceSchema } from '../schema/resources.ts';
 
 import type { UserInfo, TeamInfo } from './types.ts';
 
@@ -46,27 +45,13 @@ export class UsersModule extends Module<System['modules']> {
   }
 
   public async fetchUsers() {
-    const [users, latest] = await Promise.all([
-      this.database.query.users.findMany(),
-      this.database
-        .select({
-          id: resourceSchema.publisherId,
-          createdAt: max(resourceSchema.createdAt)
-        })
-        .from(resourceSchema)
-        .groupBy(resourceSchema.publisherId)
-    ]);
+    const users = await this.database.query.users.findMany();
 
     this.getById.clear();
     this.users.clear();
     this.ids.clear();
     this.providerIds.clear();
     this.latestUsedAt.clear();
-    for (const row of latest) {
-      if (row.createdAt) {
-        this.latestUsedAt.set(row.id, new Date(row.createdAt).getTime());
-      }
-    }
     for (const user of users) {
       this.indexUser(user);
     }
@@ -133,7 +118,8 @@ export class UsersModule extends Module<System['modules']> {
         // Update user
         dbUser.providers ??= {};
         const usedAt = user.usedAt.getTime();
-        const isLatest = usedAt >= (this.latestUsedAt.get(dbUser.id) ?? 0);
+        const latestUsedAt = this.latestUsedAt.get(dbUser.id);
+        const isLatest = latestUsedAt !== undefined && usedAt >= latestUsedAt;
         const occupied = this.users.get(user.name);
         const oldName = dbUser.name;
         const oldAvatar = dbUser.avatar;
@@ -268,27 +254,13 @@ export class TeamsModule extends Module<System['modules']> {
   }
 
   public async fetchTeams() {
-    const [teams, latest] = await Promise.all([
-      this.database.query.teams.findMany(),
-      this.database
-        .select({
-          id: resourceSchema.fansubId,
-          createdAt: max(resourceSchema.createdAt)
-        })
-        .from(resourceSchema)
-        .groupBy(resourceSchema.fansubId)
-    ]);
+    const teams = await this.database.query.teams.findMany();
 
     this.getById.clear();
     this.teams.clear();
     this.ids.clear();
     this.providerIds.clear();
     this.latestUsedAt.clear();
-    for (const row of latest) {
-      if (row.id !== null && row.createdAt) {
-        this.latestUsedAt.set(row.id, new Date(row.createdAt).getTime());
-      }
-    }
     for (const team of teams) {
       this.indexTeam(team);
     }
@@ -355,7 +327,8 @@ export class TeamsModule extends Module<System['modules']> {
         // Update team
         dbTeam.providers ??= {};
         const usedAt = team.usedAt.getTime();
-        const isLatest = usedAt >= (this.latestUsedAt.get(dbTeam.id) ?? 0);
+        const latestUsedAt = this.latestUsedAt.get(dbTeam.id);
+        const isLatest = latestUsedAt !== undefined && usedAt >= latestUsedAt;
         const occupied = this.teams.get(team.name);
         const oldName = dbTeam.name;
         const oldAvatar = dbTeam.avatar;
