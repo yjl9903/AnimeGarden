@@ -9,6 +9,7 @@ import { NetworkError } from '../error';
 
 const BASE_URL = 'https://mikanani.kas.pub';
 const SHANGHAI_TIME_ZONE = 'Asia/Shanghai';
+const TITLE_PREFIX = 'Mikan Project - ';
 const TITLE_SUFFIX = ' - Mikan Project';
 
 /** Names containing an ampersand that are one Mikan group rather than a joint release. */
@@ -145,6 +146,15 @@ function parseTitleFromHead(document: Document) {
   return title.endsWith(TITLE_SUFFIX) ? title.slice(0, -TITLE_SUFFIX.length) : title;
 }
 
+/** Mikan publish-group pages put the site name before the group name. */
+function parsePublishGroupNameFromHead(document: Document) {
+  const title = document.querySelector('title')?.textContent?.trim();
+  if (!title) {
+    return undefined;
+  }
+  return title.startsWith(TITLE_PREFIX) ? title.slice(TITLE_PREFIX.length) : title;
+}
+
 function cleanMikanPublishGroupName(name: string) {
   return name
     .replace(/[\u200B-\u200D\uFEFF]/g, '')
@@ -198,7 +208,7 @@ async function fetchMikanPublishGroupName(
       { count: retry }
     );
     const { document } = new JSDOM(await resp.text()).window;
-    const currentName = parseTitleFromHead(document);
+    const currentName = parsePublishGroupNameFromHead(document);
     return normalizeMikanPublishGroupName(currentName ?? group.name);
   } catch {
     return normalizeMikanPublishGroupName(group.name);

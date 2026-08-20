@@ -14,9 +14,11 @@ export async function requestAdminAPI<T>(
   init: RequestInit,
   options: AdminRequestOptions
 ) {
-  const secret = options.secret?.trim();
+  // Prefer an explicit CLI value, then fall back to secrets loaded from .env.
+  const secret =
+    options.secret?.trim() || process.env.ADMIN_SECRET?.trim() || process.env.SECRET?.trim();
   if (!secret) {
-    throw new Error('Expected --secret to contain the admin auth secret');
+    throw new Error('Expected --secret, ADMIN_SECRET, or SECRET to contain the admin auth secret');
   }
 
   return await fetchAPI<T>(path, init, {

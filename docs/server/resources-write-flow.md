@@ -268,10 +268,13 @@ Content-Type: application/json
 manager CLI 提供对应命令：
 
 ```bash
-pnpm manager --secret <secret> admin patch <provider> <provider-id> \
+pnpm manager admin patch <provider> <provider-id> \
   [--subject <subject-id>] [--detail] --url <api-base-url>
 ```
 
+manager 默认从 `.env` 或进程环境读取 `ADMIN_SECRET`，并以 `SECRET` 作为兼容回退；需要临时
+覆盖时仍可显式传入全局参数 `--secret <secret>`。避免在共享终端或日志环境中显式传入密钥，
+因为 pnpm 可能回显展开后的脚本命令。
 `--url` 可选，用于指定本地或其他环境的 API 地址；不传时使用 client 的默认线上地址。
 `--subject` 和 `--detail` 至少传一个，也可以同时使用。`detail: true` 会让 cron 绕过已有
 Redis detail cache 和详情过期时间，立即从上游重新抓取并覆盖 detail。

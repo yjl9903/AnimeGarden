@@ -186,7 +186,7 @@ describe('mikan', () => {
     expect(normalizeMikanPublishGroupName('得宗字幕组×拾月出云')).toBe('得宗字幕组');
   });
 
-  it('should prefer the current publish-group page name for a joint list label', async () => {
+  it('should strip the publish-group title prefix before normalizing its name', async () => {
     const list = LIST_HTML.replace(
       '<a href="/Home/PublishGroup/392" target="_blank" class="magnet-link-wrap">Kirara Fantasia</a>',
       '<a href="/Home/PublishGroup/392" target="_blank" class="magnet-link-wrap">旧组&amp;联合组</a>'
@@ -194,13 +194,13 @@ describe('mikan', () => {
     const fetch = createFetch({
       'https://mikanani.kas.pub/Home/Classic/1': list,
       'https://mikanani.kas.pub/Home/PublishGroup/392':
-        '<html><head><title>当前组 - Mikan Project</title></head></html>'
+        '<html><head><title>Mikan Project - 天月动漫&amp;发布组</title></head></html>'
     });
 
     const resources = await fetchMikanPage(fetch, { page: 1, retry: 0 });
 
-    expect(resources[0]?.publisher).toEqual({ id: '392', name: '当前组' });
-    expect(resources[0]?.fansub).toEqual({ id: '392', name: '当前组' });
+    expect(resources[0]?.publisher).toEqual({ id: '392', name: '天月动漫&发布组' });
+    expect(resources[0]?.fansub).toEqual({ id: '392', name: '天月动漫&发布组' });
   });
 
   it('should parse list page and keep the first publish group when multiple groups exist', async () => {

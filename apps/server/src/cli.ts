@@ -16,7 +16,7 @@ import { parseAdminPatchArguments, requestAdminAPI } from './manager/admin.ts';
 const { description, version } = packageJson;
 
 export const app = breadc('animegarden-manager', { description, version })
-  .option('--secret <string>', 'Admin auth secret')
+  .option('--secret <string>', 'Admin auth secret (defaults to ADMIN_SECRET or SECRET)')
   .option('--postgres-uri <string>', 'Postgres connection URI')
   .option('--redis-uri <string>', 'Redis connection URI');
 
