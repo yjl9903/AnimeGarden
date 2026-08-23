@@ -33,7 +33,7 @@
 Hono 入口在 `src/server/index.ts`。`registerHono()` 统一绑定：
 
 - 请求 id、响应时间、JSON charset、CORS、logger、60s timeout。
-- `/` 和 `/health` 状态接口。
+- `/` 和 `/health` 状态接口，以及禁止搜索引擎抓取整个 API hostname 的 `/robots.txt`。
 - `users`、`subjects`、`resources`、`collections`、`feed`、`admin`、`sitemaps` 路由。
 - 查询错误到 JSON / XML 的统一转换。
 

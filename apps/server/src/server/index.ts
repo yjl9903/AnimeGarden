@@ -25,6 +25,7 @@ import { defineCollectionsRoutes } from './routes/collections.ts';
 import { defineFeedRoutes } from './routes/feed.ts';
 import { defineAdminRoutes } from './routes/admin.ts';
 import { defineSitemapsRoutes } from './routes/sitemaps.ts';
+import { defineRobotsRoutes } from './routes/robots.ts';
 import {
   getResourcesQueryErrorResponse,
   getResourcesQueryErrorXml
@@ -183,7 +184,11 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
   );
 
   app.use('*', async (ctx, next) => {
-    if (ctx.req.path === '/health' || ctx.req.path === '/.well-known/mcp/server-card.json') {
+    if (
+      ctx.req.path === '/health' ||
+      ctx.req.path === '/robots.txt' ||
+      ctx.req.path === '/.well-known/mcp/server-card.json'
+    ) {
       await next();
     } else {
       await sys.initialize();
@@ -227,6 +232,7 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
   app.use('*', requestTimeout);
 
   // Bind routes
+  defineRobotsRoutes(app);
   defineUsersRoutes(sys, app);
   defineSubjectsRoutes(sys, app);
   defineResourcesRoutes(sys, app);

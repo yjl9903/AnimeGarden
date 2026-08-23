@@ -164,10 +164,18 @@ Content-Signal: ai-train=yes, search=yes, ai-input=yes
 Sitemap: https://animes.garden/sitemap-index.xml
 ```
 
+API 子域 `https://api.animes.garden/robots.txt` 独立返回：
+
+```text
+User-agent: *
+Disallow: /
+```
+
 当前作用范围：
 
 - `User-agent: *` 面向遵守 Robots Exclusion Protocol 的通用爬虫，不是访问权限控制。
-- robots.txt 只作用于相同协议、hostname 和端口，不控制 `api.animes.garden` 等其他 hostname。
+- robots.txt 只作用于相同协议、hostname 和端口；因此 API 子域使用自己的 `/robots.txt`，禁止抓取
+  `/feed.xml`、API、MCP 和 sitemap 数据接口。
 - `Disallow` 控制抓取，不保证 URL 一定不会被索引。
 - HTML 页面使用 `noindex` 控制是否进入搜索结果；爬虫需要访问页面才能读取该指令。
 - `/about` 因此允许抓取，但页面输出 `noindex,follow`。
