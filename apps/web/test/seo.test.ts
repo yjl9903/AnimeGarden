@@ -213,6 +213,23 @@ describe('SEO metadata', () => {
     });
   });
 
+  it('keeps every Resources page after page 1 out of the index', () => {
+    for (const filter of [undefined, { types: ['动画'] }, { search: ['测试作品'] }]) {
+      const head = buildResourcesPageHead(filter, {}, 2, true);
+      expect(head.meta).toContainEqual({ name: 'robots', content: 'noindex,follow' });
+      expect(head.links[0]?.href).toContain('/resources/2');
+    }
+
+    const subjectHead = buildResourcesPageHead(
+      { subjects: [100] },
+      { 100: createSeoSubject(100) },
+      2,
+      true
+    );
+    expect(subjectHead.meta).toContainEqual({ name: 'robots', content: 'noindex,follow' });
+    expect(subjectHead.links[0]?.href).toContain('/resources/2?');
+  });
+
   it('canonicalizes a single Subject resource filter to the Subject page', () => {
     const subject = createSeoSubject(100);
     const head = buildResourcesPageHead({ subjects: [100] }, { 100: subject }, 1, true);

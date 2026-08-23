@@ -127,8 +127,7 @@ function quote(value: string) {
  * keyword; a preset combined with one to three types; or a single Subject/search/keyword combined
  * with one fansub/publisher. All accepted array values must be non-empty, and Subject data must be
  * resolvable. Other multi-dimensional filters, multiple values, include, exclude, provider, and
- * date ranges are noindex. Empty result pages are also noindex. Page numbers do not affect this
- * decision.
+ * date ranges are noindex. Empty result pages and every page after page 1 are also noindex.
  *
  * A single valid Subject filter is the exception: it remains indexable but canonicalizes to the
  * corresponding Subject page instead of the resources URL.
@@ -136,8 +135,15 @@ function quote(value: string) {
 export function resolveResourcesPageIndexing(
   filter: ResolvedFilterOptions | undefined,
   subjects: Record<number, Pick<WebBgmSubject, 'title'>> = {},
-  hasResults?: boolean
+  hasResults?: boolean,
+  page = 1
 ) {
+  // Only the first page participates in the indexing whitelist. Later pages keep their own
+  // canonical URL but must not compete with the primary landing page in search results.
+  if (page !== 1) {
+    return { indexable: false, canonicalSubjectId: undefined };
+  }
+
   const resolvedFilter = filter ?? {};
   const activeFilters = getActiveResourceFilters(resolvedFilter);
   const singleSubjectId =
@@ -250,7 +256,7 @@ export function buildResourcesPageHead(
   const resolvedFilter = filter ?? {};
   const resolvedSubjects = subjects ?? {};
   const search = stringifyURLSearch(resolvedFilter);
-  const indexing = resolveResourcesPageIndexing(resolvedFilter, resolvedSubjects, hasResults);
+  const indexing = resolveResourcesPageIndexing(resolvedFilter, resolvedSubjects, hasResults, page);
   const canonical = indexing.canonicalSubjectId
     ? getCanonicalURL(`/subject/${indexing.canonicalSubjectId}`)
     : getCanonicalURL(`/resources/${page}`, search.toString());

@@ -23,7 +23,7 @@
 - 周历、资源列表、Subject、详情和 API 文档接入页面级 canonical 和社交卡片。
 - Subject description 直接使用清洗、截断后的上游简介；无简介时不输出任何 description。
 - 资源列表使用可读的筛选摘要生成 description，不再把搜索语法直接写入摘要。
-- 资源列表仅允许稳定的单条件入口和单一名称搜索进入索引；复杂组合与无结果页设置
+- 资源列表仅允许第一页的稳定单条件入口和单一名称搜索进入索引；后续页、复杂组合与无结果页设置
   `noindex,follow`，Subject 单筛选 canonical 到对应 Subject 页面。
 - iframe、匿名收藏夹和未完成的 About 页面设置 `noindex,follow`。
 - robots.txt 禁止通用爬虫抓取 API、iframe 和匿名收藏夹路径。
@@ -194,17 +194,17 @@ Sitemap Index：`https://animes.garden/sitemap-index.xml`。
 
 ### 页面内容配置
 
-| 页面                            | Title                                                     | Description 生成方式                                                                                                                                                 | Canonical                                    | Robots                                          | Image                  |
-| ------------------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- | ----------------------------------------------- | ---------------------- |
-| `/`                             | `Anime Garden 動漫花園第三方镜像站以及动画 BT 资源聚合站` | `動漫花園第三方镜像站以及动画 BT 资源聚合站。`                                                                                                                       | `/`                                          | `max-image-preview:large`                       | 默认分享图             |
-| `/calendar/:season`             | `{年份} · {季度名称}动画周历 \| Anime Garden`             | `{年份} · {季度名称}动画周历, 动画每周播出时间表, Anime Garden`                                                                                                      | 当前季度 URL                                 | `max-image-preview:large`                       | 默认分享图             |
-| `/resources/:page`              | 根据筛选条件生成，再追加 ` \| Anime Garden`               | 无筛选：页面专属固定描述；有筛选：`{页面标题}。筛选条件：{可读筛选摘要}。`，最长 160 字                                                                              | 当前页及查询参数；Subject 单筛选指向 Subject | 简单筛选允许；复杂筛选或无结果 `noindex,follow` | 默认分享图             |
-| `/subject/:id`                  | `{作品名} 最新动画资源 \| Anime Garden`                   | 有简介：清理 HTML、实体和多余空白，截取 120 字，不添加作品名前缀；无简介：HTML、OG、Twitter 和 JSON-LD 均不输出 description                                          | 当前 Subject URL                             | `max-image-preview:large`                       | 作品海报               |
-| `/detail/:provider/:providerId` | `{资源标题，最多 56 字} \| Anime Garden`                  | 解析后的简介未以作品名开头时输出 `{作品名}：{简介}`；否则直接使用简介；没有解析简介时清理原始详情描述；仍为空时输出 `查看“{作品名}”的资源详情、文件列表和发布信息。` | 当前详情 URL                                 | `max-image-preview:large`                       | 详情首图，否则作品海报 |
-| `/docs/api`                     | `Open API 文档 \| Anime Garden`                           | `查看 Anime Garden 动画 BT 资源开放 API、请求参数、响应结构和交互式调用示例。`                                                                                       | `/docs/api`                                  | `max-image-preview:large`                       | 默认分享图             |
-| `/about`                        | `关于 \| Anime Garden`                                    | `了解 Anime Garden 的动画资源聚合、动画周历和开放 API。`                                                                                                             | `/about`                                     | `noindex,follow`                                | 不输出                 |
-| `/iframe`                       | 与 `/resources/:page` 一致                                | 与 `/resources/:page` 一致                                                                                                                                           | 不输出                                       | `noindex,follow`                                | 不输出                 |
-| `/collection/:hash`             | `{收藏夹名称或“资源收藏夹”} \| Anime Garden`              | 有名称：`查看 Anime Garden 收藏夹“{收藏夹名称}”中的动画资源。`；无名称：`查看 Anime Garden 资源收藏夹中的动画资源。`                                                 | 当前收藏夹 URL                               | `noindex,follow`                                | 不输出                 |
+| 页面                            | Title                                                     | Description 生成方式                                                                                                                                                 | Canonical                                           | Robots                                                          | Image                  |
+| ------------------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------------------- | ---------------------- |
+| `/`                             | `Anime Garden 動漫花園第三方镜像站以及动画 BT 资源聚合站` | `動漫花園第三方镜像站以及动画 BT 资源聚合站。`                                                                                                                       | `/`                                                 | `max-image-preview:large`                                       | 默认分享图             |
+| `/calendar/:season`             | `{年份} · {季度名称}动画周历 \| Anime Garden`             | `{年份} · {季度名称}动画周历, 动画每周播出时间表, Anime Garden`                                                                                                      | 当前季度 URL                                        | `max-image-preview:large`                                       | 默认分享图             |
+| `/resources/:page`              | 根据筛选条件生成，再追加 ` \| Anime Garden`               | 无筛选：页面专属固定描述；有筛选：`{页面标题}。筛选条件：{可读筛选摘要}。`，最长 160 字                                                                              | 当前页及查询参数；第一页 Subject 单筛选指向 Subject | 仅第一页简单筛选允许；后续页、复杂筛选或无结果 `noindex,follow` | 默认分享图             |
+| `/subject/:id`                  | `{作品名} 最新动画资源 \| Anime Garden`                   | 有简介：清理 HTML、实体和多余空白，截取 120 字，不添加作品名前缀；无简介：HTML、OG、Twitter 和 JSON-LD 均不输出 description                                          | 当前 Subject URL                                    | `max-image-preview:large`                                       | 作品海报               |
+| `/detail/:provider/:providerId` | `{资源标题，最多 56 字} \| Anime Garden`                  | 解析后的简介未以作品名开头时输出 `{作品名}：{简介}`；否则直接使用简介；没有解析简介时清理原始详情描述；仍为空时输出 `查看“{作品名}”的资源详情、文件列表和发布信息。` | 当前详情 URL                                        | `max-image-preview:large`                                       | 详情首图，否则作品海报 |
+| `/docs/api`                     | `Open API 文档 \| Anime Garden`                           | `查看 Anime Garden 动画 BT 资源开放 API、请求参数、响应结构和交互式调用示例。`                                                                                       | `/docs/api`                                         | `max-image-preview:large`                                       | 默认分享图             |
+| `/about`                        | `关于 \| Anime Garden`                                    | `了解 Anime Garden 的动画资源聚合、动画周历和开放 API。`                                                                                                             | `/about`                                            | `noindex,follow`                                                | 不输出                 |
+| `/iframe`                       | 与 `/resources/:page` 一致                                | 与 `/resources/:page` 一致                                                                                                                                           | 不输出                                              | `noindex,follow`                                                | 不输出                 |
+| `/collection/:hash`             | `{收藏夹名称或“资源收藏夹”} \| Anime Garden`              | 有名称：`查看 Anime Garden 收藏夹“{收藏夹名称}”中的动画资源。`；无名称：`查看 Anime Garden 资源收藏夹中的动画资源。`                                                 | 当前收藏夹 URL                                      | `noindex,follow`                                                | 不输出                 |
 
 ### Subject Title 与 Description 拼接规则
 
@@ -325,10 +325,12 @@ Subject 页面：
 资源列表页面：
 
 索引判断先统计有效筛选维度。数组字段只有长度大于 0 时才算一个维度；同一维度包含多个值仍然只算一个
-维度，但不满足“单一值”的索引条件。判断不受页码影响。
+维度，但不满足“单一值”的索引条件。只有第一页参与筛选白名单判断；所有后续页均为
+`noindex,follow`。
 
 | 条件                                                                | Robots           | Canonical          |
 | ------------------------------------------------------------------- | ---------------- | ------------------ |
+| 页码大于 1                                                          | `noindex,follow` | 当前 Resources URL |
 | 无筛选条件且有结果                                                  | 默认允许索引     | 当前 Resources URL |
 | 只有一个 preset                                                     | 默认允许索引     | 当前 Resources URL |
 | 一个 preset 加 1～3 个资源类型                                      | 默认允许索引     | 当前 Resources URL |
@@ -354,7 +356,8 @@ Subject 页面：
 - Subject 单筛选只有在 Subject 数据成功加载时才 canonical 到 `/subject/:id`；这是无结果规则的唯一例外。
 - Subject 与字幕组或发布者组合时使用当前 Resources URL 作为 self-canonical，不 canonical 到 Subject
   页面。
-- 分页页面保持各自的 self-canonical；同一筛选序列允许复用 description。
+- 页码大于 1 的页面设置 `noindex,follow` 并保持各自的 self-canonical；同一筛选序列允许复用
+  description。
 
 详情页面：
 
