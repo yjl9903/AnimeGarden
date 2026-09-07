@@ -30,9 +30,13 @@ export async function renderDetailMarkdown(
   }
 
   const resp = await fetchResourceDetail(provider as ProviderType, providerId, getFetchOptions());
-  if (!resp.ok || !resp.resource || !resp.detail) {
-    return errorMarkdown('资源不存在', '请求的资源不存在。', 404);
+  if (!resp.ok) {
+    if (resp.code === 'NOT_FOUND') {
+      return errorMarkdown('资源不存在', '请求的资源不存在。', 404);
+    }
+    throw resp.error;
   }
+  if (!resp.detail) throw new Error('获取资源详情失败');
 
   const resource = resp.resource;
   const description = normalizeDescription(resp.detail.description);

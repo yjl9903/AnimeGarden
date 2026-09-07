@@ -1,7 +1,7 @@
 import { fetchResources } from '@animegarden/client';
 
 import { groupResourcesByFansub } from '~/pages/subject.$subject.($page)/utils';
-import { getSubjectById } from '~/query/subject.server';
+import { getSubjectByIdResult } from '~/query/subject.server';
 import { ResponseCacheControl } from '~/utils/response';
 import { getSubjectDisplayName } from '~/utils/subject';
 import { buildSubjectPageSeo } from '~/pages/subject.$subject.($page)/seo';
@@ -17,10 +17,11 @@ import {
 } from './shared.server';
 
 export async function renderSubjectMarkdown(subjectId: number): Promise<MarkdownResult> {
-  const subject = await getSubjectById(subjectId);
-  if (!subject) {
+  const subjectResult = await getSubjectByIdResult(subjectId);
+  if (!subjectResult.ok) {
     return errorMarkdown('动画不存在', '请求的动画不存在。', 404);
   }
+  const subject = subjectResult.subject;
 
   const resp = await fetchResources({
     ...getFetchOptions(),

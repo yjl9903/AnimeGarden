@@ -1,13 +1,17 @@
 import type { ProviderType, FetchResourceDetailOptions, Resource, ResourceDetail } from '../types';
 
-import { fetchAPI } from './base';
+import { AnimeGardenError, type ClientResult, toClientFailure } from '../error';
 
-export interface FetchResourceDetailResult {
-  ok: boolean;
-  resource: Resource<{ tracker: true; metadata: true }> | undefined;
+import { fetchAPI } from './base';
+import { isResourceDetailPayload, normalizeResourcePayload } from './validation';
+
+export interface ResourceDetailData {
+  resource: Resource<{ tracker: true; metadata: true }>;
   detail: ResourceDetail | undefined;
-  timestamp: Date | undefined;
+  timestamp: Date;
 }
+
+export type FetchResourceDetailResult = ClientResult<ResourceDetailData>;
 
 /**
  * Fetch resource detail from anime garden
@@ -17,18 +21,35 @@ export async function fetchResourceDetail(
   href: string,
   options: FetchResourceDetailOptions = {}
 ): Promise<FetchResourceDetailResult> {
-  const resp = await fetchAPI<any>(`detail/${provider}/${href}`, undefined, options).catch(
-    (_err) => {
-      return undefined;
-    }
-  );
+  if (!href.trim()) {
+    return toClientFailure(AnimeGardenError.fromBadRequest('Resource detail id is required'));
+  }
 
-  return {
-    ok: resp && resp.resource !== undefined && resp.timestamp !== undefined,
-    resource: resp?.resource,
-    detail: resp?.detail,
-    timestamp: resp?.timestamp
-  };
+  try {
+    const resp = await fetchAPI<any>(`detail/${provider}/${href}`, undefined, options);
+    if (
+      !resp ||
+      typeof resp !== 'object' ||
+      Array.isArray(resp) ||
+      !normalizeResourcePayload(resp.resource) ||
+      (resp.detail !== undefined && !isResourceDetailPayload(resp.detail)) ||
+      !(resp.timestamp instanceof Date)
+    ) {
+      throw AnimeGardenError.fromInvalidResponse(
+        `Invalid response /detail/${provider}/${href}`,
+        resp
+      );
+    }
+
+    return {
+      ok: true,
+      resource: resp.resource,
+      detail: resp.detail,
+      timestamp: resp.timestamp
+    };
+  } catch (error) {
+    return toClientFailure(error);
+  }
 }
 
 export async function fetchResourceDetailByInfoHash(
@@ -37,26 +58,33 @@ export async function fetchResourceDetailByInfoHash(
 ): Promise<FetchResourceDetailResult> {
   const hash = infoHash.trim();
   if (!hash) {
-    return {
-      ok: false,
-      resource: undefined,
-      detail: undefined,
-      timestamp: undefined
-    };
+    return toClientFailure(AnimeGardenError.fromBadRequest('Info hash is required'));
   }
 
-  const resp = await fetchAPI<any>(
-    `detail/infohash/${encodeURIComponent(hash)}`,
-    undefined,
-    options
-  ).catch((_err) => {
-    return undefined;
-  });
+  try {
+    const resp = await fetchAPI<any>(
+      `detail/infohash/${encodeURIComponent(hash)}`,
+      undefined,
+      options
+    );
+    if (
+      !resp ||
+      typeof resp !== 'object' ||
+      Array.isArray(resp) ||
+      !normalizeResourcePayload(resp.resource) ||
+      (resp.detail !== undefined && !isResourceDetailPayload(resp.detail)) ||
+      !(resp.timestamp instanceof Date)
+    ) {
+      throw AnimeGardenError.fromInvalidResponse(`Invalid response /detail/infohash/${hash}`, resp);
+    }
 
-  return {
-    ok: resp && resp.resource !== undefined && resp.timestamp !== undefined,
-    resource: resp?.resource,
-    detail: resp?.detail,
-    timestamp: resp?.timestamp
-  };
+    return {
+      ok: true,
+      resource: resp.resource,
+      detail: resp.detail,
+      timestamp: resp.timestamp
+    };
+  } catch (error) {
+    return toClientFailure(error);
+  }
 }

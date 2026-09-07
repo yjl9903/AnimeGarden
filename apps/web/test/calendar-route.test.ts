@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { isNotFound } from '@tanstack/react-router';
 import type { QueryClient } from '@tanstack/react-query';
 
 const { setCacheControl, setErrorResponse } = vi.hoisted(() => ({
@@ -56,5 +57,36 @@ describe('calendar season route loader', () => {
     });
     expect(setErrorResponse).not.toHaveBeenCalled();
     expect(queryClient.ensureQueryData).toHaveBeenCalledTimes(3);
+  });
+
+  it('throws not found for an unavailable calendar season', async () => {
+    const queryClient = {
+      ensureQueryData: vi.fn(async (options: { queryKey: readonly unknown[] }) => {
+        if (options.queryKey[1] === 'timestamp') {
+          return { ok: true, timestamp: new Date('2026-07-01T00:00:00.000Z') };
+        }
+        if (options.queryKey[1] === 'calendars') {
+          return {
+            ok: true,
+            calendars: [{ season: '2026-07', is_active: true, updated_at: new Date() }]
+          };
+        }
+        throw new Error(`Unexpected query: ${options.queryKey.join('/')}`);
+      })
+    };
+
+    let error: unknown;
+    try {
+      await loader({
+        context: { queryClient: queryClient as unknown as QueryClient },
+        params: { season: '1999-01' }
+      });
+    } catch (cause) {
+      error = cause;
+    }
+
+    expect(isNotFound(error)).toBe(true);
+    expect(error).toMatchObject({ data: { kind: 'calendar' } });
+    expect(error).toMatchObject({ headers: { 'Cache-Control': 'no-store' } });
   });
 });

@@ -51,12 +51,14 @@ export const defineCollectionsRoutes = defineHandler((sys, app) => {
           ...result
         });
       } else {
+        c.res.headers.set('Cache-Control', 'no-store');
+
         return c.json(
           {
             status: 'ERROR',
             message: 'Failed querying collection result'
           } as const,
-          400
+          404
         );
       }
     });

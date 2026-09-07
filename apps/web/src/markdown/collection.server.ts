@@ -16,8 +16,11 @@ import {
 
 export async function renderCollectionMarkdown(hash: string): Promise<MarkdownResult> {
   const resp = await fetchCollection(hash, getFetchOptions());
-  if (!resp?.ok) {
-    return errorMarkdown('收藏夹不存在', '请求的收藏夹不存在。', 404);
+  if (!resp.ok) {
+    if (resp.code === 'NOT_FOUND') {
+      return errorMarkdown('收藏夹不存在', '请求的收藏夹不存在。', 404);
+    }
+    throw resp.error;
   }
 
   const head = buildCollectionPageSeo(resp.name);
@@ -32,7 +35,7 @@ export async function renderCollectionMarkdown(hash: string): Promise<MarkdownRe
           heading(2, filter?.name || `筛选条件 ${index + 1}`) +
           paragraph(formatFilter(result.filter)) +
           formatResources(result.resources) +
-          (result.complete ? '' : '这个筛选条件还有更多资源，请查看 HTML 页面。\n\n')
+          (result.pagination.complete ? '' : '这个筛选条件还有更多资源，请查看 HTML 页面。\n\n')
         );
       })
       .join('');

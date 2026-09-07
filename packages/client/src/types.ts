@@ -242,6 +242,16 @@ export type PaginationOptions = {
 
 export type ResolvedPaginationOptions = Required<PaginationOptions>;
 
+/** Pagination metadata shared by resource lists and individual collection results. */
+export interface PaginationResult {
+  page: number;
+
+  pageSize: number;
+
+  /** Whether there are no more results after the current page. */
+  complete: boolean;
+}
+
 export type PresetOptions = {
   /**
    * Predefined filter preset options
@@ -446,7 +456,7 @@ export interface CollectionResourcesResult<
 
   results: Array<{
     resources: Resource<T>[];
-    complete: boolean;
+    pagination: PaginationResult;
     filter: ResolvedFilterOptions | undefined;
   }>;
 
@@ -465,12 +475,12 @@ export type CollectionFilter<
     ? {
         resources: Resource<T>[];
 
-        complete: boolean;
+        pagination: PaginationResult;
       }
     : R extends false
       ? {}
       : {
           resources?: Resource<T>[];
 
-          complete?: boolean;
+          pagination?: PaginationResult;
         });

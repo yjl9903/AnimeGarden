@@ -39,6 +39,7 @@ describe('index route loader', () => {
         if (options.queryKey[1] === 'resources') {
           return {
             ok: false,
+            code: 'SERVER_ERROR',
             resources: [],
             timestamp: new Date('2026-07-01T00:00:00.000Z'),
             error: new Error('resources unavailable')

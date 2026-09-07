@@ -1,7 +1,7 @@
 # Google Search SEO 当前实现
 
 状态：首版已实现
-更新日期：2026-08-19
+更新日期：2026-08-24
 
 本文只记录 Anime Garden 当前已经生效的 SEO 行为、页面配置和仍待处理的问题，不描述未采用的方案。
 
@@ -29,10 +29,14 @@
 - robots.txt 禁止通用爬虫抓取 API、iframe 和匿名收藏夹路径。
 - 补齐 favicon、Apple Touch Icon 和 Web App Manifest。
 - Sitemap 移除重定向入口 `/anime`，并使用标准 URL API 编码筛选参数。
+- 未匹配路径和不存在的 Detail、Collection、Subject、动画季度统一返回真实 HTTP `404`，不再跳转首页。
+- Subject 只有在 Bangumi API 明确返回 `404` 且本地 fallback 也不存在时才返回 `404`；数据库、网络或
+  上游临时故障返回 `5xx`，避免搜索引擎将暂时不可用误判为永久删除。
+- HTML 404 页面统一使用 `页面不存在 | Anime Garden`，设置 `noindex,follow`，且不输出 description、
+  canonical、社交卡片和 JSON-LD；Markdown 对应页面继续返回独立的 404 文本。
 
 ### 当前待处理
 
-- 无效详情和无效收藏夹目前跳转首页，尚未返回真实 `404`，可能形成 soft 404。
 - Detail description 尚未限制长度；原始上游详情过长时可能生成过长摘要，通用 fallback 文案也仍需
   单独确认。
 - Detail 页当前仅提供外部 KeepShare 播放链接，没有在页面主体嵌入播放器，因此即使存在有效
@@ -66,6 +70,7 @@ apps/web/src/pages/
 ├── detail.$provider.$providerId/seo.ts
 ├── docs.api/seo.ts
 ├── iframe/seo.ts
+├── not-found/seo.ts
 ├── resources.($page)/seo.ts
 └── subject.$subject.($page)/seo.ts
 ```
@@ -312,12 +317,12 @@ Anime Garden 动画 BT 资源聚合列表，支持按作品、字幕组、发布
 | `/`                             | 可索引                                   | 允许                     | `WebSite`、`Organization`                                     | 默认分享图           | 是             |
 | `/calendar/:season`             | 可索引                                   | 允许                     | 无                                                            | 默认分享图           | 是             |
 | `/subject/:id`                  | 可索引；不存在时返回 `404`               | 允许                     | `WebPage`、`TVSeries` 或 `CreativeWork`、可选 `ImageObject`   | 作品海报可用时输出   | 是             |
-| `/detail/:provider/:providerId` | 可索引；无效资源当前跳转首页             | 允许                     | 可靠分集有 `WebPage`、`TVEpisode`；满足字段时有 `VideoObject` | 详情封面或作品海报   | 是，按月份分片 |
+| `/detail/:provider/:providerId` | 可索引；不存在时返回 `404`               | 允许                     | 可靠分集有 `WebPage`、`TVEpisode`；满足字段时有 `VideoObject` | 详情封面或作品海报   | 是，按月份分片 |
 | `/resources/:page`              | 仅无筛选、稳定单条件和单一名称搜索可索引 | 允许                     | 无                                                            | 默认分享图           | 仅固定筛选入口 |
 | `/docs/api`                     | 可索引                                   | 允许                     | 无                                                            | 默认分享图           | 是             |
 | `/about`                        | `noindex,follow`                         | 允许，以便读取 `noindex` | 无                                                            | 无                   | 否             |
 | `/iframe`                       | `noindex,follow`                         | 禁止                     | 无                                                            | 无                   | 否             |
-| `/collection/:hash`             | `noindex,follow`；无效收藏夹当前跳转首页 | 禁止                     | 无                                                            | 无                   | 否             |
+| `/collection/:hash`             | `noindex,follow`；不存在时返回 `404`     | 禁止                     | 无                                                            | 无                   | 否             |
 
 未显式设置 `noindex` 的页面默认允许索引，并继承全局 `max-image-preview:large`。
 
@@ -384,16 +389,15 @@ Subject 页面：
 
 ### 重定向与非 HTML 路由
 
-| 路由                                   | 当前行为                                     |
-| -------------------------------------- | -------------------------------------------- |
-| `/anime`                               | 跳转到当前有效季度 `/calendar/:season`       |
-| `/resources/`                          | 跳转到 `/resources/1`，保留查询参数          |
-| `/subject/:id/:page`                   | 跳转到 `/subject/:id`，保留查询参数          |
-| 未匹配的 HTML 路径                     | 跳转首页                                     |
-| 无效详情                               | 跳转首页                                     |
-| 无效收藏夹                             | 跳转首页                                     |
-| `/robots.txt`                          | 输出抓取规则                                 |
-| `/sitemap-index.xml`、`/sitemap-*.xml` | 输出 Sitemap Index 和分片 Sitemap            |
-| `/openapi.json`                        | 输出 OpenAPI 文档数据，不设置 HTML SEO meta  |
-| `/llms.txt`                            | 输出面向模型的站点说明，不设置 HTML SEO meta |
-| `/.well-known/*`                       | 输出 API/MCP 发现数据，不设置 HTML SEO meta  |
+| 路由                                     | 当前行为                                     |
+| ---------------------------------------- | -------------------------------------------- |
+| `/anime`                                 | 跳转到当前有效季度 `/calendar/:season`       |
+| `/resources/`                            | 跳转到 `/resources/1`，保留查询参数          |
+| `/subject/:id/:page`                     | 跳转到 `/subject/:id`，保留查询参数          |
+| 未匹配的 HTML 路径                       | 返回统一 HTML `404`                          |
+| 不存在的详情、收藏夹、Subject 或动画季度 | 返回统一 HTML `404`                          |
+| `/robots.txt`                            | 输出抓取规则                                 |
+| `/sitemap-index.xml`、`/sitemap-*.xml`   | 输出 Sitemap Index 和分片 Sitemap            |
+| `/openapi.json`                          | 输出 OpenAPI 文档数据，不设置 HTML SEO meta  |
+| `/llms.txt`                              | 输出面向模型的站点说明，不设置 HTML SEO meta |
+| `/.well-known/*`                         | 输出 API/MCP 发现数据，不设置 HTML SEO meta  |

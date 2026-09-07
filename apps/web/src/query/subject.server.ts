@@ -10,6 +10,9 @@ import { getSubjectPosterURL } from '~/utils/subject';
 
 type BgmSubject = DatabaseSubject | CalendarSubject;
 
+export type SubjectLookupResult =
+  { ok: true; subject: WebBgmSubject } | { ok: false; code: 'NOT_FOUND'; subject: undefined };
+
 type CacheItem<T> = {
   expires: number;
   value: Promise<T>;
@@ -97,19 +100,46 @@ async function getFallbackSubjectById(subjectId: number) {
   return subject ? transformBgmdSubject(subject) : undefined;
 }
 
-export async function getSubjectById(subjectId: number) {
+/** Loads a Subject while preserving the difference between absence and upstream failure. */
+export async function getSubjectByIdResult(subjectId: number): Promise<SubjectLookupResult> {
   return getCached(`subject:${subjectId}`, ResponseStaleTime.Subject, async () => {
     try {
       const { subject } = await fetchSubject(subjectId, {
         timeout: 10 * 1000,
         retry: 1
       });
-      return transformBgmSubject(subject);
+      return { ok: true, subject: transformBgmSubject(subject) } as const;
     } catch (error) {
       console.error('[BGM]', 'fetchSubject fallback bgmd/full', subjectId, error);
-      return getFallbackSubjectById(subjectId);
+      const fallback = await getFallbackSubjectById(subjectId);
+      if (fallback) return { ok: true, subject: fallback } as const;
+      if (getHTTPStatus(error) === 404) {
+        return { ok: false, code: 'NOT_FOUND', subject: undefined } as const;
+      }
+      throw error;
     }
   });
+}
+
+/** Loads optional Subject metadata without making its consumers fail on an upstream outage. */
+export async function getSubjectById(subjectId: number) {
+  try {
+    const result = await getSubjectByIdResult(subjectId);
+    return result.ok ? result.subject : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function getHTTPStatus(error: unknown): number | undefined {
+  if (!error || typeof error !== 'object') return undefined;
+
+  const response = 'response' in error ? error.response : undefined;
+  if (response && typeof response === 'object' && 'status' in response) {
+    return typeof response.status === 'number' ? response.status : undefined;
+  }
+
+  return 'cause' in error ? getHTTPStatus(error.cause) : undefined;
 }
 
 export async function searchSubjects(keyword: string, limit?: number) {

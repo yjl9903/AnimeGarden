@@ -1,8 +1,10 @@
-import { createFileRoute, redirect, useLocation } from '@tanstack/react-router';
+import { createFileRoute, isNotFound, redirect, useLocation } from '@tanstack/react-router';
 import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 
 import Page from '~/pages/subject.$subject.($page)/route';
 import { buildSubjectPageHead } from '~/pages/subject.$subject.($page)/seo';
+import NotFoundPage, { buildNotFoundPageHeaders, throwNotFoundPage } from '~/pages/not-found/route';
+import { buildNotFoundPageHead } from '~/pages/not-found/seo';
 import { calendarQueryOptions, resourcesQueryOptions, subjectQueryOptions } from '~/query';
 import { getTrackingError, serializeError } from '~/utils';
 import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
@@ -18,7 +20,7 @@ function getSubjectResourcesFilter(subjectId: number) {
   };
 }
 
-const loader = async ({
+export const loader = async ({
   context,
   location,
   params
@@ -32,6 +34,10 @@ const loader = async ({
   }
 
   const subjectId = +params.subject!;
+  if (!Number.isSafeInteger(subjectId) || subjectId <= 0) {
+    throwNotFoundPage('subject');
+  }
+
   const resourceFilter = getSubjectResourcesFilter(subjectId);
   const [subjectResp, resourcesResp] = await Promise.all([
     context.queryClient.ensureQueryData(subjectQueryOptions(subjectId)),
@@ -39,20 +45,13 @@ const loader = async ({
     context.queryClient.ensureQueryData(calendarQueryOptions())
   ]);
 
-  const subject = subjectResp.subject;
-  if (!subjectResp.ok || !subject) {
-    await setErrorResponse(404);
-    return {
-      ok: false,
-      subjectId,
-      subject,
-      resources: [],
-      pagination: undefined,
-      filter: undefined,
-      timestamp: undefined,
-      error: undefined
-    };
+  if (!subjectResp.ok) {
+    if (subjectResp.code !== 'NOT_FOUND') {
+      throw new Error(subjectResp.error.message);
+    }
+    throwNotFoundPage('subject');
   }
+  const subject = subjectResp.subject;
 
   const { ok, resources, pagination, filter, timestamp, error } = resourcesResp;
 
@@ -80,8 +79,14 @@ const loader = async ({
 
 export const Route = createFileRoute('/subject/$subject')({
   loader,
-  head: ({ loaderData, params }) =>
-    buildSubjectPageHead(loaderData?.subject, loaderData?.filter, params.subject!),
+  head: ({ loaderData, params, match }) =>
+    loaderData?.subject
+      ? buildSubjectPageHead(loaderData.subject, loaderData.filter, params.subject!)
+      : isNotFound(match.error)
+        ? buildNotFoundPageHead()
+        : {},
+  headers: ({ match }) => buildNotFoundPageHeaders(match.error),
+  notFoundComponent: NotFoundPage,
   component: SubjectRoute
 });
 

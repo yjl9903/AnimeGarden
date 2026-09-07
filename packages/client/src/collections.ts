@@ -56,6 +56,10 @@ export async function hashCollection(collection: Collection<true>) {
     delete r.searchParams;
     // @ts-ignore
     delete r.resources;
+    // Query pagination must not change a saved collection's identity.
+    // @ts-ignore
+    delete r.pagination;
+    // Exclude completion metadata persisted by older clients as well.
     // @ts-ignore
     delete r.complete;
     return r;

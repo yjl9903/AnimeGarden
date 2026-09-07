@@ -53,6 +53,8 @@ describe('fetchResources', () => {
     });
 
     expect(result.ok).toBe(false);
+    if (result.ok) throw new Error('Expected failure');
+    expect(result.code).toBe('SERVER_ERROR');
     expect(result.resources).toEqual([]);
     expect(result.error).toBeInstanceOf(AnimeGardenError);
     expect(result.error?.status).toBe(500);
@@ -87,6 +89,8 @@ describe('fetchResources', () => {
     });
 
     expect(result.ok).toBe(false);
+    if (result.ok) throw new Error('Expected failure');
+    expect(result.code).toBe('SERVER_ERROR');
     expect(result.resources).toHaveLength(1);
     expect(result.error).toBeInstanceOf(AnimeGardenError);
     expect(result.error?.status).toBe(503);
@@ -131,5 +135,107 @@ describe('fetchResources', () => {
         signal: controller.signal
       })
     ).rejects.toBe(reason);
+  });
+
+  it('returns network failures through the high-level Result', async () => {
+    const result = await fetchResources({
+      fetch: vi.fn(async () => {
+        throw new TypeError('network failed');
+      }),
+      baseURL: 'https://example.com/'
+    });
+
+    expect(result).toMatchObject({
+      ok: false,
+      code: 'NETWORK_ERROR',
+      error: { retryable: true },
+      resources: []
+    });
+  });
+
+  it('returns INVALID_RESPONSE for malformed pagination metadata', async () => {
+    const response = createResourcesResponse([createResource(1)]);
+    response.pagination.complete = 'no' as unknown as boolean;
+
+    const result = await fetchResources({
+      fetch: vi.fn(async () => Response.json(response)),
+      baseURL: 'https://example.com/'
+    });
+
+    expect(result).toMatchObject({ ok: false, code: 'INVALID_RESPONSE', resources: [] });
+  });
+
+  it('returns INVALID_RESPONSE for invalid serialized filter dates', async () => {
+    const response = {
+      ...createResourcesResponse([createResource(1)]),
+      filter: { after: 'not-a-date' }
+    };
+
+    const result = await fetchResources({
+      fetch: vi.fn(async () => Response.json(response)),
+      baseURL: 'https://example.com/'
+    });
+
+    expect(result).toMatchObject({ ok: false, code: 'INVALID_RESPONSE', resources: [] });
+  });
+
+  it.each([
+    ['createdAt', null],
+    ['createdAt', false],
+    ['fetchedAt', true]
+  ])('rejects a non-date %s value of %j', async (field, value) => {
+    const resource = { ...createResource(1), [field]: value };
+    const result = await fetchResources({
+      fetch: vi.fn(async () =>
+        Response.json(
+          createResourcesResponse([resource as unknown as ReturnType<typeof createResource>])
+        )
+      ),
+      baseURL: 'https://example.com/'
+    });
+
+    expect(result).toMatchObject({ ok: false, code: 'INVALID_RESPONSE', resources: [] });
+  });
+
+  it('rejects null filter dates instead of preserving them as resolved values', async () => {
+    const response = {
+      ...createResourcesResponse([createResource(1)]),
+      filter: { before: null }
+    };
+    const result = await fetchResources({
+      fetch: vi.fn(async () => Response.json(response)),
+      baseURL: 'https://example.com/'
+    });
+
+    expect(result).toMatchObject({ ok: false, code: 'INVALID_RESPONSE', resources: [] });
+  });
+
+  it('returns ABORTED before requesting when the signal is already cancelled', async () => {
+    const controller = new AbortController();
+    controller.abort('cancelled');
+    const fetch = vi.fn();
+
+    const result = await fetchResources({
+      fetch,
+      baseURL: 'https://example.com/',
+      signal: controller.signal
+    });
+
+    expect(result).toMatchObject({ ok: false, code: 'ABORTED', resources: [] });
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('does not swallow progress callback errors', async () => {
+    const callbackError = new Error('progress failed');
+
+    await expect(
+      fetchResources({
+        fetch: vi.fn(async () => Response.json(createResourcesResponse([createResource(1)]))),
+        baseURL: 'https://example.com/',
+        progress: () => {
+          throw callbackError;
+        }
+      })
+    ).rejects.toBe(callbackError);
   });
 });

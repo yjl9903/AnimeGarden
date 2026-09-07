@@ -1,40 +1,44 @@
-import type { Resource, FetchResourcesOptions, ResolvedFilterOptions } from '../types';
+import type {
+  Resource,
+  FetchResourcesOptions,
+  ResolvedFilterOptions,
+  PaginationResult
+} from '../types';
 
-import { AnimeGardenError } from '../error';
+import {
+  type ClientFailure,
+  type ClientSuccess,
+  AnimeGardenError,
+  toClientFailure
+} from '../error';
 import { stringifyURLSearch } from '../resolver';
-
-import { fetchAPI } from './base';
 import { DefaultPageSize, MaxRequestPageSize } from '../constants';
 
-type PaginationResponse = {
-  page: number;
-  pageSize: number;
-  complete: boolean;
-};
+import {
+  isPaginationPayload,
+  normalizeResolvedFilterPayload,
+  normalizeResourcePayload
+} from './validation';
+import { fetchAPI } from './base';
+import { toRequestError } from './request-error';
 
-export type PaginationResult = {
-  page: number;
-  pageSize: number;
-  complete: boolean;
-};
+export type { PaginationResult } from '../types';
+
+export interface ResourcesData<T extends FetchResourcesOptions> {
+  resources: Resource<T>[];
+  pagination: PaginationResult;
+  filter: ResolvedFilterOptions;
+  timestamp: Date;
+}
 
 export type FetchResourcesResult<T extends FetchResourcesOptions> =
-  | {
-      ok: true;
-      resources: Resource<T>[];
-      pagination: PaginationResult;
-      filter: ResolvedFilterOptions;
-      timestamp: Date;
-      error: Error | any | undefined;
-    }
-  | {
-      ok: false;
+  | ClientSuccess<ResourcesData<T>>
+  | (ClientFailure & {
       resources: Resource<T>[];
       pagination: PaginationResult | undefined;
       filter: ResolvedFilterOptions | undefined;
       timestamp: Date | undefined;
-      error: Error | any | undefined;
-    };
+    });
 
 /**
  * Fetch resources list data from anime garden
@@ -70,93 +74,73 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
   }
 
   const map = new Map<string, Resource<T>>();
-  let aborted = false;
   let timestamp: Date | undefined = undefined;
-  let pagination: PaginationResponse | undefined = undefined;
+  let pagination: PaginationResult | undefined = undefined;
   let filter: ResolvedFilterOptions | undefined = undefined;
-  let error: Error | any | undefined = undefined;
-  let failed = false;
+  let failure: ClientFailure | undefined;
 
   for (let page = startPage; map.size < count && !pagination?.complete; page++) {
+    if (options.signal?.aborted) {
+      failure = toClientFailure(
+        toRequestError('Request aborted', options.signal.reason, options.signal)
+      );
+      break;
+    }
+
+    let resp: Awaited<ReturnType<typeof fetchPage<T>>>;
     try {
-      if (options.signal?.aborted) {
-        aborted = true;
-        break;
-      }
-
-      const resp = await fetchPage(page, searchParams, options);
-      if (!resp) {
-        aborted = true;
-        break;
-      }
-
-      if (!timestamp) {
-        timestamp = resp.timestamp;
-      }
-      if (resp.pagination) {
-        pagination = resp.pagination;
-      }
-      if (resp.filter) {
-        filter = resp.filter;
-      }
-
-      // No new resources
-      if (resp.resources.length === 0) {
-        break;
-      }
-
-      const newRes = [];
-      for (const r of resp.resources) {
-        if (!map.has(r.href)) {
-          map.set(r.href, r);
-          newRes.push(r);
-        }
-      }
-
-      await options.progress?.(newRes, {
-        url: searchParams.toString(),
-        searchParams,
-        page
-      });
+      resp = await fetchPage(page, searchParams, options);
     } catch (currentError) {
-      if (
-        currentError instanceof Error &&
-        (currentError.name === 'AbortError' || currentError.name === 'TimeoutError')
-      ) {
-        aborted = true;
-        error = currentError;
-        break;
-      } else {
-        failed = true;
-        error = currentError;
-        break;
+      failure = toClientFailure(currentError);
+      break;
+    }
+
+    timestamp ??= resp.timestamp;
+    pagination = resp.pagination;
+    filter = resp.filter;
+
+    // No new resources
+    if (resp.resources.length === 0) {
+      break;
+    }
+
+    const newRes = [];
+    for (const r of resp.resources) {
+      if (!map.has(r.href)) {
+        map.set(r.href, r);
+        newRes.push(r);
       }
     }
+
+    // Progress callbacks are application code; their exceptions must remain visible to callers.
+    await options.progress?.(newRes, {
+      url: searchParams.toString(),
+      searchParams,
+      page
+    });
 
     if (once) {
       break;
     }
   }
 
-  if (!aborted && !failed) {
+  if (!failure) {
     return {
       ok: true,
       resources: uniq([...map.values()]),
       pagination: pagination as PaginationResult,
       filter: filter as ResolvedFilterOptions,
-      timestamp: timestamp as Date,
-      error
-    };
-  } else {
-    return {
-      ok: false,
-      resources: uniq([...map.values()]),
-      pagination,
-      filter,
-      timestamp,
-      error
+      timestamp: timestamp as Date
     };
   }
+
+  return {
+    ...failure,
+    resources: uniq([...map.values()]),
+    pagination,
+    filter,
+    timestamp
+  };
 }
 
 async function fetchPage<T extends FetchResourcesOptions = FetchResourcesOptions>(
@@ -167,28 +151,24 @@ async function fetchPage<T extends FetchResourcesOptions = FetchResourcesOptions
   searchParams.set('page', '' + page);
 
   const r = await fetchAPI<any>('resources?' + searchParams.toString(), undefined, options);
-  if (r.timestamp) {
-    // --- Fix date type ---
-    for (const res of r.resources) {
-      res.createdAt = new Date(res.createdAt);
-      res.fetchedAt = new Date(res.fetchedAt);
-    }
-    if (r.filter.before) {
-      r.filter.before = new Date(r.filter.before);
-    }
-    if (r.filter.after) {
-      r.filter.after = new Date(r.filter.after);
-    }
-    // ---------------------
-
+  if (
+    r &&
+    typeof r === 'object' &&
+    !Array.isArray(r) &&
+    r.timestamp instanceof Date &&
+    Array.isArray(r.resources) &&
+    r.resources.every(normalizeResourcePayload) &&
+    isPaginationPayload(r.pagination) &&
+    normalizeResolvedFilterPayload(r.filter)
+  ) {
     return {
       resources: r.resources as Resource<T>[],
-      pagination: r.pagination as PaginationResponse | undefined,
-      filter: r.filter as ResolvedFilterOptions | undefined,
+      pagination: r.pagination,
+      filter: r.filter,
       timestamp: r.timestamp
     };
   } else {
-    throw AnimeGardenError.fromOriginalError(
+    throw AnimeGardenError.fromInvalidResponse(
       `Invalid response /resources?${searchParams.toString()}`,
       r
     );

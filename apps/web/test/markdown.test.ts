@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { AnimeGardenError } from '@animegarden/client';
+
 import { handleMarkdownRequest } from '../src/markdown/index.server';
 
 const resource = {
@@ -80,7 +82,13 @@ vi.mock('@animegarden/client', async (importOriginal) => {
       hash: 'abc',
       name: 'My Collection',
       filters: [{ name: 'Latest', searchParams: '', types: ['动画'] }],
-      results: [{ resources: [resource], complete: true, filter: { types: ['动画'] } }],
+      results: [
+        {
+          resources: [resource],
+          pagination: { page: 1, pageSize: 30, complete: true },
+          filter: { types: ['动画'] }
+        }
+      ],
       createdAt: '2026-01-02T03:04:05Z',
       timestamp: new Date('2026-01-02T03:04:05Z')
     }))
@@ -94,6 +102,16 @@ vi.mock('../src/query/subject.server', () => ({
     summary: 'Subject summary',
     poster: 'https://example.com/poster.jpg',
     search: { include: ['Subject Title'] }
+  })),
+  getSubjectByIdResult: vi.fn(async () => ({
+    ok: true,
+    subject: {
+      id: 100,
+      title: 'Subject Title',
+      summary: 'Subject summary',
+      poster: 'https://example.com/poster.jpg',
+      search: { include: ['Subject Title'] }
+    }
   })),
   resolveSubjectsByName: vi.fn(async () => []),
   getCalendar: vi.fn(async () => markdownCalendar),
@@ -195,6 +213,85 @@ describe('markdown responses', () => {
       'description: "查看 Anime Garden 收藏夹“My Collection”中的动画资源。"'
     );
     expectMinimalSeoFrontmatter(collection);
+  });
+
+  it.each([true, false])(
+    'uses collection pagination.complete=%s for the more-resources notice',
+    async (complete) => {
+      const { fetchCollection } = await import('@animegarden/client');
+      const collection = await fetchCollection('abc');
+      if (!collection.ok) throw collection.error;
+      vi.mocked(fetchCollection).mockResolvedValueOnce({
+        ...collection,
+        results: collection.results.map((result) => ({
+          ...result,
+          pagination: { ...result.pagination, complete }
+        }))
+      });
+
+      const response = await handleMarkdownRequest(
+        new Request('https://animes.garden/collection/abc', {
+          headers: { Accept: 'text/markdown' }
+        })
+      );
+      const body = await response.text();
+
+      expect(response.status).toBe(200);
+      expect(body).toContain('Test \\[Anime\\] \\*01\\*');
+      expect(body.includes('这个筛选条件还有更多资源，请查看 HTML 页面。')).toBe(!complete);
+    }
+  );
+
+  it('returns 404 Markdown only for confirmed missing resources', async () => {
+    const { fetchCollection, fetchResourceDetail } = await import('@animegarden/client');
+    vi.mocked(fetchResourceDetail).mockResolvedValueOnce({
+      ok: false,
+      code: 'NOT_FOUND',
+      error: new AnimeGardenError('missing', { code: 'NOT_FOUND' })
+    });
+    vi.mocked(fetchCollection).mockResolvedValueOnce({
+      ok: false,
+      code: 'NOT_FOUND',
+      error: new AnimeGardenError('missing', { code: 'NOT_FOUND' })
+    });
+
+    const [detail, collection] = await Promise.all([
+      handleMarkdownRequest(
+        new Request('https://animes.garden/detail/dmhy/missing', {
+          headers: { Accept: 'text/markdown' }
+        })
+      ),
+      handleMarkdownRequest(
+        new Request('https://animes.garden/collection/missing', {
+          headers: { Accept: 'text/markdown' }
+        })
+      )
+    ]);
+
+    expect(detail.status).toBe(404);
+    expect(collection.status).toBe(404);
+    expect(detail.headers.get('cache-control')).toBe('no-store');
+    expect(collection.headers.get('cache-control')).toBe('no-store');
+  });
+
+  it('does not convert upstream Markdown failures into 404s', async () => {
+    const { fetchResourceDetail } = await import('@animegarden/client');
+    vi.mocked(fetchResourceDetail).mockResolvedValueOnce({
+      ok: false,
+      code: 'SERVER_ERROR',
+      error: new AnimeGardenError('upstream unavailable', { code: 'SERVER_ERROR' })
+    });
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    const response = await handleMarkdownRequest(
+      new Request('https://animes.garden/detail/dmhy/unavailable', {
+        headers: { Accept: 'text/markdown' }
+      })
+    );
+
+    expect(response.status).toBe(502);
+    expect(error).toHaveBeenCalled();
+    error.mockRestore();
   });
 
   it('redirects invalid resources page numbers like the HTML route', async () => {

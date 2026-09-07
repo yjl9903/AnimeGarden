@@ -20,6 +20,10 @@ async function main() {
     },
     baseURL: 'http://0.0.0.0:8080'
   });
+  if (!r.ok) {
+    console.error(r.code, r.error);
+    return;
+  }
   console.log(r.resources.length, r.filter);
 }
 

@@ -4,6 +4,7 @@ import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import type { Calendar } from 'bgmx/client';
 
 import type { WebBgmSubject } from '../utils/subject';
+import { serializeError, type SerializedError } from '../utils/error';
 
 import {
   ResponseCacheControl,
@@ -16,7 +17,7 @@ import {
   getCalendar,
   getCalendars,
   getLatestCalendar,
-  getSubjectById,
+  getSubjectByIdResult,
   resolveSubjectByName,
   searchSubjects
 } from './subject.server';
@@ -26,7 +27,12 @@ type SubjectsResponse = {
   subjects: WebBgmSubject[];
 };
 
-type SubjectResponse = {
+type SubjectResponse =
+  | { ok: true; subject: WebBgmSubject }
+  | { ok: false; code: 'NOT_FOUND'; subject: undefined }
+  | { ok: false; code: 'SERVER_ERROR'; subject: undefined; error: SerializedError };
+
+type SubjectByNameResponse = {
   ok: boolean;
   subject?: WebBgmSubject;
 };
@@ -113,17 +119,23 @@ const fetchSubjectFn = createServerFn({ method: 'GET' })
   .validator((subjectId: number) => subjectId)
   .handler(async ({ data: subjectId }) => {
     try {
-      const subject = await getSubjectById(subjectId);
-      if (subject) {
+      const result = await getSubjectByIdResult(subjectId);
+      if (result.ok) {
         await setCacheControl(ResponseCacheControl.Subject);
-        return { ok: true, subject };
+        return result;
       }
 
-      return { ok: false, subject: undefined };
+      await setErrorResponse(404);
+      return result;
     } catch (error) {
       console.error('[API]', 'fetchSubject', subjectId, error);
       await setErrorResponse();
-      return { ok: false, subject: undefined };
+      return {
+        ok: false,
+        code: 'SERVER_ERROR',
+        subject: undefined,
+        error: serializeError(error) ?? { name: 'Error', message: 'Failed fetching Subject' }
+      } as const;
     }
   });
 
@@ -141,7 +153,7 @@ export function subjectQueryOptions(subjectId: number, externalSignal?: AbortSig
 
 const fetchSubjectByNameFn = createServerFn({ method: 'GET' })
   .validator((name: string) => name.trim())
-  .handler(async ({ data: name }): Promise<SubjectResponse> => {
+  .handler(async ({ data: name }): Promise<SubjectByNameResponse> => {
     try {
       await setCacheControl(ResponseCacheControl.Subject);
       return { ok: true, subject: await resolveSubjectByName(name) };

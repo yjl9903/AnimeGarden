@@ -137,6 +137,29 @@ describe('subject.server BGM client', () => {
     });
   });
 
+  it('returns NOT_FOUND only when the upstream response is 404 and fallback is absent', async () => {
+    fetchSubject.mockRejectedValue(
+      new Error('missing', {
+        cause: { response: new Response(null, { status: 404 }) }
+      })
+    );
+    const { getSubjectByIdResult } = await import('../src/query/subject.server');
+
+    await expect(getSubjectByIdResult(999)).resolves.toEqual({
+      ok: false,
+      code: 'NOT_FOUND',
+      subject: undefined
+    });
+  });
+
+  it('preserves upstream failures when fallback is absent', async () => {
+    const upstreamError = new Error('offline');
+    fetchSubject.mockRejectedValue(upstreamError);
+    const { getSubjectByIdResult } = await import('../src/query/subject.server');
+
+    await expect(getSubjectByIdResult(999)).rejects.toBe(upstreamError);
+  });
+
   it('does not fallback calendar failures', async () => {
     fetchCalendar.mockRejectedValue(new Error('offline'));
     const { getCalendar } = await import('../src/query/subject.server');

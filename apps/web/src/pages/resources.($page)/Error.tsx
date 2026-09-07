@@ -33,9 +33,14 @@ export function Error({ message, children, tracking }: ErrorProps) {
     });
   }, [error, path, trackingKey]);
 
+  return <ErrorMessage message={message}>{children}</ErrorMessage>;
+}
+
+/** Renders the shared error-state appearance without recording an error event. */
+export function ErrorMessage({ message, children }: Pick<ErrorProps, 'message' | 'children'>) {
   return (
     <div className="h-20 text-2xl text-red-700/80 flex items-center justify-center">
-      <div>
+      <div className="flex items-center">
         <span className="mr2 i-carbon-error" />
         <span>发生错误</span>
         {message && (

@@ -21,6 +21,9 @@ export interface MemoOptions<F extends AsyncFn> {
    * Auto start GC
    */
   autoStartGC?: boolean;
+
+  /** Retains rejected calls until expiration unless explicitly disabled. */
+  cacheErrors?: boolean;
 }
 
 export interface MemoFunc<F extends AsyncFn> {
@@ -121,6 +124,11 @@ export function memo<F extends AsyncFn>(fn: F, options: MemoOptions<F>): MemoFun
         item.status = Status.Error;
         item.error = error;
         item.expiration = new Date().getTime() + options.expirationTtl;
+
+        // Keep current waiters attached to this failure while allowing the next call to retry.
+        if (options.cacheErrors === false) {
+          caches.delete(key);
+        }
 
         const callbacks = item.callbacks;
         setTimeout(() => {

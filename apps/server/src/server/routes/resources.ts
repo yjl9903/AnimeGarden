@@ -54,8 +54,6 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
 
     return ctx.json({
       status: 'OK',
-      // For legacy compatibility
-      complete: resp.pagination.complete,
       ...resp
     });
   }
@@ -65,7 +63,7 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
       const detailURL = await provider.getDetailURL(sys, path);
       if (!detailURL) {
         return {
-          status: 'ERROR',
+          status: 'ERROR' as const,
           message: `Unknown detail id: ${provider.name} ${path}`
         };
       }
@@ -77,8 +75,15 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
         () => provider.fetchResourceDetail(sys, href)
       );
 
+      if (!resp.resource) {
+        return {
+          status: 'ERROR' as const,
+          message: `Unknown detail id: ${provider.name} ${path}`
+        };
+      }
+
       return {
-        status: 'OK',
+        status: 'OK' as const,
         ...resp
       };
     },
@@ -86,7 +91,8 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
       getKey: (_sys, provider, path) => provider + ':' + path,
       expirationTtl: 60 * 60 * 1000,
       maxSize: MAX_DETAIL_CACHE_COUNT,
-      autoStartGC: true
+      autoStartGC: true,
+      cacheErrors: false
     }
   );
 
@@ -118,6 +124,10 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
           ScraperProviders.get(provider)!,
           c.req.param('id')
         );
+        if (resp.status === 'ERROR') {
+          c.res.headers.set('Cache-Control', 'no-store');
+          return c.json({ ...resp }, 404);
+        }
         c.res.headers.set('Cache-Control', `public, max-age=${24 * 60 * 60}`);
         return c.json({ ...resp });
       })
@@ -127,6 +137,12 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
           ScraperProviders.get(provider)!,
           c.req.param('id')
         );
+
+        if (resp.status === 'ERROR') {
+          c.res.headers.set('Cache-Control', 'no-store');
+          return c.json({ ...resp }, 404);
+        }
+
         c.res.headers.set('Cache-Control', `public, max-age=${24 * 60 * 60}`);
         return c.json({ ...resp });
       });
@@ -141,26 +157,38 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
 
     if (!infoHash || (!isHex && !isBase32)) {
       c.res.headers.set('Cache-Control', 'no-store');
-      return c.json({
-        status: 'ERROR',
-        message: `Invalid info hash: ${infoHash || raw}`,
-        resource: undefined,
-        detail: undefined,
-        isDeleted: false,
-        duplicatedId: undefined
-      });
+
+      return c.json(
+        {
+          status: 'ERROR',
+          message: `Invalid info hash: ${infoHash || raw}`,
+          resource: undefined,
+          detail: undefined,
+          isDeleted: false,
+          duplicatedId: undefined
+        },
+        400
+      );
     }
 
     const resp = await sys.modules.resources.details.getByInfoHash(infoHash);
-    c.res.headers.set('Cache-Control', `public, max-age=${24 * 60 * 60}`);
 
+    if (!resp.resource) {
+      c.res.headers.set('Cache-Control', 'no-store');
+
+      return c.json(
+        {
+          status: 'ERROR',
+          message: `Unknown detail info hash: ${infoHash}`,
+          ...resp
+        },
+        404
+      );
+    }
+
+    c.res.headers.set('Cache-Control', `public, max-age=${24 * 60 * 60}`);
     return c.json({
-      status: resp.resource ? 'OK' : 'ERROR',
-      ...(resp.resource
-        ? {}
-        : {
-            message: `Unknown detail info hash: ${infoHash}`
-          }),
+      status: 'OK',
       ...resp
     });
   });

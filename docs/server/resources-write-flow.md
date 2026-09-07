@@ -231,6 +231,11 @@ REST API、详情、收藏夹、RSS 和 MCP 对外返回的 `size` 或 `enclosur
 
 都会进入 `Resources.details.getByProviderId()` 或 `getByInfoHash()`。
 
+DMHY 的纯数字 ID 会先查询 `resources` 表以补全详情 URL。查询成功但没有对应资源时返回
+`404`；数据库超时或连接故障会向上传播，由统一错误处理返回 `5xx`，不会转换成资源不存在。
+Provider 详情路由的进程内 memo 仍缓存正常结果，但不缓存抛出的异常，故障恢复后的下一次
+请求会重新查询。
+
 ### 执行流程
 
 1. 先查 Redis detail cache。

@@ -40,20 +40,20 @@ export class DmhyProvider extends Provider {
     return await fetchDmhyDetail(fetch, href);
   }
 
+  /** Resolves numeric IDs from the index, preserving database failures for the caller. */
   public async getDetailURL(sys: System, id: string) {
     const match = /^(\d+)/.exec(id);
     if (!match) return undefined;
     const providerId = match[1];
     if (id === providerId) {
-      const href = await sys.database.query.resources
-        .findFirst({
-          columns: {
-            href: true
-          },
-          where: (resources, { and, eq }) =>
-            and(eq(resources.provider, this.name), eq(resources.providerId, id))
-        })
-        .catch(() => undefined);
+      // Only a successful lookup with no matching row means the resource is missing.
+      const href = await sys.database.query.resources.findFirst({
+        columns: {
+          href: true
+        },
+        where: (resources, { and, eq }) =>
+          and(eq(resources.provider, this.name), eq(resources.providerId, id))
+      });
 
       if (href) {
         return {

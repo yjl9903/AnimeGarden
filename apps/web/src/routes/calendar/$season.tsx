@@ -3,6 +3,8 @@ import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 
 import Page from '~/pages/anime/route';
 import { buildAnimePageHead } from '~/pages/anime/seo';
+import NotFoundPage, { buildNotFoundPageHeaders, throwNotFoundPage } from '~/pages/not-found/route';
+import { buildNotFoundPageHead } from '~/pages/not-found/seo';
 import { calendarQueryOptions, calendarsQueryOptions, timestampQueryOptions } from '~/query';
 import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
 
@@ -30,13 +32,7 @@ export const loader = async ({
   }
 
   if (!season) {
-    await setErrorResponse(404);
-    return {
-      ...timestamp,
-      calendar: [],
-      calendars: calendars.calendars,
-      season: params.season
-    };
+    throwNotFoundPage('calendar');
   }
 
   const calendar = await context.queryClient.ensureQueryData(calendarQueryOptions(season));
@@ -57,7 +53,10 @@ export const loader = async ({
 
 export const Route = createFileRoute('/calendar/$season')({
   loader,
-  head: ({ loaderData, params }) => buildAnimePageHead(loaderData?.season ?? params.season),
+  head: ({ loaderData, params }) =>
+    loaderData ? buildAnimePageHead(loaderData.season ?? params.season) : buildNotFoundPageHead(),
+  headers: ({ match }) => buildNotFoundPageHeaders(match.error),
+  notFoundComponent: NotFoundPage,
   component: CalendarRoute
 });
 

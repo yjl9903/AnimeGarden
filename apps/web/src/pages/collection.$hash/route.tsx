@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { memo } from 'react';
 import { Link } from '@tanstack/react-router';
 
-import { Collection, Jsonify } from '@animegarden/client';
+import type { CollectionData } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import ResourcesTable from '~/components/Resources';
@@ -12,7 +12,7 @@ import { getResourcesRouteLink } from '~/utils/routes';
 
 import { Error } from '../resources.($page)/Error';
 
-export default function Collections({ data }: { data: any }) {
+export default function Collections({ data }: { data?: CollectionData }) {
   if (!data) {
     return (
       <Error
@@ -23,14 +23,13 @@ export default function Collections({ data }: { data: any }) {
     );
   }
 
-  const filters = data.filters!;
-  const results = data.results!;
+  const { filters, results } = data;
 
   return (
     <Layout timestamp={data.timestamp} feedURL={getCollectionFeedURL(data.hash!)}>
       <div className="w-full pt-13 pb-24">
         <div className="space-y-8">
-          {results.map((item: any, idx: number) => (
+          {results.map((item, idx) => (
             <div key={filters[idx].searchParams} className={clsx('py-4 rounded-md border drop-md')}>
               <div className="mb-4 px-4 pb-4 border-b">
                 <h2 className="text-xl font-bold">
@@ -45,8 +44,8 @@ export default function Collections({ data }: { data: any }) {
               <div className="px-4">
                 <ResourcesTable
                   resources={item.resources}
-                  page={1}
-                  complete={item.complete}
+                  page={item.pagination.page}
+                  complete={item.pagination.complete}
                   link={(page) => getResourcesRouteLink(page, filters[idx].searchParams)}
                 ></ResourcesTable>
               </div>
@@ -58,7 +57,7 @@ export default function Collections({ data }: { data: any }) {
   );
 }
 
-const CollectionItemTitle = memo((props: { item: Collection<true>['filters'][0] }) => {
+const CollectionItemTitle = memo((props: { item: CollectionData['filters'][number] }) => {
   const item = props.item;
   const name = useInferCollectionItemName(props.item);
 

@@ -7,6 +7,7 @@
 | 分类 | 内容 | 入口 |
 | --- | --- | --- |
 | anipar | 动画标题解析测试资产、标题和元数据审计 | [anipar/README.md](./anipar/README.md) |
+| client | API Client 的返回值和错误模型 | [client/README.md](./client/README.md) |
 | server | 后端服务职责、资源写入、查询优化、Telegram 推送 | [server/README.md](./server/README.md) |
 | web | 前端应用行为和埋点说明 | [web/README.md](./web/README.md) |
 

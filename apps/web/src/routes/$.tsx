@@ -1,7 +1,15 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
+
+import NotFoundPage, { buildNotFoundPageHeaders, throwNotFoundPage } from '~/pages/not-found/route';
+import { buildNotFoundPageHead } from '~/pages/not-found/seo';
+
+export const loader = async () => {
+  throwNotFoundPage('page');
+};
 
 export const Route = createFileRoute('/$')({
-  loader: () => {
-    throw redirect({ to: '/' });
-  }
+  loader,
+  head: buildNotFoundPageHead,
+  headers: ({ match }) => buildNotFoundPageHeaders(match.error),
+  notFoundComponent: NotFoundPage
 });

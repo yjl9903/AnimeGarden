@@ -126,7 +126,7 @@ export const fetchTimestampFn = createServerFn({ method: 'GET' }).handler(async 
       ...getProxyFetchOptions(10 * 1000),
       signal: AbortSignal.timeout(10 * 1000)
     });
-    if (resp.ok && resp.timestamp) {
+    if (resp.ok) {
       setTimestamp(resp);
       await setCacheControl(ResponseCacheControl.List);
 
@@ -135,6 +135,14 @@ export const fetchTimestampFn = createServerFn({ method: 'GET' }).handler(async 
         timestamp: resp.timestamp
       };
     }
+
+    console.error('fetchTimestamp', resp.error);
+    await setErrorResponse();
+    return {
+      ...resp,
+      error: serializeError(resp.error),
+      timestamp: lastTimestamp
+    };
   } catch (error) {
     console.error('fetchTimestamp', error);
   }
@@ -143,6 +151,8 @@ export const fetchTimestampFn = createServerFn({ method: 'GET' }).handler(async 
 
   return {
     ok: false,
+    code: 'INVALID_RESPONSE' as const,
+    error: serializeError(new Error('Failed fetching timestamp')),
     timestamp: lastTimestamp
   };
 });
@@ -162,21 +172,25 @@ export const fetchResourcesFn = createServerFn({ method: 'GET' })
         metadata: true
       });
 
-      setTimestamp(resp);
-      resp.error = serializeError(normalizeResourcesError(resp.error));
       if (resp.ok) {
+        setTimestamp(resp);
         await setCacheControl(ResponseCacheControl.List);
-      } else {
-        await setErrorResponse();
+        return { ...resp, error: undefined };
       }
 
-      return resp;
+      setTimestamp(resp);
+      await setErrorResponse();
+      return {
+        ...resp,
+        error: serializeError(normalizeResourcesError(resp.error))
+      };
     } catch (error) {
       console.error('[API]', 'fetchResources', filter, error);
       await setErrorResponse();
 
       return {
         ok: false,
+        code: 'INVALID_RESPONSE' as const,
         resources: [],
         pagination: undefined,
         filter: undefined,
@@ -196,20 +210,32 @@ export const fetchResourceDetailFn = createServerFn({ method: 'GET' })
         ...getProxyFetchOptions(30 * 1000)
       });
 
-      setTimestamp(resp);
       if (resp.ok) {
+        setTimestamp(resp);
         await setCacheControl(ResponseCacheControl.Detail);
+        const description = resp.detail?.description
+          ? await normalizeResourceDescription(resp.detail.description)
+          : undefined;
+
+        return {
+          ...resp,
+          description
+        };
+      }
+
+      if (resp.code === 'NOT_FOUND') {
+        await setErrorResponse(404);
       } else {
         await setErrorResponse();
       }
 
-      const description = resp?.detail?.description
-        ? await normalizeResourceDescription(resp.detail.description)
-        : undefined;
-
       return {
         ...resp,
-        description
+        error: serializeError(resp.error),
+        resource: undefined,
+        detail: undefined,
+        timestamp: lastTimestamp,
+        description: undefined
       };
     } catch (error) {
       console.error('[API]', 'fetchResourceDetail', provider, providerId, error);
@@ -217,6 +243,8 @@ export const fetchResourceDetailFn = createServerFn({ method: 'GET' })
 
       return {
         ok: false,
+        code: 'INVALID_RESPONSE' as const,
+        error: serializeError(normalizeResourcesError(error)),
         resource: undefined,
         detail: undefined,
         timestamp: lastTimestamp,
@@ -233,19 +261,23 @@ export const fetchCollectionFn = createServerFn({ method: 'GET' })
         ...getProxyFetchOptions(30 * 1000)
       });
 
-      setTimestamp(resp);
-      if (resp?.ok) {
+      if (resp.ok) {
+        setTimestamp(resp);
         await setCacheControl(ResponseCacheControl.List);
-      } else {
-        await setErrorResponse();
+        return resp;
       }
 
-      return resp;
+      await setErrorResponse(resp.code === 'NOT_FOUND' ? 404 : 502);
+      return { ...resp, error: serializeError(resp.error) };
     } catch (error) {
       console.error('[API]', 'fetchCollection', hash, error);
-      await setErrorResponse();
 
-      return undefined;
+      await setErrorResponse();
+      return {
+        ok: false as const,
+        code: 'INVALID_RESPONSE' as const,
+        error: serializeError(normalizeResourcesError(error))
+      };
     }
   });
 
@@ -253,12 +285,17 @@ export const generateCollectionFn = createServerFn({ method: 'POST' })
   .validator((collection: Collection<true>) => collection)
   .handler(async ({ data: collection }) => {
     try {
-      return await rawGenerateCollection(collection, {
+      const resp = await rawGenerateCollection(collection, {
         ...getProxyFetchOptions()
       });
+      return resp.ok ? resp : { ...resp, error: serializeError(resp.error) };
     } catch (error) {
       console.error('[API]', 'generateCollection', collection, error);
 
-      return null;
+      return {
+        ok: false as const,
+        code: 'INVALID_RESPONSE' as const,
+        error: serializeError(normalizeResourcesError(error))
+      };
     }
   });

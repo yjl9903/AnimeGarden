@@ -1,14 +1,16 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 
 import { SupportProviders } from '@animegarden/client';
 
 import Page from '~/pages/detail.$provider.$providerId/route';
 import { buildDetailPageHead } from '~/pages/detail.$provider.$providerId/seo';
+import NotFoundPage, { buildNotFoundPageHeaders, throwNotFoundPage } from '~/pages/not-found/route';
+import { buildNotFoundPageHead } from '~/pages/not-found/seo';
 import { ResponseCacheControl, setCacheControl } from '~/utils/response';
 import { calendarQueryOptions, resourceDetailQueryOptions, subjectQueryOptions } from '~/query';
 
-const loader = async ({
+export const loader = async ({
   context,
   params
 }: {
@@ -30,22 +32,32 @@ const loader = async ({
       await setCacheControl(ResponseCacheControl.Detail);
       return { ...data, subject };
     }
+
+    if (data?.code === 'NOT_FOUND') {
+      throwNotFoundPage('resource');
+    }
+
+    throw new Error(`Failed loading resource detail: ${provider}:${providerId}`);
   }
 
-  throw redirect({ to: '/' });
+  throwNotFoundPage('resource');
 };
 
 export const Route = createFileRoute('/detail/$provider/$providerId')({
   loader,
   head: ({ loaderData, params }) =>
-    buildDetailPageHead({
-      resource: loaderData?.resource,
-      description: loaderData?.description,
-      fallbackDescription: loaderData?.detail?.description,
-      subject: loaderData?.subject,
-      provider: params.provider!,
-      providerId: params.providerId!
-    }),
+    loaderData?.resource
+      ? buildDetailPageHead({
+          resource: loaderData.resource,
+          description: loaderData.description,
+          fallbackDescription: loaderData.detail?.description,
+          subject: loaderData.subject,
+          provider: params.provider!,
+          providerId: params.providerId!
+        })
+      : buildNotFoundPageHead(),
+  headers: ({ match }) => buildNotFoundPageHeaders(match.error),
+  notFoundComponent: NotFoundPage,
   component: DetailRoute
 });
 

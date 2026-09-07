@@ -12,6 +12,10 @@ No authentication is required for the public endpoints documented here.
 
 - Success responses usually include `status: "OK"`.
 - Error responses usually include `status: "ERROR"` and `message`.
+- Resource lists keep pagination in `pagination: { page, pageSize, complete }`.
+  `page` starts at `1`; `pageSize` is the requested page size, and the returned list may be shorter.
+  `complete: true` only means no matching resources follow the current page. It does not confirm
+  that the caller fetched previous pages.
 
 ## 1. Status API
 
@@ -53,7 +57,9 @@ No authentication is required for the public endpoints documented here.
     - `metadata`: Include parsed metadata (for example, `anipar`) in returned resources.
 - Response:
   - `200` `ResourcesResponse`:
-    - `status`, `complete`, `resources[]`, `pagination`, `filter`, `timestamp`.
+    - `status`, `resources[]`, `pagination`, `filter`, `timestamp`.
+    - `pagination`: `{ page: number, pageSize: number, complete: boolean }`.
+    - There is no top-level `complete` field.
 - Example:
 
   ```bash
@@ -88,7 +94,40 @@ No authentication is required for the public endpoints documented here.
   - `200` object with `status`, `resource`, `detail`, `timestamp`.
   - Invalid or unknown hashes return `status: "ERROR"`.
 
-## 3. Metadata APIs
+## 3. Collection API
+
+### GET /collection/{hash}
+
+- Function:
+  - Get the collection and the first resource page for each saved filter.
+- Parameters:
+  - Path: `hash` (collection hash).
+  - No `page` or `pageSize` parameters are supported by this endpoint.
+- Response:
+  - `200` object with `status`, `hash`, `name`, `createdAt`, `filters[]`, and `results[]`.
+  - Each `results[i]` corresponds to `filters[i]` and contains:
+    - `resources[]`.
+    - `pagination`: `{ page: 1, pageSize: 1000, complete: boolean }`.
+    - `filter`: resolved resource query filters.
+  - There is no sibling `results[i].complete` field.
+- More resources:
+  - When `results[i].pagination.complete` is `false`, query `/resources` with the corresponding
+    `filters[i].searchParams`, the next `page`, and the same `pageSize`.
+  - Collection queries still return page `1`, with at most `1000` resources per filter.
+
+### Pagination migration
+
+The old completion fields are removed without aliases:
+
+| Old response path                                  | New response path                       |
+| -------------------------------------------------- | --------------------------------------- |
+| `/resources`: `result.complete`                    | `result.pagination.complete`            |
+| `/collection/{hash}`: `result.results[i].complete` | `result.results[i].pagination.complete` |
+
+The SDK also exposes `pagination` for resource and collection query results. Update consumers,
+fixtures, and assertions to read all pagination fields from this object.
+
+## 4. Metadata APIs
 
 ### GET /users
 

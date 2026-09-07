@@ -112,6 +112,17 @@ Task GC 每小时检查一次，两小时未刷新的 Task 会从 Task Map 中�
 Task。移除 Task 时只会删除仍指向该 Task 原对象的 intern 项，避免旧 Task 的清理误删其他
 Task 已经写入的更新对象。Task GC 和每日字符串池清理即使单次执行失败，也会继续调度下一轮。
 
+### 9. API 分页信息统一放在 pagination
+
+`QueryManager.find()` 返回 `{ resources, pagination, filter }`，其中 `pagination` 包含
+`page`、`pageSize` 和 `complete`。`/resources` 及其 provider、页码和尾斜杠别名直接保留
+该结构，不再返回与 `pagination` 同级的兼容字段 `complete`。旧调用方需要改读
+`result.pagination.complete`。
+
+`/collection/:hash` 的 `results[]` 每项同样使用这一结构。收藏夹仍对每个保存的筛选条件
+查询第 1 页、最多 1000 条资源，分别通过 `results[i].pagination.complete` 表示是否完整；
+本次响应结构统一不新增收藏夹请求分页参数。
+
 ## 当前实现尚未完全达到预期的部分
 
 虽然整体机制已经基本成型，但若以“优化复杂筛选分页查询，并最大化细化查询的复用率”为目标，当前实现仍有几个关键偏差。

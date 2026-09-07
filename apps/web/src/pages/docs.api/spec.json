@@ -443,7 +443,7 @@
               }
             }
           },
-          "400": {
+          "404": {
             "description": "资源不存在",
             "content": {
               "application/json": {
@@ -632,14 +632,14 @@
                               "$ref": "#/components/schemas/Resource"
                             }
                           },
-                          "complete": {
-                            "type": "boolean"
+                          "pagination": {
+                            "$ref": "#/components/schemas/PaginationInfo"
                           },
                           "filter": {
                             "$ref": "#/components/schemas/FilterOptions"
                           }
                         },
-                        "required": ["resources", "complete"]
+                        "required": ["resources", "pagination"]
                       }
                     },
                     "timestamp": {
@@ -652,7 +652,7 @@
               }
             }
           },
-          "400": {
+          "404": {
             "description": "收藏夹不存在",
             "content": {
               "application/json": {
@@ -1534,7 +1534,19 @@
             }
           }
         },
-        "required": ["id", "provider", "providerId", "title", "href", "type", "magnet", "size", "publisher", "createdAt", "fetchedAt"]
+        "required": [
+          "id",
+          "provider",
+          "providerId",
+          "title",
+          "href",
+          "type",
+          "magnet",
+          "size",
+          "publisher",
+          "createdAt",
+          "fetchedAt"
+        ]
       },
       "ResourceDetail": {
         "type": "object",
@@ -1796,10 +1808,6 @@
             "type": "string",
             "enum": ["OK"]
           },
-          "complete": {
-            "type": "boolean",
-            "description": "为了兼容性保留，与pagination.complete相同"
-          },
           "resources": {
             "type": "array",
             "items": {
@@ -1817,7 +1825,7 @@
             "format": "date-time"
           }
         },
-        "required": ["status", "complete", "resources", "pagination", "filter", "timestamp"]
+        "required": ["status", "resources", "pagination", "filter", "timestamp"]
       },
       "CollectionRequest": {
         "type": "object",

@@ -7,6 +7,7 @@ import { buildCollectionPageHead } from '../src/pages/collection.$hash/seo';
 import { buildDetailPageHead } from '../src/pages/detail.$provider.$providerId/seo';
 import { buildDocsApiPageSeo } from '../src/pages/docs.api/seo';
 import { buildIframePageHead, buildIframePageSeo } from '../src/pages/iframe/seo';
+import { buildNotFoundPageHead } from '../src/pages/not-found/seo';
 import {
   buildResourcesPageHead,
   buildResourcesPageSeo,
@@ -341,6 +342,19 @@ describe('SEO metadata', () => {
     ]) {
       expect(head.meta).toContainEqual({ name: 'robots', content: 'noindex,follow' });
     }
+  });
+
+  it('keeps true 404 heads minimal and non-indexable', () => {
+    const head = buildNotFoundPageHead();
+
+    expect(head.meta).toEqual([
+      { title: '页面不存在 | Anime Garden' },
+      { name: 'robots', content: 'noindex,follow' }
+    ]);
+    expect(head.links).toEqual([]);
+    expect(JSON.stringify(head)).not.toContain('canonical');
+    expect(JSON.stringify(head)).not.toContain('description');
+    expect(JSON.stringify(head)).not.toContain('ld+json');
   });
 });
 

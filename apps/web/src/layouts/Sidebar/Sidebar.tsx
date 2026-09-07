@@ -143,7 +143,7 @@ const Collection = memo((props: { collection: Collection<true> }) => {
     const resp = await generateCollectionMutation.mutateAsync(collection);
     console.log('创建收藏夹', resp);
 
-    if (resp) {
+    if (resp.ok) {
       updateCollection(stores, collection, { hash: resp.hash });
       return resp;
     }
