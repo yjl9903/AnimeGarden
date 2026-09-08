@@ -182,6 +182,8 @@ Disallow: /
 - robots.txt 只作用于相同协议、hostname 和端口；因此 API 子域使用自己的 `/robots.txt`，禁止抓取
   `/feed.xml`、API、MCP 和 sitemap 数据接口。
 - `Disallow` 控制抓取，不保证 URL 一定不会被索引。
+- API 服务所有响应统一返回 `X-Robots-Tag: noindex`，覆盖 JSON、RSS/XML、重定向、304 和错误响应。
+  现有 API `Disallow: /` 规则仍保留；被禁止抓取的爬虫无法读取该响应头，因此不能保证已收录 URL 会被移除。
 - HTML 页面使用 `noindex` 控制是否进入搜索结果；爬虫需要访问页面才能读取该指令。
 - `/about` 因此允许抓取，但页面输出 `noindex,follow`。
 - `Content-Signal` 不是 Google 支持的 robots.txt 字段，Google 会忽略；当前作为独立内容使用信号保留。

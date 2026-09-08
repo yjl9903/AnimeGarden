@@ -158,6 +158,8 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
       await next();
     } finally {
       ctx.res.headers.set('X-Request-Id', requestId);
+      // API responses, including feeds and errors, are not search result pages.
+      ctx.res.headers.set('X-Robots-Tag', 'noindex');
 
       const responseTimestamp = ctx.get('responseTimestamp') || new Date();
       ctx.res.headers.set('X-Response-Timestamp', responseTimestamp.toISOString());

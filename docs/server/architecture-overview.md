@@ -33,6 +33,7 @@
 Hono 入口在 `src/server/index.ts`。`registerHono()` 统一绑定：
 
 - 请求 id、响应时间、JSON charset、CORS、logger、60s timeout。
+- 所有 API 响应统一携带 `X-Robots-Tag: noindex`，包括 JSON、XML、重定向、304 和错误响应。
 - `/` 和 `/health` 状态接口，以及禁止搜索引擎抓取整个 API hostname 的 `/robots.txt`。
 - `users`、`subjects`、`resources`、`collections`、`feed`、`admin`、`sitemaps` 路由。
 - 查询错误到 JSON / XML 的统一转换。
