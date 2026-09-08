@@ -128,6 +128,45 @@ describe('sitemap server routes', () => {
     expect(getCalendars).toHaveBeenCalled();
   });
 
+  it('does not forward upstream API noindex headers to public sitemaps', async () => {
+    const { fetchAPI: actualFetchAPI } =
+      await vi.importActual<typeof import('@animegarden/client')>('@animegarden/client');
+    const cases = [
+      {
+        pathname: '/sitemap-fansubs.xml',
+        data: { teams: [{ name: 'TestTeam' }] },
+        url: 'https://animes.garden/resources/1?fansub=TestTeam'
+      },
+      {
+        pathname: '/sitemap-subjects.xml',
+        data: { subjects: [{ id: 1234 }] },
+        url: 'https://animes.garden/subject/1234'
+      },
+      {
+        pathname: '/sitemap-2020-01.xml',
+        data: { resources: [{ provider: 'dmhy', providerId: 'abc-1' }] },
+        url: 'https://animes.garden/detail/dmhy/abc-1'
+      }
+    ];
+
+    for (const { pathname, data, url } of cases) {
+      // Exercise the real client parsing against an API response carrying noindex.
+      vi.mocked(fetchAPI).mockImplementationOnce((path, init, options) =>
+        actualFetchAPI(path, init, {
+          ...options,
+          fetch: async () => Response.json(data, { headers: { 'X-Robots-Tag': 'noindex' } })
+        })
+      );
+
+      const response = await handleSitemapRequest(request(pathname));
+
+      expect(response.status).toBe(200);
+      expect(response.headers.get('Content-Type')).toContain('application/xml');
+      expect(response.headers.get('X-Robots-Tag')).toBeNull();
+      expect(await response.text()).toContain(`<loc>${url}</loc>`);
+    }
+  });
+
   it('returns 404 for unknown sitemap names', async () => {
     const response = await handleSitemapRequest(request('/sitemap-nope.xml'));
 
