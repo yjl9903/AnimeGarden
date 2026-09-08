@@ -6,7 +6,7 @@ AnimeGarden is a pnpm/Turborepo monorepo. Apps live in `apps/`: `apps/web` is th
 
 ## Build, Test, and Development Commands
 
-- `pnpm i`: install workspace dependencies. Use pnpm 10.x with Node 24.
+- `pnpm i`: install workspace dependencies. Use pnpm 12 (pinned in `package.json`) with Node 24+.
 - `pnpm build`: run `turbo run build`.
 - `pnpm build:web`, `pnpm build:server`, `pnpm build:worker`: build one app and dependencies.
 - `pnpm dev`: start development tasks in parallel.

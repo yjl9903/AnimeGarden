@@ -19,5 +19,7 @@
 
 ## 工具链约定
 
-- 本仓库使用 Node.js 24+ 与 pnpm 11。根目录 `package.json` 的 `packageManager` 字段固定 pnpm 版本。
+- 本仓库使用 Node.js 24+ 与 pnpm 12。根目录 `package.json` 的 `packageManager` 字段固定 pnpm 版本；GitHub Actions 和 Docker 构建均读取该字段。
 - pnpm 的工作区和安装策略配置集中维护在根目录 `pnpm-workspace.yaml`。
+- `pnpm-lock.yaml` 同时记录 pnpm 自身的版本与平台包，以及工作区依赖；升级包管理器时一并提交自动生成的锁文件变更。
+- 本地使用 `pnpm install` 安装依赖；CI 和 Docker 使用 `pnpm install --frozen-lockfile`，依赖更新工作流使用 `--no-frozen-lockfile` 更新锁文件。
