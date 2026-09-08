@@ -52,7 +52,8 @@ COPY ./apps/worker/package.json ./apps/worker/
 # Install the package manager version declared by the workspace root.
 RUN npm install -g $(node -p "require('./package.json').packageManager")
 
-RUN pnpm install --frozen-lockfile --prod=false
+# Install build tools even though the base image sets NODE_ENV=production.
+RUN NODE_ENV=development pnpm install --frozen-lockfile
 
 # Copy application code
 COPY --link . .
