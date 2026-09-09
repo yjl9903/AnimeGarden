@@ -110,8 +110,8 @@ importers:
   .:
     devDependencies:
       '@cloudflare/workers-types':
-        specifier: 5.20260907.1
-        version: 5.20260907.1
+        specifier: 5.20260908.1
+        version: 5.20260908.1
       '@flydotio/dockerfile':
         specifier: 0.7.10
         version: 0.7.10(@types/node@24.13.3)
@@ -159,7 +159,7 @@ importers:
         version: 4.1.11(@types/node@24.13.3)(jsdom@29.1.1)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(tsx@4.23.13)(yaml@2.9.0))
       wrangler:
         specifier: 4.129.1
-        version: 4.129.1(@cloudflare/workers-types@5.20260907.1)
+        version: 4.129.1(@cloudflare/workers-types@5.20260908.1)
 
   apps/server:
     dependencies:
@@ -216,7 +216,7 @@ importers:
         version: 17.4.2
       drizzle-orm:
         specifier: 0.45.2
-        version: 0.45.2(@cloudflare/workers-types@5.20260907.1)(@types/better-sqlite3@7.6.13)(postgres@3.4.9)
+        version: 0.45.2(@cloudflare/workers-types@5.20260908.1)(@types/better-sqlite3@7.6.13)(postgres@3.4.9)
       fast-xml-parser:
         specifier: 5.11.1
         version: 5.11.1
@@ -1267,8 +1267,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@cloudflare/workers-types@5.20260907.1':
-    resolution: {integrity: sha512-HYI7eFb/MOcNzvbUW7ZwHVZL5YFXb4r6yHN3vx8gJCqde7yhn3bhuPKiQPw90UtGWWp7uOI+Que3kf8Svjn5cw==}
+  '@cloudflare/workers-types@5.20260908.1':
+    resolution: {integrity: sha512-cILmYEd/YtL+Hlwytc5n+QVV8F+E5doQOtc6QiBtPb51kK+5fkk909db+G8dxeUsMd2ytJgdpAt/lyciUEobcw==}
 
   '@colordx/core@5.4.3':
     resolution: {integrity: sha512-kIxYSfA5T8HXjav55UaaH/o/cKivF6jCCGIb8eqtcsfI46wsvlSiT8jMDyrl779qLec3c2c2oHBZo4oAhvbjrQ==}
@@ -8905,7 +8905,7 @@ snapshots:
   '@cloudflare/workerd-windows-64@1.20260907.1':
     optional: true
 
-  '@cloudflare/workers-types@5.20260907.1': {}
+  '@cloudflare/workers-types@5.20260908.1': {}
 
   '@colordx/core@5.4.3': {}
 
@@ -12619,9 +12619,9 @@ snapshots:
       esbuild: 0.25.12
       tsx: 4.23.13
 
-  drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260907.1)(@types/better-sqlite3@7.6.13)(postgres@3.4.9):
+  drizzle-orm@0.45.2(@cloudflare/workers-types@5.20260908.1)(@types/better-sqlite3@7.6.13)(postgres@3.4.9):
     optionalDependencies:
-      '@cloudflare/workers-types': 5.20260907.1
+      '@cloudflare/workers-types': 5.20260908.1
       '@types/better-sqlite3': 7.6.13
       postgres: 3.4.9
 
@@ -15798,7 +15798,7 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20260907.1
       '@cloudflare/workerd-windows-64': 1.20260907.1
 
-  wrangler@4.129.1(@cloudflare/workers-types@5.20260907.1):
+  wrangler@4.129.1(@cloudflare/workers-types@5.20260908.1):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.5.0
       '@cloudflare/unenv-preset': 2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260907.1)
@@ -15809,7 +15809,7 @@ snapshots:
       unenv: 2.0.0-rc.24
       workerd: 1.20260907.1
     optionalDependencies:
-      '@cloudflare/workers-types': 5.20260907.1
+      '@cloudflare/workers-types': 5.20260908.1
       fsevents: 2.3.3
     transitivePeerDependencies:
       - bufferutil
