@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import { XMLParser, XMLValidator } from 'fast-xml-parser';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ResourcesSlowQueryBusyError, ResourcesSlowQueryTimeoutError } from '../src/error';
@@ -101,9 +102,9 @@ function createResource(sizeInBytes: number) {
   };
 }
 
-function createSuccessfulFeedApp(sizeInBytes: number) {
+function createSuccessfulFeedApp(sizeInBytes: number, subjectId?: number | null) {
   const app = new Hono<AppEnv>();
-  const resource = createResource(sizeInBytes);
+  const resource = { ...createResource(sizeInBytes), subjectId };
   const sys = {
     options: {
       site: 'animes.garden'
@@ -146,6 +147,50 @@ describe('feed enclosure length', () => {
     expect(response.status).toBe(200);
     await expect(response.text()).resolves.toContain('length="1572864"');
   });
+});
+
+describe.each(['/feed.xml', '/collection/test/feed.xml'])('feed Subject extension: %s', (path) => {
+  it('emits the Bangumi Subject ID with its namespace and preserves standard fields', async () => {
+    const app = createSuccessfulFeedApp(1572864, 123456);
+
+    const response = await app.request(`http://localhost${path}`);
+    const xml = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(XMLValidator.validate(xml)).toBe(true);
+    const { rss } = new XMLParser({ ignoreAttributes: false }).parse(xml);
+    expect(rss['@_xmlns:animegarden']).toBe('https://animes.garden/ns/rss/1.0');
+    expect(rss.channel.item).toMatchObject({
+      'animegarden:subjectId': 123456,
+      title: 'Test resource',
+      link: 'https://animes.garden/detail/dmhy/12345',
+      guid: {
+        '#text': 'https://animes.garden/detail/dmhy/12345',
+        '@_isPermaLink': 'true'
+      },
+      enclosure: {
+        '@_url': 'magnet:?xt=urn:btih:test',
+        '@_length': '1572864',
+        '@_type': 'application/x-bittorrent'
+      }
+    });
+  });
+
+  it.each([null, undefined])(
+    'omits the Subject element when subjectId is %s',
+    async (subjectId) => {
+      const app = createSuccessfulFeedApp(1572864, subjectId);
+
+      const response = await app.request(`http://localhost${path}`);
+      const xml = await response.text();
+
+      expect(response.status).toBe(200);
+      expect(XMLValidator.validate(xml)).toBe(true);
+      const { rss } = new XMLParser({ ignoreAttributes: false }).parse(xml);
+      expect(rss['@_xmlns:animegarden']).toBe('https://animes.garden/ns/rss/1.0');
+      expect(rss.channel.item).not.toHaveProperty('animegarden:subjectId');
+    }
+  );
 });
 
 describe('server slow query errors', () => {

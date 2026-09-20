@@ -47,6 +47,8 @@ export type RSSFeedItem = {
   description?: z.infer<typeof rssSchema>['description'];
   /** Append some other XML-valid data to this item */
   customData?: z.infer<typeof rssSchema>['customData'];
+  /** Namespaced scalar elements, escaped by XMLBuilder. Nullish values are omitted. */
+  extensions?: z.infer<typeof rssSchema>['extensions'];
   /** Categories or tags related to the item */
   categories?: z.infer<typeof rssSchema>['categories'];
   /** The item author's email address */
@@ -238,6 +240,10 @@ async function generateRSS(rssOptions: ValidatedRSSOptions): Promise<string> {
     }
     if (typeof result.customData === 'string') {
       Object.assign(item, parser.parse(`<item>${result.customData}</item>`).item);
+    }
+    // Pass scalar values directly to the builder so text is escaped only once.
+    for (const [name, value] of Object.entries(result.extensions ?? {})) {
+      if (value != null) item[name] = value;
     }
     if (Array.isArray(result.categories)) {
       item.category = result.categories;

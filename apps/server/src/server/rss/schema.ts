@@ -9,6 +9,13 @@ export const rssSchema = z.object({
     .transform((value) => (value === undefined ? value : new Date(value)))
     .refine((value) => (value === undefined ? value : !isNaN(value.getTime()))),
   customData: z.string().optional(),
+  // Namespaced scalar elements; nullish values are omitted during serialization.
+  extensions: z
+    .record(
+      z.string().regex(/^[A-Za-z_][\w.-]*:[A-Za-z_][\w.-]*$/),
+      z.union([z.string(), z.number().finite(), z.boolean()]).nullish()
+    )
+    .optional(),
   categories: z.array(z.string()).optional(),
   author: z.string().optional(),
   commentsUrl: z.string().optional(),

@@ -8,6 +8,9 @@ import { defineHandler } from '../utils/hono.ts';
 import { generateTitleFromFilter } from '../utils/meta.ts';
 import { assertResourcesPagination } from '../utils/resources-query.ts';
 
+// Keep the extension namespace stable across both feeds and configured site hosts.
+const feedNamespaces = { animegarden: 'https://animes.garden/ns/rss/1.0' };
+
 export const defineFeedRoutes = defineHandler((sys, app) =>
   app
     .get('/feed.xml', etag(), async (ctx) => {
@@ -33,11 +36,13 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
           description: 'Anime Garden 是動漫花園資源網的第三方镜像站',
           site: `https://${sys.options.site ?? 'animes.garden'}/resources/1${url.search}`,
           trailingSlash: false,
+          xmlns: feedNamespaces,
           items: resp.resources.map((r) => {
             return {
               title: r.title,
               pubDate: toDate(r.createdAt, { timeZone: 'Asia/Shanghai' }),
               link: `https://${sys.options.site ?? 'animes.garden'}${getDetailURL(r)}`,
+              extensions: { 'animegarden:subjectId': r.subjectId },
               enclosure: {
                 url: r.magnet + (isTracker ? r.tracker : ''),
                 length: r.size,
@@ -72,6 +77,7 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
           description: 'Anime Garden 是動漫花園資源網的第三方镜像站.',
           site: `https://${sys.options.site ?? 'animes.garden'}/collection/${hsh}`,
           trailingSlash: false,
+          xmlns: feedNamespaces,
           items: resp.results
             .flatMap((r) => r.resources)
             .map((r) => {
@@ -79,6 +85,7 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
                 title: r.title,
                 pubDate: toDate(r.createdAt, { timeZone: 'Asia/Shanghai' }),
                 link: `https://${sys.options.site ?? 'animes.garden'}${getDetailURL(r)}`,
+                extensions: { 'animegarden:subjectId': r.subjectId },
                 enclosure: {
                   url: r.magnet + (isTracker ? r.tracker : ''),
                   length: r.size,
