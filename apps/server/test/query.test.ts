@@ -53,7 +53,7 @@ function createTask(total: number, options: DatabaseFilterOptions = {}) {
   };
 }
 
-function createManager() {
+function createManager(mockPrefetch = true) {
   const logger = {
     withTag: vi.fn(() => logger),
     error: vi.fn(),
@@ -77,7 +77,7 @@ function createManager() {
     logger as any
   ) as any;
 
-  manager.findFromRedis = vi.fn(async () => []);
+  if (mockPrefetch) manager.findFromRedis = vi.fn(async () => []);
 
   return {
     manager,
@@ -89,6 +89,127 @@ afterEach(() => {
   vi.useRealTimers();
   vi.restoreAllMocks();
 });
+
+describe.each(['findFromRedis', 'findFromAccurateQuery'] as const)(
+  '%s Redis resilience',
+  (path) => {
+    function setup() {
+      vi.useFakeTimers();
+      const { manager } = createManager(false);
+      const redis = {
+        status: 'ready',
+        get: vi.fn().mockResolvedValue(null),
+        set: vi.fn().mockResolvedValue('OK')
+      };
+      manager.system.publisherRedis = redis;
+      const expected = [createResource(1)];
+      const database = vi.spyOn(manager, 'findFromDatabase').mockResolvedValue(expected);
+      return { manager, redis, database, expected };
+    }
+
+    it('uses healthy Redis hits without querying the database', async () => {
+      const { manager, redis, database, expected } = setup();
+      redis.get.mockResolvedValue(JSON.stringify(expected));
+
+      await expect(manager[path]({}, 0, 10)).resolves.toEqual(expected);
+
+      expect(database).not.toHaveBeenCalled();
+      expect(redis.set).not.toHaveBeenCalled();
+      await vi.advanceTimersByTimeAsync(0);
+      expect(vi.getTimerCount()).toBe(0);
+    });
+
+    it('bounds stalled reads, bypasses both paths during cooldown, and retries afterwards', async () => {
+      const { manager, redis, database, expected } = setup();
+      let rejectRead!: (error: Error) => void;
+      redis.get.mockImplementationOnce(
+        () =>
+          new Promise((_resolve, reject) => {
+            rejectRead = reject;
+          })
+      );
+
+      const pending = manager[path]({}, 0, 10);
+      await vi.advanceTimersByTimeAsync(499);
+      expect(database).not.toHaveBeenCalled();
+      await vi.advanceTimersByTimeAsync(1);
+      await expect(pending).resolves.toEqual(expected);
+      expect(redis.set).not.toHaveBeenCalled();
+
+      // A late failure must be consumed without affecting the successful response.
+      rejectRead(new Error('late read failure'));
+      const otherPath = path === 'findFromRedis' ? 'findFromAccurateQuery' : 'findFromRedis';
+      await expect(manager[otherPath]({}, 10, 10)).resolves.toEqual(expected);
+      expect(redis.get).toHaveBeenCalledTimes(1);
+      expect(redis.set).not.toHaveBeenCalled();
+
+      await vi.advanceTimersByTimeAsync(30_000);
+      redis.get.mockResolvedValue(JSON.stringify(expected));
+      await expect(manager[path]({}, 20, 10)).resolves.toEqual(expected);
+      expect(redis.get).toHaveBeenCalledTimes(2);
+      expect(database).toHaveBeenCalledTimes(2);
+      await vi.advanceTimersByTimeAsync(0);
+      expect(vi.getTimerCount()).toBe(0);
+    });
+
+    it('returns database results before a stalled write and bypasses Redis after its timeout', async () => {
+      const { manager, redis, expected } = setup();
+      let rejectWrite!: (error: Error) => void;
+      redis.set.mockImplementationOnce(
+        () =>
+          new Promise((_resolve, reject) => {
+            rejectWrite = reject;
+          })
+      );
+
+      // No timer advancement: returning this result must not wait for SET.
+      await expect(manager[path]({}, 0, 10)).resolves.toEqual(expected);
+      expect(redis.set).toHaveBeenCalledWith(
+        expect.any(String),
+        JSON.stringify(expected),
+        'EX',
+        300
+      );
+
+      await vi.advanceTimersByTimeAsync(500);
+      rejectWrite(new Error('late write failure'));
+      await expect(manager[path]({}, 10, 10)).resolves.toEqual(expected);
+      expect(redis.get).toHaveBeenCalledTimes(1);
+      expect(redis.set).toHaveBeenCalledTimes(1);
+      await vi.advanceTimersByTimeAsync(0);
+      expect(vi.getTimerCount()).toBe(0);
+    });
+
+    it.each(['get', 'set'] as const)(
+      'falls back on %s rejection and skips subsequent cache access',
+      async (command) => {
+        const { manager, redis, expected } = setup();
+        redis[command].mockRejectedValue(new Error('Redis unavailable'));
+
+        await expect(manager[path]({}, 0, 10)).resolves.toEqual(expected);
+        await expect(manager[path]({}, 10, 10)).resolves.toEqual(expected);
+
+        expect(redis.get).toHaveBeenCalledTimes(1);
+        expect(redis.set).toHaveBeenCalledTimes(command === 'set' ? 1 : 0);
+        await vi.advanceTimersByTimeAsync(0);
+        expect(vi.getTimerCount()).toBe(0);
+      }
+    );
+
+    it('skips disconnected Redis and uses it once ready', async () => {
+      const { manager, redis, expected } = setup();
+      redis.status = 'reconnecting';
+      await expect(manager[path]({}, 0, 10)).resolves.toEqual(expected);
+      expect(redis.get).not.toHaveBeenCalled();
+      expect(redis.set).not.toHaveBeenCalled();
+
+      redis.status = 'ready';
+      await expect(manager[path]({}, 10, 10)).resolves.toEqual(expected);
+      expect(redis.get).toHaveBeenCalledTimes(1);
+      expect(redis.set).toHaveBeenCalledTimes(1);
+    });
+  }
+);
 
 describe('query cache garbage collection', () => {
   it('keeps scheduling task GC after a failed run', async () => {

@@ -1,3 +1,4 @@
+import type { Redis } from 'ioredis';
 import type { ConsolaInstance } from 'consola';
 
 import { hash } from 'ohash';
@@ -77,6 +78,9 @@ export const RESOURCE_SELECTOR = {
 const RESOURCES_SLOW_QUERY_LOCK_NAMESPACE = 9_201;
 const RESOURCES_SLOW_QUERY_LOCK_KEY = 1;
 
+const REDIS_QUERY_TIMEOUT_MS = 500;
+const REDIS_QUERY_COOLDOWN_MS = 30_000;
+
 export class QueryManager {
   public readonly system: System;
 
@@ -88,7 +92,14 @@ export class QueryManager {
 
   private readonly resources: Map<ProviderType, Map<string, DatabaseResource>> = new Map();
 
+  /** Guards the slow database lane against concurrent queries within this QueryManager. */
   private slowQuerying = false;
+
+  /**
+   * Unix time in milliseconds until which this QueryManager skips Redis query cache reads and writes.
+   * Zero means no cooldown.
+   */
+  private redisQueryDisabledUntil = 0;
 
   public constructor(system: System, logger: ConsolaInstance) {
     this.system = system;
@@ -416,7 +427,8 @@ export class QueryManager {
       const resp = await this.findFromDatabase(filter, offset, limit, {
         allowSlowQueryFallback: true
       });
-      await this.writeRedisQueryCache(filter, offset, limit, resp);
+      // Cache persistence must not delay a successful database response.
+      void this.writeRedisQueryCache(filter, offset, limit, resp);
       return resp;
     },
     {
@@ -438,7 +450,8 @@ export class QueryManager {
 
       const resp = await this.findFromDatabase(filter, offset, limit);
 
-      await this.writeRedisQueryCache(filter, offset, limit, resp);
+      // Cache persistence must not delay a successful database response.
+      void this.writeRedisQueryCache(filter, offset, limit, resp);
 
       return resp;
     },
@@ -452,15 +465,39 @@ export class QueryManager {
     }
   );
 
-  private async readRedisQueryCache(filter: DatabaseFilterOptions, offset: number, limit: number) {
+  /** Bounds cache latency and bypasses both reads and writes briefly after any cache failure. */
+  private async runRedisQueryCache<T>(operation: (redis: Redis) => Promise<T>) {
     const redis = this.system.publisherRedis;
-    const timestamp = this.system.modules.providers.timestamp.getTime().toString();
-
-    if (!redis) {
+    if (!redis || redis.status !== 'ready' || Date.now() < this.redisQueryDisabledUntil) {
       return undefined;
     }
 
+    let timer: ReturnType<typeof setTimeout> | undefined;
     try {
+      const timeout = new Promise<never>((_resolve, reject) => {
+        timer = setTimeout(
+          () => reject(new Error('Redis query cache timed out')),
+          REDIS_QUERY_TIMEOUT_MS
+        );
+      });
+      // The race also handles late command rejections after the timeout has won.
+      return await Promise.race([operation(redis), timeout]);
+    } catch (error) {
+      const now = Date.now();
+      if (now >= this.redisQueryDisabledUntil) {
+        this.logger.warn('Redis query cache unavailable; bypassing for 30 seconds', error);
+      }
+      this.redisQueryDisabledUntil = now + REDIS_QUERY_COOLDOWN_MS;
+      return undefined;
+    } finally {
+      if (timer !== undefined) clearTimeout(timer);
+    }
+  }
+
+  /** Reads shared query results, treating cache failures as misses. */
+  private async readRedisQueryCache(filter: DatabaseFilterOptions, offset: number, limit: number) {
+    return this.runRedisQueryCache(async (redis) => {
+      const timestamp = this.system.modules.providers.timestamp.getTime().toString();
       const key = this.getRedisQueryCacheKey(filter, offset, limit, timestamp);
       const cached = await redis.get(key);
       if (cached) {
@@ -468,28 +505,21 @@ export class QueryManager {
         const parsed = JSON.parse(cached) as RedisQueryResource[];
         return this.hydrateResources(parsed);
       }
-    } catch {}
-
-    return undefined;
+    });
   }
 
+  /** Best-effort cache write; all failures are handled so callers can run it in the background. */
   private async writeRedisQueryCache(
     filter: DatabaseFilterOptions,
     offset: number,
     limit: number,
     resp: DatabaseResource[]
   ) {
-    const redis = this.system.publisherRedis;
-    const timestamp = this.system.modules.providers.timestamp.getTime().toString();
-
-    if (!redis) {
-      return;
-    }
-
-    try {
+    await this.runRedisQueryCache(async (redis) => {
+      const timestamp = this.system.modules.providers.timestamp.getTime().toString();
       const key = this.getRedisQueryCacheKey(filter, offset, limit, timestamp);
       await redis.set(key, JSON.stringify(resp), 'EX', 5 * 60);
-    } catch {}
+    });
   }
 
   private getRedisQueryCacheKey(
