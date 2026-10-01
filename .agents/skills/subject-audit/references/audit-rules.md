@@ -6,6 +6,14 @@ Use the caller's start and end timestamps as the scan interval and display it in
 the report. Review every returned animation resource, including both null and non-null `subjectId`
 values, against the complete registered Subject index.
 
+Treat routine releases from open-ended, continuously serialized television main series as expected
+exclusions. Apply this by release structure—an ongoing main-series episode stream without a distinct
+installment—not by a fixed title list. Non-exhaustive examples include `クレヨンしんちゃん`
+(蜡笔小新), `ちびまる子ちゃん` (樱桃小丸子), and `名探偵コナン` (名侦探柯南). Do not perform
+binding attribution, production-equivalent matching, or issue and search recommendations for these
+resources, and count them under the existing `不确定、未注册或另行排除` summary. Continue auditing
+resources that clearly identify a separately registered movie or special.
+
 ## Working evidence
 
 The audit starts with two base evidence files and creates additional task-scoped files as needed:
