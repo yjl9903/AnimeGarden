@@ -1,7 +1,7 @@
 import type { Resource } from '@animegarden/client';
 
 const FansubNames = [
-  '雪飄工作室(FLsnow)',
+  '雪飄工作室',
   '驯兽师联盟',
   '北宇治字幕组',
   'LoliHouse',
@@ -26,6 +26,7 @@ const FansubNames = [
   '云光字幕组',
   '云歌字幕组',
   '千夏字幕组',
+  '樱桃花字幕组',
   '六四位元字幕組',
   '阿特拉斯字幕组',
   '晚街与灯',

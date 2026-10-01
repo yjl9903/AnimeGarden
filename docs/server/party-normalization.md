@@ -9,6 +9,10 @@
 - 只有 cron 服务会在启动或刷新后于后台按实体 ID 分批加载最大 `created_at`；用户/字幕组插入会主动确保该任务已经启动并等待完成。
 - Mikan 联合发布优先读取发布组页的当前名称；无法取得时，除已确认的单组名称外，将全角 `＆` 转为 `&` 并取第一个组，再进入统一名称归一化。
 
+Web 导航的 `apps/web/src/utils/constants.ts` 字幕组列表和番剧详情页
+`apps/web/src/pages/subject.$subject.($page)/utils.ts` 的预设排序使用归一化后的主名称。
+新增名称修正时需同步检查这两处，避免导航继续使用旧名称或详情页无法匹配预设排序。
+
 存量数据使用 [`apps/server/scripts/normalize-party-data.sql`](../../apps/server/scripts/normalize-party-data.sql)
 一次性处理。SQL 在事务中验证已审核名称、合并重复 providerId 和明确别名组、迁移
 `resources` / `telegram_messages` 引用并检查结果；验证失败时整笔事务回滚。

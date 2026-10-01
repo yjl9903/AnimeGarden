@@ -13,8 +13,7 @@ describe('debug', () => {
           "type": "总第13集",
         },
         "fansub": {
-          "alias": "雪飄工作室",
-          "name": "雪飄工作室(FLsnow)",
+          "name": "雪飄工作室",
         },
         "search": [
           "偶活",

@@ -14,7 +14,7 @@
 
 ## 标题字段变化
 
-当前 staged snapshot 中仅发现 1 处 `title` / `titles` 相关变化，位于 `雪飄工作室_flsnow.csv:1118`，属于修复项：
+当前 staged snapshot 中仅发现 1 处 `title` / `titles` 相关变化，位于 `雪飄工作室.csv:1118`，属于修复项：
 
 - 旧结果：`title="希望之力 大人光之美少女'23/キボウノチカラ～オトナプリキュア'23～/Kibou no Chikara Otona Precure'23"`，`titles=["1080p", "修訂版"]`。
 - 当前结果：`title="希望之力 大人光之美少女'23"`，`titles=["キボウノチカラ～オトナプリキュア'23～", "Kibou no Chikara Otona Precure'23"]`，`file.video.resolution="1080p"`，`tags=["修訂版"]`。
@@ -43,7 +43,7 @@
 | `三明治摆烂组.csv` | 1 | `type_prefix_in_title` |
 | `喵萌奶茶屋.csv` | 3 | `type_prefix_in_title` |
 | `桜都字幕组.csv` | 4 | `type_prefix_in_title` |
-| `雪飄工作室_flsnow.csv` | 4 | `type_prefix_in_title`、`season_missing` |
+| `雪飄工作室.csv` | 4 | `type_prefix_in_title`、`season_missing` |
 
 说明：统计已排除已结构化为 `seasonsRange` 的 `S1-S2` / `S1-S4` 用例。
 
@@ -62,7 +62,7 @@
 | `kirara_fantasia.csv` | 8 | `title="卡片戰鬥!! 先導者 Divinez 第五季「幻真星戰篇」"`，无 `season` | 可解析 `season.number=5` |
 | `kirara_fantasia.csv` | 53 | `title` 含 `第四季`，英文别名含 `4th Season`，无 `season` | 可解析 `season.number=4` |
 | `prejudice_studio.csv` | 246 | `volume.number=2`，`title` 仍含 `第二季` | `Volume2 / 第二季` 的语义边界需确认，当前 season 缺失 |
-| `雪飄工作室_flsnow.csv` | 1336 | `tags=["第一期完"]`，无 `season` | 可考虑 `season.number=1`，或明确把“第一期完”只作为 tag |
+| `雪飄工作室.csv` | 1336 | `tags=["第一期完"]`，无 `season` | 可考虑 `season.number=1`，或明确把“第一期完”只作为 tag |
 
 ### M-2: 类型前缀已识别但未从标题剥离
 
@@ -75,7 +75,7 @@
 | `lolihouse.csv` | 79 | `title="剧场版 吹响吧！上低音号 ~誓言的终曲~"`，无 `type` | 可解析 `type="剧场版"`，标题去掉类型前缀 |
 | `喵萌奶茶屋.csv` | 315 | `type="剧场版"`，但 `title="剧场版 白箱"` | 标题中剥离类型前缀 |
 | `桜都字幕组.csv` | 1449 | `title="特别篇 吹响！悠风号～合奏比赛～"` | 可解析 `type="特别篇"`，标题去掉类型前缀 |
-| `雪飄工作室_flsnow.csv` | 419 | `type="剧场版"`，但 `title` 仍以 `剧场版` 开头 | 标题中剥离类型前缀 |
+| `雪飄工作室.csv` | 419 | `type="剧场版"`，但 `title` 仍以 `剧场版` 开头 | 标题中剥离类型前缀 |
 
 ### M-3: 字幕发布方式与字幕文件格式仍共用一个字段
 
