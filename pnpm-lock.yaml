@@ -194,8 +194,8 @@ importers:
         specifier: 0.31.10
         version: 0.31.10
       prettier:
-        specifier: 3.9.6
-        version: 3.9.6
+        specifier: 3.9.9
+        version: 3.9.9
       tsx:
         specifier: 4.23.13
         version: 4.23.13
@@ -6461,6 +6461,11 @@ packages:
 
   prettier@3.9.6:
     resolution: {integrity: sha512-OpN0zzVdiaiAhxpuuj5efpIS4sY9j7bY6uR5mnj5yPzGkdkjNKSJeUThPb60Jw29QuAZgA4o+/iB49kFiaBX6g==}
+    engines: {node: '>=14'}
+    hasBin: true
+
+  prettier@3.9.9:
+    resolution: {integrity: sha512-Z/CJHIkdujO/OtN7nXUii0Rf3VT5SRuhjBA82Xvu2XhBUgX3nhP67T0LHceBdQLex7OOFGTox+Q5Yg8Jk2Qivg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -14056,6 +14061,8 @@ snapshots:
   postgres@3.4.9: {}
 
   prettier@3.9.6: {}
+
+  prettier@3.9.9: {}
 
   pretty-bytes@5.6.0: {}
 
