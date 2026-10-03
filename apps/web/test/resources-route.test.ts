@@ -100,7 +100,7 @@ describe('resources route loader', () => {
     });
   });
 
-  it('redirects deep pagination to the latest calendar', async () => {
+  it('returns not found for deep pagination even when a calendar is available', async () => {
     const queryClient = {
       ensureQueryData: vi.fn(async (options: { queryKey: readonly unknown[] }) => {
         if (options.queryKey[1] === 'resources') {
@@ -142,13 +142,50 @@ describe('resources route loader', () => {
       response = error;
     }
 
-    expect(response).toBeInstanceOf(Response);
-    expect((response as Response).status).toBe(307);
-    expect((response as Response).headers.get('Location')).toBe('/calendar/2026-07');
+    expect(isNotFound(response)).toBe(true);
+    expect(response).toMatchObject({
+      data: { kind: 'page' },
+      headers: { 'Cache-Control': 'no-store' }
+    });
+    const head = Route.options.head!({
+      match: { error: response }
+    } as Parameters<NonNullable<typeof Route.options.head>>[0]);
+    expect(head).toMatchObject({
+      meta: expect.arrayContaining([
+        expect.objectContaining({ name: 'robots', content: 'noindex,follow' })
+      ]),
+      links: []
+    });
     expect(error).not.toHaveBeenCalled();
     expect(setErrorResponse).not.toHaveBeenCalled();
     expect(setCacheControl).not.toHaveBeenCalled();
 
     error.mockRestore();
+  });
+
+  it('keeps other upstream failures as server errors', async () => {
+    const upstreamError = { name: 'Error', message: 'Service unavailable' };
+    const ensureQueryData = vi.fn(async (options: { queryKey: readonly unknown[] }) => {
+      if (options.queryKey[1] === 'resources') {
+        return { ok: false, resources: [], error: upstreamError };
+      }
+      if (options.queryKey[1] === 'calendar') return { ok: true, calendar: [] };
+      throw new Error(`Unexpected query: ${options.queryKey.join('/')}`);
+    });
+    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      await expect(
+        loader({
+          context: { queryClient: { ensureQueryData } as unknown as QueryClient },
+          location: { href: 'https://animes.garden/resources/2' },
+          params: { page: '2' }
+        })
+      ).resolves.toMatchObject({ ok: false });
+      expect(setErrorResponse).toHaveBeenCalledWith(500);
+      expect(setCacheControl).not.toHaveBeenCalled();
+      expect(error).toHaveBeenCalledWith('https://animes.garden/resources/2', upstreamError);
+    } finally {
+      error.mockRestore();
+    }
   });
 });

@@ -89,7 +89,7 @@ ICO/PNG，现代浏览器可使用可缩放 SVG，Apple 设备使用 180×180 to
 
 ## Route / Page 边界
 
-资源页如果收到后端深分页拒绝响应，会重定向到当前周历 `/calendar/:season`，避免继续请求超出 API 上限的页码。
+资源列表 HTML 路由如果收到后端深分页拒绝响应，会返回共享 404 页面，带 `Cache-Control: no-store` 和 `noindex`，不输出 canonical，不再跳转到周历。其他上游错误仍返回 500。
 
 `src/routes/**` 是 TanStack Start 原生边界。每个页面 route 应在这里声明 loader、head、params/search 解析、redirect 和 canonical 等 SSR 相关逻辑；组件内部使用对应的 `Route.useLoaderData()`、`Route.useParams()`、`useLocation()` 等 route API 组装出稳定 props，再传给 `src/pages/**`。
 

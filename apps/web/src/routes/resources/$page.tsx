@@ -1,4 +1,4 @@
-import { createFileRoute, isNotFound, redirect, useLocation } from '@tanstack/react-router';
+import { createFileRoute, isNotFound, useLocation } from '@tanstack/react-router';
 import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
 
@@ -48,7 +48,7 @@ export const loader = async ({
   }
 
   const { parsedFilter, queryInput } = getResourcesQueryInput(url, page);
-  const [{ ok, resources, pagination, filter, timestamp, error }, calendar, subjectResponses] =
+  const [{ ok, resources, pagination, filter, timestamp, error }, , subjectResponses] =
     await Promise.all([
       context.queryClient.ensureQueryData(resourcesQueryOptions(queryInput)),
       context.queryClient.ensureQueryData(calendarQueryOptions()),
@@ -65,9 +65,7 @@ export const loader = async ({
   }
 
   if (isDeepPagination) {
-    throw redirect({
-      href: calendar.ok && calendar.season ? `/calendar/${calendar.season}` : '/anime'
-    });
+    throwNotFoundPage('page');
   }
 
   if (!ok) {
