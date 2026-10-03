@@ -42,13 +42,9 @@ export const loader = async ({
   const url = new URL(location.href, `https://${APP_HOST}`);
 
   const page = Math.floor(+(params.page ?? '1'));
-  // Reject NaN, infinities and unsafe page numbers before querying or building canonical URLs.
-  if (!Number.isSafeInteger(page)) {
+  // Only positive safe integers can reach queries or canonical URL generation.
+  if (!Number.isSafeInteger(page) || page <= 0) {
     throwNotFoundPage('page');
-  }
-  if (page <= 0) {
-    url.pathname = url.pathname.replace(/\/-?\d+(\.\d*)?$/, '/1');
-    throw redirect({ href: `${url.pathname}${url.search}` });
   }
 
   const { parsedFilter, queryInput } = getResourcesQueryInput(url, page);

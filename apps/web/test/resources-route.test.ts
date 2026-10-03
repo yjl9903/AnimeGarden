@@ -22,7 +22,17 @@ import { loader, Route } from '../src/routes/resources/$page';
 describe('resources route loader', () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it.each(['magnet:', 'NaN', 'Infinity', '-Infinity', '9007199254740992'])(
+  it.each([
+    'magnet:',
+    'NaN',
+    'Infinity',
+    '-Infinity',
+    '9007199254740992',
+    '0',
+    '-1',
+    '0.5',
+    '-1.5'
+  ])(
     'rejects invalid page %s before querying and uses the non-cacheable 404 head',
     async (page) => {
       const ensureQueryData = vi.fn();
@@ -62,24 +72,6 @@ describe('resources route loader', () => {
       expect(Route.options.notFoundComponent).toBeDefined();
     }
   );
-
-  it.each(['0', '-1'])('keeps redirecting page %s to page 1 with filters', async (page) => {
-    const ensureQueryData = vi.fn();
-    let response: unknown;
-    try {
-      await loader({
-        context: { queryClient: { ensureQueryData } as unknown as QueryClient },
-        location: { href: `https://animes.garden/resources/${page}?type=anime` },
-        params: { page }
-      });
-    } catch (error) {
-      response = error;
-    }
-    expect(response).toBeInstanceOf(Response);
-    expect((response as Response).status).toBe(307);
-    expect((response as Response).headers.get('Location')).toBe('/resources/1?type=anime');
-    expect(ensureQueryData).not.toHaveBeenCalled();
-  });
 
   it.each([undefined, '2', '1.9'])('loads and builds canonical URLs for page %s', async (page) => {
     const expectedPage = page === '2' ? 2 : 1;
