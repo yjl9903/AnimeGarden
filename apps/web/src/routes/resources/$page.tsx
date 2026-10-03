@@ -1,9 +1,11 @@
-import { createFileRoute, redirect, useLocation } from '@tanstack/react-router';
+import { createFileRoute, isNotFound, redirect, useLocation } from '@tanstack/react-router';
 import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
 
 import Page from '~/pages/resources.($page)/route';
 import { buildResourcesPageHead } from '~/pages/resources.($page)/seo';
+import NotFoundPage, { buildNotFoundPageHeaders, throwNotFoundPage } from '~/pages/not-found/route';
+import { buildNotFoundPageHead } from '~/pages/not-found/seo';
 import { APP_HOST } from '~build/env';
 import { calendarQueryOptions, resourcesQueryOptions, subjectQueryOptions } from '~/query';
 import { getFeedURL, getTrackingError, serializeError } from '~/utils';
@@ -40,6 +42,10 @@ export const loader = async ({
   const url = new URL(location.href, `https://${APP_HOST}`);
 
   const page = Math.floor(+(params.page ?? '1'));
+  // Reject NaN, infinities and unsafe page numbers before querying or building canonical URLs.
+  if (!Number.isSafeInteger(page)) {
+    throwNotFoundPage('page');
+  }
   if (page <= 0) {
     url.pathname = url.pathname.replace(/\/-?\d+(\.\d*)?$/, '/1');
     throw redirect({ href: `${url.pathname}${url.search}` });
@@ -90,13 +96,17 @@ export const loader = async ({
 
 export const Route = createFileRoute('/resources/$page')({
   loader,
-  head: ({ loaderData }) =>
-    buildResourcesPageHead(
-      loaderData?.filter,
-      loaderData?.subjects,
-      loaderData?.page ?? 1,
-      loaderData?.resources ? loaderData.resources.length > 0 : undefined
-    ),
+  head: ({ loaderData, match }) =>
+    isNotFound(match.error)
+      ? buildNotFoundPageHead()
+      : buildResourcesPageHead(
+          loaderData?.filter,
+          loaderData?.subjects,
+          loaderData?.page ?? 1,
+          loaderData?.resources ? loaderData.resources.length > 0 : undefined
+        ),
+  headers: ({ match }) => buildNotFoundPageHeaders(match.error),
+  notFoundComponent: NotFoundPage,
   component: ResourcesRoute
 });
 

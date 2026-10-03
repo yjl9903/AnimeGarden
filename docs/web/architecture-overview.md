@@ -34,6 +34,8 @@ Web 不再提供 `/api/*`、`/feed.xml` 或 `/collection/:hash/feed.xml` 代理�
 
 GET server function 和 SSR loader 的公开缓存头统一由 `src/utils/response.ts` 设置：timestamp、资源列表和 collection 页面使用 `public, max-age=30, s-maxage=60`，详情页使用 `public, max-age=3600, s-maxage=86400`。上游失败或 `ok: false` 时返回错误状态并设置 `Cache-Control: no-store`，避免浏览器或 CDN 缓存错误响应。
 
+资源列表 HTML 路由在查询前校验归一化后的页码必须是安全整数。`/resources/magnet:`、`/resources/NaN`、无穷大或超过安全整数范围的页码返回共享 404 页面，带 `Cache-Control: no-store` 和 `noindex`，不输出 canonical，也不查询资源、周历或 Subject。原有的小数向下取整和非正页码跳转到第 1 页行为保留。这修复了 #2734 中非法路径返回 200 和生成 `/resources/NaN` canonical 的问题；异常磁力路径的流量来源及 Umami 过滤另行排查。
+
 Bangumi subject/full/calendar 数据不应进入客户端运行时依赖；需要读取这类数据的页面应通过 `src/query/subject.ts` 的 TanStack Query options 和 `createServerFn()` 访问。当前 serverFn 通过 `bgmx` 读取 `bgm.animes.garden`，按需做 subject、calendar 和标题搜索查询，并只在 subject detail 失败时 fallback 到 `bgmd/full`。有封面的 subject 会统一按 subject ID 输出 `bgm.animes.garden/bangumi/subject/:id/poster.jpeg?quality=large`，不向页面透传上游原始图片地址。
 
 ### 动画周历 Calendar 语义
