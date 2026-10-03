@@ -34,6 +34,8 @@ Web 不再提供 `/api/*`、`/feed.xml` 或 `/collection/:hash/feed.xml` 代理�
 
 GET server function 和 SSR loader 的公开缓存头统一由 `src/utils/response.ts` 设置：timestamp、资源列表和 collection 页面使用 `public, max-age=30, s-maxage=60`，详情页使用 `public, max-age=3600, s-maxage=86400`。上游失败或 `ok: false` 时返回错误状态并设置 `Cache-Control: no-store`，避免浏览器或 CDN 缓存错误响应。
 
+资源列表 HTML 路由在查询前校验归一化后的页码必须是安全正整数。`/resources/magnet:`、`/resources/NaN`、无穷大、超过安全整数范围或非正的页码均返回共享 404 页面，带 `Cache-Control: no-store` 和 `noindex`，不输出 canonical，也不查询资源、周历或 Subject。保留小数向下取整，但取整后不大于 0 的页码同样返回 404，不再跳转第 1 页。这修复了 #2734 中非法路径返回 200 和生成 `/resources/NaN` canonical 的问题；异常磁力路径的流量来源及 Umami 过滤另行排查。
+
 Bangumi subject/full/calendar 数据不应进入客户端运行时依赖；需要读取这类数据的页面应通过 `src/query/subject.ts` 的 TanStack Query options 和 `createServerFn()` 访问。当前 serverFn 通过 `bgmx` 读取 `bgm.animes.garden`，按需做 subject、calendar 和标题搜索查询，并只在 subject detail 失败时 fallback 到 `bgmd/full`。有封面的 subject 会统一按 subject ID 输出 `bgm.animes.garden/bangumi/subject/:id/poster.jpeg?quality=large`，不向页面透传上游原始图片地址。
 
 ### 动画周历 Calendar 语义
@@ -87,7 +89,7 @@ ICO/PNG，现代浏览器可使用可缩放 SVG，Apple 设备使用 180×180 to
 
 ## Route / Page 边界
 
-资源页如果收到后端深分页拒绝响应，会重定向到当前周历 `/calendar/:season`，避免继续请求超出 API 上限的页码。
+资源列表 HTML 路由如果收到后端深分页拒绝响应，会返回共享 404 页面，带 `Cache-Control: no-store` 和 `noindex`，不输出 canonical，不再跳转到周历。其他上游错误仍返回 500。
 
 `src/routes/**` 是 TanStack Start 原生边界。每个页面 route 应在这里声明 loader、head、params/search 解析、redirect 和 canonical 等 SSR 相关逻辑；组件内部使用对应的 `Route.useLoaderData()`、`Route.useParams()`、`useLocation()` 等 route API 组装出稳定 props，再传给 `src/pages/**`。
 
