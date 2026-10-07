@@ -1,6 +1,6 @@
 ---
 name: subject-audit
-description: Review AnimeGarden animation resource-to-Bangumi Subject bindings for a specified time range, identify missing or incorrect bindings, and report evidence-backed Subject search improvements. Use for manager-side audits; online binding corrections are optional and require explicit user confirmation.
+description: Audit AnimeGarden resource-to-Bangumi Subject bindings and search coverage for a time range. Read-only by default; apply binding corrections only after explicit user confirmation.
 ---
 
 # AnimeGarden Subject Audit
@@ -90,8 +90,7 @@ search adjustment depends on the complete release family.
 
 ### 5. Optionally apply confirmed resource bindings
 
-If the user asks to apply reliable target bindings before the Subject search configuration is
-updated, generate a preview:
+When the user requests binding corrections, generate a preview of reliable targets:
 
 ```bash
 node scripts/patch-resource-bindings.mjs --input <tmp-dir>/matches.jsonl --output <tmp-dir>/binding-patch-preview.jsonl
@@ -104,8 +103,9 @@ user explicitly confirms that patch set, apply that preview file with the confir
 node scripts/patch-resource-bindings.mjs --input <tmp-dir>/binding-patch-preview.jsonl --output <tmp-dir>/binding-patch-results.jsonl --apply --expected-count <confirmed count>
 ```
 
-Apply mode reads `ADMIN_SECRET` from the project root `.env` and records server results in a journal.
-Keep the audit read-only until the user confirms the exact previewed patch set.
+Apply mode reads `ADMIN_SECRET` from the project root `.env` and records results. If the request
+result is unclear, the script checks the actual binding before reporting failure; see the
+[correction rules](references/audit-rules.md#optional-online-binding-correction).
 
 ### 6. Report the findings
 
@@ -114,8 +114,7 @@ summary counts, linked resource examples, and the correct numeric Subject ID wit
 whenever attribution is reliable. Show both current and correct Subjects for a wrong binding, and
 state the remaining ambiguity for unresolved cases.
 
-When the optional online patch ran, include its changed, unchanged, and failed counts and identify
-any resource that was not completed.
+If bindings were applied, report completed and incomplete resources.
 
 Present Subject search recommendations as an unranked list and keep them focused on current title
 patterns and Subject search fields.

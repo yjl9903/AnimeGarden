@@ -199,12 +199,15 @@ the exact planned count for user confirmation.
 
 After confirmation, pass that preview file back to the script with
 `--apply --expected-count <confirmed count>` and a fresh result path. Apply mode reads `ADMIN_SECRET`
-from the project root `.env`, validates the confirmed patch set, and writes a result journal with
-server acknowledgements, failures, and any server state that differs from the audit snapshot. The
-default manager URL targets the production service; `--url` can select another environment. This
-operation updates resource bindings only, so the Subject search assessment remains a separate
-finding. A failed apply can leave a partial journal; report failed and unattempted resources. Later
-resource synchronization may recalculate bindings, so the search recommendations remain relevant.
+from the project root `.env` and journals results. The default URL targets production; `--url`
+selects another environment.
+
+If a request fails or its response is unclear, the script queries the resource up to three times.
+An actual target binding counts as success; otherwise the batch stops. It does not automatically
+resend the PATCH. Report completed, unconfirmed, and unattempted resources.
+
+This updates bindings only, not Subject search settings. Later synchronization may recalculate
+bindings, so search recommendations remain relevant.
 
 ## Report format
 
@@ -256,5 +259,5 @@ Group examples when they share the same attribution and search diagnosis. Presen
 unranked changes to current title patterns and Subject search fields. Describe changes from a
 previous round when a supplied evidence snapshot supports the comparison.
 
-When online bindings were applied, add the result counts and link each incomplete resource using the
-same resource-link convention.
+When bindings were applied, report completion counts and link each incomplete resource. Include
+read-back confirmations as completed.

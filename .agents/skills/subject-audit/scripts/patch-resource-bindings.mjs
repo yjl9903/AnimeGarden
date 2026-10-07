@@ -8,6 +8,7 @@ import { createInterface } from 'node:readline';
 import { fileURLToPath } from 'node:url';
 
 import { config } from 'dotenv';
+import { fetchAPI } from '@animegarden/client';
 
 import {
   parseAdminPatchArguments,
@@ -284,6 +285,7 @@ async function applyPlans(plans, options) {
     completed: 0,
     changed: 0,
     unchanged: 0,
+    verified: 0,
     failed: 0
   };
   let failure;
@@ -302,26 +304,36 @@ async function applyPlans(plans, options) {
     // Apply sequentially and retain each acknowledgement before moving to the next resource.
     for (const plan of plans) {
       try {
-        const response = await requestAdminAPI(
-          `/admin/resources/${plan.provider}/${encodeURIComponent(plan.providerId)}`,
-          {
-            method: 'PATCH',
-            body: JSON.stringify({ subjectId: plan.targetSubjectId })
-          },
-          { url: options.url }
-        );
-        assertPatchResponse(plan, response);
+        let response;
+        try {
+          response = await requestAdminAPI(
+            `/admin/resources/${plan.provider}/${encodeURIComponent(plan.providerId)}`,
+            {
+              method: 'PATCH',
+              body: JSON.stringify({ subjectId: plan.targetSubjectId })
+            },
+            { url: options.url }
+          );
+          assertPatchResponse(plan, response);
+        } catch (error) {
+          // A failed acknowledgement does not prove the write failed; confirm the actual binding.
+          response = await verifyResourceBinding(plan, options.url, error);
+        }
 
-        const status = response.changed ? 'changed' : 'unchanged';
+        const status = response.verified ? 'verified' : response.changed ? 'changed' : 'unchanged';
         counts.completed += 1;
         counts[status] += 1;
         await writeRecord(output, {
           ...plan,
           status,
           changed: response.changed,
-          serverPreviousSubjectId: response.previous.subjectId,
+          serverPreviousSubjectId: response.previous?.subjectId,
           serverSubjectId: response.resource.subjectId,
-          evidenceDrift: response.previous.subjectId !== plan.evidenceCurrentSubjectId
+          evidenceDrift: response.previous
+            ? response.previous.subjectId !== plan.evidenceCurrentSubjectId
+            : undefined,
+          verificationAttempts: response.verificationAttempts,
+          requestError: response.requestError
         });
       } catch (error) {
         counts.failed += 1;
@@ -349,6 +361,49 @@ async function applyPlans(plans, options) {
 
   if (failure) throw failure;
   return counts;
+}
+
+/** Confirms the target binding after any request or acknowledgement error, without re-sending PATCH. */
+async function verifyResourceBinding(plan, url, requestError) {
+  let lastObservation = 'Resource not found';
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    if (attempt > 1) await new Promise((resolve) => setTimeout(resolve, (attempt - 1) * 2000));
+    try {
+      // Detail responses have a long-lived memo; query the resource list and bypass HTTP caches.
+      const params = new URLSearchParams({
+        provider: plan.provider,
+        include: plan.title,
+        duplicate: 'true',
+        pageSize: '1000',
+        _bindingCheck: crypto.randomUUID()
+      });
+      const result = await fetchAPI(`resources?${params}`, undefined, {
+        baseURL: url,
+        timeout: 10 * 1000,
+        headers: { 'cache-control': 'no-cache' }
+      });
+      const resource = result?.resources?.find(
+        (r) => r.provider === plan.provider && String(r.providerId) === plan.providerId
+      );
+      if (resource?.subjectId === plan.targetSubjectId) {
+        return {
+          verified: true,
+          resource,
+          verificationAttempts: attempt,
+          requestError: errorMessage(requestError)
+        };
+      }
+      lastObservation = resource
+        ? `Current subjectId is ${resource.subjectId ?? 'null'}`
+        : 'Resource not found';
+    } catch (error) {
+      lastObservation = errorMessage(error);
+    }
+  }
+  throw new Error(
+    `Could not confirm ${resourceKey(plan.provider, plan.providerId)} -> ${plan.targetSubjectId} after 3 resource queries: ${lastObservation}; request: ${errorMessage(requestError)}`,
+    { cause: requestError }
+  );
 }
 
 function assertPatchResponse(plan, response) {
