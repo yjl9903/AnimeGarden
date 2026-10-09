@@ -13,6 +13,17 @@ describe('openapi discovery', () => {
     expect(spec.tags.map((tag: any) => tag.name)).not.toContain('Admin');
     expect(spec.paths['/detail/{provider}/{id}'].get.responses['404']).toBeDefined();
     expect(spec.paths['/collection/{hash}'].get.responses['404']).toBeDefined();
+
+    const status = spec.paths['/'].get.responses['200'].content['application/json'].schema;
+    expect(status.required).toEqual(['status', 'timestamp', 'providers', 'links']);
+    expect(status.properties.status.enum).toEqual(['OK']);
+    expect(status.properties).not.toHaveProperty('message');
+    expect(status.properties.links.required).toEqual(['openapi', 'llms']);
+    for (const link of Object.values(status.properties.links.properties) as any[]) {
+      expect(link.type).toBe('string');
+      expect(link.format).toBe('uri');
+      expect(new URL(link.example).protocol).toBe('https:');
+    }
   });
 
   it('documents pagination consistently for resources and collection results', async () => {

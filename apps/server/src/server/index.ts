@@ -200,12 +200,18 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
 
   app.get('/', async (c) => {
     const timestamp = new Date(sys.modules.providers.timestamp);
+    const siteUrl = `https://${sys.options.site ?? 'animes.garden'}`;
     c.set('responseTimestamp', timestamp);
 
     return c.json({
       status: 'OK',
       timestamp: timestamp.toISOString(),
-      providers: Object.fromEntries(sys.modules.providers.providers)
+      providers: Object.fromEntries(sys.modules.providers.providers),
+      // Point discovery links to the existing documentation on the Web site.
+      links: {
+        openapi: `${siteUrl}/openapi.json`,
+        llms: `${siteUrl}/llms.txt`
+      }
     });
   });
 

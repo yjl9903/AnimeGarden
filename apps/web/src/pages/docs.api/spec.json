@@ -23,7 +23,7 @@
     "/": {
       "get": {
         "summary": "获取API状态信息",
-        "description": "获取API基础信息、时间戳和提供商状态",
+        "description": "获取API基础信息、时间戳、提供商状态和文档入口链接",
         "operationId": "getStatus",
         "tags": ["Status"],
         "responses": {
@@ -34,9 +34,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "message": {
+                    "status": {
                       "type": "string",
-                      "example": "Anime Garden 動漫花園 镜像站 / 动画 BT 资源聚合站"
+                      "enum": ["OK"]
                     },
                     "timestamp": {
                       "type": "string",
@@ -53,9 +53,26 @@
                       },
                       "required": ["dmhy", "mikan", "moe", "ani"],
                       "additionalProperties": false
+                    },
+                    "links": {
+                      "type": "object",
+                      "description": "主站提供的 API 文档与机器可读入口",
+                      "properties": {
+                        "openapi": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://animes.garden/openapi.json"
+                        },
+                        "llms": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://animes.garden/llms.txt"
+                        }
+                      },
+                      "required": ["openapi", "llms"]
                     }
                   },
-                  "required": ["message", "timestamp", "providers"]
+                  "required": ["status", "timestamp", "providers", "links"]
                 }
               }
             }
