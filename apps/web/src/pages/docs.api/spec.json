@@ -46,10 +46,18 @@
                     "providers": {
                       "type": "object",
                       "properties": {
-                        "dmhy": { "$ref": "#/components/schemas/Provider" },
-                        "mikan": { "$ref": "#/components/schemas/Provider" },
-                        "moe": { "$ref": "#/components/schemas/Provider" },
-                        "ani": { "$ref": "#/components/schemas/Provider" }
+                        "dmhy": {
+                          "$ref": "#/components/schemas/Provider"
+                        },
+                        "mikan": {
+                          "$ref": "#/components/schemas/Provider"
+                        },
+                        "moe": {
+                          "$ref": "#/components/schemas/Provider"
+                        },
+                        "ani": {
+                          "$ref": "#/components/schemas/Provider"
+                        }
                       },
                       "required": ["dmhy", "mikan", "moe", "ani"],
                       "additionalProperties": false
@@ -182,7 +190,7 @@
     "/resources": {
       "get": {
         "summary": "获取资源列表",
-        "description": "获取所有提供商的资源列表，支持分页和过滤",
+        "description": "获取所有提供商的资源列表，支持分页和过滤。页码从 1 开始；page × pageSize 必须不超过 10000，超出返回 HTTP 400。",
         "operationId": "getResources",
         "tags": ["Resources"],
         "parameters": [
@@ -233,6 +241,9 @@
           },
           {
             "$ref": "#/components/parameters/MetadataParam"
+          },
+          {
+            "$ref": "#/components/parameters/PresetParam"
           }
         ],
         "responses": {
@@ -244,13 +255,48 @@
                   "$ref": "#/components/schemas/ResourcesResponse"
                 }
               }
+            },
+            "headers": {
+              "X-Response-Timestamp": {
+                "$ref": "#/components/headers/ResponseTimestamp"
+              }
+            }
+          },
+          "503": {
+            "description": "慢查询通道繁忙，请稍后重试",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "慢查询执行超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "分页过深：page × pageSize 不能超过 10000",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
             }
           }
         }
       },
       "post": {
         "summary": "获取资源列表 (POST)",
-        "description": "使用POST方法获取资源列表，支持复杂的过滤条件",
+        "description": "使用POST方法获取资源列表，支持复杂的过滤条件。页码从 1 开始；page × pageSize 必须不超过 10000，超出返回 HTTP 400。",
         "operationId": "postResources",
         "tags": ["Resources"],
         "parameters": [
@@ -280,6 +326,41 @@
                   "$ref": "#/components/schemas/ResourcesResponse"
                 }
               }
+            },
+            "headers": {
+              "X-Response-Timestamp": {
+                "$ref": "#/components/headers/ResponseTimestamp"
+              }
+            }
+          },
+          "503": {
+            "description": "慢查询通道繁忙，请稍后重试",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "慢查询执行超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "分页过深：page × pageSize 不能超过 10000",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
             }
           }
         }
@@ -288,7 +369,7 @@
     "/resources/{provider}": {
       "get": {
         "summary": "获取指定提供商的资源列表",
-        "description": "获取指定提供商的资源列表",
+        "description": "获取指定提供商的资源列表。页码从 1 开始；page × pageSize 必须不超过 10000，超出返回 HTTP 400。",
         "operationId": "getProviderResources",
         "tags": ["Resources"],
         "parameters": [
@@ -346,6 +427,9 @@
           },
           {
             "$ref": "#/components/parameters/MetadataParam"
+          },
+          {
+            "$ref": "#/components/parameters/PresetParam"
           }
         ],
         "responses": {
@@ -357,13 +441,48 @@
                   "$ref": "#/components/schemas/ResourcesResponse"
                 }
               }
+            },
+            "headers": {
+              "X-Response-Timestamp": {
+                "$ref": "#/components/headers/ResponseTimestamp"
+              }
+            }
+          },
+          "503": {
+            "description": "慢查询通道繁忙，请稍后重试",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "慢查询执行超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "分页过深：page × pageSize 不能超过 10000",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
             }
           }
         }
       },
       "post": {
         "summary": "获取指定提供商的资源列表 (POST)",
-        "description": "使用POST方法获取指定提供商的资源列表",
+        "description": "使用POST方法获取指定提供商的资源列表。页码从 1 开始；page × pageSize 必须不超过 10000，超出返回 HTTP 400。",
         "operationId": "postProviderResources",
         "tags": ["Resources"],
         "parameters": [
@@ -401,6 +520,41 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ResourcesResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Response-Timestamp": {
+                "$ref": "#/components/headers/ResponseTimestamp"
+              }
+            }
+          },
+          "503": {
+            "description": "慢查询通道繁忙，请稍后重试",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "慢查询执行超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "分页过深：page × pageSize 不能超过 10000",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -441,22 +595,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "enum": ["OK"]
-                    },
-                    "detail": {
-                      "$ref": "#/components/schemas/ResourceDetail"
-                    },
-                    "timestamp": {
-                      "type": "string",
-                      "format": "date-time"
-                    }
-                  },
-                  "required": ["status", "detail", "timestamp"]
+                  "$ref": "#/components/schemas/ResourceDetailResponse"
                 }
+              }
+            },
+            "headers": {
+              "X-Response-Timestamp": {
+                "$ref": "#/components/headers/ResponseTimestamp"
               }
             }
           },
@@ -513,14 +658,15 @@
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
-                    },
-                    "timestamp": {
-                      "type": "string",
-                      "format": "date-time"
                     }
                   },
-                  "required": ["status", "id", "hash", "createdAt", "timestamp"]
+                  "required": ["status", "id", "hash", "createdAt"]
                 }
+              }
+            },
+            "headers": {
+              "X-Response-Timestamp": {
+                "$ref": "#/components/headers/ResponseTimestamp"
               }
             }
           },
@@ -575,14 +721,15 @@
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
-                    },
-                    "timestamp": {
-                      "type": "string",
-                      "format": "date-time"
                     }
                   },
-                  "required": ["status", "id", "hash", "createdAt", "timestamp"]
+                  "required": ["status", "id", "hash", "createdAt"]
                 }
+              }
+            },
+            "headers": {
+              "X-Response-Timestamp": {
+                "$ref": "#/components/headers/ResponseTimestamp"
               }
             }
           },
@@ -657,20 +804,61 @@
                           }
                         },
                         "required": ["resources", "pagination"]
-                      }
+                      },
+                      "description": "与 filters 按顺序一一对应；每项查询第 1 页，pageSize 为 1000。"
                     },
-                    "timestamp": {
+                    "updatedAt": {
                       "type": "string",
-                      "format": "date-time"
+                      "format": "date-time",
+                      "description": "收藏夹查询结果生成时间，缓存命中时沿用缓存值。"
+                    },
+                    "filters": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CollectionFilter"
+                      }
                     }
                   },
-                  "required": ["status", "hash", "name", "createdAt", "results", "timestamp"]
+                  "required": [
+                    "status",
+                    "hash",
+                    "name",
+                    "createdAt",
+                    "results",
+                    "updatedAt",
+                    "filters"
+                  ]
                 }
+              }
+            },
+            "headers": {
+              "X-Response-Timestamp": {
+                "$ref": "#/components/headers/ResponseTimestamp"
               }
             }
           },
           "404": {
             "description": "收藏夹不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "慢查询通道繁忙，请稍后重试",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "慢查询执行超时",
             "content": {
               "application/json": {
                 "schema": {
@@ -685,7 +873,7 @@
     "/feed.xml": {
       "get": {
         "summary": "获取RSS订阅源",
-        "description": "获取资源的RSS订阅源",
+        "description": "获取资源的RSS订阅源。页码从 1 开始；page × pageSize 必须不超过 10000，超出返回 HTTP 400。",
         "operationId": "getRSSFeed",
         "tags": ["Feed"],
         "parameters": [
@@ -720,13 +908,22 @@
             "$ref": "#/components/parameters/BeforeParam"
           },
           {
-            "name": "tracker",
-            "in": "query",
-            "description": "是否包含Tracker信息",
-            "schema": {
-              "type": "string",
-              "enum": ["true", "false", "on", "off", "yes", "no"]
-            }
+            "$ref": "#/components/parameters/FeedTrackerParam"
+          },
+          {
+            "$ref": "#/components/parameters/PageParam"
+          },
+          {
+            "$ref": "#/components/parameters/PageSizeParam"
+          },
+          {
+            "$ref": "#/components/parameters/ProviderParam"
+          },
+          {
+            "$ref": "#/components/parameters/DuplicateParam"
+          },
+          {
+            "$ref": "#/components/parameters/PresetParam"
           }
         ],
         "responses": {
@@ -737,6 +934,39 @@
                 "schema": {
                   "type": "string",
                   "description": "RSS XML格式的订阅源"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "慢查询通道繁忙，请稍后重试",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "description": "XML 错误正文，根元素为 error，message 子元素描述错误。"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "慢查询执行超时",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "description": "XML 错误正文，根元素为 error，message 子元素描述错误。"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "分页过深：page × pageSize 不能超过 10000",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "description": "XML 错误正文，根元素为 error，message 子元素描述错误。"
                 }
               }
             }
@@ -761,13 +991,7 @@
             }
           },
           {
-            "name": "tracker",
-            "in": "query",
-            "description": "是否包含Tracker信息",
-            "schema": {
-              "type": "string",
-              "enum": ["true", "false", "on", "off", "yes", "no"]
-            }
+            "$ref": "#/components/parameters/FeedTrackerParam"
           }
         ],
         "responses": {
@@ -788,6 +1012,28 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "慢查询通道繁忙，请稍后重试",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "description": "XML 错误正文，根元素为 error，message 子元素描述错误。"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "慢查询执行超时",
+            "content": {
+              "application/xml": {
+                "schema": {
+                  "type": "string",
+                  "description": "XML 错误正文，根元素为 error，message 子元素描述错误。"
                 }
               }
             }
@@ -822,7 +1068,7 @@
                             "type": "integer"
                           },
                           "activedAt": {
-                            "type": "string",
+                            "type": ["string", "null"],
                             "format": "date-time"
                           },
                           "isArchived": {
@@ -844,7 +1090,7 @@
     "/sitemaps/{year}/{month}": {
       "get": {
         "summary": "获取指定月份的资源站点地图",
-        "description": "获取指定年月的资源站点地图信息",
+        "description": "获取指定年月的资源站点地图信息。仅支持 2020 年至当前年月；合法数字格式但超出范围时返回 HTTP 200 错误正文，非数字路径不匹配该路由。",
         "operationId": "getResourcesSitemap",
         "tags": ["Sitemap"],
         "parameters": [
@@ -872,64 +1118,61 @@
         ],
         "responses": {
           "200": {
-            "description": "成功获取资源站点地图",
+            "description": "当前实现始终返回 HTTP 200；参数越界或查询失败时 status 为 ERROR，并返回空 resources，不包含 count。",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "enum": ["OK"]
-                    },
-                    "count": {
-                      "type": "integer"
-                    },
-                    "resources": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "integer"
-                          },
-                          "provider": {
-                            "type": "string"
-                          },
-                          "providerId": {
-                            "type": "string"
-                          },
-                          "fetchedAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          }
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": ["OK"]
                         },
-                        "required": ["id", "provider", "providerId", "fetchedAt"]
-                      }
-                    }
-                  },
-                  "required": ["status", "count", "resources"]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "参数错误",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "enum": ["ERROR"]
+                        "count": {
+                          "type": "integer"
+                        },
+                        "resources": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer"
+                              },
+                              "provider": {
+                                "type": "string"
+                              },
+                              "providerId": {
+                                "type": "string"
+                              },
+                              "fetchedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": ["id", "provider", "providerId", "fetchedAt"]
+                          }
+                        }
+                      },
+                      "required": ["status", "count", "resources"]
                     },
-                    "resources": {
-                      "type": "array",
-                      "items": {}
+                    {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": ["ERROR"]
+                        },
+                        "resources": {
+                          "type": "array",
+                          "items": {}
+                        }
+                      },
+                      "required": ["status", "resources"]
                     }
-                  },
-                  "required": ["status", "resources"]
+                  ]
                 }
               }
             }
@@ -1179,6 +1422,62 @@
           }
         }
       }
+    },
+    "/detail/infohash/{hash}": {
+      "get": {
+        "summary": "按 info hash 获取资源详情",
+        "description": "支持 40 位十六进制或 32 位 Base32 info hash，忽略大小写并去除首尾空白。格式错误返回 400，资源不存在返回 404。",
+        "operationId": "getResourceDetailByInfoHash",
+        "tags": ["Resources"],
+        "parameters": [
+          {
+            "name": "hash",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "40 位十六进制或 32 位 Base32 info hash"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功获取资源详情",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceDetailResponse"
+                }
+              }
+            },
+            "headers": {
+              "X-Response-Timestamp": {
+                "$ref": "#/components/headers/ResponseTimestamp"
+              }
+            }
+          },
+          "404": {
+            "description": "资源不存在",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "info hash 格式错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1194,7 +1493,7 @@
       "PageParam": {
         "name": "page",
         "in": "query",
-        "description": "页码",
+        "description": "页码从 1 开始；page × pageSize 必须不超过 10000，超出返回 HTTP 400。",
         "schema": {
           "type": "integer",
           "minimum": 1,
@@ -1204,7 +1503,7 @@
       "PageSizeParam": {
         "name": "pageSize",
         "in": "query",
-        "description": "每页数量",
+        "description": "每页数量，默认 100，最大 1000；page × pageSize 不超过 10000。越界或无效值回退为 100。",
         "schema": {
           "type": "integer",
           "minimum": 1,
@@ -1248,9 +1547,9 @@
         "explode": true
       },
       "KeywordsParam": {
-        "name": "keywords",
+        "name": "keyword",
         "in": "query",
-        "description": "必须包含的关键词",
+        "description": "必须包含的关键词；URL 使用单数 keyword，可重复传递；POST JSON 正文使用 keywords。",
         "schema": {
           "type": "array",
           "items": {
@@ -1346,10 +1645,9 @@
       "DuplicateParam": {
         "name": "duplicate",
         "in": "query",
-        "description": "是否包含重复资源",
+        "description": "现有行为：仅在 query 或 JSON 正文指定有效 provider 时生效，省略时默认包含重复资源；URL 非空字符串（包括 false、0）均被解析为 true，空字符串为 false。未指定 provider 时忽略此参数；仅路径中的 provider 不触发该默认规则。此行为将在后续版本评估调整。",
         "schema": {
-          "type": "boolean",
-          "default": false
+          "type": "string"
         }
       },
       "TrackerParam": {
@@ -1368,6 +1666,24 @@
         "schema": {
           "type": "boolean",
           "default": false
+        }
+      },
+      "PresetParam": {
+        "name": "preset",
+        "in": "query",
+        "description": "预设筛选条件",
+        "schema": {
+          "type": "string",
+          "enum": ["bangumi"]
+        }
+      },
+      "FeedTrackerParam": {
+        "name": "trakcer",
+        "in": "query",
+        "description": "现有 RSS 实现的历史拼写。默认包含 tracker，仅小写 false、off、no 关闭；tracker 参数目前被忽略。资源 JSON 接口仍使用 tracker。",
+        "schema": {
+          "type": "string",
+          "default": "true"
         }
       }
     },
@@ -1398,21 +1714,21 @@
           "id": {
             "type": "integer"
           },
-          "provider": {
-            "type": "string"
-          },
-          "providerId": {
-            "type": "string"
-          },
           "name": {
             "type": "string"
           },
           "avatar": {
-            "type": "string",
-            "nullable": true
+            "type": ["string", "null"]
+          },
+          "providers": {
+            "type": ["object", "null"],
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ProviderInfo"
+            },
+            "description": "以提供商名称为键的身份映射；同一发布者或字幕组可以对应多个来源。"
           }
         },
-        "required": ["id", "provider", "providerId", "name"]
+        "required": ["id", "name", "avatar", "providers"]
       },
       "Team": {
         "type": "object",
@@ -1420,21 +1736,21 @@
           "id": {
             "type": "integer"
           },
-          "provider": {
-            "type": "string"
-          },
-          "providerId": {
-            "type": "string"
-          },
           "name": {
             "type": "string"
           },
           "avatar": {
-            "type": "string",
-            "nullable": true
+            "type": ["string", "null"]
+          },
+          "providers": {
+            "type": ["object", "null"],
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ProviderInfo"
+            },
+            "description": "以提供商名称为键的身份映射；同一发布者或字幕组可以对应多个来源。"
           }
         },
-        "required": ["id", "provider", "providerId", "name"]
+        "required": ["id", "name", "avatar", "providers"]
       },
       "Subject": {
         "type": "object",
@@ -1446,21 +1762,18 @@
           "name": {
             "type": "string"
           },
-          "keywords": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "activedAt": {
-            "type": "string",
+            "type": ["string", "null"],
             "format": "date-time"
           },
           "isArchived": {
             "type": "boolean"
+          },
+          "search": {
+            "$ref": "#/components/schemas/SubjectSearch"
           }
         },
-        "required": ["id", "name", "keywords", "activedAt", "isArchived"]
+        "required": ["id", "name", "search", "activedAt", "isArchived"]
       },
       "Resource": {
         "type": "object",
@@ -1488,15 +1801,14 @@
           },
           "tracker": {
             "type": "string",
-            "nullable": true,
             "description": "当tracker参数为true时返回"
           },
           "size": {
-            "type": "integer"
+            "type": "integer",
+            "description": "文件大小，单位为字节。"
           },
           "fansub": {
             "type": "object",
-            "nullable": true,
             "properties": {
               "id": {
                 "type": "integer"
@@ -1505,8 +1817,7 @@
                 "type": "string"
               },
               "avatar": {
-                "type": "string",
-                "nullable": true
+                "type": "string"
               }
             },
             "required": ["id", "name"]
@@ -1521,15 +1832,13 @@
                 "type": "string"
               },
               "avatar": {
-                "type": "string",
-                "nullable": true
+                "type": "string"
               }
             },
             "required": ["id", "name"]
           },
           "subjectId": {
-            "type": "integer",
-            "nullable": true
+            "type": "integer"
           },
           "createdAt": {
             "type": "string",
@@ -1540,8 +1849,7 @@
             "format": "date-time"
           },
           "metadata": {
-            "type": "object",
-            "nullable": true,
+            "type": ["object", "null"],
             "description": "当metadata参数为true时返回",
             "properties": {
               "anipar": {
@@ -1603,9 +1911,17 @@
           },
           "hasMoreFiles": {
             "type": "boolean"
+          },
+          "id": {
+            "type": "integer",
+            "description": "资源 ID"
+          },
+          "fetchedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         },
-        "required": ["description", "files", "magnets", "hasMoreFiles"]
+        "required": ["description", "files", "magnets", "hasMoreFiles", "id", "fetchedAt"]
       },
       "FilterOptions": {
         "type": "object",
@@ -1700,13 +2016,15 @@
           "page": {
             "type": "integer",
             "minimum": 1,
-            "default": 1
+            "default": 1,
+            "description": "页码从 1 开始；page × pageSize 必须不超过 10000，超出返回 HTTP 400。"
           },
           "pageSize": {
             "type": "integer",
             "minimum": 1,
             "maximum": 1000,
-            "default": 100
+            "default": 100,
+            "description": "每页数量，默认 100，最大 1000；page × pageSize 不超过 10000。越界或无效值回退为 100。"
           },
           "provider": {
             "type": "string",
@@ -1714,7 +2032,7 @@
           },
           "duplicate": {
             "type": "boolean",
-            "default": false
+            "description": "仅在 query 或 JSON 正文指定有效 provider 时生效；该情况下省略默认 true，否则忽略。URL duplicate 的非空字符串会被解析为 true，混用 URL 与正文参数时需注意。"
           },
           "after": {
             "type": "string",
@@ -1836,41 +2154,41 @@
           },
           "filter": {
             "$ref": "#/components/schemas/FilterOptions"
-          },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
           }
         },
-        "required": ["status", "resources", "pagination", "filter", "timestamp"]
+        "required": ["status", "resources", "pagination", "filter"]
       },
       "CollectionRequest": {
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "default": ""
           },
           "authorization": {
             "type": "string"
           },
           "filters": {
             "type": "array",
+            "minItems": 1,
+            "maxItems": 50,
             "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "searchParams": {
-                  "type": "string"
-                }
-              },
-              "required": ["name"],
-              "additionalProperties": true
+              "$ref": "#/components/schemas/CollectionFilter"
             }
           }
         },
-        "required": ["name", "authorization", "filters"]
+        "required": ["authorization", "filters"],
+        "example": {
+          "name": "动画",
+          "authorization": "example-token",
+          "filters": [
+            {
+              "name": "动画",
+              "searchParams": "type=%E5%8A%A8%E7%94%BB",
+              "types": ["动画"]
+            }
+          ]
+        }
       },
       "ErrorResponse": {
         "type": "object",
@@ -1884,6 +2202,171 @@
           }
         },
         "required": ["status", "message"]
+      },
+      "ProviderInfo": {
+        "type": "object",
+        "properties": {
+          "providerId": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": ["providerId"]
+      },
+      "SubjectSearch": {
+        "type": "object",
+        "properties": {
+          "include": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exclude": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "after": {
+            "type": "number",
+            "description": "Unix 毫秒时间戳"
+          },
+          "before": {
+            "type": "number",
+            "description": "Unix 毫秒时间戳"
+          }
+        },
+        "required": ["include"]
+      },
+      "CollectionFilter": {
+        "type": "object",
+        "description": "保存的结构化筛选条件。searchParams 用于记录查询字符串，服务端查询使用同级筛选字段，不会解析 searchParams 来生成它们。",
+        "properties": {
+          "name": {
+            "type": "string",
+            "default": ""
+          },
+          "searchParams": {
+            "type": "string"
+          },
+          "preset": {
+            "type": "string",
+            "enum": ["bangumi"]
+          },
+          "provider": {
+            "type": "string",
+            "enum": ["dmhy", "mikan", "moe", "ani"]
+          },
+          "duplicate": {
+            "type": "boolean"
+          },
+          "types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "after": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "before": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fansubs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "publishers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "search": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "include": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exclude": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": ["searchParams"],
+        "additionalProperties": true
+      },
+      "ResourceDetailResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["OK"]
+          },
+          "detail": {
+            "$ref": "#/components/schemas/ResourceDetail",
+            "description": "抓取到的详情；详情尚未取得或抓取失败时省略，资源仍可返回 HTTP 200。"
+          },
+          "resource": {
+            "$ref": "#/components/schemas/Resource"
+          },
+          "isDeleted": {
+            "type": ["boolean", "null"]
+          },
+          "duplicatedId": {
+            "type": ["integer", "null"],
+            "description": "重复资源指向的资源 ID；未设置时可能为 null 或省略。"
+          }
+        },
+        "required": ["status", "resource", "isDeleted"]
+      }
+    },
+    "headers": {
+      "ResponseTimestamp": {
+        "description": "响应时间，ISO 8601 格式；资源列表、详情和收藏夹响应正文不包含 timestamp。缓存命中时可能是生成缓存响应的时间。",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        }
       }
     }
   },

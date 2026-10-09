@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { parseCollection, parseURLSearch } from '@animegarden/client';
+
 import { Route } from '../src/routes/openapi[.]json';
 
 describe('openapi discovery', () => {
@@ -23,6 +25,86 @@ describe('openapi discovery', () => {
       expect(link.type).toBe('string');
       expect(link.format).toBe('uri');
       expect(new URL(link.example).protocol).toBe('https:');
+    }
+  });
+
+  it('documents timestamps in response headers without changing the root status body', async () => {
+    const response = await (Route.options.server!.handlers as any).GET({} as any);
+    const spec = (await response.json()) as any;
+
+    for (const path of [
+      '/resources',
+      '/resources/{provider}',
+      '/detail/{provider}/{id}',
+      '/detail/infohash/{hash}',
+      '/collection',
+      '/collection/{hash}'
+    ]) {
+      for (const operation of Object.values(spec.paths[path]) as any[]) {
+        const success = operation.responses['200'];
+        expect(success.headers['X-Response-Timestamp']).toEqual({
+          $ref: '#/components/headers/ResponseTimestamp'
+        });
+        const schema = success.content['application/json'].schema;
+        const body = schema.$ref ? spec.components.schemas[schema.$ref.split('/').at(-1)] : schema;
+        expect(body.properties).not.toHaveProperty('timestamp');
+        expect(body.required).not.toContain('timestamp');
+      }
+    }
+    expect(spec.components.headers.ResponseTimestamp.schema).toEqual({
+      type: 'string',
+      format: 'date-time'
+    });
+    const root = spec.paths['/'].get.responses['200'].content['application/json'].schema;
+    expect(root.required).toContain('timestamp');
+    expect(root.properties.timestamp.format).toBe('date-time');
+  });
+
+  it('uses query parameter names understood by the resource parser', async () => {
+    const response = await (Route.options.server!.handlers as any).GET({} as any);
+    const spec = (await response.json()) as any;
+    const parameters = spec.components.parameters;
+    const query = new URLSearchParams();
+    query.append(parameters.KeywordsParam.name, 'hello');
+    query.append(parameters.KeywordsParam.name, 'world');
+    query.set(parameters.PresetParam.name, 'bangumi');
+
+    expect(parseURLSearch(query).filter).toMatchObject({
+      keywords: ['hello', 'world'],
+      preset: 'bangumi'
+    });
+    expect(parseURLSearch(undefined, { keywords: ['hello'] }).filter.keywords).toEqual(['hello']);
+    for (const path of ['/resources', '/resources/{provider}', '/feed.xml']) {
+      expect(spec.paths[path].get.parameters).toContainEqual({
+        $ref: '#/components/parameters/PresetParam'
+      });
+    }
+  });
+
+  it('documents collection inputs accepted by the current parser', async () => {
+    const response = await (Route.options.server!.handlers as any).GET({} as any);
+    const { components } = (await response.json()) as any;
+    const request = components.schemas.CollectionRequest;
+    const filter = components.schemas.CollectionFilter;
+
+    expect(parseCollection(request.example)).toBeDefined();
+    const minimal = { authorization: 'test', filters: [{ searchParams: '' }] };
+    expect(parseCollection(minimal)).toMatchObject({ name: '', filters: [{ name: '' }] });
+    expect(request.required).toEqual(Object.keys(minimal));
+    expect(filter.required).toEqual(Object.keys(minimal.filters[0]));
+    expect(
+      parseCollection({ authorization: 'test', filters: [{ name: 'missing query' }] })
+    ).toBeUndefined();
+
+    const { minItems, maxItems } = request.properties.filters;
+    expect(minItems).toBe(1);
+    expect(maxItems).toBe(50);
+    for (const count of [minItems - 1, minItems, maxItems, maxItems + 1]) {
+      const parsed = parseCollection({
+        authorization: 'test',
+        filters: Array.from({ length: count }, () => ({ searchParams: '' }))
+      });
+      expect(parsed !== undefined).toBe(count >= minItems && count <= maxItems);
     }
   });
 
