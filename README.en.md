@@ -3,7 +3,7 @@
 [![Group](https://img.shields.io/badge/Telegram-2CA5E0?style=flat-squeare&logo=telegram&logoColor=white)](https://t.me/animegarden_dev)
 [![version](https://img.shields.io/npm/v/animegarden?label=animegarden)](https://www.npmjs.com/package/animegarden)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
-[![Ask DeepWiki](https://img.shields.io/badge/Ask-DeepWiki-20B2AA)](https://deepwiki.com/yjl9903/AnimeGarden)
+[![Ask DeepWiki](./assets/deepwiki.svg)](https://deepwiki.com/yjl9903/AnimeGarden)
 
 [English](/README.en.md) | [简体中文](/README.md)
 
