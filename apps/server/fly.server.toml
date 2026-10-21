@@ -26,7 +26,7 @@ force_https = false
 auto_stop_machines = 'suspend'
 auto_start_machines = true
 min_machines_running = 1
-processes = ['server', 'cron']
+processes = ['server']
 
 [http_service.concurrency]
 type = 'requests'
@@ -38,7 +38,7 @@ interval = "120s"
 timeout = "30s"
 method = "GET"
 path = "/health"
-processes = ['server', 'cron']
+processes = ['server']
 
 [[restart]]
 policy = 'on-failure'
@@ -52,7 +52,7 @@ cpus = 1
 processes = ['server']
 
 [[vm]]
-memory = '512mb'
+memory = '1g'
 cpu_kind = 'shared'
 cpus = 1
 processes = ['cron']
