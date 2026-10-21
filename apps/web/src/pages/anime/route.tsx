@@ -20,7 +20,7 @@ import { getSubjectDisplayName, getSubjectRouteLink, type WebBgmSubject } from '
 import './anime.css';
 
 /**
- * Renders the anime calendar as a season header plus weekday sections.
+ * Renders the anime calendar as a season header plus weekday and WEB sections.
  */
 export default function Index({
   timestamp,
@@ -78,7 +78,7 @@ export default function Index({
         let nextActive = resolvedCalendar[0]?.index ?? 1;
 
         for (const cal of resolvedCalendar) {
-          const section = document.getElementById(`星期${cal.text}`);
+          const section = document.getElementById(cal.label);
           if (!section) continue;
           if (section.getBoundingClientRect().top <= anchorY) {
             nextActive = cal.index;
@@ -197,28 +197,28 @@ export default function Index({
         </header>
 
         <div className="anime-layout">
-          <nav className="anime-toc" aria-label="星期目录">
+          <nav className="anime-toc" aria-label="周历目录">
             {resolvedCalendar.map((cal) => (
               <a
                 className={activeWeekday === cal.index ? 'is-active' : undefined}
-                href={`#星期${cal.text}`}
+                href={`#${cal.label}`}
                 key={cal.index}
                 onClick={() => setActiveWeekday(cal.index)}
               >
-                星期{cal.text}
+                {cal.label}
               </a>
             ))}
           </nav>
 
           <div className="anime-days space-y-14">
             {resolvedCalendar.map((cal) => (
-              <section className="bgm-weekday" id={`星期${cal.text}`} key={cal.index}>
+              <section className="bgm-weekday" id={cal.label} key={cal.index}>
                 <h2 className="mb-6 select-none">
                   <a
                     className="text-2xl lt-sm:text-xl font-bold leading-tight"
-                    href={`#星期${cal.text}`}
+                    href={`#${cal.label}`}
                   >
-                    星期{cal.text}
+                    {cal.label}
                   </a>
                 </h2>
                 <div className="anime-bgm-grid">
@@ -231,7 +231,7 @@ export default function Index({
                         trackAnimeCalendarClick({
                           subjectId: String(bgm.id),
                           title: getSubjectDisplayName(bgm),
-                          weekday: `星期${cal.text}`
+                          weekday: cal.label
                         })
                       }
                     >

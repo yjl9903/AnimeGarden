@@ -40,6 +40,8 @@ Bangumi subject/full/calendar 数据不应进入客户端运行时依赖；需�
 
 ### 动画周历 Calendar 语义
 
+`fetchCalendar({ seasons: [season] })` 从 `bgm.animes.garden/calendar` 读取七天的 `calendar` 和独立的 `web` 数组。服务端将 WEB 作为内部周历数组的第八组传递；页面仅轮转前七组，固定在末尾展示「WEB」，复用星期分区的卡片、封面/国创过滤和日期排序。目录和 Markdown 输出也使用 WEB 标签；默认 `/anime` 与指定季度页面共享此行为。WEB 分类直接使用上游当季名单，不按星期或集数推断，也不依赖 `bgmd/full` 静态快照。
+
 `bgmx` 返回的 `Calendar` 列表是周历索引，核心字段包括 `season`、`is_active` 和 `updated_at`。`season` 使用 `YYYY-MM` 表示季度月份，例如 `2026-07` 表示 2026 年夏季周历。
 
 `is_active` 仅表示“当前默认正在播出中的周历”，用于 `/anime` 默认入口和 `getLatestCalendar()` 选择当前季度。它不是数据有效性、发布状态或历史可见性标记。`getCalendars()` 返回的每一个 calendar 都应视为有效周历，并出现在年份/季度下拉列表、`/calendar/:season` 直达页面、`/sitemap-calendar.xml` 和 `/calendar/:season` Markdown 输出中。

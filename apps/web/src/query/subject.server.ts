@@ -203,14 +203,16 @@ export async function getCalendars() {
   );
 }
 
+/** Loads seven weekday buckets followed by the season’s standalone WEB bucket. */
 export async function getCalendar(season: string) {
   return getCached(`calendar:${season}`, ResponseStaleTime.Calendar, async () => {
-    const { calendar } = await fetchCalendar({
+    const { calendar, web } = await fetchCalendar({
       seasons: [season],
       timeout: 10 * 1000,
       retry: 1
     });
-    return calendar.map((subjects) => subjects.map(transformBgmSubject));
+    // Keep WEB separate from weekday scheduling, including batch releases without a weekday.
+    return [...calendar, web].map((subjects) => subjects.map(transformBgmSubject));
   });
 }
 
