@@ -36,7 +36,7 @@ export async function renderAnimeMarkdown(season?: string): Promise<MarkdownResu
         const bangumis = sortSubjects(subjects);
 
         return (
-          heading(2, `星期${Weekdays[index] ?? index + 1}`) +
+          heading(2, index === 7 ? 'WEB' : `星期${Weekdays[index] ?? index + 1}`) +
           (bangumis.length
             ? bangumis
                 .map((item) =>

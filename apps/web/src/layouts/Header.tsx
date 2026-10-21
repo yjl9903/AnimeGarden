@@ -109,9 +109,9 @@ const AnimeDropdown = memo(() => {
               className="[&:hover>.trigger]:bg-basis-100! dark:[&:hover>.trigger]:bg-basis-800!"
               trigger={
                 <div
-                  className={`trigger px2 py1 cursor-pointer ${day.index === 7 && 'rounded-b-md'}`}
+                  className={`trigger px2 py1 cursor-pointer ${index === calendar.length - 1 && 'rounded-b-md'}`}
                 >
-                  周{day.text}
+                  {day.index === 8 ? 'WEB' : `周${day.text}`}
                 </div>
               }
             >
@@ -127,7 +127,7 @@ const AnimeDropdown = memo(() => {
                       onClick={() =>
                         trackNavClick('anime', {
                           item: getSubjectDisplayName(bgm),
-                          group: `周${day.text}`
+                          group: day.index === 8 ? 'WEB' : `周${day.text}`
                         })
                       }
                       className={clsx(

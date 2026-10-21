@@ -160,6 +160,21 @@ describe('subject.server BGM client', () => {
     await expect(getSubjectByIdResult(999)).rejects.toBe(upstreamError);
   });
 
+  it('preserves the season WEB bucket after all seven weekdays', async () => {
+    const web = subject(513878);
+    web.bangumi.platform = 'WEB';
+    fetchCalendar.mockResolvedValue({
+      calendar: Array.from({ length: 7 }, (_, index) => (index === 0 ? [subject(1)] : [])),
+      web: [web]
+    });
+    const { getCalendar } = await import('../src/query/subject.server');
+    const result = await getCalendar('2026-10');
+    expect(result).toHaveLength(8);
+    expect(result[0][0].id).toBe(1);
+    expect(result[7]).toMatchObject([{ id: 513878, platform: 'WEB' }]);
+    expect(fetchCalendar).toHaveBeenCalledWith(expect.objectContaining({ seasons: ['2026-10'] }));
+  });
+
   it('does not fallback calendar failures', async () => {
     fetchCalendar.mockRejectedValue(new Error('offline'));
     const { getCalendar } = await import('../src/query/subject.server');

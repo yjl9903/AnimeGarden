@@ -51,7 +51,18 @@ const markdownCalendar = [
   [],
   [],
   [],
-  []
+  [],
+  [
+    {
+      id: 513878,
+      title: 'WEB Title',
+      platform: 'WEB',
+      onair_date: '2026-10-20',
+      poster: 'https://example.com/web.jpg',
+      tags: [],
+      search: { include: ['WEB Title'] }
+    }
+  ]
 ];
 
 vi.mock('@animegarden/client', async (importOriginal) => {
@@ -318,7 +329,7 @@ describe('markdown responses', () => {
     expect(response.headers.get('location')).toBe('/resources/1?type=%E5%8A%A8%E7%94%BB');
   });
 
-  it('renders anime calendar markdown from bgmd weekday groups', async () => {
+  it('renders anime calendar markdown with a final WEB section', async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-07-01T12:00:00+08:00'));
 
@@ -339,6 +350,10 @@ describe('markdown responses', () => {
       expect(body.indexOf('## 星期一')).toBeLessThan(body.indexOf('## 星期二'));
       expect(body).toContain('Subject Title - /subject/100');
       expect(body).toContain('Another Title - /subject/101');
+      expect(body).toContain('## WEB');
+      expect(body).toContain('WEB Title - /subject/513878');
+      expect(body.indexOf('## WEB')).toBeGreaterThan(body.indexOf('## 星期日'));
+      expect(body).not.toContain('## 星期8');
     } finally {
       vi.useRealTimers();
     }
