@@ -32,10 +32,26 @@ jobs:
 
     concurrency:
       group: deploy-fly-web-${{ github.event.inputs.environment }}-group
-      cancel-in-progress: true
+      # Let deployment and its cache purge finish before starting another release.
+      cancel-in-progress: false
 
     steps:
       - uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        if: ${{ inputs.environment == 'production' }}
+        uses: pnpm/action-setup@v6.0.9
+
+      - name: Setup Node.js
+        if: ${{ inputs.environment == 'production' }}
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Install dependencies
+        if: ${{ inputs.environment == 'production' }}
+        run: pnpm install --frozen-lockfile
 
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
@@ -45,6 +61,19 @@ jobs:
             --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Purge frontend CDN cache
+        if: ${{ success() && inputs.environment == 'production' }}
+        timeout-minutes: 5
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
+          CF_SEND_TELEMETRY: 'false'
+        run: |
+          pnpm exec cf cache purge \
+            --zone "$CLOUDFLARE_ZONE_ID" \
+            --body '{"hosts":["animes.garden"]}' \
+            --force
 
   server:
     name: Deploy Server

@@ -19,6 +19,28 @@
 - `WEB_SERVER_URL` 指向 `animegarden-server-production.flycast`，供 Web app 服务端渲染和 loader 访问内网后端。
 - `FEED_HOST` 指向 `api.animes.garden`，用于浏览器侧和页面展示的公开 API / feed 地址。
 
+## 前端发布后的 CDN 缓存清理
+
+`.github/workflows/deploy-fly.yml` 的 production Web job
+使用 `.node-version` 和 `package.json` 中的 pnpm 版本安装冻结锁文件的依赖，
+在 `flyctl deploy` 成功后通过项目内的 `pnpm exec cf cache purge` 清理
+`animes.garden` hostname 的 CDN 缓存。`cf` 版本由根 `package.json` 和
+`pnpm-lock.yaml` 统一管理。
+
+GitHub 仓库的 Settings → Secrets and variables → Actions 需要配置：
+
+| 类型 | 名称 | 内容 |
+| --- | --- | --- |
+| Secret | `CLOUDFLARE_API_TOKEN` | 具有目标 Zone 的 `Cache Purge` 权限的 API Token |
+| Variable | `CLOUDFLARE_ZONE_ID` | `animes.garden` 所属 Zone 的 ID |
+
+清理失败时 job 报错，但不会自动回滚已完成的 Fly 部署。
+test 环境和 server/feed job 不执行清理。Web job 不取消正在执行的发布，确保后续发布
+不会中断当前发布的缓存清理步骤。
+
+清理范围不包含 `api.animes.garden` 等其他 hostname，也无法移除用户浏览器已经保存的缓存。
+404 等错误响应仍需正确配置 `no-store`，静态资源在版本切换期间仍需保持可用。
+
 ## 排查边界
 
 排查线上可用性时，需要分别观察：
