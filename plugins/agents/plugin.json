@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "animegarden",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Search Anime Garden anime resources with remote MCP and an optional local PikPak CLI workflow.",
   "author": {
     "name": "OneKuma",
@@ -10,6 +10,15 @@
   "homepage": "https://animes.garden",
   "repository": "https://github.com/yjl9903/AnimeGarden",
   "license": "AGPL-3.0",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "AnimeGarden",
+        "logo": "./assets/icon.png",
+        "composerIcon": "./assets/icon.png"
+      }
+    }
+  },
   "keywords": [
     "anime",
     "animegarden",

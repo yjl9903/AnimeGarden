@@ -1,7 +1,7 @@
 set -e
 
 # Only regenerate packages when this commit touches plugins.
-set -- skills/animegarden scripts/package-plugins.ts \
+set -- skills/animegarden scripts/package-plugins.ts apps/web/public/pwa-512x512.png \
   plugins/agents/plugin.json plugins/agents/mcp.json plugins/agents/README.md
 if git diff --cached --quiet -- "$@" plugins \
   .agents/plugins/marketplace.json .claude-plugin/marketplace.json .cursor-plugin/marketplace.json; then
@@ -19,6 +19,6 @@ node scripts/package-plugins.ts
 node scripts/package-plugins.ts --check
 
 # Stage generated files only. Source files remain under the author's control.
-git add -- plugins/agents/skills plugins/agents/LICENSE \
+git add -- plugins/agents/skills plugins/agents/assets plugins/agents/LICENSE \
   plugins/claude plugins/antigravity \
   .agents/plugins/marketplace.json .claude-plugin/marketplace.json .cursor-plugin/marketplace.json

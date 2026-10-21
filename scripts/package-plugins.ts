@@ -16,6 +16,7 @@ type PluginManifest = {
   repository: string;
   license: string;
   keywords: string[];
+  extensions?: Record<string, unknown>;
 };
 
 const targets = ['agents', 'claude', 'antigravity'] as const;
@@ -66,6 +67,10 @@ export async function syncPlugins(root: string, check = false): Promise<void> {
     assert(skill.has(file), `Missing skill source: ${file}`);
   }
   const expected = new Map<string, Buffer>();
+  // Bundle the site's existing icon so cached plugins do not depend on the web app directory.
+  const icon = await readFile(join(root, 'apps/web/public/pwa-512x512.png'));
+  expected.set('plugins/agents/assets/icon.png', icon);
+  expected.set('plugins/claude/assets/icon.png', icon);
   const json = (path: string, value: unknown) => {
     expected.set(path, Buffer.from(JSON.stringify(value, null, 2) + '\n'));
   };
@@ -79,8 +84,11 @@ export async function syncPlugins(root: string, check = false): Promise<void> {
     if (target === 'claude') expected.set(`${base}/README.md`, readme);
   }
   // Portable identity remains the only editable version source; adapters select supported fields.
-  const { $schema, ...claudeManifest } = manifest;
-  json('plugins/claude/.claude-plugin/plugin.json', claudeManifest);
+  const { $schema, extensions, ...claudeManifest } = manifest;
+  json('plugins/claude/.claude-plugin/plugin.json', {
+    ...claudeManifest,
+    icon: './assets/icon.png'
+  });
   json('plugins/claude/.mcp.json', {
     mcpServers: { animegarden: { type: 'http', url: server.url } }
   });

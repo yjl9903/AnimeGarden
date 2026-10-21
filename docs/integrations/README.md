@@ -12,6 +12,7 @@ AnimeGarden 插件将资源搜索 skill 与公开 MCP 服务一起安装，支�
 | ------------------------------------------ | ---------------------------- | ------------------------------------------------------ |
 | skill、references、skill UI 元数据与许可证 | `skills/animegarden/`        | 三个包的 `skills/animegarden/`；许可证另复制到包根目录 |
 | 插件名称、版本、作者等                     | `plugins/agents/plugin.json` | 各适配 manifest 支持的字段                             |
+| 插件展示图标 | `apps/web/public/pwa-512x512.png` | `plugins/agents/assets/icon.png` |
 | 远程 MCP 定义                              | `plugins/agents/mcp.json`    | 各平台 MCP 配置                                        |
 | 包内用户说明                              | `plugins/agents/README.md` | `plugins/claude/README.md` |
 | 平台转换和市场条目                         | `scripts/package-plugins.ts` | 三个包、三个 marketplace 入口                          |
@@ -25,6 +26,8 @@ AnimeGarden 插件将资源搜索 skill 与公开 MCP 服务一起安装，支�
 | `antigravity` | `plugin.json`（仅输出已文档化的 `name`、`description`） | `mcp_config.json`：`serverUrl`             |
 
 插件包自包含，不使用指向包外的符号链接。发布副本作为可安装内容随主分支提交；ZIP 和其他构建文件保留在忽略的 `dist/` 中。
+
+OpenAI 插件展示字段放在 `plugins/agents/plugin.json` 的 `extensions.com.openai.interface`：`displayName` 为 `AnimeGarden`，`logo` 和 `composerIcon` 引用包内樱花图标。同步到 Claude manifest 时去掉平台专属 `extensions`。MCP 配置键保持 `animegarden`；当前 Codex 桌面端详情页会将其首字母大写为 `Animegarden`，该行与插件展示名独立，并复用插件 logo。
 
 只修改表中的维护源，再通过同步脚本生成各包内容。开发、维护和发布流程维护在本文，不另建 `plugins/README.md`。包内用户说明维护在 [agents README](../../plugins/agents/README.md)，同步到 claude 包，不手工维护多份；Antigravity 暂不生成 README。
 
@@ -74,7 +77,7 @@ pnpm plugins:pack
 
 GitHub marketplace 分发与官方市场收录分别管理：
 
-- **OpenAI / Codex / ChatGPT**：将 agents ZIP 上传 [Plugins](https://platform.openai.com/plugins)。[市场展示内容](https://developers.openai.com/plugins/deploy/submission)使用 `plugin.json` 的 `extensions.com.openai.interface`，不从 README 自动生成。当前包只包含通用元数据；提交前需补齐展示字段及门户要求的审核材料。首次提交包含远程 MCP；skills 或元数据更新需要重新上传 ZIP。
+- **OpenAI / Codex / ChatGPT**：将 agents ZIP 上传 [Plugins](https://platform.openai.com/plugins)。[市场展示内容](https://developers.openai.com/plugins/deploy/submission)使用 `plugin.json` 的 `extensions.com.openai.interface`，不从 README 自动生成。当前包已配置展示名和图标；提交前仍需补齐其他展示字段及门户要求的审核材料。首次提交包含远程 MCP；skills 或元数据更新需要重新上传 ZIP。
 - **Cursor**：向 [发布入口](https://cursor.com/marketplace/publish) 提交本仓库，marketplace 条目指向 `plugins/agents`。[提交清单](https://cursor.com/docs/reference/plugins#submission-checklist)要求 README 说明用法与配置，当前包内 README 承担此职责；官方未明确其详情页渲染方式。
 - **Anthropic Directory**：在 [开发者门户](https://claude.ai/directory/manage) 提交本仓库，路径 `plugins/claude`，跟踪 `main`。[市场详情从该包的 manifest 和 README 读取](https://claude.com/docs/plugins/submit#submit-a-plugin)，修改后需重新验证并发布新版本。远程 MCP connector 另行提交；Directory 收录与 `claude-plugins-official` 分开。
 - **Antigravity Marketplace**：通过 [官方 Marketplace 页面](https://antigravity.google/docs/marketplace/#next-steps) 的收录申请表提交。正式上架后补充用户安装入口。
