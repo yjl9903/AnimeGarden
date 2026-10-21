@@ -1,0 +1,15 @@
+{
+  "name": "animegarden",
+  "description": "Anime Garden skills and remote MCP for Claude Code.",
+  "owner": {
+    "name": "OneKuma",
+    "url": "https://github.com/yjl9903"
+  },
+  "plugins": [
+    {
+      "name": "animegarden",
+      "source": "./plugins/claude",
+      "description": "Search Anime Garden anime resources with remote MCP and an optional local PikPak CLI workflow."
+    }
+  ]
+}

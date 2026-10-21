@@ -1,0 +1,20 @@
+{
+  "name": "animegarden",
+  "interface": {
+    "displayName": "AnimeGarden"
+  },
+  "plugins": [
+    {
+      "name": "animegarden",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agents"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Entertainment"
+    }
+  ]
+}

@@ -32,5 +32,8 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Check plugins
+        run: pnpm plugins:check
+
       - name: Test
         run: pnpm test:ci

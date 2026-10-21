@@ -1,0 +1,24 @@
+set -e
+
+# Only regenerate packages when this commit touches plugins.
+set -- skills/animegarden scripts/package-plugins.ts \
+  plugins/agents/plugin.json plugins/agents/mcp.json plugins/agents/README.md
+if git diff --cached --quiet -- "$@" plugins \
+  .agents/plugins/marketplace.json .claude-plugin/marketplace.json .cursor-plugin/marketplace.json; then
+  exit 0
+fi
+
+# The generator reads the working tree; do not mix unstaged source edits into this commit.
+if ! git diff --quiet -- "$@" || [ -n "$(git ls-files --others --exclude-standard -- "$@")" ]; then
+  echo "Stage or stash all plugin source changes before committing."
+  exit 1
+fi
+
+# The generator has no dependencies; avoid package-manager installation during a commit.
+node scripts/package-plugins.ts
+node scripts/package-plugins.ts --check
+
+# Stage generated files only. Source files remain under the author's control.
+git add -- plugins/agents/skills plugins/agents/LICENSE \
+  plugins/claude plugins/antigravity \
+  .agents/plugins/marketplace.json .claude-plugin/marketplace.json .cursor-plugin/marketplace.json

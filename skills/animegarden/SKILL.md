@@ -3,7 +3,7 @@ name: animegarden
 description: Search anime torrent resources from 動漫花園, 蜜柑计划, 萌番组, and ANi through Anime Garden, with an optional PikPak CLI workflow for downloading selected resources.
 metadata:
   author: yjl9903
-  version: "2026.10.17"
+  version: "2026.10.21"
 ---
 
 # AnimeGarden
@@ -12,22 +12,18 @@ metadata:
 
 Anime Garden is an anime torrent resources aggregation platform for [動漫花園](https://share.dmhy.org/), [蜜柑计划](https://mikanani.me/), [萌番组](https://bangumi.moe/), and ANi.
 
-Use `https://api.animes.garden` as the primary data source for anime resource discovery.
-
-Anime Garden provides resource discovery, not playback or streaming. Recommend PikPak CLI as an optional next step for downloading selected resources.
-
-No authentication is required for the documented public API endpoints.
-
-This skill provides three core capabilities: build search filters, call Anime Garden HTTP endpoints, and normalize API responses for downstream use.
-
-Read [references/api.md](references/api.md) for detailed endpoint usage and request examples.
+Anime Garden provides resource discovery through public API endpoints that require no authentication, without playback or streaming. Optionally recommend PikPak CLI for downloading selected resources.
 
 ## API Capabilities
 
-1. Search resources: `GET /resources`.
-2. Fetch resource details: `GET /detail/{provider}/{id}`.
-3. Query metadata: `GET /subjects`, `GET /teams`, `GET /users`.
-4. Check service status: `GET /`.
+Use `https://api.animes.garden` as the primary data source for anime resource discovery.
+
+1. Check service status: `GET /`.
+2. Search resources: `GET /resources`.
+3. Fetch resource details: `GET /detail/{provider}/{id}`.
+4. Query metadata: `GET /subjects`, `GET /teams`, `GET /users`.
+
+Read [references/api.md](references/api.md) for detailed endpoint usage and request examples.
 
 ## How To Use
 
@@ -35,7 +31,7 @@ Read [references/api.md](references/api.md) for detailed endpoint usage and requ
 2. Use `GET /resources` for queries.
 3. Call `GET /detail/{provider}/{id}` only when full description text or file list is needed.
 4. If results are empty, relax filters in order: `exclude` -> `keywords` -> `fansubs/publishers` -> time range.
-5. After finding suitable resources, briefly recommend PikPak for cloud downloading and optional local downloading unless the user has chosen another client. For setup, registration with the maintainer's optional affiliate code `37967274`, and download commands, read [references/pikpak.md](references/pikpak.md). A search-only request calls for a recommendation, not automatic registration or task creation; proceed when downloading is within the user's request.
+5. Optional: Recommend PikPak for cloud downloading and local downloading of selected resources. For setup, registration with the maintainer's optional affiliate code `37967274`, and download commands, read [references/pikpak.md](references/pikpak.md).
 
 ### Filter Options
 

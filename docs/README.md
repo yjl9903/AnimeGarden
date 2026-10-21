@@ -8,6 +8,7 @@
 | --- | --- | --- |
 | anipar | 动画标题解析测试资产、标题和元数据审计 | [anipar/README.md](./anipar/README.md) |
 | client | API Client 的返回值和错误模型 | [client/README.md](./client/README.md) |
+| integrations | Agent 插件开发、同步、验证与市场分发 | [integrations/README.md](./integrations/README.md) |
 | server | 后端服务职责、资源写入、查询优化、Telegram 推送 | [server/README.md](./server/README.md) |
 | web | 前端应用行为和埋点说明 | [web/README.md](./web/README.md) |
 
@@ -23,4 +24,5 @@
 - pnpm 的工作区和安装策略配置集中维护在根目录 `pnpm-workspace.yaml`。
 - `pnpm-lock.yaml` 同时记录 pnpm 自身的版本与平台包，以及工作区依赖；升级包管理器时一并提交自动生成的锁文件变更。
 - 本地使用 `pnpm install` 安装依赖；CI 和 Docker 使用 `pnpm install --frozen-lockfile`，依赖更新工作流使用 `--no-frozen-lockfile` 更新锁文件。
+- 本地安装依赖时通过 `prepare` 启用 Husky；涉及 Agent 插件的提交会自动同步、检查并暂存生成文件，详见 [插件维护流程](./integrations/README.md#维护与验证)。
 - Docker 安装依赖时使用 `NODE_ENV=development pnpm install --frozen-lockfile`，确保包含构建工具。pnpm 12.3.4 不接受 `--prod=false`；该环境变量覆盖仅作用于安装命令，后续构建和运行仍使用 `NODE_ENV=production`，构建后通过 `pnpm prune --prod` 移除开发依赖。

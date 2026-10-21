@@ -24,6 +24,28 @@
 
 [![home](./assets/home.jpeg)](https://animes.garden/resources/1?subject=477825)
 
+## 使用插件
+
+选择你使用的 Agent 客户端安装插件.
+
+**Codex**
+
+```bash
+codex plugin marketplace add yjl9903/AnimeGarden
+codex plugin add animegarden@animegarden
+```
+
+**Claude Code**
+
+```bash
+claude plugin marketplace add yjl9903/AnimeGarden
+claude plugin install animegarden@animegarden
+```
+
+安装后打开新会话，直接输入：
+
+> 用 AnimeGarden 查找葬送的芙莉莲 1080p 简体字幕资源，列出磁力链接.
+
 ## 使用 Skills
 
 **Anime Garden skill**: 用于从 Anime Garden 上检索动画资源.
@@ -38,12 +60,13 @@ npx skills add https://github.com/yjl9903/AnimeGarden --skill animegarden
 
 Anime Garden MCP 服务端点: `https://api.animes.garden/mcp`.
 
-你只需要将如下配置放入你的 MCP Client 即可.
+例如，在 Claude Code 的 MCP 配置中添加：
 
 ```json
 {
   "mcpServers": {
     "animegarden": {
+      "type": "http",
       "url": "https://api.animes.garden/mcp"
     }
   }

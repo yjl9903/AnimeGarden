@@ -1,0 +1,17 @@
+{
+  "name": "animegarden",
+  "owner": {
+    "name": "OneKuma",
+    "url": "https://github.com/yjl9903"
+  },
+  "metadata": {
+    "description": "Anime Garden skills and remote MCP for Cursor."
+  },
+  "plugins": [
+    {
+      "name": "animegarden",
+      "source": "plugins/agents",
+      "description": "Search Anime Garden anime resources with remote MCP and an optional local PikPak CLI workflow."
+    }
+  ]
+}
