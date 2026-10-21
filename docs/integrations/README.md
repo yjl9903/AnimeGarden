@@ -84,6 +84,24 @@ GitHub marketplace 分发与官方市场收录分别管理：
 
 以上市场提交与 GitHub Release 均不是同步脚本的副作用，需要维护者执行发布步骤。
 
+## MCP Registry 登记
+
+仓库根目录的 [server.json](../../server.json) 保存远程 MCP 的登记元数据，名称为 `garden.animes/animegarden`，端点为 `https://api.animes.garden/mcp`。它独立于客户端插件的 `mcp.json`，无需发布 npm 包；提交该文件不会自动登记。
+
+使用 [官方 DNS 认证流程](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/authentication.mdx#dns-authentication)验证 `animes.garden`。将公钥 TXT 记录放在根域名 `animes.garden`（DNS 后台通常填写 `@`），内容为 `v=MCPv1; k=ed25519; p=<公钥 Base64>`。私钥保存在安全的本地位置，例如已被 Git 忽略的 `.animegarden/mcp-registry/key.pem`，不提交到仓库。
+
+安装 `mcp-publisher`，在仓库根目录校验文件，完成 DNS 登录后手动发布：
+
+```sh
+brew install mcp-publisher
+mcp-publisher validate server.json
+# 按官方流程使用私钥执行 mcp-publisher login dns --domain animes.garden
+mcp-publisher publish server.json
+curl -fsS 'https://registry.modelcontextprotocol.io/v0.1/servers?search=garden.animes/animegarden'
+```
+
+Registry 使用独立于后端的插件发布版本，与 `plugins/agents/plugin.json` 的 `version` 保持一致，首次登记版本为 `0.1.1`。发布前手动将插件版本同步到 `server.json`；登记元数据更新时递增插件版本，并同步后再发布，已发布版本不可覆盖。端点变更时同步更新本文件和插件 MCP 配置。Registry 登记与各客户端官方目录审核分别进行。
+
 ## 官方格式依据
 
 - [Agent Plugins：包结构与边界](https://agent-plugins.org/plugin-authors/build-an-agent-plugin)
