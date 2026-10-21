@@ -62,7 +62,7 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-      - name: Purge frontend CDN cache
+      - name: Purge frontend page CDN cache
         if: ${{ success() && inputs.environment == 'production' }}
         timeout-minutes: 5
         env:
@@ -70,9 +70,16 @@ jobs:
           CLOUDFLARE_ZONE_ID: ${{ vars.CLOUDFLARE_ZONE_ID }}
           CF_SEND_TELEMETRY: 'false'
         run: |
+          # Purge the homepage by URL; a root prefix would also purge /assets/.
           pnpm exec cf cache purge \
             --zone "$CLOUDFLARE_ZONE_ID" \
-            --body '{"hosts":["animes.garden"]}' \
+            --body '{"files":["https://animes.garden/"]}' \
+            --force
+
+          # Page prefixes include query variants while preserving static assets.
+          pnpm exec cf cache purge \
+            --zone "$CLOUDFLARE_ZONE_ID" \
+            --body '{"prefixes":["animes.garden/resources","animes.garden/subject","animes.garden/detail","animes.garden/calendar","animes.garden/collection","animes.garden/anime","animes.garden/about","animes.garden/iframe","animes.garden/docs/api"]}' \
             --force
 
   server:
