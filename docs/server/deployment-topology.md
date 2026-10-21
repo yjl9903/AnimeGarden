@@ -24,8 +24,13 @@
 `.github/workflows/deploy-fly.yml` 的 production Web job
 使用 `.node-version` 和 `package.json` 中的 pnpm 版本安装冻结锁文件的依赖，
 在 `flyctl deploy` 成功后通过项目内的 `pnpm exec cf cache purge` 清理
-`animes.garden` hostname 的 CDN 缓存。`cf` 版本由根 `package.json` 和
+`animes.garden` 页面路径的 CDN 缓存。`cf` 版本由根 `package.json` 和
 `pnpm-lock.yaml` 统一管理。
+
+- 首页 `https://animes.garden/` 按完整 URL 清理，不使用根路径前缀。
+- `/resources`、`/subject`、`/detail`、`/calendar`、`/collection`、`/anime`、
+  `/about`、`/iframe`、`/docs/api` 按路径前缀清理，包括这些路径的查询参数变体。
+- `/assets/` 下的 JS/CSS、图片等静态资源保留缓存。新增页面路径时同步更新工作流中的前缀列表。
 
 GitHub 仓库的 Settings → Secrets and variables → Actions 需要配置：
 
