@@ -12,7 +12,7 @@ AnimeGarden 插件将资源搜索 skill 与公开 MCP 服务一起安装，支�
 | ------------------------------------------ | ---------------------------- | ------------------------------------------------------ |
 | skill、references、skill UI 元数据与许可证 | `skills/animegarden/`        | 三个包的 `skills/animegarden/`；许可证另复制到包根目录 |
 | 插件名称、版本、作者等                     | `plugins/agents/plugin.json` | 各适配 manifest 支持的字段                             |
-| 插件展示图标 | `apps/web/public/pwa-512x512.png` | `plugins/agents/assets/icon.png` |
+| 插件展示图标 | `apps/web/public/pwa-512x512.png` | `plugins/agents/assets/icon.png`、`plugins/claude/assets/icon.png` |
 | 远程 MCP 定义                              | `plugins/agents/mcp.json`    | 各平台 MCP 配置                                        |
 | 包内用户说明                              | `plugins/agents/README.md` | `plugins/claude/README.md` |
 | 平台转换和市场条目                         | `scripts/package-plugins.ts` | 三个包、三个 marketplace 入口                          |
@@ -28,6 +28,8 @@ AnimeGarden 插件将资源搜索 skill 与公开 MCP 服务一起安装，支�
 插件包自包含，不使用指向包外的符号链接。发布副本作为可安装内容随主分支提交；ZIP 和其他构建文件保留在忽略的 `dist/` 中。
 
 OpenAI 插件展示字段放在 `plugins/agents/plugin.json` 的 `extensions.com.openai.interface`：`displayName` 为 `AnimeGarden`，`logo` 和 `composerIcon` 引用包内樱花图标。同步到 Claude manifest 时去掉平台专属 `extensions`。MCP 配置键保持 `animegarden`；当前 Codex 桌面端详情页会将其首字母大写为 `Animegarden`，该行与插件展示名独立，并复用插件 logo。
+
+Claude manifest 单独生成 `icon: "./assets/icon.png"`，复用同一张樱花图标。[官方字段说明](https://code.claude.com/docs/en/plugins-reference#directory-listing-fields)明确该字段用于 Anthropic 插件目录展示，Claude Code 加载时不读取；该字段仅放在插件 manifest 中，不放入 marketplace 入口。
 
 只修改表中的维护源，再通过同步脚本生成各包内容。开发、维护和发布流程维护在本文，不另建 `plugins/README.md`。包内用户说明维护在 [agents README](../../plugins/agents/README.md)，同步到 claude 包，不手工维护多份；Antigravity 暂不生成 README。
 
