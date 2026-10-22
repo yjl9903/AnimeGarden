@@ -1,5 +1,3 @@
-import 'dotenv/config';
-
 import fs from 'fs-extra';
 import path from 'path';
 import { breadc } from 'breadc';
@@ -9,9 +7,12 @@ import { SupportProviders } from '@animegarden/client';
 
 import packageJson from '../package.json' with { type: 'json' };
 
+import { loadEnvironment } from './env.ts';
 import { makeServer, makeExecutor } from './server/index.ts';
 import { type SystemOptions, makeSystem } from './system/index.ts';
 import { parseAdminPatchArguments, requestAdminAPI } from './manager/admin.ts';
+
+loadEnvironment();
 
 const { description, version } = packageJson;
 
