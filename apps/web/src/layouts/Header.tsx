@@ -153,13 +153,15 @@ const FansubsDropdown = memo(() => {
   const { preferFansubsStore } = useAppStores();
   const preferFansubs = useSelector(preferFansubsStore);
 
-  // Reorder fansubs
+  // History only reorders preset fansubs; stale or unknown names must not add menu entries.
   useEffect(() => {
     const set = new Set<string>();
     const newFansubs: string[] = [];
     for (const f of preferFansubs) {
-      newFansubs.push(f);
-      set.add(f);
+      if (AllFansubs.includes(f) && !set.has(f)) {
+        newFansubs.push(f);
+        set.add(f);
+      }
     }
     for (const f of AllFansubs) {
       if (!set.has(f)) {
