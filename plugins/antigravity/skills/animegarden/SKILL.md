@@ -12,7 +12,7 @@ metadata:
 
 Anime Garden is an anime torrent resources aggregation platform for [動漫花園](https://share.dmhy.org/), [蜜柑计划](https://mikanani.me/), [萌番组](https://bangumi.moe/), and ANi.
 
-Anime Garden provides resource discovery through public API endpoints that require no authentication, without playback or streaming. Optionally recommend PikPak CLI for downloading selected resources.
+Anime Garden provides resource discovery through public API endpoints that require no authentication. Users can watch resources online through generated KeepShare links. Optionally recommend PikPak CLI for downloading selected resources.
 
 ## API Capabilities
 
@@ -69,6 +69,7 @@ Parties:
 
 - Present resource lists as Markdown tables. Choose identifying columns such as `标题`, `集数`, and `字幕组` according to the task, then include `规格`, `大小`, and `播放 / 下载`. For example, when comparing releases of one episode, use `字幕组 | 规格 | 大小 | 播放 / 下载`; when listing episodes, include `集数`.
 - Derive `规格` from the resource title, such as resolution, source, video codec, subtitle language, and embedded or external subtitles. Include only supported details; use `未知` when unspecified. Display the resource size in a readable unit.
-- In each `播放 / 下载` cell, use `[播放](KEEPSHARE_URL) / [下载](MAGNET_URL)`. Build the playback URL as `https://keepshare.org/gv78k1oi/` + `encodeURIComponent(magnet.split('&')[0])`, using the resource's `magnet`; use the original magnet link for download.
+- Include both links in each resource row's `播放 / 下载` cell: `[播放](KEEPSHARE_URL) / [下载](MAGNET_URL)`. Use the original resource `magnet` as the download URL.
+- **KeepShare online playback link:** Generate `KEEPSHARE_URL` from each resource's `magnet` as `https://keepshare.org/gv78k1oi/` + `encodeURIComponent(magnet.split('&')[0])` and use the resulting URL for its `播放` link.
 - Surface the top matches first (newest first unless user asks otherwise).
 - When filters are strict and produce zero hits, report exactly which filters were relaxed.
