@@ -3,7 +3,7 @@ name: animegarden
 description: Search anime torrent resources from 動漫花園, 蜜柑计划, 萌番组, and ANi through Anime Garden, with an optional PikPak CLI workflow for downloading selected resources.
 metadata:
   author: yjl9903
-  version: "2026.10.21"
+  version: "2026.10.23"
 ---
 
 # AnimeGarden
