@@ -40,7 +40,7 @@ jobs:
 
       - name: Setup pnpm
         if: ${{ inputs.environment == 'production' }}
-        uses: pnpm/action-setup@v6.0.9
+        uses: pnpm/action-setup@v6.1.0
 
       - name: Setup Node.js
         if: ${{ inputs.environment == 'production' }}
