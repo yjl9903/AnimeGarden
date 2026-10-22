@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { ArrowDown, Check, Copy, Wrench } from 'lucide-react';
 
 import Layout from '~/layouts/Layout';
+import { OpenInChat } from '~/components/Skills/OpenInChat';
 import { SkillPrompt } from '~/components/Skills/SkillPrompt';
 import { getKeepShareURL, openMagnetLink } from '~/utils/url';
 
@@ -287,6 +288,7 @@ export default function SkillsPage() {
           >
             <div className="skills-section-heading">
               <h2 id={`skill-${option.id}-title`}>{option.name}</h2>
+              {option.kind === 'prompt' && <OpenInChat prompt={option.content} />}
             </div>
             <div className="skills-install">
               <div className="skills-terminal">
@@ -315,16 +317,19 @@ export default function SkillsPage() {
             <h2 id="examples-title">试着问它</h2>
           </div>
           <div className="skills-examples">
-            {examples.map((example) => (
-              <article key={example.title} className="skills-example">
-                <h3>{example.title}</h3>
-                <p>{example.prompt}</p>
-                <CopyButton
-                  text={example.prompt.replace('AnimeGarden', `[AnimeGarden](${skillURL})`)}
-                  label="复制示例"
-                />
-              </article>
-            ))}
+            {examples.map((example) => {
+              const prompt = example.prompt.replace('AnimeGarden', `[AnimeGarden](${skillURL})`);
+              return (
+                <article key={example.title} className="skills-example">
+                  <h3>{example.title}</h3>
+                  <p>{example.prompt}</p>
+                  <div className="flex items-center gap-3">
+                    <CopyButton text={prompt} label="复制示例" />
+                    <OpenInChat prompt={prompt} />
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </section>
       </div>
