@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AnimeGardenError } from '@animegarden/client';
+import { AnimeGardenError, fetchResources, fetchResourceDetail } from '@animegarden/client';
 
 import { handleMarkdownRequest } from '../src/markdown/index.server';
 
@@ -150,6 +150,60 @@ function expectMinimalSeoFrontmatter(body: string) {
 describe('markdown responses', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  it.each(['/skills', '/skills/'])(
+    'renders static onboarding at %s with actionable links',
+    async (path) => {
+      const response = await handleMarkdownRequest(
+        new Request(`https://animes.garden${path}`, { headers: { Accept: 'text/markdown' } })
+      );
+      const body = await response.text();
+
+      expect(response.status).toBe(200);
+      expect(response.headers.get('content-type')).toBe('text/markdown; charset=utf-8');
+      expect(response.headers.get('vary')).toBe('Accept');
+      expect(response.headers.get('cache-control')).toBe('public, max-age=3600, s-maxage=86400');
+      expect(response.headers.get('x-markdown-tokens')).toMatch(/^\d+$/);
+      expect(body).toContain('使用 Skills / MCP');
+      expectMinimalSeoFrontmatter(body);
+      expect(body).toContain('\n## 直接使用\n');
+      expect(body).toContain('\n## 安装 Skill\n');
+      expect(body).not.toContain('## 使用 Skill');
+      expect(body).toContain(
+        '使用 [AnimeGarden](https://raw.githubusercontent.com/yjl9903/AnimeGarden/main/skills/animegarden/SKILL.md)'
+      );
+      expect(body).toContain(
+        'npx skills add https://github.com/yjl9903/AnimeGarden --skill animegarden'
+      );
+      expect(body).toContain('codex plugin add animegarden@animegarden');
+      expect(body).toContain('\n## 安装 MCP\n');
+      expect(body.indexOf('## 安装 MCP')).toBeGreaterThan(body.indexOf('## 安装 Skill'));
+      expect(body.indexOf('## 安装 MCP')).toBeLessThan(body.indexOf('## 安装插件'));
+      expect(body).toContain('codex mcp add animegarden --url https://api.animes.garden/mcp');
+      expect(body).toContain(
+        'claude mcp add --transport http --scope user animegarden https://api.animes.garden/mcp'
+      );
+      expect(body).toContain('claude plugin install animegarden@animegarden');
+      expect(body).toContain('## 试着问它');
+      expect(body).toContain('## 示例对话（静态）');
+      expect(body).toContain('[千夏字幕组](https://animes.garden/detail/dmhy/716882)');
+      expect(body).toMatch(/\[播放\]\(https:\/\/keepshare\.org\/[^/]+\/magnet%3A/);
+      expect(body).toContain('[下载](magnet:?xt=urn:btih:DGGCBVK5HAX3UIAEQW3WS22SDPR5L36F)');
+      expect(fetchResources).not.toHaveBeenCalled();
+      expect(fetchResourceDetail).not.toHaveBeenCalled();
+    }
+  );
+
+  it('returns the same onboarding headers without a body for HEAD', async () => {
+    const get = await handleMarkdownRequest(new Request('https://animes.garden/skills'));
+    const head = await handleMarkdownRequest(
+      new Request('https://animes.garden/skills', { method: 'HEAD' })
+    );
+
+    expect(head.status).toBe(200);
+    expect(await head.text()).toBe('');
+    expect([...head.headers]).toEqual([...get.headers]);
   });
 
   it('returns markdown with negotiation headers for the home page', async () => {

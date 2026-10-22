@@ -41,31 +41,34 @@ export default function Index({ data, feedURL, latestSeason, path, renderError }
   return (
     <Layout feedURL={feedURL} timestamp={timestamp}>
       <div className="w-full pt-13 pb-24">
-        {latestSeason && (
-          <header className="mb-12 lt-sm:mb-6 flex min-h-10 items-end justify-between gap-4 pl-4 lt-md:pl-0 lt-sm:flex-col lt-sm:items-start">
-            <div>
-              <div className="flex items-baseline gap-4 lt-sm:flex-col lt-sm:items-start lt-sm:gap-2">
-                <h1 className="text-3xl lt-sm:text-2xl font-bold leading-tight tracking-normal select-none">
-                  <Link
-                    {...getCalendarRouteLink(latestSeason)}
-                    className="text-inherit text-link-active"
-                  >
-                    <span
-                      className="anime-season-emoji text-2xl font-quicksand font-bold"
-                      aria-hidden="true"
-                    >
-                      {calendarSeason.emoji}
-                    </span>
-                    {calendarSeason.title}放送中...
-                  </Link>
-                </h1>
-                <Link {...getCalendarRouteLink(latestSeason)} className="text-link text-base">
-                  → 前往周历
-                </Link>
-              </div>
-            </div>
-          </header>
-        )}
+        <header className="mb-12 lt-sm:mb-6 flex min-h-10 flex-wrap items-baseline gap-4 pl-4 lt-md:pl-0 lt-sm:gap-2">
+          {latestSeason && (
+            <h1 className="text-3xl lt-sm:text-2xl lt-sm:w-full font-bold leading-tight tracking-normal select-none">
+              <Link
+                {...getCalendarRouteLink(latestSeason)}
+                className="text-inherit text-link-active"
+              >
+                <span
+                  className="anime-season-emoji text-2xl font-quicksand font-bold"
+                  aria-hidden="true"
+                >
+                  {calendarSeason.emoji}
+                </span>
+                {calendarSeason.title}放送中...
+              </Link>
+            </h1>
+          )}
+          <div className="flex flex-wrap items-baseline gap-4">
+            {latestSeason && (
+              <Link {...getCalendarRouteLink(latestSeason)} className="text-link text-base">
+                → 前往周历
+              </Link>
+            )}
+            <Link to="/skills" className="text-link text-base">
+              → 使用 Skills / MCP
+            </Link>
+          </div>
+        </header>
         {ok ? (
           <Resources
             resources={resources}

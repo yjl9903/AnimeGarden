@@ -11,6 +11,7 @@ import type { QueryClient } from '@tanstack/react-query';
 
 import { Toaster } from '~/components/ui/sonner';
 import { NavHeight, SearchTop, HeroHeight } from '~/layouts/Layout';
+import { SkillsOnboarding } from '~/layouts/Onboarding/SkillsOnboarding';
 import type { AppStores } from '~/stores';
 import { AgentDiscoveryLinkHeader, appendLinkHeader } from '~/utils/response';
 import { DefaultRobotsContent } from '~/utils';
@@ -120,6 +121,7 @@ function RootComponent() {
   return (
     <RootDocument>
       <Outlet />
+      <SkillsOnboarding />
     </RootDocument>
   );
 }

@@ -80,6 +80,7 @@ async function getSitemapUrls(pathname: string): Promise<SitemapItemLoose[] | un
     if (pathname === '/sitemap-0.xml') {
       return [
         { url: SITE },
+        { url: `${SITE}/skills` },
         { url: getResourcesUrl({ preset: 'bangumi', type: '动画' }) },
         { url: getResourcesUrl({ type: '动画' }) },
         { url: getResourcesUrl({ type: '合集' }) },

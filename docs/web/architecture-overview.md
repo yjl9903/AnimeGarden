@@ -18,7 +18,7 @@ Web 不再提供 `/api/*`、`/feed.xml` 或 `/collection/:hash/feed.xml` 代理�
 
 `vite.config.ts` 使用 `tanstackStart()`、React Vite plugin、UnoCSS、Icons、Info、Analytics、Inline 和 tsconfig paths。Cloudflare Worker 构建入口、wrangler 配置和 Worker 静态资源适配已移除，Web 只支持 Node/Fly 部署。
 
-`src/start.ts` 注册 TanStack Start 全局 request middleware。普通浏览器请求继续走 SSR；`GET` / `HEAD` 且 `Accept: text/markdown` 的已支持页面路径会在进入 HTML SSR 前由 `src/markdown/` 返回应用侧拼装的 Markdown，避免 TanStack Start 的 HTML-only Accept 检查把 agent 请求返回 500。Markdown negotiation 支持 `/anime` 和 `/calendar/:season` 等已登记页面。非 HTML 的 `router` 类型 `GET` 200 响应会统一生成强 ETag，并在 `If-None-Match` 命中时返回 304；HTML 页面和 `serverFn` 不进入这层 ETag 处理，避免干扰 SSR streaming、TanStack RPC、CSRF 和序列化响应。Sitemap server routes 另外提供显式 `HEAD` handler，用 GET 同源内容生成一致的 ETag / 304。`/llms.txt`、`/openapi.json`、`/.well-known/*` 等 handler route 不进入 Markdown negotiation，但仍属于非 HTML GET 的 ETag 覆盖范围。
+`src/start.ts` 注册 TanStack Start 全局 request middleware。普通浏览器请求继续走 SSR；`GET` / `HEAD` 且 `Accept: text/markdown` 的已支持页面路径会在进入 HTML SSR 前由 `src/markdown/` 返回应用侧拼装的 Markdown，避免 TanStack Start 的 HTML-only Accept 检查把 agent 请求返回 500。Markdown negotiation 支持 `/skills`、`/anime` 和 `/calendar/:season` 等已登记页面。非 HTML 的 `router` 类型 `GET` 200 响应会统一生成强 ETag，并在 `If-None-Match` 命中时返回 304；HTML 页面和 `serverFn` 不进入这层 ETag 处理，避免干扰 SSR streaming、TanStack RPC、CSRF 和序列化响应。Sitemap server routes 另外提供显式 `HEAD` handler，用 GET 同源内容生成一致的 ETag / 304。`/llms.txt`、`/openapi.json`、`/.well-known/*` 等 handler route 不进入 Markdown negotiation，但仍属于非 HTML GET 的 ETag 覆盖范围。
 
 ## 请求与数据流
 
@@ -78,9 +78,12 @@ ICO/PNG，现代浏览器可使用可缩放 SVG，Apple 设备使用 180×180 to
 | `/anime`                         | `routes/anime/route.tsx`                        | 重定向到当前 active `/calendar/:season`        |
 | `/calendar/:season`              | `routes/calendar/$season.tsx`                   | `pages/anime/route.tsx`                        |
 | `/docs/api`                      | `routes/docs/api/route.tsx`                     | `pages/docs.api/route.tsx`                     |
+| `/skills`                        | `routes/skills.tsx`                            | `pages/skills/route.tsx`                       |
 | `/iframe`                        | `routes/iframe.tsx`                             | `pages/iframe/route.tsx`                       |
 
 ## 修改入口建议
+
+`/skills` 是 Agent Skills onboarding 页面，复用全站 Layout、搜索、收藏夹侧栏与主题。正文为静态内容，不依赖资源 API 成功返回；全局导航和页脚仍使用现有查询。使用方式分为「直接使用」「安装 Skill」「安装 MCP」和「安装插件」四个同级章节：Skill 可通过 skills CLI 本地安装，也可将包含 GitHub 原始 SKILL.md 地址的提示词交给支持网页读取的 Agent 直接使用；插件提供 Codex 和 Claude Code 安装命令，与仓库 README 同步维护。Skill 的「直接使用」与「安装 Skill」以两个独立代码块同时展示，直接使用和首屏复制共享带 Skill Markdown 链接的提示词；MCP 和插件客户端保留独立的紧凑标签切换。MCP 章节提供 Codex 和 Claude Code 的 HTTP 服务添加命令，端点为 `https://api.animes.garden/mcp`，Claude Code 使用用户级配置；HTML 和 Markdown 响应共用命令定义。代码块共享渲染和复制按钮。页脚将原 Agent Skills 与 MCP 入口合并为「Skills / MCP」，指向此页。页面支持复制命令和提示词，不展示常见问题；首屏使用无外框的 Codex 风格静态对话展示示例提示词、始终展开的静态搜索记录与结果表格，不展示应用标题栏或输入框。对话的中性色、字号和间距参照维护者提供的 Codex 截图；示例统一使用上伊那牡丹；prompt 引用和搜索记录复用网站 favicon。表格为站内查询并核对详情所得的第一话固定样例，表格按字幕组、规格、大小和播放 / 下载分列；字幕组链接进入 detail，规格从真实标题及文件列表提取，播放复用 `getKeepShareURL` 跳转 KeepShare，下载使用磁力链接，不在页面加载时实时搜索。复制后的提示词由用户在 Agent 中执行。
 
 - 改页面数据加载、head 或 canonical：先看 `src/routes/**`，页面组件只接收 route 传入的 props。
 - 改资源表格或分页：先看 `src/components/Resources/` 和 `src/pages/resources.($page)/`。
@@ -88,6 +91,8 @@ ICO/PNG，现代浏览器可使用可缩放 SVG，Apple 设备使用 180×180 to
 - 改收藏夹：先看 `src/layouts/Sidebar/`、`src/stores/collection.ts`、`src/pages/collection.$hash/route.tsx`。
 - 改动画周历：先看 `src/routes/anime/route.tsx`、`src/routes/calendar/$season.tsx`、`src/pages/anime/route.tsx` 和 `src/query/subject.ts`；`is_active` 只用于默认季度选择，不能用来过滤历史周历。
 - 改部署：先看 `server.mjs`、`vite.config.ts` 和 Fly/Docker 配置；改 feed 链接：先看 `src/utils/url.ts`；改 sitemap：先看 `src/sitemap/index.server.ts` 和 `src/routes/sitemap-*.ts`。
+
+首页新番标题行中，「→ 前往周历」后紧接常驻的「→ 使用 Skills / MCP」入口，指向 `/skills`，不依赖新番季度数据或弹窗展示次数。全局 onboarding 组件与展示状态逻辑位于 `src/layouts/Onboarding/`。`SkillsOnboarding` 在右下角展示带 New 标签的「把 Anime Garden 带进你的 AI 助手」标题，以及静态聊天输入框；输入框和 Skills 页复用 `src/components/Skills/SkillPrompt.tsx` 组件，统一图标、链接、字体与基线，操作区仅保留发送按钮；圆形发送按钮引导进入 `/skills`。所有环境统一通过 localStorage 累计最多展示两次，sessionStorage 限制同一标签页会话只展示一次；首次进入 `/skills` 不展示，点击发送按钮后停止后续提示，存储不可用时不展示。
 
 ## Route / Page 边界
 
@@ -98,3 +103,9 @@ ICO/PNG，现代浏览器可使用可缩放 SVG，Apple 设备使用 180×180 to
 loader 是 route 的数据入口，但不是 server-only 边界：SSR 首次渲染会在服务端执行，客户端导航、预加载和缓存失效时也可能从浏览器侧触发。需要使用 Node-only 依赖、私密环境变量或只应在服务端运行的逻辑时，应包进 TanStack Start `createServerFn()`，再由 loader 调用。
 
 `src/pages/**` 只负责浏览器侧页面展示、局部交互和组合业务组件。页面文件不再导出 loader/head/meta，不直接调用 `useLoaderData()`，也不承担 URL 到数据模型的转换；需要的数据都通过 route props 传入。
+
+### Skills Markdown 响应
+
+`GET /skills` 或 `HEAD /skills` 携带 `Accept: text/markdown` 时，由 `src/markdown/skills.server.ts` 返回 Markdown；普通浏览器继续返回 HTML。`/skills/` 也支持内容协商。Markdown 包含直接使用提示词、Skill 安装命令、两个客户端的插件安装命令、带 Skill 链接的示例提示词，以及明确标注为静态的资源示例表格；详情和播放使用绝对链接，下载保留磁力链接。
+
+HTML 与 Markdown 共用 `src/pages/skills/content.ts` 的元信息、安装命令、提示词和资源数据，不依赖实时资源查询。响应沿用 `Vary: Accept`、`x-markdown-tokens`、Docs 缓存策略以及全局 GET ETag；HEAD 只返回响应头。

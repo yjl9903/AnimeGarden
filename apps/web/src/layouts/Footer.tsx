@@ -112,6 +112,16 @@ export const Footer = memo((props: FooterProps) => {
             </a>
           </div>
           <div className="flex mt-2">
+            <span className="text-base-900 font-bold select-none">开放</span>
+            <span className="i-carbon:chevron-right lt-sm:text-base text-base-900 text-xl font-bold select-none relative top-[2px]"></span>
+            <Link to="/skills" className="ml-2 lt-sm:ml-2">
+              Skills / MCP
+            </Link>
+            <Link to="/docs/api" className="ml-4 lt-sm:ml-2">
+              API 文档
+            </Link>
+          </div>
+          <div className="flex mt-2">
             <span className="text-base-900 font-bold select-none">关于</span>
             <span className="i-carbon:chevron-right text-xl lt-sm:text-base text-base-900 font-bold select-none relative top-[2px]"></span>
             <a
@@ -134,37 +144,6 @@ export const Footer = memo((props: FooterProps) => {
             >
               AnimeSpace 计划
             </a>
-          </div>
-          <div className="flex mt-2">
-            <span className="text-base-900 font-bold select-none">开放</span>
-            <span className="i-carbon:chevron-right lt-sm:text-base text-base-900 text-xl font-bold select-none relative top-[2px]"></span>
-            <a
-              href="https://github.com/yjl9903/AnimeGarden?tab=readme-ov-file#%E4%BD%BF%E7%94%A8-skills"
-              target="_blank"
-              className="ml-2 lt-sm:ml-2"
-              onClick={onExternalLinkClick(
-                '开放',
-                'Agent Skills',
-                'https://github.com/yjl9903/AnimeGarden?tab=readme-ov-file#%E4%BD%BF%E7%94%A8-skills'
-              )}
-            >
-              Agent Skills
-            </a>
-            <a
-              href="https://github.com/yjl9903/AnimeGarden?tab=readme-ov-file#%E4%BD%BF%E7%94%A8-mcp"
-              target="_blank"
-              className="ml-4 lt-sm:ml-2"
-              onClick={onExternalLinkClick(
-                '开放',
-                'MCP',
-                'https://github.com/yjl9903/AnimeGarden?tab=readme-ov-file#%E4%BD%BF%E7%94%A8-mcp'
-              )}
-            >
-              MCP
-            </a>
-            <Link to="/docs/api" className="ml-4 lt-sm:ml-2">
-              API 文档
-            </Link>
           </div>
           <div className="flex mt-2">
             <span className="text-base-900 font-bold select-none">更多</span>

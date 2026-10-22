@@ -5,6 +5,7 @@ import { renderDetailMarkdown } from './detail.server';
 import { renderHomeMarkdown } from './home.server';
 import { renderResourcesMarkdown } from './resources.server';
 import { renderSubjectMarkdown } from './subject.server';
+import { renderSkillsMarkdown } from './skills.server';
 
 export async function handleMarkdownRequest(request: Request) {
   const url = new URL(request.url);
@@ -27,6 +28,7 @@ async function dispatchMarkdown(url: URL): Promise<MarkdownResult | Response> {
 
   if (pathname === '/') return renderHomeMarkdown();
   if (pathname === '/anime') return renderAnimeMarkdown();
+  if (pathname === '/skills') return renderSkillsMarkdown();
   if (pathname === '/resources') return renderResourcesMarkdown(url, 1);
 
   const calendarMatch = pathname.match(/^\/calendar\/(\d{4}-\d{2})$/);

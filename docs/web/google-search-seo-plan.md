@@ -202,6 +202,7 @@ Sitemap Index：`https://animes.garden/sitemap-index.xml`。
 - Subject 页面。
 - 按月份拆分的资源详情页。
 - API 文档。
+- Skills / MCP 使用引导页（`/skills`，收录于 `sitemap-0.xml`）。
 
 当前不包含 `/anime`、iframe、收藏夹、About 和普通资源分页。
 

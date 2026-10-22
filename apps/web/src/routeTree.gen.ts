@@ -20,6 +20,7 @@ import { Route as ResourcesRouteRouteImport } from './routes/resources/route'
 import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as SitemapIndexDotxmlRouteImport } from './routes/sitemap-index[.]xml'
 import { Route as SitemapChar123sitemapChar125DotxmlRouteImport } from './routes/sitemap-{$sitemap}[.]xml'
+import { Route as SkillsRouteImport } from './routes/skills'
 import { Route as DotwellKnownApiCatalogRouteImport } from './routes/[.]well-known/api-catalog'
 import { Route as CalendarSeasonRouteImport } from './routes/calendar/$season'
 import { Route as CollectionHashRouteRouteImport } from './routes/collection/$hash/route'
@@ -87,6 +88,11 @@ const SitemapChar123sitemapChar125DotxmlRoute =
     path: '/sitemap-{$sitemap}.xml',
     getParentRoute: () => rootRouteImport,
   } as any)
+const SkillsRoute = SkillsRouteImport.update({
+  id: '/skills',
+  path: '/skills',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DotwellKnownApiCatalogRoute = DotwellKnownApiCatalogRouteImport.update({
   id: '/.well-known/api-catalog',
   path: '/.well-known/api-catalog',
@@ -152,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
   '/sitemap-{$sitemap}.xml': typeof SitemapChar123sitemapChar125DotxmlRoute
+  '/skills': typeof SkillsRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
@@ -174,6 +181,7 @@ export interface FileRoutesByTo {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
   '/sitemap-{$sitemap}.xml': typeof SitemapChar123sitemapChar125DotxmlRoute
+  '/skills': typeof SkillsRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
@@ -198,6 +206,7 @@ export interface FileRoutesById {
   '/robots.txt': typeof RobotsDottxtRoute
   '/sitemap-index.xml': typeof SitemapIndexDotxmlRoute
   '/sitemap-{$sitemap}.xml': typeof SitemapChar123sitemapChar125DotxmlRoute
+  '/skills': typeof SkillsRoute
   '/collection/$hash': typeof CollectionHashRouteRoute
   '/docs/api': typeof DocsApiRouteRoute
   '/subject/$subject': typeof SubjectSubjectRouteRouteWithChildren
@@ -223,6 +232,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap-index.xml'
     | '/sitemap-{$sitemap}.xml'
+    | '/skills'
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
@@ -245,6 +255,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap-index.xml'
     | '/sitemap-{$sitemap}.xml'
+    | '/skills'
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
@@ -268,6 +279,7 @@ export interface FileRouteTypes {
     | '/robots.txt'
     | '/sitemap-index.xml'
     | '/sitemap-{$sitemap}.xml'
+    | '/skills'
     | '/collection/$hash'
     | '/docs/api'
     | '/subject/$subject'
@@ -292,6 +304,7 @@ export interface RootRouteChildren {
   RobotsDottxtRoute: typeof RobotsDottxtRoute
   SitemapIndexDotxmlRoute: typeof SitemapIndexDotxmlRoute
   SitemapChar123sitemapChar125DotxmlRoute: typeof SitemapChar123sitemapChar125DotxmlRoute
+  SkillsRoute: typeof SkillsRoute
   CollectionHashRouteRoute: typeof CollectionHashRouteRoute
   DocsApiRouteRoute: typeof DocsApiRouteRoute
   SubjectSubjectRouteRoute: typeof SubjectSubjectRouteRouteWithChildren
@@ -378,6 +391,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap-{$sitemap}.xml'
       fullPath: '/sitemap-{$sitemap}.xml'
       preLoaderRoute: typeof SitemapChar123sitemapChar125DotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/skills': {
+      id: '/skills'
+      path: '/skills'
+      fullPath: '/skills'
+      preLoaderRoute: typeof SkillsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.well-known/api-catalog': {
@@ -491,6 +511,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapIndexDotxmlRoute: SitemapIndexDotxmlRoute,
   SitemapChar123sitemapChar125DotxmlRoute:
     SitemapChar123sitemapChar125DotxmlRoute,
+  SkillsRoute: SkillsRoute,
   CollectionHashRouteRoute: CollectionHashRouteRoute,
   DocsApiRouteRoute: DocsApiRouteRoute,
   SubjectSubjectRouteRoute: SubjectSubjectRouteRouteWithChildren,

@@ -18,7 +18,7 @@
 
 | 事件名      | 触发场景                 | 属性                                                                        |
 | ----------- | ------------------------ | --------------------------------------------------------------------------- |
-| `download`  | 资源下载链接点击         | `resource = {provider}:{providerId}`，`source`                              |
+| `download`  | 资源下载链接点击（含 Skills 示例） | `resource = {provider}:{providerId}`，`source`（Skills 示例为 `skills`）                              |
 | `pikpak`    | PikPak 播放/在线播放点击 | `resource = {provider}:{providerId}`，通过 `data-umami-event-resource` 上报 |
 | `feed.open` | RSS 链接点击             | `href`                                                                      |
 

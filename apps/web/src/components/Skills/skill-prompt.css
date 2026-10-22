@@ -1,0 +1,31 @@
+.skill-prompt {
+  color: #1b1b1b;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.skill-prompt-mention {
+  display: inline;
+  white-space: nowrap;
+  color: #555dc2;
+  text-decoration: none;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.skill-prompt-mention:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+}
+.skill-prompt-mention img {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  vertical-align: -3px;
+}
+.dark .skill-prompt {
+  color: #ededed;
+}
+.dark .skill-prompt-mention {
+  color: #a5aaff;
+}

@@ -1,0 +1,379 @@
+.skills-page {
+  --skills-ink: #292629;
+  --skills-muted: #757077;
+  --skills-line: #eae5e6;
+  --skills-soft: #fcf8f7;
+  --skills-paper: #fff;
+  --skills-panel-padding: 24px;
+  color: var(--skills-ink);
+  /* Match the shared footer and page headings; Layout owns the content width. */
+  width: 100%;
+  padding: 52px 0 64px 16px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.dark .skills-page {
+  --skills-ink: #ece7e9;
+  --skills-muted: #aaa2a7;
+  --skills-line: #383034;
+  --skills-soft: #211a1d;
+  --skills-paper: #151214;
+}
+.skills-page a,
+.skills-page button {
+  -webkit-tap-highlight-color: transparent;
+}
+.skills-page button {
+  cursor: pointer;
+}
+.skills-page :is(a, button):focus-visible {
+  outline-color: var(--colors-pink-600);
+  outline-width: 2px;
+  outline-style: solid;
+  outline-offset: 5px;
+}
+.dark .skills-page :is(a, button):focus-visible {
+  outline-color: var(--colors-pink-400);
+}
+.skills-intro {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  align-items: center;
+  gap: 54px;
+  padding: 8px 0 24px;
+}
+.skills-intro h1 {
+  margin: 14px 0 18px;
+  font-size: clamp(32px, 3.2vw, 44px);
+  font-weight: 650;
+  line-height: 1.35;
+  letter-spacing: -1.5px;
+}
+.skills-lead {
+  color: var(--skills-muted);
+  font-size: 14px;
+  line-height: 1.95;
+}
+.skills-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin: 26px 0 14px;
+}
+.skills-primary {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  border-radius: 7px;
+  padding: 10px 18px;
+  color: #fff;
+  font-weight: 500;
+}
+/* Neutral conversation tokens sampled from the supplied Codex screenshot. */
+.skills-conversation {
+  --chat-ink: #1b1b1b;
+  --chat-muted: #757575;
+  --chat-status: #8c8c8d;
+  --chat-bubble: #f0f0f1;
+  --chat-border: #eaeaeb;
+  min-width: 0;
+  margin: 0;
+  color: var(--chat-ink);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+}
+.dark .skills-conversation {
+  --chat-ink: #ededed;
+  --chat-muted: #a3a3a3;
+  --chat-status: #909090;
+  --chat-bubble: #292929;
+  --chat-border: #333;
+}
+.skills-chat-user-message {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.skills-chat-user-message > .skills-copy {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 4px;
+  color: var(--chat-status);
+}
+.skills-chat-user-message > .skills-copy svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 1.5;
+}
+.skills-chat-user {
+  width: fit-content;
+  max-width: 70%;
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 20px;
+  background: var(--chat-bubble);
+}
+.skills-chat-status {
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--chat-border);
+  color: var(--chat-status);
+}
+.skills-chat-commentary {
+  margin-top: 16px;
+}
+.skills-chat-tool {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--chat-muted);
+}
+.skills-chat-tool + .skills-chat-tool {
+  margin-top: 6px;
+}
+.skills-chat-tool-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  /* Align activity icons with the first line when the label wraps. */
+  margin-top: calc((1em * 1.7 - 16px) / 2);
+}
+.skills-chat-answer {
+  margin-top: 20px;
+}
+.skills-chat-answer strong {
+  font-weight: 600;
+}
+.skills-chat-answer table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 13px;
+  text-align: left;
+}
+.skills-chat-answer :is(th, td) {
+  padding: 9px 12px 9px 0;
+  border-bottom: 1px solid var(--chat-border);
+  vertical-align: top;
+}
+.skills-chat-answer th {
+  font-weight: 500;
+}
+.skills-chat-answer :is(th, td):first-child,
+.skills-chat-answer :is(th, td):nth-child(n + 3) {
+  white-space: nowrap;
+}
+.skills-chat-answer :is(th, td):last-child {
+  padding-right: 0;
+  text-align: right;
+}
+.skills-conversation a {
+  color: #555dc2;
+  text-decoration: none;
+  text-decoration-style: dashed;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+.skills-conversation a:is(:hover, :focus-visible) {
+  text-decoration-line: underline;
+}
+.dark .skills-conversation a {
+  color: #a5aaff;
+}
+.skills-section {
+  margin-top: 42px;
+  scroll-margin-top: 128px;
+}
+.skills-section-heading {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.skills-section h2 {
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.skills-install {
+  --skills-command-padding: 16px;
+  border: 1px solid var(--skills-line);
+  border-radius: 12px;
+  background: #f7f7f8;
+  overflow: hidden;
+}
+.dark .skills-install {
+  background: #1c191c;
+}
+.skills-client-picker {
+  display: flex;
+  gap: 26px;
+  padding: 0 var(--skills-command-padding);
+  border-bottom: 1px solid var(--skills-line);
+}
+.skills-client-picker button {
+  padding: 8px 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  color: var(--skills-muted);
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.skills-client-picker button[aria-selected='true'] {
+  border-bottom-color: currentColor;
+}
+.skills-client-picker button:hover {
+  color: var(--skills-ink);
+}
+.skills-terminal {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px var(--skills-command-padding);
+}
+.skills-copy-icon {
+  flex-shrink: 0;
+  min-width: 28px;
+  min-height: 28px;
+  justify-content: center;
+  color: var(--skills-muted);
+}
+.skills-command-executable {
+  color: #2864d7;
+  font-style: italic;
+}
+.skills-command-arguments {
+  color: #347a31;
+}
+.dark .skills-command-executable {
+  color: #91b4ff;
+}
+.dark .skills-command-arguments {
+  color: #9dcf92;
+}
+.skills-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  color: inherit;
+}
+.skills-copy:hover {
+  background: #80808016;
+}
+.skills-terminal > .skills-copy {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
+  color: var(--skills-muted);
+}
+.skills-terminal > .skills-copy svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 1.5;
+}
+.skills-terminal pre {
+  flex: 1;
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.8;
+  font-family: 'Input Mono', ui-monospace, monospace;
+}
+.skills-examples {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: calc(var(--skills-panel-padding) * 2);
+}
+.skills-example {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 8px 0;
+}
+.skills-example + .skills-example::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(-1 * var(--skills-panel-padding));
+  width: 1px;
+  background: var(--skills-line);
+}
+.skills-example h3 {
+  font-weight: 600;
+  font-size: 14px;
+}
+.skills-example p {
+  flex: 1;
+  font-size: 12px;
+  margin: 18px 0;
+  line-height: 1.9;
+}
+.skills-example .skills-copy {
+  color: var(--skills-muted);
+  margin-left: -8px;
+}
+.skills-online-prompt {
+  white-space: pre-wrap;
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  line-height: 1.8;
+  font-family: 'Input Mono', ui-monospace, monospace;
+}
+/* Use the same xl / md boundaries as the shared UnoCSS layout. */
+@media (width < 80rem) {
+  .skills-intro {
+    gap: 28px;
+  }
+}
+@media (width < 48rem) {
+  .skills-install {
+    --skills-command-padding: 12px;
+  }
+  .skills-page {
+    --skills-panel-padding: 16px;
+    padding: 52px 0 40px;
+  }
+  .skills-intro {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 0 0 12px;
+  }
+  .skills-intro h1 {
+    font-size: 36px;
+  }
+  .skills-chat-user {
+    max-width: 88%;
+    margin-bottom: 0;
+  }
+  .skills-section {
+    margin-top: 32px;
+  }
+  .skills-client-picker {
+    gap: 22px;
+  }
+  .skills-examples {
+    grid-template-columns: 1fr;
+  }
+  .skills-example + .skills-example::before {
+    bottom: auto;
+    left: 0;
+    width: 100%;
+    height: 1px;
+  }
+  .skills-example p {
+    margin: 12px 0;
+  }
+}
