@@ -27,6 +27,7 @@ import '~/styles/sidebar.css';
 import '~/layouts/Search/cmdk.css';
 
 import scrollHandler from '~/layouts/global.ts?inline-ts';
+import umamiHandler from '~/layouts/umami.ts?inline-ts';
 
 const WebFontStylesheets = [
   'https://fonts.bunny.net/css?family=ibm-plex-sans|noto-sans-simplified-chinese|input-mono&display=swap',
@@ -130,6 +131,8 @@ function RootDocument({ children }: { children: ReactNode }) {
         <HeadContent />
         <script dangerouslySetInnerHTML={{ __html: WebFontLoadScript }} />
         <noscript dangerouslySetInnerHTML={{ __html: WebFontNoScriptLinks }} />
+        {/* Register synchronously before the deferred tracker sends the first pageview. */}
+        {!import.meta.env.DEV && <script dangerouslySetInnerHTML={{ __html: umamiHandler }} />}
         {!import.meta.env.DEV &&
           Tags.map((t) =>
             'src' in t ? (
@@ -141,6 +144,7 @@ function RootDocument({ children }: { children: ReactNode }) {
                 {...Object.fromEntries(
                   Object.entries(t.dataset ?? {}).map(([k, v]) => ['data-' + kebabCase(k), v])
                 )}
+                data-before-send={t.dataset?.websiteId ? 'beforeUmamiSend' : undefined}
               />
             ) : (
               <script
