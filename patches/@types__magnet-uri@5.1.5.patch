@@ -1,0 +1,13 @@
+diff --git a/index.d.ts b/index.d.ts
+index a05e9022799597c99abb6b216fe35689ce74dfec..840a90035e7d998d80290cba6ef0d8dbe3e1c317 100644
+--- a/index.d.ts
++++ b/index.d.ts
+@@ -19,7 +19,7 @@ declare namespace MagnetUri {
+         ix?: number | number[] | undefined;
+         xt?: string | string[] | undefined;
+         infoHash?: string | undefined;
+-        infoHashBuffer?: Buffer | undefined;
++        infoHashBuffer?: Uint8Array | undefined;
+         name?: string | string[] | undefined;
+         keywords?: string | string[] | undefined;
+         announce?: string[] | undefined;

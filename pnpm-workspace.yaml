@@ -25,3 +25,5 @@ minimumReleaseAgeExclude:
 shellEmulator: true
 ignoreWorkspaceRootCheck: true
 shamefullyHoist: true
+patchedDependencies:
+  '@types/magnet-uri@5.1.5': patches/@types__magnet-uri@5.1.5.patch

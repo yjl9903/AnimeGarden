@@ -31,25 +31,25 @@ export const setResponseStatus = createIsomorphicFn()
 /** Sets Cache-Control during SSR/server functions while no-oping on client navigations. */
 export const setCacheControl = createIsomorphicFn()
   .server(async (value: ResponseCacheControl) => {
-    const { getResponseHeaders } = await import('@tanstack/react-start/server');
-    getResponseHeaders().set('Cache-Control', value);
+    const { setResponseHeader } = await import('@tanstack/react-start/server');
+    setResponseHeader('Cache-Control', value);
   })
   .client(async (_value: ResponseCacheControl) => {});
 
 /** Appends RFC 8288 Link headers for homepage agent discovery. */
 export const appendLinkHeader = createIsomorphicFn()
   .server(async (value: string) => {
-    const { getResponseHeaders } = await import('@tanstack/react-start/server');
-    getResponseHeaders().append('Link', value);
+    const { appendResponseHeader } = await import('@tanstack/react-start/server');
+    appendResponseHeader('Link', value);
   })
   .client(async (_value: string) => {});
 
 /** Marks an upstream failure response as non-cacheable. */
 export const setErrorResponse = createIsomorphicFn()
   .server(async (status: number = 502) => {
-    const { getResponseHeaders, setResponseStatus: setTanStackResponseStatus } =
+    const { setResponseHeader, setResponseStatus: setTanStackResponseStatus } =
       await import('@tanstack/react-start/server');
     setTanStackResponseStatus(status);
-    getResponseHeaders().set('Cache-Control', ResponseCacheControl.Error);
+    setResponseHeader('Cache-Control', ResponseCacheControl.Error);
   })
   .client(async (_status: number = 502) => {});
