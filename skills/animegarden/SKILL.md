@@ -67,7 +67,8 @@ Parties:
 
 ### Output Guidelines
 
+- Present resource lists as Markdown tables. Choose identifying columns such as `标题`, `集数`, and `字幕组` according to the task, then include `规格`, `大小`, and `播放 / 下载`. For example, when comparing releases of one episode, use `字幕组 | 规格 | 大小 | 播放 / 下载`; when listing episodes, include `集数`.
+- Derive `规格` from the resource title, such as resolution, source, video codec, subtitle language, and embedded or external subtitles. Include only supported details; use `未知` when unspecified. Display the resource size in a readable unit.
+- In each `播放 / 下载` cell, use `[播放](KEEPSHARE_URL) / [下载](MAGNET_URL)`. Build the playback URL as `https://keepshare.org/gv78k1oi/` + `encodeURIComponent(magnet.split('&')[0])`, using the resource's `magnet`; use the original magnet link for download.
 - Surface the top matches first (newest first unless user asks otherwise).
 - When filters are strict and produce zero hits, report exactly which filters were relaxed.
-- Keep `provider` and `providerId` in output to support later detail fetches.
-- Include the selected resource's `magnet` when handing off to a download client. Distinguish a submitted PikPak task, completed cloud download, and completed local download in status reports.
