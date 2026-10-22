@@ -1,0 +1,9 @@
+.chat-app-icon-doubao {
+  display: inline-block;
+  background-color: currentColor;
+  mask: url('./doubao.svg') no-repeat center / contain;
+}
+
+.chat-app-icon-kimi {
+  transform: scale(0.875);
+}

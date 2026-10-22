@@ -131,11 +131,12 @@
 
 | 事件名 | 触发场景 | 属性 |
 | --- | --- | --- |
-| `skills.chat.open` | 「打开」菜单中选择 ChatGPT、Codex、Claude 或 Cursor | `app`，`source`，示例入口另带 `example` |
+| `skills.chat.open` | 「打开」菜单中选择 ChatGPT、Codex、Claude、Cursor、DeepSeek、豆包、Kimi、千问或元宝 | `app`，`source`，示例入口另带 `example` |
 
 - `source = direct`：直接使用。
 - `source = example`：试着问它；`example` 为示例标题。
 - 记录链接的鼠标主键、键盘和中键激活；仅展开菜单不记录，不代表目标应用已成功加载。
+- 国产应用的「复制并打开」在复制成功后上报，复制失败不记录打开事件。
 - 不上传完整 prompt 或含 prompt 的目标 URL。
 - 接入位置：`src/components/Skills/OpenInChat.tsx`，统一调用 `src/utils/umami.ts` 的 `trackSkillsChatOpen`。
 

@@ -9,7 +9,6 @@ import {
   skillsPageMetadata
 } from '~/pages/skills/content';
 import { ResponseCacheControl } from '~/utils/response';
-import { getChatAppLinks } from '~/components/Skills/chat-apps';
 import { buildPageTitle } from '~/utils/seo';
 import { getKeepShareURL } from '~/utils/url';
 
@@ -37,12 +36,7 @@ export function renderSkillsMarkdown(): MarkdownResult {
       .map(
         (option) =>
           heading(2, option.name) +
-          `\`\`\`${option.kind === 'command' ? 'sh' : 'text'}\n${option.content}\n\`\`\`\n\n` +
-          (option.kind === 'prompt'
-            ? getChatAppLinks(option.content)
-                .map((app) => link(`在 ${app.name} 中打开`, app.href))
-                .join(' · ') + '\n\n'
-            : '')
+          `\`\`\`${option.kind === 'command' ? 'sh' : 'text'}\n${option.content}\n\`\`\`\n\n`
       )
       .join('') +
     heading(2, '安装 MCP') +
@@ -59,10 +53,6 @@ export function renderSkillsMarkdown(): MarkdownResult {
         (example) =>
           heading(3, example.title) +
           example.prompt.replace('AnimeGarden', `[AnimeGarden](${skillURL})`) +
-          '\n\n' +
-          getChatAppLinks(example.prompt.replace('AnimeGarden', `[AnimeGarden](${skillURL})`))
-            .map((app) => link(`在 ${app.name} 中打开`, app.href))
-            .join(' · ') +
           '\n\n'
       )
       .join('') +

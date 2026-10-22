@@ -6,7 +6,7 @@ import { skillPrompt } from '../src/pages/skills/content';
 describe('chat app prompt links', () => {
   it('preserves Markdown links, Chinese and reserved characters in each app parameter', () => {
     const prompt = `${skillPrompt}\n请保留 A&B + #1 / 100%`;
-    const links = getChatAppLinks(prompt);
+    const links = getChatAppLinks(prompt).filter((app) => app.mode === 'prefill');
     expect(links.map((app) => app.name)).toEqual(['ChatGPT', 'Codex', 'Claude', 'Cursor']);
     const expected = [
       ['https:', 'chatgpt.com', '/', 'prompt'],
