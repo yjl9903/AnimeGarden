@@ -7,7 +7,7 @@
   "scripts": {
     "build": "VIRTUAL_PWA_MODULE=true vite build",
     "dev": "VIRTUAL_PWA_MODULE=true vite dev",
-    "format": "prettier --write '**/*.{mjs,ts,tsx}'",
+    "format": "prettier --ignore-path ../../.prettierignore --write '**/*.{mjs,ts,tsx}'",
     "preview": "node server.mjs",
     "start:node": "node server.mjs",
     "test": "vitest",
