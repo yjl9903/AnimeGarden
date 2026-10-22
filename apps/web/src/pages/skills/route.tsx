@@ -288,7 +288,7 @@ export default function SkillsPage() {
           >
             <div className="skills-section-heading">
               <h2 id={`skill-${option.id}-title`}>{option.name}</h2>
-              {option.kind === 'prompt' && <OpenInChat prompt={option.content} />}
+              {option.kind === 'prompt' && <OpenInChat prompt={option.content} source="direct" />}
             </div>
             <div className="skills-install">
               <div className="skills-terminal">
@@ -325,7 +325,7 @@ export default function SkillsPage() {
                   <p>{example.prompt}</p>
                   <div className="flex items-center gap-3">
                     <CopyButton text={prompt} label="复制示例" />
-                    <OpenInChat prompt={prompt} />
+                    <OpenInChat prompt={prompt} source="example" example={example.title} />
                   </div>
                 </article>
               );

@@ -50,6 +50,13 @@ export interface TrackFooterExternalLinkPayload {
   href: string;
 }
 
+/** Identifies the chat application and the Skills entry that launched it. */
+export interface TrackSkillsChatOpenPayload {
+  app: string;
+  source: 'direct' | 'example';
+  example?: string;
+}
+
 export interface TrackAnimeCalendarClickPayload {
   subjectId: string;
   title: string;
@@ -179,6 +186,15 @@ export const trackFooterExternalLinkClick = (payload: TrackFooterExternalLinkPay
     section: payload.section,
     label: payload.label,
     href: payload.href
+  });
+};
+
+/** Records an app-link activation without including the prompt in analytics. */
+export const trackSkillsChatOpen = (payload: TrackSkillsChatOpenPayload) => {
+  track('skills.chat.open', {
+    app: payload.app,
+    source: payload.source,
+    ...(payload.example ? { example: payload.example } : {})
   });
 };
 

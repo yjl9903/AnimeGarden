@@ -1,4 +1,5 @@
 import { ChevronDown, ExternalLink } from 'lucide-react';
+import { trackSkillsChatOpen, type TrackSkillsChatOpenPayload } from '~/utils/umami';
 
 import {
   DropdownMenu,
@@ -10,7 +11,11 @@ import {
 import { getChatAppLinks } from './chat-apps';
 
 /** Opens a chosen chat app with the complete prompt, retaining native link behavior. */
-export function OpenInChat({ prompt }: { prompt: string }) {
+export function OpenInChat({
+  prompt,
+  source,
+  example
+}: { prompt: string } & Omit<TrackSkillsChatOpenPayload, 'app'>) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -30,6 +35,12 @@ export function OpenInChat({ prompt }: { prompt: string }) {
               target="_blank"
               rel="noopener noreferrer"
               className="gap-2 cursor-pointer"
+              onClick={() => trackSkillsChatOpen({ app: app.name, source, example })}
+              onAuxClick={(event) => {
+                if (event.button === 1) {
+                  trackSkillsChatOpen({ app: app.name, source, example });
+                }
+              }}
             >
               <span className={`${app.icon} h-4 w-4 shrink-0`} aria-hidden="true" />在 {app.name}{' '}
               中打开
