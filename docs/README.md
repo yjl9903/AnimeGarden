@@ -25,4 +25,4 @@
 - `pnpm-lock.yaml` 同时记录 pnpm 自身的版本与平台包，以及工作区依赖；升级包管理器时一并提交自动生成的锁文件变更。
 - 本地使用 `pnpm install` 安装依赖；CI 和 Docker 使用 `pnpm install --frozen-lockfile`，依赖更新工作流使用 `--no-frozen-lockfile` 更新锁文件。
 - 本地安装依赖时通过 `prepare` 启用 Husky；涉及 Agent 插件的提交会自动同步、检查并暂存生成文件，详见 [插件维护流程](./integrations/README.md#维护与验证)。
-- Docker 安装依赖时使用 `NODE_ENV=development pnpm install --frozen-lockfile`，确保包含构建工具。pnpm 12.3.4 不接受 `--prod=false`；该环境变量覆盖仅作用于安装命令，后续构建和运行仍使用 `NODE_ENV=production`，构建后通过 `pnpm prune --prod` 移除开发依赖。
+- Docker 安装依赖时使用 `NODE_ENV=development pnpm install --frozen-lockfile`，确保包含构建工具。pnpm 12.3.4 不接受 `--prod=false`；该环境变量覆盖仅作用于安装命令，后续构建和运行仍使用 `NODE_ENV=production`，构建后通过 `pnpm prune --prod --ignore-scripts` 移除开发依赖。裁剪阶段跳过生命周期脚本，避免移除 Husky 后再次执行 `prepare` 导致构建失败；安装阶段仍执行依赖构建脚本。

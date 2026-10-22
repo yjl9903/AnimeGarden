@@ -59,7 +59,8 @@ RUN NODE_ENV=development pnpm install --frozen-lockfile
 COPY --link . .
 
 # Build application and remove development dependencies
-RUN pnpm run build:web && pnpm prune --prod
+# Dependencies were built during install; skip prepare after Husky is pruned.
+RUN pnpm run build:web && pnpm prune --prod --ignore-scripts
 
 
 # Final stage for app image
