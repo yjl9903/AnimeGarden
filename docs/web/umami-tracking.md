@@ -131,7 +131,7 @@
 
 | 事件名 | 触发场景 | 属性 |
 | --- | --- | --- |
-| `skills.chat.open` | 「打开」菜单中选择 ChatGPT、Claude 或 Cursor | `app`，`source`，示例入口另带 `example` |
+| `skills.chat.open` | 「打开」菜单中选择 ChatGPT、Codex、Claude 或 Cursor | `app`，`source`，示例入口另带 `example` |
 
 - `source = direct`：直接使用。
 - `source = example`：试着问它；`example` 为示例标题。
