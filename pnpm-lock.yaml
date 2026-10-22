@@ -263,8 +263,8 @@ importers:
         specifier: 0.3.3
         version: 0.3.3(bangumi-data@0.3.212)
       breadc:
-        specifier: 1.0.0-beta.18
-        version: 1.0.0-beta.18
+        specifier: 1.0.0-beta.23
+        version: 1.0.0-beta.23
       consola:
         specifier: 3.4.2
         version: 3.4.2
@@ -1272,17 +1272,17 @@ packages:
     resolution: {integrity: sha512-ctxtJ/eA+t+6q2++vj5j7FYX3nRu311q1wfYH3xjlLOsczhlhxAg2FWNUXhpGvAw3BWo1xBcvOV6/YLc2r5FJw==}
     hasBin: true
 
-  '@breadc/color@1.0.0-beta.18':
-    resolution: {integrity: sha512-vClJTkTXJSScmk9kzX0N4C0a0a282X9fb0KYU/2emaHvseAUidrh7FBrueE3vzfHTuYiE2o4PHBfPTr0wOBsdQ==}
+  '@breadc/color@1.0.0-beta.23':
+    resolution: {integrity: sha512-6wimyFSbdQbv3WiGkiOEnv+ZwA/5sr2ecgJK0SP+iYccHlPfTatJOcvqeAriF8fwzeJR1GnNcFFQ1tGs9YDM+w==}
 
-  '@breadc/core@1.0.0-beta.18':
-    resolution: {integrity: sha512-PMAB7Gwh8M1+/yYb8gK5mjUzPSjMtaJrpA6e0hPIm0V0+rukNLOczul26Gn47Ivbju/XyL3PK0UDapnuI8difQ==}
+  '@breadc/core@1.0.0-beta.23':
+    resolution: {integrity: sha512-oXbU503ivyZXdji10iHasd2EcvgZp9UFLjjsMtjOEhwKga6QJAlmNdT53raRoH4in/NKFTR/LXxFuM/hNdo9FQ==}
 
-  '@breadc/death@1.0.0-beta.18':
-    resolution: {integrity: sha512-cunyKh7QPgY6mSmazqikkQ1n7QFHiTPP885H093QY/mCTKLyvIFM6MsT8yo6J3CeLtBzN30EiEVRqMlJT3ZMbA==}
+  '@breadc/death@1.0.0-beta.23':
+    resolution: {integrity: sha512-clXAeTn9XwNuAmSHk/QBt1HKC/N09uyrj7Nqf/008FW03LRUfrQXgMuU8AOoe0pnmampg3y1sjYDdOyVMpmokA==}
 
-  '@breadc/tui@1.0.0-beta.18':
-    resolution: {integrity: sha512-q3d2OkuoLsT9aYHroUqfbBo1yX5TCtbFvi7e4P857m7MDAZisfpOHY9/mXd59u4bH69vcC4rmrfYZ5YIO8GqvQ==}
+  '@breadc/tui@1.0.0-beta.23':
+    resolution: {integrity: sha512-vusx4tRnxv+racZIHye8ALkk0oATwTjjOHtvqvbtLlvJvkV5LadiAwhqWSTU4MIKCer/Fj/nnG4up3kbbXssvQ==}
 
   '@canvas/image-data@1.1.0':
     resolution: {integrity: sha512-QdObRRjRbcXGmM1tmJ+MrHcaz1MftF2+W7YI+MsphnsCrmtyfS0d5qJbk0MeSbUeyM/jCb0hmnkXPsy026L7dA==}
@@ -3578,6 +3578,9 @@ packages:
   '@speed-highlight/core@1.2.17':
     resolution: {integrity: sha512-Z92FwKpCtfaW1V0jTU/fh3QzYEZN8wDwrzRIBoADCJfn4mJCNcJN/XegifX7BDrQ8/h9Xh/JnbyMchL0FqXrkg==}
 
+  '@standard-schema/spec@1.1.0':
+    resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
+
   '@svgr/babel-plugin-add-jsx-attribute@8.0.0':
     resolution: {integrity: sha512-b9MIk7yhdS1pMCZM8VeNfUlSKVRhsHZNMl5O9SfaX0l0t5wjdgu4IDzGB8bpnGBBOjGST3rRFVsaaEtI4W6f7g==}
     engines: {node: '>=14'}
@@ -4442,8 +4445,8 @@ packages:
     resolution: {integrity: sha512-ScQ4IuvIEF1TMlP7Zt+vjJ//9zlPb2SDcxWxM3bk8s6t6GGdJ7KO1dCcTidOPJKePW30LE/2cT7wCyPho9/Wxg==}
     engines: {node: 20 || >=22}
 
-  breadc@1.0.0-beta.18:
-    resolution: {integrity: sha512-L/gKQSCc0yY1VtV/y4y4EKI52FVSX0gLRy29rV6jd+S1xrIQTxV8cBtAY75r542lB2clNh1kxMGB8ia9yjz33A==}
+  breadc@1.0.0-beta.23:
+    resolution: {integrity: sha512-JfLvs/cWBEXxBw2w6rUwfewGmv3b0erkSQa79UCFIBT/41f16yTOS/uYd71/BStY617HTJS/XRZ45QTA3dkFxg==}
 
   browserslist@4.28.2:
     resolution: {integrity: sha512-48xSriZYYg+8qXna9kwqjIVzuQxi+KYWp2+5nCYnYKPTr0LvD89Jqk2Or5ogxz0NUMfIjhh2lIUX/LyX9B4oIg==}
@@ -6900,9 +6903,6 @@ packages:
     resolution: {integrity: sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw==}
     engines: {node: '>= 0.8'}
 
-  std-env@4.2.0:
-    resolution: {integrity: sha512-oCUKSupKTHX53EyjDtuZQ64pjLJ6yYCtpmEw0goYxtjG9KpbRe8KAsl2tBUGU9DyMcJ0RwJ8GqJAFzMXcXW1Rw==}
-
   std-env@4.3.0:
     resolution: {integrity: sha512-OtU/EgQ1kIm5KwqQpBC6ZEMXrZRui11w8zgfTWp8cdO9B8OaPsbA8bTHO2P+HNo1VlUTGMVBwPhydu6poeXiag==}
 
@@ -8724,20 +8724,19 @@ snapshots:
     dependencies:
       css-tree: 3.2.1
 
-  '@breadc/color@1.0.0-beta.18': {}
+  '@breadc/color@1.0.0-beta.23': {}
 
-  '@breadc/core@1.0.0-beta.18':
+  '@breadc/core@1.0.0-beta.23':
     dependencies:
-      '@breadc/color': 1.0.0-beta.18
+      '@standard-schema/spec': 1.1.0
 
-  '@breadc/death@1.0.0-beta.18': {}
+  '@breadc/death@1.0.0-beta.23': {}
 
-  '@breadc/tui@1.0.0-beta.18':
+  '@breadc/tui@1.0.0-beta.23':
     dependencies:
-      '@breadc/color': 1.0.0-beta.18
-      '@breadc/death': 1.0.0-beta.18
+      '@breadc/color': 1.0.0-beta.23
+      '@breadc/death': 1.0.0-beta.23
       fast-string-width: 3.0.2
-      std-env: 4.2.0
 
   '@canvas/image-data@1.1.0': {}
 
@@ -10453,6 +10452,8 @@ snapshots:
 
   '@speed-highlight/core@1.2.17': {}
 
+  '@standard-schema/spec@1.1.0': {}
+
   '@svgr/babel-plugin-add-jsx-attribute@8.0.0(@babel/core@7.29.7(supports-color@10.2.2))':
     dependencies:
       '@babel/core': 7.29.7(supports-color@10.2.2)
@@ -11796,7 +11797,7 @@ snapshots:
 
   bgmc@0.3.0:
     dependencies:
-      breadc: 1.0.0-beta.18
+      breadc: 1.0.0-beta.23
 
   bgmd@0.20260707.1: {}
 
@@ -11812,7 +11813,7 @@ snapshots:
       bangumi-data: 0.3.212
       bgmc: 0.3.0
       bgmt: 0.3.1
-      breadc: 1.0.0-beta.18
+      breadc: 1.0.0-beta.23
       consola: 3.4.2
       date-fns: 4.4.0
       dotenv: 17.4.2
@@ -11864,12 +11865,13 @@ snapshots:
     dependencies:
       balanced-match: 4.0.4
 
-  breadc@1.0.0-beta.18:
+  breadc@1.0.0-beta.23:
     dependencies:
-      '@breadc/color': 1.0.0-beta.18
-      '@breadc/core': 1.0.0-beta.18
-      '@breadc/death': 1.0.0-beta.18
-      '@breadc/tui': 1.0.0-beta.18
+      '@breadc/color': 1.0.0-beta.23
+      '@breadc/core': 1.0.0-beta.23
+      '@breadc/death': 1.0.0-beta.23
+      '@breadc/tui': 1.0.0-beta.23
+      fast-string-width: 3.0.2
 
   browserslist@4.28.2:
     dependencies:
@@ -14436,8 +14438,6 @@ snapshots:
 
   statuses@2.0.2: {}
 
-  std-env@4.2.0: {}
-
   std-env@4.3.0: {}
 
   stop-iteration-iterator@1.1.0:
@@ -14672,7 +14672,7 @@ snapshots:
 
   tmdbc@0.1.0:
     dependencies:
-      breadc: 1.0.0-beta.18
+      breadc: 1.0.0-beta.23
 
   to-buffer@1.2.2:
     dependencies:
