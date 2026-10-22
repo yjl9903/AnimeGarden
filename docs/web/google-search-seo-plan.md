@@ -401,5 +401,5 @@ Subject 页面：
 | `/robots.txt`                            | 输出抓取规则                                 |
 | `/sitemap-index.xml`、`/sitemap-*.xml`   | 输出 Sitemap Index 和分片 Sitemap            |
 | `/openapi.json`                          | 输出 OpenAPI 文档数据，不设置 HTML SEO meta  |
-| `/llms.txt`                              | 输出面向模型的站点说明，不设置 HTML SEO meta |
+| `/llms.txt`                              | 按网站、HTTP API、AI 接入、开发分发和联系方式分类；简述 Skill、插件和 MCP 的用途，保留安装命令、MCP 配置及可选 PikPak 接入说明，不设置 HTML SEO meta |
 | `/.well-known/*`                         | 输出 API/MCP 发现数据，不设置 HTML SEO meta  |
