@@ -81,8 +81,8 @@ app
   .option('--site <site>', 'Web site host')
   .option('--host <ip>', 'Listen host')
   .option('--port <port>', 'Listen port')
-  .option('--listen', 'Enable server listening', { default: true })
-  .option('--import', 'Import bangumi data', { default: true })
+  .option('--[no-]listen', 'Enable server listening', { default: true })
+  .option('--[no-]import', 'Import bangumi data', { default: true })
   .action(async (options) => {
     const sys = await initialize({ ...options, cron: true, profile: 'cron' });
     const executor = await makeExecutor(sys, {});
@@ -163,8 +163,8 @@ app
 
 app
   .command('telegram push', 'Manually push telegram channel messages')
-  .option('--resource [...key]', 'Push specified resource message, e.g. dmhy:123 or dmhy/123')
-  .option('--subject [...id]', 'Push resource messages with subject id')
+  .option('--resource <...key>', 'Push specified resource message, e.g. dmhy:123 or dmhy/123')
+  .option('--subject <...id>', 'Push resource messages with subject id')
   .option('--force', 'Force re-push sent telegram messages')
   .action(async (options) => {
     const sys = await initialize(options);
@@ -235,9 +235,9 @@ app.command('migrate', 'Migrate Postgres database schema').action(async (options
 
 app
   .command('fetch dmhy', 'Fetch resources from dmhy')
-  .option('--start <number>', 'Fetch resources start from page', { cast: (v) => (v ? +v : 1) })
+  .option('--start <number>', 'Fetch resources start from page', { default: '1', cast: Number })
   .option('--end <number>', 'Fetch resources end before page')
-  .option('--retry <count>', 'Request retry times', { cast: (v) => (v ? +v : 5) })
+  .option('--retry <count>', 'Request retry times', { default: '5', cast: Number })
   .option('--out-dir <dir>', 'Fetched output dir')
   .action(async (options) => {
     const outDir = path.join(options.outDir ?? './output/', 'dmhy');
@@ -256,9 +256,9 @@ app
 
 app
   .command('fetch moe', 'Fetch resources from moe')
-  .option('--start <number>', 'Fetch resources start from page', { cast: (v) => (v ? +v : 1) })
+  .option('--start <number>', 'Fetch resources start from page', { default: '1', cast: Number })
   .option('--end <number>', 'Fetch resources end before page')
-  .option('--retry <count>', 'Request retry times', { cast: (v) => (v ? +v : 5) })
+  .option('--retry <count>', 'Request retry times', { default: '5', cast: Number })
   .option('--out-dir <dir>', 'Fetched output dir')
   .action(async (options) => {
     const outDir = path.join(options.outDir ?? './output/', 'moe');
@@ -277,9 +277,9 @@ app
 
 app
   .command('fetch mikan', 'Fetch resources from mikan')
-  .option('--start <number>', 'Fetch resources start from page', { cast: (v) => (v ? +v : 1) })
+  .option('--start <number>', 'Fetch resources start from page', { default: '1', cast: Number })
   .option('--end <number>', 'Fetch resources end before page')
-  .option('--retry <count>', 'Request retry times', { cast: (v) => (v ? +v : 5) })
+  .option('--retry <count>', 'Request retry times', { default: '5', cast: Number })
   .option('--out-dir <dir>', 'Fetched output dir')
   .action(async (options) => {
     const outDir = path.join(options.outDir ?? './output/', 'mikan');
@@ -298,7 +298,7 @@ app
 
 app
   .command('fetch ani', 'Fetch resources from ANi')
-  .option('--retry <count>', 'Request retry times', { cast: (v) => (v ? +v : 5) })
+  .option('--retry <count>', 'Request retry times', { default: '5', cast: Number })
   .option('--out-dir <dir>', 'Fetched output dir')
   .action(async (options) => {
     const outDir = path.join(options.outDir ?? './output/', 'ani');
@@ -332,7 +332,7 @@ app
   .option('--end <page>', 'Import resources to page (inclusive)', {
     cast: (v) => (v ? +v : undefined)
   })
-  .option('--batch-size <size>', 'JSON files per batch', { cast: (v) => (v ? +v : 10) })
+  .option('--batch-size <size>', 'JSON files per batch', { default: '10', cast: Number })
   .action(async (dir, options) => {
     const sys = await initialize(options);
 
@@ -353,7 +353,7 @@ app
 // MARK: utils
 app
   .command('detail dmhy <url>', 'Fetch resource detail from dmhy')
-  .option('--retry <count>', 'Request retry times', { cast: (v) => (v ? +v : 5) })
+  .option('--retry <count>', 'Request retry times', { default: '5', cast: Number })
   .action(async (url, options) => {
     const { fetchDmhyDetail } = await import('@animegarden/scraper');
     const resp = await fetchDmhyDetail(fetch, url, { retry: options.retry });
@@ -363,7 +363,7 @@ app
 
 app
   .command('detail moe <id>', 'Fetch resource detail from moe')
-  .option('--retry <count>', 'Request retry times', { cast: (v) => (v ? +v : 5) })
+  .option('--retry <count>', 'Request retry times', { default: '5', cast: Number })
   .action(async (id, options) => {
     const { fetchMoeDetail } = await import('@animegarden/scraper');
     const resp = await fetchMoeDetail(fetch, id, { retry: options.retry });
@@ -373,7 +373,7 @@ app
 
 app
   .command('detail mikan <id>', 'Fetch resource detail from mikan')
-  .option('--retry <count>', 'Request retry times', { cast: (v) => (v ? +v : 5) })
+  .option('--retry <count>', 'Request retry times', { default: '5', cast: Number })
   .action(async (id, options) => {
     const { fetchMikanDetail } = await import('@animegarden/scraper');
     const resp = await fetchMikanDetail(fetch, id, { retry: options.retry });
@@ -383,7 +383,7 @@ app
 
 app
   .command('detail ani <id>', 'Fetch resource detail from ANi')
-  .option('--retry <count>', 'Request retry times', { cast: (v) => (v ? +v : 5) })
+  .option('--retry <count>', 'Request retry times', { default: '5', cast: Number })
   .action(async (id, options) => {
     const { fetchANiDetail } = await import('@animegarden/scraper');
     const resp = await fetchANiDetail(fetch, id, { retry: options.retry });
