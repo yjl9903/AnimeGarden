@@ -266,9 +266,11 @@ export type FilterOptions = {
   provider?: string;
 
   /**
-   * Whether include duplicated resources from different platfrom.
+   * Whether include duplicated resources from different platforms.
    *
-   * @default false
+   * This option only takes effect when `provider` is specified. If unset and
+   * `provider` is specified, the server treats it as `true` (duplicated
+   * resources are included); otherwise unset is treated as `false`.
    */
   duplicate?: boolean;
 

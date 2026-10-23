@@ -20,13 +20,32 @@ const dateLike = z.union([
 
 const stringArray = z.union([z.string().transform((s) => [s]), z.array(z.string())]);
 
+/**
+ * Parse a boolean like value.
+ *
+ * Accepts booleans as is, and maps the strings `'true'` / `'1'` to `true` and
+ * `'false'` / `'0'` / `''` to `false`. Any other value fails validation and is
+ * treated as unset (the server default applies).
+ */
+const booleanLike = z.preprocess((value) => {
+  if (typeof value === 'string') {
+    if (value === 'true' || value === '1') {
+      return true;
+    }
+    if (value === 'false' || value === '0' || value === '') {
+      return false;
+    }
+  }
+  return value;
+}, z.boolean());
+
 const providerEnum = z.enum(SupportProviders);
 
 const presetEnum = z.enum(SupportPresets);
 
 const UrlSearchSchema = {
   provider: providerEnum.optional(),
-  duplicate: z.union([z.null(), z.undefined(), z.coerce.boolean()]).optional(),
+  duplicate: z.union([z.null(), z.undefined(), booleanLike]).optional(),
   page: z.union([z.null(), z.undefined(), z.coerce.number()]).optional(),
   pageSize: z.union([z.null(), z.undefined(), z.coerce.number()]).optional(),
   fansub: z.string().array().optional(),
@@ -44,7 +63,7 @@ const UrlSearchSchema = {
 
 const BodySchema = {
   provider: providerEnum.optional(),
-  duplicate: z.union([z.null(), z.undefined(), z.coerce.boolean()]).optional(),
+  duplicate: z.union([z.null(), z.undefined(), booleanLike]).optional(),
   page: z.coerce.number().optional(),
   pageSize: z.coerce.number().optional(),
   fansub: z.string().optional(),
@@ -255,8 +274,11 @@ export function stringifyURLSearch(
   if (pageSize) {
     params.set('pageSize', '' + pageSize);
   }
-  if (duplicate) {
+  if (duplicate === true) {
     params.set('duplicate', 'true');
+  } else if (duplicate === false) {
+    // Keep explicit `false` distinguishable from unset
+    params.set('duplicate', 'false');
   }
   if (after) {
     const time = after instanceof Date ? after.getTime() : new Date(after).getTime();

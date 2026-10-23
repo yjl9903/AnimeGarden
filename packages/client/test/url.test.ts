@@ -117,6 +117,70 @@ describe('parse url', () => {
       `);
   });
 
+  it('should parse duplicate=false as false', () => {
+    expect(parseURLSearch(new URLSearchParams(`provider=dmhy&duplicate=false`)).filter).toEqual({
+      provider: 'dmhy',
+      duplicate: false
+    });
+
+    expect(parseURLSearch(new URLSearchParams(`provider=dmhy&duplicate=0`)).filter).toEqual({
+      provider: 'dmhy',
+      duplicate: false
+    });
+
+    expect(
+      parseURLSearch(new URLSearchParams(`provider=dmhy&duplicate=`), { duplicate: false }).filter
+    ).toEqual({
+      provider: 'dmhy',
+      duplicate: false
+    });
+  });
+
+  it('should parse body duplicate=false as false', () => {
+    expect(parseURLSearch(undefined, { provider: 'dmhy', duplicate: false }).filter).toEqual({
+      provider: 'dmhy',
+      duplicate: false
+    });
+
+    expect(
+      parseURLSearch(undefined, { provider: 'dmhy', duplicate: 'false' as any }).filter
+    ).toEqual({
+      provider: 'dmhy',
+      duplicate: false
+    });
+  });
+
+  it('should parse duplicate=true as true', () => {
+    expect(parseURLSearch(new URLSearchParams(`provider=dmhy&duplicate=true`)).filter).toEqual({
+      provider: 'dmhy',
+      duplicate: true
+    });
+
+    expect(parseURLSearch(new URLSearchParams(`provider=dmhy&duplicate=1`)).filter).toEqual({
+      provider: 'dmhy',
+      duplicate: true
+    });
+
+    expect(parseURLSearch(undefined, { provider: 'dmhy', duplicate: true }).filter).toEqual({
+      provider: 'dmhy',
+      duplicate: true
+    });
+
+    expect(
+      parseURLSearch(undefined, { provider: 'dmhy', duplicate: 'true' as any }).filter
+    ).toEqual({
+      provider: 'dmhy',
+      duplicate: true
+    });
+  });
+
+  it('should fallback invalid duplicate values to unset', () => {
+    expect(parseURLSearch(new URLSearchParams(`provider=dmhy&duplicate=abc`)).filter).toEqual({
+      provider: 'dmhy',
+      duplicate: true
+    });
+  });
+
   it('multiple include', () => {
     const wrap = (o: string[]) => new URLSearchParams(o.map((o) => `include=${o}`).join('&'));
 
@@ -231,5 +295,29 @@ describe('stringify url', () => {
     expect(stringifyURLSearch({ ...pagination, ...filter }).toString()).toMatchInlineSnapshot(
       `"after=1686355200000&before=1686614400000&exclude=h1&fansub=abc&fansub=def&page=2&pageSize=100&publisher=456&search=hello&search=world&type=%E5%8A%A8%E7%94%BB"`
     );
+  });
+
+  it('should stringify explicit duplicate=false', () => {
+    expect(stringifyURLSearch({ duplicate: false }).toString()).toBe('duplicate=false');
+
+    expect(stringifyURLSearch({ provider: 'dmhy', duplicate: false }).toString()).toBe(
+      'duplicate=false&provider=dmhy'
+    );
+  });
+
+  it('should stringify duplicate=true and keep unset indistinguishable from missing', () => {
+    expect(stringifyURLSearch({ duplicate: true }).toString()).toBe('duplicate=true');
+
+    expect(stringifyURLSearch({}).toString()).toBe('');
+    expect(stringifyURLSearch({ duplicate: undefined }).toString()).toBe('');
+  });
+
+  it('should roundtrip explicit duplicate=false', () => {
+    const params = stringifyURLSearch({ provider: 'dmhy', duplicate: false });
+
+    expect(parseURLSearch(params).filter).toEqual({
+      provider: 'dmhy',
+      duplicate: false
+    });
   });
 });
