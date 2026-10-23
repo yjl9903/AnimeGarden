@@ -42,7 +42,7 @@ No authentication is required for the public endpoints documented here.
 - Parameters:
   - Query:
     - `page`: Page number (starts from `1`).
-    - `pageSize`: Number of resources per page.
+    - `pageSize`: Number of resources per page; values outside `1`-`1000` fall back to the default `100` instead of being clamped.
     - `after`: Lower time bound; keep resources created at or after this datetime.
     - `before`: Upper time bound; keep resources created at or before this datetime.
     - `search`: Full-text search terms for title/content matching.
@@ -75,9 +75,9 @@ No authentication is required for the public endpoints documented here.
     - `provider` (`dmhy` | `moe` | `mikan` | `ani`)
     - `id` (provider-side resource ID string)
 - Response:
-  - `200` object with `status`, `detail`, `timestamp`.
+  - `200` object with `status`, `resource`, `detail`, `isDeleted`.
   - `detail` is `ResourceDetail` with `description`, `files[]`, `magnets[]`, `hasMoreFiles`.
-  - `400` `ErrorResponse` when not found.
+  - `404` `ErrorResponse` when not found (`status: "ERROR"`, `message: "Unknown detail id: ..."`).
 - Example:
 
   ```bash
@@ -91,8 +91,9 @@ No authentication is required for the public endpoints documented here.
 - Parameters:
   - Path: `hash` (40-character hex info hash or 32-character base32 info hash)
 - Response:
-  - `200` object with `status`, `resource`, `detail`, `timestamp`.
-  - Invalid or unknown hashes return `status: "ERROR"`.
+  - `200` object with `status`, `resource`, `detail`, `isDeleted`.
+  - `400` `ErrorResponse` for a malformed hash (`status: "ERROR"`, `message: "Invalid info hash: ..."`).
+  - `404` `ErrorResponse` for a well-formed but unknown hash (`status: "ERROR"`, `message: "Unknown detail info hash: ..."`).
 
 ## 3. Collection API
 
@@ -184,4 +185,4 @@ fixtures, and assertions to read all pagination fields from this object.
   - `exclude` are blocked terms; matched items are filtered out.
 - `search` has higher priority than `include` in the project resolver logic.
 - `provider` values are limited to `dmhy`, `moe`, `mikan`, and `ani`.
-- For resource detail lookups, handle `400` errors as invalid/not-found input.
+- For resource detail lookups, treat `404` as not-found input and `400` (info hash format errors) as malformed input.

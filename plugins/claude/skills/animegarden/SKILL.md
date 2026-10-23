@@ -44,7 +44,7 @@ Provider and preset:
 
 Pagination and time:
 
-- `page`, `pageSize`: `page` starts at `1`; `pageSize` is capped at `1000`.
+- `page`, `pageSize`: `page` starts at `1`; `pageSize` outside `1`-`1000` falls back to the default `100`.
 - `after`, `before`: upload time bounds; dates or timestamps.
 
 Title matching:
