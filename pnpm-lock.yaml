@@ -173,8 +173,8 @@ importers:
         specifier: 5.20261022.1
         version: 5.20261022.1
       '@flydotio/dockerfile':
-        specifier: 0.7.10
-        version: 0.7.10(@types/node@26.6.5)
+        specifier: 0.7.12
+        version: 0.7.12(@types/node@26.6.5)
       '@total-typescript/ts-reset':
         specifier: 0.6.1
         version: 0.6.1
@@ -2027,8 +2027,8 @@ packages:
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
 
-  '@flydotio/dockerfile@0.7.10':
-    resolution: {integrity: sha512-dTXqBjCl7nFmnhlyeDjjPtX+sdfYBWFH9PUKNqAYttvBiczKcYXxr7/0A0wZ+g1FB1tmMzsOzedgr6xap/AB9g==}
+  '@flydotio/dockerfile@0.7.12':
+    resolution: {integrity: sha512-5E62kMjgsQLutm7+at9DzZl7GIw42QD0H+tTgSN9P8feW+/XYnrPNhl3tsoj/InOpT8hrY5VYw83Nnd5GlPj/w==}
     engines: {node: '>=16.0.0'}
     hasBin: true
 
@@ -4791,8 +4791,8 @@ packages:
       cac:
         optional: true
 
-  diff@7.0.0:
-    resolution: {integrity: sha512-PJWHUb1RFevKCwaFA9RlG5tCd+FO5iRh9A8HEtkmBH2Li03iJriB6m6JIN4rGz3K3JLawI7/veA1xzRKP6ISBw==}
+  diff@8.0.4:
+    resolution: {integrity: sha512-DPi0FmjiSU5EvQV0++GFDOJ9ASQUVFh5kD+OzOnYdi7n3Wpm9hWWGfB/O2blfHcMVTL5WkQXSnRiK9makhrcnw==}
     engines: {node: '>=0.3.1'}
 
   diff@9.0.0:
@@ -9042,10 +9042,10 @@ snapshots:
 
   '@floating-ui/utils@0.2.12': {}
 
-  '@flydotio/dockerfile@0.7.10(@types/node@26.6.5)':
+  '@flydotio/dockerfile@0.7.12(@types/node@26.6.5)':
     dependencies:
       chalk: 5.6.2
-      diff: 7.0.0
+      diff: 8.0.4
       ejs: 3.1.10
       inquirer: 12.11.1(@types/node@26.6.5)
       shell-quote: 1.8.4
@@ -12114,7 +12114,7 @@ snapshots:
       - ocache
       - srvx
 
-  diff@7.0.0: {}
+  diff@8.0.4: {}
 
   diff@9.0.0: {}
 
