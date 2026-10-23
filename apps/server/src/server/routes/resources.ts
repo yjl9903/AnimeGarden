@@ -21,6 +21,17 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
       url.searchParams,
       await ctx.req.json().catch(() => undefined)
     );
+
+    // Honor the page path param in routes like /resources/:page and /resources/:provider/:page.
+    // Fallback to the page from the search params or the default page when it is missing or invalid.
+    const pageParam = ctx.req.param('page');
+    if (pageParam !== undefined) {
+      const page = Number.parseInt(pageParam, 10);
+      if (Number.isInteger(page) && page >= 1) {
+        pagination.page = page;
+      }
+    }
+
     assertResourcesPagination(pagination);
 
     if (provider) {
