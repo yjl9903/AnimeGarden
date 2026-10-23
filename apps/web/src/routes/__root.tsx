@@ -98,7 +98,9 @@ export const Route = createRootRouteWithContext<{
         href: '/apple-touch-icon-180x180.png'
       },
       { rel: 'preconnect', href: 'https://fonts.bunny.net' },
+      { rel: 'preconnect', href: 'https://fonts.bunny.net', crossOrigin: '' },
       { rel: 'preconnect', href: 'https://api.fontshare.com' },
+      { rel: 'preconnect', href: 'https://cdn.fontshare.com', crossOrigin: '' },
       ...WebFontStylesheets.map((href) => ({
         rel: 'stylesheet',
         href,
