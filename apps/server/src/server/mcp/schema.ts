@@ -51,6 +51,20 @@ export const searchResourcesInputSchema = z
     exclude: z
       .array(z.string())
       .optional()
-      .describe('Blocked title keywords. Exclude resources containing ANY value.')
+      .describe('Blocked title keywords. Exclude resources containing ANY value.'),
+    page: z.coerce
+      .number()
+      .int()
+      .optional()
+      .describe(
+        'Page number for pagination, starting from 1. Default 1. Use together with pageSize to fetch results beyond the first 30.'
+      ),
+    pageSize: z.coerce
+      .number()
+      .int()
+      .optional()
+      .describe(
+        'Number of results per page. Default 30. The server accepts at most 1000; values out of range fall back to the server default page size.'
+      )
   })
   .describe('Search parameters for Anime Garden resources.');

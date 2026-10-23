@@ -83,6 +83,8 @@ export class McpServer {
           '- Within fansubs/publishers/types/subjects/include/exclude, values are OR.',
           '- search has higher priority than include.',
           '- keywords uses AND (all keywords must be present), exclude uses AND (all excluded words must not be present).',
+          'Pagination:',
+          '- Results are paginated: use `page` (1-based) and `pageSize` (default 30, server max 1000) to fetch beyond the first 30 results.',
           'Recommended search patterns:',
           '1) Latest episode releases:',
           '{"types":["动画"]}',
@@ -96,13 +98,15 @@ export class McpServer {
         inputSchema: searchResourcesInputSchema
       },
       async (args: z.infer<typeof searchResourcesInputSchema>) => {
-        const { filter } = parseURLSearch(undefined, args);
+        const { pagination, filter } = parseURLSearch(undefined, args);
 
         this.logger.info(`Start searching resources`, filter);
 
         const resp = await this.system.modules.resources.query.find(filter, {
-          page: 1,
-          pageSize: 30
+          page: pagination.page,
+          // Keep the MCP default page size of 30 when the client omits pageSize;
+          // parseURLSearch would otherwise fall back to its own default (100).
+          pageSize: args.pageSize === undefined ? 30 : pagination.pageSize
         });
 
         const result = resp.resources.map((r) => ({
