@@ -26,7 +26,11 @@ export async function fetchResourceDetail(
   }
 
   try {
-    const resp = await fetchAPI<any>(`detail/${provider}/${href}`, undefined, options);
+    const resp = await fetchAPI<any>(
+      `detail/${provider}/${encodeURIComponent(href)}`,
+      undefined,
+      options
+    );
     if (
       !resp ||
       typeof resp !== 'object' ||
