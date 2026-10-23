@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { ResponseLinkHeaderEntry } from '@tanstack/react-start/server';
 
-import { createEarlyHintLinkFilter } from '../src/utils/early-hints';
+import { createEarlyHintLinkFilter } from '../src/utils/server/early-hints';
 
 const { fetchHandler } = vi.hoisted(() => ({ fetchHandler: vi.fn() }));
 

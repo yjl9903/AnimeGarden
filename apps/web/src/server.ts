@@ -1,6 +1,6 @@
 import handler, { createServerEntry } from '@tanstack/react-start/server-entry';
 
-import { createEarlyHintLinkFilter } from './utils/early-hints';
+import { createEarlyHintLinkFilter } from './utils/server/early-hints';
 
 export default createServerEntry({
   fetch(request, opts) {
