@@ -37,6 +37,24 @@ function createResourcesResponse(resources: Array<ReturnType<typeof createResour
   };
 }
 
+/** A fetch mock echoing the requested page and pageSize, like the real server. */
+function createPaginatedFetchMock() {
+  return vi.fn(async (input: unknown) => {
+    const url = new URL(String(input));
+    const page = Number(url.searchParams.get('page') ?? '1');
+    const pageSize = Number(url.searchParams.get('pageSize') ?? '100');
+    const resources = Array.from({ length: pageSize }, (_, index) =>
+      createResource((page - 1) * pageSize + index + 1)
+    );
+    return Response.json({
+      resources,
+      pagination: { page, pageSize, complete: false },
+      filter: {},
+      timestamp: '2026-05-08T00:00:00.000Z'
+    });
+  });
+}
+
 describe('fetchResources', () => {
   it('returns ok false when the first page request fails', async () => {
     const fetch = vi.fn(async () => {
@@ -237,5 +255,59 @@ describe('fetchResources', () => {
         }
       })
     ).rejects.toBe(callbackError);
+  });
+
+  it('respects an explicit pageSize across multi-page requests', async () => {
+    const fetch = createPaginatedFetchMock();
+
+    const result = await fetchResources({
+      fetch,
+      baseURL: 'https://example.com/',
+      pageSize: 30,
+      count: 100
+    });
+
+    expect(result.ok).toBe(true);
+    // 100 resources at 30 per page require 4 page requests
+    expect(fetch).toHaveBeenCalledTimes(4);
+    const pages = fetch.mock.calls.map((call) => new URL(String(call[0])).searchParams);
+    expect(pages.map((params) => params.get('page'))).toEqual(['1', '2', '3', '4']);
+    for (const params of pages) {
+      expect(params.get('pageSize')).toBe('30');
+    }
+  });
+
+  it('keeps the returned pagination.pageSize consistent with an explicit request pageSize', async () => {
+    const fetch = createPaginatedFetchMock();
+
+    const result = await fetchResources({
+      fetch,
+      baseURL: 'https://example.com/',
+      pageSize: 30,
+      count: 100
+    });
+
+    expect(result.ok).toBe(true);
+    if (!result.ok) throw new Error('Expected success');
+    expect(result.pagination.pageSize).toBe(30);
+    expect(result.pagination.page).toBe(4);
+  });
+
+  it('requests with MaxRequestPageSize when pageSize is not set in multi-page mode', async () => {
+    const fetch = createPaginatedFetchMock();
+
+    const result = await fetchResources({
+      fetch,
+      baseURL: 'https://example.com/',
+      count: 100
+    });
+
+    expect(result.ok).toBe(true);
+    // The first page of 1000 resources already satisfies count = 100
+    expect(fetch).toHaveBeenCalledTimes(1);
+    const params = new URL(String(fetch.mock.calls[0][0])).searchParams;
+    expect(params.get('pageSize')).toBe('1000');
+    if (!result.ok) throw new Error('Expected success');
+    expect(result.pagination.pageSize).toBe(1000);
   });
 });

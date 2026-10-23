@@ -69,7 +69,9 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
   const startPage = options.page ?? 1;
 
   // Fetch multiple pages
-  if (!once) {
+  // Respect an explicitly provided pageSize; otherwise request the maximum
+  // page size to reduce the number of requests
+  if (!once && options.pageSize === undefined) {
     searchParams.set('pageSize', '' + MaxRequestPageSize);
   }
 

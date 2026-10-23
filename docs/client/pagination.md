@@ -31,6 +31,8 @@ if (result.ok) {
 
 SDK 使用 `count` 连续请求多页时，`resources` 累积各页资源，`pagination` 描述最后一次成功取得的页。
 请求达到指定 `count` 后可能停止，此时 `pagination.complete` 仍可能为 `false`。
+多页模式默认按 `MaxRequestPageSize`（1000）作为每页条数拉取，以减少请求次数；
+若显式传入 `pageSize`，该值会被尊重而不会被覆盖，返回的 `pagination.pageSize` 与请求一致。
 失败时的部分结果约定见[错误模型](./error-model.md)。
 
 ## 收藏夹查询
