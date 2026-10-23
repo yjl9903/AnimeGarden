@@ -107,3 +107,66 @@ describe('API pagination response contract', () => {
     }
   });
 });
+
+describe('resources page path param', () => {
+  it('honors the page path param for /resources/:page', async () => {
+    const { app, find } = createPaginationApp();
+
+    const response = await app.request('http://localhost/resources/2?pageSize=1');
+    const result = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(result).toMatchObject({
+      status: 'OK',
+      pagination: { page: 2, pageSize: 1, complete: true }
+    });
+    expect(find).toHaveBeenCalledWith({}, { page: 2, pageSize: 1 });
+  });
+
+  it('honors the page path param with provider for /resources/:provider/:page', async () => {
+    const { app, find } = createPaginationApp();
+
+    const response = await app.request('http://localhost/resources/dmhy/2?pageSize=1');
+    const result = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(result).toMatchObject({
+      status: 'OK',
+      filter: { provider: 'dmhy' },
+      pagination: { page: 2, pageSize: 1, complete: true }
+    });
+    expect(find).toHaveBeenCalledWith({ provider: 'dmhy' }, { page: 2, pageSize: 1 });
+  });
+
+  it('honors the page path param over the page query param', async () => {
+    const { app } = createPaginationApp();
+
+    const response = await app.request('http://localhost/resources/3?page=2&pageSize=1');
+    const result = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(result).toMatchObject({ pagination: { page: 3, pageSize: 1 } });
+  });
+
+  it('falls back to the page query param when the page path param is not a number', async () => {
+    const { app } = createPaginationApp();
+
+    const response = await app.request('http://localhost/resources/abc?page=2&pageSize=1');
+    const result = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(result).toMatchObject({ pagination: { page: 2, pageSize: 1 } });
+  });
+
+  it('falls back to the first page when the page path param is invalid', async () => {
+    const { app } = createPaginationApp();
+
+    for (const path of ['/resources/abc', '/resources/dmhy/abc']) {
+      const response = await app.request(`http://localhost${path}?pageSize=1`);
+      const result = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(result).toMatchObject({ pagination: { page: 1, pageSize: 1 } });
+    }
+  });
+});
