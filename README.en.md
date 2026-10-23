@@ -1,7 +1,7 @@
 # 🌸 Anime Garden
 
 [![Group](https://img.shields.io/badge/Telegram-2CA5E0?style=flat-squeare&logo=telegram&logoColor=white)](https://t.me/animegarden_dev)
-[![version](https://img.shields.io/npm/v/animegarden?label=animegarden)](https://www.npmjs.com/package/animegarden)
+[![version](https://img.shields.io/npm/v/@animegarden/client?label=@animegarden/client)](https://www.npmjs.com/package/@animegarden/client)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 [![Ask DeepWiki](./assets/deepwiki.svg)](https://deepwiki.com/yjl9903/AnimeGarden)
 
@@ -12,7 +12,7 @@ A third-party [mirror](https://animes.garden) of [動漫花園](https://share.dm
 + ☁️ An open [API](https://animes.garden/docs/api) for developers
 + 📺 Browse the [anime broadcast schedule](https://animes.garden/anime) to find anime you like
 + 🔖 Advanced search with a wide range of filters, for example: `葬送的芙莉莲 +简体内嵌 字幕组:桜都字幕组 类型:动画`
-+ 📙 Custom RSS feed URLs, for example: [葬送的芙莉莲](https://animes.garden/feed.xml?filter=%5B%7B%22fansubId%22:%5B%22619%22%5D,%22type%22:%22%E5%8B%95%E7%95%AB%22,%22include%22:%5B%22%E8%91%AC%E9%80%81%E7%9A%84%E8%8A%99%E8%8E%89%E8%8E%B2%22%5D,%22keywords%22:%5B%22%E7%AE%80%E4%BD%93%E5%86%85%E5%B5%8C%22%5D%7D%5D)
++ 📙 Custom RSS feed URLs, for example: [葬送的芙莉莲](https://api.animes.garden/feed.xml?filter=%5B%7B%22fansubId%22:%5B%22619%22%5D,%22type%22:%22%E5%8B%95%E7%95%AB%22,%22include%22:%5B%22%E8%91%AC%E9%80%81%E7%9A%84%E8%8A%99%E8%8E%89%E8%8E%B2%22%5D,%22keywords%22:%5B%22%E7%AE%80%E4%BD%93%E5%86%85%E5%B5%8C%22%5D%7D%5D)
 + ⭐ Bookmark search filters and generate aggregated RSS feed URLs
 + 👷‍♂️ Integrations with [AutoBangumi](https://www.autobangumi.org/) and [AnimeSpace](https://github.com/yjl9903/AnimeSpace)
 
@@ -83,7 +83,7 @@ You can find the [interactive Open API documentation](https://animes.garden/docs
 
 You can also use the website to copy generated cURL, JavaScript, and Python API request code directly from a resource listing page, such as [the latest releases of 明天，美食广场见。](https://animes.garden/resources/1?after=1751155200000&fansub=%E6%A1%9C%E9%83%BD%E5%AD%97%E5%B9%95%E7%BB%84&keyword=%E7%AE%80%E4%BD%93&subject=528438).
 
-If you develop in JavaScript or TypeScript, you can use the npm package [@animegarden/client](https://www.npmjs.com/package/animegarden), which provides a higher-level wrapper for these API requests.
+If you develop in JavaScript or TypeScript, you can use the npm package [@animegarden/client](https://www.npmjs.com/package/@animegarden/client), which provides a higher-level wrapper for these API requests.
 
 ## npm Package Usage
 
@@ -97,15 +97,19 @@ npm i @animegarden/client
 import { fetchResources } from '@animegarden/client'
 
 // Fetch the first page of Anime Garden mirror site
-const resources = await fetchResources()
+const result = await fetchResources()
+
+if (result.ok) {
+  console.log(result.resources)
+}
 
 // Fetch all the resources which match some filter conditions
-const sakurato = await fetchResources({ count: -1, fansub: 'ANi' })
+const sakurato = (await fetchResources({ count: -1, fansub: 'ANi' })).resources
 ```
 
 Your runtime must provide a built-in [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) function. If it does not, install [undici](https://github.com/nodejs/undici) or [ofetch](https://github.com/unjs/ofetch) as a polyfill.
 
-See [FilterOptions](https://github.com/yjl9903/AnimeGarden/blob/32bc3843084367338f41be7d4af47c80b639f828/packages/client/src/types.ts#L220) for more filtering options and the [./examples/](https://github.com/yjl9903/AnimeGarden/blob/main/examples/) directory for more code examples.
+See [FilterOptions](https://github.com/yjl9903/AnimeGarden/blob/main/packages/client/src/types.ts) for more filtering options and the [./examples/](https://github.com/yjl9903/AnimeGarden/blob/main/examples/) directory for more code examples.
 
 ## Embedding
 
