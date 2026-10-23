@@ -232,4 +232,79 @@ describe('stringify url', () => {
       `"after=1686355200000&before=1686614400000&exclude=h1&fansub=abc&fansub=def&page=2&pageSize=100&publisher=456&search=hello&search=world&type=%E5%8A%A8%E7%94%BB"`
     );
   });
+
+  it('should treat a string search value as a single filter term', () => {
+    const params = stringifyURLSearch({ search: '芙莉莲' });
+
+    expect(params.getAll('search')).toEqual(['芙莉莲']);
+    expect(params.toString()).toBe(`search=${encodeURIComponent('芙莉莲')}`);
+  });
+
+  it('should keep array search values and deduplicate', () => {
+    const params = stringifyURLSearch({
+      search: ['芙莉莲', '葬送的芙莉莲', '葬送的芙莉莲']
+    });
+
+    expect(params.getAll('search')).toEqual(['芙莉莲', '葬送的芙莉莲']);
+  });
+
+  it('should treat a string include value as a single filter term', () => {
+    const params = stringifyURLSearch({ include: '葬送的芙莉莲' });
+
+    expect(params.getAll('include')).toEqual(['葬送的芙莉莲']);
+    expect(params.getAll('search')).toEqual([]);
+  });
+
+  it('should treat a string keywords value as a single filter term', () => {
+    const params = stringifyURLSearch({ keywords: '简中' });
+
+    expect(params.getAll('keyword')).toEqual(['简中']);
+  });
+
+  it('should treat a string exclude value as a single filter term', () => {
+    const params = stringifyURLSearch({ exclude: 'PV' });
+
+    expect(params.getAll('exclude')).toEqual(['PV']);
+  });
+
+  it('should not split string keywords and exclude in search mode', () => {
+    const params = stringifyURLSearch({ search: '芙莉莲', keywords: '简中', exclude: 'PV' });
+
+    expect(params.getAll('search')).toEqual(['芙莉莲']);
+    expect(params.getAll('keyword')).toEqual(['简中']);
+    expect(params.getAll('exclude')).toEqual(['PV']);
+  });
+
+  it('should not split string keywords and exclude in include mode', () => {
+    const params = stringifyURLSearch({ include: '葬送的芙莉莲', keywords: '简中', exclude: 'PV' });
+
+    expect(params.getAll('include')).toEqual(['葬送的芙莉莲']);
+    expect(params.getAll('keyword')).toEqual(['简中']);
+    expect(params.getAll('exclude')).toEqual(['PV']);
+  });
+
+  it('should keep deduplicating array keywords and exclude', () => {
+    const params = stringifyURLSearch({
+      keywords: ['简中', '简中', '繁中'],
+      exclude: ['PV', 'PV', 'NCOP']
+    });
+
+    expect(params.getAll('keyword')).toEqual(['简中', '繁中']);
+    expect(params.getAll('exclude')).toEqual(['PV', 'NCOP']);
+  });
+
+  it('should normalize string body filter values in parseURLSearch', () => {
+    const { filter } = parseURLSearch(undefined, {
+      search: '芙莉莲',
+      include: '葬送的芙莉莲',
+      keywords: '简中',
+      exclude: 'PV'
+    });
+
+    expect(filter.search).toEqual(['芙莉莲']);
+    // include is dropped when search is present
+    expect(filter.include).toBeUndefined();
+    expect(filter.keywords).toEqual(['简中']);
+    expect(filter.exclude).toEqual(['PV']);
+  });
 });
