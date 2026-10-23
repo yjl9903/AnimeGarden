@@ -91,9 +91,31 @@
     "/users": {
       "get": {
         "summary": "获取用户列表",
-        "description": "获取所有发布者用户信息",
+        "description": "获取所有发布者用户信息。默认不分页并返回全量用户；传入 pageSize > 0 时按页返回并附带 pagination 字段。",
         "operationId": "getUsers",
         "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "页码从 1 开始，默认 1；仅在 pageSize > 0 时生效。",
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "每页数量。默认 0 表示不分页、返回全量数据（与历史行为一致）；大于 0 时按页返回并在响应中附带 pagination 字段。",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "成功获取用户列表",
@@ -111,6 +133,9 @@
                       "items": {
                         "$ref": "#/components/schemas/User"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/PaginationInfo"
                     }
                   },
                   "required": ["status", "users"]
@@ -124,9 +149,31 @@
     "/teams": {
       "get": {
         "summary": "获取字幕组列表",
-        "description": "获取所有字幕组信息",
+        "description": "获取所有字幕组信息。默认不分页并返回全量字幕组；传入 pageSize > 0 时按页返回并附带 pagination 字段。",
         "operationId": "getTeams",
         "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "页码从 1 开始，默认 1；仅在 pageSize > 0 时生效。",
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "每页数量。默认 0 表示不分页、返回全量数据（与历史行为一致）；大于 0 时按页返回并在响应中附带 pagination 字段。",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "成功获取字幕组列表",
@@ -144,6 +191,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Team"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/PaginationInfo"
                     }
                   },
                   "required": ["status", "teams"]
@@ -157,9 +207,31 @@
     "/subjects": {
       "get": {
         "summary": "获取主题列表",
-        "description": "获取所有番剧主题信息",
+        "description": "获取所有未归档的番剧主题信息。默认不分页并返回全量主题；传入 pageSize > 0 时按页返回并附带 pagination 字段。",
         "operationId": "getSubjects",
         "tags": ["Subjects"],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "页码从 1 开始，默认 1；仅在 pageSize > 0 时生效。",
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "minimum": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "每页数量。默认 0 表示不分页、返回全量数据（与历史行为一致）；大于 0 时按页返回并在响应中附带 pagination 字段。",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "minimum": 0
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "成功获取主题列表",
@@ -177,6 +249,9 @@
                       "items": {
                         "$ref": "#/components/schemas/Subject"
                       }
+                    },
+                    "pagination": {
+                      "$ref": "#/components/schemas/PaginationInfo"
                     }
                   },
                   "required": ["status", "subjects"]

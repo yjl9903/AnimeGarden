@@ -7,6 +7,8 @@ import { SupportProviders } from '@animegarden/client';
 import { CollectionsModule } from '../src/collections/index';
 import { QueryManager } from '../src/resources/query';
 import { defineCollectionsRoutes } from '../src/server/routes/collections';
+import { defineSubjectsRoutes } from '../src/server/routes/subjects';
+import { defineUsersRoutes } from '../src/server/routes/users';
 import { defineResourcesRoutes } from '../src/server/routes/resources';
 import type { AppEnv } from '../src/server/utils/hono';
 import type { System } from '../src/system/index';
@@ -105,5 +107,146 @@ describe('API pagination response contract', () => {
       expect(collection.results[index]).toEqual(listResult);
       expect(collection.results[index]).not.toHaveProperty('complete');
     }
+  });
+});
+
+/** In-memory metadata lists served by the users, teams and subjects modules. */
+const metadataUsers = Array.from({ length: 5 }, (_, index) => ({
+  id: index + 1,
+  name: `user-${index + 1}`
+}));
+const metadataTeams = Array.from({ length: 4 }, (_, index) => ({
+  id: index + 1,
+  name: `team-${index + 1}`
+}));
+const metadataSubjects = Array.from({ length: 4 }, (_, index) => ({
+  id: index + 1,
+  name: `subject-${index + 1}`
+}));
+
+/** Builds a system whose in-memory metadata modules hold the fixed lists above. */
+function createMetadataSystem() {
+  const system = {
+    modules: {
+      users: { ids: new Map(metadataUsers.map((user) => [user.id, user])) },
+      teams: { ids: new Map(metadataTeams.map((team) => [team.id, team])) },
+      subjects: { activeSubjects: [...metadataSubjects] }
+    }
+  } as unknown as System;
+
+  const app = new Hono<AppEnv>();
+  defineUsersRoutes(system, app);
+  defineSubjectsRoutes(system, app);
+
+  return { app, system };
+}
+
+type MetadataResponse = {
+  status: string;
+  pagination?: { page: number; pageSize: number; complete: boolean };
+} & Record<string, unknown>;
+
+describe('Metadata endpoints optional pagination', () => {
+  const metadataByKey: Record<string, unknown[]> = {
+    users: metadataUsers,
+    teams: metadataTeams,
+    subjects: metadataSubjects
+  };
+
+  it.each(['/users', '/teams', '/subjects'])(
+    'returns the full list from %s without pagination params',
+    async (path) => {
+      const { app } = createMetadataSystem();
+
+      const response = await app.request(`http://localhost${path}`);
+      const result = (await response.json()) as MetadataResponse;
+      const key = path.slice(1);
+
+      expect(response.status).toBe(200);
+      expect(result).toEqual({ status: 'OK', [key]: metadataByKey[key] });
+      expect(result[key]).toHaveLength(metadataByKey[key].length);
+      expect(result).not.toHaveProperty('pagination');
+    }
+  );
+
+  it.each(['/users', '/teams', '/subjects'])(
+    'returns the first page from %s with pageSize=2',
+    async (path) => {
+      const { app } = createMetadataSystem();
+      const key = path.slice(1);
+
+      const response = await app.request(`http://localhost${path}?pageSize=2`);
+      const result = (await response.json()) as MetadataResponse;
+
+      expect(response.status).toBe(200);
+      expect(result.status).toBe('OK');
+      expect(result[key]).toEqual(metadataByKey[key].slice(0, 2));
+      expect(result.pagination).toEqual({ page: 1, pageSize: 2, complete: false });
+    }
+  );
+
+  it.each([
+    ['/users', metadataUsers.slice(2, 4), false],
+    ['/teams', metadataTeams.slice(2, 4), true],
+    ['/subjects', metadataSubjects.slice(2, 4), true]
+  ])('returns the second page from %s with page=2&pageSize=2', async (path, expected, complete) => {
+    const { app } = createMetadataSystem();
+    const key = path.slice(1);
+
+    const response = await app.request(`http://localhost${path}?page=2&pageSize=2`);
+    const result = (await response.json()) as MetadataResponse;
+
+    expect(response.status).toBe(200);
+    expect(result.status).toBe('OK');
+    expect(result[key]).toEqual(expected);
+    expect(result.pagination).toEqual({ page: 2, pageSize: 2, complete });
+  });
+
+  it('returns the partial last page with complete=true after the full pages', async () => {
+    const { app } = createMetadataSystem();
+
+    const response = await app.request('http://localhost/users?page=3&pageSize=2');
+    const result = (await response.json()) as MetadataResponse;
+
+    expect(response.status).toBe(200);
+    expect(result.users).toEqual([metadataUsers[4]]);
+    expect(result.pagination).toEqual({ page: 3, pageSize: 2, complete: true });
+  });
+
+  it('returns an empty page with complete=true when the page is beyond the list', async () => {
+    const { app } = createMetadataSystem();
+
+    const response = await app.request('http://localhost/users?page=4&pageSize=2');
+    const result = (await response.json()) as MetadataResponse;
+
+    expect(response.status).toBe(200);
+    expect(result.users).toEqual([]);
+    expect(result.pagination).toEqual({ page: 4, pageSize: 2, complete: true });
+  });
+
+  it.each(['/users', '/teams', '/subjects'])(
+    'falls back to the full unpaginated list from %s for an invalid pageSize',
+    async (path) => {
+      const { app } = createMetadataSystem();
+      const key = path.slice(1);
+
+      const response = await app.request(`http://localhost${path}?pageSize=abc`);
+      const result = (await response.json()) as MetadataResponse;
+
+      expect(response.status).toBe(200);
+      expect(result[key]).toHaveLength(metadataByKey[key].length);
+      expect(result).not.toHaveProperty('pagination');
+    }
+  );
+
+  it('treats non-positive page numbers as the first page', async () => {
+    const { app } = createMetadataSystem();
+
+    const response = await app.request('http://localhost/users?page=0&pageSize=2');
+    const result = (await response.json()) as MetadataResponse;
+
+    expect(response.status).toBe(200);
+    expect(result.users).toEqual(metadataUsers.slice(0, 2));
+    expect(result.pagination).toEqual({ page: 1, pageSize: 2, complete: false });
   });
 });
