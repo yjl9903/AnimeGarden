@@ -1678,9 +1678,9 @@
         }
       },
       "FeedTrackerParam": {
-        "name": "trakcer",
+        "name": "tracker",
         "in": "query",
-        "description": "现有 RSS 实现的历史拼写。默认包含 tracker，仅小写 false、off、no 关闭；tracker 参数目前被忽略。资源 JSON 接口仍使用 tracker。",
+        "description": "是否在 RSS enclosure 的磁力链接中附加 tracker。默认包含，仅小写 false、off、no 关闭。资源 JSON 接口使用同名 tracker 参数。",
         "schema": {
           "type": "string",
           "default": "true"

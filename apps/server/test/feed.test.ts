@@ -102,9 +102,9 @@ function createResource(sizeInBytes: number) {
   };
 }
 
-function createSuccessfulFeedApp(sizeInBytes: number, subjectId?: number | null) {
+function createSuccessfulFeedApp(sizeInBytes: number, subjectId?: number | null, tracker = '') {
   const app = new Hono<AppEnv>();
-  const resource = { ...createResource(sizeInBytes), subjectId };
+  const resource = { ...createResource(sizeInBytes), subjectId, tracker };
   const sys = {
     options: {
       site: 'animes.garden'
@@ -189,6 +189,37 @@ describe.each(['/feed.xml', '/collection/test/feed.xml'])('feed Subject extensio
       const { rss } = new XMLParser({ ignoreAttributes: false }).parse(xml);
       expect(rss['@_xmlns:animegarden']).toBe('https://animes.garden/ns/rss/1.0');
       expect(rss.channel.item).not.toHaveProperty('animegarden:subjectId');
+    }
+  );
+});
+
+describe.each(['/feed.xml', '/collection/test/feed.xml'])('feed tracker param: %s', (path) => {
+  const tracker = '&tr=https://tracker.example/announce';
+
+  it('appends the resource tracker to the enclosure url by default', async () => {
+    const app = createSuccessfulFeedApp(1572864, 123456, tracker);
+
+    const response = await app.request(`http://localhost${path}`);
+    const xml = await response.text();
+
+    expect(response.status).toBe(200);
+    expect(XMLValidator.validate(xml)).toBe(true);
+    const { rss } = new XMLParser({ ignoreAttributes: false }).parse(xml);
+    expect(rss.channel.item.enclosure['@_url']).toBe(`magnet:?xt=urn:btih:test${tracker}`);
+  });
+
+  it.each(['false', 'off', 'no'])(
+    'omits the tracker from the enclosure url when tracker=%s',
+    async (value) => {
+      const app = createSuccessfulFeedApp(1572864, 123456, tracker);
+
+      const response = await app.request(`http://localhost${path}?tracker=${value}`);
+      const xml = await response.text();
+
+      expect(response.status).toBe(200);
+      expect(XMLValidator.validate(xml)).toBe(true);
+      const { rss } = new XMLParser({ ignoreAttributes: false }).parse(xml);
+      expect(rss.channel.item.enclosure['@_url']).toBe('magnet:?xt=urn:btih:test');
     }
   );
 });
