@@ -127,6 +127,19 @@
 
 - `src/layouts/Footer.tsx`
 
+### Skills 复制操作
+
+| 事件名 | 触发场景 | 属性 |
+| --- | --- | --- |
+| `skills.copy` | Skills 页「复制提示词 / 复制命令 / 复制示例」成功后 | `kind`，`source`，示例另带 `example` |
+
+- `kind = prompt / command / example`：分别表示提示词、安装命令和使用示例。
+- `source = hero / online / local`：分别表示首屏对话、直接使用、安装 Skill。
+- `source = mcp.codex / mcp.claude / plugin.codex / plugin.claude`：区分 MCP、插件安装及所选客户端。
+- `source = example`：试着问它；`example` 为示例标题。
+- 仅在剪贴板写入成功后上报，复制失败不记录；不上传完整提示词、命令或示例正文。
+- 接入位置：`src/pages/skills/route.tsx` 的 `CopyButton`，统一调用 `src/utils/umami.ts` 的 `trackSkillsCopy`。
+
 ### Skills 聊天应用入口
 
 | 事件名 | 触发场景 | 属性 |

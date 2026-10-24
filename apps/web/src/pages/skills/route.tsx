@@ -6,6 +6,7 @@ import Layout from '~/layouts/Layout';
 import { OpenInChat } from '~/components/Skills/OpenInChat';
 import { SkillPrompt } from '~/components/Skills/SkillPrompt';
 import { getKeepShareURL, openMagnetLink } from '~/utils/url';
+import { trackSkillsCopy, type TrackSkillsCopyPayload } from '~/utils/umami';
 
 import {
   skillURL,
@@ -23,10 +24,12 @@ import './skills.css';
 /** Copies user-selected text and reports clipboard failures without claiming success. */
 function CopyButton({
   text,
+  tracking,
   label = '复制命令',
   iconOnly = false
 }: {
   text: string;
+  tracking: TrackSkillsCopyPayload;
   label?: string;
   iconOnly?: boolean;
 }) {
@@ -36,6 +39,8 @@ function CopyButton({
   async function copy() {
     try {
       await navigator.clipboard.writeText(text);
+      // Record the action only after the clipboard accepts the text.
+      trackSkillsCopy(tracking);
       setStatus('copied');
     } catch {
       setStatus('failed');
@@ -63,7 +68,7 @@ function CopyButton({
 }
 
 /** Shares code rendering and copy behavior between standalone blocks and client tabs. */
-function SetupContent({ option }: { option: SetupOption }) {
+function SetupContent({ option, source }: { option: SetupOption; source: string }) {
   return (
     <>
       {option.kind === 'prompt' ? (
@@ -89,6 +94,7 @@ function SetupContent({ option }: { option: SetupOption }) {
       <CopyButton
         key={option.id}
         text={option.content}
+        tracking={{ kind: option.kind, source }}
         label={option.kind === 'prompt' ? '复制提示词' : '复制命令'}
         iconOnly
       />
@@ -158,7 +164,7 @@ function SetupPanel({
           aria-labelledby={`${id}-tab-${selected.id}`}
           tabIndex={0}
         >
-          <SetupContent option={selected} />
+          <SetupContent option={selected} source={`${id}.${selected.id}`} />
         </div>
       </div>
     </>
@@ -192,7 +198,12 @@ export default function SkillsPage() {
                 <div className="skills-chat-user">
                   <SkillPrompt />
                 </div>
-                <CopyButton text={skillPrompt} label="复制提示词" iconOnly />
+                <CopyButton
+                  text={skillPrompt}
+                  tracking={{ kind: 'prompt', source: 'hero' }}
+                  label="复制提示词"
+                  iconOnly
+                />
               </div>
               <div className="skills-chat-activity">
                 <div className="skills-chat-status">已完成搜索</div>
@@ -292,7 +303,7 @@ export default function SkillsPage() {
             </div>
             <div className="skills-install">
               <div className="skills-terminal">
-                <SetupContent option={option} />
+                <SetupContent option={option} source={option.id} />
               </div>
             </div>
           </section>
@@ -324,7 +335,11 @@ export default function SkillsPage() {
                   <h3>{example.title}</h3>
                   <p>{example.prompt}</p>
                   <div className="flex items-center gap-3">
-                    <CopyButton text={prompt} label="复制示例" />
+                    <CopyButton
+                      text={prompt}
+                      tracking={{ kind: 'example', source: 'example', example: example.title }}
+                      label="复制示例"
+                    />
                     <OpenInChat prompt={prompt} source="example" example={example.title} />
                   </div>
                 </article>
