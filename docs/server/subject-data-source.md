@@ -28,13 +28,11 @@ cron 的 `updateCalendar()` 拉取完整 subjects 列表，用 `calendar + web` 
 有封面资料时统一输出 `https://bgm.animes.garden/bangumi/subject/{id}/poster.jpeg?quality=large`。
 统一地址不保证 Telegram 抓图成功；`sendPhoto 400 failed to get HTTP URL content` 仍需检查镜像响应和 Telegram 抓取结果。
 
-## 部署与迁移
+## 数据库与同步
 
-1. 先执行 `pnpm manager migrate`，应用 `0010_subject_metadata.sql`，添加可空 JSON 字段。
-   旧代码兼容该字段，新代码要求字段已存在；无需新增环境变量。
-2. 更新 cron、server、feed 和 Web，由 cron 启动导入或每小时 `:17` 的 calendar 同步填充资料。
-   如需先刷数据再推送，应在填充期间关闭 TG 配置，确认待推资源对应的 metadata 齐全后再启用。
-3. 检查资料覆盖、server/feed 快照和 RSS 标题，再验证推送。单条查询兜底仍依赖上游可用性。
+`0010_subject_metadata.sql` 为 `subjects` 添加可空 JSON 字段 `metadata`，当前代码依赖该字段，
+无需新增环境变量。数据库迁移只添加字段，资料由 cron 启动导入或每小时 `:17` 的 calendar
+同步填充；metadata 缺失时的单条查询兜底仍依赖上游可用性。
 
 不要用 `import subjects` 代替 calendar 同步：该维护命令会先清空资源绑定再全量重导。
 回滚旧应用时保留新增字段和已填充资料。

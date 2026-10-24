@@ -60,7 +60,7 @@ Hono 入口在 `src/server/index.ts`。`registerHono()` 统一绑定：
 | `src/collections/` | 收藏夹生成和读取 |
 | `src/server/rss/`、`src/server/sitemap/` | RSS 与 sitemap 输出 |
 | `src/server/mcp/` | MCP 服务封装 |
-| `src/utils/` | 缓存、数据库重试、jieba、bgmd、时间等工具 |
+| `src/utils/` | 缓存、数据库重试、jieba、时间等工具 |
 
 ## 资源主链路
 

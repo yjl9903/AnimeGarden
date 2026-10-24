@@ -24,7 +24,8 @@ Cache-Control: public, max-age=short, stale-while-revalidate=long
 
 ### 拆分首屏大 chunk
 
-当前构建中最大 client JS chunk gzip 后约 `1.15M`，疑似包含完整 `bgmd` subject 数据。迁移时需要避免完整 subject 数据进入首页、Layout、Search 等首屏路径。
+Web 已移除 `bgmd` 静态数据依赖，番剧资料通过服务端按需查询 `bgmx`。迁移时仍需避免完整
+subject 数据进入首页、Layout、Search 等首屏路径；评估拆包收益时应重新测量当前构建产物。
 
 可选方向：
 
