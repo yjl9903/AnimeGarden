@@ -102,9 +102,9 @@ function createResource(sizeInBytes: number) {
   };
 }
 
-function createSuccessfulFeedApp(sizeInBytes: number, subjectId?: number | null) {
+function createSuccessfulFeedApp(sizeInBytes: number, subjectId?: number | null, tracker = '') {
   const app = new Hono<AppEnv>();
-  const resource = { ...createResource(sizeInBytes), subjectId };
+  const resource = { ...createResource(sizeInBytes), subjectId, tracker };
   const sys = {
     options: {
       site: 'animes.garden'
@@ -128,6 +128,27 @@ function createSuccessfulFeedApp(sizeInBytes: number, subjectId?: number | null)
 
   return app;
 }
+
+describe.each(['/feed.xml', '/collection/test/feed.xml'])('feed tracker parameter: %s', (path) => {
+  it.each([
+    ['', true],
+    ['?tracker=true', true],
+    ['?tracker=false', false],
+    ['?tracker=off', false],
+    ['?tracker=no', false]
+  ])('controls enclosure trackers with query %s', async (query, enabled) => {
+    const tracker = '&tr=https%3A%2F%2Ftracker.example.com%2Fannounce';
+    const app = createSuccessfulFeedApp(1572864, undefined, tracker);
+
+    const response = await app.request(`http://localhost${path}${query}`);
+
+    expect(response.status).toBe(200);
+    const { rss } = new XMLParser({ ignoreAttributes: false }).parse(await response.text());
+    expect(rss.channel.item.enclosure['@_url']).toBe(
+      'magnet:?xt=urn:btih:test' + (enabled ? tracker : '')
+    );
+  });
+});
 
 describe('feed enclosure length', () => {
   it('emits the byte size returned by the query layer for the resources feed', async () => {

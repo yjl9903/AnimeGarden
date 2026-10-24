@@ -24,9 +24,15 @@ const providerEnum = z.enum(SupportProviders);
 
 const presetEnum = z.enum(SupportPresets);
 
+// Parse explicit false values instead of treating every non-empty string as true.
+const duplicateParam = z
+  .string()
+  .transform((value) => !['', 'false', '0', 'off', 'no'].includes(value))
+  .nullish();
+
 const UrlSearchSchema = {
   provider: providerEnum.optional(),
-  duplicate: z.union([z.null(), z.undefined(), z.coerce.boolean()]).optional(),
+  duplicate: duplicateParam,
   page: z.union([z.null(), z.undefined(), z.coerce.number()]).optional(),
   pageSize: z.union([z.null(), z.undefined(), z.coerce.number()]).optional(),
   fansub: z.string().array().optional(),
@@ -44,7 +50,7 @@ const UrlSearchSchema = {
 
 const BodySchema = {
   provider: providerEnum.optional(),
-  duplicate: z.union([z.null(), z.undefined(), z.coerce.boolean()]).optional(),
+  duplicate: z.union([z.boolean(), duplicateParam]),
   page: z.coerce.number().optional(),
   pageSize: z.coerce.number().optional(),
   fansub: z.string().optional(),
@@ -255,8 +261,9 @@ export function stringifyURLSearch(
   if (pageSize) {
     params.set('pageSize', '' + pageSize);
   }
-  if (duplicate) {
-    params.set('duplicate', 'true');
+  // Preserve explicit false so a URL round trip does not restore the provider default.
+  if (duplicate !== undefined) {
+    params.set('duplicate', String(duplicate));
   }
   if (after) {
     const time = after instanceof Date ? after.getTime() : new Date(after).getTime();

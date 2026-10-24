@@ -99,7 +99,7 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
 );
 
 function isTrackerEnabled(searchParams: URLSearchParams) {
-  const value = searchParams.get('trakcer');
+  const value = searchParams.get('tracker');
   return value === null ? true : ['no', 'off', 'false'].includes(value) ? false : true;
 }
 

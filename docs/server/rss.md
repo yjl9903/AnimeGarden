@@ -23,6 +23,11 @@ RSS 请求中的资源按番剧分类。标准字段 `title`、`link`、`guid`�
 此扩展不改变分页或缓存策略：全站 RSS 默认返回 100 条，`pageSize` 最大为 1000，两个接口
 的响应缓存时间均为 1 小时。消费者仍需处理轮询期间超出返回窗口的资源，以及后续绑定修正。
 
+## Tracker 参数
+
+两个 RSS 接口均通过 `tracker` 查询参数控制是否在 enclosure 的磁力链接中追加 tracker，
+默认开启。仅小写 `false`、`off`、`no` 会关闭，例如 `/feed.xml?tracker=false`。
+
 ## 生成器接口
 
 在 `getRssString()` 的 item 中通过结构化 `extensions` 添加字段，无需拼接 XML：

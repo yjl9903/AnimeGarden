@@ -266,9 +266,9 @@ export type FilterOptions = {
   provider?: string;
 
   /**
-   * Whether include duplicated resources from different platfrom.
+   * Whether to include duplicated resources when a valid provider is specified.
    *
-   * @default false
+   * @default true
    */
   duplicate?: boolean;
 

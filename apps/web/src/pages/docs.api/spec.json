@@ -1605,7 +1605,7 @@
       "DuplicateParam": {
         "name": "duplicate",
         "in": "query",
-        "description": "是否包含重复资源。仅在查询条件中指定有效 provider 时生效，省略时包含重复资源；仅指定路径中的 provider 不触发此规则。非空字符串（包括 false、0）均视为 true，空字符串视为 false。",
+        "description": "是否包含重复资源。仅在查询条件中指定有效 provider 时生效，省略时包含重复资源；仅指定路径中的 provider 不触发此规则。小写 false、off、no、0 和空字符串解析为 false，其他字符串解析为 true。",
         "schema": {
           "type": "string"
         }
@@ -1638,7 +1638,7 @@
         }
       },
       "FeedTrackerParam": {
-        "name": "trakcer",
+        "name": "tracker",
         "in": "query",
         "description": "仅小写 false、off、no 关闭 tracker。",
         "schema": {
