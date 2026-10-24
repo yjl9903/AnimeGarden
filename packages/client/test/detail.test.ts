@@ -71,9 +71,11 @@ describe('fetchResourceDetail', () => {
   });
 
   it('encodes special characters in the detail id', async () => {
-    const fetch = vi.fn(async () =>
-      Response.json({ resource, timestamp: '2026-06-29T00:00:00.000Z' })
-    );
+    let requestedUrl = '';
+    const fetch = vi.fn(async (request: RequestInfo) => {
+      requestedUrl = request instanceof Request ? request.url : String(request);
+      return Response.json({ resource, timestamp: '2026-06-29T00:00:00.000Z' });
+    });
 
     const result = await fetchResourceDetail('dmhy', 'a/b', {
       fetch,
@@ -87,15 +89,17 @@ describe('fetchResourceDetail', () => {
     );
 
     // The server route receives the original id after decoding the path segment.
-    const url = new URL((fetch.mock.calls[0]?.[0] as string) ?? '');
+    const url = new URL(requestedUrl);
     const id = decodeURIComponent(url.pathname.split('/').at(-1) ?? '');
     expect(id).toBe('a/b');
   });
 
   it('keeps an already percent-encoded detail id literally encoded', async () => {
-    const fetch = vi.fn(async () =>
-      Response.json({ resource, timestamp: '2026-06-29T00:00:00.000Z' })
-    );
+    let requestedUrl = '';
+    const fetch = vi.fn(async (request: RequestInfo) => {
+      requestedUrl = request instanceof Request ? request.url : String(request);
+      return Response.json({ resource, timestamp: '2026-06-29T00:00:00.000Z' });
+    });
 
     const result = await fetchResourceDetail('dmhy', 'abc%2Fdef', {
       fetch,
@@ -108,15 +112,17 @@ describe('fetchResourceDetail', () => {
       expect.any(Object)
     );
 
-    const url = new URL((fetch.mock.calls[0]?.[0] as string) ?? '');
+    const url = new URL(requestedUrl);
     const id = decodeURIComponent(url.pathname.split('/').at(-1) ?? '');
     expect(id).toBe('abc%2Fdef');
   });
 
   it('encodes query and fragment characters in the detail id', async () => {
-    const fetch = vi.fn(async () =>
-      Response.json({ resource, timestamp: '2026-06-29T00:00:00.000Z' })
-    );
+    let requestedUrl = '';
+    const fetch = vi.fn(async (request: RequestInfo) => {
+      requestedUrl = request instanceof Request ? request.url : String(request);
+      return Response.json({ resource, timestamp: '2026-06-29T00:00:00.000Z' });
+    });
 
     const result = await fetchResourceDetail('dmhy', 'a?b#c', {
       fetch,
@@ -129,7 +135,7 @@ describe('fetchResourceDetail', () => {
       expect.any(Object)
     );
 
-    const url = new URL((fetch.mock.calls[0]?.[0] as string) ?? '');
+    const url = new URL(requestedUrl);
     expect(url.search).toBe('');
     expect(url.hash).toBe('');
     const id = decodeURIComponent(url.pathname.split('/').at(-1) ?? '');
