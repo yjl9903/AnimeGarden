@@ -15,6 +15,15 @@ interface PaginationResult {
 
 ## 资源查询
 
+资源列表支持 `/resources`、`/resources/:page`、`/resources/:provider` 和
+`/resources/:provider/:page`。provider 路径始终限定资源来源，例如
+`/resources/dmhy?page=2` 查询動漫花園的第 2 页资源。
+
+路径页码必须由十进制数字组成且大于等于 `1`；有效路径页码优先于 query 和 JSON 请求体中的
+`page`。路径缺失或非法（例如 `2abc`、`2.5`、`0`）时，沿用 query、请求体、默认第 `1` 页的
+解析顺序。例如 `/resources/2?page=7` 返回第 2 页，`/resources/2abc?page=7` 返回第 7 页。
+路径分页同样受下述深分页上限限制。
+
 `GET /resources` 返回 `resources`、`pagination` 和 `filter` 等字段，移除了与 `resources`
 同级的旧 `complete` 字段。SDK `fetchResources` 成功时同样使用 `result.pagination`：
 
