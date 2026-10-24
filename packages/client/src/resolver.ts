@@ -279,7 +279,18 @@ export function stringifyURLSearch(
     params.set('provider', provider);
   }
 
-  const { search, include, keywords, exclude, subject, subjects } = options;
+  const { subject, subjects } = options;
+
+  // A string filter value is a single filter term, not an iterable of characters.
+  // Normalize string | string[] into string[] before deduplicating with `Set`,
+  // otherwise `new Set('芙莉莲')` would split the string into single characters.
+  const toArray = (value: string | string[] | undefined | null): string[] | undefined =>
+    Array.isArray(value) ? value : value ? [value] : undefined;
+
+  const search = toArray(options.search);
+  const include = toArray(options.include);
+  const keywords = toArray(options.keywords);
+  const exclude = toArray(options.exclude);
 
   // subject
   if (subject) {
