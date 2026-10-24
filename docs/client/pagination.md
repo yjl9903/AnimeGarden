@@ -33,6 +33,9 @@ SDK 使用 `count` 连续请求多页时，`resources` 累积各页资源，`pag
 请求达到指定 `count` 后可能停止，此时 `pagination.complete` 仍可能为 `false`。
 失败时的部分结果约定见[错误模型](./error-model.md)。
 
+服务端要求 `page × pageSize <= 10000`，超过上限返回 HTTP 400。`count: -1` 只表示客户端
+持续翻页，不会绕过此限制；匹配资源过多时，应增加番剧、字幕组或时间范围等筛选条件。
+
 ## 收藏夹查询
 
 `GET /collection/{hash}` 和 SDK `fetchCollection` 的每个 `results[i]` 对应 `filters[i]`，结构为：

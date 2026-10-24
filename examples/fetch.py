@@ -8,13 +8,13 @@ import requests
 
 url = "https://api.animes.garden/resources"
 params = {
-  'subject': [528438],
-  'fansub': ["桜都字幕组"],
-  'keyword': ["简体"],
-  'after': 1751155200000
+    'subject': 543360,
+    'fansub': '喵萌奶茶屋',
+    'keyword': '简日'
 }
 
-response = requests.get(url, params=params)
-resources = response.json()
+response = requests.get(url, params=params, timeout=30)
+response.raise_for_status()
+result = response.json()
 
-print(resources)
+print(result['resources'])

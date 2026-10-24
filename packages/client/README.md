@@ -3,9 +3,11 @@
 [![version](https://img.shields.io/npm/v/@animegarden/client?label=@animegarden/client)](https://www.npmjs.com/package/@animegarden/client)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
-[AnimeGarden](https://animes.garden/) API client and utils.
+A JavaScript / TypeScript API client for [AnimeGarden](https://animes.garden).
 
 ## Installation
+
+> Requires Node.js 24+ or a browser with the standard Fetch API.
 
 ```bash
 npm i @animegarden/client
@@ -13,19 +15,57 @@ npm i @animegarden/client
 
 ## Usage
 
+Example:
+
 ```ts
-import { fetchResources } from '@animegarden/client'
+import { fetchResources } from '@animegarden/client';
 
-// Fetch the first page of Anime Garden mirror site
-const resources = await fetchResources(fetch)
+// Fetch the first page of resources
+const result = await fetchResources();
+if (!result.ok) {
+  throw result.error;
+}
 
-// Fetch all the resources which match some filter conditions
-const sakurato = await fetchResources(fetch, { count: -1, fansub: 619 })
+console.log(result.resources);
+
+// Fetch matching resources across pages
+const botan = await fetchResources({
+  count: -1,
+  subject: 543360,
+  fansub: '喵萌奶茶屋',
+  keywords: ['简日']
+});
+
+if (!botan.ok) {
+  throw botan.error;
+}
+
+console.log(botan.resources);
 ```
 
-Assume your environment has built-in [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch). If not you can use [undici](https://github.com/nodejs/undici) or [ofetch](https://github.com/unjs/ofetch).
+See [./examples/](https://github.com/yjl9903/AnimeGarden/blob/main/examples/) for more code examples.
 
-You can check more filter conditions [FilterOptions](https://github.com/yjl9903/AnimeGarden/blob/main/packages/animegarden/src/garden/types.ts) and usage examples in [./scripts/](https://github.com/yjl9903/AnimeGarden/blob/main/scripts/) directory.
+Common filters (combined with AND by default):
+
+| Field | Matching rule |
+| --- | --- |
+| `subjects` | Match any of the specified Bangumi subject IDs. |
+| `fansubs` / `publishers` | Filter by fansub or publisher names, respectively. Match any name; when both are set, either condition suffices. |
+| `search` | Search titles by anime name or keywords. Overrides `include`. |
+| `include` | The title contains any of the specified terms; useful for searching by anime name. |
+| `keywords` | The title contains every specified term, such as `['1080p', '简日']`. |
+| `exclude` | Exclude resources whose titles contain any specified term. |
+| `after` / `before` | Limit publication dates to an inclusive range. |
+
+A successful `fetchResources()` result contains these fields:
+
+| Field | Meaning |
+| --- | --- |
+| `ok` | `true` if the request succeeded. |
+| `resources` | Matching resources, deduplicated and sorted from newest to oldest. |
+| `pagination` | The last fetched page number `page` and page size `pageSize`; `complete: true` means there is no next page. |
+| `filter` | The filters actually used by the server after parsing. |
+| `timestamp` | The first successful response time. |
 
 ## Credits
 

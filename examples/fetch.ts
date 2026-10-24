@@ -1,10 +1,13 @@
 import { fetchResources } from '@animegarden/client';
 
-const resources = await fetchResources({
-  subjects: [528438],
-  fansubs: ["桜都字幕组"],
-  keywords: ["简体"],
-  after: new Date('2025-06-29T00:00:00.000Z')
+const result = await fetchResources({
+  subject: 543360,
+  fansub: '喵萌奶茶屋',
+  keywords: ['简日']
 });
 
-console.log(resources);
+if (!result.ok) {
+  throw result.error;
+}
+
+console.log(result.resources);

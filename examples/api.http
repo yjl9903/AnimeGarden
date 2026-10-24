@@ -2,16 +2,16 @@
 GET https://api.animes.garden/resources
 Content-Type: application/json
 
-### List the first page of resources with its full magnet url with tracker
+### List the first page of resources with a separate tracker field
 GET https://api.animes.garden/resources?tracker=true
 Content-Type: application/json
 
-### Get the resource detail
-GET https://api.animes.garden/detail/dmhy/674983
+### Get the resource detail by provider ID
+GET https://api.animes.garden/detail/dmhy/716633
 Content-Type: application/json
 
-### Get the resource detail by id
-GET https://api.animes.garden/detail/dmhy/674983
+### Get the resource detail by info hash
+GET https://api.animes.garden/detail/infohash/AVXUXZOH3IKKI4OFNOAVRLMSFUSJYWPE
 Content-Type: application/json
 
 ### List the second page of resources
@@ -31,7 +31,7 @@ GET https://api.animes.garden/resources?fansub=ANi&fansub=爱恋字幕社
 Content-Type: application/json
 
 ### Search resources
-GET https://api.animes.garden/resources
+POST https://api.animes.garden/resources
 Content-Type: application/json
 
 {
@@ -39,7 +39,7 @@ Content-Type: application/json
 }
 
 ### Only search type 动画
-GET https://api.animes.garden/resources?type=动画
+POST https://api.animes.garden/resources?type=动画
 Content-Type: application/json
 
 {
@@ -47,7 +47,7 @@ Content-Type: application/json
 }
 
 ### Search resources with exclude
-GET https://api.animes.garden/resources
+POST https://api.animes.garden/resources
 Content-Type: application/json
 
 {
@@ -58,14 +58,14 @@ Content-Type: application/json
 ### Search resources with complicated search
 ### Resource must has type "动画"
 ### Resource title must contains one of ("机动战士高达" or "水星的魔女") and all the keywords ("第二季" and "ANi")
-GET https://api.animes.garden/resources?type=动画
+POST https://api.animes.garden/resources?type=动画
 Cache-Control: no-store
 Content-Type: application/json
 
 {
   "include": [
     "机动战士高达",
-    "水星的魔女",
+    "水星的魔女"
   ],
   "keywords": [
     "第二季",
@@ -74,7 +74,7 @@ Content-Type: application/json
 }
 
 ### Search resources with full text index
-GET https://api.animes.garden/resources?type=动画
+POST https://api.animes.garden/resources?type=动画
 Cache-Control: no-cache
 Content-Type: application/json
 

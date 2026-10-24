@@ -1,6 +1,6 @@
 # 🌸 Anime Garden
 
-[![Group](https://img.shields.io/badge/Telegram-2CA5E0?style=flat-squeare&logo=telegram&logoColor=white)](https://t.me/animegarden_dev)
+[![Group](https://img.shields.io/badge/Telegram-2CA5E0?style=flat&logo=telegram&logoColor=white)](https://t.me/animegarden_dev)
 [![version](https://img.shields.io/npm/v/@animegarden/client?label=@animegarden/client)](https://www.npmjs.com/package/@animegarden/client)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 [![Ask DeepWiki](./assets/deepwiki.svg)](https://deepwiki.com/yjl9903/AnimeGarden)
@@ -11,8 +11,8 @@
 
 + ☁️ 为开发者准备的开放 [API 接口](https://animes.garden/docs/api)
 + 📺 查看 [动画放送时间表](https://animes.garden/anime) 来找到你喜欢的动画
-+ 🔖 支持丰富的高级搜索, 例如: `葬送的芙莉莲 +简体内嵌 字幕组:桜都字幕组 类型:动画`
-+ 📙 自定义 RSS 订阅链接, 例如: [葬送的芙莉莲](https://api.animes.garden/feed.xml?filter=%5B%7B%22fansubId%22:%5B%22619%22%5D,%22type%22:%22%E5%8B%95%E7%95%AB%22,%22include%22:%5B%22%E8%91%AC%E9%80%81%E7%9A%84%E8%8A%99%E8%8E%89%E8%8E%B2%22%5D,%22keywords%22:%5B%22%E7%AE%80%E4%BD%93%E5%86%85%E5%B5%8C%22%5D%7D%5D)
++ 🔖 支持丰富的高级搜索, 例如: `上伊那牡丹 +简日 字幕组:喵萌奶茶屋 类型:动画`
++ 📙 自定义 RSS 订阅链接, 例如: [上伊那牡丹](https://api.animes.garden/feed.xml?subject=543360&fansub=%E5%96%B5%E8%90%8C%E5%A5%B6%E8%8C%B6%E5%B1%8B&keyword=%E7%AE%80%E6%97%A5)
 + ⭐ 搜索条件收藏夹和生成聚合的 RSS 订阅链接
 + 👷‍♂️ 支持与 [AutoBangumi](https://www.autobangumi.org/) 和 [AnimeSpace](https://github.com/yjl9903/AnimeSpace) 集成
 
@@ -22,7 +22,7 @@
 >
 > **项目文档**: [由 DeepWiki 生成](https://deepwiki.com/yjl9903/AnimeGarden)
 
-[![home](./assets/home.jpeg)](https://animes.garden/resources/1?subject=477825)
+[![home](./assets/home.jpeg)](https://animes.garden/resources/1?subject=543360)
 
 ## 使用插件
 
@@ -44,7 +44,7 @@ claude plugin install animegarden@animegarden
 
 安装后打开新会话，直接输入：
 
-> 用 AnimeGarden 查找葬送的芙莉莲 1080p 简体字幕资源，列出磁力链接.
+> 用 AnimeGarden 查找上伊那牡丹 1080p 简体字幕资源，列出磁力链接.
 
 ## 使用 Skills
 
@@ -81,11 +81,13 @@ curl "https://api.animes.garden/resources?page=1&pageSize=10"
 
 你可以在[这里](https://animes.garden/docs/api)找到交互式的 Open API 文档, 以及在本仓库的 [examples/api.http](./examples/api.http) 文件内查看到更多 API 用例.
 
-你也可以直接使用网站, 在资源列表页 (例如 [明天，美食广场见。 最新资源](https://animes.garden/resources/1?after=1751155200000&fansub=%E6%A1%9C%E9%83%BD%E5%AD%97%E5%B9%95%E7%BB%84&keyword=%E7%AE%80%E4%BD%93&subject=528438)) 直接复制生成的 cURL、JavaScript 和 Python 的 API 请求代码.
+你也可以直接使用网站, 在资源列表页 (例如 [上伊那牡丹 最新资源](https://animes.garden/resources/1?subject=543360&fansub=%E5%96%B5%E8%90%8C%E5%A5%B6%E8%8C%B6%E5%B1%8B&keyword=%E7%AE%80%E6%97%A5)) 直接复制生成的 cURL、JavaScript 和 Python 的 API 请求代码.
 
 如果你正在使用 JavaScript 和 TypeScript 进行开发, 那么你可以直接使用 npm 包 [@animegarden/client](https://www.npmjs.com/package/@animegarden/client), 它是对这些 API 请求的上层封装.
 
 ## 使用 npm 包
+
+> 支持 Node.js 24+ 或提供标准 Fetch API 的浏览器环境.
 
 它是 [AnimeGarden](https://animes.garden) 的 JavaScript / TypeScript 的 API 客户端封装.
 
@@ -93,30 +95,64 @@ curl "https://api.animes.garden/resources?page=1&pageSize=10"
 npm i @animegarden/client
 ```
 
+示例:
+
 ```ts
-import { fetchResources } from '@animegarden/client'
+import { fetchResources } from '@animegarden/client';
 
-// Fetch the first page of Anime Garden mirror site
-const result = await fetchResources()
-
-if (result.ok) {
-  console.log(result.resources)
+// Fetch the first page of resources
+const result = await fetchResources();
+if (!result.ok) {
+  throw result.error;
 }
 
-// Fetch all the resources which match some filter conditions
-const sakurato = (await fetchResources({ count: -1, fansub: 'ANi' })).resources
+console.log(result.resources);
+
+// Fetch matching resources across pages
+const botan = await fetchResources({
+  count: -1,
+  subject: 543360,
+  fansub: '喵萌奶茶屋',
+  keywords: ['简日']
+});
+
+if (!botan.ok) {
+  throw botan.error;
+}
+
+console.log(botan.resources);
 ```
 
-使用时, 你需要保证你的程序环境中有内置的 [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) 函数. 如果没有, 你可以安装使用 [undici](https://github.com/nodejs/undici) 或者 [ofetch](https://github.com/unjs/ofetch) 进行 polyfill.
+更多程序示例见 [./examples/](https://github.com/yjl9903/AnimeGarden/blob/main/examples/).
 
-你可以在[这里](https://github.com/yjl9903/AnimeGarden/blob/main/packages/client/src/types.ts)查看更多过滤条件 `FilterOptions`, 也可以在 [./examples/](https://github.com/yjl9903/AnimeGarden/blob/main/examples/) 目录下找到更多程序示例.
+常用筛选条件（默认取交集）：
+
+| 字段 | 筛选逻辑 |
+| --- | --- |
+| `subjects` | 按 Bangumi 条目 ID 筛选，多个 ID 匹配任意一个. |
+| `fansubs` / `publishers` | 分别按字幕组或发布者名称筛选，匹配任意一个；同时设置时满足任一条件即可. |
+| `search` | 按番剧名或关键词搜索标题；设置后忽略 `include`. |
+| `include` | 标题包含任意一个指定词，可用于按番剧名搜索. |
+| `keywords` | 标题包含全部指定词，例如 `['1080p', '简日']`. |
+| `exclude` | 排除标题包含任意一个指定词的资源. |
+| `after` / `before` | 限定发布时间范围，包含边界时间. |
+
+`fetchResources()` 成功返回时，包含以下字段：
+
+| 字段 | 含义 |
+| --- | --- |
+| `ok` | `true` 表示请求成功. |
+| `resources` | 匹配的资源数组，去重后按发布时间从新到旧排序. |
+| `pagination` | 最后取得的页码 `page`、每页条数 `pageSize`；`complete: true` 表示没有下一页. |
+| `filter` | 服务端解析后实际使用的筛选条件. |
+| `timestamp` | 首次成功响应的时间. |
 
 ## 使用内嵌代码
 
 你可以从资源搜索页复制出网页嵌入代码，放到你的博客等各种页面中.
 
 ```html
-<iframe src="//animes.garden/iframe?subject=477825" width="100%" height="600" frameborder="0"></iframe>
+<iframe src="https://animes.garden/iframe?subject=543360" width="100%" height="600" frameborder="0"></iframe>
 ```
 
 ## 本地开发

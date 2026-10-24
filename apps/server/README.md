@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 
-The server implmentation for [AnimeGarden](https://animes.garden/).
+The server implementation for [AnimeGarden](https://animes.garden/).
 
 ## Credits
 
@@ -14,4 +14,4 @@ The server implmentation for [AnimeGarden](https://animes.garden/).
 
 ## License
 
-MIT License © 2023 [XLor](https://github.com/yjl9903)
+AGPL-3.0 License © 2023 [XLor](https://github.com/yjl9903)

@@ -2,15 +2,19 @@
 
 ## Setup
 
+We recommend [mise](https://mise.jdx.dev/getting-started.html) to install Node.js and pnpm.
+
 We use [`pnpm`](https://pnpm.io/) to manage this monorepo.
 
-To set the repository up:
+Run the setup commands from the repository root:
 
 | Steps | Command |
 |-------|--------|
-| 1. Install [Node.js](https://nodejs.org/), using the [latest LTS](https://nodejs.org/en/about/releases/) | - |
-| 2. Install [pnpm](https://pnpm.io/installation) | `npm i -g pnpm` |
-| 3. Install dependencies under the project root | `pnpm i` |
+| 1. [Install mise](https://mise.jdx.dev/getting-started.html) and make it available on `PATH` | - |
+| 2. Install the project's Node.js and pnpm versions | `mise install node pnpm` |
+| 3. Install dependencies | `mise exec -- pnpm i` |
+
+With [mise shell activation](https://mise.jdx.dev/cli/activate.html), you can run `pnpm` directly. Otherwise, prefix the commands below with `mise exec --`.
 
 ## Packages
 
@@ -44,7 +48,7 @@ pnpm -C packages/anipar test
 
 It is located at `apps/web`.
 
-This package is built on the [Remix](https://remix.run/).
+This package is built on TanStack Start. See the [Web architecture guide](./docs/web/architecture-overview.md).
 
 ```bash
 # Build web app
@@ -73,26 +77,33 @@ Make sure you have setup the environment.
 ### Fetch initial data
 
 ```bash
-pnpm manager fetch dmhy --output output/dmhy
-pnpm manager fetch moe  --output output/moe
+pnpm manager fetch dmhy --out-dir output --start 1 --end 2
+pnpm manager fetch moe --out-dir output --start 1 --end 2
 ```
 
-These two commands will fetch data from the remote and write to files in the dir `output/dmhy` and `output/moe`.
+These commands fetch the first page from each provider and write JSON files to `output/dmhy` and `output/moe`.
 
-Fetching all the data usually **takes several hours**. You can use the `--from <page>` and `--to <page>` arguments to specify the fetching range.
+Use `--start <page>` (inclusive) and `--end <page>` (exclusive) to select a larger range. Without `--end`, each command fetches one page.
 
 ### Setup the database
 
-Start dev postgres and redis with `docker-compose.yml`
+Start development Postgres and Redis with `docker-compose.dev.yml`:
 
 ```bash
 docker compose --file=docker-compose.dev.yml up
 ```
 
-Then migrate the dev postgres database.
+Set `POSTGRES_URI` to your development database connection URI, using the configuration in [docker-compose.dev.yml](./docker-compose.dev.yml), then migrate the schema:
 
 ```bash
-pnpm manager db migrate --uri "postgres://root:example@0.0.0.0:5432/animegarden"
+pnpm manager migrate --postgres-uri "$POSTGRES_URI"
 ```
 
-Work in progress...
+### Import initial data
+
+Import the previously fetched JSON files into the database:
+
+```bash
+pnpm manager import resources output/dmhy --postgres-uri "$POSTGRES_URI"
+pnpm manager import resources output/moe --postgres-uri "$POSTGRES_URI"
+```
