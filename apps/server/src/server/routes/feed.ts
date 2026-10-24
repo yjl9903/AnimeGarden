@@ -32,7 +32,7 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
 
       return ctx.body(
         await getRssString({
-          title: generateTitleFromFilter(filter),
+          title: await generateTitleFromFilter(filter, sys.modules.subjects),
           description: 'Anime Garden 是動漫花園資源網的第三方镜像站',
           site: `https://${sys.options.site ?? 'animes.garden'}/resources/1${url.search}`,
           trailingSlash: false,

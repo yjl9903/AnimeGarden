@@ -1,12 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PgDialect } from 'drizzle-orm/pg-core';
 
-const { fetchCalendar, fetchSubjects } = vi.hoisted(() => ({
+const { fetchCalendar, fetchSubjects, fetchSubject } = vi.hoisted(() => ({
+  fetchSubject: vi.fn(),
   fetchCalendar: vi.fn(),
   fetchSubjects: vi.fn()
 }));
 
 vi.mock('bgmx', () => ({
+  fetchSubject,
   fetchCalendar,
   fetchSubjects
 }));
@@ -43,6 +45,7 @@ async function* bgmxSubjects(values: ReturnType<typeof bgmxSubject>[]) {
 }
 
 beforeEach(() => {
+  fetchSubject.mockReset();
   fetchCalendar.mockReset();
   fetchSubjects.mockReset();
   fetchSubjects.mockImplementation(() => bgmxSubjects([]));
@@ -62,6 +65,7 @@ describe('SubjectsModule telegram push enqueueing', () => {
       SubjectsModule.name
     );
 
+    vi.spyOn(mod, 'fetchSubjects').mockResolvedValue([]);
     vi.spyOn(mod, 'insertSubject')
       .mockResolvedValueOnce({
         id: 1,
@@ -208,6 +212,7 @@ describe('SubjectsModule bgmx calendar sync', () => {
       })),
       fetchSubjects: vi.fn(),
       system: {
+        notifyRefreshedResources: vi.fn(),
         modules: {
           push: {
             enqueueResourceMessages
@@ -249,6 +254,20 @@ describe('SubjectsModule bgmx calendar sync', () => {
     );
     expect(fetchSubjects).toHaveBeenCalledWith({ timeout: 30 * 1000, retry: 1 });
     expect(enqueueResourceMessages).toHaveBeenCalledWith([11]);
+    expect(mod.fetchSubjects.mock.invocationCallOrder[0]).toBeLessThan(
+      mod.indexSubject.mock.invocationCallOrder[0]
+    );
+    expect(mod.fetchSubjects.mock.invocationCallOrder[0]).toBeLessThan(
+      enqueueResourceMessages.mock.invocationCallOrder[0]
+    );
+    const persisted = mod.upsertSubjects.mock.calls[0][0];
+    expect(persisted.find((sub: any) => sub.id === 2)).toMatchObject({
+      isArchived: true,
+      metadata: { title: '日文标题', display_title: '中文标题', onair_date: '2026-07-01' }
+    });
+    expect(mod.system.notifyRefreshedResources).toHaveBeenCalledWith(
+      expect.objectContaining({ subjects: true })
+    );
   });
 
   it('indexes existing active subjects only when search conditions changed', async () => {
@@ -267,6 +286,7 @@ describe('SubjectsModule bgmx calendar sync', () => {
       indexSubject: vi.fn(async () => ({ matched: [] })),
       fetchSubjects: vi.fn(),
       system: {
+        notifyRefreshedResources: vi.fn(),
         modules: { push: { enqueueResourceMessages: vi.fn() } },
         logger: { warn: vi.fn() }
       }
@@ -313,6 +333,7 @@ describe('SubjectsModule bgmx calendar sync', () => {
       indexSubject: vi.fn(async () => ({ matched: [] })),
       fetchSubjects: vi.fn(),
       system: {
+        notifyRefreshedResources: vi.fn(),
         modules: { push: { enqueueResourceMessages: vi.fn() } },
         logger: { warn: vi.fn() }
       }
@@ -340,6 +361,7 @@ describe('SubjectsModule bgmx calendar sync', () => {
       indexSubject: vi.fn(async () => ({ matched: [] })),
       fetchSubjects: vi.fn(),
       system: {
+        notifyRefreshedResources: vi.fn(),
         modules: { push: { enqueueResourceMessages: vi.fn() } },
         logger: { warn: vi.fn() }
       }
@@ -449,5 +471,117 @@ describe('Subject sitemap ordering', () => {
     expect(subjects.sort(compareSubjectsByActivedAt).map((subject) => subject.id)).toEqual([
       4, 3, 2, 1
     ]);
+  });
+});
+
+/** A shared database stub lets independent processes observe the same committed records. */
+function subjectDatabase(initial: any[] = []) {
+  let rows = initial;
+  const select = vi.fn((columns?: unknown) => ({
+    from: () => {
+      const snapshot = rows;
+      return Object.assign(Promise.resolve(snapshot), {
+        where: () => ({ limit: async () => snapshot.map((row) => ({ metadata: row.metadata })) })
+      });
+    }
+  }));
+  return {
+    database: { select },
+    commit: (next: any[]) => {
+      rows = next;
+    }
+  };
+}
+
+describe('Dynamic subject metadata and cache consistency', () => {
+  it('refreshes other processes on notification and polls when notifications are lost', async () => {
+    vi.useFakeTimers();
+    const db = subjectDatabase([]);
+    const system = { database: db.database, disposables: [] as (() => void)[] };
+    const mod = new SubjectsModule(system as any, SubjectsModule.name);
+    try {
+      await mod.initialize();
+      db.commit([{ id: 700001, name: '新番', isArchived: false }]);
+      await mod.refresh({ subjects: true } as any);
+      expect(mod.getSubject(700001)?.name).toBe('新番');
+      db.commit([{ id: 700001, name: '更新标题', isArchived: true }]);
+      await vi.advanceTimersByTimeAsync(60_000);
+      expect(db.database.select).toHaveBeenCalledTimes(2);
+      expect(mod.getSubject(700001)?.name).toBe('新番');
+      await vi.advanceTimersByTimeAsync(9 * 60_000);
+      expect(mod.getSubject(700001)?.name).toBe('更新标题');
+      expect(mod.activeSubjects).toEqual([]);
+      expect(mod.archivedSubjects).toHaveLength(1);
+      // A failed refresh retains the last complete snapshot and the next poll recovers.
+      db.database.select.mockImplementationOnce(() => {
+        throw new Error('database offline');
+      });
+      await vi.advanceTimersByTimeAsync(10 * 60_000);
+      expect(mod.getSubject(700001)?.name).toBe('更新标题');
+      db.commit([{ id: 700001, name: '恢复', isArchived: false }]);
+      await vi.advanceTimersByTimeAsync(10 * 60_000);
+      expect(mod.getSubject(700001)?.name).toBe('恢复');
+    } finally {
+      system.disposables.forEach((dispose) => dispose());
+      vi.useRealTimers();
+    }
+  });
+
+  it('serializes reloads so a pre-commit query cannot overwrite a newer snapshot', async () => {
+    let complete!: (rows: any[]) => void;
+    const oldRead = new Promise<any[]>((resolve) => {
+      complete = resolve;
+    });
+    const select = vi
+      .fn()
+      .mockReturnValueOnce({ from: () => oldRead })
+      .mockReturnValueOnce({ from: async () => [{ id: 700001, name: 'new' }] });
+    const mod = new SubjectsModule({ database: { select } } as any, SubjectsModule.name);
+    const first = mod.fetchSubjects();
+    const afterCommit = mod.fetchSubjects();
+    expect(select).toHaveBeenCalledTimes(1);
+    complete([{ id: 700001, name: 'old' }]);
+    await Promise.all([first, afterCommit]);
+    expect(mod.getSubject(700001)?.name).toBe('new');
+  });
+
+  it('reads committed historical metadata for TG and RSS despite stale process snapshots', async () => {
+    const { transformBgmSubject } = await import('@animegarden/shared');
+    const { generateTitleFromFilter } = await import('../src/server/utils/meta');
+    const original = transformBgmSubject(bgmxSubject(700001) as any);
+    const db = subjectDatabase([{ id: original.id, metadata: original, isArchived: false }]);
+    const first = new SubjectsModule({ database: db.database } as any, SubjectsModule.name);
+    const second = new SubjectsModule({ database: db.database } as any, SubjectsModule.name);
+    await Promise.all([first.fetchSubjects(), second.fetchSubjects()]);
+    const next = { ...original, display_title: '换季后的历史标题', title: 'Updated' };
+    db.commit([{ id: original.id, metadata: next, isArchived: true }]);
+    expect(first.getSubject(700001)?.metadata).toEqual(original);
+    await expect(first.getSubjectMetadata(700001)).resolves.toEqual(next);
+    await expect(second.getSubjectMetadata(700001)).resolves.toEqual(next);
+    await expect(generateTitleFromFilter({ subjects: [700001] }, second)).resolves.toBe(
+      '换季后的历史标题 最新动画资源'
+    );
+    expect(fetchSubject).not.toHaveBeenCalled();
+  });
+
+  it('resolves legacy metadata dynamically and distinguishes missing subjects from outages', async () => {
+    const db = subjectDatabase([{ id: 700001, metadata: null }]);
+    const mod = new SubjectsModule({ database: db.database } as any, SubjectsModule.name);
+    fetchSubject.mockResolvedValueOnce({ subject: bgmxSubject(700001) });
+    await expect(mod.getSubjectMetadata(700001)).resolves.toMatchObject({
+      id: 700001,
+      title: '日文标题',
+      display_title: '中文标题',
+      onair_date: '2026-07-01'
+    });
+    fetchSubject.mockRejectedValueOnce({ response: { status: 404 } });
+    await expect(mod.getSubjectMetadata(700001)).resolves.toBeUndefined();
+    fetchSubject.mockRejectedValueOnce(new Error('upstream offline'));
+    await expect(mod.getSubjectMetadata(700001)).rejects.toThrow('upstream offline');
+    db.database.select.mockImplementationOnce(() => {
+      throw new Error('database offline');
+    });
+    await expect(mod.getSubjectMetadata(700001)).rejects.toThrow('database offline');
+    expect(fetchSubject).toHaveBeenCalledTimes(3);
   });
 });

@@ -2,6 +2,8 @@ import type { CalendarSubject, DatabaseSubject } from 'bgmx';
 
 import { fetchCalendar, fetchSubjects } from 'bgmx';
 
+import { transformBgmSubject } from '@animegarden/shared';
+
 import type { SubjectsModule } from './index.ts';
 import type { NewSubject, Subject } from './schema.ts';
 
@@ -43,6 +45,9 @@ export async function updateCalendar(mod: SubjectsModule) {
 
   await mod.upsertSubjects([...mergedSubjects.values()]);
 
+  // Publish a committed snapshot before indexing can enqueue any resource messages.
+  await mod.fetchSubjects();
+
   const shouldIndex = new Set(
     activeSubs
       .filter((subject) => {
@@ -67,6 +72,7 @@ export async function updateCalendar(mod: SubjectsModule) {
           name: subject.name,
           search: subject.search,
           activedAt: subject.activedAt ?? null,
+          metadata: subject.metadata ?? null,
           isArchived: false
         },
         { overwrite: false }
@@ -80,7 +86,11 @@ export async function updateCalendar(mod: SubjectsModule) {
     void mod.system.modules.push.enqueueResourceMessages(resourceIds);
   }
 
-  await mod.fetchSubjects();
+  await mod.system.notifyRefreshedResources({
+    subjects: true,
+    resources: { inserted: [], updated: [], deleted: [] },
+    duplicated: { attached: [], detached: [] }
+  });
 
   return {
     inserted,
@@ -158,6 +168,7 @@ function transformSubjects(mod: SubjectsModule, bangumis: SourceSubject[], isArc
         name: title,
         activedAt,
         search: bgm.search,
+        metadata: transformBgmSubject(bgm),
         isArchived
       });
     } else {

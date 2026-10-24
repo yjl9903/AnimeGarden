@@ -4,7 +4,7 @@ import path from 'node:path';
 import { parse } from 'anipar';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { BasicSubject } from 'bgmd';
+import type { SubjectMetadata } from '@animegarden/shared';
 import type { FoundResource } from '../src/resources/query';
 import {
   buildResourceCardMessage,
@@ -217,6 +217,7 @@ function createPushModule(options: {
         }
       },
       modules: {
+        subjects: { getSubjectMetadata: vi.fn(async (id: number) => ({ ...subject, id })) },
         resources: {
           getResourcesByIds
         }
@@ -247,15 +248,13 @@ function createPreparedPushContext(
   return context;
 }
 
-const subject: BasicSubject = {
+const subject: SubjectMetadata = {
   id: 1,
   title: '從前從前有隻貓！世界喵童話',
   platform: 'TV',
   onair_date: '2025-10-01',
-  rating: {
-    score: 0,
-    rank: 0
-  },
+  display_title: '從前從前有隻貓！世界喵童話',
+  summary: '',
   poster: 'https://example.com/poster.jpg',
   tags: [],
   alias: {},
@@ -1118,5 +1117,28 @@ describe('telegram resource card', () => {
 
     expect(message.text).toContain('#Team_Name · #2025年10月新番');
     expect(message.text).toContain('<b>追踪:</b> #Foo_Bar #Team_Name_Foo_Bar');
+  });
+});
+
+describe('dynamic subjects in Telegram preparation', () => {
+  it('prepares and builds a message for a new subject absent from the old static release', async () => {
+    const resource = createPushResource({ subjectId: 9000001 });
+    const { mod } = createPushModule({ resources: [resource] });
+    const metadata = {
+      ...subject,
+      id: 9000001,
+      title: 'Dynamic original',
+      alias: { zh: ['动态十月新番'] },
+      display_title: '动态十月新番',
+      onair_date: '2026-10-01',
+      poster: 'https://bgm.animes.garden/bangumi/subject/9000001/poster.jpeg?quality=large'
+    };
+    vi.mocked(mod.system.modules.subjects.getSubjectMetadata).mockResolvedValue(metadata);
+    const context = new PushContext(mod.system as any, resource);
+    await expect(context.prepare()).resolves.toBe(context);
+    const message = buildResourceCardMessage(resource, context.subject, context.parsed);
+    expect(message.text).toContain('动态十月新番');
+    expect(message.text).toContain('#2026年10月新番');
+    expect(message.photo).toBe(metadata.poster);
   });
 });

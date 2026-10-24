@@ -7,3 +7,7 @@ export * from './string';
 export * from './torrent';
 
 export * from './queue';
+
+export * from './bgmx';
+
+export * from './http';

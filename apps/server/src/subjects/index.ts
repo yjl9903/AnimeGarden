@@ -1,6 +1,11 @@
 import { and, eq, isNull, isNotNull, inArray, or, sql } from 'drizzle-orm';
 
+import { fetchSubject } from 'bgmx';
+
+import { getHTTPStatus, transformBgmSubject } from '@animegarden/shared';
+
 import type { System } from '../system/index.ts';
+import type { Notification } from '../system/types.ts';
 
 import { Module } from '../system/module.ts';
 
@@ -30,30 +35,53 @@ export class SubjectsModule extends Module<System['modules']> {
 
   public readonly bgms: Map<number, Subject> = new Map();
 
+  private fetching: Promise<Subject[]> | undefined;
+
   public async initialize() {
     this.logger.info('Initializing Subjects module');
+
     await this.fetchSubjects();
+
+    // Redis notifications are best-effort. Poll even when Redis is unavailable.
+    const timer = setInterval(() => {
+      if (!this.fetching) {
+        void this.fetchSubjects().catch((error) => this.logger.error(error));
+      }
+    }, 10 * 60_000);
+    timer.unref();
+    this.system.disposables.push(() => clearInterval(timer));
+
     this.logger.success('Initialize Subjects module OK');
   }
 
-  public async refresh() {
-    // this.logger.info('Refreshing Subjects module');
-    // await this.fetchSubjects();
-    // this.logger.success('Refreshing Subjects module OK');
+  /** Reload subject changes without scanning the table for unrelated resource notifications. */
+  public async refresh(notification: Notification) {
+    if (notification.subjects) await this.fetchSubjects();
   }
 
   public async import() {
     await this.updateCalendar();
   }
 
+  /** Replace the binding snapshot only after a complete, serialized database read succeeds. */
   public async fetchSubjects() {
-    const subs = await this.database.select().from(subjects);
-    this.subjects.splice(0, this.subjects.length, ...subs);
-    this.bgms.clear();
-    for (const sub of subs) {
-      this.bgms.set(sub.id, sub);
+    // Serialize reads: a query started before a commit must never overwrite its newer snapshot.
+    while (this.fetching) await this.fetching.catch(() => undefined);
+
+    const fetching = (async () => {
+      const subs = await this.database.select().from(subjects);
+      this.subjects.splice(0, this.subjects.length, ...subs);
+      this.bgms.clear();
+      for (const sub of subs) this.bgms.set(sub.id, sub);
+      return subs;
+    })();
+
+    this.fetching = fetching;
+    try {
+      return await fetching;
+    } finally {
+      this.fetching = undefined;
     }
-    return subs;
   }
 
   public get activeSubjects() {
@@ -66,6 +94,26 @@ export class SubjectsModule extends Module<System['modules']> {
 
   public getSubject(id: number) {
     return this.bgms.get(id);
+  }
+
+  /** Read committed display data, including archived subjects, across all server processes. */
+  public async getSubjectMetadata(id: number) {
+    const [subject] = await this.database
+      .select({ metadata: subjects.metadata })
+      .from(subjects)
+      .where(eq(subjects.id, id))
+      .limit(1);
+    if (subject?.metadata) return subject.metadata;
+
+    // Legacy/unlisted rows can still resolve dynamically before the next full synchronization.
+    // Never turn database or upstream outages into a false NOT_FOUND response.
+    try {
+      const { subject } = await fetchSubject(id, { timeout: 10_000, retry: 1 });
+      return transformBgmSubject(subject);
+    } catch (error) {
+      if (getHTTPStatus(error) === 404) return undefined;
+      throw error;
+    }
   }
 
   public async insertSubject(subject: NewSubject, options: InsertSubjectOptions = {}) {
@@ -85,6 +133,7 @@ export class SubjectsModule extends Module<System['modules']> {
             name: subject.name,
             activedAt: subject.activedAt,
             search: subject.search,
+            metadata: subject.metadata,
             isArchived
           }
         })
@@ -103,7 +152,13 @@ export class SubjectsModule extends Module<System['modules']> {
       if (changed && options.indexResources) {
         this.logger.info(`Start indexing subject ${subject.name}`);
         const indexed = await this.indexSubject(
-          { isArchived, ...subject, activedAt: subject.activedAt ?? null, ...resp[0] },
+          {
+            isArchived,
+            ...subject,
+            metadata: subject.metadata ?? null,
+            activedAt: subject.activedAt ?? null,
+            ...resp[0]
+          },
           options
         );
         matched = indexed.matched;
@@ -142,6 +197,7 @@ export class SubjectsModule extends Module<System['modules']> {
       // 推送 telegram channel 消息
       const inserted = resp.filter((s): s is InsertSubjectResult => Boolean(s));
       if (options.pushTelegramMessage) {
+        await this.fetchSubjects();
         const resourceIds = [
           ...new Set(
             inserted
@@ -203,12 +259,14 @@ export class SubjectsModule extends Module<System['modules']> {
             .onConflictDoUpdate({
               target: [subjects.id],
               set: {
+                metadata: sql.raw(`excluded.${subjects.metadata.name}`),
                 name: sql.raw(`excluded.${subjects.name.name}`),
                 search: sql.raw(`excluded.${subjects.search.name}`),
                 activedAt: sql.raw(`excluded.${subjects.activedAt.name}`),
                 isArchived: sql.raw(`excluded.${subjects.isArchived.name}`)
               },
               setWhere: or(
+                sql`${subjects.metadata}::jsonb IS DISTINCT FROM ${sql.raw(`excluded.${subjects.metadata.name}`)}::jsonb`,
                 sql`${subjects.name} IS DISTINCT FROM ${sql.raw(`excluded.${subjects.name.name}`)}`,
                 sql`${subjects.search}::jsonb IS DISTINCT FROM ${sql.raw(`excluded.${subjects.search.name}`)}::jsonb`,
                 sql`${subjects.activedAt} IS DISTINCT FROM ${sql.raw(`excluded.${subjects.activedAt.name}`)}`,
