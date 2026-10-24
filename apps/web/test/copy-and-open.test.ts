@@ -47,7 +47,14 @@ describe('clipboard app handoff', () => {
 
   it('keeps clipboard prompts out of domestic app URLs', () => {
     const apps = getChatAppLinks('private prompt').filter((app) => app.mode === 'copy');
-    expect(apps.map((app) => app.name)).toEqual(['DeepSeek', '豆包', 'Kimi', '千问', '元宝']);
+    expect(apps.map((app) => app.name)).toEqual([
+      'DeepSeek',
+      '豆包',
+      '千问',
+      'Kimi',
+      '智谱清言',
+      'MiniMax'
+    ]);
     for (const app of apps) {
       expect(new URL(app.href).protocol).toBe('https:');
       expect(new URL(app.href).search).toBe('');

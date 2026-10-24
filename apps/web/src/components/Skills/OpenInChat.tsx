@@ -21,7 +21,7 @@ export function OpenInChat({
 }: { prompt: string } & Omit<TrackSkillsChatOpenPayload, 'app'>) {
   async function copyAndOpen(app: ChatAppLink) {
     try {
-      await copyPromptAndOpen(prompt, app.href);
+      await copyPromptAndOpen(app.prompt, app.href);
       trackSkillsChatOpen({ app: app.name, source, example });
       toast.success(`已复制提示词，请粘贴到 ${app.name}`);
     } catch {
@@ -40,7 +40,10 @@ export function OpenInChat({
           打开 <ChevronDown size={14} aria-hidden="true" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="min-w-48">
+      <DropdownMenuContent
+        align="start"
+        className="min-w-48 max-h-[var(--radix-dropdown-menu-content-available-height)] overflow-y-auto"
+      >
         {getChatAppLinks(prompt).map((app) =>
           app.mode === 'copy' ? (
             <DropdownMenuItem

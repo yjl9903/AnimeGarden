@@ -171,7 +171,7 @@ describe('markdown responses', () => {
       expect(body).toContain('\n## 安装 Skill\n');
       expect(body).not.toContain('## 使用 Skill');
       expect(body).toContain(
-        '使用 [AnimeGarden](https://raw.githubusercontent.com/yjl9903/AnimeGarden/main/skills/animegarden/SKILL.md)'
+        '使用 [AnimeGarden](https://animes.garden/.well-known/agent-skills/animegarden/SKILL.md)'
       );
       expect(body).toContain(
         'npx skills add https://github.com/yjl9903/AnimeGarden --skill animegarden'

@@ -83,7 +83,7 @@ ICO/PNG，现代浏览器可使用可缩放 SVG，Apple 设备使用 180×180 to
 
 ## 修改入口建议
 
-`/skills` 是 Agent Skills onboarding 页面，复用全站 Layout、搜索、收藏夹侧栏与主题。正文为静态内容，不依赖资源 API 成功返回；全局导航和页脚仍使用现有查询。使用方式分为「直接使用」「安装 Skill」「安装 MCP」和「安装插件」四个同级章节：Skill 可通过 skills CLI 本地安装，也可将包含 GitHub 原始 SKILL.md 地址的提示词交给支持网页读取的 Agent 直接使用；插件提供 Codex 和 Claude Code 安装命令，与仓库 README 同步维护。Skill 的「直接使用」与「安装 Skill」以两个独立代码块同时展示，直接使用和首屏复制共享带 Skill Markdown 链接的提示词；MCP 和插件客户端保留独立的紧凑标签切换。MCP 章节提供 Codex 和 Claude Code 的 HTTP 服务添加命令，端点为 `https://api.animes.garden/mcp`，Claude Code 使用用户级配置；HTML 和 Markdown 响应共用命令定义。代码块共享渲染和复制按钮。紧挨「直接使用」标题及各示例复制按钮旁的 `OpenInChat` 下拉提供 ChatGPT、Codex、Claude、Cursor，将完整 Skill prompt 通过 URLSearchParams 编码传入。ChatGPT 使用 `surface=work` 打开 Work 模式，Codex 使用 `codex://new?prompt=…` 唤起桌面端并预填新会话；Claude 和 Cursor 保留网页入口。保留复制兜底。DeepSeek、豆包、Kimi、千问、元宝使用「复制并打开」入口：先复制完整 Skill prompt，再导航到应用；复制失败时不导航并提示手动复制，弹窗被阻止时在当前标签页打开。Markdown 响应保留提示词和安装命令，不展示聊天应用打开链接。页脚将原 Agent Skills 与 MCP 入口合并为「Skills / MCP」，指向此页。页面支持复制命令和提示词，不展示常见问题；首屏使用无外框的 Codex 风格静态对话展示示例提示词、始终展开的静态搜索记录与结果表格，不展示应用标题栏或输入框。对话的中性色、字号和间距参照维护者提供的 Codex 截图；示例统一使用上伊那牡丹；prompt 引用和搜索记录复用网站 favicon。表格为站内查询并核对详情所得的第一话固定样例，表格按字幕组、规格、大小和播放 / 下载分列；字幕组链接进入 detail，规格从真实标题及文件列表提取，播放复用 `getKeepShareURL` 跳转 KeepShare，下载使用磁力链接，不在页面加载时实时搜索。复制后的提示词由用户在 Agent 中执行。
+`/skills` 是 Agent Skills onboarding 页面，复用全站 Layout、搜索、收藏夹侧栏与主题。正文为静态内容，不依赖资源 API 成功返回；全局导航和页脚仍使用现有查询。使用方式分为「直接使用」「安装 Skill」「安装 MCP」和「安装插件」四个同级章节：Skill 可通过 skills CLI 本地安装，也可将包含本站 `/.well-known/agent-skills/animegarden/SKILL.md` 地址的提示词交给支持网页读取的 Agent 直接使用；插件提供 Codex 和 Claude Code 安装命令，与仓库 README 同步维护。Skill 的「直接使用」与「安装 Skill」以两个独立代码块同时展示，直接使用和首屏复制共享带 Skill Markdown 链接的提示词；MCP 和插件客户端保留独立的紧凑标签切换。MCP 章节提供 Codex 和 Claude Code 的 HTTP 服务添加命令，端点为 `https://api.animes.garden/mcp`，Claude Code 使用用户级配置；HTML 和 Markdown 响应共用命令定义。代码块共享渲染和复制按钮。紧挨「直接使用」标题及各示例复制按钮旁的 `OpenInChat` 下拉提供 ChatGPT、Codex、Claude、Cursor，将完整 Skill prompt 通过 URLSearchParams 编码传入。ChatGPT 使用 `surface=work` 打开 Work 模式，Codex 使用 `codex://new?prompt=…` 唤起桌面端并预填新会话；Claude 和 Cursor 保留网页入口。保留复制兜底。DeepSeek、豆包、千问、Kimi、智谱清言、MiniMax（国内站）使用「复制并打开」入口：先复制完整 Skill prompt，再导航到应用；复制失败时不导航并提示手动复制，弹窗被阻止时在当前标签页打开。千问直达 `https://www.qianwen.com/chat/workbench`，默认进入「工作」模式。平台 Skill 地址覆盖集中维护在 `src/components/Skills/chat-apps.ts` 的 `chatAppSkillURLs`：元宝因输出结果不稳定暂时从菜单隐藏，保留平台与 Skill 地址配置以便恢复。DeepSeek 和元宝的配置使用 GitHub 文件页面 `https://github.com/yjl9903/AnimeGarden/blob/main/skills/animegarden/SKILL.md`，智谱清言使用 GitHub raw 地址 `https://raw.githubusercontent.com/yjl9903/AnimeGarden/main/skills/animegarden/SKILL.md`，其余平台使用本站部署地址。生成应用入口时先替换提示词中的 AnimeGarden Skill 链接，再用于 URL 预填或剪贴板复制；普通复制按钮仍使用本站地址。应用菜单高度受当前视口可用空间约束，超出时可滚动。Markdown 响应保留提示词和安装命令，不展示聊天应用打开链接。页脚将原 Agent Skills 与 MCP 入口合并为「Skills / MCP」，指向此页。页面支持复制命令和提示词，不展示常见问题；首屏使用无外框的 Codex 风格静态对话展示示例提示词、始终展开的静态搜索记录与结果表格，不展示应用标题栏或输入框。对话的中性色、字号和间距参照维护者提供的 Codex 截图；示例统一使用上伊那牡丹；prompt 引用和搜索记录复用网站 favicon。表格为站内查询并核对详情所得的第一话固定样例，表格按字幕组、规格、大小和播放 / 下载分列；字幕组链接进入 detail，规格从真实标题及文件列表提取，播放复用 `getKeepShareURL` 跳转 KeepShare，下载使用磁力链接，不在页面加载时实时搜索。复制后的提示词由用户在 Agent 中执行。
 
 - 改页面数据加载、head 或 canonical：先看 `src/routes/**`，页面组件只接收 route 传入的 props。
 - 改资源表格或分页：先看 `src/components/Resources/` 和 `src/pages/resources.($page)/`。
@@ -103,6 +103,10 @@ ICO/PNG，现代浏览器可使用可缩放 SVG，Apple 设备使用 180×180 to
 loader 是 route 的数据入口，但不是 server-only 边界：SSR 首次渲染会在服务端执行，客户端导航、预加载和缓存失效时也可能从浏览器侧触发。需要使用 Node-only 依赖、私密环境变量或只应在服务端运行的逻辑时，应包进 TanStack Start `createServerFn()`，再由 loader 调用。
 
 `src/pages/**` 只负责浏览器侧页面展示、局部交互和组合业务组件。页面文件不再导出 loader/head/meta，不直接调用 `useLoaderData()`，也不承担 URL 到数据模型的转换；需要的数据都通过 route props 传入。
+
+### Skill 文件发布
+
+`vite.config.ts` 在构建时将 `skills/animegarden/` 整个目录复制到 `/.well-known/agent-skills/animegarden/`，并生成带内容摘要的 `index.json`。页面直接使用提示词、示例的普通复制和 onboarding 默认引用 `https://animes.garden/.well-known/agent-skills/animegarden/SKILL.md`，相对引用文件可在同站读取。`server.mjs` 将已发布的 `.md` 文件以 `text/markdown; charset=utf-8` 返回，GET 和 HEAD 均适用，无需额外 Accept 请求头；Skill 内容更新随 Web 部署生效。
 
 ### Skills Markdown 响应
 

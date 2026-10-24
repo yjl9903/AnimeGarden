@@ -7,3 +7,9 @@
 .chat-app-icon-kimi {
   transform: scale(0.875);
 }
+
+.chat-app-icon-qingyan {
+  display: inline-block;
+  background-color: currentColor;
+  mask: url('./qingyan.svg') no-repeat center / contain;
+}

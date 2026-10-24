@@ -1,5 +1,4 @@
-export const skillURL =
-  'https://raw.githubusercontent.com/yjl9903/AnimeGarden/main/skills/animegarden/SKILL.md';
+export const skillURL = 'https://animes.garden/.well-known/agent-skills/animegarden/SKILL.md';
 
 export const skillPrompt = `使用 [AnimeGarden](${skillURL}) 查找上伊那牡丹第一话资源`;
 

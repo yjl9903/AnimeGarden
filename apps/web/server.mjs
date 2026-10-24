@@ -57,7 +57,18 @@ if (fs.existsSync(ClientRoot)) {
 }
 
 app.all('/assets/*', serveStatic({ root: path.relative(process.cwd(), ClientRoot) }));
-app.all('/.well-known/*', serveStatic({ root: path.relative(process.cwd(), ClientRoot) }));
+app.all(
+  '/.well-known/*',
+  serveStatic({
+    root: path.relative(process.cwd(), ClientRoot),
+    onFound: (filepath, c) => {
+      // Serve published skills and their references as readable Markdown.
+      if (path.extname(filepath).toLowerCase() === '.md') {
+        c.header('Content-Type', 'text/markdown; charset=utf-8');
+      }
+    }
+  })
+);
 
 app.all('*', (c) => startEntry.fetch(c.req.raw));
 
