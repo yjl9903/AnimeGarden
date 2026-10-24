@@ -9,6 +9,7 @@ import { QueryManager } from '../src/resources/query';
 import { defineCollectionsRoutes } from '../src/server/routes/collections';
 import { defineResourcesRoutes } from '../src/server/routes/resources';
 import type { AppEnv } from '../src/server/utils/hono';
+import { getResourcesQueryErrorResponse } from '../src/server/utils/resources-query';
 import type { System } from '../src/system/index';
 
 /** The query payload shared by resource lists and individual collection results. */
@@ -46,6 +47,11 @@ function createPaginationApp() {
   const app = new Hono<AppEnv>();
   defineResourcesRoutes(system, app);
   defineCollectionsRoutes(system, app);
+  app.onError((error, c) => {
+    const response = getResourcesQueryErrorResponse(error);
+    if (!response) throw error;
+    return c.json({ status: 'ERROR', message: response.message }, response.status);
+  });
 
   return { app, find };
 }
@@ -109,10 +115,58 @@ describe('API pagination response contract', () => {
 });
 
 describe('resources page path param', () => {
-  it('honors the page path param for /resources/:page', async () => {
+  it.each(
+    ['/resources', '/resources/dmhy'].flatMap((base) =>
+      ['2abc', '2.5', '2e3', '0x10', '+2', ' 2', '2\n', '0', '-2'].map(
+        (page) => `${base}/${encodeURIComponent(page)}`
+      )
+    )
+  )('keeps query or default pagination for the malformed path %s', async (path) => {
+    const { app } = createPaginationApp();
+
+    const queryResponse = await app.request(`http://localhost${path}?page=7&pageSize=1`);
+    expect(queryResponse.status).toBe(200);
+    expect(await queryResponse.json()).toMatchObject({ pagination: { page: 7, pageSize: 1 } });
+
+    const defaultResponse = await app.request(`http://localhost${path}?pageSize=1`);
+    expect(defaultResponse.status).toBe(200);
+    expect(await defaultResponse.json()).toMatchObject({ pagination: { page: 1, pageSize: 1 } });
+  });
+
+  it('keeps body pagination when the path is malformed and the query omits page', async () => {
+    const { app, find } = createPaginationApp();
+    const response = await app.request('http://localhost/resources/2abc', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page: 7, pageSize: 1 })
+    });
+
+    expect(response.status).toBe(200);
+    expect(find).toHaveBeenCalledWith({}, { page: 7, pageSize: 1 });
+  });
+
+  it.each(['/resources', '/resources/dmhy'])(
+    'checks the path page against the deep-pagination boundary for %s',
+    async (base) => {
+      const { app, find } = createPaginationApp();
+      const allowed = await app.request(`http://localhost${base}/10000?page=1&pageSize=1`);
+
+      expect(allowed.status).toBe(200);
+      expect(await allowed.json()).toMatchObject({ pagination: { page: 10000, pageSize: 1 } });
+
+      find.mockClear();
+      const rejected = await app.request(`http://localhost${base}/10001?page=1&pageSize=1`);
+
+      expect(rejected.status).toBe(400);
+      expect(await rejected.json()).toMatchObject({ status: 'ERROR' });
+      expect(find).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each(['2', '02'])('honors the page path param for /resources/%s', async (page) => {
     const { app, find } = createPaginationApp();
 
-    const response = await app.request('http://localhost/resources/2?pageSize=1');
+    const response = await app.request(`http://localhost/resources/${page}?pageSize=1`);
     const result = await response.json();
 
     expect(response.status).toBe(200);
@@ -168,5 +222,23 @@ describe('resources page path param', () => {
       expect(response.status).toBe(200);
       expect(result).toMatchObject({ pagination: { page: 1, pageSize: 1 } });
     }
+  });
+});
+
+describe('resources provider routes', () => {
+  it.each(
+    SupportProviders.flatMap((provider) =>
+      ['', '/', '/2'].map((suffix) => ({ provider, path: `/resources/${provider}${suffix}` }))
+    )
+  )('preserves the provider filter for $path', async ({ provider, path }) => {
+    const { app, find } = createPaginationApp();
+    const response = await app.request(`http://localhost${path}?page=2&pageSize=1`);
+
+    expect(response.status).toBe(200);
+    expect(await response.json()).toMatchObject({
+      filter: { provider },
+      pagination: { page: 2, pageSize: 1 }
+    });
+    expect(find).toHaveBeenCalledWith({ provider }, { page: 2, pageSize: 1 });
   });
 });

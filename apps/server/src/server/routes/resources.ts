@@ -23,10 +23,10 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
     );
 
     // Honor the page path param in routes like /resources/:page and /resources/:provider/:page.
-    // Fallback to the page from the search params or the default page when it is missing or invalid.
+    // Keep the parsed query/body/default page unless the entire path param is decimal digits.
     const pageParam = ctx.req.param('page');
-    if (pageParam !== undefined) {
-      const page = Number.parseInt(pageParam, 10);
+    if (pageParam && !/\D/.test(pageParam)) {
+      const page = Number(pageParam);
       if (Number.isInteger(page) && page >= 1) {
         pagination.page = page;
       }
@@ -113,9 +113,6 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
     })
     .all('/resources/', etag(), (c) => {
       return listResources(c, sys);
-    })
-    .all('/resources/:page', etag(), (c) => {
-      return listResources(c, sys);
     });
 
   for (const provider of SupportProviders) {
@@ -158,6 +155,11 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
         return c.json({ ...resp });
       });
   }
+
+  // Register provider routes first so names such as "dmhy" are not consumed as page params.
+  app.all('/resources/:page', etag(), (c) => {
+    return listResources(c, sys);
+  });
 
   app.get('/detail/infohash/:hash', etag(), async (c) => {
     const raw = c.req.param('hash') ?? '';
