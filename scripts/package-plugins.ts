@@ -63,7 +63,7 @@ export async function syncPlugins(root: string, check = false): Promise<void> {
 
   const skill = await readTree(join(root, 'skills/animegarden'));
   const readme = await readFile(join(root, 'plugins/agents/README.md'));
-  for (const file of ['SKILL.md', 'references/api.md', 'references/pikpak.md', 'LICENSE.txt']) {
+  for (const file of ['SKILL.md', 'references/pikpak.md', 'LICENSE.txt']) {
     assert(skill.has(file), `Missing skill source: ${file}`);
   }
   const expected = new Map<string, Buffer>();

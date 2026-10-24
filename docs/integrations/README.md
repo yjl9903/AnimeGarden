@@ -33,6 +33,8 @@ Claude manifest 单独生成 `icon: "./assets/icon.png"`，复用同一张樱花
 
 只修改表中的维护源，再通过同步脚本生成各包内容。开发、维护和发布流程维护在本文，不另建 `plugins/README.md`。包内用户说明维护在 [agents README](../../plugins/agents/README.md)，同步到 claude 包，不手工维护多份；Antigravity 暂不生成 README。
 
+Skill 在 `Filter Options` 中维护常用筛选参数的简洁快照；需要接口详情、响应字段或请求示例时，引导读取[线上 OpenAPI](https://animes.garden/openapi.json)，不再维护独立的 `api.md`。公开契约维护在 `apps/web/src/pages/docs.api/spec.json`，由 `getPublicOpenApiSpec` 筛选后发布；接口说明变更需要部署 Web 才会反映到 skill 的在线参考中。
+
 包内 README 面向安装前了解插件和安装后使用插件的读者，只介绍功能、使用示例和必要配置。各客户端安装命令放在仓库首页；平台如何使用发布内容见下文“官方目录收录”。
 
 市场发现入口由客户端规定，放在仓库根目录并由同步脚本生成：

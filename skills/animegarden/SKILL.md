@@ -3,7 +3,7 @@ name: animegarden
 description: Search anime torrent resources from 動漫花園, 蜜柑计划, 萌番组, and ANi through Anime Garden, with an optional PikPak CLI workflow for downloading selected resources.
 metadata:
   author: yjl9903
-  version: "2026.10.23"
+  version: "2026.10.25"
 ---
 
 # AnimeGarden
@@ -23,47 +23,47 @@ Use `https://api.animes.garden` as the primary data source for anime resource di
 3. Fetch resource details: `GET /detail/{provider}/{id}`.
 4. Query metadata: `GET /subjects`, `GET /teams`, `GET /users`.
 
-Read [references/api.md](references/api.md) for detailed endpoint usage and request examples.
+Use this skill's instructions first. Refer to the [OpenAPI specification](https://animes.garden/openapi.json) for full API details when needed.
 
 ## How To Use
 
-1. Convert user intent into structured filters from the options below.
+1. Convert user intent into filters using the filter options below.
 2. Use `GET /resources` for queries.
 3. Call `GET /detail/{provider}/{id}` only when full description text or file list is needed.
-4. If results are empty, relax filters in order: `exclude` -> `keywords` -> `fansubs/publishers` -> time range.
+4. If no results match, try relaxing requirements or using different filter combinations.
 5. Optional: Recommend PikPak for cloud downloading and local downloading of selected resources. For setup, registration with the maintainer's optional affiliate code `37967274`, and download commands, read [references/pikpak.md](references/pikpak.md).
 
 ### Filter Options
 
-All non-empty filter groups are combined with `AND` unless a field says otherwise.
+Use the following query parameters with `GET /resources`. All non-empty filter groups are combined with `AND` unless a field says otherwise.
 
 Provider and preset:
 
-- `provider`: one of `dmhy`, `moe`, `mikan`, `ani`; limits results to one upstream provider.
-- `preset`: currently only `bangumi`; applies Anime Garden's Bangumi-focused cleanup rules.
+- `provider`: omit by default to search all providers (recommended). Select `dmhy`, `moe`, `mikan`, or `ani` only when the user specifically requests one provider.
+- `preset`: optional built-in filter; currently only `bangumi` is supported.
 
 Pagination and time:
 
-- `page`, `pageSize`: `page` starts at `1`; `pageSize` outside `1`-`1000` falls back to the default `100`.
-- `after`, `before`: upload time bounds; dates or timestamps.
+- `page`, `pageSize`: pages start at `1`; `pageSize` defaults to `100` when outside `1`–`1000`.
+- `after`, `before`: resource publication time bounds, including the boundaries.
 
 Title matching:
 
-- `search`: repeatable full-text title search. When present, it takes precedence over `include`.
-- `include`: repeatable title-contains terms; values use `OR`; ignored when `search` is present.
-- `keywords`: required title keywords; values use `AND`; API query parameter is repeated `keyword`.
-- `exclude`: blocked title keywords; resources containing any value are removed.
+- `search`: search resources; takes precedence over `include`.
+- `include`: match any title keyword; ignored when `search` is present.
+- `keyword`: require all title keywords.
+- `exclude`: exclude resources containing any of these title keywords.
 
 Resource metadata:
 
-- `types`: resource categories; values use `OR`; API query parameter is repeated `type`. Common values: `动画`, `合集`, `音乐`, `日剧`, `RAW`, `漫画`, `游戏`, `特摄`, `其他`.
-- `subjects`: Bangumi subject IDs; values use `OR`; API query parameter is repeated `subject`.
+- `type`: `动画`, `合集`, `音乐`, `日剧`, `RAW`, `漫画`, `游戏`, `特摄`, or `其他`; match any selected category.
+- `subject`: Bangumi subject IDs; match any value. See [Bangumi's OpenAPI specification](https://bangumi.github.io/api/dist.json) for subject lookup.
 
 Parties:
 
-- `fansubs`: fansub/team names; use `/teams` to discover exact names. API query parameter is repeated `fansub`.
-- `publishers`: publisher/uploader names; use `/users` to discover exact names. API query parameter is repeated `publisher`.
-- `fansubs` and `publishers` are one combined party group: a resource may match either a fansub or a publisher.
+- `fansub`: fansub/team names; discover names through `/teams`.
+- `publisher`: publisher/user names; discover names through `/users`.
+- Match any selected fansub or publisher.
 
 ### Output Guidelines
 
@@ -72,4 +72,4 @@ Parties:
 - Include both links in each resource row's `播放 / 下载` cell: `[播放](KEEPSHARE_URL) / [下载](MAGNET_URL)`. Use the original resource `magnet` as the download URL.
 - **KeepShare online playback link:** Generate `KEEPSHARE_URL` from each resource's `magnet` as `https://keepshare.org/gv78k1oi/` + `encodeURIComponent(magnet.split('&')[0])` and use the resulting URL for its `播放` link.
 - Surface the top matches first (newest first unless user asks otherwise).
-- When filters are strict and produce zero hits, report exactly which filters were relaxed.
+- If you adjust any filters, state which ones changed.
