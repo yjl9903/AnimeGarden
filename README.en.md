@@ -44,7 +44,7 @@ claude plugin install animegarden@animegarden
 
 After installation, start a new conversation and ask:
 
-> Use AnimeGarden to find 1080p releases of 上伊那牡丹 with Simplified Chinese subtitles. List magnet links.
+> Use AnimeGarden to find releases of episode 1 of 上伊那牡丹.
 
 ## Skills Usage
 
@@ -125,7 +125,7 @@ console.log(botan.resources);
 
 See [./examples/](https://github.com/yjl9903/AnimeGarden/blob/main/examples/) for more code examples.
 
-Common filters (combined with AND by default):
+Common filters (combined with AND):
 
 | Field | Matching rule |
 | --- | --- |

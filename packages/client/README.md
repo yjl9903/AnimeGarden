@@ -45,7 +45,7 @@ console.log(botan.resources);
 
 See [./examples/](https://github.com/yjl9903/AnimeGarden/blob/main/examples/) for more code examples.
 
-Common filters (combined with AND by default):
+Common filters (combined with AND):
 
 | Field | Matching rule |
 | --- | --- |

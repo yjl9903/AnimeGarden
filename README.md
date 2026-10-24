@@ -44,7 +44,7 @@ claude plugin install animegarden@animegarden
 
 安装后打开新会话，直接输入：
 
-> 用 AnimeGarden 查找上伊那牡丹 1080p 简体字幕资源，列出磁力链接.
+> 使用 AnimeGarden 查找上伊那牡丹第一话资源
 
 ## 使用 Skills
 
@@ -125,7 +125,7 @@ console.log(botan.resources);
 
 更多程序示例见 [./examples/](https://github.com/yjl9903/AnimeGarden/blob/main/examples/).
 
-常用筛选条件（默认取交集）：
+常用筛选条件（取交集）：
 
 | 字段 | 筛选逻辑 |
 | --- | --- |
