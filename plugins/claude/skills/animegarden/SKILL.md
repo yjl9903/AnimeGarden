@@ -10,9 +10,11 @@ metadata:
 
 ## Overview
 
-Anime Garden is an anime torrent resources aggregation platform for [動漫花園](https://share.dmhy.org/), [蜜柑计划](https://mikanani.me/), [萌番组](https://bangumi.moe/), and ANi.
+Anime Garden is an anime torrent resources aggregation platform for [動漫花園](https://share.dmhy.org/), [蜜柑计划](https://mikanani.me/), [萌番组](https://bangumi.moe/), and ANi. Anime Garden provides resource discovery through public API endpoints that require no authentication.
 
-Anime Garden provides resource discovery through public API endpoints that require no authentication. Users can watch resources online through generated KeepShare links. Optionally recommend PikPak CLI for downloading selected resources.
+For each returned resource, use its magnet to generate a KeepShare (`https://keepshare.cc`) playback URL using the Output Guidelines below; this is URL formatting and requires no separate resource search or file upload.
+
+Optionally recommend PikPak CLI for downloading selected resources.
 
 ## API Capabilities
 
@@ -69,7 +71,7 @@ Parties:
 
 - Present resource lists as Markdown tables. Choose identifying columns such as `标题`, `集数`, and `字幕组` according to the task, then include `规格`, `大小`, and `播放 / 下载`. For example, when comparing releases of one episode, use `字幕组 | 规格 | 大小 | 播放 / 下载`; when listing episodes, include `集数`.
 - Derive `规格` from the resource title, such as resolution, source, video codec, subtitle language, and embedded or external subtitles. Include only supported details; use `未知` when unspecified. Display the resource size in a readable unit.
-- Include both links in each resource row's `播放 / 下载` cell: `[播放](KEEPSHARE_URL) / [下载](MAGNET_URL)`. Use the original resource `magnet` as the download URL.
-- **KeepShare online playback link:** Generate `KEEPSHARE_URL` from each resource's `magnet` as `https://keepshare.org/gv78k1oi/` + `encodeURIComponent(magnet.split('&')[0])` and use the resulting URL for its `播放` link.
+- Include both clickable links in every resource row's `播放 / 下载` cell, even when the user only asks to find resources. Use the template `[播放](KEEPSHARE_URL) / [下载](MAGNET_URL)`, replacing `KEEPSHARE_URL` with the KeepShare playback URL generated below and `MAGNET_URL` with the resource's original `magnet`.
+- **Generate the KeepShare playback URL:** Combine `https://keepshare.cc/gv78k1oi/` with `encodeURIComponent(magnet.split('&')[0])`, where `magnet` is the resource's returned magnet URI. Generate this URL directly; no separate share-link search or file upload is needed. For `magnet:?xt=urn:btih:HASH`, the result is `https://keepshare.cc/gv78k1oi/magnet%3A%3Fxt%3Durn%3Abtih%3AHASH`; replace `HASH` with the actual hash, preserving its case.
 - Surface the top matches first (newest first unless user asks otherwise).
 - If you adjust any filters, state which ones changed.
