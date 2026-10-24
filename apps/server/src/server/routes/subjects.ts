@@ -6,7 +6,9 @@ export const defineSubjectsRoutes = defineHandler((sys, app) =>
     c.res.headers.set('Cache-Control', `public, max-age=${24 * 60 * 60}`);
     return c.json({
       status: 'OK',
-      subjects: sys.modules.subjects.activeSubjects
+      subjects: sys.modules.subjects.activeSubjects.map(
+        ({ metadata: _metadata, ...subject }) => subject
+      )
     });
   })
 );

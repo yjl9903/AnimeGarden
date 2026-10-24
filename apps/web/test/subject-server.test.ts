@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const { fetchSubject, fetchCalendar, fetchCalendars, fetchSubjects } = vi.hoisted(() => ({
   fetchSubject: vi.fn(),
@@ -12,24 +12,6 @@ vi.mock('bgmx/client', () => ({
   fetchCalendar,
   fetchCalendars,
   fetchSubjects
-}));
-
-vi.mock('bgmd/full', () => ({
-  default: {
-    subjects: [
-      {
-        id: 2,
-        title: 'Fallback Title',
-        platform: 'TV',
-        onair_date: '2026-01-01',
-        poster: 'fallback.jpg',
-        summary: 'Fallback summary',
-        alias: ['Fallback Alias'],
-        tags: [],
-        search: { include: ['Fallback Title'] }
-      }
-    ]
-  }
 }));
 
 function subject(id = 1) {
@@ -126,18 +108,73 @@ describe('subject.server BGM client', () => {
     });
   });
 
-  it('falls back to bgmd/full only for subject detail failures', async () => {
-    fetchSubject.mockRejectedValue(new Error('offline'));
-    const { getSubjectById } = await import('../src/query/subject.server');
+  afterEach(() => vi.useRealTimers());
 
-    await expect(getSubjectById(2)).resolves.toMatchObject({
-      id: 2,
-      title: 'Fallback Title',
-      poster: 'https://bgm.animes.garden/bangumi/subject/2/poster.jpeg?quality=large'
+  it('retains the last successful dynamic detail across repeated outages and retries', async () => {
+    vi.useFakeTimers();
+    fetchSubject.mockResolvedValueOnce({ subject: subject(700001) });
+    const { getSubjectByIdResult } = await import('../src/query/subject.server');
+    const first = await getSubjectByIdResult(700001);
+    await vi.advanceTimersByTimeAsync(3_600_001);
+    fetchSubject.mockRejectedValue(new Error('offline'));
+    await expect(getSubjectByIdResult(700001)).resolves.toEqual(first);
+    await expect(getSubjectByIdResult(700001)).resolves.toEqual(first);
+    expect(fetchSubject).toHaveBeenCalledTimes(2);
+    await vi.advanceTimersByTimeAsync(60_001);
+    await expect(getSubjectByIdResult(700001)).resolves.toEqual(first);
+    fetchSubject.mockResolvedValue({ subject: { ...subject(700001), title: 'Updated' } });
+    await vi.advanceTimersByTimeAsync(60_001);
+    await expect(getSubjectByIdResult(700001)).resolves.toMatchObject({
+      subject: { title: 'Updated' }
     });
   });
 
-  it('returns NOT_FOUND only when the upstream response is 404 and fallback is absent', async () => {
+  it('keeps recently refreshed details when the cache reaches its capacity', async () => {
+    vi.useFakeTimers();
+    fetchSubject.mockImplementation(async (id: number) => ({ subject: subject(id) }));
+    const { getSubjectByIdResult } = await import('../src/query/subject.server');
+    const first = await getSubjectByIdResult(1);
+    await Promise.all(Array.from({ length: 1023 }, (_, index) => getSubjectByIdResult(index + 2)));
+
+    await vi.advanceTimersByTimeAsync(3_600_001);
+    await getSubjectByIdResult(1);
+    await getSubjectByIdResult(1025);
+
+    // Refreshing an expired entry counts as recent use, so another entry must be evicted.
+    fetchSubject.mockRejectedValue(new Error('offline'));
+    await vi.advanceTimersByTimeAsync(3_600_001);
+    await expect(getSubjectByIdResult(1)).resolves.toEqual(first);
+    await expect(getSubjectByIdResult(2)).rejects.toThrow('offline');
+  });
+
+  it('does not resurrect cached details after an authoritative 404', async () => {
+    vi.useFakeTimers();
+    fetchSubject.mockResolvedValueOnce({ subject: subject(700001) });
+    const { getSubjectByIdResult } = await import('../src/query/subject.server');
+    await getSubjectByIdResult(700001);
+    await vi.advanceTimersByTimeAsync(3_600_001);
+    fetchSubject.mockRejectedValue({ response: { status: 404 } });
+    await expect(getSubjectByIdResult(700001)).resolves.toMatchObject({
+      ok: false,
+      code: 'NOT_FOUND'
+    });
+    await vi.advanceTimersByTimeAsync(3_600_001);
+    fetchSubject.mockRejectedValue(new Error('offline'));
+    await expect(getSubjectByIdResult(700001)).rejects.toThrow('offline');
+  });
+
+  it('reuses the latest successful calendar during outages', async () => {
+    vi.useFakeTimers();
+    fetchCalendar.mockResolvedValueOnce({ calendar: [[subject(1)]], web: [] });
+    const { getCalendar } = await import('../src/query/subject.server');
+    const first = await getCalendar('2026-10');
+    await vi.advanceTimersByTimeAsync(3_600_001);
+    fetchCalendar.mockRejectedValue(new Error('offline'));
+    await expect(getCalendar('2026-10')).resolves.toEqual(first);
+    await expect(getCalendar('2020-01')).rejects.toThrow('offline');
+  });
+
+  it('returns NOT_FOUND only when the upstream response is 404 without a static fallback', async () => {
     fetchSubject.mockRejectedValue(
       new Error('missing', {
         cause: { response: new Response(null, { status: 404 }) }
@@ -152,7 +189,7 @@ describe('subject.server BGM client', () => {
     });
   });
 
-  it('preserves upstream failures when fallback is absent', async () => {
+  it('preserves upstream failures without a last successful response', async () => {
     const upstreamError = new Error('offline');
     fetchSubject.mockRejectedValue(upstreamError);
     const { getSubjectByIdResult } = await import('../src/query/subject.server');

@@ -1,4 +1,4 @@
-import type { BasicSubject } from 'bgmd';
+import type { SubjectMetadata } from '@animegarden/shared';
 
 import { type ParseResult, parse } from 'anipar';
 import { SupportProviders } from '@animegarden/client';
@@ -7,7 +7,6 @@ import type { System } from '../system/index.ts';
 import type { FoundResource } from '../resources/query.ts';
 import type { TelegramMessage } from '../schema/index.ts';
 
-import { getSubjectById } from '../utils/bgmd.ts';
 import { TelegramMessageStatus } from '../schema/telegram.ts';
 
 import { buildResourceCardMessage } from './message.ts';
@@ -32,7 +31,7 @@ export class PushContext {
 
   public fansub!: NonNullable<FoundResource['fansub']>;
 
-  public subject!: BasicSubject;
+  public subject!: SubjectMetadata;
 
   public parsed!: ParseResult;
 
@@ -64,7 +63,9 @@ export class PushContext {
     }
 
     // subject 和 episode 是消息去重键的一部分，解析失败时不写 telegram_messages。
-    const subject = resource.subjectId ? getSubjectById(resource.subjectId) : undefined;
+    const subject = resource.subjectId
+      ? await this.system.modules.subjects.getSubjectMetadata(resource.subjectId)
+      : undefined;
     const parsed = parse(resource.title, { fansub: fansubName });
     const episode = parsed ? normalizeParsedEpisode(parsed) : undefined;
 

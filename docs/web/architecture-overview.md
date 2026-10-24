@@ -36,7 +36,7 @@ GET server function 和 SSR loader 的公开缓存头统一由 `src/utils/respon
 
 资源列表 HTML 路由在查询前校验归一化后的页码必须是安全正整数。`/resources/magnet:`、`/resources/NaN`、无穷大、超过安全整数范围或非正的页码均返回共享 404 页面，带 `Cache-Control: no-store` 和 `noindex`，不输出 canonical，也不查询资源、周历或 Subject。保留小数向下取整，但取整后不大于 0 的页码同样返回 404，不再跳转第 1 页。这修复了 #2734 中非法路径返回 200 和生成 `/resources/NaN` canonical 的问题；异常磁力路径的流量来源及 Umami 过滤另行排查。
 
-Bangumi subject/full/calendar 数据不应进入客户端运行时依赖；需要读取这类数据的页面应通过 `src/query/subject.ts` 的 TanStack Query options 和 `createServerFn()` 访问。当前 serverFn 通过 `bgmx` 读取 `bgm.animes.garden`，按需做 subject、calendar 和标题搜索查询，并只在 subject detail 失败时 fallback 到 `bgmd/full`。有封面的 subject 会统一按 subject ID 输出 `bgm.animes.garden/bangumi/subject/:id/poster.jpeg?quality=large`，不向页面透传上游原始图片地址。
+Bangumi 数据不应进入客户端运行时依赖；页面通过 `src/query/subject.ts` 的 TanStack Query options 和 `createServerFn()` 按需查询 subject、calendar 和标题搜索。资料转换、封面与缓存规则统一见 [动态番剧资料与缓存](../server/subject-data-source.md)。
 
 ### 动画周历 Calendar 语义
 

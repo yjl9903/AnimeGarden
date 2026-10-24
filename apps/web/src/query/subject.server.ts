@@ -1,14 +1,10 @@
-import type { FullSubject } from 'bgmd';
-import type { CalendarSubject, DatabaseSubject } from 'bgmx/client';
-
 import { fetchCalendar, fetchCalendars, fetchSubject, fetchSubjects } from 'bgmx/client';
+
+import { getHTTPStatus, transformBgmSubject } from '@animegarden/shared';
 
 import type { WebBgmSubject } from '~/utils/subject';
 
 import { ResponseStaleTime } from '~/utils/response';
-import { getSubjectPosterURL } from '~/utils/subject';
-
-type BgmSubject = DatabaseSubject | CalendarSubject;
 
 export type SubjectLookupResult =
   { ok: true; subject: WebBgmSubject } | { ok: false; code: 'NOT_FOUND'; subject: undefined };
@@ -16,6 +12,7 @@ export type SubjectLookupResult =
 type CacheItem<T> = {
   expires: number;
   value: Promise<T>;
+  successful?: T;
 };
 
 const SubjectCache = new Map<string, CacheItem<unknown>>();
@@ -26,99 +23,79 @@ function normalizeTexts(texts: string[]) {
   return [...new Set(texts.map((text) => text.trim()).filter(Boolean))];
 }
 
-function getCached<T>(key: string, ttl: number, fetcher: () => Promise<T>) {
+/** Cache successful dynamic responses and retry outages after one minute using the last success. */
+function getCached<T>(
+  key: string,
+  ttl: number,
+  fetcher: () => Promise<T>,
+  canUseStale: (value: T) => boolean = () => true
+): Promise<T> {
   const now = Date.now();
-  const cached = SubjectCache.get(key);
+  const cached = SubjectCache.get(key) as CacheItem<T> | undefined;
   if (cached && cached.expires > now) {
     SubjectCache.delete(key);
     SubjectCache.set(key, cached);
-    return cached.value as Promise<T>;
+    return cached.value;
   }
 
-  const value = fetcher().catch((error) => {
-    SubjectCache.delete(key);
-    throw error;
-  });
-  SubjectCache.set(key, { expires: now + ttl, value });
+  const entry: CacheItem<T> = {
+    expires: now + ttl,
+    value: Promise.resolve()
+      .then(fetcher)
+      .then((value) => {
+        entry.successful = value;
+        return value;
+      })
+      .catch((error) => {
+        // A definitive 404 must not resurrect a removed subject or season.
+        if (
+          getHTTPStatus(error) !== 404 &&
+          cached?.successful !== undefined &&
+          canUseStale(cached.successful)
+        ) {
+          console.warn('[BGM]', 'Serving last successful response', key, error);
+          entry.expires = Date.now() + 60_000;
+          entry.successful = cached.successful;
+          return cached.successful;
+        }
+        if (SubjectCache.get(key) === entry) SubjectCache.delete(key);
+        throw error;
+      })
+  };
+  // Renew recency on an expired lookup as well as on a fresh cache hit.
+  SubjectCache.delete(key);
+  SubjectCache.set(key, entry);
 
   while (SubjectCache.size > MaxCacheSize) {
-    const key = SubjectCache.keys().next().value;
-    if (!key) break;
-    SubjectCache.delete(key);
+    const oldest = SubjectCache.keys().next().value;
+    if (!oldest) break;
+    SubjectCache.delete(oldest);
   }
 
-  return value;
-}
-
-function getDisplayTitle(subject: BgmSubject) {
-  return subject.alias.zh?.[0] || subject.title;
-}
-
-function transformBgmSubject(subject: BgmSubject): WebBgmSubject {
-  const displayTitle = getDisplayTitle(subject);
-
-  return {
-    id: subject.id,
-    title: subject.title,
-    display_title: displayTitle,
-    platform: subject.bangumi.platform,
-    onair_date: subject.onair_date || subject.bangumi.date,
-    poster: subject.poster || subject.bangumi.images.large ? getSubjectPosterURL(subject.id) : '',
-    summary: subject.bangumi.summary,
-    alias: subject.alias,
-    tags: [...new Set([...(subject.bangumi.meta_tags ?? []), ...(subject.bangumi.tags ?? [])])],
-    search: subject.search
-  };
-}
-
-function transformBgmdSubject(subject: FullSubject): WebBgmSubject {
-  return {
-    id: subject.id,
-    title: subject.title,
-    display_title: subject.title,
-    platform: subject.platform,
-    onair_date: subject.onair_date,
-    poster: subject.poster ? getSubjectPosterURL(subject.id) : '',
-    summary: subject.summary ?? '',
-    alias: subject.alias,
-    tags: subject.tags,
-    search: {
-      ...subject.search,
-      include: normalizeTexts([
-        subject.title,
-        ...Object.values(subject.alias).flat(),
-        ...subject.search.include
-      ])
-    }
-  };
-}
-
-async function getFallbackSubjectById(subjectId: number) {
-  const { default: bgmd } = await import('bgmd/full');
-  const subject = bgmd.subjects.find((subject) => subject.id === subjectId) as
-    FullSubject | undefined;
-  return subject ? transformBgmdSubject(subject) : undefined;
+  return entry.value;
 }
 
 /** Loads a Subject while preserving the difference between absence and upstream failure. */
 export async function getSubjectByIdResult(subjectId: number): Promise<SubjectLookupResult> {
-  return getCached(`subject:${subjectId}`, ResponseStaleTime.Subject, async () => {
-    try {
-      const { subject } = await fetchSubject(subjectId, {
-        timeout: 10 * 1000,
-        retry: 1
-      });
-      return { ok: true, subject: transformBgmSubject(subject) } as const;
-    } catch (error) {
-      console.error('[BGM]', 'fetchSubject fallback bgmd/full', subjectId, error);
-      const fallback = await getFallbackSubjectById(subjectId);
-      if (fallback) return { ok: true, subject: fallback } as const;
-      if (getHTTPStatus(error) === 404) {
-        return { ok: false, code: 'NOT_FOUND', subject: undefined } as const;
+  return getCached(
+    `subject:${subjectId}`,
+    ResponseStaleTime.Subject,
+    async () => {
+      try {
+        const { subject } = await fetchSubject(subjectId, {
+          timeout: 10 * 1000,
+          retry: 1
+        });
+        return { ok: true, subject: transformBgmSubject(subject) } as const;
+      } catch (error) {
+        if (getHTTPStatus(error) === 404) {
+          return { ok: false, code: 'NOT_FOUND', subject: undefined } as const;
+        }
+        throw error;
       }
-      throw error;
-    }
-  });
+    },
+    (result) => result.ok
+  );
 }
 
 /** Loads optional Subject metadata without making its consumers fail on an upstream outage. */
@@ -129,17 +106,6 @@ export async function getSubjectById(subjectId: number) {
   } catch {
     return undefined;
   }
-}
-
-function getHTTPStatus(error: unknown): number | undefined {
-  if (!error || typeof error !== 'object') return undefined;
-
-  const response = 'response' in error ? error.response : undefined;
-  if (response && typeof response === 'object' && 'status' in response) {
-    return typeof response.status === 'number' ? response.status : undefined;
-  }
-
-  return 'cause' in error ? getHTTPStatus(error.cause) : undefined;
 }
 
 export async function searchSubjects(keyword: string, limit?: number) {

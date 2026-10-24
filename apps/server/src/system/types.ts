@@ -3,6 +3,9 @@ import type { ProviderType } from '@animegarden/client';
 import type { RpcEventMap } from './rpc.ts';
 
 export interface Notification {
+  /** The committed subject snapshot changed; reload from Postgres. */
+  subjects?: boolean;
+
   resources: {
     inserted: NotifiedResource[];
 

@@ -235,6 +235,9 @@ importers:
       '@animegarden/scraper':
         specifier: workspace:*
         version: link:../../packages/scraper
+      '@animegarden/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@aws-sdk/client-s3':
         specifier: 3.1154.0
         version: 3.1154.0
@@ -256,9 +259,6 @@ importers:
       anipar:
         specifier: workspace:*
         version: link:../../packages/anipar
-      bgmd:
-        specifier: 0.20260707.1
-        version: 0.20260707.1
       bgmx:
         specifier: 0.3.4
         version: 0.3.4(bangumi-data@0.3.212)
@@ -316,10 +316,6 @@ importers:
       zod:
         specifier: 3.25.76
         version: 3.25.76
-    devDependencies:
-      '@animegarden/shared':
-        specifier: workspace:*
-        version: link:../../packages/shared
 
   apps/web:
     dependencies:
@@ -332,6 +328,9 @@ importers:
       '@animegarden/server':
         specifier: workspace:*
         version: link:../server
+      '@animegarden/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       '@floating-ui/react':
         specifier: 0.27.20
         version: 0.27.20(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -383,9 +382,6 @@ importers:
       anipar:
         specifier: workspace:*
         version: link:../../packages/anipar
-      bgmd:
-        specifier: 0.20260707.1
-        version: 0.20260707.1
       bgmx:
         specifier: 0.3.4
         version: 0.3.4(bangumi-data@0.3.212)
@@ -574,6 +570,9 @@ importers:
       '@types/parse-torrent':
         specifier: ^11.0.1
         version: 11.0.1
+      bgmd:
+        specifier: 0.20260707.1
+        version: 0.20260707.1
 
   packages/client:
     dependencies:
@@ -627,6 +626,9 @@ importers:
 
   packages/shared:
     dependencies:
+      bgmx:
+        specifier: 0.3.4
+        version: 0.3.4(bangumi-data@0.3.212)
       simptrad:
         specifier: ^0.3.0
         version: 0.3.0

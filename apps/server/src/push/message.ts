@@ -1,9 +1,9 @@
-import type { ParseResult } from 'anipar';
-import type { BasicSubject } from 'bgmd';
-
 import { type Bot } from 'grammy';
 import { tradToSimple } from 'simptrad';
 import { formatInTimeZone } from 'date-fns-tz';
+
+import type { ParseResult } from 'anipar';
+import type { SubjectMetadata } from '@animegarden/shared';
 
 import type { SystemOptions } from '../system/system.ts';
 import type { FoundResource } from '../resources/query.ts';
@@ -24,7 +24,7 @@ import { getKeepShareURL } from '../utils/keepshare.ts';
  */
 export function buildResourceCardMessage(
   resource: FoundResource,
-  subject: BasicSubject,
+  subject: SubjectMetadata,
   parsed: ParseResult,
   options: Pick<SystemOptions, 'site' | 'keepshare'> = {}
 ) {
@@ -59,7 +59,7 @@ function formatTitleLine(subjectName: string, parsed: ParseResult) {
   return `<b>${escapeHtml(subjectName)}${episode ? ` · ${escapeHtml(episode)}` : ''}</b>`;
 }
 
-function getSubjectDisplayName(subject: BasicSubject) {
+function getSubjectDisplayName(subject: SubjectMetadata) {
   return subject.alias.zh?.[0] || subject.title;
 }
 
@@ -87,7 +87,7 @@ function formatEpisodeNumber(number: number, numberSub?: number) {
   return numberSub !== undefined ? `${number}.${numberSub}` : `${number}`;
 }
 
-function formatFansubs(parsed: ParseResult, subject: BasicSubject, resource: FoundResource) {
+function formatFansubs(parsed: ParseResult, subject: SubjectMetadata, resource: FoundResource) {
   const fansubs = getNormalizedFansubs(parsed);
   if (fansubs.length === 0) return undefined;
   const labels = fansubs.map((fansub) => escapeHtml(formatHashTag(fansub)));
@@ -200,7 +200,7 @@ function formatLabels(rawFansub: string, subjectName: string) {
   return `<b>追踪:</b> ${formatHashTag(subjectName)} ${formatHashTag(`${fansub}_${subjectName}`)}`;
 }
 
-function formatQuarter(subject: BasicSubject, resource: FoundResource) {
+function formatQuarter(subject: SubjectMetadata, resource: FoundResource) {
   const date = alignQuarterDate(new Date(subject.onair_date || resource.createdAt));
   if (Number.isNaN(date.getTime())) {
     return '';

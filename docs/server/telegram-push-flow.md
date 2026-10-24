@@ -146,6 +146,8 @@ cli cron
 5. 新 active subject，或完整 `search` 筛选条件变化的 active subject，会补偿绑定历史 resources 中尚未绑定的记录。
 6. 将这些新绑定 subject 的 resource ids 去重后传给 `enqueueResourceMessages`。
 
+展示资料来源、缓存刷新顺序和迁移步骤见 [动态番剧资料与缓存](./subject-data-source.md)。
+
 本地 `subjects.search` 直接保存 bgmx 的筛选对象。资源绑定与 bgmx 查询语义一致：
 
 - `include` 中任意标题命中即可。
