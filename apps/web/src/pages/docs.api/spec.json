@@ -22,8 +22,7 @@
   "paths": {
     "/": {
       "get": {
-        "summary": "获取API状态信息",
-        "description": "获取API基础信息、时间戳、提供商状态和文档入口链接",
+        "summary": "获取 API 状态信息",
         "operationId": "getStatus",
         "tags": ["Status"],
         "responses": {
@@ -91,7 +90,7 @@
     "/users": {
       "get": {
         "summary": "获取用户列表",
-        "description": "获取所有发布者用户信息",
+        "description": "返回全部发布者。",
         "operationId": "getUsers",
         "tags": ["Users"],
         "responses": {
@@ -124,7 +123,7 @@
     "/teams": {
       "get": {
         "summary": "获取字幕组列表",
-        "description": "获取所有字幕组信息",
+        "description": "返回全部字幕组。",
         "operationId": "getTeams",
         "tags": ["Users"],
         "responses": {
@@ -157,7 +156,7 @@
     "/subjects": {
       "get": {
         "summary": "获取主题列表",
-        "description": "获取所有番剧主题信息",
+        "description": "返回当前未归档的番剧条目。",
         "operationId": "getSubjects",
         "tags": ["Subjects"],
         "responses": {
@@ -190,7 +189,6 @@
     "/resources": {
       "get": {
         "summary": "获取资源列表",
-        "description": "获取所有提供商的资源列表，支持分页和过滤。页码从 1 开始；page × pageSize 必须不超过 10000，超出返回 HTTP 400。",
         "operationId": "getResources",
         "tags": ["Resources"],
         "parameters": [
@@ -248,7 +246,7 @@
         ],
         "responses": {
           "200": {
-            "description": "成功获取资源列表",
+            "description": "当前页资源及生效条件。",
             "content": {
               "application/json": {
                 "schema": {
@@ -263,7 +261,7 @@
             }
           },
           "503": {
-            "description": "慢查询通道繁忙，请稍后重试",
+            "description": "服务繁忙，请稍后重试",
             "content": {
               "application/json": {
                 "schema": {
@@ -273,17 +271,7 @@
             }
           },
           "504": {
-            "description": "慢查询执行超时",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "分页过深：page × pageSize 不能超过 10000",
+            "description": "查询超时",
             "content": {
               "application/json": {
                 "schema": {
@@ -296,7 +284,7 @@
       },
       "post": {
         "summary": "获取资源列表 (POST)",
-        "description": "使用POST方法获取资源列表，支持复杂的过滤条件。页码从 1 开始；page × pageSize 必须不超过 10000，超出返回 HTTP 400。",
+        "description": "只读查询，与 GET 行为相同。",
         "operationId": "postResources",
         "tags": ["Resources"],
         "parameters": [
@@ -308,18 +296,24 @@
           }
         ],
         "requestBody": {
-          "description": "过滤和分页参数",
+          "description": "省略时使用 URL 中的查询条件。",
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ResourcesRequest"
+              },
+              "example": {
+                "subjects": [543360],
+                "keywords": ["简日"],
+                "page": 1,
+                "pageSize": 20
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "成功获取资源列表",
+            "description": "当前页资源及生效条件。",
             "content": {
               "application/json": {
                 "schema": {
@@ -334,7 +328,7 @@
             }
           },
           "503": {
-            "description": "慢查询通道繁忙，请稍后重试",
+            "description": "服务繁忙，请稍后重试",
             "content": {
               "application/json": {
                 "schema": {
@@ -344,17 +338,7 @@
             }
           },
           "504": {
-            "description": "慢查询执行超时",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "分页过深：page × pageSize 不能超过 10000",
+            "description": "查询超时",
             "content": {
               "application/json": {
                 "schema": {
@@ -369,7 +353,6 @@
     "/resources/{provider}": {
       "get": {
         "summary": "获取指定提供商的资源列表",
-        "description": "获取指定提供商的资源列表。页码从 1 开始；page × pageSize 必须不超过 10000，超出返回 HTTP 400。",
         "operationId": "getProviderResources",
         "tags": ["Resources"],
         "parameters": [
@@ -377,7 +360,7 @@
             "name": "provider",
             "in": "path",
             "required": true,
-            "description": "提供商名称",
+            "description": "资源来源。",
             "schema": {
               "type": "string",
               "enum": ["dmhy", "mikan", "moe", "ani"]
@@ -434,7 +417,7 @@
         ],
         "responses": {
           "200": {
-            "description": "成功获取资源列表",
+            "description": "当前页资源及生效条件。",
             "content": {
               "application/json": {
                 "schema": {
@@ -449,7 +432,7 @@
             }
           },
           "503": {
-            "description": "慢查询通道繁忙，请稍后重试",
+            "description": "服务繁忙，请稍后重试",
             "content": {
               "application/json": {
                 "schema": {
@@ -459,17 +442,7 @@
             }
           },
           "504": {
-            "description": "慢查询执行超时",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "分页过深：page × pageSize 不能超过 10000",
+            "description": "查询超时",
             "content": {
               "application/json": {
                 "schema": {
@@ -482,7 +455,7 @@
       },
       "post": {
         "summary": "获取指定提供商的资源列表 (POST)",
-        "description": "使用POST方法获取指定提供商的资源列表。页码从 1 开始；page × pageSize 必须不超过 10000，超出返回 HTTP 400。",
+        "description": "只读查询，与 GET 行为相同。",
         "operationId": "postProviderResources",
         "tags": ["Resources"],
         "parameters": [
@@ -490,7 +463,7 @@
             "name": "provider",
             "in": "path",
             "required": true,
-            "description": "提供商名称",
+            "description": "资源来源。",
             "schema": {
               "type": "string",
               "enum": ["dmhy", "mikan", "moe", "ani"]
@@ -504,18 +477,24 @@
           }
         ],
         "requestBody": {
-          "description": "过滤和分页参数",
+          "description": "省略时使用 URL 中的查询条件。",
           "content": {
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ResourcesRequest"
+              },
+              "example": {
+                "subjects": [543360],
+                "keywords": ["简日"],
+                "page": 1,
+                "pageSize": 20
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "成功获取资源列表",
+            "description": "当前页资源及生效条件。",
             "content": {
               "application/json": {
                 "schema": {
@@ -530,7 +509,7 @@
             }
           },
           "503": {
-            "description": "慢查询通道繁忙，请稍后重试",
+            "description": "服务繁忙，请稍后重试",
             "content": {
               "application/json": {
                 "schema": {
@@ -540,17 +519,7 @@
             }
           },
           "504": {
-            "description": "慢查询执行超时",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "分页过深：page × pageSize 不能超过 10000",
+            "description": "查询超时",
             "content": {
               "application/json": {
                 "schema": {
@@ -565,7 +534,6 @@
     "/detail/{provider}/{id}": {
       "get": {
         "summary": "获取资源详情 (别名)",
-        "description": "获取指定资源的详细信息（与/resource/{provider}/{id}相同）",
         "operationId": "getDetailAlias",
         "tags": ["Resources"],
         "parameters": [
@@ -583,7 +551,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "description": "资源ID",
+            "description": "来源站资源 ID，即资源列表中的 providerId。",
             "schema": {
               "type": "string"
             }
@@ -591,7 +559,7 @@
         ],
         "responses": {
           "200": {
-            "description": "成功获取资源详情",
+            "description": "资源及可取得的详情。",
             "content": {
               "application/json": {
                 "schema": {
@@ -620,13 +588,12 @@
     },
     "/collection": {
       "post": {
-        "summary": "创建收藏夹",
-        "description": "创建新的收藏夹",
+        "summary": "创建或复用收藏夹",
+        "description": "保存可重复查询的筛选条件；相同 hash 复用已有收藏夹。POST 与 PUT 行为相同。",
         "operationId": "createCollection",
         "tags": ["Collections"],
         "requestBody": {
           "required": true,
-          "description": "收藏夹信息",
           "content": {
             "application/json": {
               "schema": {
@@ -637,7 +604,7 @@
         },
         "responses": {
           "200": {
-            "description": "成功创建收藏夹",
+            "description": "返回新建或已有记录；复用时不覆盖名称或配置。",
             "content": {
               "application/json": {
                 "schema": {
@@ -649,15 +616,16 @@
                     },
                     "id": {
                       "type": "integer",
-                      "description": "收藏夹ID"
+                      "description": "收藏夹站内 ID；读取和订阅使用 hash。"
                     },
                     "hash": {
                       "type": "string",
-                      "description": "收藏夹哈希值"
+                      "description": "服务端根据筛选配置计算的标识；名称和 authorization 不参与计算。用于 /collection/{hash} 查询及 /collection/{hash}/feed.xml 订阅。"
                     },
                     "createdAt": {
                       "type": "string",
-                      "format": "date-time"
+                      "format": "date-time",
+                      "description": "该收藏夹最初保存的时间；复用已有记录时不会刷新。"
                     }
                   },
                   "required": ["status", "id", "hash", "createdAt"]
@@ -671,7 +639,7 @@
             }
           },
           "400": {
-            "description": "收藏夹格式错误",
+            "description": "收藏夹格式不符合要求，或服务端未能保存收藏夹。",
             "content": {
               "application/json": {
                 "schema": {
@@ -683,13 +651,12 @@
         }
       },
       "put": {
-        "summary": "创建或更新收藏夹",
-        "description": "创建或更新收藏夹（与POST相同）",
+        "summary": "创建或复用收藏夹",
+        "description": "保存可重复查询的筛选条件；相同 hash 复用已有收藏夹。POST 与 PUT 行为相同。",
         "operationId": "upsertCollection",
         "tags": ["Collections"],
         "requestBody": {
           "required": true,
-          "description": "收藏夹信息",
           "content": {
             "application/json": {
               "schema": {
@@ -700,7 +667,7 @@
         },
         "responses": {
           "200": {
-            "description": "成功创建收藏夹",
+            "description": "返回新建或已有记录；复用时不覆盖名称或配置。",
             "content": {
               "application/json": {
                 "schema": {
@@ -712,15 +679,16 @@
                     },
                     "id": {
                       "type": "integer",
-                      "description": "收藏夹ID"
+                      "description": "收藏夹站内 ID；读取和订阅使用 hash。"
                     },
                     "hash": {
                       "type": "string",
-                      "description": "收藏夹哈希值"
+                      "description": "服务端根据筛选配置计算的标识；名称和 authorization 不参与计算。用于 /collection/{hash} 查询及 /collection/{hash}/feed.xml 订阅。"
                     },
                     "createdAt": {
                       "type": "string",
-                      "format": "date-time"
+                      "format": "date-time",
+                      "description": "该收藏夹最初保存的时间；复用已有记录时不会刷新。"
                     }
                   },
                   "required": ["status", "id", "hash", "createdAt"]
@@ -734,7 +702,7 @@
             }
           },
           "400": {
-            "description": "收藏夹格式错误",
+            "description": "收藏夹格式不符合要求，或服务端未能保存收藏夹。",
             "content": {
               "application/json": {
                 "schema": {
@@ -749,7 +717,7 @@
     "/collection/{hash}": {
       "get": {
         "summary": "获取收藏夹内容",
-        "description": "根据哈希值获取收藏夹及其包含的资源",
+        "description": "返回保存的筛选条件及其当前匹配资源。",
         "operationId": "getCollection",
         "tags": ["Collections"],
         "parameters": [
@@ -757,7 +725,7 @@
             "name": "hash",
             "in": "path",
             "required": true,
-            "description": "收藏夹哈希值",
+            "description": "创建收藏夹时返回的 hash。",
             "schema": {
               "type": "string"
             }
@@ -803,20 +771,22 @@
                             "$ref": "#/components/schemas/FilterOptions"
                           }
                         },
-                        "required": ["resources", "pagination"]
+                        "required": ["resources", "pagination"],
+                        "description": "complete 为 false 时，将对应 filters[i] 的结构化筛选字段作为 POST /resources 正文，设置 page=2、pageSize=1000 继续查询。"
                       },
-                      "description": "与 filters 按顺序一一对应；每项查询第 1 页，pageSize 为 1000。"
+                      "description": "与 filters 按顺序对应，每项查询第 1 页、最多 1000 条；不跨项去重。"
                     },
                     "updatedAt": {
                       "type": "string",
                       "format": "date-time",
-                      "description": "收藏夹查询结果生成时间，缓存命中时沿用缓存值。"
+                      "description": "资源结果生成时间；命中缓存时沿用原值。"
                     },
                     "filters": {
                       "type": "array",
                       "items": {
                         "$ref": "#/components/schemas/CollectionFilter"
-                      }
+                      },
+                      "description": "保存的筛选配置，与 results 按顺序一一对应。"
                     }
                   },
                   "required": [
@@ -848,7 +818,7 @@
             }
           },
           "503": {
-            "description": "慢查询通道繁忙，请稍后重试",
+            "description": "服务繁忙，请稍后重试",
             "content": {
               "application/json": {
                 "schema": {
@@ -858,7 +828,7 @@
             }
           },
           "504": {
-            "description": "慢查询执行超时",
+            "description": "查询超时",
             "content": {
               "application/json": {
                 "schema": {
@@ -872,8 +842,8 @@
     },
     "/feed.xml": {
       "get": {
-        "summary": "获取RSS订阅源",
-        "description": "获取资源的RSS订阅源。页码从 1 开始；page × pageSize 必须不超过 10000，超出返回 HTTP 400。",
+        "summary": "获取 RSS 订阅源",
+        "description": "订阅匹配筛选条件的资源。",
         "operationId": "getRSSFeed",
         "tags": ["Feed"],
         "parameters": [
@@ -928,18 +898,18 @@
         ],
         "responses": {
           "200": {
-            "description": "RSS XML内容",
+            "description": "当前页资源，按发布时间从新到旧排列。轮询间新增数量超出窗口时可能遗漏资源。",
             "content": {
               "application/xml": {
                 "schema": {
                   "type": "string",
-                  "description": "RSS XML格式的订阅源"
+                  "description": "RSS 2.0 字段：\n- item.link、guid：资源详情页。\n- item.pubDate：资源发布时间。\n- item.enclosure.url：磁力链接，默认附带 tracker。\n- item.enclosure.length：字节数。\n- item.animegarden:subjectId：Bangumi 条目 ID，未绑定时省略；命名空间为 https://animes.garden/ns/rss/1.0。"
                 }
               }
             }
           },
           "503": {
-            "description": "慢查询通道繁忙，请稍后重试",
+            "description": "服务繁忙，请稍后重试",
             "content": {
               "application/xml": {
                 "schema": {
@@ -950,18 +920,7 @@
             }
           },
           "504": {
-            "description": "慢查询执行超时",
-            "content": {
-              "application/xml": {
-                "schema": {
-                  "type": "string",
-                  "description": "XML 错误正文，根元素为 error，message 子元素描述错误。"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "分页过深：page × pageSize 不能超过 10000",
+            "description": "查询超时",
             "content": {
               "application/xml": {
                 "schema": {
@@ -976,8 +935,8 @@
     },
     "/collection/{hash}/feed.xml": {
       "get": {
-        "summary": "获取收藏夹RSS订阅源",
-        "description": "获取指定收藏夹的RSS订阅源",
+        "summary": "获取收藏夹 RSS 订阅源",
+        "description": "订阅收藏夹各筛选项匹配的资源。",
         "operationId": "getCollectionRSSFeed",
         "tags": ["Feed"],
         "parameters": [
@@ -985,7 +944,7 @@
             "name": "hash",
             "in": "path",
             "required": true,
-            "description": "收藏夹哈希值",
+            "description": "创建收藏夹时返回的 hash。",
             "schema": {
               "type": "string"
             }
@@ -996,12 +955,12 @@
         ],
         "responses": {
           "200": {
-            "description": "RSS XML内容",
+            "description": "按筛选项顺序合并各项第 1 页，每项最多 1000 条；不跨项去重或全局排序。",
             "content": {
               "application/xml": {
                 "schema": {
                   "type": "string",
-                  "description": "RSS XML格式的订阅源"
+                  "description": "RSS 2.0 字段：\n- item.link、guid：资源详情页。\n- item.pubDate：资源发布时间。\n- item.enclosure.url：磁力链接，默认附带 tracker。\n- item.enclosure.length：字节数。\n- item.animegarden:subjectId：Bangumi 条目 ID，未绑定时省略；命名空间为 https://animes.garden/ns/rss/1.0。"
                 }
               }
             }
@@ -1017,7 +976,7 @@
             }
           },
           "503": {
-            "description": "慢查询通道繁忙，请稍后重试",
+            "description": "服务繁忙，请稍后重试",
             "content": {
               "application/xml": {
                 "schema": {
@@ -1028,7 +987,7 @@
             }
           },
           "504": {
-            "description": "慢查询执行超时",
+            "description": "查询超时",
             "content": {
               "application/xml": {
                 "schema": {
@@ -1044,7 +1003,6 @@
     "/sitemaps/subjects": {
       "get": {
         "summary": "获取主题站点地图",
-        "description": "获取所有主题的站点地图信息",
         "operationId": "getSubjectsSitemap",
         "tags": ["Sitemap"],
         "responses": {
@@ -1090,7 +1048,6 @@
     "/sitemaps/{year}/{month}": {
       "get": {
         "summary": "获取指定月份的资源站点地图",
-        "description": "获取指定年月的资源站点地图信息。仅支持 2020 年至当前年月；合法数字格式但超出范围时返回 HTTP 200 错误正文，非数字路径不匹配该路由。",
         "operationId": "getResourcesSitemap",
         "tags": ["Sitemap"],
         "parameters": [
@@ -1098,7 +1055,7 @@
             "name": "year",
             "in": "path",
             "required": true,
-            "description": "年份",
+            "description": "资源发布年份，不晚于当前年份。",
             "schema": {
               "type": "integer",
               "minimum": 2020
@@ -1108,7 +1065,7 @@
             "name": "month",
             "in": "path",
             "required": true,
-            "description": "月份",
+            "description": "资源发布月份；当年只支持截至当前月份。",
             "schema": {
               "type": "integer",
               "minimum": 1,
@@ -1118,7 +1075,7 @@
         ],
         "responses": {
           "200": {
-            "description": "当前实现始终返回 HTTP 200；参数越界或查询失败时 status 为 ERROR，并返回空 resources，不包含 count。",
+            "description": "参数越界或查询失败时返回 ERROR；非数字路径不匹配此接口。",
             "content": {
               "application/json": {
                 "schema": {
@@ -1426,7 +1383,6 @@
     "/detail/infohash/{hash}": {
       "get": {
         "summary": "按 info hash 获取资源详情",
-        "description": "支持 40 位十六进制或 32 位 Base32 info hash，忽略大小写并去除首尾空白。格式错误返回 400，资源不存在返回 404。",
         "operationId": "getResourceDetailByInfoHash",
         "tags": ["Resources"],
         "parameters": [
@@ -1437,12 +1393,13 @@
             "schema": {
               "type": "string"
             },
-            "description": "40 位十六进制或 32 位 Base32 info hash"
+            "description": "种子的 info hash。例如从 `magnet:?xt=urn:btih:0123456789abcdef0123456789abcdef01234567&dn=example` 中提取 `0123456789abcdef0123456789abcdef01234567`。",
+            "example": "0123456789abcdef0123456789abcdef01234567"
           }
         ],
         "responses": {
           "200": {
-            "description": "成功获取资源详情",
+            "description": "资源及可取得的详情。",
             "content": {
               "application/json": {
                 "schema": {
@@ -1482,18 +1439,16 @@
   },
   "components": {
     "securitySchemes": {
-      "ApiTokenAuth": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "authorization",
-        "description": "管理员 API 需要在 header 中直接配置 secret token"
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
       }
     },
     "parameters": {
       "PageParam": {
         "name": "page",
         "in": "query",
-        "description": "页码从 1 开始；page × pageSize 必须不超过 10000，超出返回 HTTP 400。",
+        "description": "页码。",
         "schema": {
           "type": "integer",
           "minimum": 1,
@@ -1503,7 +1458,7 @@
       "PageSizeParam": {
         "name": "pageSize",
         "in": "query",
-        "description": "每页数量，默认 100，最大 1000；page × pageSize 不超过 10000。越界或无效值回退为 100。",
+        "description": "每页数量；越界或无效值回退为默认值。",
         "schema": {
           "type": "integer",
           "minimum": 1,
@@ -1514,7 +1469,7 @@
       "ProviderParam": {
         "name": "provider",
         "in": "query",
-        "description": "提供商过滤",
+        "description": "资源来源标识；省略时查询所有来源。",
         "schema": {
           "type": "string",
           "enum": ["dmhy", "mikan", "moe", "ani"]
@@ -1523,7 +1478,7 @@
       "SearchParam": {
         "name": "search",
         "in": "query",
-        "description": "搜索关键词（可重复传递多个参数，例如 ?search=foo&search=bar，或在Swagger页面中以逗号分隔输入：foo,bar）",
+        "description": "搜索资源；非空时覆盖 include，keyword 和 exclude 仍生效。",
         "schema": {
           "type": "array",
           "items": {
@@ -1536,7 +1491,7 @@
       "IncludeParam": {
         "name": "include",
         "in": "query",
-        "description": "包含关键词（可重复传递多个参数，例如 ?include=foo&include=bar，或在Swagger页面中以逗号分隔输入：foo,bar）",
+        "description": "标题包含任一关键词；非空 search 存在时忽略。",
         "schema": {
           "type": "array",
           "items": {
@@ -1549,7 +1504,7 @@
       "KeywordsParam": {
         "name": "keyword",
         "in": "query",
-        "description": "必须包含的关键词；URL 使用单数 keyword，可重复传递；POST JSON 正文使用 keywords。",
+        "description": "标题必须包含全部关键词。",
         "schema": {
           "type": "array",
           "items": {
@@ -1557,12 +1512,13 @@
           }
         },
         "style": "form",
-        "explode": true
+        "explode": true,
+        "example": ["简日"]
       },
       "ExcludeParam": {
         "name": "exclude",
         "in": "query",
-        "description": "排除关键词",
+        "description": "排除标题包含任一关键词的资源。",
         "schema": {
           "type": "array",
           "items": {
@@ -1575,7 +1531,7 @@
       "TypeParam": {
         "name": "type",
         "in": "query",
-        "description": "资源类型过滤",
+        "description": "按资源的 type 名称筛选，匹配任一类型即可。",
         "schema": {
           "type": "array",
           "items": {
@@ -1583,12 +1539,13 @@
           }
         },
         "style": "form",
-        "explode": true
+        "explode": true,
+        "example": ["动画"]
       },
       "SubjectParam": {
         "name": "subject",
         "in": "query",
-        "description": "Bangumi ID 过滤",
+        "description": "按资源的 subjectId（Bangumi 条目 ID）筛选，匹配任一条目即可。",
         "schema": {
           "type": "array",
           "items": {
@@ -1596,12 +1553,13 @@
           }
         },
         "style": "form",
-        "explode": true
+        "explode": true,
+        "example": [543360]
       },
       "FansubParam": {
         "name": "fansub",
         "in": "query",
-        "description": "字幕组过滤",
+        "description": "按 GET /teams 返回的 name 筛选，匹配任一名称即可；与 publisher 同时指定时取并集。",
         "schema": {
           "type": "array",
           "items": {
@@ -1614,7 +1572,7 @@
       "PublisherParam": {
         "name": "publisher",
         "in": "query",
-        "description": "发布者过滤",
+        "description": "按 GET /users 返回的 name 筛选，匹配任一名称即可；与 fansub 同时指定时取并集。",
         "schema": {
           "type": "array",
           "items": {
@@ -1627,25 +1585,27 @@
       "AfterParam": {
         "name": "after",
         "in": "query",
-        "description": "起始时间过滤（ISO 8601格式）",
+        "description": "资源发布时间 createdAt 的下界，包含边界。",
         "schema": {
           "type": "string",
           "format": "date-time"
-        }
+        },
+        "example": "2026-10-01T00:00:00+08:00"
       },
       "BeforeParam": {
         "name": "before",
         "in": "query",
-        "description": "结束时间过滤（ISO 8601格式）",
+        "description": "资源发布时间 createdAt 的上界，包含边界。",
         "schema": {
           "type": "string",
           "format": "date-time"
-        }
+        },
+        "example": "2026-10-31T23:59:59+08:00"
       },
       "DuplicateParam": {
         "name": "duplicate",
         "in": "query",
-        "description": "现有行为：仅在 query 或 JSON 正文指定有效 provider 时生效，省略时默认包含重复资源；URL 非空字符串（包括 false、0）均被解析为 true，空字符串为 false。未指定 provider 时忽略此参数；仅路径中的 provider 不触发该默认规则。此行为将在后续版本评估调整。",
+        "description": "是否包含重复资源。仅在查询条件中指定有效 provider 时生效，省略时包含重复资源；仅指定路径中的 provider 不触发此规则。非空字符串（包括 false、0）均视为 true，空字符串视为 false。",
         "schema": {
           "type": "string"
         }
@@ -1653,7 +1613,7 @@
       "TrackerParam": {
         "name": "tracker",
         "in": "query",
-        "description": "是否返回tracker信息",
+        "description": "是否返回可追加到 magnet 后的 tracker。",
         "schema": {
           "type": "boolean",
           "default": false
@@ -1662,7 +1622,7 @@
       "MetadataParam": {
         "name": "metadata",
         "in": "query",
-        "description": "是否返回metadata信息",
+        "description": "是否返回 metadata 信息",
         "schema": {
           "type": "boolean",
           "default": false
@@ -1680,7 +1640,7 @@
       "FeedTrackerParam": {
         "name": "trakcer",
         "in": "query",
-        "description": "现有 RSS 实现的历史拼写。默认包含 tracker，仅小写 false、off、no 关闭；tracker 参数目前被忽略。资源 JSON 接口仍使用 tracker。",
+        "description": "仅小写 false、off、no 关闭 tracker。",
         "schema": {
           "type": "string",
           "default": "true"
@@ -1779,29 +1739,35 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Anime Garden 站内资源 ID；详情查询使用 providerId。"
           },
           "provider": {
-            "type": "string"
+            "type": "string",
+            "description": "资源来源标识，与 providerId 一起用于查询详情。"
           },
           "providerId": {
-            "type": "string"
+            "type": "string",
+            "description": "资源在来源站的 ID，作为 GET /detail/{provider}/{id} 中的 id。"
           },
           "title": {
             "type": "string"
           },
           "href": {
-            "type": "string"
+            "type": "string",
+            "description": "来源站的资源详情链接。"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "description": "资源类型名称，可用于 type 筛选。"
           },
           "magnet": {
-            "type": "string"
+            "type": "string",
+            "description": "资源磁力链接。"
           },
           "tracker": {
             "type": "string",
-            "description": "当tracker参数为true时返回"
+            "description": "可直接追加到 magnet 后；资源列表需通过 tracker=true 请求此字段。"
           },
           "size": {
             "type": "integer",
@@ -1820,7 +1786,8 @@
                 "type": "string"
               }
             },
-            "required": ["id", "name"]
+            "required": ["id", "name"],
+            "description": "发布该资源的字幕组；没有字幕组信息时省略。"
           },
           "publisher": {
             "type": "object",
@@ -1835,26 +1802,30 @@
                 "type": "string"
               }
             },
-            "required": ["id", "name"]
+            "required": ["id", "name"],
+            "description": "发布该资源的用户；其 name 可用于 publisher 筛选。"
           },
           "subjectId": {
-            "type": "integer"
+            "type": "integer",
+            "description": "绑定的 Bangumi 条目 ID，可用于 subject 筛选；未绑定时省略。"
           },
           "createdAt": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "资源在来源站的发布时间；用于列表排序及 after、before 筛选。"
           },
           "fetchedAt": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "Anime Garden 记录的资源抓取时间。"
           },
           "metadata": {
             "type": ["object", "null"],
-            "description": "当metadata参数为true时返回",
+            "description": "当 metadata 参数为 true 时返回",
             "properties": {
               "anipar": {
                 "type": "object",
-                "description": "Anipar解析结果"
+                "description": "Anipar 解析结果"
               }
             }
           }
@@ -1877,7 +1848,8 @@
         "type": "object",
         "properties": {
           "description": {
-            "type": "string"
+            "type": "string",
+            "description": "来源站的详情正文，可能包含 HTML。"
           },
           "files": {
             "type": "array",
@@ -1888,11 +1860,13 @@
                   "type": "string"
                 },
                 "size": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "来源站提供的文件大小文本。"
                 }
               },
               "required": ["name", "size"]
-            }
+            },
+            "description": "已取得的种子文件列表。"
           },
           "magnets": {
             "type": "array",
@@ -1907,18 +1881,21 @@
                 }
               },
               "required": ["name", "url"]
-            }
+            },
+            "description": "从详情页取得的磁力链接。"
           },
           "hasMoreFiles": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "是否还有未列入 files 的文件。"
           },
           "id": {
             "type": "integer",
-            "description": "资源 ID"
+            "description": "对应 Resource.id 的 Anime Garden 站内资源 ID。"
           },
           "fetchedAt": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "该详情内容的抓取时间，可能与 resource.fetchedAt 不同。"
           }
         },
         "required": ["description", "files", "magnets", "hasMoreFiles", "id", "fetchedAt"]
@@ -1932,7 +1909,8 @@
           },
           "provider": {
             "type": "string",
-            "enum": ["dmhy", "mikan", "moe", "ani"]
+            "enum": ["dmhy", "mikan", "moe", "ani"],
+            "description": "资源来源标识。"
           },
           "duplicate": {
             "type": "boolean"
@@ -1941,74 +1919,89 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "按资源的 type 名称筛选，匹配任一类型即可。"
           },
           "after": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "资源发布时间 createdAt 的下界，包含边界。"
           },
           "before": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "资源发布时间 createdAt 的上界，包含边界。"
           },
           "fansubs": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "按 GET /teams 返回的 name 筛选，匹配任一名称即可；与 publishers 同时指定时取并集。"
           },
           "publishers": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "按 GET /users 返回的 name 筛选，匹配任一名称即可；与 fansubs 同时指定时取并集。"
           },
           "subjects": {
             "type": "array",
             "items": {
               "type": "integer"
-            }
+            },
+            "description": "按 Bangumi 条目 ID 筛选，匹配任一条目即可。"
           },
           "search": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "搜索资源。"
           },
           "include": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "标题包含任一关键词。"
           },
           "keywords": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "标题必须包含全部关键词。"
           },
           "exclude": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "排除标题包含任一关键词的资源。"
           }
-        }
+        },
+        "description": "查询实际生效的条件；未生效的字段可能省略。"
       },
       "PaginationInfo": {
         "type": "object",
         "properties": {
           "page": {
-            "type": "integer"
+            "type": "integer",
+            "description": "当前页码，从 1 开始。"
           },
           "pageSize": {
-            "type": "integer"
+            "type": "integer",
+            "description": "当前请求的每页数量；实际返回的资源条数可能更少。"
           },
           "complete": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "true 表示当前页之后没有更多匹配资源；false 时可使用相同筛选条件和 pageSize，请求 page + 1。"
           }
         },
-        "required": ["page", "pageSize", "complete"]
+        "required": ["page", "pageSize", "complete"],
+        "description": "翻页期间新增或更新的资源可能影响分页结果。"
       },
       "ResourcesRequest": {
         "type": "object",
@@ -2017,30 +2010,33 @@
             "type": "integer",
             "minimum": 1,
             "default": 1,
-            "description": "页码从 1 开始；page × pageSize 必须不超过 10000，超出返回 HTTP 400。"
+            "description": "与 URL 中的 page 同时指定时，URL 值优先。"
           },
           "pageSize": {
             "type": "integer",
             "minimum": 1,
             "maximum": 1000,
             "default": 100,
-            "description": "每页数量，默认 100，最大 1000；page × pageSize 不超过 10000。越界或无效值回退为 100。"
+            "description": "越界或无效值回退为默认值；与 URL 中的 pageSize 同时指定时，URL 值优先。"
           },
           "provider": {
             "type": "string",
-            "enum": ["dmhy", "mikan", "moe", "ani"]
+            "enum": ["dmhy", "mikan", "moe", "ani"],
+            "description": "资源来源标识。"
           },
           "duplicate": {
             "type": "boolean",
-            "description": "仅在 query 或 JSON 正文指定有效 provider 时生效；该情况下省略默认 true，否则忽略。URL duplicate 的非空字符串会被解析为 true，混用 URL 与正文参数时需注意。"
+            "description": "是否包含重复资源。仅在查询条件中指定有效 provider 时生效，省略时包含重复资源。正文指定 provider 时，URL duplicate 优先；仅 URL 指定 provider 时，正文 duplicate 优先。"
           },
           "after": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "资源发布时间 createdAt 的下界，包含边界。"
           },
           "before": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "资源发布时间 createdAt 的上界，包含边界。"
           },
           "search": {
             "oneOf": [
@@ -2053,7 +2049,8 @@
                   "type": "string"
                 }
               }
-            ]
+            ],
+            "description": "搜索资源；非空时覆盖 include，keywords 和 exclude 仍生效。"
           },
           "include": {
             "oneOf": [
@@ -2066,7 +2063,8 @@
                   "type": "string"
                 }
               }
-            ]
+            ],
+            "description": "标题包含任一关键词；非空 search 存在时忽略。"
           },
           "keywords": {
             "oneOf": [
@@ -2079,7 +2077,8 @@
                   "type": "string"
                 }
               }
-            ]
+            ],
+            "description": "标题必须包含全部关键词。"
           },
           "exclude": {
             "oneOf": [
@@ -2092,49 +2091,59 @@
                   "type": "string"
                 }
               }
-            ]
+            ],
+            "description": "排除标题包含任一关键词的资源。"
           },
           "type": {
-            "type": "string"
+            "type": "string",
+            "description": "资源类型名称；与 types 同时提供时，此字段优先。"
           },
           "types": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "按资源的 type 名称筛选，匹配任一类型即可。"
           },
           "subject": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Bangumi 条目 ID；与 subjects 同时提供时，此字段优先。"
           },
           "subjects": {
             "type": "array",
             "items": {
               "type": "integer"
-            }
+            },
+            "description": "按 Bangumi 条目 ID 筛选，匹配任一条目即可。"
           },
           "fansub": {
-            "type": "string"
+            "type": "string",
+            "description": "字幕组名称；与 fansubs 同时提供时，此字段优先。"
           },
           "fansubs": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "按 GET /teams 返回的 name 筛选，匹配任一名称即可；与 publishers 同时指定时取并集。"
           },
           "publisher": {
-            "type": "string"
+            "type": "string",
+            "description": "发布者名称；与 publishers 同时提供时，此字段优先。"
           },
           "publishers": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "按 GET /users 返回的 name 筛选，匹配任一名称即可；与 fansubs 同时指定时取并集。"
           },
           "preset": {
             "type": "string",
             "enum": ["bangumi"]
           }
-        }
+        },
+        "description": "不同筛选条件取交集，fansubs 与 publishers 取并集。混用 URL 与正文时，有效、非空筛选优先使用正文；分页和 duplicate 的优先级见字段说明。"
       },
       "ResourcesResponse": {
         "type": "object",
@@ -2147,13 +2156,15 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Resource"
-            }
+            },
+            "description": "按 createdAt 从新到旧排列。"
           },
           "pagination": {
             "$ref": "#/components/schemas/PaginationInfo"
           },
           "filter": {
-            "$ref": "#/components/schemas/FilterOptions"
+            "$ref": "#/components/schemas/FilterOptions",
+            "description": "本次查询实际生效的筛选条件。"
           }
         },
         "required": ["status", "resources", "pagination", "filter"]
@@ -2163,10 +2174,12 @@
         "properties": {
           "name": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "description": "显示名称，不参与 hash 计算；仅修改名称不会更新已有收藏夹。"
           },
           "authorization": {
-            "type": "string"
+            "type": "string",
+            "description": "由调用方自行生成，无需申请 token；不参与 hash 计算，也不控制创建或公开读取权限。"
           },
           "filters": {
             "type": "array",
@@ -2174,18 +2187,20 @@
             "maxItems": 50,
             "items": {
               "$ref": "#/components/schemas/CollectionFilter"
-            }
+            },
+            "description": "保存的筛选条件会在读取时重新查询；修改条件可能生成新的 hash。"
           }
         },
         "required": ["authorization", "filters"],
         "example": {
-          "name": "动画",
-          "authorization": "example-token",
+          "name": "追番",
+          "authorization": "example-client-generated-token",
           "filters": [
             {
-              "name": "动画",
-              "searchParams": "type=%E5%8A%A8%E7%94%BB",
-              "types": ["动画"]
+              "name": "上伊那牡丹",
+              "searchParams": "subject=543360&keyword=%E7%AE%80%E6%97%A5",
+              "subjects": [543360],
+              "keywords": ["简日"]
             }
           ]
         }
@@ -2255,14 +2270,16 @@
       },
       "CollectionFilter": {
         "type": "object",
-        "description": "保存的结构化筛选条件。searchParams 用于记录查询字符串，服务端查询使用同级筛选字段，不会解析 searchParams 来生成它们。",
+        "description": "收藏夹中单项查询的结构化筛选条件。",
         "properties": {
           "name": {
             "type": "string",
-            "default": ""
+            "default": "",
+            "description": "显示名称，不参与 hash 计算。"
           },
           "searchParams": {
-            "type": "string"
+            "type": "string",
+            "description": "用于还原筛选，应与同级字段保持一致；服务端只使用同级结构化字段查询，不解析此值。"
           },
           "preset": {
             "type": "string",
@@ -2270,7 +2287,8 @@
           },
           "provider": {
             "type": "string",
-            "enum": ["dmhy", "mikan", "moe", "ani"]
+            "enum": ["dmhy", "mikan", "moe", "ani"],
+            "description": "资源来源标识。"
           },
           "duplicate": {
             "type": "boolean"
@@ -2279,57 +2297,67 @@
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "按资源的 type 名称筛选，匹配任一类型即可。"
           },
           "after": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "资源发布时间 createdAt 的下界，包含边界。"
           },
           "before": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "description": "资源发布时间 createdAt 的上界，包含边界。"
           },
           "fansubs": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "按 GET /teams 返回的 name 筛选，匹配任一名称即可；与 publishers 同时指定时取并集。"
           },
           "publishers": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "按 GET /users 返回的 name 筛选，匹配任一名称即可；与 fansubs 同时指定时取并集。"
           },
           "subjects": {
             "type": "array",
             "items": {
               "type": "integer"
-            }
+            },
+            "description": "按 Bangumi 条目 ID 筛选，匹配任一条目即可。"
           },
           "search": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "搜索资源。"
           },
           "include": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "标题包含任一关键词。"
           },
           "keywords": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "标题必须包含全部关键词。"
           },
           "exclude": {
             "type": "array",
             "items": {
               "type": "string"
-            }
+            },
+            "description": "排除标题包含任一关键词的资源。"
           }
         },
         "required": ["searchParams"],
@@ -2350,11 +2378,12 @@
             "$ref": "#/components/schemas/Resource"
           },
           "isDeleted": {
-            "type": ["boolean", "null"]
+            "type": ["boolean", "null"],
+            "description": "资源是否被标记删除；null 表示未确定。详情接口可能返回已删除资源。"
           },
           "duplicatedId": {
             "type": ["integer", "null"],
-            "description": "重复资源指向的资源 ID；未设置时可能为 null 或省略。"
+            "description": "重复资源所指向的站内资源 ID。"
           }
         },
         "required": ["status", "resource", "isDeleted"]
@@ -2362,7 +2391,7 @@
     },
     "headers": {
       "ResponseTimestamp": {
-        "description": "响应时间，ISO 8601 格式；资源列表、详情和收藏夹响应正文不包含 timestamp。缓存命中时可能是生成缓存响应的时间。",
+        "description": "响应生成时间；命中缓存时可能沿用缓存响应的时间。",
         "schema": {
           "type": "string",
           "format": "date-time"
@@ -2373,7 +2402,7 @@
   "tags": [
     {
       "name": "Status",
-      "description": "API状态和基础信息"
+      "description": "API 状态和基础信息"
     },
     {
       "name": "Resources",
@@ -2393,15 +2422,15 @@
     },
     {
       "name": "Feed",
-      "description": "RSS订阅源相关接口"
+      "description": "RSS 订阅源相关接口"
     },
     {
       "name": "Sitemap",
-      "description": "站点地图相关接口，用于SEO优化"
+      "description": "站点地图相关接口，用于 SEO 优化"
     },
     {
       "name": "Admin",
-      "description": "管理员接口（需要Bearer Token认证）"
+      "description": "管理员接口"
     }
   ]
 }

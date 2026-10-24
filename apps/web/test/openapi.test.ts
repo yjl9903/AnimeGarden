@@ -11,8 +11,10 @@ describe('openapi discovery', () => {
 
     expect(response.status).toBe(200);
     expect(Object.keys(spec.paths).some((path) => path.startsWith('/admin/'))).toBe(false);
+    expect(Object.keys(spec.paths).some((path) => path.startsWith('/sitemaps/'))).toBe(false);
     expect(spec.components.securitySchemes).toBeUndefined();
     expect(spec.tags.map((tag: any) => tag.name)).not.toContain('Admin');
+    expect(spec.tags.map((tag: any) => tag.name)).not.toContain('Sitemap');
     expect(spec.paths['/detail/{provider}/{id}'].get.responses['404']).toBeDefined();
     expect(spec.paths['/collection/{hash}'].get.responses['404']).toBeDefined();
 

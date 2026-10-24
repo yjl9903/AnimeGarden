@@ -38,6 +38,11 @@ Hono 入口在 `src/server/index.ts`。`registerHono()` 统一绑定：
 - `users`、`subjects`、`resources`、`collections`、`feed`、`admin`、`sitemaps` 路由。
 - 查询错误到 JSON / XML 的统一转换。
 
+`/sitemaps/*` 是供 Web 生成站点地图使用的内部契约，不列入公开 `/openapi.json` 或 Swagger 页面。源定义保留在 `apps/web/src/pages/docs.api/spec.json`，由 `getPublicOpenApiSpec()` 过滤后对外发布。
+
+- `GET /sitemaps/subjects` 返回全部条目的 `id`、`activedAt`、`isArchived`，包含已归档条目。
+- `GET /sitemaps/{year}/{month}` 按上海时区的资源发布时间查询月份，排除已删除和重复资源，返回 `count` 及资源的 `id`、`provider`、`providerId`、`fetchedAt`。支持 2020 年至当前年月；数字参数越界或查询失败时返回 HTTP 200、`status: ERROR` 和空 `resources`，不含 `count`。非数字路径不匹配路由。
+
 `makeServer()` 额外注册 `/mcp`，并将 `/.well-known/mcp/server-card.json` 重定向到 Web 站点；`makeExecutor()` 额外注册资源任务 RPC，并由 `Executor.start()` 注册每 5 分钟 fetch、每小时 sync 的 cron job。
 
 ## 代码逻辑分类
