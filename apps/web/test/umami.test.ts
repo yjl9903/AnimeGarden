@@ -1,7 +1,34 @@
 import { runInNewContext } from 'node:vm';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import umamiHandler from '../src/layouts/umami.ts?inline-ts';
+import { trackSkillsCopy, type TrackSkillsCopyPayload } from '../src/utils/umami';
+
+afterEach(() => vi.unstubAllGlobals());
+
+describe('Skills copy tracking', () => {
+  it.each<TrackSkillsCopyPayload>([
+    { kind: 'prompt', source: 'hero' },
+    { kind: 'prompt', source: 'online' },
+    { kind: 'command', source: 'local' },
+    { kind: 'command', source: 'mcp.codex' },
+    { kind: 'command', source: 'plugin.claude' },
+    { kind: 'example', source: 'example', example: '找一部动画' }
+  ])('sends only copy metadata for $source', (payload) => {
+    const track = vi.fn();
+    vi.stubGlobal('window', { umami: { track } });
+    vi.stubGlobal('umami', { track });
+
+    trackSkillsCopy({ ...payload, text: 'private clipboard content' } as TrackSkillsCopyPayload);
+
+    expect(track).toHaveBeenCalledExactlyOnceWith('skills.copy', payload);
+  });
+
+  it('works when the analytics script is unavailable', () => {
+    vi.stubGlobal('window', {});
+    expect(() => trackSkillsCopy({ kind: 'prompt', source: 'hero' })).not.toThrow();
+  });
+});
 
 /** Browser overrides used to exercise framework artifacts and unsupported APIs. */
 interface BrowserOverrides {

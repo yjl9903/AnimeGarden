@@ -57,6 +57,13 @@ export interface TrackSkillsChatOpenPayload {
   example?: string;
 }
 
+/** Identifies a Skills copy action without including the copied content. */
+export interface TrackSkillsCopyPayload {
+  kind: 'prompt' | 'command' | 'example';
+  source: string;
+  example?: string;
+}
+
 export interface TrackAnimeCalendarClickPayload {
   subjectId: string;
   title: string;
@@ -193,6 +200,15 @@ export const trackFooterExternalLinkClick = (payload: TrackFooterExternalLinkPay
 export const trackSkillsChatOpen = (payload: TrackSkillsChatOpenPayload) => {
   track('skills.chat.open', {
     app: payload.app,
+    source: payload.source,
+    ...(payload.example ? { example: payload.example } : {})
+  });
+};
+
+/** Records a successful clipboard write using only the copy entry's metadata. */
+export const trackSkillsCopy = (payload: TrackSkillsCopyPayload) => {
+  track('skills.copy', {
+    kind: payload.kind,
     source: payload.source,
     ...(payload.example ? { example: payload.example } : {})
   });
