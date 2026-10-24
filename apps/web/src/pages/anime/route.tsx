@@ -103,7 +103,7 @@ export default function Index({
   return (
     <Layout timestamp={timestamp}>
       <div className="anime-page w-full pt-13 pb-24">
-        <header className="mb-12 flex items-end justify-between gap-4 lt-sm:flex-col lt-sm:items-start">
+        <header className="mb-12 flex items-start justify-between gap-4 lt-md:pl-4 lt-sm:pl-2 lt-sm:flex-col">
           <div>
             <h1 className="text-3xl lt-sm:text-2xl font-bold leading-tight tracking-normal select-none">
               <span

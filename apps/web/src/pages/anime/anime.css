@@ -129,6 +129,13 @@
   color: #fafafa;
 }
 
+/* The desktop layout reserves enough outer gutter for the weekday navigation. */
+@media (max-width: 1023.98px) {
+  .anime-toc {
+    display: none;
+  }
+}
+
 @media (max-width: 767.98px) {
   .anime-page {
     padding-left: 0;
@@ -141,10 +148,6 @@
   .anime-layout {
     display: block;
     margin-left: 0;
-  }
-
-  .anime-toc {
-    display: none;
   }
 
   .anime-bgm-grid {

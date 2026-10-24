@@ -395,9 +395,9 @@ describe('markdown responses', () => {
 
       expect(response.status).toBe(200);
       expect(response.headers.get('content-type')).toContain('text/markdown');
-      expect(body).toContain('title: "2026 · 夏季新番动画周历 | Anime Garden"');
+      expect(body).toContain('title: "2026 7 月新番动画周历 | Anime Garden"');
       expect(body).toContain(
-        'description: "2026 · 夏季新番动画周历, 动画每周播出时间表, Anime Garden"'
+        'description: "2026 7 月新番动画周历, 动画每周播出时间表, Anime Garden"'
       );
       expectMinimalSeoFrontmatter(body);
       expect(body).toContain('# 动画周历');
@@ -422,9 +422,9 @@ describe('markdown responses', () => {
     const body = await response.text();
 
     expect(response.status).toBe(200);
-    expect(body).toContain('title: "2026 · 秋季新番动画周历 | Anime Garden"');
+    expect(body).toContain('title: "2026 10 月新番动画周历 | Anime Garden"');
     expectMinimalSeoFrontmatter(body);
-    expect(body).toContain('# 2026 · 秋季新番动画周历');
+    expect(body).toContain('# 2026 10 月新番动画周历');
   });
 
   it('omits the body for HEAD markdown requests', async () => {

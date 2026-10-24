@@ -1,10 +1,10 @@
 export const CalendarSeasonMonths = [1, 4, 7, 10];
 
 const CalendarSeasonMap = {
-  1: { emoji: '❄️', name: '冬季新番', label: '冬季' },
-  4: { emoji: '🌸', name: '春季新番', label: '春季' },
-  7: { emoji: '☀️', name: '夏季新番', label: '夏季' },
-  10: { emoji: '🍁', name: '秋季新番', label: '秋季' }
+  1: { emoji: '❄️', name: '1 月新番', label: '1 月' },
+  4: { emoji: '🌸', name: '4 月新番', label: '4 月' },
+  7: { emoji: '☀️', name: '7 月新番', label: '7 月' },
+  10: { emoji: '🍁', name: '10 月新番', label: '10 月' }
 } as const;
 
 export function getCalendarSeason(season?: string) {
@@ -33,6 +33,6 @@ export function getCalendarSeason(season?: string) {
     year,
     month,
     ...meta,
-    title: `${year} · ${meta.name}`
+    title: `${year} ${meta.name}`
   };
 }

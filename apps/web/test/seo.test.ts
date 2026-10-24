@@ -33,8 +33,8 @@ import {
 describe('SEO metadata', () => {
   it('builds concise site and page titles', () => {
     expect(buildPageTitle()).toBe('Anime Garden 動漫花園第三方镜像站以及动画 BT 资源聚合站');
-    expect(buildPageTitle('2026 年夏季新番放送时间表')).toBe(
-      '2026 年夏季新番放送时间表 | Anime Garden'
+    expect(buildPageTitle('2026 7 月新番放送时间表')).toBe(
+      '2026 7 月新番放送时间表 | Anime Garden'
     );
     expect(buildDocsApiPageSeo().title).toBe('Open API 文档 | Anime Garden');
   });
