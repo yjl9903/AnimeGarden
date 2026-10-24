@@ -291,7 +291,7 @@ describe('telegram resource card', () => {
     );
     expect(message.text).not.toContain('磁力链接');
     expect(message.text).toContain(
-      '<a href="https://animes.garden/detail/dmhy/12345">查看详情</a> · <a href="https://keepshare.org/gv78k1oi/magnet%3A%3Fxt%3Durn%3Abtih%3A0123456789012345678901234567890123456789">在线播放</a>'
+      '<a href="https://animes.garden/detail/dmhy/12345">查看详情</a> · <a href="https://keepshare.cc/gv78k1oi/magnet%3A%3Fxt%3Durn%3Abtih%3A0123456789012345678901234567890123456789">在线播放</a>'
     );
     expect(message.photo).toBe('https://example.com/poster.jpg');
     expect(message.options.parse_mode).toBe('HTML');

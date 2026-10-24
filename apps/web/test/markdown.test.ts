@@ -188,7 +188,7 @@ describe('markdown responses', () => {
       expect(body).toContain('## 试着问它');
       expect(body).toContain('## 示例对话（静态）');
       expect(body).toContain('[千夏字幕组](https://animes.garden/detail/dmhy/716882)');
-      expect(body).toMatch(/\[播放\]\(https:\/\/keepshare\.org\/[^/]+\/magnet%3A/);
+      expect(body).toMatch(/\[播放\]\(https:\/\/keepshare\.cc\/[^/]+\/magnet%3A/);
       expect(body).toContain('[下载](magnet:?xt=urn:btih:DGGCBVK5HAX3UIAEQW3WS22SDPR5L36F)');
       expect(fetchResources).not.toHaveBeenCalled();
       expect(fetchResourceDetail).not.toHaveBeenCalled();

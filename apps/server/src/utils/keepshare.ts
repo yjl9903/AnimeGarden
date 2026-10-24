@@ -2,7 +2,7 @@ const DEFAULT_KEEPSHARE_ID = 'gv78k1oi';
 
 export function getKeepShareURL(keepShareId: string | undefined, magnet: string) {
   const url = magnet.split('&')[0];
-  return `https://keepshare.org/${keepShareId || DEFAULT_KEEPSHARE_ID}/${encodeURIComponent(url)}`;
+  return `https://keepshare.cc/${keepShareId || DEFAULT_KEEPSHARE_ID}/${encodeURIComponent(url)}`;
 }
 
 export async function prefetchKeepShare(

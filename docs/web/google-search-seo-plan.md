@@ -384,7 +384,7 @@ Subject 页面：
   海报时，才输出 `VideoObject`，避免缺少 Google 必需字段的无效标记。
 - `VideoObject.name` 使用完整资源标题，`description` 与页面 meta description 一致，
   `thumbnailUrl` 使用详情首图或 Subject 海报，`uploadDate` 使用页面可见的资源发布时间。
-- `VideoObject.embedUrl` 使用 `https://keepshare.org/{KEEPSHARE_ID}/{编码后的磁力链接}`；生成时移除
+- `VideoObject.embedUrl` 使用 `https://keepshare.cc/{KEEPSHARE_ID}/{编码后的磁力链接}`；生成时移除
   tracker 参数。KeepShare 地址是播放器页面而非直接媒体文件，因此不输出 `contentUrl`。
 - `VideoObject` 只向搜索引擎声明结构化字段，不等于已满足 Google 视频索引条件。当前 Detail 页的
   视频仍是外部链接；若要提高视频索引资格，需要在可索引页面主体中提供可抓取、以视频为主要内容的

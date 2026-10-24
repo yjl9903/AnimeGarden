@@ -27,7 +27,7 @@ export function openMagnetLink(
 /** Builds the KeepShare player URL for a magnet link. */
 export function getKeepShareURL(magnet: string) {
   const url = magnet.split('&')[0];
-  return `https://keepshare.org/${KEEPSHARE_ID}/${encodeURIComponent(url)}`;
+  return `https://keepshare.cc/${KEEPSHARE_ID}/${encodeURIComponent(url)}`;
 }
 
 export function getFeedURL(search?: string) {

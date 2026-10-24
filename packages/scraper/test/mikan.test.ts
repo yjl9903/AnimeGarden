@@ -22,7 +22,7 @@ const LIST_HTML = `
           </td>
           <td>781.1 MB</td>
           <td><a href="/Download/20260409/765fcf5524c805231d25f74d4c90c41a5abab6dc.torrent">下载</a></td>
-          <td><a target="_blank" href="https://keepshare.org/rclukaia/magnet%3A%3Fxt%3Durn%3Abtih%3A765fcf5524c805231d25f74d4c90c41a5abab6dc">播放</a></td>
+          <td><a target="_blank" href="https://keepshare.cc/rclukaia/magnet%3A%3Fxt%3Durn%3Abtih%3A765fcf5524c805231d25f74d4c90c41a5abab6dc">播放</a></td>
         </tr>
         <tr>
           <td>今天 22:01</td>
@@ -38,7 +38,7 @@ const LIST_HTML = `
           </td>
           <td>353.7 MB</td>
           <td><a href="/Download/20260409/c635df597c3f143437bb8aa0d334da14570fdd79.torrent">下载</a></td>
-          <td><a target="_blank" href="https://keepshare.org/rclukaia/magnet%3A%3Fxt%3Durn%3Abtih%3Ac635df597c3f143437bb8aa0d334da14570fdd79">播放</a></td>
+          <td><a target="_blank" href="https://keepshare.cc/rclukaia/magnet%3A%3Fxt%3Durn%3Abtih%3Ac635df597c3f143437bb8aa0d334da14570fdd79">播放</a></td>
         </tr>
         <tr>
           <td>昨天 23:00</td>
@@ -63,7 +63,7 @@ const LIST_HTML = `
           </td>
           <td>59.8MB</td>
           <td><a href="/Download/20260408/22ab4969f1aa0c058bfbd014be802b6cc1956eb2.torrent">下载</a></td>
-          <td><a target="_blank" href="https://keepshare.org/rclukaia/magnet%3A%3Fxt%3Durn%3Abtih%3A22ab4969f1aa0c058bfbd014be802b6cc1956eb2">播放</a></td>
+          <td><a target="_blank" href="https://keepshare.cc/rclukaia/magnet%3A%3Fxt%3Durn%3Abtih%3A22ab4969f1aa0c058bfbd014be802b6cc1956eb2">播放</a></td>
         </tr>
       </tbody>
     </table>

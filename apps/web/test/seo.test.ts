@@ -287,7 +287,7 @@ describe('SEO metadata', () => {
     });
     expect(JSON.stringify(detailHead.meta)).toContain('VideoObject');
     expect(JSON.stringify(detailHead.meta)).toContain(
-      'https://keepshare.org/gv78k1oi/magnet%3A%3Fxt%3Durn%3Abtih%3Aabc'
+      'https://keepshare.cc/gv78k1oi/magnet%3A%3Fxt%3Durn%3Abtih%3Aabc'
     );
     expect(JSON.stringify(detailHead.meta)).toContain('2026-08-19T00:00:00.000Z');
     expect(JSON.stringify(detailHead.meta)).not.toContain('contentUrl');
