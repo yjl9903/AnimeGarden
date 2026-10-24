@@ -1,7 +1,6 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vite';
 import viteReact from '@vitejs/plugin-react';
 import { tanstackStart } from '@tanstack/react-start/plugin/vite';
@@ -30,7 +29,7 @@ const { APP_HOST, FEED_HOST, WEB_SERVER_URL, KEEPSHARE_ID, UMAMI_HOST, UMAMI_ID 
 
 function publishAgentSkills(outDir: string) {
   const skillName = 'animegarden';
-  const source = path.resolve(__dirname, '../../skills', skillName);
+  const source = path.resolve(import.meta.dirname, '../../skills', skillName);
   const targetRoot = path.resolve(outDir, '.well-known/agent-skills');
   const target = path.join(targetRoot, skillName);
   const skillPath = path.join(target, 'SKILL.md');
@@ -70,8 +69,9 @@ function publishAgentSkills(outDir: string) {
 
 export default defineConfig({
   resolve: {
+    tsconfigPaths: true,
     mainFields: ['browser', 'module', 'main'],
-    alias: { '@': path.resolve(__dirname, './src') }
+    alias: { '@': path.resolve(import.meta.dirname, './src') }
   },
   build: {
     minify: true,
@@ -123,7 +123,6 @@ export default defineConfig({
     tanstackStart(),
     viteReact(),
     Icons({ compiler: 'jsx', jsx: 'react' }),
-    tsconfigPaths(),
     Inline(),
     {
       name: 'animegarden-web:agent-skills',

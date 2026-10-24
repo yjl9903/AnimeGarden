@@ -16,7 +16,7 @@ Web 不再提供 `/api/*`、`/feed.xml` 或 `/collection/:hash/feed.xml` 代理�
 | Node server    | `server.mjs`                                            | Fly / Node 环境运行 Hono，托管静态资源、保留 `/health`，并把页面请求交给 Start                |
 | 页面组件       | `src/pages/`                                            | 纯前端页面渲染和页面局部交互；数据由 `routes/` 透传为 props                                   |
 
-`vite.config.ts` 使用 `tanstackStart()`、React Vite plugin、UnoCSS、Icons、Info、Analytics、Inline 和 tsconfig paths。Cloudflare Worker 构建入口、wrangler 配置和 Worker 静态资源适配已移除，Web 只支持 Node/Fly 部署。
+`vite.config.ts` 使用 `tanstackStart()`、React Vite plugin、UnoCSS、Icons、Info、Analytics 和 Inline。TypeScript 路径映射通过 Vite 原生 `resolve.tsconfigPaths: true` 解析；配置内目录路径使用 `import.meta.dirname`，兼容 native config loader。Cloudflare Worker 构建入口、wrangler 配置和 Worker 静态资源适配已移除，Web 只支持 Node/Fly 部署。
 
 `src/start.ts` 注册 TanStack Start 全局 request middleware。普通浏览器请求继续走 SSR；`GET` / `HEAD` 且 `Accept: text/markdown` 的已支持页面路径会在进入 HTML SSR 前由 `src/markdown/` 返回应用侧拼装的 Markdown，避免 TanStack Start 的 HTML-only Accept 检查把 agent 请求返回 500。Markdown negotiation 支持 `/skills`、`/anime` 和 `/calendar/:season` 等已登记页面。非 HTML 的 `router` 类型 `GET` 200 响应会统一生成强 ETag，并在 `If-None-Match` 命中时返回 304；HTML 页面和 `serverFn` 不进入这层 ETag 处理，避免干扰 SSR streaming、TanStack RPC、CSRF 和序列化响应。Sitemap server routes 另外提供显式 `HEAD` handler，用 GET 同源内容生成一致的 ETag / 304。`/llms.txt`、`/openapi.json`、`/.well-known/*` 等 handler route 不进入 Markdown negotiation，但仍属于非 HTML GET 的 ETag 覆盖范围。
 
