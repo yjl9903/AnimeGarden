@@ -48,6 +48,8 @@ test 环境和 server/feed job 不执行清理。Web job 不取消正在执行�
 
 ## 排查边界
 
+服务监控地址：[status.animes.garden](https://status.animes.garden/)，网站页脚的「监控」入口指向此地址。
+
 排查线上可用性时，需要分别观察：
 
 - `animegarden-web-production`：页面请求、SSR、静态资源、Web 健康检查。

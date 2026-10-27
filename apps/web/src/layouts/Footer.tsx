@@ -56,14 +56,10 @@ export const Footer = memo((props: FooterProps) => {
             <span className="text-base-900 font-bold select-none">状态</span>
             <span className="i-carbon:chevron-right text-xl lt-sm:text-base text-base-900 font-bold select-none relative top-[2px]"></span>
             <a
-              href="https://uptime.animes.garden/status/animegarden"
+              href="https://status.animes.garden/"
               target="_blank"
               className="ml-2"
-              onClick={onExternalLinkClick(
-                '状态',
-                '监控',
-                'https://uptime.animes.garden/status/animegarden'
-              )}
+              onClick={onExternalLinkClick('状态', '监控', 'https://status.animes.garden/')}
             >
               监控
             </a>
