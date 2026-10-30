@@ -4,6 +4,7 @@ export type PartyKind = 'user' | 'team';
 
 /** Data-backed spelling and symbol corrections applied to every provider. */
 const FIXED_PARTY_NAMES = new Map<string, string>([
+  ['今晚月色真美个人发布', '今晚月色真美'],
   ['雪飄工作室(FLsnow)', '雪飄工作室'],
   ['雪飘工作室(FLsnow)', '雪飄工作室'],
   ['雪飘工作室', '雪飄工作室'],

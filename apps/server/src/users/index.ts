@@ -83,7 +83,11 @@ export class UsersModule extends Module<System['modules']> {
     for (const [provider, info] of Object.entries(user.providers ?? {})) {
       this.providerIds.set(providerIdentity(provider, info.providerId), user);
       for (const alias of info.aliases ?? []) {
-        this.users.set(alias, user);
+        // An alias must not replace another party's canonical name.
+        const owner = this.users.get(alias);
+        if (!owner || owner.name !== alias) {
+          this.users.set(alias, user);
+        }
       }
     }
   }
@@ -334,7 +338,11 @@ export class TeamsModule extends Module<System['modules']> {
     for (const [provider, info] of Object.entries(team.providers ?? {})) {
       this.providerIds.set(providerIdentity(provider, info.providerId), team);
       for (const alias of info.aliases ?? []) {
-        this.teams.set(alias, team);
+        // An alias must not replace another party's canonical name.
+        const owner = this.teams.get(alias);
+        if (!owner || owner.name !== alias) {
+          this.teams.set(alias, team);
+        }
       }
     }
   }
