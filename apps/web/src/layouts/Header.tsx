@@ -9,7 +9,7 @@ import { calendarQueryOptions } from '~/query';
 import { getCalendar } from '~/utils/calendar';
 import { getSubjectDisplayName, getSubjectRouteLink } from '~/utils/subject';
 import { getCalendarRouteLink, getResourcesRouteLink } from '~/utils/routes';
-import { getOpenFeedTrackEvent, trackNavClick } from '~/utils/umami';
+import { track } from '~/utils/umami';
 import { fansubs as AllFansubs, types, DisplayTypeColor } from '~/utils/constants';
 import {
   Dropdown,
@@ -29,7 +29,7 @@ export const Header = memo((props: { feedURL?: string }) => {
     >
       <nav className="main flex gap-1 [&>div]:(leading-$nav-height)">
         <div className="box-content w-[32px] pl3 lt-sm:pl1 text-2xl text-center font-quicksand font-bold pointer-events-auto">
-          <Link to="/" onClick={() => trackNavClick('home', { item: 'home' })}>
+          <Link to="/" onClick={() => track('nav.click.home', { item: 'home' })}>
             🌸
           </Link>
         </div>
@@ -41,7 +41,7 @@ export const Header = memo((props: { feedURL?: string }) => {
           {feedURL && (
             <a
               href={feedURL}
-              {...getOpenFeedTrackEvent(feedURL)}
+              onClick={() => track('feed.open', { href: feedURL })}
               className="inline cursor-pointer rounded-md p-2 text-[#ee802f] [&:hover>span]:(text-[#ff7800]! border-b-2 border-b-[#ff7800]!)"
               target="_blank"
             >
@@ -61,46 +61,32 @@ export const Header = memo((props: { feedURL?: string }) => {
 const AnimeDropdown = memo(() => {
   const { data } = useQuery(calendarQueryOptions());
   const calendar = useMemo(() => getCalendar(data?.calendar ?? []), [data?.calendar]);
-  const calendarRouteLink = data?.season ? getCalendarRouteLink(data.season) : undefined;
+  const calendarRouteLink = data?.season
+    ? getCalendarRouteLink(data.season)
+    : { to: '/anime' as const };
 
   return (
     <Dropdown
       className="nav-animes pointer-events-auto [&:hover>a]:bg-zinc-100! dark:[&:hover>a]:bg-zinc-800!"
       data-nav-collision-target="anime"
       trigger={
-        calendarRouteLink ? (
-          <Link
-            {...calendarRouteLink}
-            className="rounded-md p-2"
-            onClick={() => trackNavClick('anime')}
-          >
-            动画
-          </Link>
-        ) : (
-          <a href="/anime" className="rounded-md p-2" onClick={() => trackNavClick('anime')}>
-            动画
-          </a>
-        )
+        <Link
+          {...calendarRouteLink}
+          className="rounded-md p-2"
+          onClick={() => track('nav.click.anime')}
+        >
+          动画
+        </Link>
       }
     >
       <DropdownMenu className="mt-[-10px] w-[80px] max-h-[600px] lt-sm:max-h-[360px] rounded-md shadow-box divide-y bg-light-100 dark:bg-dark-100 leading-normal">
-        {calendarRouteLink ? (
-          <Link
-            {...calendarRouteLink}
-            className="block px2 py1 rounded-t-md hover:bg-basis-100 dark:hover:bg-basis-800"
-            onClick={() => trackNavClick('anime')}
-          >
-            周历
-          </Link>
-        ) : (
-          <a
-            href="/anime"
-            className="block px2 py1 rounded-t-md hover:bg-basis-100 dark:hover:bg-basis-800"
-            onClick={() => trackNavClick('anime')}
-          >
-            周历
-          </a>
-        )}
+        <Link
+          {...calendarRouteLink}
+          className="block px2 py1 rounded-t-md hover:bg-basis-100 dark:hover:bg-basis-800"
+          onClick={() => track('nav.click.anime')}
+        >
+          周历
+        </Link>
         {calendar
           .sort((l, r) => l.index - r.index)
           .map((day, index) => (
@@ -125,7 +111,7 @@ const AnimeDropdown = memo(() => {
                       {...getSubjectRouteLink(bgm)}
                       key={bgm.id}
                       onClick={() =>
-                        trackNavClick('anime', {
+                        track('nav.click.anime', {
                           item: getSubjectDisplayName(bgm),
                           group: day.index === 8 ? 'WEB' : `周${day.text}`
                         })
@@ -179,7 +165,7 @@ const FansubsDropdown = memo(() => {
         <Link
           {...getResourcesRouteLink(1, { fansub: fansubs[0] })}
           className="rounded-md p-2"
-          onClick={() => trackNavClick('fansub')}
+          onClick={() => track('nav.click.fansub')}
         >
           字幕组
         </Link>
@@ -190,7 +176,7 @@ const FansubsDropdown = memo(() => {
           <Link
             key={fansub}
             {...getResourcesRouteLink(1, { fansub })}
-            onClick={() => trackNavClick('fansub', { item: fansub })}
+            onClick={() => track('nav.click.fansub', { item: fansub })}
             className="block px2 py1 hover:bg-basis-100 dark:hover:bg-basis-800 whitespace-nowrap overflow-hidden text-ellipsis"
           >
             {fansub}
@@ -210,7 +196,7 @@ const TypesDropdown = memo(() => {
         <Link
           {...getResourcesRouteLink(1)}
           className="rounded-md p-2"
-          onClick={() => trackNavClick('type')}
+          onClick={() => track('nav.click.type')}
         >
           资源
         </Link>
@@ -224,7 +210,7 @@ const TypesDropdown = memo(() => {
               1,
               type === '动画' ? { type: '动画', preset: 'bangumi' } : { type }
             )}
-            onClick={() => trackNavClick('type', { item: type })}
+            onClick={() => track('nav.click.type', { item: type })}
             className={clsx(
               'flex items-center gap-2 px2 py1 hover:bg-basis-100 dark:hover:bg-basis-800',
               DisplayTypeColor[type]

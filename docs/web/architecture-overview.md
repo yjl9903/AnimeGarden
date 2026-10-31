@@ -8,6 +8,8 @@
 
 Web 不再提供 `/api/*`、`/feed.xml` 或 `/collection/:hash/feed.xml` 代理；API 读写和 feed 输出由独立 server/feed 服务承担，前端数据读取和 RSS 链接继续通过 `@animegarden/client` / `FEED_HOST` 指向 public API 域名。
 
+Header 的站内导航统一使用 TanStack Router `Link`，包括周历数据未就绪时的 `/anime` 兜底入口，避免整页刷新。RSS 指向独立 feed 服务，保留原生 `<a target="_blank">`，不交给页面路由处理。
+
 ## 运行形态
 
 | 入口           | 代码                                                    | 职责                                                                                          |
@@ -31,6 +33,8 @@ Web 不再提供 `/api/*`、`/feed.xml` 或 `/collection/:hash/feed.xml` 代理�
 5. 其他请求交给 TanStack Start server entry。
 
 页面 loader 通过 `src/query/` 的 TanStack Query options 预取数据，query 函数通过 TanStack Start `createServerFn()` 调用 `@animegarden/client`。远端资源数据不放入 TanStack Store；Store 只承载主题、收藏夹、搜索历史、fansub 偏好和 sidebar/UI 状态，并由 `createRouter()` 为每个 router 实例创建。
+
+资源列表路由通过 `loaderDeps` 将 URL 查询参数纳入 loader 缓存标识。Header 悬停预加载和切换分类、字幕组时，即使页码路径相同，也不能复用另一组筛选条件的数据；RSS 和分页链接使用与当前筛选对应的 loader 数据。
 
 GET server function 和 SSR loader 的公开缓存头统一由 `src/utils/response.ts` 设置：timestamp、资源列表和 collection 页面使用 `public, max-age=30, s-maxage=60`，详情页使用 `public, max-age=3600, s-maxage=86400`。上游失败或 `ok: false` 时返回错误状态并设置 `Cache-Control: no-store`，避免浏览器或 CDN 缓存错误响应。
 

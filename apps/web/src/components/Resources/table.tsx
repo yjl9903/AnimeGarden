@@ -16,9 +16,8 @@ import {
   openMagnetLink,
   formatChinaTime,
   parseSize,
-  getPikPakTrackEvent,
-  trackResourceDetailClick,
-  trackResourceRefineFilterClick
+  getTrackAttributes,
+  track
 } from '~/utils';
 import { toResourcesRouterSearch } from '~/utils/routes';
 
@@ -155,7 +154,9 @@ export const ResourceItem = memo(
                 to="/resources/$page"
                 params={{ page: '1' }}
                 search={followSearch(location, { type: r.type })}
-                onClick={() => trackResourceRefineFilterClick('type', r.type)}
+                onClick={() =>
+                  track('resources.filter.click', { filterType: 'type', value: r.type })
+                }
                 className={`flex items-center justify-center h-[32px] w-[32px] rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 ${DisplayTypeColor[r.type]}`}
               >
                 {DisplayTypeIcon[r.type]({})}
@@ -169,7 +170,10 @@ export const ResourceItem = memo(
                       <>
                         <a
                           href={getKeepShareURL(r.magnet)}
-                          {...getPikPakTrackEvent(r.provider, r.providerId, 'title')}
+                          {...getTrackAttributes('pikpak', {
+                            resource: `${r.provider}:${r.providerId}`,
+                            source: 'title'
+                          })}
                           className="text-link mr1"
                           aria-label={`Go to download resource of ${r.title}`}
                           target="_blank"
@@ -210,9 +214,8 @@ export const ResourceItem = memo(
                 <Link
                   {...getDetailRouteLink(r)}
                   onClick={() =>
-                    trackResourceDetailClick({
-                      provider: r.provider,
-                      providerId: r.providerId,
+                    track('resources.detail.click', {
+                      resource: `${r.provider}:${r.providerId}`,
                       type: r.type
                     })
                   }
@@ -235,7 +238,9 @@ export const ResourceItem = memo(
                   to="/resources/$page"
                   params={{ page: '1' }}
                   search={followSearch(location, { fansub: r.fansub.name })}
-                  onClick={() => trackResourceRefineFilterClick('fansub', r.fansub!.name)}
+                  onClick={() =>
+                    track('resources.filter.click', { filterType: 'fansub', value: r.fansub!.name })
+                  }
                   className="block w-max"
                   aria-label={`Go to resources list of fansub ${r.fansub.name}`}
                 >
@@ -249,7 +254,12 @@ export const ResourceItem = memo(
                   to="/resources/$page"
                   params={{ page: '1' }}
                   search={followSearch(location, { publisher: r.publisher.name })}
-                  onClick={() => trackResourceRefineFilterClick('publisher', r.publisher!.name)}
+                  onClick={() =>
+                    track('resources.filter.click', {
+                      filterType: 'publisher',
+                      value: r.publisher!.name
+                    })
+                  }
                   className="block w-max"
                   aria-label={`Go to resources list of publisher ${r.publisher.name}`}
                 >
@@ -266,7 +276,10 @@ export const ResourceItem = memo(
           <div className="flex gap1 items-center justify-start">
             <a
               href={getKeepShareURL(r.magnet)}
-              {...getPikPakTrackEvent(r.provider, r.providerId, 'play')}
+              {...getTrackAttributes('pikpak', {
+                resource: `${r.provider}:${r.providerId}`,
+                source: 'play'
+              })}
               data-resource-title={r.title}
               className="play text-xl text-base-500 hover:text-base-900"
               aria-label="Play resource"

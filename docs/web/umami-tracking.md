@@ -4,13 +4,29 @@
 
 ## 实现入口
 
-统一封装在 `src/utils/umami.ts`, 主要有两种接入方式:
+统一封装在 `src/utils/umami.ts`，只提供两种通用接入方式，不再为每个事件导出专用函数：
 
-- 直接调用 `track(event, payload)`
-- 给链接挂属性或事件
-  - `openMagnetLink(event, href, resource, source)`
-  - `getPikPakTrackEvent(provider, providerId)`
-  - `getOpenFeedTrackEvent(href)`
+```tsx
+track('copy.feed');
+track('copy.fetch', { language: 'curl' });
+track('nav.click.anime', { item: '动画标题', group: '周一' });
+
+<a
+  href={playURL}
+  {...getTrackAttributes('pikpak', { resource: `${provider}:${providerId}`, source: 'play' })}
+>
+  播放
+</a>;
+```
+
+- 事件名在 `events` 中逐个显式声明，调用处直接使用完整字面量；不通过前缀、分类或模板生成事件名。
+- `events` 使用项目已有的 Zod 定义字段，`TrackEventName` 和 `TrackPayload<'skills.copy'>` 从同一份定义推导。新增事件只需补充该定义和本文事件表，不新增包装函数。
+- 两个方法均校验事件名与 payload 的对应关系：必填 payload 不可省略，无 payload 的事件不能传对象，字段及枚举值都有类型约束。导航事件允许省略整个 payload，但传入时需要 `item`。
+- 两种接入共用字段白名单，运行时剔除未知字段和 `undefined`；可选的 `example`、搜索历史 `text`/`count` 延续原有规则，空字符串不上传。不要把完整提示词、命令或复制正文放入埋点字段。
+- `getTrackAttributes` 只生成 `data-umami-event` 和 `data-umami-event-*` 属性，不发送事件、不生成 `onClick`。同一点击不要同时用属性和 `track` 上报。
+- `getTrackAttributes` 的事件范围由 `TrackAttributeEventName` 从 schema 自动推导：仅允许所有 payload 字段名均为小写的事件（包括无 payload 的事件）。HTML 会将属性名转为小写，因此带 `subjectId` 的 `search.suggestion.click` / `anime.calendar.click`、带 `filterType` 的 `resources.filter.click` 只能调用 `track`，属性方法在编译期拒绝这些事件。现有上报字段名及历史数据不变。
+- 需要控制触发时机的操作继续使用 `track`：例如复制成功、搜索去重以及聊天应用中键激活。RSS 保留显式 `onClick`；磁力链接继续由 `openMagnetLink` 阻止默认跳转并调用 `track('download', ...)`。
+- `track` 在 SSR、Umami 未加载或被拦截时静默跳过；同步上报错误不会打断用户操作。
 
 ## 当前已有埋点
 
@@ -70,7 +86,7 @@
 
 | 事件名                    | 触发场景                         | 属性                            |
 | ------------------------- | -------------------------------- | ------------------------------- |
-| `resources.more.click`    | 资源表格点击“更多”               | `resource`，`type`              |
+| `resources.detail.click`  | 资源表格点击“详情”               | `resource`，`type`              |
 | `resources.filter.click`  | 资源表格精化筛选                 | `filterType`，`value`           |
 | `anime.calendar.click`    | 动画周历卡片点击                 | `subjectId`，`title`，`weekday` |
 | `subject.fallback-search` | Subject 页无资源时点击“前往搜索” | `subject`                       |
@@ -101,6 +117,8 @@
 | `copy.fetch`                | 复制 cURL / Python / JavaScript 请求代码 | `language` |
 | `copy.iframe`               | 复制 iframe 嵌入代码                     | 无         |
 | `collection.open-resources` | 收藏项菜单里“在新页面中打开”             | `search`   |
+
+复制统计统一表示成功写入剪贴板：资源页的 RSS、磁力链接、JSON、请求代码、iframe，以及收藏夹 RSS 和分享链接，每次操作仅在 `clipboard.writeText` 成功后上报一次。等待写入、写入失败或复制前校验失败（如缺少 RSS URL、没有磁力链接）均不上报；不在 `finally` 中记录复制事件。
 
 当前接入位置：
 
@@ -138,7 +156,7 @@
 - `source = mcp.codex / mcp.claude / plugin.codex / plugin.claude`：区分 MCP、插件安装及所选客户端。
 - `source = example`：试着问它；`example` 为示例标题。
 - 仅在剪贴板写入成功后上报，复制失败不记录；不上传完整提示词、命令或示例正文。
-- 接入位置：`src/pages/skills/route.tsx` 的 `CopyButton`，统一调用 `src/utils/umami.ts` 的 `trackSkillsCopy`。
+- 接入位置：`src/pages/skills/route.tsx` 的 `CopyButton`，调用 `track('skills.copy', payload)`。
 
 ### Skills 聊天应用入口
 
@@ -151,7 +169,7 @@
 - 记录链接的鼠标主键、键盘和中键激活；仅展开菜单不记录，不代表目标应用已成功加载。
 - 国产应用的「复制并打开」在复制成功后上报，复制失败不记录打开事件。
 - 不上传完整 prompt 或含 prompt 的目标 URL。
-- 接入位置：`src/components/Skills/OpenInChat.tsx`，统一调用 `src/utils/umami.ts` 的 `trackSkillsChatOpen`。
+- 接入位置：`src/components/Skills/OpenInChat.tsx`，调用 `track('skills.chat.open', payload)`。
 
 ### 错误埋点
 

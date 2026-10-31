@@ -6,7 +6,7 @@ import Layout from '~/layouts/Layout';
 import { OpenInChat } from '~/components/Skills/OpenInChat';
 import { SkillPrompt } from '~/components/Skills/SkillPrompt';
 import { getKeepShareURL, openMagnetLink } from '~/utils/url';
-import { trackSkillsCopy, type TrackSkillsCopyPayload } from '~/utils/umami';
+import { track, type TrackPayload } from '~/utils/umami';
 
 import {
   skillURL,
@@ -29,7 +29,7 @@ function CopyButton({
   iconOnly = false
 }: {
   text: string;
-  tracking: TrackSkillsCopyPayload;
+  tracking: TrackPayload<'skills.copy'>;
   label?: string;
   iconOnly?: boolean;
 }) {
@@ -40,7 +40,7 @@ function CopyButton({
     try {
       await navigator.clipboard.writeText(text);
       // Record the action only after the clipboard accepts the text.
-      trackSkillsCopy(tracking);
+      track('skills.copy', tracking);
       setStatus('copied');
     } catch {
       setStatus('failed');

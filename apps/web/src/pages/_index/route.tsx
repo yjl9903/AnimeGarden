@@ -5,7 +5,7 @@ import { Link } from '@tanstack/react-router';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import { getTrackingError, trackFetchResourcesError } from '~/utils';
+import { getTrackingError, track } from '~/utils';
 import { getCalendarSeason } from '~/utils/calendar-season';
 import { getCalendarRouteLink, getResourcesRouteLink } from '~/utils/routes';
 
@@ -32,7 +32,7 @@ export default function Index({ data, feedURL, latestSeason, path, renderError }
   useEffect(() => {
     if (!error || !ok) return;
 
-    trackFetchResourcesError({
+    track('error.fetch-resources', {
       path,
       error: getTrackingError(error, 'index-fetch-failed')
     });

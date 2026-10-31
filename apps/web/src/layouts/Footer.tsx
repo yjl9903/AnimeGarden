@@ -4,12 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { memo } from 'react';
 import { Link } from '@tanstack/react-router';
 
-import {
-  formatChinaTime,
-  getFeedURL,
-  getOpenFeedTrackEvent,
-  trackFooterExternalLinkClick
-} from '~/utils';
+import { formatChinaTime, getFeedURL, track } from '~/utils';
 import { timestampQueryOptions } from '~/query';
 import { useAppStores } from '~/stores/hooks';
 
@@ -37,7 +32,7 @@ export const Footer = memo((props: FooterProps) => {
   const loading = timestampQuery.isLoading;
 
   const onExternalLinkClick = (section: string, label: string, href: string) => () =>
-    trackFooterExternalLinkClick({ section, label, href });
+    track('footer.link.click', { section, label, href });
 
   return (
     <footer
@@ -204,7 +199,10 @@ export const Footer = memo((props: FooterProps) => {
               </span>
               <span> | </span>
               <span>
-                <a href={resolvedFeedURL} {...getOpenFeedTrackEvent(resolvedFeedURL)}>
+                <a
+                  href={resolvedFeedURL}
+                  onClick={() => track('feed.open', { href: resolvedFeedURL })}
+                >
                   RSS
                 </a>
               </span>

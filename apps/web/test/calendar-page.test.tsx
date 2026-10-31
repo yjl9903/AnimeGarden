@@ -23,7 +23,7 @@ vi.mock('@tanstack/react-router', () => ({
     </a>
   )
 }));
-vi.mock('~/utils', () => ({ trackAnimeCalendarClick: vi.fn() }));
+vi.mock('~/utils', () => ({ track: vi.fn() }));
 
 describe('calendar WEB section', () => {
   it('renders a WEB anchor and the existing card style after all weekdays', () => {

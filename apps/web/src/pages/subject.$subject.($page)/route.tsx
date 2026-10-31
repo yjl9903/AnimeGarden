@@ -5,13 +5,7 @@ import { stringifyURLSearch } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import {
-  getFeedURL,
-  getOpenFeedTrackEvent,
-  getTrackingError,
-  track,
-  trackFetchResourcesError
-} from '~/utils';
+import { getFeedURL, getTrackingError, track } from '~/utils';
 import { getResourcesRouteLink } from '~/utils/routes';
 import { getAllSubjectNames } from '~/utils/subject';
 
@@ -62,7 +56,7 @@ export default function SubjectIndex({
   useEffect(() => {
     if (!error || !ok || !subject) return;
 
-    trackFetchResourcesError({
+    track('error.fetch-resources', {
       path,
       error: getTrackingError(error, 'subject-fetch-failed')
     });
@@ -165,7 +159,7 @@ function FansubGroupResources({
         <span className="block flex-auto"></span>
         <a
           href={feedURL}
-          {...getOpenFeedTrackEvent(feedURL)}
+          onClick={() => track('feed.open', { href: feedURL })}
           target="_blank"
           className="flex items-center cursor-pointer text-base font-light text-[#ee802f] border-b-2 border-b-transparent hover:(text-[#ff7800] border-b-[#ff7800])"
         >

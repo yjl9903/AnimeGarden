@@ -7,7 +7,7 @@ import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { type Collection, type Jsonify } from '@animegarden/client';
 
 import { subjectQueryOptions } from '~/query';
-import { DisplayTypeColor, formatChinaTime, getFeedURL, track, trackCopyFeed } from '~/utils';
+import { DisplayTypeColor, formatChinaTime, getFeedURL, track } from '~/utils';
 import { deleteCollectionItem, updateCollectionItem } from '~/stores/collection';
 import { useAppStores } from '~/stores/hooks';
 import { getResourcesRouteLink } from '~/utils/routes';
@@ -57,8 +57,6 @@ export const CollectionItemContent = memo(
         console.error(error);
         toast.error('复制 RSS 订阅失败', { closeButton: true });
       }
-
-      trackCopyFeed();
     }, [item]);
 
     // --- Rename title

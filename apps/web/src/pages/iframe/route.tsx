@@ -3,7 +3,7 @@ import styleToObject from 'style-to-object';
 import { useEffect, useMemo } from 'react';
 
 import Resources from '~/components/Resources';
-import { getTrackingError, trackFetchResourcesError } from '~/utils';
+import { getTrackingError, track } from '~/utils';
 import { toRouterSearch } from '~/utils/routes';
 
 import { Error } from '../resources.($page)/Error';
@@ -34,7 +34,7 @@ export default function ResourcesIndex({
   useEffect(() => {
     if (!error || !ok) return;
 
-    trackFetchResourcesError({
+    track('error.fetch-resources', {
       path,
       error: getTrackingError(error, 'iframe-fetch-failed')
     });

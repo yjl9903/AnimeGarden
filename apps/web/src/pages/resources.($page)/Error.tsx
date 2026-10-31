@@ -1,15 +1,14 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from '@tanstack/react-router';
 
-import { trackRenderError } from '~/utils';
-import type { TrackErrorRenderPayload } from '~/utils';
+import { track, type TrackPayload } from '~/utils';
 
 export interface ErrorProps {
   message?: string | React.ReactNode;
 
   children?: React.ReactNode;
 
-  tracking?: Pick<TrackErrorRenderPayload, 'error'>;
+  tracking?: Pick<TrackPayload<'error.render'>, 'error'>;
 }
 
 export function Error({ message, children, tracking }: ErrorProps) {
@@ -27,7 +26,7 @@ export function Error({ message, children, tracking }: ErrorProps) {
     if (trackedRef.current === trackingKey) return;
 
     trackedRef.current = trackingKey;
-    trackRenderError({
+    track('error.render', {
       path,
       error
     });

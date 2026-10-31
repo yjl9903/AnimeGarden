@@ -15,14 +15,7 @@ import {
   useState
 } from 'react';
 
-import {
-  trackSearchHistoryClick,
-  trackSearchHistoryDelete,
-  trackSearchResultClick,
-  trackSearchSuggestionClick,
-  trackSearchTrigger,
-  type SearchTriggerSource
-} from '~/utils';
+import { track, type TrackPayload } from '~/utils';
 import { resourcesQueryOptions, subjectSearchQueryOptions } from '~/query';
 import {
   debounce,
@@ -38,6 +31,8 @@ import { useActiveElement, useDocument, useEventListener } from '~/hooks';
 const SEARCH_HELP_URL = `https://docs.animes.garden/animegarden/search.html`;
 
 const SEARCH_SELECT_TRACK_WINDOW_MS = 300;
+
+type SearchTriggerSource = TrackPayload<'search.trigger'>['source'];
 
 type RecentTrackRef = RefObject<{
   key?: string;
@@ -198,7 +193,7 @@ export const Search = memo(() => {
           historiesStore.setState(() => newHistories);
         }
 
-        trackSearchTrigger({
+        track('search.trigger', {
           text: target,
           source
         });
@@ -326,7 +321,7 @@ function SearchSubject(props: {
       const text = '动画:' + getSubjectDisplayName(bgm);
 
       trackOnceWithinWindow(trackedRef, `subject:${bgm.id}`, () => {
-        trackSearchSuggestionClick({
+        track('search.suggestion.click', {
           text,
           subjectId: String(bgm.id)
         });
@@ -456,7 +451,7 @@ function SearchResult(props: {
       const resource = `${provider}:${providerId}`;
 
       trackOnceWithinWindow(trackedRef, `resource:${resource}`, () => {
-        trackSearchResultClick({
+        track('search.result.click', {
           text: search,
           resource
         });
@@ -556,7 +551,7 @@ function SearchHistory(props: {
 
   const onClearHistories = useCallback(
     (ev: React.MouseEvent) => {
-      trackSearchHistoryDelete({
+      track('search.history.delete', {
         action: 'clear',
         count: String(histories.length)
       });
@@ -569,7 +564,7 @@ function SearchHistory(props: {
 
   const onRemoveHistory = useCallback(
     (ev: React.MouseEvent, item: string) => {
-      trackSearchHistoryDelete({
+      track('search.history.delete', {
         action: 'remove',
         text: item
       });
@@ -597,7 +592,7 @@ function SearchHistory(props: {
         <Command.Item
           key={h}
           onMouseDown={(ev) => {
-            trackSearchHistoryClick(h);
+            track('search.history.click', { text: h });
             selectGoToSearch(h, 'history');
             ev.stopPropagation();
             ev.preventDefault();

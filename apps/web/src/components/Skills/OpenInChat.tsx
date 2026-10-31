@@ -1,6 +1,6 @@
 import { ChevronDown, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
-import { trackSkillsChatOpen, type TrackSkillsChatOpenPayload } from '~/utils/umami';
+import { track, type TrackPayload } from '~/utils/umami';
 
 import {
   DropdownMenu,
@@ -18,11 +18,11 @@ export function OpenInChat({
   prompt,
   source,
   example
-}: { prompt: string } & Omit<TrackSkillsChatOpenPayload, 'app'>) {
+}: { prompt: string } & Omit<TrackPayload<'skills.chat.open'>, 'app'>) {
   async function copyAndOpen(app: ChatAppLink) {
     try {
       await copyPromptAndOpen(app.prompt, app.href);
-      trackSkillsChatOpen({ app: app.name, source, example });
+      track('skills.chat.open', { app: app.name, source, example });
       toast.success(`已复制提示词，请粘贴到 ${app.name}`);
     } catch {
       toast.error('复制失败，请先手动复制提示词');
@@ -64,10 +64,10 @@ export function OpenInChat({
                 target="_blank"
                 rel="noopener noreferrer"
                 className="gap-2 cursor-pointer"
-                onClick={() => trackSkillsChatOpen({ app: app.name, source, example })}
+                onClick={() => track('skills.chat.open', { app: app.name, source, example })}
                 onAuxClick={(event) => {
                   if (event.button === 1) {
-                    trackSkillsChatOpen({ app: app.name, source, example });
+                    track('skills.chat.open', { app: app.name, source, example });
                   }
                 }}
               >

@@ -1,237 +1,143 @@
-export const getPikPakTrackEvent = (provider: string, providerId: string, source: string) => ({
-  'data-umami-event': 'pikpak',
-  'data-umami-event-resource': `${provider}:${providerId}`,
-  'data-umami-event-source': source
-});
+import { z } from 'zod';
 
-export const getOpenFeedTrackEvent = (href: string) => ({
-  onClick: () => track('feed.open', { href })
-});
+const optionalText = z
+  .string()
+  .optional()
+  .transform((value) => value || undefined);
+const errorPayload = z.object({ path: z.string(), error: z.string() });
+const navPayload = z.object({ item: z.string() }).optional();
 
-export type NavTrackType = 'home' | 'anime' | 'fansub' | 'type';
+/**
+ * The single source of truth for event names and their public analytics fields.
+ * Object schemas strip unknown fields so prompts and clipboard contents cannot leak
+ * through structurally compatible payloads. Event names are always written explicitly.
+ */
+const events = {
+  download: z.object({ resource: z.string(), source: z.string() }),
+  pikpak: z.object({ resource: z.string(), source: z.string() }),
+  'feed.open': z.object({ href: z.string() }),
+  'nav.click.home': navPayload,
+  'nav.click.anime': z.object({ item: z.string(), group: z.string().optional() }).optional(),
+  'nav.click.fansub': navPayload,
+  'nav.click.type': navPayload,
+  'theme.switch': z.object({ mode: z.enum(['light', 'dark', 'system']) }),
+  'search.trigger': z.object({
+    text: z.string(),
+    source: z.enum(['button', 'command', 'history', 'result-more'])
+  }),
+  'search.history.click': z.object({ text: z.string() }),
+  'search.history.delete': z.object({
+    action: z.enum(['clear', 'remove']),
+    text: optionalText,
+    count: optionalText
+  }),
+  'search.suggestion.click': z.object({ text: z.string(), subjectId: z.string() }),
+  'search.result.click': z.object({ text: z.string(), resource: z.string() }),
+  'resources.detail.click': z.object({ resource: z.string(), type: z.string() }),
+  'resources.filter.click': z.object({
+    filterType: z.enum(['type', 'fansub', 'publisher']),
+    value: z.string()
+  }),
+  'anime.calendar.click': z.object({
+    subjectId: z.string(),
+    title: z.string(),
+    weekday: z.string()
+  }),
+  'subject.fallback-search': z.object({ subject: z.string() }),
+  'collection.open-sidebar': z.undefined(),
+  'collection.add': z.undefined(),
+  'collection.open': z.object({ hash: z.string() }),
+  'collection.share': z.object({ hash: z.string() }),
+  'collection.open-resources': z.object({ search: z.string() }),
+  'copy.feed': z.undefined(),
+  'copy.magnet-links': z.undefined(),
+  'copy.json': z.undefined(),
+  'copy.fetch': z.object({ language: z.enum(['curl', 'javascript', 'python']) }),
+  'copy.iframe': z.undefined(),
+  'footer.link.click': z.object({ section: z.string(), label: z.string(), href: z.string() }),
+  'skills.chat.open': z.object({
+    app: z.string(),
+    source: z.enum(['direct', 'example']),
+    example: optionalText
+  }),
+  'skills.copy': z.object({
+    kind: z.enum(['prompt', 'command', 'example']),
+    source: z.string(),
+    example: optionalText
+  }),
+  'error.render': errorPayload,
+  'error.fetch-resources': errorPayload
+};
 
-export type SearchTriggerSource = 'button' | 'command' | 'history' | 'result-more';
+/** Supported literal event names; no arbitrary strings or generated names. */
+export type TrackEventName = keyof typeof events;
 
-export type ResourceRefineFilterType = 'type' | 'fansub' | 'publisher';
+/** Infers the payload for an event, including required fields and literal unions. */
+export type TrackPayload<Event extends TrackEventName> = z.infer<(typeof events)[Event]>;
 
-interface ErrorTrackingPayload {
-  path: string;
-  error: string;
+/** Payload-free events have no keys; optional payloads still contribute all their fields. */
+type TrackPayloadKeys<Event extends TrackEventName> =
+  TrackPayload<Event> extends undefined ? never : keyof NonNullable<TrackPayload<Event>> & string;
+
+/** HTML lowercases attribute names, so only events with entirely lowercase fields are eligible. */
+export type TrackAttributeEventName = {
+  [Name in TrackEventName]: Exclude<
+    TrackPayloadKeys<Name>,
+    Lowercase<TrackPayloadKeys<Name>>
+  > extends never
+    ? Name
+    : never;
+}[TrackEventName];
+
+/** A union of tuples preserves the event/payload relationship even for union event names. */
+type TrackArgs<Event extends TrackEventName = TrackEventName> = {
+  [Name in Event]: undefined extends TrackPayload<Name>
+    ? [eventName: Name, payload?: TrackPayload<Name>]
+    : [eventName: Name, payload: TrackPayload<Name>];
+}[Event];
+
+/** Data attributes only: spreading these does not install or replace an onClick handler. */
+type TrackAttributes<Event extends TrackEventName> = {
+  'data-umami-event': Event;
+} & {
+  [Key in keyof NonNullable<TrackPayload<Event>> as `data-umami-event-${Key & string}`]?: string;
+};
+
+/** Applies the same field allowlist and optional-value handling to both tracking APIs. */
+function getPayload(eventName: TrackEventName, payload: TrackPayload<TrackEventName>) {
+  const parsed = events[eventName].parse(payload);
+  if (parsed === undefined) return undefined;
+  return Object.fromEntries(
+    Object.entries(parsed).filter((entry): entry is [string, string] => entry[1] !== undefined)
+  );
 }
 
-export interface TrackErrorRenderPayload extends ErrorTrackingPayload {}
-
-export interface TrackResourcesFetchErrorPayload extends ErrorTrackingPayload {}
-
-export interface TrackNavClickPayload extends Record<string, string> {
-  item: string;
-}
-
-export interface TrackSearchTriggerPayload {
-  text: string;
-  source: SearchTriggerSource;
-}
-
-export interface TrackSearchHistoryDeletePayload {
-  action: 'clear' | 'remove';
-  text?: string;
-  count?: string;
-}
-
-export interface TrackResourceMoreClickPayload {
-  provider: string;
-  providerId: string;
-  type: string;
-}
-
-export interface TrackFooterExternalLinkPayload {
-  section: string;
-  label: string;
-  href: string;
-}
-
-/** Identifies the chat application and the Skills entry that launched it. */
-export interface TrackSkillsChatOpenPayload {
-  app: string;
-  source: 'direct' | 'example';
-  example?: string;
-}
-
-/** Identifies a Skills copy action without including the copied content. */
-export interface TrackSkillsCopyPayload {
-  kind: 'prompt' | 'command' | 'example';
-  source: string;
-  example?: string;
-}
-
-export interface TrackAnimeCalendarClickPayload {
-  subjectId: string;
-  title: string;
-  weekday: string;
-}
-
-export interface TrackSearchSuggestionClickPayload {
-  text: string;
-  subjectId: string;
-}
-
-export interface TrackSearchResultClickPayload {
-  text: string;
-  resource: string;
-}
-
-export const track = (event: string, payload?: Record<string, string>) => {
+/** Sends one event without letting an absent or failing tracker interrupt user actions. */
+export function track(...[eventName, payload]: TrackArgs): void {
   try {
-    // @ts-ignore
-    if (!window.umami) return;
-    // @ts-ignore
-    umami.track(event, payload);
+    // Rendering on the server and browsing with analytics blocked are both supported.
+    if (typeof window === 'undefined') return;
+    const umami = (
+      window as Window & {
+        umami?: { track: (eventName: string, payload?: Record<string, string>) => unknown };
+      }
+    ).umami;
+    if (!umami) return;
+    umami.track(eventName, getPayload(eventName, payload));
   } catch (error) {
     console.error(error);
   }
-};
-
-function buildTrackPayload(
-  payload: TrackErrorRenderPayload | TrackResourcesFetchErrorPayload
-): Record<string, string> {
-  return {
-    path: payload.path,
-    error: payload.error
-  };
 }
 
-export const trackAddCollection = () => {
-  track('collection.add');
-};
-
-export const trackCopyFeed = () => {
-  track('copy.feed');
-};
-
-export const trackCopyMagnetLinks = () => {
-  track('copy.magnet-links');
-};
-
-export const trackCopyJSONData = () => {
-  track('copy.json');
-};
-
-export const trackCopyFetchCurl = () => {
-  track('copy.fetch', { language: 'curl' });
-};
-
-export const trackCopyFetchJS = () => {
-  track('copy.fetch', { language: 'javascript' });
-};
-
-export const trackCopyFetchPython = () => {
-  track('copy.fetch', { language: 'python' });
-};
-
-export const trackCopyIframe = () => {
-  track('copy.iframe');
-};
-
-export const trackRenderError = (payload: TrackErrorRenderPayload) => {
-  track('error.render', buildTrackPayload(payload));
-};
-
-export const trackFetchResourcesError = (payload: TrackResourcesFetchErrorPayload) => {
-  track('error.fetch-resources', buildTrackPayload(payload));
-};
-
-export const trackNavClick = (type: NavTrackType, payload?: TrackNavClickPayload) => {
-  track(`nav.click.${type}`, payload);
-};
-
-export const trackSearchTrigger = (payload: TrackSearchTriggerPayload) => {
-  track('search.trigger', {
-    text: payload.text,
-    source: payload.source
-  });
-};
-
-export const trackSearchHistoryClick = (text: string) => {
-  track('search.history.click', { text });
-};
-
-export const trackSearchHistoryDelete = (payload: TrackSearchHistoryDeletePayload) => {
-  const result: Record<string, string> = {
-    action: payload.action
-  };
-
-  if (payload.text) {
-    result.text = payload.text;
+/** Builds declarative click attributes; events with mixed-case fields must use track instead. */
+export function getTrackAttributes<Event extends TrackAttributeEventName>(
+  ...[eventName, payload]: TrackArgs<TrackAttributeEventName> &
+    [eventName: Event, payload?: TrackPayload<Event>]
+): TrackAttributes<Event> {
+  const attributes: Record<string, string> = { 'data-umami-event': eventName };
+  for (const [key, value] of Object.entries(getPayload(eventName, payload) ?? {})) {
+    attributes[`data-umami-event-${key}`] = value;
   }
-
-  if (payload.count) {
-    result.count = payload.count;
-  }
-
-  track('search.history.delete', result);
-};
-
-export const trackResourceDetailClick = (payload: TrackResourceMoreClickPayload) => {
-  track('resources.detail.click', {
-    resource: `${payload.provider}:${payload.providerId}`,
-    type: payload.type
-  });
-};
-
-export const trackResourceRefineFilterClick = (
-  filterType: ResourceRefineFilterType,
-  value: string
-) => {
-  track('resources.filter.click', {
-    filterType,
-    value
-  });
-};
-
-export const trackFooterExternalLinkClick = (payload: TrackFooterExternalLinkPayload) => {
-  track('footer.link.click', {
-    section: payload.section,
-    label: payload.label,
-    href: payload.href
-  });
-};
-
-/** Records an app-link activation without including the prompt in analytics. */
-export const trackSkillsChatOpen = (payload: TrackSkillsChatOpenPayload) => {
-  track('skills.chat.open', {
-    app: payload.app,
-    source: payload.source,
-    ...(payload.example ? { example: payload.example } : {})
-  });
-};
-
-/** Records a successful clipboard write using only the copy entry's metadata. */
-export const trackSkillsCopy = (payload: TrackSkillsCopyPayload) => {
-  track('skills.copy', {
-    kind: payload.kind,
-    source: payload.source,
-    ...(payload.example ? { example: payload.example } : {})
-  });
-};
-
-export const trackAnimeCalendarClick = (payload: TrackAnimeCalendarClickPayload) => {
-  track('anime.calendar.click', {
-    subjectId: payload.subjectId,
-    title: payload.title,
-    weekday: payload.weekday
-  });
-};
-
-export const trackSearchSuggestionClick = (payload: TrackSearchSuggestionClickPayload) => {
-  track('search.suggestion.click', {
-    text: payload.text,
-    subjectId: payload.subjectId
-  });
-};
-
-export const trackSearchResultClick = (payload: TrackSearchResultClickPayload) => {
-  track('search.result.click', {
-    text: payload.text,
-    resource: payload.resource
-  });
-};
+  // Dynamic attribute keys cannot retain their mapped type through Object.entries.
+  return attributes as TrackAttributes<Event>;
+}

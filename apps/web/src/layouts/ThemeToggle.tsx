@@ -13,7 +13,7 @@ export const ThemeToggle = memo(() => {
 
   const handleModeChange = (mode: ThemeMode) => {
     themeModeStore.setState(() => mode);
-    track(`theme.switch`, { mode });
+    track('theme.switch', { mode });
   };
 
   return (

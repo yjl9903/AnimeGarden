@@ -4,7 +4,7 @@ import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
 import type { PaginationLink } from '~/components/Resources/pagination';
 import { usePreferFansub } from '~/stores/fansubs';
-import { getTrackingError, trackFetchResourcesError } from '~/utils';
+import { getTrackingError, track } from '~/utils';
 
 import { Error } from './Error';
 import { FilterCard, type ResourceFilter } from './Filter';
@@ -39,7 +39,7 @@ export default function ResourcesIndex({
   useEffect(() => {
     if (!error || !ok) return;
 
-    trackFetchResourcesError({
+    track('error.fetch-resources', {
       path,
       error: getTrackingError(error, 'resources-fetch-failed')
     });

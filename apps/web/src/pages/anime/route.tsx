@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger
 } from '~/components/ui/dropdown-menu';
 import Layout from '~/layouts/Layout';
-import { trackAnimeCalendarClick } from '~/utils';
+import { track } from '~/utils';
 import { getCalendar } from '~/utils/calendar';
 import { CalendarSeasonMonths, getCalendarSeason } from '~/utils/calendar-season';
 import { getSubjectDisplayName, getSubjectRouteLink, type WebBgmSubject } from '~/utils/subject';
@@ -228,7 +228,7 @@ export default function Index({
                       className="anime-card group"
                       key={bgm.id}
                       onClick={() =>
-                        trackAnimeCalendarClick({
+                        track('anime.calendar.click', {
                           subjectId: String(bgm.id),
                           title: getSubjectDisplayName(bgm),
                           weekday: cal.label

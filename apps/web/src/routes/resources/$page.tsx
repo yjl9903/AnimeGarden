@@ -89,6 +89,8 @@ export const loader = async ({
 };
 
 export const Route = createFileRoute('/resources/$page')({
+  // Header links can preload the same page with different filters; keep their loader caches separate.
+  loaderDeps: ({ search }) => search,
   loader,
   head: ({ loaderData, match }) =>
     isNotFound(match.error)

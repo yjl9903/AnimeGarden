@@ -22,15 +22,8 @@ import {
   removeQuote,
   formatChinaTime,
   DisplayTypeColor,
-  trackAddCollection,
-  trackCopyFeed,
-  PRESET_DISPLAY_NAME,
-  trackCopyMagnetLinks,
-  trackCopyJSONData,
-  trackCopyFetchCurl,
-  trackCopyFetchJS,
-  trackCopyFetchPython,
-  trackCopyIframe
+  track,
+  PRESET_DISPLAY_NAME
 } from '~/utils';
 import { subjectQueryOptions } from '~/query';
 import { getSubjectDisplayName, getSubjectRouteLink } from '~/utils/subject';
@@ -255,6 +248,7 @@ export function FilterCard(props: Props) {
   );
 }
 
+/** Runs success feedback and tracking only after the asynchronous action completes. */
 const useToastCallback = (
   fn: () => Promise<void>,
   options: {
@@ -262,7 +256,6 @@ const useToastCallback = (
     error: string;
     onSuccess?: () => void;
     onError?: () => void;
-    onFinally?: () => void;
   },
   deps: React.DependencyList
 ) => {
@@ -285,8 +278,6 @@ const useToastCallback = (
         closeButton: true,
         position: 'top-right'
       });
-    } finally {
-      options.onFinally?.();
     }
   }, deps);
 };
@@ -302,7 +293,7 @@ const CopyResourcesDropdown = (props: Props) => {
     {
       success: '复制 RSS 订阅成功',
       error: '复制 RSS 订阅失败',
-      onFinally: () => trackCopyFeed()
+      onSuccess: () => track('copy.feed')
     },
     [feedURL]
   );
@@ -320,7 +311,7 @@ const CopyResourcesDropdown = (props: Props) => {
     {
       success: `成功复制 ${resources.length} 条磁力链接`,
       error: '没有磁力链接',
-      onFinally: () => trackCopyMagnetLinks()
+      onSuccess: () => track('copy.magnet-links')
     },
     [resources]
   );
@@ -333,9 +324,9 @@ const CopyResourcesDropdown = (props: Props) => {
     {
       success: '复制 JSON 数据成功',
       error: '复制 JSON 数据失败',
-      onFinally: () => trackCopyJSONData()
+      onSuccess: () => track('copy.json')
     },
-    [resources]
+    [filter, resources]
   );
 
   const copyFetchCurl = useToastCallback(
@@ -346,7 +337,7 @@ const CopyResourcesDropdown = (props: Props) => {
     {
       success: '复制 cURL 命令成功',
       error: '复制 cURL 命令失败',
-      onFinally: () => trackCopyFetchCurl()
+      onSuccess: () => track('copy.fetch', { language: 'curl' })
     },
     [filter]
   );
@@ -359,7 +350,7 @@ const CopyResourcesDropdown = (props: Props) => {
     {
       success: '复制 @animegarden/client JavaScript 代码成功',
       error: '复制 @animegarden/client JavaScript 代码失败',
-      onFinally: () => trackCopyFetchJS()
+      onSuccess: () => track('copy.fetch', { language: 'javascript' })
     },
     [filter]
   );
@@ -372,7 +363,7 @@ const CopyResourcesDropdown = (props: Props) => {
     {
       success: '复制 Python 代码成功',
       error: '复制 Python 代码失败',
-      onFinally: () => trackCopyFetchPython()
+      onSuccess: () => track('copy.fetch', { language: 'python' })
     },
     [filter]
   );
@@ -385,7 +376,7 @@ const CopyResourcesDropdown = (props: Props) => {
     {
       success: '复制网页嵌入代码成功',
       error: '复制网页嵌入代码失败',
-      onFinally: () => trackCopyIframe()
+      onSuccess: () => track('copy.iframe')
     },
     [filter]
   );
@@ -475,7 +466,7 @@ export function FilterOperations(props: Props) {
     }
     stores.isOpenSidebarStore.setState(() => true);
 
-    trackAddCollection();
+    track('collection.add');
   }, [filter, collection, stores]);
 
   return (
