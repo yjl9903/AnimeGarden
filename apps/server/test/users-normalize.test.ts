@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import { drizzle } from 'drizzle-orm/pg-proxy';
+import { describe, expect, it, vi } from 'vitest';
 
 import { UsersModule, TeamsModule } from '../src/users/index.ts';
 
@@ -63,4 +64,94 @@ describe.each([UsersModule, TeamsModule])('%s canonical name priority', (PartyMo
       expect(module.getByName('旧个人发布名')?.id).toBe(4738);
     }
   );
+});
+
+/** Provides real usage SQL generation and in-memory party reads/writes. */
+function createPartyModule(PartyModule: typeof UsersModule | typeof TeamsModule) {
+  const rows = [
+    { id: 31, name: 'Current', avatar: null, providers: { dmhy: { providerId: 'stable' } } },
+    { id: 42, name: 'Unrelated', avatar: null, providers: { dmhy: { providerId: 'other' } } }
+  ];
+  const execute = vi.fn(async (_sql: string, params: unknown[]) => ({
+    rows: params.slice(1).map((id) => [id, '2026-10-20T00:00:00Z'])
+  }));
+  const sqlDatabase = drizzle(execute);
+  const findMany = vi.fn(async () => structuredClone(rows));
+  const tx = {
+    insert: () => ({
+      values: (values: { name: string }[]) => ({
+        returning: async () => values.map(({ name }, index) => ({ id: 100 + index, name }))
+      })
+    }),
+    update: () => ({ set: () => ({ where: () => ({ returning: async () => [] }) }) })
+  };
+  const transaction = vi.fn(async (callback) => callback(tx));
+  const module = new PartyModule(
+    {
+      options: { cron: true },
+      database: {
+        select: sqlDatabase.select.bind(sqlDatabase),
+        query: { users: { findMany }, teams: { findMany } },
+        transaction
+      }
+    } as any,
+    PartyModule.name
+  );
+  module.logger.pauseLogs();
+  const insert = (inputs: Parameters<UsersModule['insertUsers']>[0]) =>
+    module instanceof UsersModule ? module.insertUsers(inputs) : module.insertTeams(inputs);
+  return { module, insert, execute, findMany, transaction };
+}
+
+describe.each([UsersModule, TeamsModule])('%s on-demand usage', (PartyModule) => {
+  it('returns for empty writes and never prewarms usage on cron initialization or refresh', async () => {
+    const { module, insert, execute, findMany, transaction } = createPartyModule(PartyModule);
+    await expect(insert([])).resolves.toEqual([]);
+    expect(findMany).not.toHaveBeenCalled();
+    await module.initialize();
+    await module.refresh();
+    expect(findMany).toHaveBeenCalledTimes(2);
+    expect(execute).not.toHaveBeenCalled();
+    expect(transaction).not.toHaveBeenCalled();
+  });
+
+  it('loads only the resolved provider ID and protects the latest name across writes', async () => {
+    const { module, insert, execute } = createPartyModule(PartyModule);
+    await module.initialize();
+    const input = { provider: 'dmhy', providerId: 'stable' };
+    await insert([{ ...input, name: 'Old', usedAt: new Date('2026-10-19') }]);
+    expect(module.ids.get(31)?.name).toBe('Current');
+    expect(module.ids.get(31)?.providers?.dmhy.aliases).toContain('Old');
+    await insert([{ ...input, name: 'New', usedAt: new Date('2026-10-21') }]);
+    await insert([{ ...input, name: 'Intermediate', usedAt: new Date('2026-10-20') }]);
+    expect(module.ids.get(31)?.name).toBe('New');
+    expect(module.ids.get(42)?.name).toBe('Unrelated');
+    expect(execute).toHaveBeenCalledTimes(1);
+    expect(execute.mock.calls[0][1]).toEqual([1, 31]);
+  });
+
+  it('also loads usage when resolving an existing party by normalized name', async () => {
+    const { module, insert, execute } = createPartyModule(PartyModule);
+    await module.initialize();
+    await insert([
+      {
+        provider: 'moe',
+        providerId: 'new-provider',
+        name: ' Current ',
+        usedAt: new Date('2026-10-19')
+      }
+    ]);
+    expect(execute.mock.calls[0][1]).toEqual([1, 31]);
+    expect(module.resolve('moe', 'new-provider', 'Current')?.id).toBe(31);
+  });
+
+  it('inserts a new party without reading resource history', async () => {
+    const { module, insert, execute } = createPartyModule(PartyModule);
+    await module.initialize();
+    await insert([
+      { provider: 'dmhy', providerId: 'new', name: 'Brand new', usedAt: new Date('2026-10-21') }
+    ]);
+    expect(module.resolve('dmhy', 'new', 'Brand new')?.id).toBe(100);
+    expect(execute).not.toHaveBeenCalled();
+  });
 });

@@ -130,3 +130,54 @@ describe('DetailsManager Redis cache', () => {
     }
   });
 });
+
+describe('DetailsManager avatar repair', () => {
+  it.each(['publisher', 'fansub'] as const)(
+    'handles a failed %s avatar write inside the detail repair task',
+    async (party) => {
+      const error = new Error('statement timeout');
+      const insertUsers = vi.fn().mockResolvedValue([]);
+      const insertTeams = vi.fn().mockResolvedValue([]);
+      (party === 'publisher' ? insertUsers : insertTeams).mockRejectedValue(error);
+      const found = { id: 31, provider: 'dmhy', providerId: '123', isDeleted: false };
+      const resource = {
+        magnet: 'magnet:existing',
+        publisher: { name: 'Publisher', avatar: party === 'publisher' ? null : 'avatar' },
+        fansub: { name: 'Fansub', avatar: party === 'fansub' ? null : 'avatar' }
+      };
+      const detail = { id: 31, description: 'Fresh detail', fetchedAt: new Date() };
+      const where = vi.fn().mockResolvedValueOnce([found]).mockResolvedValueOnce([]);
+      const logger = {
+        withTag: vi.fn(() => logger),
+        info: vi.fn(),
+        success: vi.fn(),
+        warn: vi.fn(),
+        error: vi.fn()
+      };
+      const manager = new DetailsManager(
+        {
+          database: { select: () => ({ from: () => ({ where }) }) },
+          modules: {
+            resources: { query: { transform: async () => resource } },
+            users: { insertUsers },
+            teams: { insertTeams }
+          }
+        } as any,
+        logger as any
+      );
+      vi.spyOn(manager, 'insertDetail').mockResolvedValue(detail as any);
+      const scrape = vi.fn().mockResolvedValue({
+        createdAt: '2026-10-31T00:00:00Z',
+        publisher: { id: 'p', name: 'Publisher', avatar: 'new-avatar' },
+        fansub: { id: 'f', name: 'Fansub', avatar: 'new-avatar' }
+      });
+
+      const result = await manager.getByProviderId('dmhy', '123', scrape, { force: true });
+
+      expect(result.detail).toEqual(detail);
+      expect(party === 'publisher' ? insertUsers : insertTeams).toHaveBeenCalledTimes(1);
+      expect(logger.error).toHaveBeenCalledWith(error);
+      expect(logger.warn).toHaveBeenCalledWith('Fail fixing resource detail of dmhy:123');
+    }
+  );
+});

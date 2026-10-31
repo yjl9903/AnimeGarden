@@ -1,4 +1,4 @@
-import { eq, inArray, max } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { memoAsync } from 'memofunc';
 
 import type { System } from '../system/system.ts';
@@ -6,15 +6,13 @@ import type { User, Team } from '../schema/index.ts';
 
 import { Module } from '../system/module.ts';
 import { users as userSchema, teams as teamSchema } from '../schema/users.ts';
-import { resources as resourceSchema } from '../schema/resources.ts';
 
 import type { UserInfo, TeamInfo } from './types.ts';
 
+import { LatestPartyUsage } from './usage.ts';
 import { appendProviderAliases, normalizePartyName } from './normalize.ts';
 
 export * from './types.ts';
-
-const USED_AT_BATCH_SIZE = 500;
 
 function providerIdentity(provider: string, providerId: string) {
   return `${provider}:${providerId}`;
@@ -32,32 +30,18 @@ export class UsersModule extends Module<System['modules']> {
   /** "provider:providerId" -> user. */
   private readonly providerIds: Map<string, User> = new Map();
 
-  /** Database users.id -> latest resource timestamp used to select the canonical name. */
-  private readonly latestUsedAt: Map<number, number> = new Map();
-
-  /** Background task shared by cron initialization and party insertion. */
-  private latestUsedAtTask?: Promise<void>;
+  /** Live-resource timestamps and incoming usage observed since the last refresh. */
+  private readonly latestUsedAt = new LatestPartyUsage(this.database, 'user');
 
   public async initialize() {
     this.logger.info('Initializing Users module');
     await this.fetchUsers();
-    if (this.system.options.cron) {
-      void this.ensureLatestUsedAt().catch((error) =>
-        this.logger.error('Failed to load latest user usage', error)
-      );
-    }
     this.logger.success('Initialize Users module OK');
   }
 
   public async refresh() {
     this.logger.info('Refreshing Users module');
     await this.fetchUsers();
-    this.latestUsedAtTask = undefined;
-    if (this.system.options.cron) {
-      void this.ensureLatestUsedAt().catch((error) =>
-        this.logger.error('Failed to load latest user usage', error)
-      );
-    }
     this.logger.success('Refresh Users module OK');
   }
 
@@ -92,36 +76,18 @@ export class UsersModule extends Module<System['modules']> {
     }
   }
 
-  /** Starts the batched load once and returns the shared task. */
-  private ensureLatestUsedAt() {
-    this.latestUsedAtTask ??= (async () => {
-      this.logger.info('Loading latest user usage');
-      this.latestUsedAt.clear();
-      const ids = [...this.ids.keys()];
-      for (let index = 0; index < ids.length; index += USED_AT_BATCH_SIZE) {
-        const batch = ids.slice(index, index + USED_AT_BATCH_SIZE);
-        const latest = await this.database
-          .select({ id: resourceSchema.publisherId, usedAt: max(resourceSchema.createdAt) })
-          .from(resourceSchema)
-          .where(inArray(resourceSchema.publisherId, batch))
-          .groupBy(resourceSchema.publisherId);
-        for (const row of latest) {
-          if (row.usedAt) {
-            this.latestUsedAt.set(row.id, new Date(row.usedAt).getTime());
-          }
-        }
-      }
-      this.logger.success('Load latest user usage OK');
-    })().catch((error) => {
-      this.latestUsedAtTask = undefined;
-      throw error;
-    });
-    return this.latestUsedAtTask;
-  }
-
+  /** Resolves incoming parties and loads only their missing live-resource timestamps. */
   public async insertUsers(users: UserInfo[]) {
+    if (users.length === 0) return [];
+
     this.logger.info(`Start inserting ${users.length} users`);
-    await this.ensureLatestUsedAt();
+
+    const ids = users.flatMap((input) => {
+      const party = this.resolve(input.provider, input.providerId, input.name);
+      return party ? [party.id] : [];
+    });
+
+    await this.latestUsedAt.ensure(ids);
 
     const insertions: Map<string, Omit<User, 'id'>> = new Map();
     const insertionProviders = new Map<string, string>();
@@ -194,7 +160,7 @@ export class UsersModule extends Module<System['modules']> {
           oldName
         );
 
-        this.latestUsedAt.set(dbUser.id, Math.max(usedAt, latestUsedAt));
+        this.latestUsedAt.observe(dbUser.id, usedAt);
 
         const changed =
           oldName !== dbUser.name ||
@@ -287,32 +253,18 @@ export class TeamsModule extends Module<System['modules']> {
   /** "provider:providerId" -> team. */
   private readonly providerIds: Map<string, Team> = new Map();
 
-  /** Database teams.id -> latest resource timestamp used to select the canonical name. */
-  private readonly latestUsedAt: Map<number, number> = new Map();
-
-  /** Background task shared by cron initialization and party insertion. */
-  private latestUsedAtTask?: Promise<void>;
+  /** Live-resource timestamps and incoming usage observed since the last refresh. */
+  private readonly latestUsedAt = new LatestPartyUsage(this.database, 'team');
 
   public async initialize() {
     this.logger.info('Initializing Teams module');
     await this.fetchTeams();
-    if (this.system.options.cron) {
-      void this.ensureLatestUsedAt().catch((error) =>
-        this.logger.error('Failed to load latest team usage', error)
-      );
-    }
     this.logger.success('Initialize Teams module OK');
   }
 
   public async refresh() {
     this.logger.info('Refreshing Teams module');
     await this.fetchTeams();
-    this.latestUsedAtTask = undefined;
-    if (this.system.options.cron) {
-      void this.ensureLatestUsedAt().catch((error) =>
-        this.logger.error('Failed to load latest team usage', error)
-      );
-    }
     this.logger.success('Refresh Teams module OK');
   }
 
@@ -347,36 +299,15 @@ export class TeamsModule extends Module<System['modules']> {
     }
   }
 
-  /** Starts the batched load once and returns the shared task. */
-  private ensureLatestUsedAt() {
-    this.latestUsedAtTask ??= (async () => {
-      this.logger.info('Loading latest team usage');
-      this.latestUsedAt.clear();
-      const ids = [...this.ids.keys()];
-      for (let index = 0; index < ids.length; index += USED_AT_BATCH_SIZE) {
-        const batch = ids.slice(index, index + USED_AT_BATCH_SIZE);
-        const latest = await this.database
-          .select({ id: resourceSchema.fansubId, usedAt: max(resourceSchema.createdAt) })
-          .from(resourceSchema)
-          .where(inArray(resourceSchema.fansubId, batch))
-          .groupBy(resourceSchema.fansubId);
-        for (const row of latest) {
-          if (row.id !== null && row.usedAt) {
-            this.latestUsedAt.set(row.id, new Date(row.usedAt).getTime());
-          }
-        }
-      }
-      this.logger.success('Load latest team usage OK');
-    })().catch((error) => {
-      this.latestUsedAtTask = undefined;
-      throw error;
-    });
-    return this.latestUsedAtTask;
-  }
-
+  /** Resolves incoming parties and loads only their missing live-resource timestamps. */
   public async insertTeams(teams: TeamInfo[]) {
+    if (teams.length === 0) return [];
     this.logger.info(`Start inserting ${teams.length} teams`);
-    await this.ensureLatestUsedAt();
+    const ids = teams.flatMap((input) => {
+      const party = this.resolve(input.provider, input.providerId, input.name);
+      return party ? [party.id] : [];
+    });
+    await this.latestUsedAt.ensure(ids);
 
     const insertions: Map<string, Omit<Team, 'id'>> = new Map();
     const insertionProviders = new Map<string, string>();
@@ -448,7 +379,7 @@ export class TeamsModule extends Module<System['modules']> {
           oldName
         );
 
-        this.latestUsedAt.set(dbTeam.id, Math.max(usedAt, latestUsedAt));
+        this.latestUsedAt.observe(dbTeam.id, usedAt);
 
         const changed =
           oldName !== dbTeam.name ||
