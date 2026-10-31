@@ -232,7 +232,6 @@ export class QueryManager {
     return {
       preset: filter.preset,
       provider: filter.provider,
-      duplicate: filter.duplicate,
       // Unknown party names are intentionally discarded. If every supplied name is unknown, the
       // empty ID list is treated as no party filter rather than an empty result.
       publishers: filter.publishers
@@ -313,7 +312,6 @@ export class QueryManager {
     const {
       preset,
       provider,
-      duplicate,
       fansubs,
       publishers,
       types,
@@ -336,9 +334,8 @@ export class QueryManager {
 
     if (provider) {
       conds.push(eq(resources.provider, provider));
-    }
-
-    if (!duplicate) {
+    } else {
+      // Cross-provider queries return only roots; a single provider includes all of its resources.
       conds.push(isNull(resources.duplicatedId));
     }
 

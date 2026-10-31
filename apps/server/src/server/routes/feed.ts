@@ -73,7 +73,7 @@ function normalizeSearchParams(search: URLSearchParams) {
   const params = new URLSearchParams();
   for (const [key, value] of search) {
     const name = key.toLowerCase() === 'pagesize' ? 'pageSize' : key.toLowerCase();
-    params.append(name, name === 'duplicate' ? value.toLowerCase() : value);
+    params.append(name, value);
   }
   return params;
 }

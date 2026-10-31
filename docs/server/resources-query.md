@@ -46,7 +46,10 @@ ORDER BY created_at DESC, id DESC
 LIMIT 1001
 ```
 
-默认筛选重复资源的根节点，即 `duplicated_id IS NULL`；duplicate 选项控制是否包含重复资源。
+全站查询筛选重复资源的根节点，即 `duplicated_id IS NULL`。
+指定单一 provider 时，SQL 只追加来源条件，不追加重复根节点限制，包含该来源的重复资源。
+路径、URL 查询参数和请求正文中的 provider 在进入查询层前完成解析；
+该规则仅在最终 SQL 构造处按 provider 决定。
 标题全文查询、关键词和 preset 约束在同一条 SQL 中组合。
 
 底层批次大小固定为 `MaxResourcesLimit + 1`，当前为 1001。

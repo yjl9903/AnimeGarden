@@ -68,7 +68,7 @@ RSS 请求中的资源按番剧分类。标准字段 `title`、`link`、`guid`�
 ## 全站 RSS 参数规范化
 
 `/feed.xml` 在查询和构造 channel link 前，统一参数名大小写，对集合参数排序、去重，
-丢弃未知参数，并省略默认的 `limit=30`、`duplicate=true` 和 `tracker=true`。
+丢弃未知参数，并省略默认的 `limit=30` 和 `tracker=true`。
 参数值（如发布者名称和搜索文本）的大小写保持不变，布尔参数另行解析。
 例如 `?subject=2&Subject=1&subject=2&limit=30&unused=x` 与 `?subject=1&subject=2`
 共享同一份进程内 XML 缓存、channel link 和 ETag。该规范化不重定向请求，也不修改 CDN 的 URL 缓存键。
@@ -80,8 +80,7 @@ cursor 在 HTTP 边界解码，传给资源查询时保留解析后的对象；�
 两个 RSS 接口均通过 `tracker` 查询参数控制是否在 enclosure 的磁力链接中追加 tracker，
 默认开启。`false`、`off`、`no`、`0` 会关闭，参数名和值均不区分大小写，例如
 `/feed.xml?tracker=false`。
-全站 RSS 的 `duplicate=false`、`0`、`off`、`no` 不会被当成 true；该参数仍只在指定
-provider 时生效，保持现有资源查询语义。
+指定单一 provider 的订阅包含该来源的重复资源，全站订阅仅返回重复资源的根节点。
 
 ## 生成器接口
 

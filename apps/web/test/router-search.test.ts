@@ -18,16 +18,10 @@ describe('router search params', () => {
     );
   });
 
-  it.each([
-    ['?provider=dmhy&duplicate=true', true],
-    ['?provider=dmhy', true],
-    ['?provider=dmhy&duplicate=false', false]
-  ] as const)('preserves duplicate semantics while omitting defaults: %s', (input, duplicate) => {
-    const search = toResourcesRouterSearch(input);
-    expect(search).toEqual(
-      duplicate ? { provider: 'dmhy' } : { provider: 'dmhy', duplicate: 'false' }
-    );
+  it.each(['dmhy', 'mikan'])('preserves provider=%s across resource navigation', (provider) => {
+    const search = toResourcesRouterSearch(`?provider=${provider}`);
+    expect(search).toEqual({ provider });
     const params = new URLSearchParams(stringifyRouterSearch(search));
-    expect(parseURLSearch(params).filter).toEqual({ provider: 'dmhy', duplicate });
+    expect(parseURLSearch(params).filter).toEqual({ provider });
   });
 });

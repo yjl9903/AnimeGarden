@@ -29,15 +29,8 @@ const providerEnum = z.enum(SupportProviders);
 
 const presetEnum = z.enum(SupportPresets);
 
-// Parse explicit false values instead of treating every non-empty string as true.
-const duplicateParam = z
-  .string()
-  .transform((value) => !['', 'false', '0', 'off', 'no'].includes(value))
-  .nullish();
-
 const UrlSearchSchema = {
   provider: providerEnum.optional(),
-  duplicate: duplicateParam,
   cursor: z.string().optional(),
   limit: z.union([z.null(), z.undefined(), z.coerce.number()]).optional(),
   fansub: z.string().array().optional(),
@@ -55,7 +48,6 @@ const UrlSearchSchema = {
 
 const BodySchema = {
   provider: providerEnum.optional(),
-  duplicate: z.union([z.boolean(), duplicateParam]),
   cursor: z.string().optional(),
   limit: z.coerce.number().optional(),
   fansub: z.string().optional(),
@@ -85,7 +77,6 @@ export function parseURLSearch(
   const res1 = params
     ? {
         provider: UrlSearchSchema.provider.safeParse(params.get('provider')).data,
-        duplicate: UrlSearchSchema.duplicate.safeParse(params.get('duplicate')).data,
         cursor: UrlSearchSchema.cursor.safeParse(params.get('cursor')).data,
         limit: UrlSearchSchema.limit.safeParse(params.get('limit')).data,
         fansub: UrlSearchSchema.fansub.safeParse(params.getAll('fansub')).data,
@@ -105,7 +96,6 @@ export function parseURLSearch(
   const res2 = body
     ? {
         provider: BodySchema.provider.safeParse(body.provider).data,
-        duplicate: BodySchema.duplicate.safeParse(body.duplicate).data,
         cursor: BodySchema.cursor.safeParse(body.cursor).data,
         limit: BodySchema.limit.safeParse(body.limit).data,
         fansub: BodySchema.fansub.safeParse(body.fansub).data,
@@ -150,11 +140,9 @@ export function parseURLSearch(
   }
 
   if (res2?.provider) {
-    filter.duplicate = res1?.duplicate ?? res2?.duplicate ?? true;
     filter.provider = res2.provider;
   } else if (res1?.provider) {
     filter.provider = res1.provider;
-    filter.duplicate = res2?.duplicate ?? res1?.duplicate ?? true;
   }
 
   if (res2?.fansub) {
@@ -257,7 +245,7 @@ export function stringifyURLSearch(
 ) {
   const params = new URLSearchParams();
 
-  const { cursor, limit, duplicate, after, before, preset } = options;
+  const { cursor, limit, after, before, preset } = options;
 
   if (preset) {
     params.set('preset', preset);
@@ -268,10 +256,6 @@ export function stringifyURLSearch(
   }
   if (limit && limit !== DefaultResourcesLimit) {
     params.set('limit', '' + limit);
-  }
-  // Preserve explicit false so a URL round trip does not restore the provider default.
-  if (duplicate === false) {
-    params.set('duplicate', 'false');
   }
   if (after) {
     const time = after instanceof Date ? after.getTime() : new Date(after).getTime();

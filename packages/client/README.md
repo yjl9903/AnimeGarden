@@ -49,6 +49,7 @@ Common filters (combined with AND):
 
 | Field | Matching rule |
 | --- | --- |
+| `provider` | Query one provider, including its duplicated resources. Queries across all providers exclude duplicates. |
 | `subjects` | Match any of the specified Bangumi subject IDs. |
 | `fansubs` / `publishers` | Filter by fansub or publisher names, respectively. Match any name; when both are set, either condition suffices. |
 | `search` | Search titles by anime name or keywords. Overrides `include`. |

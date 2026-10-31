@@ -262,16 +262,9 @@ export type PresetOptions = {
 
 export type FilterOptions = {
   /**
-   * Only filter resources in the specific provider
+   * Only filter resources in the specific provider, including its duplicated resources.
    */
   provider?: string;
-
-  /**
-   * Whether to include duplicated resources when a valid provider is specified.
-   *
-   * @default true
-   */
-  duplicate?: boolean;
 
   /**
    * Resources uploaded after the specified date
@@ -388,8 +381,6 @@ export type ResolvedFilterOptions = {
   preset?: PresetType;
 
   provider?: ProviderType;
-
-  duplicate?: boolean;
 
   types?: string[];
 

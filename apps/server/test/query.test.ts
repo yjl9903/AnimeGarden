@@ -84,6 +84,19 @@ function createManager(publisherRedis?: {
 }
 
 describe('QueryManager resolved pagination', () => {
+  it.each([undefined, 'dmhy'])(
+    'filters root resources only without provider=%s',
+    async (provider) => {
+      const { manager } = createManager();
+      const execute = vi.fn().mockResolvedValue({ rows: [] });
+      manager.system.database = drizzle(execute);
+      const result = await manager.find({ provider }, { limit: 30, cursor: { anchor } });
+      const statement = execute.mock.calls[0][0] as string;
+      expect(statement.includes('"resources"."duplicated_id" is null')).toBe(!provider);
+      expect(result.filter.provider).toBe(provider);
+    }
+  );
+
   it.each([1000, 1001])('returns a full 1000-resource batch from %s rows', async (count) => {
     const { manager } = createManager();
     const rows = Array.from({ length: count }, (_, index) => createResource(index + 1));

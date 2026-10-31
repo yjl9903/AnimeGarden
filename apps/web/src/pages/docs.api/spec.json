@@ -232,9 +232,6 @@
             "$ref": "#/components/parameters/BeforeParam"
           },
           {
-            "$ref": "#/components/parameters/DuplicateParam"
-          },
-          {
             "$ref": "#/components/parameters/TrackerParam"
           },
           {
@@ -400,9 +397,6 @@
           },
           {
             "$ref": "#/components/parameters/BeforeParam"
-          },
-          {
-            "$ref": "#/components/parameters/DuplicateParam"
           },
           {
             "$ref": "#/components/parameters/TrackerParam"
@@ -886,9 +880,6 @@
           },
           {
             "$ref": "#/components/parameters/ProviderParam"
-          },
-          {
-            "$ref": "#/components/parameters/DuplicateParam"
           },
           {
             "$ref": "#/components/parameters/PresetParam"
@@ -1465,7 +1456,7 @@
       "ProviderParam": {
         "name": "provider",
         "in": "query",
-        "description": "资源来源标识；省略时查询所有来源。",
+        "description": "资源来源标识。指定时包含该来源的重复资源；省略时查询所有来源并排除重复资源。",
         "schema": {
           "type": "string",
           "enum": ["dmhy", "mikan", "moe", "ani"]
@@ -1597,14 +1588,6 @@
           "format": "date-time"
         },
         "example": "2026-10-31T23:59:59+08:00"
-      },
-      "DuplicateParam": {
-        "name": "duplicate",
-        "in": "query",
-        "description": "是否包含重复资源。仅在查询条件中指定有效 provider 时生效，省略时包含重复资源；仅指定路径中的 provider 不触发此规则。小写 false、off、no、0 和空字符串解析为 false，其他字符串解析为 true。",
-        "schema": {
-          "type": "string"
-        }
       },
       "TrackerParam": {
         "name": "tracker",
@@ -1908,9 +1891,6 @@
             "enum": ["dmhy", "mikan", "moe", "ani"],
             "description": "资源来源标识。"
           },
-          "duplicate": {
-            "type": "boolean"
-          },
           "types": {
             "type": "array",
             "items": {
@@ -2024,10 +2004,6 @@
             "type": "string",
             "enum": ["dmhy", "mikan", "moe", "ani"],
             "description": "资源来源标识。"
-          },
-          "duplicate": {
-            "type": "boolean",
-            "description": "是否包含重复资源。仅在查询条件中指定有效 provider 时生效，省略时包含重复资源。请求正文中指定 provider 时，URL 查询参数中的 duplicate 优先；仅在 URL 查询参数中指定 provider 时，请求正文中的 duplicate 优先。"
           },
           "after": {
             "type": "string",
@@ -2144,7 +2120,7 @@
             "enum": ["bangumi"]
           }
         },
-        "description": "不同筛选条件取交集，fansubs 与 publishers 取并集。同时提供 URL 查询参数和请求正文时，请求正文中有效、非空的筛选条件优先；分页和 duplicate 的优先级见字段说明。"
+        "description": "不同筛选条件取交集，fansubs 与 publishers 取并集。同时提供 URL 查询参数和请求正文时，请求正文中有效、非空的筛选条件优先；分页参数的优先级见字段说明。"
       },
       "ResourcesResponse": {
         "type": "object",
@@ -2290,9 +2266,6 @@
             "type": "string",
             "enum": ["dmhy", "mikan", "moe", "ani"],
             "description": "资源来源标识。"
-          },
-          "duplicate": {
-            "type": "boolean"
           },
           "types": {
             "type": "array",

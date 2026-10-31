@@ -58,7 +58,6 @@ export function normalizeResolvedFilterPayload(value: unknown): value is Resolve
 
   if (!isOptionalType(value.preset, 'string')) return false;
   if (!isOptionalType(value.provider, 'string')) return false;
-  if (!isOptionalType(value.duplicate, 'boolean')) return false;
   if (!isOptionalArray(value.types, 'string')) return false;
   if (!isOptionalArray(value.fansubs, 'string')) return false;
   if (!isOptionalArray(value.publishers, 'string')) return false;

@@ -314,7 +314,7 @@ describe('canonical resources feed cache', () => {
     const cursor = encodeResourcesCursor({ anchor: Date.parse('2026-07-01') });
     const urls = [
       '/feed.xml?provider=dmhy',
-      '/feed.xml?provider=dmhy&duplicate=false',
+      '/feed.xml?provider=mikan',
       '/feed.xml?provider=dmhy&tracker=false',
       `/feed.xml?provider=dmhy&cursor=${cursor}`,
       '/feed.xml?provider=dmhy&limit=10'
@@ -322,9 +322,8 @@ describe('canonical resources feed cache', () => {
     const responses = await Promise.all(urls.map((url) => app.request(url)));
     expect(new Set(responses.map((response) => response.headers.get('etag'))).size).toBe(5);
     expect(query.find).toHaveBeenCalledTimes(5);
-    expect(query.find).toHaveBeenCalledWith({ provider: 'dmhy', duplicate: false }, { limit: 30 });
-    await app.request('/feed.xml?provider=dmhy&duplicate=true');
-    await app.request('/feed.xml?provider=dmhy&duplicate=FALSE');
+    expect(query.find).toHaveBeenCalledWith({ provider: 'dmhy' }, { limit: 30 });
+    await app.request('/feed.xml?provider=dmhy&limit=30');
     expect(query.find).toHaveBeenCalledTimes(5);
   });
 

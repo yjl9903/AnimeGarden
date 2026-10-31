@@ -83,11 +83,10 @@ describe('parse url', () => {
     `);
   });
 
-  it('should infer duplicate', () => {
+  it('parses a single provider', () => {
     expect(parseURLSearch(new URLSearchParams(`provider=dmhy`))).toMatchInlineSnapshot(`
       {
         "filter": {
-          "duplicate": true,
           "provider": "dmhy",
         },
         "pagination": {
@@ -100,7 +99,6 @@ describe('parse url', () => {
       .toMatchInlineSnapshot(`
         {
           "filter": {
-            "duplicate": true,
             "provider": "dmhy",
           },
           "pagination": {
@@ -183,63 +181,6 @@ describe('parse url', () => {
   });
 });
 
-describe('duplicate filter', () => {
-  it.each([
-    ['', false],
-    ['false', false],
-    ['0', false],
-    ['off', false],
-    ['no', false],
-    ['true', true],
-    ['1', true],
-    ['on', true],
-    ['yes', true],
-    ['FALSE', true],
-    ['other', true]
-  ])('parses duplicate=%s as %s in URL and body', (value, expected) => {
-    const params = new URLSearchParams({ provider: 'dmhy', duplicate: value });
-    expect(parseURLSearch(params).filter.duplicate).toBe(expected);
-    // HTTP JSON bodies may contain strings even though the SDK accepts booleans.
-    const body = JSON.parse(JSON.stringify({ provider: 'dmhy', duplicate: value }));
-    expect(parseURLSearch(undefined, body).filter.duplicate).toBe(expected);
-  });
-
-  it.each([true, false])('preserves boolean %s through serialization', (duplicate) => {
-    const options = { provider: 'dmhy', duplicate };
-    expect(parseURLSearch(undefined, options).filter).toEqual(options);
-    const params = stringifyURLSearch(options);
-    expect(params.get('duplicate')).toBe(duplicate ? null : 'false');
-    expect(parseURLSearch(params).filter).toEqual(options);
-  });
-
-  it('omits an unspecified duplicate and keeps the provider default', () => {
-    const params = stringifyURLSearch({ provider: 'dmhy' });
-    expect(params.has('duplicate')).toBe(false);
-    expect(parseURLSearch(params).filter.duplicate).toBe(true);
-    expect(parseURLSearch(undefined, { provider: 'dmhy' }).filter.duplicate).toBe(true);
-  });
-
-  it.each(['', 'provider=invalid&'])('requires a valid provider: %s', (prefix) => {
-    expect(
-      parseURLSearch(new URLSearchParams(`${prefix}duplicate=false`)).filter
-    ).not.toHaveProperty('duplicate');
-  });
-
-  it('preserves URL and body precedence for explicit false', () => {
-    expect(
-      parseURLSearch(new URLSearchParams('duplicate=false'), {
-        provider: 'dmhy',
-        duplicate: true
-      }).filter.duplicate
-    ).toBe(false);
-    expect(
-      parseURLSearch(new URLSearchParams('provider=dmhy&duplicate=true'), {
-        duplicate: false
-      }).filter.duplicate
-    ).toBe(false);
-  });
-});
-
 describe('parse url with body', () => {
   it('should work', () => {
     expect(parseURLSearch(new URLSearchParams(), { limit: 20 })).toMatchInlineSnapshot(`
@@ -300,17 +241,17 @@ describe('canonical query round trips', () => {
     }
   );
 
-  it('omits URL defaults while preserving parsed defaults, explicit false and cursors', () => {
+  it('omits URL defaults while preserving provider and cursors', () => {
     const defaults = parseURLSearch(new URLSearchParams('provider=dmhy'));
-    expect(defaults.filter.duplicate).toBe(true);
+    expect(defaults.filter).toEqual({ provider: 'dmhy' });
     expect(stringifyURLSearch({ ...defaults.pagination, ...defaults.filter }).toString()).toBe(
       'provider=dmhy'
     );
-    const custom = { provider: 'dmhy', duplicate: false, cursor: 'opaque', limit: 10 };
+    const custom = { provider: 'dmhy', cursor: 'opaque', limit: 10 };
     const params = stringifyURLSearch(custom);
-    expect(params.toString()).toBe('cursor=opaque&duplicate=false&limit=10&provider=dmhy');
+    expect(params.toString()).toBe('cursor=opaque&limit=10&provider=dmhy');
     expect(parseURLSearch(params)).toEqual({
-      filter: { provider: 'dmhy', duplicate: false },
+      filter: { provider: 'dmhy' },
       pagination: { cursor: 'opaque', limit: 10 }
     });
   });

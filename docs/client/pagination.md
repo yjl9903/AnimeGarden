@@ -44,6 +44,7 @@ URL 查询参数中的 cursor、limit 优先于请求正文。
 资源按 `createdAt DESC, id DESC` 排序，查询范围满足 `indexedAt <= anchor`。
 `indexedAt` 是首次入库时间，anchor 固定本次分页可见的入库范围。
 删除状态、重复关系和筛选字段使用查询时的数据库值。
+全站查询默认排除重复资源；指定单一 provider 时自动包含该来源的重复资源。
 
 时间字段分为：
 

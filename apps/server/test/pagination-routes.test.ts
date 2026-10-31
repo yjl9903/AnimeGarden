@@ -32,7 +32,7 @@ function createPaginationApp() {
   } as unknown as System;
   const query = new QueryManager(system, createConsola({ level: 0 }));
   const find = vi.spyOn(query, 'find');
-  vi.spyOn(query, 'findFromTask').mockResolvedValue([]);
+  const task = vi.spyOn(query, 'findFromTask').mockResolvedValue([]);
   system.modules.resources = { query } as System['modules']['resources'];
   system.modules.collections = new CollectionsModule(system, 'collections');
   vi.spyOn(system.modules.collections.logger, 'info').mockImplementation(() => {});
@@ -46,12 +46,43 @@ function createPaginationApp() {
     c.header('Cache-Control', 'no-store');
     return c.json({ status: 'ERROR', message: response.message }, response.status);
   });
-  return { app, find };
+  return { app, find, task };
 }
 
 afterEach(() => vi.restoreAllMocks());
 
 describe('API cursor response contract', () => {
+  it.each([
+    { path: '/resources', provider: undefined },
+    { path: '/resources?provider=invalid', provider: undefined },
+    { path: '/resources?provider=dmhy', provider: 'dmhy' },
+    { path: '/resources/dmhy', provider: 'dmhy' },
+    { path: '/resources/dmhy?provider=mikan', provider: 'dmhy' },
+    { path: '/resources', body: { provider: 'mikan' }, provider: 'mikan' },
+    { path: '/resources/dmhy', body: { provider: 'mikan' }, provider: 'dmhy' }
+  ])(
+    'passes the final provider to the query layer: $path ($body)',
+    async ({ path, body, provider }) => {
+      const { app, task } = createPaginationApp();
+      const response = await app.request(
+        `http://localhost${path}`,
+        body
+          ? {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body)
+            }
+          : undefined
+      );
+      expect(response.status).toBe(200);
+      expect(task).toHaveBeenCalledWith(expect.objectContaining({ provider }), {
+        anchor: anchor.getTime()
+      });
+      const result = (await response.json()) as Awaited<ReturnType<QueryManager['find']>>;
+      if (provider) expect(result.filter.provider).toBe(provider);
+    }
+  );
+
   it('rejects an undecodable cursor without caching errors', async () => {
     const { app, find } = createPaginationApp();
     const response = await app.request('http://localhost/resources?cursor=garbage');
