@@ -5,7 +5,6 @@ import { ResponseCacheControl } from '~/utils/response';
 import { getFeedURL } from '~/utils';
 import { buildResourcesPageSeo } from '~/pages/resources.($page)/seo';
 import { withoutSiteTitleSuffix } from '~/utils/seo';
-
 import {
   formatFilter,
   formatResources,
@@ -14,19 +13,14 @@ import {
   heading,
   paragraph,
   resolveResourcesFilter,
-  siteOrigin,
   type MarkdownResult
 } from './shared.server';
 
-export async function renderResourcesMarkdown(url: URL, page: number): Promise<MarkdownResult> {
-  const { filter: parsedFilter, pagination } = parseURLSearch(url.searchParams, {
-    pageSize: 80
-  });
+export async function renderResourcesMarkdown(url: URL): Promise<MarkdownResult> {
+  const { filter: parsedFilter } = parseURLSearch(url.searchParams);
   const resolvedFilter = await resolveResourcesFilter({
     ...parsedFilter,
-    ...pagination,
-    page,
-    pageSize: 30
+    limit: 30
   });
   const resp = await fetchResources({
     ...getFetchOptions(),
@@ -48,11 +42,10 @@ export async function renderResourcesMarkdown(url: URL, page: number): Promise<M
     heading(1, withoutSiteTitleSuffix(head.title)) +
     heading(2, '筛选条件') +
     paragraph(formatFilter(resp.filter)) +
-    `当前页：${page}\n\n` +
     `RSS 订阅：${feedURL}\n\n` +
     heading(2, '资源列表') +
     formatResources(resp.resources) +
-    paginationLinks(page, resp.pagination?.complete, search ? `?${search}` : '');
+    (resp.pagination.complete ? '' : '还有更多资源，请查看 HTML 页面继续加载。\n\n');
 
   return { body, cacheControl: ResponseCacheControl.List };
 }
@@ -62,11 +55,4 @@ async function getSubjects(ids: number[]) {
   return Object.fromEntries(
     subjects.flatMap((subject) => (subject ? [[subject.id, subject]] : []))
   );
-}
-
-function paginationLinks(page: number, complete: boolean | undefined, search: string) {
-  const lines = ['\n## 分页\n\n'];
-  if (page > 1) lines.push(`- 上一页：${siteOrigin}/resources/${page - 1}${search}\n`);
-  if (!complete) lines.push(`- 下一页：${siteOrigin}/resources/${page + 1}${search}\n`);
-  return lines.join('');
 }

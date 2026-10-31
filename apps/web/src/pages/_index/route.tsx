@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 
-import type { Resource } from '@animegarden/client';
+import type { CursorPagination, ResolvedFilterOptions, Resource } from '@animegarden/client';
 import { Link } from '@tanstack/react-router';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import { getTrackingError, trackFetchResourcesError } from '~/utils';
+import { ResourcesLoadMoreLink } from '~/components/Resources/load-more';
+import { getTrackingError, trackFetchResourcesError, trackHomeCalendarClick } from '~/utils';
 import { getCalendarSeason } from '~/utils/calendar-season';
-import { getCalendarRouteLink, getResourcesRouteLink } from '~/utils/routes';
+import { getCalendarRouteLink } from '~/utils/routes';
 
 import { Error } from '../resources.($page)/Error';
 import '../anime/anime.css';
@@ -16,6 +17,8 @@ export interface IndexProps {
   data: {
     ok: boolean;
     resources: Resource<{ tracker: true }>[];
+    pagination?: CursorPagination;
+    filter?: ResolvedFilterOptions;
     timestamp?: Date;
     error: any;
   };
@@ -26,7 +29,7 @@ export interface IndexProps {
 }
 
 export default function Index({ data, feedURL, latestSeason, path, renderError }: IndexProps) {
-  const { ok, resources, timestamp, error } = data;
+  const { ok, resources, pagination, filter, timestamp, error } = data;
   const calendarSeason = getCalendarSeason(latestSeason);
 
   useEffect(() => {
@@ -47,6 +50,7 @@ export default function Index({ data, feedURL, latestSeason, path, renderError }
               <Link
                 {...getCalendarRouteLink(latestSeason)}
                 className="text-inherit text-link-active"
+                onClick={() => trackHomeCalendarClick({ season: latestSeason, source: 'title' })}
               >
                 <span
                   className="anime-season-emoji text-2xl font-quicksand font-bold"
@@ -60,7 +64,11 @@ export default function Index({ data, feedURL, latestSeason, path, renderError }
           )}
           <div className="flex flex-wrap items-baseline gap-4">
             {latestSeason && (
-              <Link {...getCalendarRouteLink(latestSeason)} className="text-link text-base">
+              <Link
+                {...getCalendarRouteLink(latestSeason)}
+                className="text-link text-base"
+                onClick={() => trackHomeCalendarClick({ season: latestSeason, source: 'link' })}
+              >
                 → 前往周历
               </Link>
             )}
@@ -70,13 +78,12 @@ export default function Index({ data, feedURL, latestSeason, path, renderError }
           </div>
         </header>
         {ok ? (
-          <Resources
-            resources={resources}
-            page={1}
-            timestamp={new Date(timestamp!)}
-            complete={false}
-            link={(page) => getResourcesRouteLink(page, 'type=动画&type=合集&preset=bangumi')}
-          ></Resources>
+          <>
+            <Resources resources={resources} filter={filter}></Resources>
+            {resources.length > 0 && pagination && !pagination.complete && filter && (
+              <ResourcesLoadMoreLink filter={filter} />
+            )}
+          </>
         ) : (
           <Error
             tracking={{

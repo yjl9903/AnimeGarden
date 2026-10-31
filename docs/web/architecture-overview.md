@@ -1,117 +1,134 @@
-# @animegarden/web 架构总览
+# Web 架构总览
 
-检查日期：2026-07-09
+`apps/web` 是 TanStack Start 前端应用，使用 Hono Node server 托管。
+Web 负责 SSR、hydration、资源浏览、搜索、收藏夹、详情、站点地图、OpenAPI 展示和交互埋点；
+资源 API 与 RSS 由独立 server/feed 服务提供。
 
-## 定位
+## 运行入口
 
-`apps/web` 是 AnimeGarden 的 TanStack Start 前端应用，外层保留一层 Hono Node server。它负责页面 SSR / hydration、资源浏览和筛选、搜索、收藏夹、详情页、sitemap 输出、OpenAPI 文档页和前端埋点。
+| 入口 | 位置 | 职责 |
+| --- | --- | --- |
+| Node server | `server.mjs` | 静态资源、health、转发页面请求到 Start |
+| Router | `src/router.tsx`、`src/routes/` | 文件路由、loader、head 与导航 |
+| 全局中间件 | `src/start.ts` | Markdown 协商、非 HTML 响应 ETag |
+| 页面组件 | `src/pages/` | 渲染页面和局部交互 |
+| Vite | `vite.config.ts` | Start、React、UnoCSS、Icons、Info、Analytics 和 Inline |
 
-Web 不再提供 `/api/*`、`/feed.xml` 或 `/collection/:hash/feed.xml` 代理；API 读写和 feed 输出由独立 server/feed 服务承担，前端数据读取和 RSS 链接继续通过 `@animegarden/client` / `FEED_HOST` 指向 public API 域名。
+部署使用 Node/Fly。Vite 通过 `resolve.tsconfigPaths: true` 解析 TypeScript 路径，
+配置目录以 `import.meta.dirname` 定位。
 
-## 运行形态
+## 请求链路
 
-| 入口           | 代码                                                    | 职责                                                                                          |
-| -------------- | ------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| TanStack Start | `src/router.tsx`、`src/routes/`、`src/routeTree.gen.ts` | 文件路由、SSR、head/meta、loader 和 hydration                                                 |
-| Node server    | `server.mjs`                                            | Fly / Node 环境运行 Hono，托管静态资源、保留 `/health`，并把页面请求交给 Start                |
-| 页面组件       | `src/pages/`                                            | 纯前端页面渲染和页面局部交互；数据由 `routes/` 透传为 props                                   |
+1. Hono 处理静态资源和 `/health`，`/api/*` 返回 404。
+2. 其他请求进入 TanStack Start。
+3. 页面 loader 使用 Query options 获取数据。
+4. Query 通过 `createServerFn()` 调用 `@animegarden/client` 或服务端 Bangumi 数据源。
+5. Route 组装 props，Page 渲染视图；交互页面继续订阅相同 Query。
 
-`vite.config.ts` 使用 `tanstackStart()`、React Vite plugin、UnoCSS、Icons、Info、Analytics 和 Inline。TypeScript 路径映射通过 Vite 原生 `resolve.tsconfigPaths: true` 解析；配置内目录路径使用 `import.meta.dirname`，兼容 native config loader。Cloudflare Worker 构建入口、wrangler 配置和 Worker 静态资源适配已移除，Web 只支持 Node/Fly 部署。
+SSR、客户端导航和预加载都可以执行 loader。
+Node-only 依赖、私密环境变量和后端访问封装在 server function 中。
+API 与 feed 地址通过 `WEB_SERVER_URL`、`FEED_HOST` 和 client 配置确定。
 
-`src/start.ts` 注册 TanStack Start 全局 request middleware。普通浏览器请求继续走 SSR；`GET` / `HEAD` 且 `Accept: text/markdown` 的已支持页面路径会在进入 HTML SSR 前由 `src/markdown/` 返回应用侧拼装的 Markdown，避免 TanStack Start 的 HTML-only Accept 检查把 agent 请求返回 500。Markdown negotiation 支持 `/skills`、`/anime` 和 `/calendar/:season` 等已登记页面。非 HTML 的 `router` 类型 `GET` 200 响应会统一生成强 ETag，并在 `If-None-Match` 命中时返回 304；HTML 页面和 `serverFn` 不进入这层 ETag 处理，避免干扰 SSR streaming、TanStack RPC、CSRF 和序列化响应。Sitemap server routes 另外提供显式 `HEAD` handler，用 GET 同源内容生成一致的 ETag / 304。`/llms.txt`、`/openapi.json`、`/.well-known/*` 等 handler route 不进入 Markdown negotiation，但仍属于非 HTML GET 的 ETag 覆盖范围。
+## 状态与缓存
 
-## 请求与数据流
+| 状态 | 归属 |
+| --- | --- |
+| URL、params、search、页面结构 | TanStack Router |
+| 资源、版本、详情、Subject、周历和收藏夹响应 | TanStack Query |
+| 主题、本地收藏、搜索历史、字幕组偏好与侧栏状态 | TanStack Store |
 
-浏览器请求先进入 Hono 外壳：
+Router 为每个实例创建 QueryClient 和 UI stores，SSR 按请求隔离。
+普通命令式查询使用 `queryClient.query()`，无限列表使用 `queryClient.infiniteQuery()`。
+fresh 缓存复用，stale 或 invalidated 时查询新结果；聚合查询的子项遵循相同规则。
 
-1. `/health` 直接返回健康状态。
-2. `/api/*` 明确返回 404，避免 Web 被当作 API 代理。
-3. `/.well-known/mcp/server-card.json` 和 `/llms.txt` 由 TanStack Start route 返回 agent / LLM 发现信息。
-4. `/sitemap-index.xml` 和 `/sitemap-*.xml` 由 TanStack Start server route 生成，必要时请求 server/API 后端获取 teams、subjects、detail URL。
-5. 其他请求交给 TanStack Start server entry。
+资源、版本、收藏夹的 staleTime 为 1 分钟，详情、Subject、周历为 1 小时。
+HTTP 缓存与 Query 新鲜度分别配置，详见[性能与缓存](./performance.md)。
 
-页面 loader 通过 `src/query/` 的 TanStack Query options 预取数据，query 函数通过 TanStack Start `createServerFn()` 调用 `@animegarden/client`。远端资源数据不放入 TanStack Store；Store 只承载主题、收藏夹、搜索历史、fansub 偏好和 sidebar/UI 状态，并由 `createRouter()` 为每个 router 实例创建。
+## 资源页面
 
-GET server function 和 SSR loader 的公开缓存头统一由 `src/utils/response.ts` 设置：timestamp、资源列表和 collection 页面使用 `public, max-age=30, s-maxage=60`，详情页使用 `public, max-age=3600, s-maxage=86400`。上游失败或 `ok: false` 时返回错误状态并设置 `Cache-Control: no-store`，避免浏览器或 CDN 缓存错误响应。
+资源页通过 `useResourceList()` 使用原生无限查询。
+共享 `pages: 1` 配置使刷新替换为新首批，续页沿 nextCursor 追加。
+首次失败仍保持查询订阅，后续刷新可以恢复页面。
 
-资源列表 HTML 路由在查询前校验归一化后的页码必须是安全正整数。`/resources/magnet:`、`/resources/NaN`、无穷大、超过安全整数范围或非正的页码均返回共享 404 页面，带 `Cache-Control: no-store` 和 `noindex`，不输出 canonical，也不查询资源、周历或 Subject。保留小数向下取整，但取整后不大于 0 的页码同样返回 404，不再跳转第 1 页。这修复了 #2734 中非法路径返回 200 和生成 `/resources/NaN` canonical 的问题；异常磁力路径的流量来源及 Umami 过滤另行排查。
+全局已知版本保存在 timestamp Query，前台每 60 秒旁路刷新。
+资源请求开始时同步读取已知版本，编码为无位置 cursor；未知时由服务端选择版本。
+版本及列表刷新规则见[资源查询与分页](./resources-pagination.md)。
 
-Bangumi 数据不应进入客户端运行时依赖；页面通过 `src/query/subject.ts` 的 TanStack Query options 和 `createServerFn()` 按需查询 subject、calendar 和标题搜索。资料转换、封面与缓存规则统一见 [动态番剧资料与缓存](../server/subject-data-source.md)。
+| 页面 | 展示方式 |
+| --- | --- |
+| 首页 | 单批资源预览 |
+| `/resources` | 筛选结果与无限滚动 |
+| `/subject/:subject` | 单批最多 1000 条，按字幕组或发布者分组 |
+| `/collection/:hash` | 每个筛选项最多 100 条，按分组展示 |
+| `/iframe` | loader 按 URL limit 查询后静态展示 |
 
-### 动画周历 Calendar 语义
+首页和收藏夹仅在有更多结果时显示右对齐的“→ 全部资源”。
+Subject 的分组标题携带相应筛选条件进入资源列表。
+iframe 保留 className/style，limit 变化时重新加载，并停用全局版本轮询。
 
-周历左侧星期目录仅在视口宽度达到 1024px 时显示，使用桌面布局的外侧留白；更窄的视口隐藏目录，避免覆盖海报，番剧网格保持原有响应式布局。
+站内资源链接使用 `Link` 和 `getResourcesRouteLink()`，链接与 canonical 只携带筛选条件。
+旧 `/resources/:page` 在 HTML、Markdown 下均以 308 跳转到 `/resources`；
+旧 `/subject/:subject/:page` 在数据加载前以 308 跳转到 Subject 主页，保留查询参数。
 
-`fetchCalendar({ seasons: [season] })` 从 `bgm.animes.garden/calendar` 读取七天的 `calendar` 和独立的 `web` 数组。服务端将 WEB 作为内部周历数组的第八组传递；页面仅轮转前七组，固定在末尾展示「WEB」，复用星期分区的卡片、封面/国创过滤和日期排序。目录和 Markdown 输出也使用 WEB 标签；默认 `/anime` 与指定季度页面共享此行为。WEB 分类直接使用上游当季名单，不按星期或集数推断，也不依赖 `bgmd/full` 静态快照。
+页面宽度和外侧留白由 Layout 管理。收藏夹等无外框资源分组直接使用内容宽度，
+标题沿用首页的响应式左缩进，分组间距沿用 Subject 页。
 
-`bgmx` 返回的 `Calendar` 列表是周历索引，核心字段包括 `season`、`is_active` 和 `updated_at`。`season` 使用 `YYYY-MM` 表示季度月份，例如 `2026-07` 表示 2026 年夏季周历。
+## Bangumi 与周历
 
-`is_active` 仅表示“当前默认正在播出中的周历”，用于 `/anime` 默认入口和 `getLatestCalendar()` 选择当前季度。它不是数据有效性、发布状态或历史可见性标记。`getCalendars()` 返回的每一个 calendar 都应视为有效周历，并出现在年份/季度下拉列表、`/calendar/:season` 直达页面、`/sitemap-calendar.xml` 和 `/calendar/:season` Markdown 输出中。
+Bangumi 数据由服务端按需查询 bgmx，页面经 `src/query/subject.ts` 读取，
+资料转换和缓存规则见[Subject 数据源](../server/subject-data-source.md)。
 
-如果请求的 `season` 不存在于 `getCalendars()` 返回值中，周历页面和 Markdown 输出应返回 404 或 no-store 错误响应。若 calendar 数据源本身请求失败，应按上游错误处理，不用 `is_active` 兜底隐藏其他季度。
+周历数据包括七天 calendar 和独立 web 数组。内部将 WEB 作为第八组，
+页面轮转前七组后固定展示 WEB；星期目录与 Markdown 使用相同分类。
+桌面星期目录在视口宽度达到 1024px 时显示。
 
-## 代码逻辑分类
+Calendar 的 season 为季度月份 `YYYY-MM`，is_active 用于默认季度选择。
+`getCalendars()` 返回的所有季度都进入季度菜单、直达页面、站点地图和 Markdown。
+不存在的季度返回 404；数据源失败按上游错误处理。
 
-| 目录              | 主要职责                                                                                                                         |
-| ----------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| `src/routes/`     | TanStack file routes；定义 `createFileRoute`、loader/head、URL/params/search 归一化，并用 `Route.useLoaderData()` 组装页面 props |
-| `src/pages/`      | 纯前端页面渲染和页面局部组件；不导出 loader/head，也不直接读取 TanStack route loader 数据                                        |
-| `src/layouts/`    | 全局布局、Header、Footer、Search、Sidebar、Theme、Loading                                                                        |
-| `src/components/` | 可复用 UI 和业务组件，资源表格在 `components/Resources/`                                                                         |
-| `src/query/`      | TanStack Query options、mutation options 和对应 server functions；封装 Web 到后端 API 的调用边界                                 |
-| `src/stores/`     | 基于 TanStack Store 的本地 UI 状态 factory：收藏夹、搜索、主题、字幕组偏好、sidebar                                              |
-| `src/utils/`      | URL、canonical、日期、错误、埋点、subject、代码生成等工具                                                                        |
-| `vite.config.ts`  | Vite / TanStack Start 构建配置、环境变量默认值、插件配置                                                                          |
-| `public/`         | favicon、PWA 和公开静态资源                                                                                                      |
+## 内容输出与发现
 
-全站图标声明集中在 `src/routes/__root.tsx`。搜索引擎和传统浏览器使用 64×64
-ICO/PNG，现代浏览器可使用可缩放 SVG，Apple 设备使用 180×180 touch icon；对应文件统一放在
-`public/`，图标 URL 应保持稳定，避免搜索引擎频繁重新抓取。
+| 内容 | 入口与规则 |
+| --- | --- |
+| HTML | TanStack Start SSR 与 hydration |
+| Markdown | 支持的页面在 GET/HEAD 且 Accept 为 text/markdown 时，由 `src/markdown/` 输出 |
+| Sitemap | `src/sitemap/` 与 sitemap server routes，调用后端内部 sitemap API |
+| OpenAPI | `/openapi.json` 与 `/docs/api` |
+| Agent 发现 | `/llms.txt`、`/.well-known/*` |
+| Skill 文件 | 构建时复制到 `/.well-known/agent-skills/animegarden/`，生成内容摘要 index.json |
 
-## 主要页面分组
+非 HTML 的 router GET 200 响应生成强 ETag，处理 If-None-Match；
+Sitemap HEAD 与 GET 共用内容来源。HTML streaming 和 server function 使用各自协议。
+Skill Markdown 文件由 Node server 直接以 `text/markdown; charset=utf-8` 返回。
 
-| URL                              | Route module                                    | Page                                           |
-| -------------------------------- | ----------------------------------------------- | ---------------------------------------------- |
-| `/`                              | `routes/index.tsx`                              | `pages/_index/route.tsx`                       |
-| `/resources`、`/resources/:page` | `routes/resources/`                             | `pages/resources.($page)/route.tsx`            |
-| `/detail/:provider/:providerId`  | `routes/detail/$provider/$providerId/route.tsx` | `pages/detail.$provider.$providerId/route.tsx` |
-| `/subject/:subject`              | `routes/subject/$subject/route.tsx`             | `pages/subject.$subject.($page)/route.tsx`     |
-| `/collection/:hash`              | `routes/collection/$hash/route.tsx`             | `pages/collection.$hash/route.tsx`             |
-| `/anime`                         | `routes/anime/route.tsx`                        | 重定向到当前 active `/calendar/:season`        |
-| `/calendar/:season`              | `routes/calendar/$season.tsx`                   | `pages/anime/route.tsx`                        |
-| `/docs/api`                      | `routes/docs/api/route.tsx`                     | `pages/docs.api/route.tsx`                     |
-| `/skills`                        | `routes/skills.tsx`                            | `pages/skills/route.tsx`                       |
-| `/iframe`                        | `routes/iframe.tsx`                             | `pages/iframe/route.tsx`                       |
+## Skills 与引导
 
-## 修改入口建议
+`/skills` 复用 Layout、搜索、侧栏和主题，正文包括直接使用、安装 Skill、MCP 和插件。
+HTML 与 Markdown 共用 `src/pages/skills/content.ts` 中的提示词、命令和静态示例。
+示例表格的播放、下载沿用资源组件的入口。
 
-`/skills` 是 Agent Skills onboarding 页面，复用全站 Layout、搜索、收藏夹侧栏与主题。正文为静态内容，不依赖资源 API 成功返回；全局导航和页脚仍使用现有查询。使用方式分为「直接使用」「安装 Skill」「安装 MCP」和「安装插件」四个同级章节：Skill 可通过 skills CLI 本地安装，也可将包含本站 `/.well-known/agent-skills/animegarden/SKILL.md` 地址的提示词交给支持网页读取的 Agent 直接使用；插件提供 Codex 和 Claude Code 安装命令，与仓库 README 同步维护。Skill 的「直接使用」与「安装 Skill」以两个独立代码块同时展示，直接使用和首屏复制共享带 Skill Markdown 链接的提示词；MCP 和插件客户端保留独立的紧凑标签切换。MCP 章节提供 Codex 和 Claude Code 的 HTTP 服务添加命令，端点为 `https://api.animes.garden/mcp`，Claude Code 使用用户级配置；HTML 和 Markdown 响应共用命令定义。代码块共享渲染和复制按钮。紧挨「直接使用」标题及各示例复制按钮旁的 `OpenInChat` 下拉提供 ChatGPT、Codex、Claude、Cursor，将完整 Skill prompt 通过 URLSearchParams 编码传入。ChatGPT 使用 `surface=work` 打开 Work 模式，Codex 使用 `codex://new?prompt=…` 唤起桌面端并预填新会话；Claude 和 Cursor 保留网页入口。保留复制兜底。DeepSeek、豆包、千问、Kimi、智谱清言、MiniMax（国内站）使用「复制并打开」入口：先复制完整 Skill prompt，再导航到应用；复制失败时不导航并提示手动复制，弹窗被阻止时在当前标签页打开。千问直达 `https://www.qianwen.com/chat/workbench`，默认进入「工作」模式。平台 Skill 地址覆盖集中维护在 `src/components/Skills/chat-apps.ts` 的 `chatAppSkillURLs`：元宝因输出结果不稳定暂时从菜单隐藏，保留平台与 Skill 地址配置以便恢复。DeepSeek 和元宝的配置使用 GitHub 文件页面 `https://github.com/yjl9903/AnimeGarden/blob/main/skills/animegarden/SKILL.md`，智谱清言使用 GitHub raw 地址 `https://raw.githubusercontent.com/yjl9903/AnimeGarden/main/skills/animegarden/SKILL.md`，其余平台使用本站部署地址。生成应用入口时先替换提示词中的 AnimeGarden Skill 链接，再用于 URL 预填或剪贴板复制；普通复制按钮仍使用本站地址。应用菜单高度受当前视口可用空间约束，超出时可滚动。Markdown 响应保留提示词和安装命令，不展示聊天应用打开链接。页脚将原 Agent Skills 与 MCP 入口合并为「Skills / MCP」，指向此页。页面支持复制命令和提示词，不展示常见问题；首屏使用无外框的 Codex 风格静态对话展示示例提示词、始终展开的静态搜索记录与结果表格，不展示应用标题栏或输入框。对话的中性色、字号和间距参照维护者提供的 Codex 截图；示例统一使用上伊那牡丹；prompt 引用和搜索记录复用网站 favicon。表格为站内查询并核对详情所得的第一话固定样例，表格按字幕组、规格、大小和播放 / 下载分列；字幕组链接进入 detail，规格从真实标题及文件列表提取，播放复用 `getKeepShareURL` 跳转 KeepShare，下载使用磁力链接，不在页面加载时实时搜索。复制后的提示词由用户在 Agent 中执行。
+`OpenInChat` 提供应用打开与“复制并打开”两类入口，
+平台地址和 Skill URL 覆盖由 `src/components/Skills/chat-apps.ts` 管理。
+链接参数使用 URLSearchParams 编码，复制成功后才执行复制型跳转。
 
-- 改页面数据加载、head 或 canonical：先看 `src/routes/**`，页面组件只接收 route 传入的 props。
-- 改资源表格或分页：先看 `src/components/Resources/` 和 `src/pages/resources.($page)/`。
-- 改搜索体验：先看 `src/layouts/Search/`、`src/stores/search.ts`。
-- 改收藏夹：先看 `src/layouts/Sidebar/`、`src/stores/collection.ts`、`src/pages/collection.$hash/route.tsx`。
-- 改动画周历：先看 `src/routes/anime/route.tsx`、`src/routes/calendar/$season.tsx`、`src/pages/anime/route.tsx` 和 `src/query/subject.ts`；`is_active` 只用于默认季度选择，不能用来过滤历史周历。
-- 改部署：先看 `server.mjs`、`vite.config.ts` 和 Fly/Docker 配置；改 feed 链接：先看 `src/utils/url.ts`；改 sitemap：先看 `src/sitemap/index.server.ts` 和 `src/routes/sitemap-*.ts`。
+首页保留 Skills/MCP 入口。`SkillsOnboarding` 使用 localStorage 限制累计展示两次、
+sessionStorage 限制同一标签页会话展示一次；首次进入 Skills 页时跳过引导，
+点击发送入口后停止提示。提示词组件与 Skills 页共用。
+发布与插件维护见[集成文档](../integrations/README.md)。
 
-首页新番标题行中，「→ 前往周历」后紧接常驻的「→ 使用 Skills / MCP」入口，指向 `/skills`，不依赖新番季度数据或弹窗展示次数。全局 onboarding 组件与展示状态逻辑位于 `src/layouts/Onboarding/`。`SkillsOnboarding` 在右下角展示带 New 标签的「把 Anime Garden 带进你的 AI 助手」标题，以及静态聊天输入框；输入框和 Skills 页复用 `src/components/Skills/SkillPrompt.tsx` 组件，统一图标、链接、字体与基线，操作区仅保留发送按钮；圆形发送按钮引导进入 `/skills`。所有环境统一通过 localStorage 累计最多展示两次，sessionStorage 限制同一标签页会话只展示一次；首次进入 `/skills` 不展示，点击发送按钮后停止后续提示，存储不可用时不展示。
+## 代码导航
 
-## Route / Page 边界
+| 目录 | 职责 |
+| --- | --- |
+| `src/routes/` | loader、head、URL 归一化、redirect 和页面数据订阅 |
+| `src/pages/` | 页面渲染和局部组件，以 props 接收数据 |
+| `src/layouts/` | Layout、Header、Footer、Search、Sidebar、Theme、Loading |
+| `src/components/` | 通用 UI、资源表格、滚动哨兵、Skills 组件 |
+| `src/query/` | Query options、mutation 和 server functions |
+| `src/stores/` | 本地 UI 状态 |
+| `src/markdown/`、`src/sitemap/` | Markdown 与站点地图 |
+| `src/utils/` | URL、canonical、日期、错误、埋点和代码生成 |
+| `public/` | favicon、PWA 和公开静态资源 |
 
-资源列表 HTML 路由如果收到后端深分页拒绝响应，会返回共享 404 页面，带 `Cache-Control: no-store` 和 `noindex`，不输出 canonical，不再跳转到周历。其他上游错误仍返回 500。
-
-`src/routes/**` 是 TanStack Start 原生边界。每个页面 route 应在这里声明 loader、head、params/search 解析、redirect 和 canonical 等 SSR 相关逻辑；组件内部使用对应的 `Route.useLoaderData()`、`Route.useParams()`、`useLocation()` 等 route API 组装出稳定 props，再传给 `src/pages/**`。
-
-loader 是 route 的数据入口，但不是 server-only 边界：SSR 首次渲染会在服务端执行，客户端导航、预加载和缓存失效时也可能从浏览器侧触发。需要使用 Node-only 依赖、私密环境变量或只应在服务端运行的逻辑时，应包进 TanStack Start `createServerFn()`，再由 loader 调用。
-
-`src/pages/**` 只负责浏览器侧页面展示、局部交互和组合业务组件。页面文件不再导出 loader/head/meta，不直接调用 `useLoaderData()`，也不承担 URL 到数据模型的转换；需要的数据都通过 route props 传入。
-
-### Skill 文件发布
-
-`vite.config.ts` 在构建时将 `skills/animegarden/` 整个目录复制到 `/.well-known/agent-skills/animegarden/`，并生成带内容摘要的 `index.json`。页面直接使用提示词、示例的普通复制和 onboarding 默认引用 `https://animes.garden/.well-known/agent-skills/animegarden/SKILL.md`，相对引用文件可在同站读取。`server.mjs` 将已发布的 `.md` 文件以 `text/markdown; charset=utf-8` 返回，GET 和 HEAD 均适用，无需额外 Accept 请求头；Skill 内容更新随 Web 部署生效。
-
-### Skills Markdown 响应
-
-`GET /skills` 或 `HEAD /skills` 携带 `Accept: text/markdown` 时，由 `src/markdown/skills.server.ts` 返回 Markdown；普通浏览器继续返回 HTML。`/skills/` 也支持内容协商。Markdown 包含直接使用提示词、Skill 安装命令、两个客户端的插件安装命令、带 Skill 链接的示例提示词，以及明确标注为静态的资源示例表格；详情和播放使用绝对链接，下载保留磁力链接。
-
-HTML 与 Markdown 共用 `src/pages/skills/content.ts` 的元信息、安装命令、提示词和资源数据，不依赖实时资源查询。响应沿用 `Vary: Accept`、`x-markdown-tokens`、Docs 缓存策略以及全局 GET ETag；HEAD 只返回响应头。
+页面图标统一在 `src/routes/__root.tsx` 声明，资源位于 public。
+交互事件见[Umami 契约](./umami-tracking.md)，搜索引擎规则见[SEO 方案](./google-search-seo-plan.md)。

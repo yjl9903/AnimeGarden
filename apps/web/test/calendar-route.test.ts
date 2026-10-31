@@ -18,11 +18,12 @@ vi.mock('~/utils/response', async (importOriginal) => ({
 }));
 
 import { loader } from '../src/routes/calendar/$season';
+import { ResponseStaleTime } from '../src/utils/response';
 
 describe('calendar season route loader', () => {
   it('loads historical calendar seasons', async () => {
     const queryClient = {
-      ensureQueryData: vi.fn(async (options: { queryKey: readonly unknown[] }) => {
+      query: vi.fn(async (options: { queryKey: readonly unknown[]; staleTime?: unknown }) => {
         if (options.queryKey[1] === 'timestamp') {
           return { ok: true, timestamp: new Date('2026-07-01T00:00:00.000Z') };
         }
@@ -56,12 +57,17 @@ describe('calendar season route loader', () => {
       season: '2026-10'
     });
     expect(setErrorResponse).not.toHaveBeenCalled();
-    expect(queryClient.ensureQueryData).toHaveBeenCalledTimes(3);
+    expect(queryClient.query).toHaveBeenCalledTimes(3);
+    expect(queryClient.query.mock.calls.map(([options]) => options.staleTime)).toEqual([
+      ResponseStaleTime.List,
+      ResponseStaleTime.Calendar,
+      ResponseStaleTime.Calendar
+    ]);
   });
 
   it('throws not found for an unavailable calendar season', async () => {
     const queryClient = {
-      ensureQueryData: vi.fn(async (options: { queryKey: readonly unknown[] }) => {
+      query: vi.fn(async (options: { queryKey: readonly unknown[] }) => {
         if (options.queryKey[1] === 'timestamp') {
           return { ok: true, timestamp: new Date('2026-07-01T00:00:00.000Z') };
         }

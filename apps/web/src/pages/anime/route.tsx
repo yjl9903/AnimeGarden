@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger
 } from '~/components/ui/dropdown-menu';
 import Layout from '~/layouts/Layout';
-import { trackAnimeCalendarClick } from '~/utils';
+import { trackAnimeCalendarClick, trackAnimeSeasonChange } from '~/utils';
 import { getCalendar } from '~/utils/calendar';
 import { CalendarSeasonMonths, getCalendarSeason } from '~/utils/calendar-season';
 import { getSubjectDisplayName, getSubjectRouteLink, type WebBgmSubject } from '~/utils/subject';
@@ -48,7 +48,7 @@ export default function Index({
         CalendarSeasonMonths.indexOf(left.month) - CalendarSeasonMonths.indexOf(right.month)
     );
 
-  const updateSeason = (year: string, month: number) => {
+  const updateSeason = (year: string, month: number, source: 'year' | 'season') => {
     const candidates = calendars
       .map((calendar) => getCalendarSeason(calendar.season))
       .filter((calendar) => calendar.year === year)
@@ -61,7 +61,14 @@ export default function Index({
       [...candidates].reverse().find((calendar) => calendar.month <= month)?.season ??
       candidates[0]?.season;
 
-    if (nextSeason) onSeasonChange(nextSeason);
+    if (nextSeason && nextSeason !== selectedSeasonId) {
+      trackAnimeSeasonChange({
+        fromSeason: selectedSeasonId,
+        toSeason: nextSeason,
+        source
+      });
+      onSeasonChange(nextSeason);
+    }
   };
 
   useEffect(() => {
@@ -137,7 +144,7 @@ export default function Index({
               >
                 <DropdownMenuRadioGroup
                   value={selectedSeason.year}
-                  onValueChange={(nextYear) => updateSeason(nextYear, selectedSeason.month)}
+                  onValueChange={(nextYear) => updateSeason(nextYear, selectedSeason.month, 'year')}
                 >
                   {years.map((year) => (
                     <DropdownMenuRadioItem
@@ -177,7 +184,7 @@ export default function Index({
                 <DropdownMenuRadioGroup
                   value={String(selectedSeason.month)}
                   onValueChange={(nextMonth) =>
-                    updateSeason(selectedSeason.year, Number(nextMonth))
+                    updateSeason(selectedSeason.year, Number(nextMonth), 'season')
                   }
                 >
                   {seasonOptions.map((option) => (

@@ -30,8 +30,7 @@ POST http://0.0.0.0:8080/resources
 Content-Type: application/json
 
 {
-  "page": 1,
-  "pageSize": 80,
+  "limit": 80,
   "types": ["动画", "合集"],
   "preset": "bangumi"
 }
@@ -41,8 +40,7 @@ POST http://0.0.0.0:8080/resources
 Content-Type: application/json
 
 {
-  "page": 1,
-  "pageSize": 80,
+  "limit": 80,
   "fansub": "ANi"
 }
 
@@ -146,7 +144,7 @@ GET http://localhost:5173/subject/377130
 Accept: text/markdown
 
 ### Markdown: /resources
-GET http://localhost:5173/resources/1?type=%E5%8A%A8%E7%94%BB&preset=bangumi
+GET http://localhost:5173/resources?type=%E5%8A%A8%E7%94%BB&preset=bangumi
 Accept: text/markdown
 
 ### Markdown: /detail

@@ -70,7 +70,7 @@ async function getSitemapIndexUrls() {
 
 /** Builds a stable, correctly encoded resources landing-page URL. */
 function getResourcesUrl(params: Record<string, string>) {
-  const url = new URL('/resources/1', SITE);
+  const url = new URL('/resources', SITE);
   for (const [name, value] of Object.entries(params)) url.searchParams.set(name, value);
   return url.toString();
 }

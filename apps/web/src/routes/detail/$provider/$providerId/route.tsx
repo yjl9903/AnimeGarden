@@ -20,13 +20,12 @@ export const loader = async ({
   const { provider, providerId } = params;
   if (provider && providerId && SupportProviders.includes(provider)) {
     const [data] = await Promise.all([
-      context.queryClient.ensureQueryData(resourceDetailQueryOptions(provider, providerId)),
-      context.queryClient.ensureQueryData(calendarQueryOptions())
+      context.queryClient.query(resourceDetailQueryOptions(provider, providerId)),
+      context.queryClient.query(calendarQueryOptions())
     ]);
     if (data?.ok && data?.resource) {
       const subject = data.resource.subjectId
-        ? (await context.queryClient.ensureQueryData(subjectQueryOptions(data.resource.subjectId)))
-            .subject
+        ? (await context.queryClient.query(subjectQueryOptions(data.resource.subjectId))).subject
         : undefined;
 
       await setCacheControl(ResponseCacheControl.Detail);

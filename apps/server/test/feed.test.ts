@@ -3,6 +3,7 @@ import { XMLParser, XMLValidator } from 'fast-xml-parser';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ResourcesSlowQueryBusyError, ResourcesSlowQueryTimeoutError } from '../src/error';
+import { encodeResourcesCursor } from '@animegarden/shared';
 import { defineFeedRoutes } from '../src/server/routes/feed';
 import { defineResourcesRoutes } from '../src/server/routes/resources';
 import type { AppEnv } from '../src/server/utils/hono';
@@ -21,6 +22,7 @@ function bindSlowQueryErrorHandler(app: Hono<AppEnv>) {
         return c.body(getResourcesQueryErrorXml(queryError.message), queryError.status);
       }
 
+      c.res.headers.set('Cache-Control', 'no-store');
       return c.json(
         {
           status: 'ERROR',
@@ -40,6 +42,9 @@ function createSystem(error: Error) {
       site: 'animes.garden'
     },
     modules: {
+      providers: {
+        timestamp: new Date('2026-07-11T08:00:00.000Z')
+      },
       resources: {
         query: {
           find: vi.fn().mockRejectedValue(error)
@@ -76,6 +81,7 @@ function createResourcesAppWithFind(find: ReturnType<typeof vi.fn>) {
   const app = new Hono<AppEnv>();
   const sys = {
     modules: {
+      providers: { timestamp: new Date('2026-07-11T08:00:00.000Z') },
       resources: {
         query: {
           find
@@ -110,6 +116,7 @@ function createSuccessfulFeedApp(sizeInBytes: number, subjectId?: number | null,
       site: 'animes.garden'
     },
     modules: {
+      providers: { timestamp: new Date('2026-08-19T00:00:00Z') },
       resources: {
         query: {
           find: vi.fn().mockResolvedValue({ resources: [resource] })
@@ -215,6 +222,23 @@ describe.each(['/feed.xml', '/collection/test/feed.xml'])('feed Subject extensio
 });
 
 describe('server slow query errors', () => {
+  it('rejects a malformed feed cursor before querying and returns an XML error', async () => {
+    const sys = createSystem(new Error('must not query'));
+    const app = new Hono<AppEnv>();
+    defineFeedRoutes(sys, app);
+    bindSlowQueryErrorHandler(app);
+    const cursor = encodeResourcesCursor({
+      anchor: sys.modules.providers.timestamp.getTime() + 1000
+    });
+
+    const response = await app.request(`http://localhost/feed.xml?cursor=${cursor}=`);
+
+    expect(response.status).toBe(400);
+    expect(response.headers.get('content-type')).toContain('application/xml');
+    expect(response.headers.get('cache-control')).toBe('no-store');
+    expect(sys.modules.resources.query.find).not.toHaveBeenCalled();
+  });
+
   it('returns XML 503 when the slow query lane is busy', async () => {
     const app = createFeedApp(new ResourcesSlowQueryBusyError());
 
@@ -244,23 +268,25 @@ describe('server slow query errors', () => {
 
     expect(response.status).toBe(503);
     expect(response.headers.get('content-type')).toContain('application/json');
+    expect(response.headers.get('cache-control')).toBe('no-store');
     await expect(response.json()).resolves.toMatchObject({
       status: 'ERROR',
       message: 'Resources slow database query is busy. Please retry later.'
     });
   });
 
-  it('rejects deep /resources pagination before querying', async () => {
+  it('rejects legacy /resources pagination before querying', async () => {
     const find = vi.fn();
     const app = createResourcesAppWithFind(find);
 
     const response = await app.request('http://localhost/resources?page=101&pageSize=100');
 
     expect(response.status).toBe(400);
+    expect(response.headers.get('cache-control')).toBe('no-store');
     expect(find).not.toHaveBeenCalled();
     await expect(response.json()).resolves.toMatchObject({
       status: 'ERROR',
-      message: 'Resources pagination is too deep. Please keep offset + limit <= 10000.'
+      message: 'page and pageSize are no longer supported.'
     });
   });
 });

@@ -1,8 +1,8 @@
 export { version } from '../package.json';
 
-export const DefaultPageSize = 100;
+export const DefaultResourcesLimit = 30;
 
-export const MaxRequestPageSize = 1000;
+export const MaxResourcesLimit = 1000;
 
 export const DefaultBaseURL = 'https://api.animes.garden/';
 

@@ -1,11 +1,12 @@
-import clsx from 'clsx';
 import { memo } from 'react';
 import { Link } from '@tanstack/react-router';
 
 import type { CollectionData } from '@animegarden/client';
+import { stringifyURLSearch } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import ResourcesTable from '~/components/Resources';
+import { ResourcesLoadMoreLink } from '~/components/Resources/load-more';
 import { useInferCollectionItemName } from '~/layouts/Sidebar/Collection';
 import { getCollectionFeedURL } from '~/utils';
 import { getResourcesRouteLink } from '~/utils/routes';
@@ -28,28 +29,29 @@ export default function Collections({ data }: { data?: CollectionData }) {
   return (
     <Layout timestamp={data.timestamp} feedURL={getCollectionFeedURL(data.hash!)}>
       <div className="w-full pt-13 pb-24">
-        <div className="space-y-8">
+        <div className="flex flex-col gap-12">
           {results.map((item, idx) => (
-            <div key={filters[idx].searchParams} className={clsx('py-4 rounded-md border drop-md')}>
-              <div className="mb-4 px-4 pb-4 border-b">
+            <section key={filters[idx].searchParams}>
+              <div className="mb-4 pb-4 border-b pl-4 lt-sm:pl-2">
                 <h2 className="text-xl font-bold">
                   <Link
-                    {...getResourcesRouteLink(1, filters[idx].searchParams)}
+                    {...getResourcesRouteLink(
+                      item.filter ? stringifyURLSearch(item.filter) : filters[idx].searchParams
+                    )}
                     className="text-link-active"
                   >
                     <CollectionItemTitle item={filters[idx]}></CollectionItemTitle>
                   </Link>
                 </h2>
               </div>
-              <div className="px-4">
-                <ResourcesTable
-                  resources={item.resources}
-                  page={item.pagination.page}
-                  complete={item.pagination.complete}
-                  link={(page) => getResourcesRouteLink(page, filters[idx].searchParams)}
-                ></ResourcesTable>
-              </div>
-            </div>
+              <ResourcesTable
+                resources={item.resources}
+                filter={item.filter ?? filters[idx]}
+              ></ResourcesTable>
+              {!item.pagination.complete && (
+                <ResourcesLoadMoreLink filter={item.filter ?? filters[idx]} />
+              )}
+            </section>
           ))}
         </div>
       </div>

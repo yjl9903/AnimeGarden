@@ -1,6 +1,6 @@
 import type { Context } from 'hono';
 
-import { type ProviderType, SupportProviders, parseURLSearch } from '@animegarden/client';
+import { type ProviderType, SupportProviders } from '@animegarden/client';
 
 import type { System } from '../../system/index.ts';
 
@@ -10,33 +10,23 @@ import { type Provider, ScraperProviders } from '../../providers/index.ts';
 import { defineHandler } from '../utils/hono.ts';
 import { MAX_DETAIL_CACHE_COUNT } from '../constants.ts';
 import { safeEtag as etag } from '../utils/etag.ts';
-import { assertResourcesPagination } from '../utils/resources-query.ts';
+import { parseResourcesQuery } from '../utils/resources-query.ts';
 
 export const defineResourcesRoutes = defineHandler((sys, app) => {
   async function listResources(ctx: Context, sys: System, provider?: ProviderType) {
     const url = new URL(ctx.req.url);
     // sys.logger.info(`Receive search params: ${url.search}`);
 
-    const { pagination, filter } = parseURLSearch(
-      url.searchParams,
-      await ctx.req.json().catch(() => undefined)
-    );
-
-    // Honor the page path param in routes like /resources/:page and /resources/:provider/:page.
-    // Keep the parsed query/body/default page unless the entire path param is decimal digits.
-    const pageParam = ctx.req.param('page');
-    if (pageParam && !/\D/.test(pageParam)) {
-      const page = Number(pageParam);
-      if (Number.isInteger(page) && page >= 1) {
-        pagination.page = page;
-      }
-    }
-
-    assertResourcesPagination(pagination);
+    const body = (await ctx.req.json().catch(() => undefined)) as
+      Record<string, unknown> | undefined;
+    const latest = new Date(sys.modules.providers.timestamp);
+    const { pagination, filter } = parseResourcesQuery(url.searchParams, body);
 
     if (provider) {
       filter.provider = provider;
     }
+
+    ctx.set('responseTimestamp', latest);
 
     const resp = await sys.modules.resources.query.find(filter, pagination);
 
@@ -61,7 +51,14 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
       }
     }
 
-    ctx.res.headers.set('Cache-Control', `public, max-age=${5 * 60}`);
+    ctx.res.headers.set(
+      'Cache-Control',
+      pagination.cursor?.position
+        ? 'public, max-age=1800, stale-while-revalidate=86400'
+        : pagination.cursor
+          ? 'public, max-age=600, stale-while-revalidate=3600'
+          : 'public, max-age=60, stale-while-revalidate=300'
+    );
 
     return ctx.json({
       status: 'OK',
@@ -123,9 +120,6 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
       .all(`/resources/${provider}/`, etag(), (c) => {
         return listResources(c, sys, provider);
       })
-      .all(`/resources/${provider}/:page`, etag(), (c) => {
-        return listResources(c, sys, provider);
-      })
       .get(`/resource/${provider}/:id`, etag(), async (c) => {
         const resp = await findProviderDetail(
           sys,
@@ -155,11 +149,6 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
         return c.json({ ...resp });
       });
   }
-
-  // Register provider routes first so names such as "dmhy" are not consumed as page params.
-  app.all('/resources/:page', etag(), (c) => {
-    return listResources(c, sys);
-  });
 
   app.get('/detail/infohash/:hash', etag(), async (c) => {
     const raw = c.req.param('hash') ?? '';

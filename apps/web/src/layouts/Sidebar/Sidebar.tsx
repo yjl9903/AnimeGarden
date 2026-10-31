@@ -105,7 +105,7 @@ const QuickLinks = memo((props: { collection: Collection }) => {
         </a>
       )}
       <Link
-        {...getResourcesRouteLink(1)}
+        {...getResourcesRouteLink()}
         className={clsx(className, match === 'resources' && activeClassName)}
         resetScroll={false}
       >
@@ -231,7 +231,7 @@ const Collection = memo((props: { collection: Collection<true> }) => {
         </div>
       ) : (
         <Link
-          {...getResourcesRouteLink(1, 'search=上伊那牡丹&type=动画')}
+          {...getResourcesRouteLink('search=上伊那牡丹&type=动画')}
           className="h-[80px] px2 flex items-center justify-center text-base-700 text-link-active"
         >
           <span className="text-sm">收藏一个搜索条件吧</span>

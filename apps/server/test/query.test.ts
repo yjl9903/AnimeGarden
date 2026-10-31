@@ -1,15 +1,25 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { hash } from 'ohash';
+import type { SQLWrapper } from 'drizzle-orm';
+import { PgDialect } from 'drizzle-orm/pg-core';
+import { drizzle } from 'drizzle-orm/pg-proxy';
 
-import { RESOURCES_TASK_PREFETCH_MAX_COUNT } from '../src/constants';
 import { ResourcesSlowQueryBusyError } from '../src/error';
-import { TitlePool } from '../src/resources/pool';
-import { QueryManager, Task } from '../src/resources/query';
+import { QueryManager } from '../src/resources/query';
+import { decodeResourcesCursor } from '@animegarden/shared';
+import { BANGUMI_BANNED_FANSUBS } from '../src/resources/filter';
 
-import type { DatabaseFilterOptions, DatabaseResource } from '../src/resources/types';
+import type { DatabaseResource } from '../src/resources/types';
+
+const anchor = Date.parse('2026-01-02T00:00:00.000Z');
+
+afterEach(() => {
+  vi.useRealTimers();
+  vi.restoreAllMocks();
+});
 
 function createResource(id: number): DatabaseResource {
-  const createdAt = new Date(`2026-01-01T00:00:${String(id % 60).padStart(2, '0')}.000Z`);
+  const createdAt = new Date(anchor - id * 1000);
 
   return {
     id,
@@ -23,6 +33,7 @@ function createResource(id: number): DatabaseResource {
     size: id,
     createdAt,
     fetchedAt: createdAt,
+    indexedAt: createdAt,
     publisherId: 1,
     fansubId: null,
     subjectId: null,
@@ -32,28 +43,10 @@ function createResource(id: number): DatabaseResource {
   };
 }
 
-function createTask(total: number, options: DatabaseFilterOptions = {}) {
-  const findFromRedis = vi.fn(
-    async (_filter: DatabaseFilterOptions, offset: number, limit: number) => {
-      const count = Math.max(0, Math.min(limit, total - offset));
-      return Array.from({ length: count }, (_, index) => createResource(offset + index + 1));
-    }
-  );
-
-  const query = {
-    system: {
-      modules: {}
-    },
-    findFromRedis
-  } as any;
-
-  return {
-    task: new Task(query, 'task', options),
-    findFromRedis
-  };
-}
-
-function createManager(mockPrefetch = true) {
+function createManager(publisherRedis?: {
+  get: ReturnType<typeof vi.fn>;
+  set: ReturnType<typeof vi.fn>;
+}) {
   const logger = {
     withTag: vi.fn(() => logger),
     error: vi.fn(),
@@ -64,334 +57,135 @@ function createManager(mockPrefetch = true) {
   const manager = new QueryManager(
     {
       database: {},
+      publisherRedis: publisherRedis ? { status: 'ready', ...publisherRedis } : undefined,
       slowDatabase: undefined,
       slowQueryConnection: undefined,
       options: {},
-      disposables: [],
       modules: {
         providers: {
           timestamp: new Date('2026-01-01T00:00:00.000Z')
+        },
+        users: {
+          ids: new Map(),
+          getByName: vi.fn(),
+          getById: vi.fn()
+        },
+        teams: {
+          ids: new Map(),
+          getByName: vi.fn(),
+          getById: vi.fn()
         }
       }
     } as any,
     logger as any
   ) as any;
 
-  if (mockPrefetch) manager.findFromRedis = vi.fn(async () => []);
-
-  return {
-    manager,
-    findFromRedis: manager.findFromRedis
-  };
+  return { manager };
 }
 
-afterEach(() => {
-  vi.useRealTimers();
-  vi.restoreAllMocks();
-});
+describe('QueryManager resolved pagination', () => {
+  it.each([1000, 1001])('returns a full 1000-resource batch from %s rows', async (count) => {
+    const { manager } = createManager();
+    const rows = Array.from({ length: count }, (_, index) => createResource(index + 1));
+    vi.spyOn(manager, 'findFromTask').mockResolvedValue(rows);
+    vi.spyOn(manager, 'transform').mockImplementation(async (resource) => resource);
 
-describe.each(['findFromRedis', 'findFromAccurateQuery'] as const)(
-  '%s Redis resilience',
-  (path) => {
-    function setup() {
-      vi.useFakeTimers();
-      const { manager } = createManager(false);
-      const redis = {
-        status: 'ready',
-        get: vi.fn().mockResolvedValue(null),
-        set: vi.fn().mockResolvedValue('OK')
-      };
-      manager.system.publisherRedis = redis;
-      const expected = [createResource(1)];
-      const database = vi.spyOn(manager, 'findFromDatabase').mockResolvedValue(expected);
-      return { manager, redis, database, expected };
+    const result = await manager.find({}, { limit: 1000, cursor: { anchor } });
+    expect(result.resources).toHaveLength(1000);
+    expect(result.resources.at(-1)).toBe(rows[999]);
+    expect(result.pagination.limit).toBe(1000);
+    expect(result.pagination.complete).toBe(count === 1000);
+    if (count === 1000) {
+      expect(result.pagination.nextCursor).toBeNull();
+    } else {
+      expect(decodeResourcesCursor(result.pagination.nextCursor)).toEqual({
+        anchor,
+        position: { createdAt: rows[999].createdAt.getTime(), id: 1000 }
+      });
     }
+  });
 
-    it('uses healthy Redis hits without querying the database', async () => {
-      const { manager, redis, database, expected } = setup();
-      redis.get.mockResolvedValue(JSON.stringify(expected));
-
-      await expect(manager[path]({}, 0, 10)).resolves.toEqual(expected);
-
-      expect(database).not.toHaveBeenCalled();
-      expect(redis.set).not.toHaveBeenCalled();
-      await vi.advanceTimersByTimeAsync(0);
-      expect(vi.getTimerCount()).toBe(0);
+  it('returns the requested numeric anchor on an empty anchor-only batch', async () => {
+    const { manager } = createManager();
+    manager.system.modules.providers.timestamp = new Date(anchor);
+    const oldAnchor = anchor - 1000;
+    const find = vi.spyOn(manager, 'findFromTask').mockResolvedValue([]);
+    const result = await manager.find(
+      {},
+      {
+        cursor: { anchor: oldAnchor },
+        limit: 30
+      }
+    );
+    expect(find).toHaveBeenCalledWith({}, { anchor: oldAnchor });
+    expect(result.pagination).toEqual({
+      anchor: oldAnchor,
+      limit: 30,
+      nextCursor: null,
+      complete: true
     });
+  });
 
-    it('bounds stalled reads, bypasses both paths during cooldown, and retries afterwards', async () => {
-      const { manager, redis, database, expected } = setup();
-      let rejectRead!: (error: Error) => void;
-      redis.get.mockImplementationOnce(
-        () =>
-          new Promise((_resolve, reject) => {
-            rejectRead = reject;
-          })
-      );
+  it('keeps the original anchor after providers advance and uses id to break timestamp ties', async () => {
+    const { manager } = createManager();
+    manager.system.modules.providers.timestamp = new Date(anchor);
+    const first = createResource(3);
+    const second = { ...createResource(2), createdAt: first.createdAt };
+    const last = { ...createResource(1), createdAt: first.createdAt };
+    const find = vi
+      .spyOn(manager, 'findFromCacheOrDatabase')
+      .mockResolvedValueOnce([first, second, last])
+      .mockResolvedValueOnce([last]);
+    vi.spyOn(manager, 'transform').mockImplementation(async (resource) => resource);
 
-      const pending = manager[path]({}, 0, 10);
-      await vi.advanceTimersByTimeAsync(499);
-      expect(database).not.toHaveBeenCalled();
-      await vi.advanceTimersByTimeAsync(1);
-      await expect(pending).resolves.toEqual(expected);
-      expect(redis.set).not.toHaveBeenCalled();
-
-      // A late failure must be consumed without affecting the successful response.
-      rejectRead(new Error('late read failure'));
-      const otherPath = path === 'findFromRedis' ? 'findFromAccurateQuery' : 'findFromRedis';
-      await expect(manager[otherPath]({}, 10, 10)).resolves.toEqual(expected);
-      expect(redis.get).toHaveBeenCalledTimes(1);
-      expect(redis.set).not.toHaveBeenCalled();
-
-      await vi.advanceTimersByTimeAsync(30_000);
-      redis.get.mockResolvedValue(JSON.stringify(expected));
-      await expect(manager[path]({}, 20, 10)).resolves.toEqual(expected);
-      expect(redis.get).toHaveBeenCalledTimes(2);
-      expect(database).toHaveBeenCalledTimes(2);
-      await vi.advanceTimersByTimeAsync(0);
-      expect(vi.getTimerCount()).toBe(0);
-    });
-
-    it('returns database results before a stalled write and bypasses Redis after its timeout', async () => {
-      const { manager, redis, expected } = setup();
-      let rejectWrite!: (error: Error) => void;
-      redis.set.mockImplementationOnce(
-        () =>
-          new Promise((_resolve, reject) => {
-            rejectWrite = reject;
-          })
-      );
-
-      // No timer advancement: returning this result must not wait for SET.
-      await expect(manager[path]({}, 0, 10)).resolves.toEqual(expected);
-      expect(redis.set).toHaveBeenCalledWith(
-        expect.any(String),
-        JSON.stringify(expected),
-        'EX',
-        300
-      );
-
-      await vi.advanceTimersByTimeAsync(500);
-      rejectWrite(new Error('late write failure'));
-      await expect(manager[path]({}, 10, 10)).resolves.toEqual(expected);
-      expect(redis.get).toHaveBeenCalledTimes(1);
-      expect(redis.set).toHaveBeenCalledTimes(1);
-      await vi.advanceTimersByTimeAsync(0);
-      expect(vi.getTimerCount()).toBe(0);
-    });
-
-    it.each(['get', 'set'] as const)(
-      'falls back on %s rejection and skips subsequent cache access',
-      async (command) => {
-        const { manager, redis, expected } = setup();
-        redis[command].mockRejectedValue(new Error('Redis unavailable'));
-
-        await expect(manager[path]({}, 0, 10)).resolves.toEqual(expected);
-        await expect(manager[path]({}, 10, 10)).resolves.toEqual(expected);
-
-        expect(redis.get).toHaveBeenCalledTimes(1);
-        expect(redis.set).toHaveBeenCalledTimes(command === 'set' ? 1 : 0);
-        await vi.advanceTimersByTimeAsync(0);
-        expect(vi.getTimerCount()).toBe(0);
+    const batch = await manager.find({}, { limit: 2 });
+    manager.system.modules.providers.timestamp = new Date(anchor + 1000);
+    const next = await manager.find(
+      {},
+      {
+        cursor: decodeResourcesCursor(batch.pagination.nextCursor),
+        limit: 2
       }
     );
 
-    it('skips disconnected Redis and uses it once ready', async () => {
-      const { manager, redis, expected } = setup();
-      redis.status = 'reconnecting';
-      await expect(manager[path]({}, 0, 10)).resolves.toEqual(expected);
-      expect(redis.get).not.toHaveBeenCalled();
-      expect(redis.set).not.toHaveBeenCalled();
-
-      redis.status = 'ready';
-      await expect(manager[path]({}, 10, 10)).resolves.toEqual(expected);
-      expect(redis.get).toHaveBeenCalledTimes(1);
-      expect(redis.set).toHaveBeenCalledTimes(1);
-    });
-  }
-);
-
-describe('query cache garbage collection', () => {
-  it('keeps scheduling task GC after a failed run', async () => {
-    vi.useFakeTimers();
-    const { manager } = createManager();
-    (manager.system as any).options.cron = true;
-    (manager.findFromRedis as any).startGC = vi.fn();
-    (manager.findFromRedis as any).stopGC = vi.fn();
-
-    const clearDeadTasks = vi
-      .spyOn(manager as any, 'clearDeadTasks')
-      .mockRejectedValueOnce(new Error('task GC failed'))
-      .mockResolvedValue(undefined);
-
-    await manager.initialize();
-    await vi.advanceTimersByTimeAsync(60 * 60 * 1000);
-    await vi.advanceTimersByTimeAsync(60 * 60 * 1000);
-
-    expect(clearDeadTasks).toHaveBeenCalledTimes(2);
-  });
-
-  it('keeps scheduling string pool cleanup after a failed run', async () => {
-    vi.useFakeTimers();
-    const { manager } = createManager();
-    (manager.system as any).options.cron = true;
-    (manager.findFromRedis as any).startGC = vi.fn();
-    (manager.findFromRedis as any).stopGC = vi.fn();
-
-    const clearTitlePool = vi
-      .spyOn(TitlePool, 'clear')
-      .mockImplementationOnce(() => {
-        throw new Error('string pool cleanup failed');
-      })
-      .mockImplementation(() => undefined);
-
-    await manager.initialize();
-    await vi.advanceTimersByTimeAsync(24 * 60 * 60 * 1000);
-    await vi.advanceTimersByTimeAsync(24 * 60 * 60 * 1000);
-
-    expect(clearTitlePool).toHaveBeenCalledTimes(2);
-  });
-
-  it('deletes expired tasks without removing a newer interned resource object', async () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2026-08-20T12:00:00.000Z'));
-    const { manager } = createManager();
-    const task = new Task(manager, 'expired-task', {});
-    const staleResource = createResource(1);
-    const freshResource = { ...staleResource, subjectId: 638497 };
-
-    task.ok = true;
-    task.fetchedAt = new Date('2026-08-20T09:00:00.000Z');
-    task.resources = [staleResource];
-    task.prefetchCount = task.resources.length;
-    (manager.tasks as Map<string, Task>).set(task.key, task);
-    (manager.resources as Map<string, Map<string, DatabaseResource>>).set(
-      staleResource.provider,
-      new Map([[staleResource.providerId, freshResource]])
+    expect(find).toHaveBeenLastCalledWith(
+      {},
+      { anchor, position: { createdAt: second.createdAt.getTime(), id: 2 } }
     );
-
-    await (manager as any).clearDeadTasks();
-
-    expect((manager.tasks as Map<string, Task>).has(task.key)).toBe(false);
-    expect(
-      (manager.resources as Map<string, Map<string, DatabaseResource>>)
-        .get(staleResource.provider)
-        ?.get(staleResource.providerId)
-    ).toBe(freshResource);
+    expect(next.resources).toEqual([last]);
+    expect(next.pagination).toEqual({
+      anchor,
+      limit: 2,
+      nextCursor: null,
+      complete: true
+    });
   });
 
-  it('releases an expired task intern entry when the object is still current', async () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date('2026-08-20T12:00:00.000Z'));
+  it('reuses one maximum batch across request limits and builds each cursor from its sliced tail', async () => {
     const { manager } = createManager();
-    const task = new Task(manager, 'expired-task', {});
-    const resource = createResource(1);
+    manager.system.modules.providers.timestamp = new Date(anchor);
+    const resources = [createResource(1), createResource(2), createResource(3)];
+    const findFromCacheOrDatabase = vi
+      .spyOn(manager as any, 'findFromCacheOrDatabase')
+      .mockResolvedValue(resources);
+    vi.spyOn(manager, 'transform').mockImplementation(async (resource) => resource);
 
-    task.ok = true;
-    task.fetchedAt = new Date('2026-08-20T09:00:00.000Z');
-    task.resources = [resource];
-    task.prefetchCount = task.resources.length;
-    (manager.tasks as Map<string, Task>).set(task.key, task);
-    (manager.resources as Map<string, Map<string, DatabaseResource>>).set(
-      resource.provider,
-      new Map([[resource.providerId, resource]])
-    );
+    const resp = await manager.find({}, { limit: 2 });
+    const smallerResp = await manager.find({}, { limit: 1 });
 
-    await (manager as any).clearDeadTasks();
-
-    expect((manager.tasks as Map<string, Task>).has(task.key)).toBe(false);
-    expect(
-      (manager.resources as Map<string, Map<string, DatabaseResource>>).has(resource.provider)
-    ).toBe(false);
-  });
-});
-
-describe('Task prefetch', () => {
-  it('checks the current cache before expanding an already warm task', async () => {
-    const dbOptions: DatabaseFilterOptions = { search: ['test'] };
-    const taskOptions: DatabaseFilterOptions = {
-      search: dbOptions.search,
-      exclude: dbOptions.exclude
-    };
-    const { manager, findFromRedis } = createManager();
-    const task = new Task(manager, hash(taskOptions), taskOptions);
-
-    task.ok = true;
-    task.hasMore = true;
-    task.resources = Array.from({ length: 60 }, (_, index) => createResource(index + 1));
-    task.prefetchCount = task.resources.length;
-
-    (manager.tasks as Map<string, Task>).set(task.key, task);
-
-    const resp = await manager.findFromTask(dbOptions, 1, 30);
-
-    expect(findFromRedis).not.toHaveBeenCalled();
-    expect(resp.resources).toHaveLength(30);
-    expect(resp.hasMore).toBe(true);
-    expect(task.prefetchCount).toBe(60);
-  });
-
-  it('reuses prefetched resources for concurrent and subsequent requests', async () => {
-    const { task, findFromRedis } = createTask(300, { search: ['test'] });
-
-    await Promise.all([task.prefetch(0, 30), task.prefetch(0, 30)]);
-
-    expect(findFromRedis).toHaveBeenCalledTimes(1);
-    expect(task.prefetchCount).toBeGreaterThan(0);
-
-    const prefetchedCount = task.prefetchCount;
-    await task.prefetch(0, 30);
-
-    expect(findFromRedis).toHaveBeenCalledTimes(1);
-    expect(task.prefetchCount).toBe(prefetchedCount);
-
-    await task.prefetch(task.prefetchCount, 30);
-
-    expect(findFromRedis).toHaveBeenCalledTimes(2);
-    expect(task.prefetchCount).toBeGreaterThan(prefetchedCount);
-  });
-
-  it('stops expanding after hitting the total prefetch cap', async () => {
-    const { task, findFromRedis } = createTask(RESOURCES_TASK_PREFETCH_MAX_COUNT + 500, {
-      search: ['test']
+    expect(findFromCacheOrDatabase).toHaveBeenCalledWith({}, { anchor });
+    expect(findFromCacheOrDatabase).toHaveBeenCalledTimes(1);
+    expect(resp.resources).toEqual(resources.slice(0, 2));
+    expect(resp.pagination.complete).toBe(false);
+    expect(decodeResourcesCursor(resp.pagination.nextCursor!)).toEqual({
+      anchor,
+      position: { createdAt: resources[1].createdAt.getTime(), id: resources[1].id }
     });
-
-    await task.prefetch(0, 1000);
-    while (task.canPrefetchMore()) {
-      await task.prefetch(task.prefetchCount, 1000);
-    }
-
-    expect(task.prefetchCount).toBe(RESOURCES_TASK_PREFETCH_MAX_COUNT);
-    expect(task.hasMore).toBe(true);
-    expect(task.canPrefetchMore()).toBe(false);
-
-    const called = findFromRedis.mock.calls.length;
-    await task.prefetch(task.prefetchCount, 1000);
-
-    expect(findFromRedis).toHaveBeenCalledTimes(called);
-  });
-
-  it('reopens capped tasks after cached resources are removed', async () => {
-    const { task, findFromRedis } = createTask(RESOURCES_TASK_PREFETCH_MAX_COUNT + 500, {
-      search: ['test']
+    expect(smallerResp.resources).toEqual(resources.slice(0, 1));
+    expect(decodeResourcesCursor(smallerResp.pagination.nextCursor!)).toEqual({
+      anchor,
+      position: { createdAt: resources[0].createdAt.getTime(), id: resources[0].id }
     });
-
-    await task.prefetch(0, 1000);
-    while (task.canPrefetchMore()) {
-      await task.prefetch(task.prefetchCount, 1000);
-    }
-
-    const removed = new Set(task.resources.slice(-5).map((resource) => resource.id));
-    const calls = findFromRedis.mock.calls.length;
-
-    task.removeResources(removed);
-
-    expect(task.prefetchCount).toBe(RESOURCES_TASK_PREFETCH_MAX_COUNT - removed.size);
-    expect(task.canPrefetchMore()).toBe(true);
-
-    await task.prefetch(task.prefetchCount, 1000);
-
-    expect(findFromRedis).toHaveBeenCalledTimes(calls + 1);
   });
 });
 
@@ -411,31 +205,261 @@ describe('resource response transform', () => {
   });
 });
 
-describe('resources slow query fallback', () => {
-  it('coalesces concurrent downgraded queries on the accurate path', async () => {
+describe('exact resource query Task', () => {
+  it('retains one exact batch without prefetching another cursor', async () => {
     const { manager } = createManager();
     const expected = [createResource(1)];
-
-    vi.spyOn(manager as any, 'readRedisQueryCache').mockResolvedValue(undefined);
-    vi.spyOn(manager as any, 'writeRedisQueryCache').mockResolvedValue(undefined);
-
-    const findFromDatabase = vi
-      .spyOn(manager, 'findFromDatabase')
-      .mockImplementation(async () => expected);
+    const findFromCacheOrDatabase = vi
+      .spyOn(manager, 'findFromCacheOrDatabase')
+      .mockResolvedValue(expected);
 
     const [resp1, resp2] = await Promise.all([
-      (manager as any).findFromAccurateQuery({}, 0, 10),
-      (manager as any).findFromAccurateQuery({}, 0, 10)
+      manager.findFromTask({}, { anchor }),
+      manager.findFromTask({}, { anchor })
     ]);
 
     expect(resp1).toEqual(expected);
     expect(resp2).toEqual(expected);
-    expect(findFromDatabase).toHaveBeenCalledTimes(1);
-    expect(findFromDatabase).toHaveBeenCalledWith({}, 0, 10, {
-      allowSlowQueryFallback: true
-    });
+    expect(findFromCacheOrDatabase).toHaveBeenCalledTimes(1);
+    expect(findFromCacheOrDatabase).toHaveBeenCalledWith({}, { anchor });
   });
 
+  it('invalidates retained tasks when resource notifications arrive', async () => {
+    const { manager } = createManager();
+    const findFromCacheOrDatabase = vi
+      .spyOn(manager, 'findFromCacheOrDatabase')
+      .mockResolvedValue([createResource(1)]);
+
+    await manager.findFromTask({}, { anchor });
+    manager.onNotifications({
+      resources: { inserted: [], updated: [], deleted: [] },
+      duplicated: { attached: [], detached: [] }
+    });
+    await manager.findFromTask({}, { anchor });
+
+    expect(findFromCacheOrDatabase).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not reuse a retained task after the provider timestamp advances', async () => {
+    const { manager } = createManager();
+    const findFromCacheOrDatabase = vi
+      .spyOn(manager, 'findFromCacheOrDatabase')
+      .mockResolvedValue([createResource(1)]);
+
+    await manager.findFromTask({}, { anchor });
+    manager.system.modules.providers.timestamp = new Date(
+      manager.system.modules.providers.timestamp.getTime() + 1000
+    );
+    await manager.findFromTask({}, { anchor });
+
+    expect(findFromCacheOrDatabase).toHaveBeenCalledTimes(2);
+  });
+
+  it('evicts the least recently used Task at the configured capacity', async () => {
+    const { manager } = createManager();
+    vi.spyOn(manager, 'findFromCacheOrDatabase').mockResolvedValue([]);
+
+    for (let subject = 0; subject < 100; subject++) {
+      await manager.findFromTask({ subjects: [subject] }, { anchor });
+    }
+    await manager.findFromTask({ subjects: [0] }, { anchor });
+    await manager.findFromTask({ subjects: [100] }, { anchor });
+
+    const tasks = manager.tasks as Map<string, unknown>;
+    expect(tasks.size).toBe(100);
+    const providerTimestamp = manager.system.modules.providers.timestamp.getTime();
+    expect(
+      tasks.has(hash({ filter: { subjects: [0] }, cursor: { anchor }, providerTimestamp }))
+    ).toBe(true);
+    expect(
+      tasks.has(hash({ filter: { subjects: [1] }, cursor: { anchor }, providerTimestamp }))
+    ).toBe(false);
+  });
+});
+
+describe('resources Redis and database query', () => {
+  it('writes to the same captured Redis generation when providers refresh during the database query', async () => {
+    const redis = {
+      get: vi.fn().mockResolvedValue(null),
+      set: vi.fn().mockResolvedValue('OK')
+    };
+    const { manager } = createManager(redis);
+    vi.spyOn(manager, 'findFromDatabase').mockImplementation(async () => {
+      manager.system.modules.providers.timestamp = new Date(anchor + 1000);
+      return [];
+    });
+
+    await manager.findFromCacheOrDatabase({}, { anchor });
+    expect(redis.set).toHaveBeenCalledWith(redis.get.mock.calls[0][0], '[]', 'EX', 300);
+    await manager.findFromCacheOrDatabase({}, { anchor });
+    expect(redis.get.mock.calls[1][0]).not.toBe(redis.get.mock.calls[0][0]);
+  });
+
+  it('treats malformed Redis payloads as misses and keeps cache failures out of the query layer', async () => {
+    const redis = {
+      get: vi.fn().mockResolvedValue('not-json'),
+      set: vi.fn()
+    };
+    const { manager } = createManager(redis);
+    vi.spyOn(manager, 'findFromDatabase').mockResolvedValue([createResource(1)]);
+    await expect(manager.findFromCacheOrDatabase({}, { anchor })).resolves.toEqual([
+      createResource(1)
+    ]);
+    expect(redis.set).not.toHaveBeenCalled();
+  });
+
+  it('generates indexed visibility, tuple continuation and bounded stable ordering without OFFSET', async () => {
+    const { manager } = createManager();
+    const execute = vi.fn(async () => ({ rows: [] }));
+    const database = drizzle(execute);
+    const createdAt = new Date('2026-01-01T12:00:00.000Z');
+
+    await manager.findFromDatabase(
+      { subjects: [42] },
+      { anchor, position: { createdAt: createdAt.getTime(), id: 7 } },
+      { database }
+    );
+
+    expect(execute).toHaveBeenCalledOnce();
+    const [statement, params] = execute.mock.calls[0] as unknown as [string, unknown[]];
+    expect(statement).toContain('"resources"."indexed_at" <=');
+    expect(statement).toContain('("resources"."created_at", "resources"."id") <');
+    expect(statement).toContain('order by "resources"."created_at" desc, "resources"."id" desc');
+    expect(statement.toLowerCase()).not.toContain('offset');
+    expect(params).toEqual([
+      false,
+      new Date(anchor).toISOString(),
+      createdAt.toISOString(),
+      7,
+      42,
+      1001
+    ]);
+  });
+
+  it('bounds a stalled Redis read, bypasses during cooldown and resumes afterwards', async () => {
+    vi.useFakeTimers();
+    const redis = {
+      get: vi
+        .fn()
+        .mockImplementationOnce(() => new Promise(() => {}))
+        .mockResolvedValue(null),
+      set: vi.fn().mockResolvedValue('OK')
+    };
+    const { manager } = createManager(redis);
+    vi.spyOn(manager, 'findFromDatabase').mockResolvedValue([]);
+
+    const result = manager.findFromCacheOrDatabase({}, { anchor });
+    await vi.advanceTimersByTimeAsync(500);
+    await expect(result).resolves.toEqual([]);
+    await manager.findFromCacheOrDatabase({}, { anchor });
+    expect(redis.get).toHaveBeenCalledTimes(1);
+    expect(redis.set).not.toHaveBeenCalled();
+
+    await vi.advanceTimersByTimeAsync(30_000);
+    await manager.findFromCacheOrDatabase({}, { anchor });
+    expect(redis.get).toHaveBeenCalledTimes(2);
+    expect(redis.set).toHaveBeenCalledOnce();
+  });
+
+  it('returns database data without waiting for a stalled cache write and handles late rejection', async () => {
+    vi.useFakeTimers();
+    let rejectWrite!: (error: Error) => void;
+    const redis = {
+      get: vi.fn().mockResolvedValue(null),
+      set: vi.fn(
+        () =>
+          new Promise((_resolve, reject) => {
+            rejectWrite = reject;
+          })
+      )
+    };
+    const { manager } = createManager(redis);
+    vi.spyOn(manager, 'findFromDatabase').mockResolvedValue([createResource(1)]);
+
+    await expect(manager.findFromCacheOrDatabase({}, { anchor })).resolves.toEqual([
+      createResource(1)
+    ]);
+    await vi.advanceTimersByTimeAsync(500);
+    rejectWrite(new Error('late failure'));
+    await vi.advanceTimersByTimeAsync(0);
+    await manager.findFromCacheOrDatabase({}, { anchor });
+    expect(redis.get).toHaveBeenCalledOnce();
+  });
+
+  it('encodes the cursor position with the timestamp and id column encoders', async () => {
+    const { manager } = createManager();
+    const createdAt = new Date('2026-01-01T12:00:00.000Z');
+    const executeResourcesQuery = vi
+      .spyOn(manager as any, 'executeResourcesQuery')
+      .mockResolvedValue([]);
+
+    await manager.findFromDatabase(
+      {},
+      { anchor, position: { createdAt: createdAt.getTime(), id: 42 } }
+    );
+
+    const conds = executeResourcesQuery.mock.calls[0][1] as SQLWrapper[];
+    const cursorCondition = conds[2];
+    const query = new PgDialect().sqlToQuery(cursorCondition.getSQL());
+    expect(query.params).toEqual([createdAt.toISOString(), 42]);
+  });
+
+  it('keeps resources without a fansub in the bangumi preset', async () => {
+    const { manager } = createManager();
+    manager.system.modules.teams.getByName.mockReturnValue({ id: 7 });
+    const executeResourcesQuery = vi
+      .spyOn(manager as any, 'executeResourcesQuery')
+      .mockResolvedValue([]);
+
+    await manager.findFromDatabase({ preset: 'bangumi' }, { anchor });
+
+    const conds = executeResourcesQuery.mock.calls[0][1] as SQLWrapper[];
+    const dialect = new PgDialect();
+    const fansubCondition = conds
+      .map((condition) => dialect.sqlToQuery(condition.getSQL()))
+      .find((condition) => condition.sql.includes('"fansub_id"'))!;
+    expect(fansubCondition.sql).toMatch(/"fansub_id" is null or .*"fansub_id" not in/);
+    expect(fansubCondition.params).toEqual(BANGUMI_BANNED_FANSUBS.map(() => 7));
+  });
+
+  it('returns an exact Redis cache hit without querying PostgreSQL', async () => {
+    const cached = createResource(1);
+    const publisherRedis = {
+      get: vi.fn().mockResolvedValue(JSON.stringify([cached])),
+      set: vi.fn()
+    };
+    const { manager } = createManager(publisherRedis);
+    const findFromDatabase = vi.spyOn(manager, 'findFromDatabase');
+
+    const resp = await (manager as any).findFromCacheOrDatabase({}, { anchor });
+
+    expect(resp).toEqual([cached]);
+    expect(resp[0].indexedAt).toBeInstanceOf(Date);
+    expect(findFromDatabase).not.toHaveBeenCalled();
+    expect(publisherRedis.set).not.toHaveBeenCalled();
+  });
+
+  it('writes PostgreSQL results to the exact Redis cache with the configured TTL', async () => {
+    const publisherRedis = {
+      get: vi.fn().mockResolvedValue(undefined),
+      set: vi.fn().mockResolvedValue('OK')
+    };
+    const { manager } = createManager(publisherRedis);
+    const expected = [createResource(1)];
+    vi.spyOn(manager, 'findFromDatabase').mockResolvedValue(expected);
+
+    await (manager as any).findFromCacheOrDatabase({}, { anchor });
+
+    expect(publisherRedis.set).toHaveBeenCalledWith(
+      expect.stringMatching(/^animegarden:resources:query:/),
+      JSON.stringify(expected),
+      'EX',
+      300
+    );
+  });
+});
+
+describe('resources slow query fallback', () => {
   it('falls back to the extended-timeout lane after a statement timeout', async () => {
     const { manager } = createManager();
     const expected = [createResource(1)];
@@ -455,9 +479,13 @@ describe('resources slow query fallback', () => {
     (manager.system as any).slowDatabase = {};
     (manager.system as any).slowQueryConnection = slowQueryConnection;
 
-    const resp = await manager.findFromDatabase({}, 0, 10, {
-      allowSlowQueryFallback: true
-    });
+    const resp = await manager.findFromDatabase(
+      {},
+      { anchor },
+      {
+        allowSlowQueryFallback: true
+      }
+    );
 
     expect(resp).toEqual(expected);
     expect(executeResourcesQuery).toHaveBeenCalledTimes(2);
@@ -465,8 +493,7 @@ describe('resources slow query fallback', () => {
       2,
       (manager.system as any).slowDatabase,
       expect.any(Array),
-      0,
-      10,
+      1001,
       '{}',
       'slow database'
     );
@@ -482,53 +509,8 @@ describe('resources slow query fallback', () => {
     };
     (manager as any).slowQuerying = true;
 
-    await expect((manager as any).findFromSlowDatabase([], 0, 10, '{}')).rejects.toBeInstanceOf(
+    await expect((manager as any).findFromSlowDatabase([], 10, '{}')).rejects.toBeInstanceOf(
       ResourcesSlowQueryBusyError
     );
-  });
-});
-
-describe('resources notifications', () => {
-  it('removes stale cached resources and reloads live roots for updated/detached ids', async () => {
-    const { manager } = createManager();
-    const task = new Task(manager, 'task', {});
-
-    task.ok = true;
-    task.resources = [createResource(1), createResource(2), createResource(4)];
-    task.prefetchCount = task.resources.length;
-
-    (manager.tasks as Map<string, Task>).set(task.key, task);
-    (manager.findFromRedis as any).clear = vi.fn();
-    (manager.findFromAccurateQuery as any).clear = vi.fn();
-    (manager.system as any).database = {
-      select: vi.fn(() => ({
-        from: vi.fn(() => ({
-          where: vi.fn(() => ({
-            orderBy: vi.fn(async () => [createResource(3), createResource(1)])
-          }))
-        }))
-      }))
-    };
-
-    await manager.onNotifications({
-      resources: {
-        inserted: [],
-        updated: [
-          {
-            id: 1,
-            provider: 'dmhy',
-            providerId: '1',
-            title: 'resource-1'
-          }
-        ],
-        deleted: [2]
-      },
-      duplicated: {
-        attached: [4],
-        detached: [3]
-      }
-    });
-
-    expect(task.resources.map((resource) => resource.id)).toEqual([3, 1]);
   });
 });

@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { Link } from '@tanstack/react-router';
 
-import { stringifyURLSearch } from '@animegarden/client';
+import { stringifyURLSearch, type ResolvedFilterOptions } from '@animegarden/client';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
@@ -36,7 +36,7 @@ export default function SubjectIndex({
     subjectId: number;
     subject: any;
     resources: ReturnType<typeof groupResourcesByFansub>;
-    pagination?: { complete?: boolean };
+    filter?: ResolvedFilterOptions;
     timestamp?: Date;
     error: any;
   };
@@ -45,7 +45,7 @@ export default function SubjectIndex({
   path: string;
   renderError: string;
 }) {
-  const { ok, subjectId, subject, resources, pagination, timestamp, error } = data;
+  const { ok, subjectId, subject, resources, filter, timestamp, error } = data;
   const feedURL = useMemo(() => {
     const search = new URLSearchParams(searchStr);
     search.set('subject', subjectParam);
@@ -86,7 +86,7 @@ export default function SubjectIndex({
                   <FansubGroupResources
                     subject={subject?.id!}
                     group={group! as any}
-                    complete={pagination?.complete ?? false}
+                    filter={filter}
                   ></FansubGroupResources>
                 </div>
               ))}
@@ -96,7 +96,7 @@ export default function SubjectIndex({
                 <span className="mr2 i-carbon-search" />
                 <span className="mr2">暂时未索引到相应资源</span>
                 <Link
-                  {...getResourcesRouteLink(1, fallbackSearch)}
+                  {...getResourcesRouteLink(fallbackSearch)}
                   className="text-link"
                   onClick={() => {
                     track('subject.fallback-search', {
@@ -138,11 +138,11 @@ export default function SubjectIndex({
 function FansubGroupResources({
   subject,
   group,
-  complete
+  filter
 }: {
   subject: number;
   group: ReturnType<typeof groupResourcesByFansub>[number];
-  complete: boolean;
+  filter?: ResolvedFilterOptions;
 }) {
   const feedURL = getFeedURL(
     `?subject=${subject}&${group.fansub ? `fansub=${group.fansub.name}` : `publisher=${group.publisher.name}`}`
@@ -153,10 +153,19 @@ function FansubGroupResources({
       <h2 className="text-2xl font-bold flex items-center gap-2 pr-2">
         <Link
           {...getResourcesRouteLink(
-            1,
-            group.fansub
-              ? { subject: String(subject), fansub: group.fansub.name }
-              : { subject: String(subject), publisher: group.publisher.name }
+            stringifyURLSearch(
+              group.fansub
+                ? {
+                    ...filter,
+                    subjects: filter?.subjects ?? [subject],
+                    fansubs: [group.fansub.name]
+                  }
+                : {
+                    ...filter,
+                    subjects: filter?.subjects ?? [subject],
+                    publishers: [group.publisher.name]
+                  }
+            )
           )}
           className="text-link-active"
         >
@@ -173,22 +182,11 @@ function FansubGroupResources({
           <span>RSS</span>
         </a>
       </h2>
-      <Resources resources={group.resources as any} columns={{ fansub: false }}></Resources>
-      {!complete && (
-        <div className="py-4 px-8 lt-xl:px-2 text-right border-b">
-          <Link
-            {...getResourcesRouteLink(
-              1,
-              group.fansub
-                ? { subject: String(subject), fansub: group.fansub.name }
-                : { subject: String(subject), publisher: group.publisher.name }
-            )}
-            className="text-link"
-          >
-            搜索更多资源...
-          </Link>
-        </div>
-      )}
+      <Resources
+        resources={group.resources as any}
+        filter={filter}
+        columns={{ fansub: false }}
+      ></Resources>
     </>
   );
 }

@@ -1,83 +1,93 @@
-# @animegarden/server 架构总览
+# Server 架构总览
 
-检查日期：2026-05-08
+`apps/server` 提供资源 API、RSS、sitemap 数据、MCP、资源抓取与同步、
+详情回填、Telegram 推送及数据库迁移 CLI。
+普通 server 和 cron 进程复用 System、模块与 Hono 路由，
+部署关系见[部署拓扑](./deployment-topology.md)。
 
-## 定位
+## 启动与运行角色
 
-`apps/server` 是 AnimeGarden 的后端应用。它同时提供 HTTP API、RSS / sitemap、MCP、资源抓取与同步任务、资源详情回填、Telegram 推送和数据库迁移 CLI。部署上主要分为普通 `server` 和 `cron` 两类进程；代码上二者复用同一套 `System`、模块和 Hono 路由。
-
-## 启动链路
-
-| 入口 | 代码 | 职责 |
+| 入口 | 调用链 | 职责 |
 | --- | --- | --- |
-| `cli start` | `src/cli.ts` -> `makeSystem()` -> `makeServer()` | 启动普通 Hono 服务，profile 为 `server` |
-| `cli cron` | `src/cli.ts` -> `makeSystem()` -> `makeExecutor()` | 注册资源 fetch / sync cron，可选监听 HTTP |
-| `migrate` | `src/cli.ts` -> `connect/migrate.ts` | 执行 Drizzle 迁移 |
-| `telegram push` | `src/cli.ts` -> `modules.push` | 手动推送指定资源或 subject |
+| `cli start` | `makeSystem()` → `makeServer()` | 启动普通 Hono 服务，profile 为 server |
+| `cli cron` | `makeSystem()` → `makeExecutor()` | 注册 fetch/sync 定时任务和资源 RPC，可选 HTTP |
+| `migrate` | `connect/migrate.ts` | 执行 Drizzle 迁移 |
+| `telegram push` | `modules.push` | 推送指定资源或 Subject |
 
-`makeSystem()` 负责连接 Postgres、配置 Redis client、注册模块，并按 `profile` 配置连接参数。普通 `server` 进程会额外创建 `resources-slow` 数据库连接，用于资源慢查询隔离。Redis 是松耦合依赖：配置 `redisUri` 后会后台连接和订阅，连接失败不阻塞服务启动，并会定期重试。
+`makeSystem()` 连接 PostgreSQL、配置 Redis 并注册模块。
+普通 server 额外创建 resources-slow 数据库连接，隔离资源慢查询。
+Redis 在后台连接和重试；可用时提供共享缓存、通知和跨进程 RPC。
 
-## 核心运行模型
+## System 与模块
 
-`System` 是后端的应用容器，位于 `src/system/`。它负责：
+`src/system/` 保存连接、配置、logger 和模块实例，
+统一执行模块的 initialize、import、refresh，并管理关闭时的清理。
 
-- 保存数据库、Redis、logger、运行选项和模块实例。
-- 统一执行模块 `initialize()`、`import()`、`refresh()`。
-- 在 `cron` 与普通 `server` 之间通过 Redis 发布资源变更通知；Redis 离线期间通知、跨进程 RPC 和 Redis 缓存会降级为不可用，主进程继续运行。
-- 提供 RPC bus，让普通服务可以请求 `cron` 执行资源任务。
-
-模块都继承 `src/system/module.ts` 的 `Module`，当前注册模块包括 `providers`、`users`、`teams`、`resources`、`collections`、`tags`、`subjects`、`push`。
-
-## HTTP 与任务入口
-
-Hono 入口在 `src/server/index.ts`。`registerHono()` 统一绑定：
-
-- 请求 id、响应时间、JSON charset、CORS、logger、60s timeout。
-- 所有 API 响应统一携带 `X-Robots-Tag: noindex`，包括 JSON、XML、重定向、304 和错误响应。
-- `/` 和 `/health` 状态接口，以及禁止搜索引擎抓取整个 API hostname 的 `/robots.txt`。
-- `users`、`subjects`、`resources`、`collections`、`feed`、`admin`、`sitemaps` 路由。
-- 查询错误到 JSON / XML 的统一转换。
-
-`/sitemaps/*` 是供 Web 生成站点地图使用的内部契约，不列入公开 `/openapi.json` 或 Swagger 页面。源定义保留在 `apps/web/src/pages/docs.api/spec.json`，由 `getPublicOpenApiSpec()` 过滤后对外发布。
-
-- `GET /sitemaps/subjects` 返回全部条目的 `id`、`activedAt`、`isArchived`，包含已归档条目。
-- `GET /sitemaps/{year}/{month}` 按上海时区的资源发布时间查询月份，排除已删除和重复资源，返回 `count` 及资源的 `id`、`provider`、`providerId`、`fetchedAt`。支持 2020 年至当前年月；数字参数越界或查询失败时返回 HTTP 200、`status: ERROR` 和空 `resources`，不含 `count`。非数字路径不匹配路由。
-
-`makeServer()` 额外注册 `/mcp`，并将 `/.well-known/mcp/server-card.json` 重定向到 Web 站点；`makeExecutor()` 额外注册资源任务 RPC，并由 `Executor.start()` 注册每 5 分钟 fetch、每小时 sync 的 cron job。
-
-## 代码逻辑分类
-
-| 目录 | 主要职责 |
+| 模块 | 主要职责 |
 | --- | --- |
-| `src/connect/` | Postgres、Redis、迁移连接 |
-| `src/schema/` | Drizzle 表、关系和类型导出 |
-| `src/server/routes/` | HTTP 路由定义 |
-| `src/resources/` | 资源查询、写入、去重、详情回填、任务执行 |
-| `src/providers/` | provider 状态和 scraper 适配 |
-| `src/subjects/` | Bangumi subject 导入、索引和 calendar 维护 |
-| `src/push/` | Telegram 消息状态机、过滤、消息构造和发送队列 |
-| `src/users/` | 发布者和字幕组缓存 / 查询 |
-| `src/collections/` | 收藏夹生成和读取 |
-| `src/server/rss/`、`src/server/sitemap/` | RSS 与 sitemap 输出 |
-| `src/server/mcp/` | MCP 服务封装 |
-| `src/utils/` | 缓存、数据库重试、jieba、时间等工具 |
+| providers | provider 状态、数据版本和 scraper 适配 |
+| users / teams | 发布者、字幕组与别名 |
+| resources | 写入、查询、重复关系和详情回填 |
+| collections | 收藏夹保存和读取 |
+| tags | 标签 |
+| subjects | Bangumi 资料、索引和周历 |
+| push | Telegram 推送状态机与发送队列 |
 
-## 资源主链路
+providers 在启动、通知和写入后刷新快照，并每 60 秒轮询数据库。
+快照读取串行执行，失败保留上次成功结果；定时器随 System 关闭清理。
 
-资源主写链路在 `src/resources/jobs.ts`：
+## 资源数据流
 
-1. `runFetchJob()` 抓最新资源，执行 `upsertResources()`，维护重复链，发布通知，并异步触发 Telegram 推送。
-2. `runSyncJob()` 抓指定页区间，执行 upsert、删标、重复链维护和通知。
-3. `ResourcesModule` 负责确保发布者 / 字幕组存在、转换资源、插入或更新 DB、维护 duplicated 关系。
-4. `QueryManager` 负责资源列表查询、Task 预取缓存、Redis / 精确查询缓存、通知后的缓存刷新。
-5. `DetailsManager` 负责 detail cache、详情回源和必要的资源回填修正。
+1. cron 抓取或同步上游资源，统一执行 upsert、删标与重复关系维护。
+2. 有变更的抓取批次更新 provider refreshedAt，并发布资源通知。
+3. server 消费通知，按模块顺序刷新 provider 快照和资源查询缓存。
+4. 资源请求解析筛选与 cursor，通过 Task、Redis 和 PostgreSQL 获取精确批次。
+5. 结果按请求 limit 切片、生成 nextCursor，再转换成 API 表示。
 
-更细的 resources 写入、查询和索引背景见本目录其他文档。
+| 专题 | 内容 |
+| --- | --- |
+| [资源写入](./resources-write-flow.md) | 批次版本、upsert、删标、详情及人工修正 |
+| [资源查询](./resources-query.md) | 参数边界、keyset SQL、Task、Redis、慢查询 |
+| [资源索引](./resources-indexes.md) | 稳定排序、partial index、indexed_at 迁移 |
+| [分页契约](../client/pagination.md) | API、SDK 与 shared codec |
 
-## 修改入口建议
+## HTTP 边界
 
-- 改 API 响应或路由：先看 `src/server/routes/`，再看对应模块。
-- 改资源列表筛选：先看 `src/resources/query.ts`、`filter.ts` 和 `docs/server/resources-query-task-review.md`。
-- 改抓取 / 同步：先看 `src/resources/jobs.ts`、`src/providers/` 和 `docs/server/resources-write-flow.md`。
-- 改 Telegram：先看 `src/push/` 和 `docs/server/telegram-push-flow.md`。
-- 改表结构：先看 `src/schema/`、`drizzle/`，并补充迁移影响说明。
+`src/server/index.ts` 的 `registerHono()` 统一配置请求 ID、时间戳、JSON charset、
+CORS、logger、60 秒 timeout 和查询错误响应。
+API 响应携带 `X-Robots-Tag: noindex`；错误响应使用 `Cache-Control: no-store`。
+
+路由包括状态与 health、users、subjects、resources、collections、feed、admin 和 sitemaps。
+`makeServer()` 额外提供 `/mcp`，并将 MCP server card 发现地址重定向到 Web。
+`makeExecutor()` 注册资源任务 RPC。
+
+`/sitemaps/*` 是 Web 站点地图的数据源。源契约保存在 Web 的 OpenAPI spec，
+公开 `/openapi.json` 由 `getPublicOpenApiSpec()` 过滤后输出。
+
+| 内部接口 | 返回内容 |
+| --- | --- |
+| `GET /sitemaps/subjects` | 所有 Subject 的 id、activedAt、isArchived |
+| `GET /sitemaps/{year}/{month}` | 上海时区月份内未删除根资源的数量、标识和 fetchedAt |
+
+月份接口支持 2020 年至当前年月。数字参数越界或查询失败返回 HTTP 200、
+`status: ERROR` 和空 resources；非数字路径按路由匹配处理。
+
+## 代码导航
+
+| 目录 | 职责 |
+| --- | --- |
+| `src/connect/` | PostgreSQL、Redis、迁移连接 |
+| `src/schema/`、`drizzle/` | 表结构、索引与迁移 |
+| `src/server/routes/` | HTTP 路由 |
+| `src/resources/` | 资源读写、详情和任务 |
+| `src/providers/` | provider 快照与抓取适配 |
+| `src/subjects/` | Bangumi 导入、索引与周历 |
+| `src/users/` | 发布者和字幕组缓存 |
+| `src/collections/` | 收藏夹 |
+| `src/push/` | 推送过滤、消息与状态机 |
+| `src/server/rss/`、`src/server/sitemap/`、`src/server/mcp/` | 输出格式与协议 |
+| `src/utils/` | 数据库重试、分词、时间和公共工具 |
+
+番剧资料见[Subject 数据源](./subject-data-source.md)，
+推送见[Telegram 流程](./telegram-push-flow.md)，
+party 写入与别名见[名称归一化](./party-normalization.md)。

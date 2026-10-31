@@ -73,7 +73,12 @@ vi.mock('@animegarden/client', async (importOriginal) => {
     fetchResources: vi.fn(async () => ({
       ok: true,
       resources: [resource],
-      pagination: { page: 1, pageSize: 30, complete: false },
+      pagination: {
+        anchor: Date.parse('2026-01-02T03:04:05Z'),
+        limit: 30,
+        nextCursor: 'next',
+        complete: false
+      },
       filter: { types: ['动画'] },
       timestamp: new Date('2026-01-02T03:04:05Z')
     })),
@@ -96,7 +101,12 @@ vi.mock('@animegarden/client', async (importOriginal) => {
       results: [
         {
           resources: [resource],
-          pagination: { page: 1, pageSize: 30, complete: true },
+          pagination: {
+            anchor: Date.parse('2026-01-02T03:04:05Z'),
+            limit: 100,
+            nextCursor: null,
+            complete: true
+          },
           filter: { types: ['动画'] }
         }
       ],
@@ -245,7 +255,7 @@ describe('markdown responses', () => {
   it('uses route head metadata for resource-like markdown pages', async () => {
     const [resources, subject, collection] = await Promise.all([
       handleMarkdownRequest(
-        new Request('https://animes.garden/resources/1?type=%E5%8A%A8%E7%94%BB', {
+        new Request('https://animes.garden/resources?type=%E5%8A%A8%E7%94%BB', {
           headers: { Accept: 'text/markdown' }
         })
       ).then((response) => response.text()),
@@ -359,28 +369,32 @@ describe('markdown responses', () => {
     error.mockRestore();
   });
 
-  it('redirects invalid resources page numbers like the HTML route', async () => {
+  it('redirects removed resources page numbers to the filter-only resources route', async () => {
     const response = await handleMarkdownRequest(
-      new Request('https://animes.garden/resources/0?type=%E5%8A%A8%E7%94%BB', {
+      new Request('https://animes.garden/resources/0?type=%E5%8A%A8%E7%94%BB&cursor=next&limit=1', {
         headers: { Accept: 'text/markdown' }
       })
     );
 
-    expect(response.status).toBe(302);
-    expect(response.headers.get('location')).toBe('/resources/1?type=%E5%8A%A8%E7%94%BB');
+    expect(response.status).toBe(308);
+    expect(response.headers.get('location')).toBe(
+      'https://animes.garden/resources?type=%E5%8A%A8%E7%94%BB'
+    );
     expect(response.headers.get('vary')).toBe('Accept');
     expect(await response.text()).toBe('');
   });
 
-  it('redirects invalid resources page numbers with trailing slash', async () => {
+  it('redirects removed resources page numbers with trailing slash', async () => {
     const response = await handleMarkdownRequest(
       new Request('https://animes.garden/resources/0/?type=%E5%8A%A8%E7%94%BB', {
         headers: { Accept: 'text/markdown' }
       })
     );
 
-    expect(response.status).toBe(302);
-    expect(response.headers.get('location')).toBe('/resources/1?type=%E5%8A%A8%E7%94%BB');
+    expect(response.status).toBe(308);
+    expect(response.headers.get('location')).toBe(
+      'https://animes.garden/resources?type=%E5%8A%A8%E7%94%BB'
+    );
   });
 
   it('renders anime calendar markdown with a final WEB section', async () => {

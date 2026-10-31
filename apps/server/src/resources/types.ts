@@ -1,7 +1,15 @@
 import type { ParseResult } from 'anipar';
+import type { ResourceCursor } from '@animegarden/shared';
 import type { ResolvedFilterOptions } from '@animegarden/client';
 
 import type { NotifiedResource } from '../system/types.ts';
+
+/** Query-layer pagination: the input boundary has normalized limit and decoded/validated cursor. */
+export interface ResolvedPaginationOptions {
+  limit: number;
+
+  cursor?: ResourceCursor;
+}
 
 export interface NewParty {
   providerId?: string;
@@ -64,6 +72,8 @@ export interface DatabaseResource {
 
   fetchedAt: Date;
 
+  indexedAt: Date;
+
   publisherId: number;
 
   fansubId: number | null;
@@ -77,9 +87,10 @@ export interface DatabaseResource {
   metadata: { anipar?: ParseResult } | null;
 }
 
-export type RedisQueryResource = Omit<DatabaseResource, 'createdAt' | 'fetchedAt'> & {
+export type RedisQueryResource = Omit<DatabaseResource, 'createdAt' | 'fetchedAt' | 'indexedAt'> & {
   createdAt: string;
   fetchedAt: string;
+  indexedAt: string;
 };
 
 export interface UpsertResourcesOptions {

@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 
 import Layout from '~/layouts/Layout';
 import Resources from '~/components/Resources';
-import type { PaginationLink } from '~/components/Resources/pagination';
 import { usePreferFansub } from '~/stores/fansubs';
 import { getTrackingError, trackFetchResourcesError } from '~/utils';
 
@@ -13,15 +12,15 @@ export interface ResourcesIndexProps {
   data: {
     ok: boolean;
     resources: any[];
-    pagination?: { complete?: boolean };
+    pagination?: { anchor?: number; complete?: boolean };
     filter?: ResourceFilter;
-    page: number;
     timestamp?: Date;
     error: any;
   };
   feedURL: string;
   path: string;
-  link: (page: number) => PaginationLink;
+  isLoadingMore?: boolean;
+  onLoadMore?: () => unknown | Promise<unknown>;
   renderError: string;
 }
 
@@ -29,10 +28,11 @@ export default function ResourcesIndex({
   data,
   feedURL,
   path,
-  link,
+  isLoadingMore,
+  onLoadMore,
   renderError
 }: ResourcesIndexProps) {
-  const { ok, resources, pagination, filter, page, timestamp, error } = data;
+  const { ok, resources, pagination, filter, timestamp, error } = data;
 
   usePreferFansub(filter?.fansubs ?? undefined);
 
@@ -58,10 +58,11 @@ export default function ResourcesIndex({
             ></FilterCard>
             <Resources
               resources={resources}
-              page={page}
+              filter={filter}
               complete={pagination?.complete ?? false}
-              timestamp={new Date(timestamp!)}
-              link={link}
+              isLoadingMore={isLoadingMore}
+              hasLoadMoreError={Boolean(error)}
+              onLoadMore={onLoadMore}
             ></Resources>
           </>
         ) : (

@@ -1,24 +1,15 @@
-import { createFileRoute, isNotFound, redirect, useLocation } from '@tanstack/react-router';
 import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
+import { createFileRoute, isNotFound, useLocation } from '@tanstack/react-router';
 
 import Page from '~/pages/subject.$subject.($page)/route';
-import { buildSubjectPageHead } from '~/pages/subject.$subject.($page)/seo';
 import NotFoundPage, { buildNotFoundPageHeaders, throwNotFoundPage } from '~/pages/not-found/route';
 import { buildNotFoundPageHead } from '~/pages/not-found/seo';
-import { calendarQueryOptions, resourcesQueryOptions, subjectQueryOptions } from '~/query';
-import { getTrackingError, serializeError } from '~/utils';
-import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
+import { buildSubjectPageHead } from '~/pages/subject.$subject.($page)/seo';
 import { groupResourcesByFansub } from '~/pages/subject.$subject.($page)/utils';
 
-function getSubjectResourcesFilter(subjectId: number) {
-  return {
-    subject: subjectId,
-    subjects: undefined,
-    page: 1,
-    pageSize: 1000,
-    types: ['动画', '合集']
-  };
-}
+import { resourcesQueryOptions, subjectQueryOptions, type ResourcesQueryInput } from '~/query';
+import { getTrackingError, serializeError } from '~/utils';
+import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
 
 export const loader = async ({
   context,
@@ -27,22 +18,22 @@ export const loader = async ({
 }: {
   context: { queryClient: QueryClient };
   location: { href: string; searchStr: string };
-  params: { subject?: string; page?: string };
+  params: { subject?: string };
 }) => {
-  if (params.page !== undefined) {
-    throw redirect({ href: `/subject/${params.subject}${location.searchStr}` });
-  }
-
   const subjectId = +params.subject!;
   if (!Number.isSafeInteger(subjectId) || subjectId <= 0) {
     throwNotFoundPage('subject');
   }
 
-  const resourceFilter = getSubjectResourcesFilter(subjectId);
+  const requestedFilter = {
+    subject: subjectId,
+    limit: 1000,
+    types: ['动画', '合集']
+  } satisfies ResourcesQueryInput;
+
   const [subjectResp, resourcesResp] = await Promise.all([
-    context.queryClient.ensureQueryData(subjectQueryOptions(subjectId)),
-    context.queryClient.ensureQueryData(resourcesQueryOptions(resourceFilter)),
-    context.queryClient.ensureQueryData(calendarQueryOptions())
+    context.queryClient.query(subjectQueryOptions(subjectId)),
+    context.queryClient.query(resourcesQueryOptions(requestedFilter))
   ]);
 
   if (!subjectResp.ok) {
@@ -53,7 +44,7 @@ export const loader = async ({
   }
   const subject = subjectResp.subject;
 
-  const { ok, resources, pagination, filter, timestamp, error } = resourcesResp;
+  const { ok, resources, timestamp, error } = resourcesResp;
 
   if (error) {
     console.error(location.href, error);
@@ -67,11 +58,10 @@ export const loader = async ({
 
   return {
     ok,
+    filter: requestedFilter,
     subjectId,
     subject,
     resources: groupResourcesByFansub(resources),
-    pagination,
-    filter,
     timestamp,
     error: serializeError(error)
   };
@@ -95,16 +85,17 @@ function SubjectRoute() {
   const loaderData = Route.useLoaderData();
   const params = Route.useParams();
   const { data: subjectData } = useSuspenseQuery(subjectQueryOptions(loaderData.subjectId));
-  const { data: resourcesData } = useSuspenseQuery(
-    resourcesQueryOptions(getSubjectResourcesFilter(loaderData.subjectId))
-  );
+  const resourcesQuery = useSuspenseQuery(resourcesQueryOptions(loaderData.filter));
+  const resourcesData = resourcesQuery.data;
+  // Keep the previous overview visible if its single-batch refresh fails.
+  const error = resourcesData.error ?? resourcesQuery.error ?? undefined;
   const data = {
     ...loaderData,
     ...resourcesData,
     subjectId: loaderData.subjectId,
     subject: subjectData.subject,
     resources: groupResourcesByFansub(resourcesData.resources),
-    error: serializeError(resourcesData.error)
+    error: serializeError(error)
   };
 
   return (
@@ -113,7 +104,7 @@ function SubjectRoute() {
       subjectParam={params.subject!}
       searchStr={location.searchStr}
       path={`${location.pathname}${location.searchStr}`}
-      renderError={getTrackingError(data.error, 'subject-render-failed')}
+      renderError={getTrackingError(error, 'subject-render-failed')}
     />
   );
 }

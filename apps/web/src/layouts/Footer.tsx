@@ -30,9 +30,10 @@ export const Footer = memo((props: FooterProps) => {
   const timestampQuery = useQuery({
     ...timestampQueryOptions(),
     enabled: !timestampInput,
-    initialData: timestampInput ? { ok: true, timestamp: timestampInput } : undefined
+    initialData: timestampInput ? { ok: true, timestamp: timestampInput } : undefined,
+    initialDataUpdatedAt: 0
   });
-  const timestampValue = timestampInput ?? timestampQuery.data?.timestamp;
+  const timestampValue = timestampQuery.data?.timestamp ?? timestampInput;
   const timestamp = timestampValue ? new Date(timestampValue) : undefined;
   const loading = timestampQuery.isLoading;
 

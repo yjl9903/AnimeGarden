@@ -1,14 +1,15 @@
-import { describe, expect, it, beforeAll } from 'vitest';
+import { describe, expect, it, beforeAll, vi } from 'vitest';
+import { QueryClient } from '@tanstack/react-query';
 
 import {
   parseSearchInput,
   resolveSearchURL,
   stringifySearchTextAsync
 } from '../src/layouts/Search/utils';
-import { subjectSearchQueryOptions } from '../src/query/subject';
+import { subjectQueryOptions, subjectSearchQueryOptions } from '../src/query/subject';
 
 const queryClient = {
-  ensureQueryData: async () => ({
+  query: async () => ({
     subject: { id: 330279, title: '葬送的芙莉莲' },
     subjects: [{ id: 330279 }]
   })
@@ -52,7 +53,7 @@ describe('search utils', () => {
 
   it('builds resource URLs when subject search has extra filters', async () => {
     await expect(resolveSearchURL(queryClient, '动画:葬送的芙莉莲 包含:1080p')).resolves.toBe(
-      '/resources/1?keyword=1080p&subject=330279'
+      '/resources?keyword=1080p&subject=330279'
     );
   });
 
@@ -60,6 +61,40 @@ describe('search utils', () => {
     await expect(
       stringifySearchTextAsync(queryClient, new URLSearchParams('subject=330279'))
     ).resolves.toBe('动画:葬送的芙莉莲');
+  });
+
+  it('reuses fresh cached subjects without fetching during search text formatting', async () => {
+    const cache = new QueryClient();
+    const options = subjectQueryOptions(330279);
+    cache.setQueryData(
+      options.queryKey,
+      {
+        ok: true,
+        subject: {
+          id: 330279,
+          title: '葬送的芙莉莲',
+          search: { include: [] },
+          platform: 'TV',
+          poster: '',
+          summary: '',
+          alias: {},
+          tags: []
+        }
+      },
+      { updatedAt: Date.now() }
+    );
+    const fetch = vi
+      .spyOn(cache.getQueryCache().find({ queryKey: options.queryKey })!, 'fetch')
+      .mockRejectedValue(new Error('Unexpected refetch'));
+    try {
+      await expect(
+        stringifySearchTextAsync(cache, new URLSearchParams('subject=330279'))
+      ).resolves.toBe('动画:葬送的芙莉莲');
+      expect(fetch).not.toHaveBeenCalled();
+    } finally {
+      fetch.mockRestore();
+      cache.clear();
+    }
   });
 
   it('ranks subject suggestions by matched keyword count then id descending', async () => {
@@ -72,7 +107,7 @@ describe('search utils', () => {
     const result = await query.queryFn!({
       signal: new AbortController().signal,
       client: {
-        ensureQueryData: async (options: { queryKey: readonly unknown[] }) => {
+        query: async (options: { queryKey: readonly unknown[] }) => {
           const limit = options.queryKey[4] as number;
           return {
             ok: true,

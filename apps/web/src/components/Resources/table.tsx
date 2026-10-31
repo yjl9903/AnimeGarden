@@ -1,4 +1,4 @@
-import { Link, useHydrated, useLocation, type ParsedLocation } from '@tanstack/react-router';
+import { Link, useHydrated } from '@tanstack/react-router';
 
 import CarbonError from '~icons/carbon/error';
 import CarbonLaunch from '~icons/carbon/launch';
@@ -7,7 +7,7 @@ import CarbonDownload from '~icons/carbon/download';
 
 import { memo } from 'react';
 
-import type { Resource, Jsonify } from '@animegarden/client';
+import { type Jsonify, type ResolvedFilterOptions, type Resource } from '@animegarden/client';
 
 import { CarbonTypes, DisplayTypeIcon } from '~/components/Icons';
 import {
@@ -20,15 +20,18 @@ import {
   trackResourceDetailClick,
   trackResourceRefineFilterClick
 } from '~/utils';
-import { toResourcesRouterSearch } from '~/utils/routes';
+import { getResourcesRouteLink, toResourceRefineRouterSearch } from '~/utils/routes';
 
 import { Tag } from './tag';
-import { Pagination, PaginationProps } from './pagination';
+import { InfiniteScrollSentinel, type LoadMoreProps } from './load-more';
 
-export interface ResourcesTableProps extends Partial<PaginationProps> {
+export interface ResourcesTableProps extends LoadMoreProps {
   className?: string;
 
   resources: Resource<{ tracker: true }>[];
+
+  /** Server-resolved filter used as the base for resource refinement links. */
+  filter?: Jsonify<ResolvedFilterOptions> | ResolvedFilterOptions;
 
   columns?: {
     /**
@@ -47,17 +50,8 @@ function getDetailRouteLink(r: Pick<Resource, 'provider' | 'providerId'>) {
   };
 }
 
-function followSearch(location: ParsedLocation, params: Record<string, string>) {
-  const s = new URLSearchParams(location.searchStr);
-  for (const [key, value] of Object.entries(params)) {
-    s.set(key, value);
-  }
-  return toResourcesRouterSearch(s);
-}
-
 export default function ResourcesTable(props: ResourcesTableProps) {
-  const location = useLocation();
-  const { className, resources, link, columns } = props;
+  const { className, resources, filter, columns } = props;
 
   const { fansub: isDisplayFansub = true } = columns ?? {};
 
@@ -93,13 +87,14 @@ export default function ResourcesTable(props: ResourcesTableProps) {
               <ResourceItem
                 key={`${r.provider}/${r.providerId}`}
                 resource={r}
+                filter={filter}
                 columns={columns}
               ></ResourceItem>
             ))}
           </tbody>
         </table>
       </div>
-      {props.page !== undefined && resources.length === 0 && (
+      {props.complete !== undefined && resources.length === 0 && (
         <div>
           <div className="h-20 text-2xl text-orange-600/80 flex items-center justify-center">
             <CarbonError className="mr-2"></CarbonError>
@@ -107,27 +102,18 @@ export default function ResourcesTable(props: ResourcesTableProps) {
           </div>
           <div className="flex items-center justify-center">
             {/* <span className="">返回&nbsp;</span> */}
-            {!location.pathname.endsWith('/1') && link && (
-              <>
-                <Link {...link(1)} className="text-link">
-                  第 1 页
-                </Link>
-                <span>&nbsp;/&nbsp;</span>
-              </>
-            )}
             <Link to="/" className="text-link">
               主页
             </Link>
           </div>
         </div>
       )}
-      {props.page !== undefined && !props.complete && resources.length > 0 && (
-        <Pagination
-          timestamp={props.timestamp}
-          page={props.page}
-          link={props.link}
-          navigate={props.navigate}
-          complete={props.complete ?? false}
+      {resources.length > 0 && (
+        <InfiniteScrollSentinel
+          complete={props.complete}
+          isLoadingMore={props.isLoadingMore}
+          hasLoadMoreError={props.hasLoadMoreError}
+          onLoadMore={props.onLoadMore}
         />
       )}
     </div>
@@ -137,11 +123,11 @@ export default function ResourcesTable(props: ResourcesTableProps) {
 export const ResourceItem = memo(
   (props: {
     resource: ResourcesTableProps['resources'][number];
+    filter?: ResourcesTableProps['filter'];
     columns?: ResourcesTableProps['columns'];
   }) => {
     const hydrated = useHydrated();
 
-    const location = useLocation();
     const { resource: r } = props;
     const { fansub: isDisplayFansub = true } = props.columns ?? {};
     const magnetHref = r.magnet + (hydrated ? r.tracker : '');
@@ -152,9 +138,9 @@ export const ResourceItem = memo(
           <div className="flex xl:min-w-[600px] lg:min-w-[480px] lt-lg:w-[calc(95vw-4px)]">
             <div className="flex-shrink-0 mr3 flex justify-center items-center">
               <Link
-                to="/resources/$page"
-                params={{ page: '1' }}
-                search={followSearch(location, { type: r.type })}
+                {...getResourcesRouteLink(
+                  toResourceRefineRouterSearch(props.filter, { type: r.type })
+                )}
                 onClick={() => trackResourceRefineFilterClick('type', r.type)}
                 className={`flex items-center justify-center h-[32px] w-[32px] rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 ${DisplayTypeColor[r.type]}`}
               >
@@ -232,9 +218,9 @@ export const ResourceItem = memo(
             <div className="flex justify-center items-center">
               {r.fansub ? (
                 <Link
-                  to="/resources/$page"
-                  params={{ page: '1' }}
-                  search={followSearch(location, { fansub: r.fansub.name })}
+                  {...getResourcesRouteLink(
+                    toResourceRefineRouterSearch(props.filter, { fansub: r.fansub.name })
+                  )}
                   onClick={() => trackResourceRefineFilterClick('fansub', r.fansub!.name)}
                   className="block w-max"
                   aria-label={`Go to resources list of fansub ${r.fansub.name}`}
@@ -246,9 +232,11 @@ export const ResourceItem = memo(
                 </Link>
               ) : r.publisher ? (
                 <Link
-                  to="/resources/$page"
-                  params={{ page: '1' }}
-                  search={followSearch(location, { publisher: r.publisher.name })}
+                  {...getResourcesRouteLink(
+                    toResourceRefineRouterSearch(props.filter, {
+                      publisher: r.publisher.name
+                    })
+                  )}
                   onClick={() => trackResourceRefineFilterClick('publisher', r.publisher!.name)}
                   className="block w-max"
                   aria-label={`Go to resources list of publisher ${r.publisher.name}`}

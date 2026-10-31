@@ -16,7 +16,7 @@ export const RPC_INVOKE_CHANNEL = `invoke-rpc`;
 export const RPC_REPLY_CHANNEL = `reply-rpc`;
 
 /**
- * 最大同时存活缓存任务个数
+ * 最大同时存活的资源精确查询任务数量
  */
 export const MAX_RESOURCES_TASK_COUNT = 100;
 
@@ -24,16 +24,6 @@ export const MAX_RESOURCES_TASK_COUNT = 100;
  * 最大同时存活收藏夹个数
  */
 export const MAX_COLLECTION_COUNT = 100;
-
-/**
- * 单个任务缓存预取数量
- */
-export const RESOURCES_TASK_PREFETCH_COUNT = 200;
-
-/**
- * 单个任务内存缓存允许预取的最大资源数量
- */
-export const RESOURCES_TASK_PREFETCH_MAX_COUNT = 1000;
 
 /**
  * 详情信息过期时间

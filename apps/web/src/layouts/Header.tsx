@@ -177,7 +177,7 @@ const FansubsDropdown = memo(() => {
       data-nav-collision-target="fansubs"
       trigger={
         <Link
-          {...getResourcesRouteLink(1, { fansub: fansubs[0] })}
+          {...getResourcesRouteLink({ fansub: fansubs[0] })}
           className="rounded-md p-2"
           onClick={() => trackNavClick('fansub')}
         >
@@ -189,7 +189,7 @@ const FansubsDropdown = memo(() => {
         {fansubs.map((fansub) => (
           <Link
             key={fansub}
-            {...getResourcesRouteLink(1, { fansub })}
+            {...getResourcesRouteLink({ fansub })}
             onClick={() => trackNavClick('fansub', { item: fansub })}
             className="block px2 py1 hover:bg-basis-100 dark:hover:bg-basis-800 whitespace-nowrap overflow-hidden text-ellipsis"
           >
@@ -208,7 +208,7 @@ const TypesDropdown = memo(() => {
       data-nav-collision-target="types"
       trigger={
         <Link
-          {...getResourcesRouteLink(1)}
+          {...getResourcesRouteLink()}
           className="rounded-md p-2"
           onClick={() => trackNavClick('type')}
         >
@@ -221,7 +221,6 @@ const TypesDropdown = memo(() => {
           <Link
             key={type}
             {...getResourcesRouteLink(
-              1,
               type === '动画' ? { type: '动画', preset: 'bangumi' } : { type }
             )}
             onClick={() => trackNavClick('type', { item: type })}

@@ -1,272 +1,129 @@
-# Umami 埋点说明
+# Umami 事件契约
 
-本文总结 `apps/web` 当前已经接入的埋点，以及静态审计后仍未覆盖、可评估是否补充的点击埋点 TODO。
+Web 埋点统一由 `apps/web/src/utils/umami.ts` 封装。
+组件通过 `track(event, payload)`、专用 helper 或链接的 `data-umami-event-*` 属性上报。
+本文按用户操作列出事件名称、字段和接入位置。
 
-## 实现入口
+## 导航与页面入口
 
-统一封装在 `src/utils/umami.ts`, 主要有两种接入方式:
+| 事件 | 触发 | 字段 |
+| --- | --- | --- |
+| `nav.click.home` | Header 首页入口 | item |
+| `nav.click.anime` | Header 动画入口及子项 | item，部分场景带 group |
+| `nav.click.fansub` | Header 字幕组入口及子项 | item |
+| `nav.click.type` | Header 资源类型入口及子项 | item |
+| `theme.switch` | 切换主题 | mode |
+| `home.calendar.click` | 首页周历入口 | season，source |
+| `anime.season.change` | 周历季度选择 | fromSeason、toSeason、source |
+| `anime.calendar.click` | 周历番剧卡片 | subjectId、title、weekday |
+| `footer.link.click` | Footer 外链 | section、label、href |
 
-- 直接调用 `track(event, payload)`
-- 给链接挂属性或事件
-  - `openMagnetLink(event, href, resource, source)`
-  - `getPikPakTrackEvent(provider, providerId)`
-  - `getOpenFeedTrackEvent(href)`
+`home.calendar.click.source` 为 title 或 link；
+`anime.season.change.source` 为 year 或 season。
+Footer section 对应状态、源站、关于、开放、更多、版权分区。
 
-## 当前已有埋点
+接入位置：`src/layouts/Header.tsx`、`ThemeToggle.tsx`、`Footer.tsx`，
+以及 `src/pages/_index/route.tsx`、`src/pages/anime/route.tsx`。
 
-### 资源下载和播放
+## 搜索
 
-| 事件名      | 触发场景                 | 属性                                                                        |
-| ----------- | ------------------------ | --------------------------------------------------------------------------- |
-| `download`  | 资源下载链接点击（含 Skills 示例） | `resource = {provider}:{providerId}`，`source`（Skills 示例为 `skills`）                              |
-| `pikpak`    | PikPak 播放/在线播放点击 | `resource = {provider}:{providerId}`，通过 `data-umami-event-resource` 上报 |
-| `feed.open` | RSS 链接点击             | `href`                                                                      |
+| 事件 | 触发 | 字段 |
+| --- | --- | --- |
+| `search.trigger` | 提交搜索 | text、source |
+| `search.history.click` | 选择历史记录 | text |
+| `search.history.delete` | 删除或清空历史 | action，可选 text、count |
+| `search.suggestion.click` | 选择联想项 | text、subjectId |
+| `search.result.click` | 选择结果详情 | text、resource |
 
-当前接入位置：
+`search.trigger.source` 为 button、command、history 或 result-more。
+接入位置：`src/layouts/Search/Search.tsx`。
 
-- 资源表格 `src/components/Resources/table.tsx`
-- 资源详情页 `src/routes/detail.$provider.$providerId/route.tsx`
-- Header RSS `src/layouts/Header.tsx`
-- Footer RSS `src/layouts/Footer.tsx`
-- Subject 分组 RSS `src/routes/subject.$subject.($page)/route.tsx`
+## 资源浏览、分页与筛选
 
-### 导航和全局入口
+| 事件 | 触发 | 字段 |
+| --- | --- | --- |
+| `resources.detail.click` | 资源表格的详情入口 | resource、type |
+| `resources.load-more.click` | 单批预览的“→ 全部资源”链接 | path、search、kind |
+| `resources.filter.click` | 资源表格精化筛选 | filterType、value |
+| `subject.fallback-search` | Subject 空结果的“前往搜索” | subject |
 
-| 事件名             | 触发场景                      | 属性                       |
-| ------------------ | ----------------------------- | -------------------------- |
-| `nav.click.home`   | Header 首页按钮点击           | `item`                     |
-| `nav.click.anime`  | Header 动画入口及其子项点击   | `item`，部分场景带 `group` |
-| `nav.click.fansub` | Header 字幕组入口及其子项点击 | `item`                     |
-| `nav.click.type`   | Header 资源入口及其子项点击   | `item`                     |
-| `theme.switch`     | 主题切换                      | `mode`                     |
+`resource` 使用 `{provider}:{providerId}`。
+`filterType` 为 type、fansub 或 publisher。
+`resources.load-more.click` 专指用户点击预览链接，kind 为 link，
+path 为当前 pathname，search 为当前 query string。
+自动滚动续页属于查询行为，不上报点击事件。
 
-当前接入位置：
-
-- `src/layouts/Header.tsx`
-- `src/layouts/ThemeToggle.tsx`
-
-### 搜索框
-
-| 事件名                    | 触发场景                    | 属性                                |
-| ------------------------- | --------------------------- | ----------------------------------- |
-| `search.trigger`          | 搜索触发                    | `text`，`source`                    |
-| `search.history.click`    | 点击搜索历史                | `text`                              |
-| `search.history.delete`   | 删除搜索历史 / 清空搜索历史 | `action`，可选 `text`，可选 `count` |
-| `search.suggestion.click` | 点击搜索联想项              | `text`，`subjectId`                 |
-| `search.result.click`     | 点击搜索结果详情项          | `text`，`resource`                  |
-
-`search.trigger.source` 当前取值：
-
-- `button`
-- `command`
-- `history`
-- `result-more`
-
-当前接入位置：
-
-- `src/layouts/Search/Search.tsx`
-
-### 资源列表和筛选
-
-| 事件名                    | 触发场景                         | 属性                            |
-| ------------------------- | -------------------------------- | ------------------------------- |
-| `resources.more.click`    | 资源表格点击“更多”               | `resource`，`type`              |
-| `resources.filter.click`  | 资源表格精化筛选                 | `filterType`，`value`           |
-| `anime.calendar.click`    | 动画周历卡片点击                 | `subjectId`，`title`，`weekday` |
-| `subject.fallback-search` | Subject 页无资源时点击“前往搜索” | `subject`                       |
-
-`resources.filter.click.filterType` 当前取值：
-
-- `type`
-- `fansub`
-- `publisher`
-
-当前接入位置：
+接入位置：
 
 - `src/components/Resources/table.tsx`
-- `src/pages/anime/route.tsx`
-- `src/routes/subject.$subject.($page)/route.tsx`
+- `src/components/Resources/load-more.tsx`
+- `src/pages/subject.$subject.($page)/route.tsx`
 
-### 收藏夹和复制操作
+## 下载、播放与订阅
 
-| 事件名                      | 触发场景                                 | 属性       |
-| --------------------------- | ---------------------------------------- | ---------- |
-| `collection.open-sidebar`   | 打开收藏夹侧栏                           | 无         |
-| `collection.add`            | 添加当前筛选到收藏夹                     | 无         |
-| `collection.open`           | 打开收藏夹页                             | `hash`     |
-| `collection.share`          | 复制收藏夹分享链接                       | `hash`     |
-| `copy.feed`                 | 复制 RSS 链接                            | 无         |
-| `copy.magnet-links`         | 复制所有磁力链接                         | 无         |
-| `copy.json`                 | 复制 JSON 数据                           | 无         |
-| `copy.fetch`                | 复制 cURL / Python / JavaScript 请求代码 | `language` |
-| `copy.iframe`               | 复制 iframe 嵌入代码                     | 无         |
-| `collection.open-resources` | 收藏项菜单里“在新页面中打开”             | `search`   |
-
-当前接入位置：
-
-- `src/layouts/Sidebar/Sidebar.tsx`
-- `src/layouts/Sidebar/Collection.tsx`
-- `src/routes/resources.($page)/Filter.tsx`
-
-### Footer 外链
-
-| 事件名              | 触发场景        | 属性                       |
-| ------------------- | --------------- | -------------------------- |
-| `footer.link.click` | Footer 外链点击 | `section`，`label`，`href` |
-
-当前覆盖的 section：
-
-- `状态`
-- `源站`
-- `关于`
-- `开放`
-- `更多`
-- `版权`
-
-当前接入位置：
-
-- `src/layouts/Footer.tsx`
-
-### Skills 复制操作
-
-| 事件名 | 触发场景 | 属性 |
+| 事件 | 触发 | 字段 |
 | --- | --- | --- |
-| `skills.copy` | Skills 页「复制提示词 / 复制命令 / 复制示例」成功后 | `kind`，`source`，示例另带 `example` |
+| `download` | 下载链接，包括 Skills 示例 | resource、source |
+| `pikpak` | 播放链接 | resource、source |
+| `feed.open` | RSS 链接 | href |
 
-- `kind = prompt / command / example`：分别表示提示词、安装命令和使用示例。
-- `source = hero / online / local`：分别表示首屏对话、直接使用、安装 Skill。
-- `source = mcp.codex / mcp.claude / plugin.codex / plugin.claude`：区分 MCP、插件安装及所选客户端。
-- `source = example`：试着问它；`example` 为示例标题。
-- 仅在剪贴板写入成功后上报，复制失败不记录；不上传完整提示词、命令或示例正文。
-- 接入位置：`src/pages/skills/route.tsx` 的 `CopyButton`，统一调用 `src/utils/umami.ts` 的 `trackSkillsCopy`。
+下载入口通过 `openMagnetLink()` 上报；播放入口通过 `getPikPakTrackEvent()` 生成属性；
+RSS 入口通过 `getOpenFeedTrackEvent()` 上报。
 
-### Skills 聊天应用入口
+接入位置：资源表格、`src/pages/detail.$provider.$providerId/route.tsx`、
+Header、Footer、Subject 分组和 Skills 示例。
 
-| 事件名 | 触发场景 | 属性 |
+## 收藏夹与复制
+
+| 事件 | 触发 | 字段 |
 | --- | --- | --- |
-| `skills.chat.open` | 「打开」菜单中选择 ChatGPT、Codex、Claude、Cursor、DeepSeek、豆包、Kimi、千问或元宝 | `app`，`source`，示例入口另带 `example` |
+| `collection.open-sidebar` | 打开收藏夹侧栏 | 无 |
+| `collection.add` | 收藏当前筛选 | 无 |
+| `collection.open` | 打开收藏夹页 | hash |
+| `collection.share` | 复制分享链接 | hash |
+| `collection.open-resources` | 收藏项菜单的“在新页面中打开” | search |
+| `copy.feed` | 复制 RSS | 无 |
+| `copy.magnet-links` | 复制磁力链接 | 无 |
+| `copy.json` | 复制 JSON | 无 |
+| `copy.fetch` | 复制请求代码 | language |
+| `copy.iframe` | 复制 iframe | 无 |
 
-- `source = direct`：直接使用。
-- `source = example`：试着问它；`example` 为示例标题。
-- 记录链接的鼠标主键、键盘和中键激活；仅展开菜单不记录，不代表目标应用已成功加载。
-- 国产应用的「复制并打开」在复制成功后上报，复制失败不记录打开事件。
-- 不上传完整 prompt 或含 prompt 的目标 URL。
-- 接入位置：`src/components/Skills/OpenInChat.tsx`，统一调用 `src/utils/umami.ts` 的 `trackSkillsChatOpen`。
+`copy.fetch.language` 为 curl、python 或 javascript。
+接入位置：`src/layouts/Sidebar/` 和 `src/pages/resources.($page)/Filter.tsx`。
 
-### 错误埋点
+## Skills
 
-| 事件名                  | 触发场景     | 属性            |
-| ----------------------- | ------------ | --------------- |
-| `error.render`          | 页面渲染错误 | `path`，`error` |
-| `error.fetch-resources` | 拉取资源失败 | `path`，`error` |
+| 事件 | 触发 | 字段 |
+| --- | --- | --- |
+| `skills.copy` | 提示词、命令或示例复制成功 | kind、source，示例另带 example |
+| `skills.chat.open` | 激活聊天应用入口 | app、source，示例另带 example |
 
-当前接入位置：
+复制事件：
 
-- `src/routes/resources.($page)/Error.tsx`
-- `src/routes/_index/route.tsx`
-- `src/routes/resources.($page)/route.tsx`
-- `src/routes/iframe/route.tsx`
-- `src/routes/subject.$subject.($page)/route.tsx`
+- kind：prompt、command、example。
+- source：hero、online、local、mcp.codex、mcp.claude、plugin.codex、plugin.claude、example。
+- example：示例标题。
 
-## 未覆盖点击埋点 TODO
+聊天应用事件的 source 为 direct 或 example，记录主键、键盘和中键激活。
+“复制并打开”入口在复制成功后上报。
+事件只携带入口元数据，提示词、安装命令和含 prompt 的目标 URL 留在本地操作中。
 
-下面是静态审计后整理出的候选项，按优先级分层，供评估是否补充。
+接入位置：`src/pages/skills/route.tsx` 的 CopyButton，
+以及 `src/components/Skills/OpenInChat.tsx`。
 
-### 高优先级
+## 错误
 
-- 分页点击
-  - 文件：`src/components/Resources/pagination.tsx`
-  - 场景：上一页、页码、下一页
-  - 建议属性：`page`，`targetPage`，`kind`
-- 详情页原链接外跳
-  - 文件：`src/routes/detail.$provider.$providerId/route.tsx`
-  - 场景：点击“原链接”
-  - 建议属性：`resource`，`href`
-- 详情页发布者/字幕组跳转
-  - 文件：`src/routes/detail.$provider.$providerId/route.tsx`
-  - 场景：点击发布者卡片、字幕组卡片
-  - 建议属性：`filterType`，`value`，`resource`
-- 搜索结果页筛选摘要跳转
-  - 文件：`src/routes/resources.($page)/Filter.tsx`
-  - 场景：点击筛选摘要中的动画、发布者、字幕组
-  - 建议属性：`filterType`，`value`
-- Subject 页分享按钮
-  - 文件：`src/routes/subject.$subject.($page)/subject.tsx`
-  - 场景：复制主题页链接
-  - 建议属性：`subjectId`，`title`
-- Subject 页 Bangumi 外链
-  - 文件：`src/routes/subject.$subject.($page)/subject.tsx`
-  - 场景：点击外部 Bangumi 链接
-  - 建议属性：`subjectId`，`href`
-- 收藏夹项管理操作
-  - 文件：`src/layouts/Sidebar/Collection.tsx`
-  - 场景：重命名、删除
-  - 建议属性：`search`，必要时带 `name`
+| 事件 | 触发 | 字段 |
+| --- | --- | --- |
+| `error.render` | 页面展示错误状态 | path、error |
+| `error.fetch-resources` | 已有页面上的资源请求失败 | path、error |
 
-### 中优先级
+错误标识通过统一 helper 生成。
+接入位置：`src/pages/resources.($page)/Error.tsx`，首页、资源页、iframe 与 Subject 页面。
 
-- 收藏夹侧栏快捷入口
-  - 文件：`src/layouts/Sidebar/Sidebar.tsx`
-  - 场景：动画周历、所有资源、高级搜索帮助
-  - 建议属性：`item`
-- 收藏夹项主点击
-  - 文件：`src/layouts/Sidebar/Collection.tsx`
-  - 场景：点击某个收藏条件进入资源页
-  - 建议属性：`search`
-- Subject 分组标题点击
-  - 文件：`src/routes/subject.$subject.($page)/route.tsx`
-  - 场景：点击分组标题里的字幕组/发布者名
-  - 建议属性：`filterType`，`value`，`subjectId`
-- Subject 分组“搜索更多资源...”
-  - 文件：`src/routes/subject.$subject.($page)/route.tsx`
-  - 场景：点击分组下方查看更多
-  - 建议属性：`filterType`，`value`，`subjectId`
-- 收藏夹详情页过滤块标题点击
-  - 文件：`src/routes/collection.$hash/route.tsx`
-  - 场景：点击每个块的标题跳到资源页
-  - 建议属性：`hash`，`search`
-- 资源标题和发布时间点击
-  - 文件：`src/components/Resources/table.tsx`
-  - 场景：点击标题进入详情，点击发布时间进入详情
-  - 建议属性：`resource`，`type`
-- 搜索框高级搜索帮助
-  - 文件：`src/layouts/Search/Search.tsx`
-  - 场景：点击“高级搜索帮助”
-  - 建议属性：`href`
-- 搜索框高级搜索补全项
-  - 文件：`src/layouts/Search/Search.tsx`
-  - 场景：点击“包含关键词 / 排除关键词 / 字幕组 / 标题 / 晚于 / 早于 / 类型”
-  - 建议属性：`item`
+## 扩展规则
 
-### 低优先级
-
-- 搜索框清空按钮
-  - 文件：`src/layouts/Search/Search.tsx`
-  - 建议属性：无或 `hasInput`
-- 动画周历星期锚点
-  - 文件：`src/pages/anime/route.tsx`
-  - 建议属性：`weekday`，`season`
-- 动画周历季度切换
-  - 文件：`src/pages/anime/route.tsx`
-  - 建议属性：`fromSeason`，`toSeason`
-- Hero 标题回首页
-  - 文件：`src/layouts/Layout.tsx`
-  - 建议属性：`item = hero-home`
-- Footer 内链
-  - 文件：`src/layouts/Footer.tsx`
-  - 场景：`API 文档`、`站点地图`
-  - 建议属性：`label`
-- 收藏夹侧栏关闭按钮
-  - 文件：`src/layouts/Sidebar/Sidebar.tsx`
-  - 建议属性：无
-- 收藏夹空状态引导入口
-  - 文件：`src/layouts/Sidebar/Sidebar.tsx`
-  - 建议属性：`item = empty-state`
-
-## 建议的补点原则
-
-- 优先埋“会改变页面流转或代表用户明确意图”的点击
-- 同一类行为尽量复用统一事件名和属性结构
-- 对跳转类行为优先带上目标对象，例如 `resource`、`subjectId`、`href`
-- 对筛选类行为优先带 `filterType` 和 `value`
-- 非核心 UI 细节，例如纯视觉滚动辅助按钮，可以放到低优先级
+- 同类操作复用事件名称与字段定义。
+- 跳转事件记录目标资源或 Subject 标识；筛选事件记录 filterType 和 value。
+- 点击、复制成功、查询失败分别按实际触发时机记录。
+- 新事件同时更新 helper 类型、调用点和对应测试。

@@ -136,7 +136,7 @@ export const CollectionItemContent = memo(
         >
           <TooltipTrigger asChild>
             <Link
-              {...getResourcesRouteLink(1, item.searchParams)}
+              {...getResourcesRouteLink(item.searchParams)}
               key={item.searchParams}
               className={clsx(
                 'collection-item hover:bg-layer-subtle-overlay rounded-md text-base-800 text-xs',
@@ -189,12 +189,12 @@ export const CollectionItemContent = memo(
                 >
                   <DropdownMenuItem asChild>
                     <Link
-                      {...getResourcesRouteLink(1, item.searchParams)}
+                      {...getResourcesRouteLink(item.searchParams)}
                       target="_blank"
                       onClick={(e: React.MouseEvent) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        window.open(`/resources/1${item.searchParams}`);
+                        window.open(`/resources${item.searchParams}`);
                         track('collection.open-resources', { search: item.searchParams });
                       }}
                     >
@@ -315,13 +315,13 @@ const CollectionItemFilter = memo((props: { item: CollectionItem }) => {
         <div>
           <span className="font-bold mr2 select-none">字幕组</span>
           {display.fansubs.map((fansub) => (
-            <a
+            <Link
               key={fansub}
-              href={`/resources/1?fansub=${fansub}`}
+              {...getResourcesRouteLink({ fansub })}
               className="select-text text-link mr2"
             >
               {fansub}
-            </a>
+            </Link>
           ))}
         </div>
       )}

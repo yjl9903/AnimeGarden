@@ -127,7 +127,7 @@ function quote(value: string) {
  * keyword; a preset combined with one to three types; or a single Subject/search/keyword combined
  * with one fansub/publisher. All accepted array values must be non-empty, and Subject data must be
  * resolvable. Other multi-dimensional filters, multiple values, include, exclude, provider, and
- * date ranges are noindex. Empty result pages and every page after page 1 are also noindex.
+ * date ranges are noindex. Empty result pages are also noindex.
  *
  * A single valid Subject filter is the exception: it remains indexable but canonicalizes to the
  * corresponding Subject page instead of the resources URL.
@@ -135,15 +135,8 @@ function quote(value: string) {
 export function resolveResourcesPageIndexing(
   filter: ResolvedFilterOptions | undefined,
   subjects: Record<number, Pick<WebBgmSubject, 'title'>> = {},
-  hasResults?: boolean,
-  page = 1
+  hasResults?: boolean
 ) {
-  // Only the first page participates in the indexing whitelist. Later pages keep their own
-  // canonical URL but must not compete with the primary landing page in search results.
-  if (page !== 1) {
-    return { indexable: false, canonicalSubjectId: undefined };
-  }
-
   const resolvedFilter = filter ?? {};
   const activeFilters = getActiveResourceFilters(resolvedFilter);
   const singleSubjectId =
@@ -250,16 +243,15 @@ function hasUsableValues(
 export function buildResourcesPageHead(
   filter: ResolvedFilterOptions | undefined,
   subjects: Record<number, Pick<WebBgmSubject, 'title'>> | undefined,
-  page: number,
   hasResults?: boolean
 ) {
   const resolvedFilter = filter ?? {};
   const resolvedSubjects = subjects ?? {};
   const search = stringifyURLSearch(resolvedFilter);
-  const indexing = resolveResourcesPageIndexing(resolvedFilter, resolvedSubjects, hasResults, page);
+  const indexing = resolveResourcesPageIndexing(resolvedFilter, resolvedSubjects, hasResults);
   const canonical = indexing.canonicalSubjectId
     ? getCanonicalURL(`/subject/${indexing.canonicalSubjectId}`)
-    : getCanonicalURL(`/resources/${page}`, search.toString());
+    : getCanonicalURL('/resources', search.toString());
   const seo = buildResourcesPageSeo(resolvedFilter, resolvedSubjects);
   const social = { ...seo, url: canonical };
 
