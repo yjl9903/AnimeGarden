@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
+import { parseURLSearch } from '@animegarden/client';
+
 import { parseRouterSearch, stringifyRouterSearch } from '../src/router';
 import { toResourcesRouterSearch } from '../src/utils/routes';
 
@@ -16,14 +18,16 @@ describe('router search params', () => {
     );
   });
 
-  it('preserves explicit and provider-derived duplicate filters for provider queries', () => {
-    expect(toResourcesRouterSearch('?provider=dmhy&duplicate=true')).toEqual({
-      provider: 'dmhy',
-      duplicate: 'true'
-    });
-    expect(toResourcesRouterSearch('?provider=dmhy')).toEqual({
-      provider: 'dmhy',
-      duplicate: 'true'
-    });
+  it.each([
+    ['?provider=dmhy&duplicate=true', true],
+    ['?provider=dmhy', true],
+    ['?provider=dmhy&duplicate=false', false]
+  ] as const)('preserves duplicate semantics while omitting defaults: %s', (input, duplicate) => {
+    const search = toResourcesRouterSearch(input);
+    expect(search).toEqual(
+      duplicate ? { provider: 'dmhy' } : { provider: 'dmhy', duplicate: 'false' }
+    );
+    const params = new URLSearchParams(stringifyRouterSearch(search));
+    expect(parseURLSearch(params).filter).toEqual({ provider: 'dmhy', duplicate });
   });
 });
