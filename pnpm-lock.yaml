@@ -279,7 +279,7 @@ importers:
         version: 2.0.1(date-fns@2.30.0)
       drizzle-orm:
         specifier: 0.45.4
-        version: 0.45.4(@cloudflare/workers-types@5.20261030.1)(@types/better-sqlite3@9.6.0)(postgres@3.4.9)
+        version: 0.45.4(@cloudflare/workers-types@5.20261030.1)(@types/better-sqlite3@9.6.0)(postgres@4.0.0)
       fast-xml-parser:
         specifier: 5.11.2
         version: 5.11.2
@@ -302,8 +302,8 @@ importers:
         specifier: 2.0.12
         version: 2.0.12
       postgres:
-        specifier: 3.4.9
-        version: 3.4.9
+        specifier: 4.0.0
+        version: 4.0.0
       simptrad:
         specifier: 0.3.0
         version: 0.3.0
@@ -6271,9 +6271,9 @@ packages:
     resolution: {integrity: sha512-LJlKCCAUFKOuZxipUdYw1NzIITEsPcgyOG9LkvRJvuKj/bRzbuRY0ARXvL0pWGpsZvn8jku+LMep2eU0seHp8g==}
     engines: {node: ^10 || ^12 || >=14}
 
-  postgres@3.4.9:
-    resolution: {integrity: sha512-GD3qdB0x1z9xgFI6cdRD6xu2Sp2WCOEoe3mtnyB5Ee0XrrL5Pe+e4CCnJrRMnL1zYtRDZmQQVbvOttLnKDLnaw==}
-    engines: {node: '>=12'}
+  postgres@4.0.0:
+    resolution: {integrity: sha512-kBh8qXtcvvIAc00DftQyOxz7M/3Zxww1tRMXZPLzipNXXl5PIzHml+9zB3Mrge2U8ldc0WF1ZdLp1iYQi7Kh3A==}
+    engines: {node: '>=20'}
 
   prettier@3.9.10:
     resolution: {integrity: sha512-skGHTH1Yb9QvaTC4hWnRTzEYtCpApF0UMBPz+t/0ZPzP8ihefo/btKd+QA7pUE0fEwA1SbS/NmhyEcstdXOIdA==}
@@ -12090,11 +12090,11 @@ snapshots:
       esbuild: 0.25.12
       tsx: 4.23.15
 
-  drizzle-orm@0.45.4(@cloudflare/workers-types@5.20261030.1)(@types/better-sqlite3@9.6.0)(postgres@3.4.9):
+  drizzle-orm@0.45.4(@cloudflare/workers-types@5.20261030.1)(@types/better-sqlite3@9.6.0)(postgres@4.0.0):
     optionalDependencies:
       '@cloudflare/workers-types': 5.20261030.1
       '@types/better-sqlite3': 9.6.0
-      postgres: 3.4.9
+      postgres: 4.0.0
 
   dunder-proto@1.0.1:
     dependencies:
@@ -13566,7 +13566,7 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.2
 
-  postgres@3.4.9: {}
+  postgres@4.0.0: {}
 
   prettier@3.9.10: {}
 
