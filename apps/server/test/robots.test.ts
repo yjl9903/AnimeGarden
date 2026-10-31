@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { describe, expect, it, vi } from 'vitest';
 
+import { FeedModule } from '../src/feed';
 import { makeServer } from '../src/server';
 import { apiRobotsTxt, defineRobotsRoutes } from '../src/server/routes/robots';
 import type { AppEnv } from '../src/server/utils/hono';
@@ -42,18 +43,18 @@ describe('API robots.txt', () => {
 
   it('marks JSON, XML, cached, redirect, and error responses as noindex', async () => {
     const find = vi.fn().mockResolvedValue({ resources: [] });
-    const server = await makeServer(
-      {
-        initialize: vi.fn(),
-        logger: { info: vi.fn(), error: vi.fn() },
-        modules: {
-          providers: { timestamp: new Date(), providers: new Map() },
-          resources: { query: { find } }
-        },
-        options: {}
-      } as any,
-      {}
-    );
+    const query = { find };
+    const sys = {
+      initialize: vi.fn(),
+      logger: { info: vi.fn(), error: vi.fn() },
+      modules: {
+        providers: { timestamp: new Date(), providers: new Map() },
+        resources: { query }
+      },
+      options: {}
+    } as any;
+    sys.modules.feed = new FeedModule(sys, FeedModule.name);
+    const server = await makeServer(sys, {});
 
     const json = await server.hono.request('/health');
     expect(json.status).toBe(200);
@@ -80,6 +81,7 @@ describe('API robots.txt', () => {
     expect(missing.headers.get('X-Robots-Tag')).toBe('noindex');
 
     find.mockRejectedValueOnce(new Error('Query failed'));
+    await sys.modules.feed.refresh();
     const error = await server.hono.request('/feed.xml');
     expect(error.status).toBe(500);
     expect(error.headers.get('X-Robots-Tag')).toBe('noindex');

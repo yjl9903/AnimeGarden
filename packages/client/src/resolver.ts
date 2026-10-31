@@ -70,6 +70,7 @@ const BodySchema = {
   preset: presetEnum.optional()
 };
 
+/** Parse and validate query input, returning deduplicated, sorted filter collections. */
 export function parseURLSearch(
   params?: URLSearchParams,
   body?: PaginationOptions & FilterOptions & PresetOptions
@@ -164,7 +165,7 @@ export function parseURLSearch(
     filter.fansubs = res1.fansub;
   }
   if (filter.fansubs) {
-    filter.fansubs = [...new Set(filter.fansubs)];
+    filter.fansubs = [...new Set(filter.fansubs)].sort();
   }
 
   if (res2?.publisher) {
@@ -173,6 +174,9 @@ export function parseURLSearch(
     filter.publishers = res2.publishers;
   } else if (res1?.publisher && res1.publisher.length > 0) {
     filter.publishers = res1.publisher;
+  }
+  if (filter.publishers) {
+    filter.publishers = [...new Set(filter.publishers)].sort();
   }
 
   if (res2?.type) {
@@ -183,7 +187,7 @@ export function parseURLSearch(
     filter.types = res1.type;
   }
   if (filter.types) {
-    filter.types = [...new Set(filter.types)];
+    filter.types = [...new Set(filter.types)].sort();
   }
 
   if (res2?.before || res1?.before) {
@@ -200,6 +204,9 @@ export function parseURLSearch(
   } else if (res1?.subject && res1.subject.length > 0) {
     filter.subjects = res1.subject;
   }
+  if (filter.subjects) {
+    filter.subjects = [...new Set(filter.subjects)].sort((a, b) => a - b);
+  }
 
   if (res2?.search && res2.search.length > 0) {
     filter.search = res2.search;
@@ -207,7 +214,7 @@ export function parseURLSearch(
     filter.search = res1.search;
   }
   if (filter.search) {
-    filter.search = [...new Set(filter.search)];
+    filter.search = [...new Set(filter.search)].sort();
   }
 
   if (res2?.include && res2.include.length > 0) {
@@ -216,7 +223,7 @@ export function parseURLSearch(
     filter.include = res1.include;
   }
   if (filter.include) {
-    filter.include = [...new Set(filter.include)];
+    filter.include = [...new Set(filter.include)].sort();
   }
 
   if (res2?.keywords && res2.keywords.length > 0) {
@@ -225,7 +232,7 @@ export function parseURLSearch(
     filter.keywords = res1.keyword;
   }
   if (filter.keywords) {
-    filter.keywords = [...new Set(filter.keywords)];
+    filter.keywords = [...new Set(filter.keywords)].sort();
   }
 
   if (res2?.exclude && res2.exclude.length > 0) {
@@ -234,7 +241,7 @@ export function parseURLSearch(
     filter.exclude = res1.exclude;
   }
   if (filter.exclude) {
-    filter.exclude = [...new Set(filter.exclude)];
+    filter.exclude = [...new Set(filter.exclude)].sort();
   }
 
   if (filter.search) {
@@ -244,6 +251,7 @@ export function parseURLSearch(
   return { pagination, filter };
 }
 
+/** Serialize a resource query with sorted sets and omitted default values. */
 export function stringifyURLSearch(
   options: PaginationOptions & (FilterOptions | Jsonify<FilterOptions>) & PresetOptions
 ) {
@@ -255,15 +263,15 @@ export function stringifyURLSearch(
     params.set('preset', preset);
   }
 
-  if (page) {
+  if (page && page !== 1) {
     params.set('page', '' + page);
   }
-  if (pageSize) {
+  if (pageSize && pageSize !== DefaultPageSize) {
     params.set('pageSize', '' + pageSize);
   }
   // Preserve explicit false so a URL round trip does not restore the provider default.
-  if (duplicate !== undefined) {
-    params.set('duplicate', String(duplicate));
+  if (duplicate === false) {
+    params.set('duplicate', 'false');
   }
   if (after) {
     const time = after instanceof Date ? after.getTime() : new Date(after).getTime();
@@ -296,39 +304,39 @@ export function stringifyURLSearch(
   if (subject) {
     params.set('subject', '' + subject);
   } else if (subjects) {
-    for (const subject of new Set(subjects)) {
+    for (const subject of [...new Set(subjects)].sort((a, b) => a - b)) {
       params.append('subject', '' + subject);
     }
   }
 
   if (search && search.length > 0) {
     // 模糊搜索模式
-    for (const word of new Set(search)) {
+    for (const word of [...new Set(search)].sort()) {
       params.append('search', word);
     }
-    for (const word of keywords ? new Set(keywords) : []) {
+    for (const word of keywords ? [...new Set(keywords)].sort() : []) {
       params.append('keyword', word);
     }
-    for (const word of exclude ? new Set(exclude) : []) {
+    for (const word of exclude ? [...new Set(exclude)].sort() : []) {
       params.append('exclude', word);
     }
   } else if (include && include.length > 0) {
     // 标题匹配模式
-    for (const word of include ? new Set(include) : []) {
+    for (const word of include ? [...new Set(include)].sort() : []) {
       params.append('include', word);
     }
-    for (const word of keywords ? new Set(keywords) : []) {
+    for (const word of keywords ? [...new Set(keywords)].sort() : []) {
       params.append('keyword', word);
     }
-    for (const word of exclude ? new Set(exclude) : []) {
+    for (const word of exclude ? [...new Set(exclude)].sort() : []) {
       params.append('exclude', word);
     }
   } else {
     // 关键词和禁用词
-    for (const word of keywords ? new Set(keywords) : []) {
+    for (const word of keywords ? [...new Set(keywords)].sort() : []) {
       params.append('keyword', word);
     }
-    for (const word of exclude ? new Set(exclude) : []) {
+    for (const word of exclude ? [...new Set(exclude)].sort() : []) {
       params.append('exclude', word);
     }
   }
@@ -337,7 +345,7 @@ export function stringifyURLSearch(
   if (type) {
     params.set('type', type);
   } else if (types) {
-    for (const type of new Set(types)) {
+    for (const type of [...new Set(types)].sort()) {
       params.append('type', type);
     }
   }
@@ -346,7 +354,7 @@ export function stringifyURLSearch(
   if (fansub) {
     params.set('fansub', fansub);
   } else if (fansubs) {
-    for (const fansub of new Set(fansubs)) {
+    for (const fansub of [...new Set(fansubs)].sort()) {
       params.append('fansub', fansub);
     }
   }
@@ -355,7 +363,7 @@ export function stringifyURLSearch(
   if (publisher) {
     params.set('publisher', publisher);
   } else if (publishers) {
-    for (const publisher of new Set(publishers)) {
+    for (const publisher of [...new Set(publishers)].sort()) {
       params.append('publisher', publisher);
     }
   }

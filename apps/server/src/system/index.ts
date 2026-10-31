@@ -6,6 +6,7 @@ import {
 } from '../connect/database.ts';
 
 import { TagsModule } from '../tags/index.ts';
+import { FeedModule } from '../feed/index.ts';
 import { PushModule } from '../push/index.ts';
 import { SubjectsModule } from '../subjects/index.ts';
 import { ResourcesModule } from '../resources/index.ts';
@@ -33,6 +34,7 @@ export type System = ISystem<
     users: UsersModule;
     teams: TeamsModule;
     collections: CollectionsModule;
+    feed: FeedModule;
     push: PushModule;
   },
   import('./types.ts').ResourcesRpcEventMap
@@ -97,6 +99,7 @@ export async function makeSystem(options: SystemOptions) {
   system.modules.collections = new CollectionsModule(system, CollectionsModule.name);
   system.modules.tags = new TagsModule(system, TagsModule.name);
   system.modules.subjects = new SubjectsModule(system, SubjectsModule.name);
+  system.modules.feed = new FeedModule(system, FeedModule.name);
   system.modules.push = new PushModule(system, PushModule.name);
 
   return system;

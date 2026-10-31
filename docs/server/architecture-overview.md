@@ -26,7 +26,7 @@
 - 在 `cron` 与普通 `server` 之间通过 Redis 发布资源变更通知；Redis 离线期间通知、跨进程 RPC 和 Redis 缓存会降级为不可用，主进程继续运行。
 - 提供 RPC bus，让普通服务可以请求 `cron` 执行资源任务。
 
-模块都继承 `src/system/module.ts` 的 `Module`，当前注册模块包括 `providers`、`users`、`teams`、`resources`、`collections`、`tags`、`subjects`、`push`。
+模块都继承 `src/system/module.ts` 的 `Module`，当前注册模块包括 `providers`、`users`、`teams`、`resources`、`collections`、`tags`、`subjects`、`feed`、`push`。
 
 ## HTTP 与任务入口
 
@@ -58,7 +58,8 @@ Hono 入口在 `src/server/index.ts`。`registerHono()` 统一绑定：
 | `src/push/` | Telegram 消息状态机、过滤、消息构造和发送队列 |
 | `src/users/` | 发布者和字幕组缓存 / 查询 |
 | `src/collections/` | 收藏夹生成和读取 |
-| `src/server/rss/`、`src/server/sitemap/` | RSS 与 sitemap 输出 |
+| `src/feed/` | RSS 筛选条件规范化、资源映射、序列化与内容缓存；HTTP 条件响应由 feed 路由处理 |
+| `src/server/sitemap/` | sitemap 输出 |
 | `src/server/mcp/` | MCP 服务封装 |
 | `src/utils/` | 缓存、数据库重试、jieba、时间等工具 |
 

@@ -1,7 +1,7 @@
 import { XMLParser, XMLValidator } from 'fast-xml-parser';
 import { describe, expect, it } from 'vitest';
 
-import { getRssString } from '../src/server/rss/index';
+import { getRssString } from '../src/feed/rss/index';
 
 describe('RSS structured extensions', () => {
   it('escapes text, preserves falsy scalars and omits nullish values', async () => {

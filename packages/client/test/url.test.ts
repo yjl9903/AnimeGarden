@@ -217,7 +217,7 @@ describe('duplicate filter', () => {
     const options = { provider: 'dmhy', duplicate };
     expect(parseURLSearch(undefined, options).filter).toEqual(options);
     const params = stringifyURLSearch(options);
-    expect(params.get('duplicate')).toBe(String(duplicate));
+    expect(params.get('duplicate')).toBe(duplicate ? null : 'false');
     expect(parseURLSearch(params).filter).toEqual(options);
   });
 
@@ -263,6 +263,69 @@ describe('parse url with body', () => {
   });
 });
 
+describe('canonical query round trips', () => {
+  it('gives equivalent queries the same filter ordering and URL', () => {
+    const first = parseURLSearch(
+      new URLSearchParams(
+        'subject=10&subject=2&subject=10&publisher=B&publisher=A&publisher=A&page=1&pageSize=100&unknown=x'
+      )
+    );
+    const second = parseURLSearch(
+      new URLSearchParams('publisher=A&publisher=B&subject=2&subject=10')
+    );
+    expect(first).toEqual(second);
+    expect(stringifyURLSearch({ ...first.filter, ...first.pagination }).toString()).toBe(
+      'publisher=A&publisher=B&subject=2&subject=10'
+    );
+    expect(first.pagination).toEqual({ page: 1, pageSize: 100 });
+  });
+
+  it.each(['search', 'include'] as const)(
+    'normalizes %s and other collections without mutating input',
+    (mode) => {
+      const body = {
+        publishers: ['B', 'A', 'B'],
+        fansubs: ['B', 'A', 'B'],
+        types: ['B', 'A', 'B'],
+        [mode]: ['B', 'A', 'B'],
+        keywords: ['B', 'A', 'B'],
+        exclude: ['B', 'A', 'B'],
+        subjects: [10, 2, 10],
+        after: new Date('2026-01-01')
+      };
+      const original = structuredClone(body);
+      const { filter } = parseURLSearch(undefined, body);
+      for (const key of [mode, 'publishers', 'fansubs', 'types', 'keywords', 'exclude'] as const) {
+        expect(filter[key]).toEqual(['A', 'B']);
+        expect(filter[key]).not.toBe(body[key]);
+      }
+      expect(filter.subjects).toEqual([2, 10]);
+      const params = stringifyURLSearch(body);
+      for (const key of [mode, 'publisher', 'fansub', 'type', 'keyword', 'exclude']) {
+        expect(params.getAll(key)).toEqual(['A', 'B']);
+      }
+      expect(params.getAll('subject')).toEqual(['2', '10']);
+      expect(params.get('after')).toBe(String(body.after.getTime()));
+      expect(body).toEqual(original);
+    }
+  );
+
+  it('omits URL defaults while preserving parsed defaults, explicit false and other pages', () => {
+    const defaults = parseURLSearch(new URLSearchParams('provider=dmhy'));
+    expect(defaults.filter.duplicate).toBe(true);
+    expect(stringifyURLSearch({ ...defaults.pagination, ...defaults.filter }).toString()).toBe(
+      'provider=dmhy'
+    );
+    const custom = { provider: 'dmhy', duplicate: false, page: 2, pageSize: 10 };
+    const params = stringifyURLSearch(custom);
+    expect(params.toString()).toBe('duplicate=false&page=2&pageSize=10&provider=dmhy');
+    expect(parseURLSearch(params)).toEqual({
+      filter: { provider: 'dmhy', duplicate: false },
+      pagination: { page: 2, pageSize: 10 }
+    });
+  });
+});
+
 describe('stringify url', () => {
   it('should work', () => {
     const params = [
@@ -286,7 +349,7 @@ describe('stringify url', () => {
     const { pagination, filter } = parseURLSearch(new URLSearchParams(params.join('&')));
 
     expect(stringifyURLSearch({ ...pagination, ...filter }).toString()).toMatchInlineSnapshot(
-      `"after=1686355200000&before=1686614400000&exclude=h1&fansub=abc&fansub=def&page=2&pageSize=100&publisher=456&search=hello&search=world&type=%E5%8A%A8%E7%94%BB"`
+      `"after=1686355200000&before=1686614400000&exclude=h1&fansub=abc&fansub=def&page=2&publisher=456&search=hello&search=world&type=%E5%8A%A8%E7%94%BB"`
     );
   });
 
@@ -347,7 +410,7 @@ describe('stringify url', () => {
     });
 
     expect(params.getAll('keyword')).toEqual(['简中', '繁中']);
-    expect(params.getAll('exclude')).toEqual(['PV', 'NCOP']);
+    expect(params.getAll('exclude')).toEqual(['NCOP', 'PV']);
   });
 
   it('should normalize string body filter values in parseURLSearch', () => {

@@ -11,6 +11,8 @@ const RETAINED_304_HEADERS = [
 
 const DEFAULT_ETAG_STATUS = 200;
 
+const DIGEST_CHUNK_SIZE = 256 * 1024;
+
 const stripWeak = (tag: string) => tag.replace(/^W\//, '');
 
 function etagMatches(etag: string, ifNoneMatch: string | null) {
@@ -59,6 +61,10 @@ function toDigestInput(body: ArrayBuffer | Uint8Array) {
   return body;
 }
 
+/**
+ * Match Hono 4.13.14's fixed-size digest blocks, regardless of stream chunk boundaries.
+ * Upstream: https://github.com/honojs/hono/blob/v4.13.14/src/middleware/etag/digest.ts
+ */
 async function generateHexDigest(
   stream: ReadableStream<Uint8Array> | null,
   generator: NonNullable<SafeEtagOptions['generateDigest']>
@@ -68,6 +74,11 @@ async function generateHexDigest(
   }
 
   let result: ArrayBuffer | Uint8Array | undefined;
+  let chunk: Uint8Array | undefined;
+  let chunkLength = 0;
+  const digest = async (body: Uint8Array) => {
+    result = await generator(mergeBuffers(result, body));
+  };
   const reader = stream.getReader();
 
   for (;;) {
@@ -76,9 +87,54 @@ async function generateHexDigest(
       break;
     }
 
-    if (value) {
-      result = await generator(mergeBuffers(result, value));
+    let offset = 0;
+    while (offset < value.byteLength) {
+      const remaining = value.byteLength - offset;
+
+      // Hash complete blocks directly without copying them into the partial buffer.
+      if (chunkLength === 0 && remaining >= DIGEST_CHUNK_SIZE) {
+        await digest(value.subarray(offset, offset + DIGEST_CHUNK_SIZE));
+        offset += DIGEST_CHUNK_SIZE;
+        continue;
+      }
+
+      const requiredLength = chunkLength + remaining;
+      if (requiredLength < DIGEST_CHUNK_SIZE) {
+        if (!chunk) {
+          chunk = value.slice(offset);
+        } else {
+          // Grow geometrically so small incoming chunks do not cause repeated full copies.
+          if (chunk.byteLength < requiredLength) {
+            const nextChunk = new Uint8Array(
+              new ArrayBuffer(
+                Math.min(DIGEST_CHUNK_SIZE, Math.max(requiredLength, chunk.byteLength * 2))
+              )
+            );
+            nextChunk.set(chunk.subarray(0, chunkLength));
+            chunk = nextChunk;
+          }
+          chunk.set(value.subarray(offset), chunkLength);
+        }
+        chunkLength = requiredLength;
+        break;
+      }
+
+      // Complete a block assembled from multiple stream reads, preserving its remainder.
+      const length = DIGEST_CHUNK_SIZE - chunkLength;
+      if (chunk?.byteLength !== DIGEST_CHUNK_SIZE) {
+        const nextChunk = new Uint8Array(new ArrayBuffer(DIGEST_CHUNK_SIZE));
+        if (chunk) nextChunk.set(chunk.subarray(0, chunkLength));
+        chunk = nextChunk;
+      }
+      chunk.set(value.subarray(offset, offset + length), chunkLength);
+      await digest(chunk);
+      chunkLength = 0;
+      offset += length;
     }
+  }
+
+  if (chunk && chunkLength > 0) {
+    await digest(chunk.subarray(0, chunkLength));
   }
 
   if (!result) {

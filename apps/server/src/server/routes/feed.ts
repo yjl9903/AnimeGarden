@@ -1,108 +1,90 @@
-import { toDate } from 'date-fns-tz';
-
 import { parseURLSearch } from '@animegarden/client';
 
-import { getRssString } from '../rss/index.ts';
-import { safeEtag as etag } from '../utils/etag.ts';
 import { defineHandler } from '../utils/hono.ts';
-import { generateTitleFromFilter } from '../utils/meta.ts';
+import { safeEtag as etag } from '../utils/etag.ts';
 import { assertResourcesPagination } from '../utils/resources-query.ts';
-
-// Keep the extension namespace stable across both feeds and configured site hosts.
-const feedNamespaces = { animegarden: 'https://animes.garden/ns/rss/1.0' };
 
 export const defineFeedRoutes = defineHandler((sys, app) =>
   app
-    .get('/feed.xml', etag(), async (ctx) => {
-      const url = new URL(ctx.req.url);
-      // sys.logger.info(`Receive feed.xml search params: ${url.search}`);
-
-      const { pagination, filter } = parseURLSearch(
-        url.searchParams,
+    .get('/feed.xml', async (ctx) => {
+      const params = normalizeSearchParams(new URL(ctx.req.url).searchParams);
+      const { filter, pagination } = parseURLSearch(
+        params,
         await ctx.req.json().catch(() => undefined)
       );
       assertResourcesPagination(pagination);
 
-      const resp = await sys.modules.resources.query.find(filter, pagination);
+      const feed = await sys.modules.feed.getResourcesFeed({
+        filter,
+        pagination,
+        tracker: isTrackerEnabled(params)
+      });
 
-      ctx.res.headers.set('Content-Type', 'application/xml; charset=UTF-8');
-      ctx.res.headers.set('Cache-Control', `public, max-age=${1 * 60 * 60}`);
-
-      const isTracker = isTrackerEnabled(url.searchParams);
-
-      return ctx.body(
-        await getRssString({
-          title: await generateTitleFromFilter(filter, sys.modules.subjects),
-          description: 'Anime Garden 是動漫花園資源網的第三方镜像站',
-          site: `https://${sys.options.site ?? 'animes.garden'}/resources/1${url.search}`,
-          trailingSlash: false,
-          xmlns: feedNamespaces,
-          items: resp.resources.map((r) => {
-            return {
-              title: r.title,
-              pubDate: toDate(r.createdAt, { timeZone: 'Asia/Shanghai' }),
-              link: `https://${sys.options.site ?? 'animes.garden'}${getDetailURL(r)}`,
-              extensions: { 'animegarden:subjectId': r.subjectId },
-              enclosure: {
-                url: r.magnet + (isTracker ? r.tracker : ''),
-                length: r.size,
-                type: 'application/x-bittorrent'
-              }
-            };
-          })
-        })
+      ctx.header(
+        'Cache-Control',
+        feed.stable ? 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=60' : 'no-store'
       );
+
+      if (feed.stable) {
+        const tag = `"${feed.digest}"`;
+        const lastModifiedAt = Math.floor(feed.generatedAt / 1000) * 1000;
+
+        ctx.header('ETag', tag);
+        ctx.header('Last-Modified', new Date(lastModifiedAt).toUTCString());
+
+        const ifNoneMatch = ctx.req.header('If-None-Match');
+        const modifiedSince = Date.parse(ctx.req.header('If-Modified-Since') ?? '');
+        // HTTP dates cannot distinguish revisions generated within the same second.
+        const dateValidatorSafe =
+          feed.changedAt !== undefined && feed.changedAt < lastModifiedAt;
+        // If-None-Match takes precedence, even when none of its tags match.
+        const unchanged =
+          ifNoneMatch !== undefined
+            ? ifNoneMatch.trim() === '*' ||
+              (ifNoneMatch.match(/(?:W\/)?"[^"]*"/g) ?? []).some(
+                (value) => value.replace(/^W\//, '') === tag
+              )
+            : dateValidatorSafe && modifiedSince >= lastModifiedAt && modifiedSince <= Date.now();
+
+        if (unchanged) {
+          return ctx.body(null, 304);
+        }
+      }
+
+      ctx.header('Content-Type', 'application/xml; charset=UTF-8');
+      return ctx.body(feed.xml);
     })
     .get('/collection/:hash/feed.xml', etag(), async (ctx) => {
-      const url = new URL(ctx.req.url);
-
-      const hsh = ctx.req.param('hash');
-      if (!hsh) {
+      const hash = ctx.req.param('hash');
+      if (!hash) {
         return ctx.json({ status: 'ERROR', message: 'Missing collection hash' }, 400);
       }
 
-      const resp = await sys.modules.collections.getCollection(hsh);
-      if (!resp) {
-        return ctx.json({ status: 'ERROR', message: `Collection "${hsh}" not found` }, 400);
+      const params = normalizeSearchParams(new URL(ctx.req.url).searchParams);
+      const xml = await sys.modules.feed.getCollectionFeed(hash, isTrackerEnabled(params));
+      if (xml === undefined) {
+        return ctx.json({ status: 'ERROR', message: `Collection "${hash}" not found` }, 400);
       }
 
       ctx.res.headers.set('Content-Type', 'application/xml; charset=UTF-8');
-      ctx.res.headers.set('Cache-Control', `public, max-age=${1 * 60 * 60}`);
+      ctx.res.headers.set('Cache-Control', 'public, max-age=3600');
 
-      const isTracker = isTrackerEnabled(url.searchParams);
-
-      return ctx.body(
-        await getRssString({
-          title: `${resp.name || '收藏夹 ' + hsh}`,
-          description: 'Anime Garden 是動漫花園資源網的第三方镜像站.',
-          site: `https://${sys.options.site ?? 'animes.garden'}/collection/${hsh}`,
-          trailingSlash: false,
-          xmlns: feedNamespaces,
-          items: resp.results
-            .flatMap((r) => r.resources)
-            .map((r) => {
-              return {
-                title: r.title,
-                pubDate: toDate(r.createdAt, { timeZone: 'Asia/Shanghai' }),
-                link: `https://${sys.options.site ?? 'animes.garden'}${getDetailURL(r)}`,
-                extensions: { 'animegarden:subjectId': r.subjectId },
-                enclosure: {
-                  url: r.magnet + (isTracker ? r.tracker : ''),
-                  length: r.size,
-                  type: 'application/x-bittorrent'
-                }
-              };
-            })
-        })
-      );
+      return ctx.body(xml);
     })
 );
 
-function isTrackerEnabled(searchParams: URLSearchParams) {
-  const value = searchParams.get('tracker');
-  return value === null ? true : ['no', 'off', 'false'].includes(value) ? false : true;
+/** Normalize HTTP query spelling before the client parser interprets values. */
+function normalizeSearchParams(search: URLSearchParams) {
+  const params = new URLSearchParams();
+  for (const [key, value] of search) {
+    const name = key.toLowerCase() === 'pagesize' ? 'pageSize' : key.toLowerCase();
+    params.append(name, name === 'duplicate' ? value.toLowerCase() : value);
+  }
+  return params;
 }
 
-function getDetailURL(r: { provider: string; providerId: string }) {
-  return `/detail/${r.provider}/${r.providerId}`;
+/** Parse the optional HTTP tracker switch, which defaults to enabled. */
+function isTrackerEnabled(params: URLSearchParams) {
+  const value = params.get('tracker');
+  return value === null || !['false', 'off', 'no', '0'].includes(value.toLowerCase());
 }

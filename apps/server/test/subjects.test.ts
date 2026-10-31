@@ -547,7 +547,7 @@ describe('Dynamic subject metadata and cache consistency', () => {
 
   it('reads committed historical metadata for TG and RSS despite stale process snapshots', async () => {
     const { transformBgmSubject } = await import('@animegarden/shared');
-    const { generateTitleFromFilter } = await import('../src/server/utils/meta');
+    const { generateTitleFromFilter } = await import('../src/feed/meta');
     const original = transformBgmSubject(bgmxSubject(700001) as any);
     const db = subjectDatabase([{ id: original.id, metadata: original, isArchived: false }]);
     const first = new SubjectsModule({ database: db.database } as any, SubjectsModule.name);

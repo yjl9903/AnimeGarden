@@ -1,7 +1,8 @@
 import type { Jsonify, ResolvedFilterOptions } from '@animegarden/client';
 
-import type { SubjectsModule } from '../../subjects/index.ts';
+import type { SubjectsModule } from '../subjects/index.ts';
 
+/** Build the feed title from subject display data or the active resource filters. */
 export async function generateTitleFromFilter(
   filter: Jsonify<ResolvedFilterOptions> | ResolvedFilterOptions,
   subjects: Pick<SubjectsModule, 'getSubjectMetadata'>
