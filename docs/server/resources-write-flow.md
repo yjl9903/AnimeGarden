@@ -1,267 +1,123 @@
-# Resources 插入与更新链路梳理
+# 资源写入与版本传播
 
-日期：2026-04-09
+资源主写入流程位于 `apps/server/src/resources/jobs.ts`，
+数据库操作位于 `src/resources/index.ts`。本文描述抓取、同步、详情回填和人工修正如何更新资源，
+以及变更如何传播到查询服务。
 
-## 背景
+## 服务职责
 
-`apps/server` 当前在线上实际承载了三类服务角色：
+| 进程 | 主要职责 |
+| --- | --- |
+| 内网 `server` | 服务 Web 查询、消费资源通知、处理详情回填 |
+| `cron` | 执行资源 fetch/sync、去重维护、人工修正 RPC 和推送任务 |
+| public API/feed `server` | 提供公开 API、RSS 和 MCP，消费资源通知、处理详情回填 |
 
-1. `fly.server.toml` 中的 `server` 进程
-2. `fly.server.toml` 中的 `cron` 进程
-3. `fly.feed.toml` 中的 `server` 进程
+各进程共享 PostgreSQL，通过 Redis 传递通知、RPC 和共享缓存。
+普通 server 与 cron 复用 System、模块和 Hono 路由；任务由 cron 执行，server 可通过 RPC 发起任务。
+部署和域名关系见[部署拓扑](./deployment-topology.md)。
 
-从代码实现看，这三类进程都基于同一套 `apps/server` 代码启动，也都能连接同一个 Postgres 和 Redis；但它们在部署职责上并不相同。
+## 任务入口
 
-本文聚焦说明：
+`Executor` 在 cron 进程注册定时任务，通过进程内 Hono 请求调用管理路由：
 
-1. 哪个服务负责主资源写入
-2. `resources` 的插入、更新、删标、详情回填分别经过哪些代码路径
-3. 三类服务之间如何通过数据库和 Redis 传递数据
-4. 哪些路径属于预期主链路，哪些只是代码层面的例外写路径
+| 任务 | 周期 | 管理入口 | 执行函数 |
+| --- | --- | --- | --- |
+| fetch | 每 5 分钟 | `/admin/resources/:provider` | `runFetchJob()` |
+| sync | 每小时 | `/admin/resources/:provider/sync` | `runSyncJob()` |
 
-## 服务角色
+`ResourcesJobCoordinator` 按 provider 协调 fetch/sync。
+已有任务运行时返回 `already_running`，接受新任务时返回 `queued`，任务结束后释放运行标记。
 
-### 1. Web 服务
+## 抓取批次与时间字段
 
-对应 `fly.server.toml` 里的 `server = './apps/server/manager.sh start'`。
+fetch 和 sync 在任务开始时创建一个 `fetchedAt`，同一批资源使用该值。
+批次发生资源或重复关系变化时，provider 的 refreshedAt 也更新为同一个 fetchedAt。
 
-职责上，它主要服务 web 前端调用，包括：
+| 字段 | 写入规则 |
+| --- | --- |
+| `createdAt` | 上游资源发布时间 |
+| `fetchedAt` | 当前抓取批次时间；资源内容变化时更新 |
+| `indexedAt` | 首次插入时取 fetchedAt，后续更新保留 |
+| provider `refreshedAt` | 有变更的抓取批次时间 |
 
-- `/resources`
-- `/resource/:provider/:id`
-- `/detail/:provider/:id`
-- `/subjects`
-- `/collections`
-- `/feed.xml`
+查询使用 `indexedAt <= anchor` 限定可见入库范围，
+使用 provider timestamp 区分缓存代际，详见[资源查询与缓存](./resources-query.md)。
 
-启动入口是 `cli start`，会以 `cron: false`、`profile: 'server'` 创建普通服务实例。
+资源大小在 PostgreSQL 和内部缓存中以 KiB 保存，
+由 `QueryManager.transform()` 统一转换成 bytes 后输出给 API、详情、收藏夹、RSS 和 MCP。
 
-### 2. Cron 服务
+## 共用 upsert
 
-对应 `fly.server.toml` 里的 `cron = 'node apps/server/cli.mjs cron'`。
+fetch 与 sync 都调用 `upsertResources()`：
 
-职责上，它是资源抓取、插入、更新、删标的主执行者。
+1. 按 `(provider, providerId)` 对输入去重。
+2. `ensureParties()` 补齐发布者与字幕组。
+3. 转换标题、大小、分词、Subject 及资源字段。
+4. 批量读取已有资源，区分插入与更新。
+5. 新资源执行 `INSERT ... ON CONFLICT DO NOTHING`。
+6. 已有资源比较删标、链接、magnet、tracker、Subject、party 和标题字段，仅写入变化部分。
+7. 返回 inserted、updated、changed 和转换失败的 errors。
 
-启动入口是 `cli cron`，会以 `cron: true`、`profile: 'cron'` 创建执行器，并注册定时任务：
+Subject 自动匹配优先更新为新的非空匹配结果。
+重新匹配为空时保留已有 Subject；显式设置 `resetSubjectId: true` 可清空。
 
-- 每 5 分钟执行一次 `/admin/resources/:provider`
-- 每小时执行一次 `/admin/resources/:provider/sync`
+## Fetch 流程
 
-### 3. Feed / OpenAPI 服务
+1. provider 的 `fetchLatestResources()` 抓取最新资源。
+2. 转为统一 NewResource，按发布时间排序后执行 upsert。
+3. 对 changed 资源维护重复关系。
+4. 有变更时更新 provider refreshedAt，并发送一份资源通知。
+5. 新插入资源进入 Telegram 推送队列，同时补偿失败推送。
 
-对应 `fly.feed.toml` 中唯一的 `server = './apps/server/manager.sh start'`。
+## Sync 流程
 
-职责上，它主要对 RSS 和 OpenAPI / API 调用提供只读访问能力。部署预期是读服务，但代码上它和 web 服务使用同一套 `start` 入口，因此并不是严格的只读进程。
+1. provider 的 `fetchResourcePages(start, end)` 抓取指定页区间。
+2. 使用相同 upsert 流程插入新资源、更新已有资源。
+3. `markDeletedResources()` 根据抓取窗口标记已从上游消失的资源。
+4. 汇总 upsert 和删标涉及的 ID，统一维护重复关系。
+5. 有变更时更新 provider refreshedAt，发送包含插入、更新、删除和重复关系变化的通知。
 
-## 总体数据流
+删除采用 `isDeleted` 逻辑标记。重复关系维护负责处理根资源与重复资源的附着、脱离，
+列表查询默认展示未删除的根资源。
 
-可以把主链路概括为：
+## 变更传播
 
-1. `cron` 进程定时抓取上游 provider 数据
-2. `cron` 进程在本进程内复用 Hono 路由，进入 `/admin/resources/*` 写路径
-3. `cron` 进程写入 Postgres 中的 `users`、`teams`、`resources`
-4. `cron` 进程把变更摘要发布到 Redis `NOTIFY_CHANNEL`
-5. web `server` 和 feed `server` 订阅该通知，刷新本进程内的 resources 查询缓存
-6. 前端、RSS、OpenAPI 请求再从各自服务读取同一份 Postgres 数据
+通知结构包含：
 
-这里有一个容易误解的点：
+```text
+resources.inserted
+resources.updated
+resources.deleted
+duplicated.attached
+duplicated.detached
+```
 
-- `cron` 不是通过外部网络去调用另一个服务
-- 它是在自己进程内通过 `this.hono.fetch(req)` 复用同一套路由和 handler
+cron 通过 Redis `NOTIFY_CHANNEL` 发布；server 订阅后调用 `System.refresh()`，按模块顺序刷新。
+providers 重读版本后，resources 清空本地精确查询 Task。
+provider timestamp 推进时，后续查询同时切换 Redis 缓存代际。
 
-因此主写链路实际上完全发生在 `cron` 进程内部，只是写完以后会通过 Redis 把变更广播给其他读服务。
+ProvidersModule 每 60 秒轮询数据库，补充通知驱动的版本刷新。
+Redis 离线时服务继续查询数据库，通知和 RPC 等待连接恢复；
+provider 轮询负责更新该模块的快照，其他模块仍按各自刷新机制维护。
 
-资源大小在存储与输出时采用不同单位：`resources.size` 在 Postgres 和内部查询缓存中以
-KiB 保存；`QueryManager.transform()` 在数据库资源离开查询层时统一转换为 bytes。因此
-REST API、详情、收藏夹、RSS 和 MCP 对外返回的 `size` 或 `enclosure.length` 均以 bytes
-表示。
+## 详情回填
 
-## 主写链路一：增量插入
+详情请求经过 `DetailsManager.getByProviderId()` 或 `getByInfoHash()`：
 
-### 触发位置
+1. 读取 Redis detail cache、resources 和 details。
+2. detail 缺失、过期或资源删标时回源抓取。
+3. 将抓取结果写入 details，并填充 Redis detail cache。
+4. `fixResourceWithDetail()` 补充 magnet、tracker、party 头像及标准化资源信息。
 
-`cron` 进程启动后会注册 `*/5 * * * *` 定时任务，按 provider 调用：
+因此普通 server 在详情查询中也会写入 details、resources、users 或 teams。
+资源详情回填与定时批次写入分别由 DetailsManager 和资源任务维护。
 
-- `/admin/resources/dmhy`
-- `/admin/resources/moe`
-- `/admin/resources/ani`
+DMHY 数字 ID 先查询 resources 以补全详情 URL。资源不存在返回 404；
+数据库错误向上层传播为 5xx。详情路由 memo 缓存正常结果，异常后的请求重新查询。
 
-### 执行流程
+## 人工修正 Subject 与详情
 
-1. 路由进入 `server/routes/admin.ts` 的 `fetchResources(sys, platform)`。
-2. 根据 provider 取出 `ScraperProviders.get(platform)`。
-3. 调用 `provider.fetchLatestResources(sys)` 抓最新资源。
-4. `dmhy` / `moe` 会翻页抓取，直到某一页已经没有新的 `providerId`。
-5. `ani` 直接抓最新列表，再过滤 DB 中已经存在的 `providerId`。
-6. 抓到的资源先转换出发布者和字幕组信息，分别写入 `users`、`teams`。
-7. 再把资源转换成 `NewResource`，统一传给 `sys.modules.resources.insertResources(...)`。
-8. `insertResources()` 会：
-   - 先按 `provider:providerId` 去重
-   - 做标题标准化、大小转换、分词和 subject 匹配
-   - 生成 `titleSearch`
-   - 计算 `duplicatedId`
-   - 执行 `insert into resources ... onConflictDoNothing()`
-9. 如果开启 `updateDuplicatedId`，插入后还会把后续重复资源的 `duplicatedId` 更新到当前根资源。
-10. 插入成功后，`cron` 更新 provider refresh timestamp，并调用 `notifyRefreshedResources(...)`。
-
-### 写入结果
-
-这条链路会写：
-
-- `users`
-- `teams`
-- `resources`
-
-如果存在重复关系，还会更新其他资源的 `duplicated_id`。
-
-## 主写链路二：同步更新与删标
-
-### 触发位置
-
-`cron` 进程启动后会注册 `0 * * * *` 定时任务，按 provider 调用：
-
-- `/admin/resources/dmhy/sync`
-- `/admin/resources/moe/sync`
-- `/admin/resources/ani/sync`
-
-### 执行流程
-
-1. 路由进入 `server/routes/admin.ts` 的 `syncResources(sys, platform, start, end)`。
-2. 调用 `provider.fetchResourcePages(sys, start, end)` 抓指定页区间。
-3. 把抓到的数据逐条传给 `sys.modules.resources.updateResource(r, updatedAt)`。
-4. `updateResource()` 会先重新执行和插入时相同的 transform。
-5. 如果 `(provider, providerId)` 在数据库中不存在，则回退到 `insertResources()`，也就是“更新链路中的新资源补插入”。
-6. 如果数据库中已存在，则逐字段比较并更新：
-   - `isDeleted`
-   - `href`
-   - `magnet`
-   - `tracker`
-   - `subjectId`
-   - `publisherId`
-   - `fansubId`
-   - `title`
-   - `titleAlt`
-   - `titleSearch`
-   - 重新匹配不到 subject 时，默认保留已有的非空 `subjectId`；只有显式传入
-     `resetSubjectId: true` 才会把它清空
-7. 同时强制重算当前资源的 `duplicatedId`。
-8. 然后清空指向当前资源的旧重复链，再把更晚的同标题 / 同 magnet 资源重新挂到当前资源下。
-9. 所有资源更新完成后，路由层汇总 `updated / inserted / duplicated`，并发送一次 resources 更新通知。
-
-### 删标流程
-
-更新结束后，同一个 `/sync` 请求还会继续执行删标：
-
-1. 调用 `sys.modules.resources.syncResources(platform, newResources)`。
-2. 以本次抓到的最小和最大 `createdAt` 为边界，在数据库中找出：
-   - provider 相同
-   - 仍然 `isDeleted = false`
-   - 落在同一时间窗口内
-   - 但本次抓取结果中不存在的资源
-3. 把这些资源统一标记为 `isDeleted = true`。
-4. 把所有指向这些已删资源的 `duplicatedId` 清空。
-5. 再发送一次“删除资源”通知。
-
-### 写入结果
-
-这条链路会写：
-
-- `resources`
-
-具体包括：
-
-- 插入缺失资源
-- 更新已存在资源字段
-- 更新去重链
-- 逻辑删除缺失资源
-
-## 服务间同步链路
-
-`cron` 写库后，并不会直接刷新其他进程里的内存缓存，而是通过 Redis 通知实现进程间同步。Redis 是松耦合依赖，服务启动时不会等待 Redis 必须可用；如果 Redis 离线，通知发布、订阅和跨进程 RPC 会暂时不可用，后台连接循环会定期重试。
-
-### 1. `cron` 负责发布
-
-当 `System.options.cron === true` 时，`notifyRefreshedResources()` 会：
-
-1. 组织一份通知结构
-2. 将其发布到 Redis `NOTIFY_CHANNEL`
-
-通知内容包括：
-
-- `resources.inserted`
-- `resources.deleted`
-- `duplicated.inserted`
-- `duplicated.duplicated`
-
-### 2. `server` 负责订阅
-
-当 `System.options.cron === false` 时，普通 `server` 进程会订阅：
-
-- `NOTIFY_CHANNEL`
-- RPC reply channel
-
-收到 `NOTIFY_CHANNEL` 后，会调用 `refresh(notification)`。
-
-### 3. Resources 查询缓存刷新
-
-`ResourcesModule.refresh(notification)` 会进一步进入 `QueryManager.onNotifications(notification)`，执行：
-
-1. 清空 Redis 查询缓存和精确查询缓存
-2. 根据通知里的 `deleted` / `duplicated` 移除任务缓存中的旧资源
-3. 根据通知里的 `inserted` / `duplicated.inserted` 重新从数据库加载最新 live root 资源
-4. 把这些资源塞回现有 task 缓存
-
-因此服务间真实的流转关系是：
-
-- Postgres 负责共享持久化数据
-- Redis 负责广播资源变更事件
-- 各个 `server` 进程负责消费变更并修正本地内存状态
-
-## 详情链路中的例外写入
-
-除了 `cron` 主写链路外，还有一条“读请求触发写入”的例外路径。
-
-### 触发位置
-
-任一 `server` 进程收到以下请求时：
-
-- `/resource/:provider/:id`
-- `/detail/:provider/:id`
-- `/detail/infohash/:hash`
-
-都会进入 `Resources.details.getByProviderId()` 或 `getByInfoHash()`。
-
-DMHY 的纯数字 ID 会先查询 `resources` 表以补全详情 URL。查询成功但没有对应资源时返回
-`404`；数据库超时或连接故障会向上传播，由统一错误处理返回 `5xx`，不会转换成资源不存在。
-Provider 详情路由的进程内 memo 仍缓存正常结果，但不缓存抛出的异常，故障恢复后的下一次
-请求会重新查询。
-
-### 执行流程
-
-1. 先查 Redis detail cache。
-2. Redis 未命中则查 `resources`。
-3. 再查 `details` 表。
-4. 如果 detail 不存在、已过期，或者资源本身已删除，则回源抓 detail。
-5. `insertDetail()` 会把抓到的 detail 写入 `details` 表，并回填 Redis。
-6. `fixResourceWithDetail()` 还会顺手做几类修复：
-   - 缺失 magnet / tracker 时，直接更新 `resources`
-   - 发布者头像缺失时，补写 `users`
-   - 字幕组头像缺失时，补写 `teams`
-   - 最后再调用一次 `resources.updateResource(...)`，把资源信息重新标准化并重算去重关系
-
-### 影响
-
-这说明：
-
-- web 服务可以在 detail 请求中写 `details`
-- web 服务也可能顺手修补 `resources`
-- feed 服务由于同样跑 `cli start`，理论上也具备同样能力
-
-但这条路径不是资源主同步链路，只是 detail 请求触发的数据修正链路。
-
-## 手工修正资源 Subject ID
-
-管理员可以通过受 Bearer secret 保护的接口修正单个资源的 Bangumi subject：
+管理接口通过 Bearer secret 鉴权，交由 cron RPC 执行：
 
 ```http
 PATCH /admin/resources/:provider/:providerId
@@ -270,122 +126,32 @@ Content-Type: application/json
 { "subjectId": 123, "detail": true }
 ```
 
-manager CLI 提供对应命令：
+manager CLI：
 
 ```bash
 pnpm manager admin patch <provider> <provider-id> \
   [--subject <subject-id>] [--detail] --url <api-base-url>
 ```
 
-manager 默认从 `.env` 或进程环境读取 `ADMIN_SECRET`，并以 `SECRET` 作为兼容回退；需要临时
-覆盖时仍可显式传入全局参数 `--secret <secret>`。避免在共享终端或日志环境中显式传入密钥，
-因为 pnpm 可能回显展开后的脚本命令。
-`--url` 可选，用于指定本地或其他环境的 API 地址；不传时使用 client 的默认线上地址。
-`--subject` 和 `--detail` 至少传一个，也可以同时使用。`detail: true` 会让 cron 绕过已有
-Redis detail cache 和详情过期时间，立即从上游重新抓取并覆盖 detail。
-请求由收到 HTTP 调用的 server 转交给 cron RPC 执行。传入 `subjectId` 时，cron 会确认
-subject 已存在于本地 `subjects` 表，再更新目标资源的 `subject_id`。修改成功后会广播 `resources.updated`
-通知并刷新资源查询缓存，同时由 cron 删除对应的 Redis detail cache。详情路由的进程内 memo
-不会主动失效，允许继续返回最长 1 小时的既有缓存。cron 不可用时接口返回 `503`，不会降级为
-server 直接写库。
+- `--subject` 与 `--detail` 至少指定一个。
+- Subject 必须存在于本地 subjects 表；修改写入资源的 subject_id。
+- `detail: true` 清理 Redis detail cache，立即重新抓取详情。
+- Subject 修改后清理对应 detail cache，并广播 `resources.updated` 通知。
+- 详情路由进程内 memo 最长保留 1 小时。
+- cron 不可用时返回 503。
 
-该修改不是永久锁定。后续资源同步如果自动匹配到另一个非空 subject，仍可能覆盖手工设置的值；
-接口也不支持把 subject ID 清空。
+manager 从环境变量或 `.env` 读取 `ADMIN_SECRET`，兼容回退到 `SECRET`。
+共享终端中应通过环境提供密钥。`--url` 省略时使用 client 默认地址。
+人工 Subject 绑定仍参与后续自动匹配；后续非空匹配结果可以覆盖该值。
 
-## 三类服务的职责边界
+## 维护入口
 
-按当前部署约定，可以把职责理解为：
-
-### 1. `fly.server.toml` 的 `server`
-
-主要职责：
-
-- 服务 web 前端读请求
-- 订阅 Redis 变更并刷新缓存
-- 在 detail 请求中执行少量修补写入
-
-不承担的主职责：
-
-- 定时抓取资源
-- 定时插入 / 更新 / 删标 `resources`
-
-### 2. `fly.server.toml` 的 `cron`
-
-主要职责：
-
-- 定时抓取 provider 数据
-- 插入新资源
-- 更新已有资源
-- 逻辑删除缺失资源
-- 维护 duplicated 关系
-- 发布 Redis 变更通知
-
-这是 `resources` 主写路径的唯一预期执行者。
-
-### 3. `fly.feed.toml` 的 `server`
-
-主要职责：
-
-- 对 RSS、OpenAPI / API 提供读访问
-- 订阅 Redis 变更并刷新缓存
-
-部署预期上它不承担主写职责，但代码上仍保留：
-
-- `/admin/*` 路由
-- detail 回填写路径
-
-因此它是“部署上偏只读、代码上非严格只读”的服务。
-
-## 需要特别注意的点
-
-### 1. `/admin/*` 路由并不只存在于 `cron`
-
-`registerHono()` 会把 `defineAdminRoutes(sys, app)` 同时绑定到 `makeServer()` 和 `makeExecutor()` 上。
-
-这意味着：
-
-- web 服务有 `/admin/*`
-- feed 服务也有 `/admin/*`
-- cron 服务同样也有 `/admin/*`
-
-只是按部署职责，只有 `cron` 会自动定时调用这些路由。
-
-### 2. `cron` 写路径依赖同一套应用代码，而不是单独 worker
-
-当前主写链路不是“独立 worker 直接调模块写库”，而是：
-
-1. `Executor` 注册 cron job
-2. cron job 在本进程构造内部 Request
-3. Hono 路由复用 `admin.ts`
-4. `admin.ts` 再调用 `ResourcesModule`
-
-因此分析写路径时，应把 `admin.ts` 看成主写入口，而不是把它当成纯 HTTP API 外壳。
-
-### 3. `/sync` 链路没有先补 `users/teams`
-
-增量插入链路在落 `resources` 之前会先插 `users`、`teams`。
-
-但 `/sync` 路径里的 `updateResource()` 直接依赖 transform 解析 `publisherId` / `fansubId`。这意味着：
-
-- 它隐含要求对应的发布者和字幕组已经在本地存在
-- 否则 transform 失败后，该条资源会被跳过
-
-这属于当前实现上的前置假设。
-
-## 总结
-
-如果只看部署职责，`resources` 的插入、更新、删标主链路都在 `fly.server.toml` 的 `cron` 进程中执行。
-
-服务间的数据流转关系是：
-
-1. `cron` 抓取上游并写 Postgres
-2. `cron` 通过 Redis 发布资源变更通知
-3. web `server` 和 feed `server` 订阅通知并刷新本地缓存
-4. 前端、RSS、OpenAPI 再从各自服务读取共享数据库中的最新数据
-
-如果把代码能力也算上，则还要补一句：
-
-- web 服务和 feed 服务并非绝对只读
-- 它们在 detail 回填和手动调用 `/admin/*` 时，仍然可能写 `details`、`users`、`teams`、`resources`
-
-但这些都不是线上预期的主资源同步职责。
+| 事项 | 位置 |
+| --- | --- |
+| 抓取、同步、RPC 协调 | `apps/server/src/resources/jobs.ts` |
+| Upsert、删标、人工绑定 | `apps/server/src/resources/index.ts` |
+| 入库转换与 indexedAt | `apps/server/src/resources/transform.ts` |
+| 详情回填 | `apps/server/src/resources/details.ts` |
+| 版本快照 | `apps/server/src/providers/module.ts` |
+| 通知发布和模块刷新 | `apps/server/src/system/system.ts` |
+| 推送状态机 | [Telegram 推送](./telegram-push-flow.md) |

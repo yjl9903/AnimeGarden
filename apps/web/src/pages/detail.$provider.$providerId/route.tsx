@@ -108,7 +108,7 @@ export default function Resources({ data }: { data: any }) {
             <div className="flex gap8">
               <div>
                 <Link
-                  {...getResourcesRouteLink(1, { publisher: resource?.publisher.name ?? '' })}
+                  {...getResourcesRouteLink({ publisher: resource?.publisher.name ?? '' })}
                   className="block text-left"
                 >
                   <img
@@ -128,7 +128,7 @@ export default function Resources({ data }: { data: any }) {
               {resource?.fansub && (
                 <div>
                   <Link
-                    {...getResourcesRouteLink(1, { fansub: resource.fansub.name })}
+                    {...getResourcesRouteLink({ fansub: resource.fansub.name })}
                     className="block w-auto text-left"
                   >
                     <img

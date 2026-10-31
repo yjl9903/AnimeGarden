@@ -13,9 +13,21 @@ export class ProvidersModule extends Module<System['modules']> {
 
   public readonly providers: Map<ProviderType, typeof providers.$inferSelect> = new Map();
 
+  private fetching: Promise<void> | undefined;
+
   public async initialize() {
     this.logger.info('Initializing Providers module');
     await this.fetchProviders();
+
+    // Notifications are best-effort; reload the small provider snapshot even without Redis.
+    const timer = setInterval(() => {
+      if (!this.fetching) {
+        void this.fetchProviders().catch((error) => this.logger.error(error));
+      }
+    }, 60_000);
+    timer.unref();
+    this.system.disposables.push(() => clearInterval(timer));
+
     this.logger.success('Initialize Providers module OK');
   }
 
@@ -25,13 +37,27 @@ export class ProvidersModule extends Module<System['modules']> {
     this.logger.success('Refresh Providers module OK');
   }
 
+  /** Serializes reloads and replaces the snapshot only after a complete database read succeeds. */
   public async fetchProviders() {
-    const resp = await retryDatabaseFn(() => this.database.select().from(providers), { count: 5 });
-    this.providers.clear();
-    for (const p of resp) {
-      this.providers.set(p.id, p);
+    // A notification arriving during a poll must read after it, not race an older snapshot.
+    while (this.fetching) await this.fetching.catch(() => undefined);
+
+    const fetching = (async () => {
+      const resp = await retryDatabaseFn(() => this.database.select().from(providers), {
+        count: 5
+      });
+      this.providers.clear();
+      for (const p of resp) {
+        this.providers.set(p.id, p);
+      }
+    })();
+    this.fetching = fetching;
+    try {
+      await fetching;
+      return this.providers;
+    } finally {
+      this.fetching = undefined;
     }
-    return this.providers;
   }
 
   public get timestamp() {
@@ -60,7 +86,7 @@ export class ProvidersModule extends Module<System['modules']> {
         { count: 5 }
       );
 
-      this.fetchProviders();
+      void this.fetchProviders().catch((error) => this.logger.error(error));
 
       return resp[0];
     } catch (error) {
@@ -86,7 +112,7 @@ export class ProvidersModule extends Module<System['modules']> {
         { count: 5 }
       );
 
-      this.fetchProviders();
+      void this.fetchProviders().catch((error) => this.logger.error(error));
 
       return resp[0];
     } catch (error) {

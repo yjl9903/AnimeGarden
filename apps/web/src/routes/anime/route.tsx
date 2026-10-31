@@ -5,7 +5,7 @@ import { calendarsQueryOptions } from '~/query';
 import { setErrorResponse } from '~/utils/response';
 
 const loader = async ({ context }: { context: { queryClient: QueryClient } }) => {
-  const { calendars, ok } = await context.queryClient.ensureQueryData(calendarsQueryOptions());
+  const { calendars, ok } = await context.queryClient.query(calendarsQueryOptions());
   const season = calendars.find((calendar) => calendar.is_active)?.season;
 
   if (!ok || !season) {

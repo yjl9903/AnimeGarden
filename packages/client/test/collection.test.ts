@@ -27,7 +27,12 @@ function createCollectionResponse(complete: boolean) {
             fetchedAt: '2026-08-24T00:00:00.000Z'
           }
         ],
-        pagination: { page: 1, pageSize: 1000, complete },
+        pagination: {
+          anchor: Date.parse('2026-08-24T00:00:00.000Z'),
+          limit: 100,
+          nextCursor: complete ? null : 'next',
+          complete
+        },
         filter: { types: ['动画'], after: '2026-08-01T00:00:00.000Z' }
       }
     ],
@@ -76,7 +81,12 @@ describe('collection', () => {
       expect(result.ok).toBe(true);
       if (!result.ok) throw result.error;
       const item = result.results[0];
-      expect(item.pagination).toEqual({ page: 1, pageSize: 1000, complete });
+      expect(item.pagination).toEqual({
+        anchor: Date.parse('2026-08-24T00:00:00.000Z'),
+        limit: 100,
+        nextCursor: complete ? null : 'next',
+        complete
+      });
       expect(item).not.toHaveProperty('complete');
       expect(item.resources[0].createdAt).toEqual(new Date('2026-08-24T00:00:00.000Z'));
       expect(item.filter?.after).toEqual(new Date('2026-08-01T00:00:00.000Z'));
@@ -159,7 +169,12 @@ describe('collection', () => {
     const queriedFilter: CollectionFilter<true, true> = {
       ...filter,
       resources: [],
-      pagination: { page: 1, pageSize: 1000, complete: true }
+      pagination: {
+        anchor: Date.parse('2026-08-24T00:00:00.000Z'),
+        limit: 100,
+        nextCursor: null,
+        complete: true
+      }
     };
     const collection = { name: '收藏夹', authorization: 'authorization', filters: [filter] };
     const queriedCollection = { ...collection, filters: [queriedFilter] };

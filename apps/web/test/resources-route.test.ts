@@ -1,191 +1,90 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { isNotFound } from '@tanstack/react-router';
-import type { QueryClient } from '@tanstack/react-query';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { QueryClient } from '@tanstack/react-query';
+import { decodeResourcesCursor } from '@animegarden/shared';
 
-const { setCacheControl, setErrorResponse } = vi.hoisted(() => ({
+const { setCacheControl, setErrorResponse, fetchResourcesFn } = vi.hoisted(() => ({
   setCacheControl: vi.fn(),
-  setErrorResponse: vi.fn()
+  setErrorResponse: vi.fn(),
+  fetchResourcesFn: vi.fn()
 }));
-
-vi.mock('~/pages/resources.($page)/route', () => ({
-  default: () => null
-}));
-
+vi.mock('~/pages/resources.($page)/route', () => ({ default: () => null }));
+vi.mock('~/query/proxy', () => ({ fetchResourcesFn }));
 vi.mock('~/utils/response', async (importOriginal) => ({
   ...(await importOriginal<typeof import('../src/utils/response')>()),
   setCacheControl,
   setErrorResponse
 }));
 
-import { loader, Route } from '../src/routes/resources/$page';
+import { loader as legacyPageLoader } from '../src/routes/resources/$page';
+import { Route as resourcesRoute, loader } from '../src/routes/resources/index';
+import { updateCurrentResourceAnchor } from '../src/query/animegarden';
+
+const anchor = Date.parse('2026-07-01');
+let queryClient: QueryClient;
+beforeEach(() => {
+  vi.clearAllMocks();
+  queryClient = new QueryClient();
+  fetchResourcesFn.mockResolvedValue({
+    ok: true,
+    resources: [],
+    pagination: { anchor, limit: 30, nextCursor: null, complete: true },
+    filter: { types: ['动画'], fansubs: ['resolved'] },
+    timestamp: new Date(anchor),
+    error: undefined
+  });
+});
+afterEach(() => queryClient.clear());
 
 describe('resources route loader', () => {
-  beforeEach(() => vi.clearAllMocks());
-
-  it.each([
-    'magnet:',
-    'NaN',
-    'Infinity',
-    '-Infinity',
-    '9007199254740992',
-    '0',
-    '-1',
-    '0.5',
-    '-1.5'
-  ])(
-    'rejects invalid page %s before querying and uses the non-cacheable 404 head',
-    async (page) => {
-      const ensureQueryData = vi.fn();
-      let error: unknown;
-      try {
-        await loader({
-          context: { queryClient: { ensureQueryData } as unknown as QueryClient },
-          location: { href: `https://animes.garden/resources/${page}?subject=1` },
-          params: { page }
-        });
-      } catch (cause) {
-        error = cause;
-      }
-
-      expect(isNotFound(error)).toBe(true);
-      expect(error).toMatchObject({
-        data: { kind: 'page' },
-        headers: { 'Cache-Control': 'no-store' }
-      });
-      expect(ensureQueryData).not.toHaveBeenCalled();
-      expect(setCacheControl).not.toHaveBeenCalled();
-
-      const head = Route.options.head!({
-        match: { error }
-      } as Parameters<NonNullable<typeof Route.options.head>>[0]);
-      expect(head).toMatchObject({
-        meta: expect.arrayContaining([
-          expect.objectContaining({ name: 'robots', content: 'noindex,follow' })
-        ]),
-        links: []
-      });
-      expect(
-        Route.options.headers!({ match: { error } } as Parameters<
-          NonNullable<typeof Route.options.headers>
-        >[0])
-      ).toEqual({ 'Cache-Control': 'no-store' });
-      expect(Route.options.notFoundComponent).toBeDefined();
-    }
-  );
-
-  it.each([undefined, '2', '1.9'])('loads and builds canonical URLs for page %s', async (page) => {
-    const expectedPage = page === '2' ? 2 : 1;
-    const ensureQueryData = vi.fn(async (options: { queryKey: readonly unknown[] }) => {
-      if (options.queryKey[1] === 'resources') {
-        expect(options.queryKey[2]).toMatchObject({ page: expectedPage, pageSize: 30 });
-        return { ok: true, resources: [], filter: {} };
-      }
-      if (options.queryKey[1] === 'calendar') return { ok: true, calendar: [] };
-      throw new Error(`Unexpected query: ${options.queryKey.join('/')}`);
-    });
-    const data = await loader({
-      context: { queryClient: { ensureQueryData } as unknown as QueryClient },
-      location: { href: `https://animes.garden/resources/${page ?? '1'}` },
-      params: { page }
-    });
-
-    expect(data.page).toBe(expectedPage);
-    expect(ensureQueryData).toHaveBeenCalledTimes(2);
-    const head = Route.options.head!({
-      loaderData: data,
-      match: {}
-    } as Parameters<NonNullable<typeof Route.options.head>>[0]);
-    expect(head).toMatchObject({
-      links: [{ rel: 'canonical', href: `https://animes.garden/resources/${expectedPage}` }]
-    });
+  it('uses filter-only loader dependencies', () => {
+    expect(
+      resourcesRoute.options.loaderDeps!({
+        search: { type: '动画', fansub: 'ANi', cursor: 'next', limit: '1' }
+      } as never)
+    ).toEqual({ fansub: 'ANi', type: '动画' });
   });
 
-  it('returns not found for deep pagination even when a calendar is available', async () => {
-    const queryClient = {
-      ensureQueryData: vi.fn(async (options: { queryKey: readonly unknown[] }) => {
-        if (options.queryKey[1] === 'resources') {
-          return {
-            ok: false,
-            resources: [],
-            pagination: undefined,
-            filter: undefined,
-            timestamp: new Date('2026-07-01T00:00:00.000Z'),
-            error: {
-              name: 'AnimeGardenError',
-              message:
-                '400 Bad Request https://api.animes.garden/resources?page=101&pageSize=100: Resources pagination is too deep.'
-            }
-          };
-        }
-
-        if (options.queryKey[1] === 'calendar') {
-          return {
-            ok: true,
-            season: '2026-07',
-            calendar: [[{ id: 1 }]]
-          };
-        }
-
-        throw new Error(`Unexpected query: ${options.queryKey.join('/')}`);
-      })
-    };
-    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
-
-    let response: unknown;
+  it('redirects legacy paths without retaining cursor state', () => {
     try {
-      await loader({
-        context: { queryClient: queryClient as unknown as QueryClient },
-        location: { href: 'https://animes.garden/resources/101?pageSize=100' },
-        params: { page: '101' }
+      legacyPageLoader({ location: { searchStr: '?fansub=ANi&page=2&cursor=next&limit=1' } });
+      throw new Error('Expected redirect');
+    } catch (response) {
+      expect(response).toBeInstanceOf(Response);
+      expect((response as Response).status).toBe(308);
+      expect(response).toMatchObject({
+        options: { to: '/resources', replace: true, search: { fansub: 'ANi' } }
       });
-    } catch (error) {
-      response = error;
     }
+  });
 
-    expect(isNotFound(response)).toBe(true);
-    expect(response).toMatchObject({
-      data: { kind: 'page' },
-      headers: { 'Cache-Control': 'no-store' }
+  it('uses the globally known version rather than a version frozen into navigation state', async () => {
+    updateCurrentResourceAnchor(queryClient, anchor);
+    const result = await loader({
+      context: { queryClient },
+      location: {
+        href: 'https://animes.garden/resources?type=动画',
+        state: { resourceRefineAnchor: '2020-01-01' }
+      }
     });
-    const head = Route.options.head!({
-      match: { error: response }
-    } as Parameters<NonNullable<typeof Route.options.head>>[0]);
-    expect(head).toMatchObject({
-      meta: expect.arrayContaining([
-        expect.objectContaining({ name: 'robots', content: 'noindex,follow' })
-      ]),
-      links: []
+    expect(decodeResourcesCursor(fetchResourcesFn.mock.calls[0][0].data.filter.cursor)).toEqual({
+      anchor
     });
-    expect(error).not.toHaveBeenCalled();
+    expect(result.filter).toEqual({ types: ['动画'], limit: 30 });
+    expect(fetchResourcesFn).toHaveBeenCalledOnce();
     expect(setErrorResponse).not.toHaveBeenCalled();
-    expect(setCacheControl).not.toHaveBeenCalled();
-
-    error.mockRestore();
+    expect(setCacheControl).toHaveBeenCalled();
   });
 
-  it('keeps other upstream failures as server errors', async () => {
-    const upstreamError = { name: 'Error', message: 'Service unavailable' };
-    const ensureQueryData = vi.fn(async (options: { queryKey: readonly unknown[] }) => {
-      if (options.queryKey[1] === 'resources') {
-        return { ok: false, resources: [], error: upstreamError };
-      }
-      if (options.queryKey[1] === 'calendar') return { ok: true, calendar: [] };
-      throw new Error(`Unexpected query: ${options.queryKey.join('/')}`);
+  it('queries immediately without a cursor when no version is known', async () => {
+    await loader({
+      context: { queryClient },
+      location: { href: 'https://animes.garden/resources?type=动画' }
     });
-    const error = vi.spyOn(console, 'error').mockImplementation(() => {});
-    try {
-      await expect(
-        loader({
-          context: { queryClient: { ensureQueryData } as unknown as QueryClient },
-          location: { href: 'https://animes.garden/resources/2' },
-          params: { page: '2' }
-        })
-      ).resolves.toMatchObject({ ok: false });
-      expect(setErrorResponse).toHaveBeenCalledWith(500);
-      expect(setCacheControl).not.toHaveBeenCalled();
-      expect(error).toHaveBeenCalledWith('https://animes.garden/resources/2', upstreamError);
-    } finally {
-      error.mockRestore();
-    }
+    expect(fetchResourcesFn.mock.calls[0][0].data.filter).toEqual({
+      types: ['动画'],
+      limit: 30,
+      cursor: undefined
+    });
+    expect(fetchResourcesFn).toHaveBeenCalledOnce();
   });
 });

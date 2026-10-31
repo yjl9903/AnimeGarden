@@ -46,7 +46,8 @@ Provider and preset:
 
 Pagination and time:
 
-- `page`, `pageSize`: pages start at `1`; `pageSize` defaults to `100` when outside `1`–`1000`.
+- `limit`: Maximum resources returned in one batch; defaults to `30`, accepts `1`–`100`.
+- `cursor`: Opaque continuation token returned in `pagination.nextCursor`.
 - `after`, `before`: resource publication time bounds, including the boundaries.
 
 Title matching:

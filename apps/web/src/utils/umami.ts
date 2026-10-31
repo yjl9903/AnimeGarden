@@ -70,6 +70,23 @@ export interface TrackAnimeCalendarClickPayload {
   weekday: string;
 }
 
+export interface TrackResourcesLoadMoreClickPayload {
+  path: string;
+  search: string;
+  kind: 'link';
+}
+
+export interface TrackHomeCalendarClickPayload {
+  season: string;
+  source: 'title' | 'link';
+}
+
+export interface TrackAnimeSeasonChangePayload {
+  fromSeason: string;
+  toSeason: string;
+  source: 'year' | 'season';
+}
+
 export interface TrackSearchSuggestionClickPayload {
   text: string;
   subjectId: string;
@@ -219,6 +236,29 @@ export const trackAnimeCalendarClick = (payload: TrackAnimeCalendarClickPayload)
     subjectId: payload.subjectId,
     title: payload.title,
     weekday: payload.weekday
+  });
+};
+
+export const trackResourcesLoadMoreClick = (payload: TrackResourcesLoadMoreClickPayload) => {
+  track('resources.load-more.click', {
+    path: payload.path,
+    search: payload.search,
+    kind: payload.kind
+  });
+};
+
+export const trackHomeCalendarClick = (payload: TrackHomeCalendarClickPayload) => {
+  track('home.calendar.click', {
+    season: payload.season,
+    source: payload.source
+  });
+};
+
+export const trackAnimeSeasonChange = (payload: TrackAnimeSeasonChangePayload) => {
+  track('anime.season.change', {
+    fromSeason: payload.fromSeason,
+    toSeason: payload.toSeason,
+    source: payload.source
   });
 };
 

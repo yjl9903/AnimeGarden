@@ -62,6 +62,8 @@ export async function hashCollection(collection: Collection<true>) {
     // Exclude completion metadata persisted by older clients as well.
     // @ts-ignore
     delete r.complete;
+    // @ts-ignore
+    delete r.pagination;
     return r;
   });
 

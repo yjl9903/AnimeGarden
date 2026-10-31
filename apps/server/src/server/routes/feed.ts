@@ -1,12 +1,10 @@
 import { toDate } from 'date-fns-tz';
 
-import { parseURLSearch } from '@animegarden/client';
-
 import { getRssString } from '../rss/index.ts';
 import { safeEtag as etag } from '../utils/etag.ts';
 import { defineHandler } from '../utils/hono.ts';
 import { generateTitleFromFilter } from '../utils/meta.ts';
-import { assertResourcesPagination } from '../utils/resources-query.ts';
+import { parseResourcesQuery } from '../utils/resources-query.ts';
 
 // Keep the extension namespace stable across both feeds and configured site hosts.
 const feedNamespaces = { animegarden: 'https://animes.garden/ns/rss/1.0' };
@@ -17,11 +15,9 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
       const url = new URL(ctx.req.url);
       // sys.logger.info(`Receive feed.xml search params: ${url.search}`);
 
-      const { pagination, filter } = parseURLSearch(
-        url.searchParams,
-        await ctx.req.json().catch(() => undefined)
-      );
-      assertResourcesPagination(pagination);
+      const body = (await ctx.req.json().catch(() => undefined)) as
+        Record<string, unknown> | undefined;
+      const { pagination, filter } = parseResourcesQuery(url.searchParams, body);
 
       const resp = await sys.modules.resources.query.find(filter, pagination);
 
@@ -34,7 +30,7 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
         await getRssString({
           title: await generateTitleFromFilter(filter, sys.modules.subjects),
           description: 'Anime Garden 是動漫花園資源網的第三方镜像站',
-          site: `https://${sys.options.site ?? 'animes.garden'}/resources/1${url.search}`,
+          site: `https://${sys.options.site ?? 'animes.garden'}/resources${url.search}`,
           trailingSlash: false,
           xmlns: feedNamespaces,
           items: resp.resources.map((r) => {

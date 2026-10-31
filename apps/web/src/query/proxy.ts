@@ -4,7 +4,6 @@ import { APP_HOST, FEED_HOST, WEB_SERVER_URL } from '~build/env';
 
 import {
   type Collection,
-  AnimeGardenError,
   type FetchResourcesOptions,
   type ProviderType,
   fetchCollection as rawFetchCollection,
@@ -36,7 +35,6 @@ const ofetch = async (url: string | RequestInfo, init?: RequestInit) => {
 };
 
 const transientAPIErrorStatuses = new Set([502, 503, 504]);
-const deepPaginationMessage = 'Resources pagination is too deep.';
 
 function getProxyFetchOptions(timeout?: number) {
   return {
@@ -63,36 +61,9 @@ async function withTransientAPIErrorRetry(url: string | RequestInfo, init?: Requ
   return ofetch(url, init);
 }
 
-let lastTimestamp!: Date;
-
-function setTimestamp<T extends { timestamp?: Date } | undefined>(resp: T) {
-  if (resp?.timestamp) {
-    lastTimestamp = resp.timestamp;
-  } else if (resp) {
-    resp.timestamp = lastTimestamp;
-  }
-
-  return resp;
-}
-
 async function normalizeResourceDescription(description: string) {
   const { normalizeDescription } = await import('@animegarden/scraper');
   return normalizeDescription(description);
-}
-
-function normalizeResourcesError(error: unknown) {
-  if (
-    error instanceof AnimeGardenError &&
-    typeof error.body === 'object' &&
-    error.body !== null &&
-    'message' in error.body &&
-    typeof error.body.message === 'string' &&
-    error.body.message.includes(deepPaginationMessage)
-  ) {
-    return new Error(error.body.message);
-  }
-
-  return error;
 }
 
 async function resolveResourcesFilter(filter: ResourcesQueryInput) {
@@ -127,7 +98,6 @@ export const fetchTimestampFn = createServerFn({ method: 'GET' }).handler(async 
       signal: AbortSignal.timeout(10 * 1000)
     });
     if (resp.ok) {
-      setTimestamp(resp);
       await setCacheControl(ResponseCacheControl.List);
 
       return {
@@ -141,7 +111,7 @@ export const fetchTimestampFn = createServerFn({ method: 'GET' }).handler(async 
     return {
       ...resp,
       error: serializeError(resp.error),
-      timestamp: lastTimestamp
+      timestamp: undefined
     };
   } catch (error) {
     console.error('fetchTimestamp', error);
@@ -153,7 +123,7 @@ export const fetchTimestampFn = createServerFn({ method: 'GET' }).handler(async 
     ok: false,
     code: 'INVALID_RESPONSE' as const,
     error: serializeError(new Error('Failed fetching timestamp')),
-    timestamp: lastTimestamp
+    timestamp: undefined
   };
 });
 
@@ -173,16 +143,14 @@ export const fetchResourcesFn = createServerFn({ method: 'GET' })
       });
 
       if (resp.ok) {
-        setTimestamp(resp);
         await setCacheControl(ResponseCacheControl.List);
         return { ...resp, error: undefined };
       }
 
-      setTimestamp(resp);
       await setErrorResponse();
       return {
         ...resp,
-        error: serializeError(normalizeResourcesError(resp.error))
+        error: serializeError(resp.error)
       };
     } catch (error) {
       console.error('[API]', 'fetchResources', filter, error);
@@ -194,8 +162,8 @@ export const fetchResourcesFn = createServerFn({ method: 'GET' })
         resources: [],
         pagination: undefined,
         filter: undefined,
-        timestamp: lastTimestamp,
-        error: serializeError(normalizeResourcesError(error))
+        timestamp: undefined,
+        error: serializeError(error)
       };
     }
   });
@@ -211,7 +179,6 @@ export const fetchResourceDetailFn = createServerFn({ method: 'GET' })
       });
 
       if (resp.ok) {
-        setTimestamp(resp);
         await setCacheControl(ResponseCacheControl.Detail);
         const description = resp.detail?.description
           ? await normalizeResourceDescription(resp.detail.description)
@@ -234,7 +201,7 @@ export const fetchResourceDetailFn = createServerFn({ method: 'GET' })
         error: serializeError(resp.error),
         resource: undefined,
         detail: undefined,
-        timestamp: lastTimestamp,
+        timestamp: undefined,
         description: undefined
       };
     } catch (error) {
@@ -244,10 +211,10 @@ export const fetchResourceDetailFn = createServerFn({ method: 'GET' })
       return {
         ok: false,
         code: 'INVALID_RESPONSE' as const,
-        error: serializeError(normalizeResourcesError(error)),
+        error: serializeError(error),
         resource: undefined,
         detail: undefined,
-        timestamp: lastTimestamp,
+        timestamp: undefined,
         description: undefined
       };
     }
@@ -262,7 +229,6 @@ export const fetchCollectionFn = createServerFn({ method: 'GET' })
       });
 
       if (resp.ok) {
-        setTimestamp(resp);
         await setCacheControl(ResponseCacheControl.List);
         return resp;
       }
@@ -276,7 +242,7 @@ export const fetchCollectionFn = createServerFn({ method: 'GET' })
       return {
         ok: false as const,
         code: 'INVALID_RESPONSE' as const,
-        error: serializeError(normalizeResourcesError(error))
+        error: serializeError(error)
       };
     }
   });
@@ -295,7 +261,7 @@ export const generateCollectionFn = createServerFn({ method: 'POST' })
       return {
         ok: false as const,
         code: 'INVALID_RESPONSE' as const,
-        error: serializeError(normalizeResourcesError(error))
+        error: serializeError(error)
       };
     }
   });

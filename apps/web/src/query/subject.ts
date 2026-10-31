@@ -187,7 +187,7 @@ export function subjectsByNameQueryOptions(names: string[], externalSignal?: Abo
       // per-name keys get better reuse across URL resolving and repeated input states.
       const responses = await Promise.all(
         normalizeTexts(names).map((name) =>
-          client.ensureQueryData(
+          client.query(
             subjectByNameQueryOptions(
               name,
               externalSignal ? AbortSignal.any([signal, externalSignal]) : signal
@@ -247,7 +247,7 @@ export function subjectSearchQueryOptions(keywords: string[]) {
       // while single-keyword hits are shared by suggestions across repeated input states.
       const responses = await Promise.all(
         normalizeTexts(keywords).map(
-          (keyword) => client.ensureQueryData(subjectSearchKeywordQueryOptions(keyword, 20, signal)) // intention: suggestion-only truncation; move ranking server-side if recall matters.
+          (keyword) => client.query(subjectSearchKeywordQueryOptions(keyword, 20, signal)) // intention: suggestion-only truncation; move ranking server-side if recall matters.
         )
       );
       return {

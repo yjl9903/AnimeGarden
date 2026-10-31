@@ -1,6 +1,6 @@
 import type { ConsolaInstance } from 'consola';
 
-import { and, eq, ilike, desc } from 'drizzle-orm';
+import { and, desc, eq, ilike } from 'drizzle-orm';
 
 import {
   type ProviderType,
@@ -194,7 +194,7 @@ export class DetailsManager {
       .select(RESOURCE_SELECTOR)
       .from(resources)
       .where(ilike(resources.magnet, `${magnetPrefix}%`))
-      .orderBy(desc(resources.createdAt))
+      .orderBy(desc(resources.createdAt), desc(resources.id))
       .limit(1);
 
     const found = resp[0];
@@ -283,6 +283,7 @@ export class DetailsManager {
       ? this.system.modules.teams.getByName(resource.fansub.name)
       : undefined;
 
+    // TODO: 资源发生变化时，通知其他实例并失效资源列表的 Task/Redis 缓存。
     // 更新资源信息
     await this.system.modules.resources.updateResource({
       provider: found.provider,

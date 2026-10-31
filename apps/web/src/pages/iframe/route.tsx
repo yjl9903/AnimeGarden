@@ -2,9 +2,10 @@ import clsx from 'clsx';
 import styleToObject from 'style-to-object';
 import { useEffect, useMemo } from 'react';
 
+import type { ResolvedFilterOptions } from '@animegarden/client';
+
 import Resources from '~/components/Resources';
 import { getTrackingError, trackFetchResourcesError } from '~/utils';
-import { toRouterSearch } from '~/utils/routes';
 
 import { Error } from '../resources.($page)/Error';
 
@@ -17,7 +18,8 @@ export default function ResourcesIndex({
   data: {
     ok: boolean;
     resources: any[];
-    pagination?: { page?: number; complete?: boolean };
+    pagination?: { complete?: boolean };
+    filter?: ResolvedFilterOptions;
     timestamp?: Date;
     error: any;
   };
@@ -29,7 +31,7 @@ export default function ResourcesIndex({
   const inlineClassName = searchParams.getAll('className');
   const inlineStyle = styleToObject(searchParams.getAll('style').join(';')) ?? {};
 
-  const { ok, resources, pagination, timestamp, error } = data;
+  const { ok, resources, pagination, filter, error } = data;
 
   useEffect(() => {
     if (!error || !ok) return;
@@ -46,17 +48,8 @@ export default function ResourcesIndex({
         <>
           <Resources
             resources={resources}
-            page={pagination?.page ?? 1}
+            filter={filter}
             complete={pagination?.complete ?? false}
-            timestamp={new Date(timestamp!)}
-            link={(page) => {
-              const newSearchParams = new URLSearchParams(searchStr);
-              newSearchParams.set('page', page.toString());
-              return {
-                to: '/iframe',
-                search: toRouterSearch(newSearchParams)
-              };
-            }}
           ></Resources>
         </>
       ) : (

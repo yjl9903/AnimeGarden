@@ -5,6 +5,7 @@ import { setupRouterSsrQueryIntegration } from '@tanstack/react-router-ssr-query
 import { routeTree } from './routeTree.gen';
 import { createAppStores } from './stores';
 import { PendingPage } from './pages/PendingPage';
+import { timestampQueryKey } from './query/animegarden';
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -33,7 +34,7 @@ export function getRouter() {
 }
 
 function createQueryClient() {
-  return new QueryClient({
+  const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
         // Data prefetched by route hover/navigation stays fresh for 1 minute by default.
@@ -43,6 +44,10 @@ function createQueryClient() {
       }
     }
   });
+
+  queryClient.setQueryDefaults(timestampQueryKey, { gcTime: Infinity });
+
+  return queryClient;
 }
 
 export function parseRouterSearch(searchStr: string) {

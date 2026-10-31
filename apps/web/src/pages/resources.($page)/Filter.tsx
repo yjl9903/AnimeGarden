@@ -159,7 +159,7 @@ export function FilterCard(props: Props) {
           {publishers.map((publisher) => (
             <Link
               key={publisher}
-              {...getResourcesRouteLink(1, { publisher })}
+              {...getResourcesRouteLink({ publisher })}
               className="text-4 select-text text-link"
             >
               {publisher}
@@ -173,7 +173,7 @@ export function FilterCard(props: Props) {
           {fansubs.map((fansub) => (
             <Link
               key={fansub}
-              {...getResourcesRouteLink(1, { fansub })}
+              {...getResourcesRouteLink({ fansub })}
               className="text-4 select-text text-link"
             >
               {fansub}

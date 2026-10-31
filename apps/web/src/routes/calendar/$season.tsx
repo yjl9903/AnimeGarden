@@ -16,8 +16,8 @@ export const loader = async ({
   params: { season: string };
 }) => {
   const [timestamp, calendars] = await Promise.all([
-    context.queryClient.ensureQueryData(timestampQueryOptions()),
-    context.queryClient.ensureQueryData(calendarsQueryOptions())
+    context.queryClient.query(timestampQueryOptions()),
+    context.queryClient.query(calendarsQueryOptions())
   ]);
   const season = calendars.calendars.find((calendar) => calendar.season === params.season)?.season;
 
@@ -35,7 +35,7 @@ export const loader = async ({
     throwNotFoundPage('calendar');
   }
 
-  const calendar = await context.queryClient.ensureQueryData(calendarQueryOptions(season));
+  const calendar = await context.queryClient.query(calendarQueryOptions(season));
 
   if (timestamp.ok && calendars.ok && calendar.ok) {
     await setCacheControl(ResponseCacheControl.Calendar);

@@ -1,4 +1,6 @@
-import type { PaginationResult, ResourceDetail, ResolvedFilterOptions } from '../types';
+import type { CursorPagination, ResourceDetail, ResolvedFilterOptions } from '../types';
+
+import { MaxResourcesLimit } from '../constants';
 
 /** Validates the required Resource fields and restores serialized date values in place. */
 export function normalizeResourcePayload(value: unknown): boolean {
@@ -28,13 +30,25 @@ export function normalizeResourcePayload(value: unknown): boolean {
   return true;
 }
 
-/** Validates pagination metadata shared by resource lists and collection results. */
-export function isPaginationPayload(value: unknown): value is PaginationResult {
+/** Validates cursor metadata shared by lists and collections without coercing its version. */
+export function isPaginationPayload(value: unknown): value is CursorPagination {
+  if (
+    !isRecord(value) ||
+    !Number.isInteger(value.limit) ||
+    typeof value.limit !== 'number' ||
+    value.limit < 1 ||
+    value.limit > MaxResourcesLimit ||
+    typeof value.complete !== 'boolean' ||
+    (value.complete
+      ? value.nextCursor !== null
+      : typeof value.nextCursor !== 'string' || value.nextCursor.length === 0)
+  ) {
+    return false;
+  }
   return (
-    isRecord(value) &&
-    typeof value.page === 'number' &&
-    typeof value.pageSize === 'number' &&
-    typeof value.complete === 'boolean'
+    typeof value.anchor === 'number' &&
+    Number.isSafeInteger(value.anchor) &&
+    !Number.isNaN(new Date(value.anchor).getTime())
   );
 }
 

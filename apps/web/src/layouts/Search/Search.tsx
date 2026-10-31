@@ -486,7 +486,7 @@ function SearchResult(props: {
   }, [search]);
 
   const { data: searchResult, isLoading } = useQuery({
-    ...resourcesQueryOptions({ ...filter!, page: 1, pageSize: 5 }),
+    ...resourcesQueryOptions({ ...filter!, limit: 5 }),
     enabled: filter !== null,
     select: (res) => res.resources
   });

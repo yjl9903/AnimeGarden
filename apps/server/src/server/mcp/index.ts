@@ -101,8 +101,7 @@ export class McpServer {
         this.logger.info(`Start searching resources`, filter);
 
         const resp = await this.system.modules.resources.query.find(filter, {
-          page: 1,
-          pageSize: 30
+          limit: 30
         });
 
         const result = resp.resources.map((r) => ({

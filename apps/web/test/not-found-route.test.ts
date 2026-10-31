@@ -50,7 +50,7 @@ describe('HTML not-found routes', () => {
       })
     );
     const queryClient = {
-      ensureQueryData: vi.fn(async (options: { queryKey: readonly unknown[] }) =>
+      query: vi.fn(async (options: { queryKey: readonly unknown[] }) =>
         options.queryKey[1] === 'detail'
           ? { ok: false, code: 'NOT_FOUND', resource: undefined }
           : { ok: true, calendar: [] }
@@ -70,7 +70,7 @@ describe('HTML not-found routes', () => {
 
   it('does not convert upstream detail failures into 404s', async () => {
     const queryClient = {
-      ensureQueryData: vi.fn(async (options: { queryKey: readonly unknown[] }) =>
+      query: vi.fn(async (options: { queryKey: readonly unknown[] }) =>
         options.queryKey[1] === 'detail'
           ? { ok: false, code: 'SERVER_ERROR', resource: undefined }
           : { ok: true, calendar: [] }
@@ -89,14 +89,14 @@ describe('HTML not-found routes', () => {
 
   it('distinguishes missing collections from collection service failures', async () => {
     const missingClient = {
-      ensureQueryData: vi.fn(async (options: { queryKey: readonly unknown[] }) =>
+      query: vi.fn(async (options: { queryKey: readonly unknown[] }) =>
         options.queryKey[1] === 'collection'
           ? { ok: false, code: 'NOT_FOUND' }
           : { ok: true, calendar: [] }
       )
     };
     const failedClient = {
-      ensureQueryData: vi.fn(async (options: { queryKey: readonly unknown[] }) =>
+      query: vi.fn(async (options: { queryKey: readonly unknown[] }) =>
         options.queryKey[1] === 'collection'
           ? { ok: false, code: 'SERVER_ERROR' }
           : { ok: true, calendar: [] }
@@ -124,7 +124,8 @@ describe('HTML not-found routes', () => {
 
   it('uses the shared not-found path for missing Subjects', async () => {
     const queryClient = {
-      ensureQueryData: vi.fn(async (options: { queryKey: readonly unknown[] }) => {
+      getQueryData: vi.fn(),
+      query: vi.fn(async (options: { queryKey: readonly unknown[] }) => {
         if (options.queryKey[1] === 'subject') {
           return { ok: false, code: 'NOT_FOUND', subject: undefined };
         }
@@ -147,7 +148,8 @@ describe('HTML not-found routes', () => {
 
   it('does not convert upstream Subject failures into 404s', async () => {
     const queryClient = {
-      ensureQueryData: vi.fn(async (options: { queryKey: readonly unknown[] }) => {
+      getQueryData: vi.fn(),
+      query: vi.fn(async (options: { queryKey: readonly unknown[] }) => {
         if (options.queryKey[1] === 'subject') {
           return {
             ok: false,
@@ -174,16 +176,16 @@ describe('HTML not-found routes', () => {
   });
 
   it('returns not found for an invalid Subject id without querying the API', async () => {
-    const ensureQueryData = vi.fn();
+    const query = vi.fn();
     const missing = await captureError(() =>
       subjectLoader({
-        context: { queryClient: { ensureQueryData } as unknown as QueryClient },
+        context: { queryClient: { query } as unknown as QueryClient },
         location: { href: 'https://animes.garden/subject/invalid', searchStr: '' },
         params: { subject: 'invalid' }
       })
     );
 
     expect(isNotFound(missing)).toBe(true);
-    expect(ensureQueryData).not.toHaveBeenCalled();
+    expect(query).not.toHaveBeenCalled();
   });
 });

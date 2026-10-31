@@ -3,43 +3,41 @@ import { describe, expect, it } from 'vitest';
 import { parseURLSearch, stringifyURLSearch } from '../src';
 
 describe('parse url', () => {
-  it('page and page size should work', () => {
-    expect(parseURLSearch(new URLSearchParams('page=1&pageSize=10'))).toMatchInlineSnapshot(`
+  it('limit and opaque cursor should work', () => {
+    expect(parseURLSearch(new URLSearchParams('limit=10&cursor=opaque&anchor=2026-07-11')))
+      .toMatchInlineSnapshot(`
       {
         "filter": {},
         "pagination": {
-          "page": 1,
-          "pageSize": 10,
+          "cursor": "opaque",
+          "limit": 10,
         },
       }
     `);
 
-    expect(parseURLSearch(new URLSearchParams('page=2&pageSize=1000000'))).toMatchInlineSnapshot(`
+    expect(parseURLSearch(new URLSearchParams('limit=1000000'))).toMatchInlineSnapshot(`
       {
         "filter": {},
         "pagination": {
-          "page": 2,
-          "pageSize": 100,
+          "limit": 30,
         },
       }
     `);
 
-    expect(parseURLSearch(new URLSearchParams('page=2.2&pageSize=4.6'))).toMatchInlineSnapshot(`
+    expect(parseURLSearch(new URLSearchParams('limit=4.6'))).toMatchInlineSnapshot(`
       {
         "filter": {},
         "pagination": {
-          "page": 2,
-          "pageSize": 5,
+          "limit": 5,
         },
       }
     `);
 
-    expect(parseURLSearch(new URLSearchParams('page=-1&pageSize=1000000'))).toMatchInlineSnapshot(`
+    expect(parseURLSearch(new URLSearchParams('limit=-1'))).toMatchInlineSnapshot(`
       {
         "filter": {},
         "pagination": {
-          "page": 1,
-          "pageSize": 100,
+          "limit": 30,
         },
       }
     `);
@@ -52,8 +50,7 @@ describe('parse url', () => {
           "after": 2023-06-14T00:00:00.000Z,
         },
         "pagination": {
-          "page": 1,
-          "pageSize": 100,
+          "limit": 30,
         },
       }
     `);
@@ -65,8 +62,7 @@ describe('parse url', () => {
             "before": 2023-06-13T00:00:00.000Z,
           },
           "pagination": {
-            "page": 1,
-            "pageSize": 100,
+            "limit": 30,
           },
         }
       `);
@@ -81,8 +77,7 @@ describe('parse url', () => {
           ],
         },
         "pagination": {
-          "page": 1,
-          "pageSize": 100,
+          "limit": 30,
         },
       }
     `);
@@ -96,8 +91,7 @@ describe('parse url', () => {
           "provider": "dmhy",
         },
         "pagination": {
-          "page": 1,
-          "pageSize": 100,
+          "limit": 30,
         },
       }
     `);
@@ -110,8 +104,7 @@ describe('parse url', () => {
             "provider": "dmhy",
           },
           "pagination": {
-            "page": 1,
-            "pageSize": 100,
+            "limit": 30,
           },
         }
       `);
@@ -148,8 +141,7 @@ describe('parse url', () => {
       'fansub=abc',
       'fansub=def',
       'publisher=456',
-      'page=2',
-      'pageSize=100',
+      'limit=100',
       'search=hello',
       'search=world',
       'include=hello',
@@ -184,8 +176,7 @@ describe('parse url', () => {
           ],
         },
         "pagination": {
-          "page": 2,
-          "pageSize": 100,
+          "limit": 100,
         },
       }
     `);
@@ -251,12 +242,11 @@ describe('duplicate filter', () => {
 
 describe('parse url with body', () => {
   it('should work', () => {
-    expect(parseURLSearch(new URLSearchParams(), { page: 2 })).toMatchInlineSnapshot(`
+    expect(parseURLSearch(new URLSearchParams(), { limit: 20 })).toMatchInlineSnapshot(`
       {
         "filter": {},
         "pagination": {
-          "page": 2,
-          "pageSize": 100,
+          "limit": 20,
         },
       }
     `);
@@ -271,8 +261,7 @@ describe('stringify url', () => {
       'fansub=abc',
       'fansub=def',
       'publisher=456',
-      'page=2',
-      'pageSize=100',
+      'limit=100',
       'search=hello',
       'search=world',
       'include=hello',
@@ -286,7 +275,7 @@ describe('stringify url', () => {
     const { pagination, filter } = parseURLSearch(new URLSearchParams(params.join('&')));
 
     expect(stringifyURLSearch({ ...pagination, ...filter }).toString()).toMatchInlineSnapshot(
-      `"after=1686355200000&before=1686614400000&exclude=h1&fansub=abc&fansub=def&page=2&pageSize=100&publisher=456&search=hello&search=world&type=%E5%8A%A8%E7%94%BB"`
+      `"after=1686355200000&before=1686614400000&exclude=h1&fansub=abc&fansub=def&limit=100&publisher=456&search=hello&search=world&type=%E5%8A%A8%E7%94%BB"`
     );
   });
 

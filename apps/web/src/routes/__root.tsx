@@ -7,7 +7,7 @@ import {
   createRootRouteWithContext,
   useRouterState
 } from '@tanstack/react-router';
-import type { QueryClient } from '@tanstack/react-query';
+import { useQuery, type QueryClient } from '@tanstack/react-query';
 
 import { Toaster } from '~/components/ui/sonner';
 import { NavHeight, SearchTop, HeroHeight } from '~/layouts/Layout';
@@ -15,6 +15,7 @@ import { SkillsOnboarding } from '~/layouts/Onboarding/SkillsOnboarding';
 import type { AppStores } from '~/stores';
 import { AgentDiscoveryLinkHeader, appendLinkHeader } from '~/utils/response';
 import { DefaultRobotsContent } from '~/utils';
+import { timestampQueryOptions } from '~/query';
 
 import Tags from '~analytics/scripts';
 
@@ -115,6 +116,17 @@ export const Route = createRootRouteWithContext<{
 
 function RootComponent() {
   const location = useRouterState({ select: (state) => state.location.href });
+  const isIframe = useRouterState({
+    select: (state) => state.location.pathname.replace(/\/+$/, '') === '/iframe'
+  });
+
+  // Static iframe embeds do not poll; other pages never await this side channel.
+  useQuery({
+    ...timestampQueryOptions(),
+    enabled: typeof window !== 'undefined' && !isIframe,
+    refetchInterval: 60_000,
+    refetchIntervalInBackground: false
+  });
 
   useEffect(() => {
     requestAnimationFrame(() => window.__animegardenLayoutController?.update());

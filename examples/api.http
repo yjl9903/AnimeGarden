@@ -1,8 +1,8 @@
-### List the first page of resources
+### List the first batch of resources
 GET https://api.animes.garden/resources
 Content-Type: application/json
 
-### List the first page of resources with a separate tracker field
+### List the first batch of resources with a separate tracker field
 GET https://api.animes.garden/resources?tracker=true
 Content-Type: application/json
 
@@ -14,12 +14,12 @@ Content-Type: application/json
 GET https://api.animes.garden/detail/infohash/AVXUXZOH3IKKI4OFNOAVRLMSFUSJYWPE
 Content-Type: application/json
 
-### List the second page of resources
-GET https://api.animes.garden/resources?page=2
+### Continue with pagination.nextCursor from the previous response
+GET https://api.animes.garden/resources?cursor=REPLACE_WITH_NEXT_CURSOR
 Content-Type: application/json
 
-### List resources from the 21st to 40th
-GET https://api.animes.garden/resources?page=2&pageSize=20
+### Return at most 20 resources in one batch
+GET https://api.animes.garden/resources?limit=20
 Content-Type: application/json
 
 ### List resources with more filter

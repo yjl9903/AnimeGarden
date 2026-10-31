@@ -16,8 +16,7 @@ import {
 export async function renderHomeMarkdown(): Promise<MarkdownResult> {
   const resp = await fetchResources({
     ...getFetchOptions(),
-    page: 1,
-    pageSize: 30,
+    limit: 30,
     types: ['动画', '合集'],
     preset: 'bangumi',
     tracker: true,

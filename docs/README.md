@@ -1,22 +1,33 @@
 # AnimeGarden 文档索引
 
-本目录是项目文档的统一入口。修改代码前，先从这里确认相关模块是否已有背景、设计或审计记录；修改后如果行为、配置、命令或服务职责有变化，需要同步补充文档。
+本目录记录项目的架构、接口契约、数据流程和维护约束，供开发与运维使用。
+各专题描述当前方案，代码行为、配置或职责变化时同步维护对应文档。
 
 ## 分类索引
 
 | 分类 | 内容 | 入口 |
 | --- | --- | --- |
 | anipar | 动画标题解析测试资产、标题和元数据审计 | [anipar/README.md](./anipar/README.md) |
-| client | API Client 的返回值和错误模型 | [client/README.md](./client/README.md) |
+| client | API 分页契约、SDK 返回值和错误模型 | [client/README.md](./client/README.md) |
 | integrations | Agent 插件开发、同步、验证与市场分发 | [integrations/README.md](./integrations/README.md) |
 | server | 后端服务职责、资源写入、查询优化、Telegram 推送 | [server/README.md](./server/README.md) |
 | web | 前端应用行为和埋点说明 | [web/README.md](./web/README.md) |
 
 ## 维护约定
 
-- 新增设计、审计、运维说明时，优先放入对应的 `docs/<module>/` 目录。
+- 新增设计和运维说明时，放入对应的 `docs/<module>/` 目录。
+- 按职责和数据流组织内容，约束在所属专题定义，其他文档通过链接引用。
+- 文档维护当前方案；开发过程、执行结果和提交汇报保留在讨论或变更记录中。
 - 文档文件名使用小写短横线，例如 `telegram-push-flow.md`。
 - 移动或重命名文档时，同步更新本索引和子目录索引。
+
+## 资源分页阅读顺序
+
+1. [API 与 SDK 分页契约](./client/pagination.md)：字段、cursor 和聚合查询。
+2. [资源写入与版本传播](./server/resources-write-flow.md)：入库时间、provider 版本和通知。
+3. [服务端查询与缓存](./server/resources-query.md)、[索引](./server/resources-indexes.md)：SQL、Task、Redis 和数据库约束。
+4. [前端资源查询与分页](./web/resources-pagination.md)：Query 状态、旁路版本和页面交互。
+5. [前端性能与缓存](./web/performance.md)、[事件契约](./web/umami-tracking.md)：缓存边界和埋点。
 
 ## 工具链约定
 
