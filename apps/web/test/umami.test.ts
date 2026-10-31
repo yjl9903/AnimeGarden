@@ -34,6 +34,24 @@ describe('Skills copy tracking', () => {
 });
 
 describe('generic tracking', () => {
+  it('retains cursor-page events through the shared schema', () => {
+    const send = vi.fn();
+    vi.stubGlobal('window', { umami: { track: send } });
+    const preview = { path: '/', search: '', kind: 'link' as const, extra: 'not public' };
+    track('resources.load-more.click', preview);
+    track('home.calendar.click', { season: '2026-10', source: 'link' });
+    track('anime.season.change', {
+      fromSeason: '2026-07',
+      toSeason: '2026-10',
+      source: 'season'
+    });
+    expect(send.mock.calls).toEqual([
+      ['resources.load-more.click', { path: '/', search: '', kind: 'link' }],
+      ['home.calendar.click', { season: '2026-10', source: 'link' }],
+      ['anime.season.change', { fromSeason: '2026-07', toSeason: '2026-10', source: 'season' }]
+    ]);
+  });
+
   it('sends explicit names and payloads without rewriting them', () => {
     const send = vi.fn();
     vi.stubGlobal('window', { umami: { track: send } });

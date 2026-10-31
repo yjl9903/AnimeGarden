@@ -152,6 +152,8 @@ export class Executor extends Server {
 function registerHono(sys: System, app: Hono<AppEnv>) {
   app.use('*', async (ctx, next) => {
     const requestId = ctx.req.header('X-Request-Id') ?? randomUUID();
+    const requestTimestamp = new Date();
+
     ctx.set('requestId', requestId);
 
     try {
@@ -160,9 +162,16 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
       ctx.res.headers.set('X-Request-Id', requestId);
       // API responses, including feeds and errors, are not search result pages.
       ctx.res.headers.set('X-Robots-Tag', 'noindex');
+      ctx.res.headers.set('X-Request-Timestamp', requestTimestamp.toISOString());
 
-      const responseTimestamp = ctx.get('responseTimestamp') || new Date();
-      ctx.res.headers.set('X-Response-Timestamp', responseTimestamp.toISOString());
+      if (ctx.res.status >= 400) {
+        ctx.res.headers.set('Cache-Control', 'no-store');
+      }
+
+      const responseTimestamp = ctx.get('responseTimestamp') ?? sys.modules?.providers?.timestamp;
+      if (responseTimestamp && !Number.isNaN(responseTimestamp.getTime())) {
+        ctx.res.headers.set('X-Response-Timestamp', responseTimestamp.toISOString());
+      }
 
       const contentType = ctx.res.headers.get('content-type');
       if (contentType && contentType.toLowerCase().startsWith('application/json')) {
@@ -174,7 +183,8 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
     '*',
     cors({
       origin: '*',
-      allowMethods: ['GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'PATCH', 'OPTIONS']
+      allowMethods: ['GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'PATCH', 'OPTIONS'],
+      exposeHeaders: ['ETag', 'X-Request-Id', 'X-Request-Timestamp', 'X-Response-Timestamp']
     })
   );
   app.use('*', prettyJSON());
@@ -255,11 +265,13 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
       return error.getResponse();
     }
 
+    // TODO: 优化错误处理
     const queryError = getResourcesQueryErrorResponse(error);
     if (queryError) {
+      c.res.headers.set('Cache-Control', 'no-store');
+
       if (c.req.path.endsWith('/feed.xml')) {
         c.res.headers.set('Content-Type', 'application/xml; charset=UTF-8');
-        c.res.headers.set('Cache-Control', 'no-store');
         return c.body(getResourcesQueryErrorXml(queryError.message), queryError.status);
       }
 
@@ -273,6 +285,7 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
     }
 
     sys.logger.error(error);
+
     return c.json({ status: 'ERROR' }, 500);
   });
 

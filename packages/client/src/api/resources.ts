@@ -2,7 +2,7 @@ import type {
   Resource,
   FetchResourcesOptions,
   ResolvedFilterOptions,
-  PaginationResult
+  CursorPagination
 } from '../types';
 
 import {
@@ -11,8 +11,8 @@ import {
   AnimeGardenError,
   toClientFailure
 } from '../error';
-import { stringifyURLSearch } from '../resolver';
-import { DefaultPageSize, MaxRequestPageSize } from '../constants';
+import { parseURLSearch, stringifyURLSearch } from '../resolver';
+import { DefaultResourcesLimit, MaxResourcesLimit } from '../constants';
 
 import {
   isPaginationPayload,
@@ -22,11 +22,11 @@ import {
 import { fetchAPI } from './base';
 import { toRequestError } from './request-error';
 
-export type { PaginationResult } from '../types';
+export type { CursorPagination } from '../types';
 
 export interface ResourcesData<T extends FetchResourcesOptions> {
   resources: Resource<T>[];
-  pagination: PaginationResult;
+  pagination: CursorPagination;
   filter: ResolvedFilterOptions;
   timestamp: Date;
 }
@@ -35,7 +35,7 @@ export type FetchResourcesResult<T extends FetchResourcesOptions> =
   | ClientSuccess<ResourcesData<T>>
   | (ClientFailure & {
       resources: Resource<T>[];
-      pagination: PaginationResult | undefined;
+      pagination: CursorPagination | undefined;
       filter: ResolvedFilterOptions | undefined;
       timestamp: Date | undefined;
     });
@@ -58,30 +58,26 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
   }
 
   const {
-    once, // Only fetch one page
+    once, // Only fetch one batch
     count // Fetch resources count
   } =
     options.count !== undefined && options.count !== null
       ? // Prefer the original count or -1 for inf
         { count: options.count < 0 ? Number.MAX_SAFE_INTEGER : options.count, once: false }
-      : { count: options.pageSize ?? DefaultPageSize, once: true };
-
-  const startPage = options.page ?? 1;
-
-  // Fetch multiple pages
-  // Respect an explicitly provided pageSize; otherwise request the maximum
-  // page size to reduce the number of requests
-  if (!once && options.pageSize === undefined) {
-    searchParams.set('pageSize', '' + MaxRequestPageSize);
-  }
+      : { count: parseURLSearch(undefined, options).pagination.limit, once: true };
 
   const map = new Map<string, Resource<T>>();
   let timestamp: Date | undefined = undefined;
-  let pagination: PaginationResult | undefined = undefined;
+  let pagination: CursorPagination | undefined = undefined;
   let filter: ResolvedFilterOptions | undefined = undefined;
   let failure: ClientFailure | undefined;
+  let cursor = options.cursor;
 
-  for (let page = startPage; map.size < count && !pagination?.complete; page++) {
+  const seenCursors = new Set<string>();
+  if (cursor) seenCursors.add(cursor);
+
+  // Even count=0 fetches metadata so success always includes validated pagination and filters.
+  while ((!pagination || map.size < count) && !pagination?.complete) {
     if (options.signal?.aborted) {
       failure = toClientFailure(
         toRequestError('Request aborted', options.signal.reason, options.signal)
@@ -89,9 +85,29 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
       break;
     }
 
-    let resp: Awaited<ReturnType<typeof fetchPage<T>>>;
+    let resp: Awaited<ReturnType<typeof fetchBatch<T>>>;
     try {
-      resp = await fetchPage(page, searchParams, options);
+      const requestedLimit =
+        options.limit === undefined
+          ? once
+            ? DefaultResourcesLimit
+            : MaxResourcesLimit
+          : parseURLSearch(undefined, options).pagination.limit;
+      const limit =
+        once || count === 0
+          ? requestedLimit
+          : Math.max(1, Math.min(requestedLimit, count - map.size));
+      searchParams.set('limit', String(limit));
+      if (cursor) {
+        searchParams.set('cursor', cursor);
+      }
+      resp = await fetchBatch(searchParams, options);
+      if (pagination && resp.pagination.anchor !== pagination.anchor) {
+        throw AnimeGardenError.fromInvalidResponse('Resource anchor changed between batches', resp);
+      }
+      if (resp.pagination.nextCursor && seenCursors.has(resp.pagination.nextCursor)) {
+        throw AnimeGardenError.fromInvalidResponse('Resource cursor did not advance', resp);
+      }
     } catch (currentError) {
       failure = toClientFailure(currentError);
       break;
@@ -101,10 +117,7 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
     pagination = resp.pagination;
     filter = resp.filter;
 
-    // No new resources
-    if (resp.resources.length === 0) {
-      break;
-    }
+    if (count === 0) break;
 
     const newRes = [];
     for (const r of resp.resources) {
@@ -116,21 +129,22 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
 
     // Progress callbacks are application code; their exceptions must remain visible to callers.
     await options.progress?.(newRes, {
-      url: searchParams.toString(),
-      searchParams,
-      page
+      anchor: resp.pagination.anchor,
+      cursor
     });
 
-    if (once) {
+    if (once || count === 0) {
       break;
     }
+    cursor = resp.pagination.nextCursor ?? undefined;
+    if (cursor) seenCursors.add(cursor);
   }
 
   if (!failure) {
     return {
       ok: true,
-      resources: uniq([...map.values()]),
-      pagination: pagination as PaginationResult,
+      resources: uniq([...map.values()]).slice(0, count),
+      pagination: pagination as CursorPagination,
       filter: filter as ResolvedFilterOptions,
       timestamp: timestamp as Date
     };
@@ -145,13 +159,10 @@ export async function fetchResources<T extends FetchResourcesOptions = FetchReso
   };
 }
 
-async function fetchPage<T extends FetchResourcesOptions = FetchResourcesOptions>(
-  page: number,
+async function fetchBatch<T extends FetchResourcesOptions = FetchResourcesOptions>(
   searchParams: URLSearchParams,
   options: T
 ) {
-  searchParams.set('page', '' + page);
-
   const r = await fetchAPI<any>('resources?' + searchParams.toString(), undefined, options);
   if (
     r &&

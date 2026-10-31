@@ -101,7 +101,7 @@ describe('sitemap server routes', () => {
     const subjects = await (await handleSitemapRequest(request('/sitemap-subjects.xml'))).text();
     const monthly = await (await handleSitemapRequest(request('/sitemap-2020-01.xml'))).text();
 
-    expect(fansubs).toContain('<loc>https://animes.garden/resources/1?fansub=TestTeam</loc>');
+    expect(fansubs).toContain('<loc>https://animes.garden/resources?fansub=TestTeam</loc>');
     expect(subjects).toContain('<loc>https://animes.garden/subject/1234</loc>');
     expect(monthly).toContain('<loc>https://animes.garden/detail/dmhy/abc-1</loc>');
     expect(fetchAPI).toHaveBeenCalledWith(
@@ -136,7 +136,7 @@ describe('sitemap server routes', () => {
       {
         pathname: '/sitemap-fansubs.xml',
         data: { teams: [{ name: 'TestTeam' }] },
-        url: 'https://animes.garden/resources/1?fansub=TestTeam'
+        url: 'https://animes.garden/resources?fansub=TestTeam'
       },
       {
         pathname: '/sitemap-subjects.xml',

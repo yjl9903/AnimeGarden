@@ -1,18 +1,14 @@
-import { parseURLSearch } from '@animegarden/client';
-
 import { defineHandler } from '../utils/hono.ts';
 import { safeEtag as etag } from '../utils/etag.ts';
-import { assertResourcesPagination } from '../utils/resources-query.ts';
+import { parseResourcesQuery } from '../utils/resources-query.ts';
 
 export const defineFeedRoutes = defineHandler((sys, app) =>
   app
     .get('/feed.xml', async (ctx) => {
       const params = normalizeSearchParams(new URL(ctx.req.url).searchParams);
-      const { filter, pagination } = parseURLSearch(
-        params,
-        await ctx.req.json().catch(() => undefined)
-      );
-      assertResourcesPagination(pagination);
+      const body = (await ctx.req.json().catch(() => undefined)) as
+        Record<string, unknown> | undefined;
+      const { pagination, filter } = parseResourcesQuery(params, body);
 
       const feed = await sys.modules.feed.getResourcesFeed({
         filter,
@@ -35,8 +31,7 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
         const ifNoneMatch = ctx.req.header('If-None-Match');
         const modifiedSince = Date.parse(ctx.req.header('If-Modified-Since') ?? '');
         // HTTP dates cannot distinguish revisions generated within the same second.
-        const dateValidatorSafe =
-          feed.changedAt !== undefined && feed.changedAt < lastModifiedAt;
+        const dateValidatorSafe = feed.changedAt !== undefined && feed.changedAt < lastModifiedAt;
         // If-None-Match takes precedence, even when none of its tags match.
         const unchanged =
           ifNoneMatch !== undefined

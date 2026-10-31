@@ -192,7 +192,7 @@ export function stringifySearchText(
   search: URLSearchParams,
   subjects: Record<number, Pick<SubjectInfo, 'title' | 'display_title'>>
 ) {
-  const { filter } = parseURLSearch(search, { pageSize: 80 });
+  const { filter } = parseURLSearch(search, { limit: 30 });
   const content: string[] = [];
 
   if (filter.subjects && filter.subjects.length === 1) {
@@ -265,11 +265,9 @@ export async function stringifySearchTextAsync(
   signal?: AbortSignal
 ) {
   signal?.throwIfAborted();
-  const { filter } = parseURLSearch(search, { pageSize: 80 });
+  const { filter } = parseURLSearch(search, { limit: 30 });
   const subjects = await Promise.all(
-    (filter.subjects ?? []).map((id) =>
-      queryClient.ensureQueryData(subjectQueryOptions(id, signal))
-    )
+    (filter.subjects ?? []).map((id) => queryClient.query(subjectQueryOptions(id, signal)))
   );
   signal?.throwIfAborted();
 
@@ -303,9 +301,9 @@ export async function resolveSearchURL(
       const { subjects, ...parsed } = parseSearchInput(search);
       const subjectIds =
         subjects.length > 0
-          ? (
-              await queryClient.ensureQueryData(subjectsByNameQueryOptions(subjects, signal))
-            ).subjects.map((subject) => subject.id)
+          ? (await queryClient.query(subjectsByNameQueryOptions(subjects, signal))).subjects.map(
+              (subject) => subject.id
+            )
           : [];
       const filter: FilterOptions =
         subjects.length > 0 ? { ...parsed, subjects: subjectIds } : parsed; // intention: unresolved subject names intentionally drop the subject filter.
@@ -315,7 +313,7 @@ export async function resolveSearchURL(
       if (searchParams.size === 1 && searchParams.get('subject')) {
         return `/subject/${searchParams.get('subject')}`;
       } else {
-        return `/resources/1?${searchParams.toString()}`;
+        return `/resources?${searchParams.toString()}`;
       }
     }
   }

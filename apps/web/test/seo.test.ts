@@ -108,7 +108,7 @@ describe('SEO metadata', () => {
   it('builds complete canonical and social metadata inside page modules', () => {
     const home = buildHomePageHead();
     const calendar = buildAnimePageHead('2026-07');
-    const resources = buildResourcesPageHead({ types: ['动画'] }, {}, 2);
+    const resources = buildResourcesPageHead({ types: ['动画'] }, {});
 
     expect(home.links).toContainEqual({ rel: 'canonical', href: 'https://animes.garden/' });
     expect(home.meta).toContainEqual(
@@ -123,7 +123,7 @@ describe('SEO metadata', () => {
     });
     expect(resources.links).toContainEqual({
       rel: 'canonical',
-      href: 'https://animes.garden/resources/2?type=%E5%8A%A8%E7%94%BB'
+      href: 'https://animes.garden/resources?type=%E5%8A%A8%E7%94%BB'
     });
   });
 
@@ -185,7 +185,7 @@ describe('SEO metadata', () => {
       const subjects: Record<number, Pick<WebBgmSubject, 'title'>> = filter?.subjects
         ? { 100: createSeoSubject(100) }
         : {};
-      expect(buildResourcesPageHead(filter, subjects, 1, true).meta).not.toContainEqual({
+      expect(buildResourcesPageHead(filter, subjects, true).meta).not.toContainEqual({
         name: 'robots',
         content: 'noindex,follow'
       });
@@ -202,38 +202,35 @@ describe('SEO metadata', () => {
       { after: new Date('2026-01-01T00:00:00.000Z') }
     ];
     for (const filter of noindexFilters) {
-      expect(buildResourcesPageHead(filter, {}, 1, true).meta).toContainEqual({
+      expect(buildResourcesPageHead(filter, {}, true).meta).toContainEqual({
         name: 'robots',
         content: 'noindex,follow'
       });
     }
 
-    expect(buildResourcesPageHead({ types: ['动画'] }, {}, 1, false).meta).toContainEqual({
+    expect(buildResourcesPageHead({ types: ['动画'] }, {}, false).meta).toContainEqual({
       name: 'robots',
       content: 'noindex,follow'
     });
   });
 
-  it('keeps every Resources page after page 1 out of the index', () => {
+  it('uses filter-only canonical URLs without page numbers', () => {
     for (const filter of [undefined, { types: ['动画'] }, { search: ['测试作品'] }]) {
-      const head = buildResourcesPageHead(filter, {}, 2, true);
-      expect(head.meta).toContainEqual({ name: 'robots', content: 'noindex,follow' });
-      expect(head.links[0]?.href).toContain('/resources/2');
+      const head = buildResourcesPageHead(filter, {}, true);
+      expect(new URL(head.links[0]!.href).pathname).toBe('/resources');
     }
 
     const subjectHead = buildResourcesPageHead(
       { subjects: [100] },
       { 100: createSeoSubject(100) },
-      2,
       true
     );
-    expect(subjectHead.meta).toContainEqual({ name: 'robots', content: 'noindex,follow' });
-    expect(subjectHead.links[0]?.href).toContain('/resources/2?');
+    expect(subjectHead.links[0]?.href).toBe('https://animes.garden/subject/100');
   });
 
   it('canonicalizes a single Subject resource filter to the Subject page', () => {
     const subject = createSeoSubject(100);
-    const head = buildResourcesPageHead({ subjects: [100] }, { 100: subject }, 1, true);
+    const head = buildResourcesPageHead({ subjects: [100] }, { 100: subject }, true);
 
     expect(head.links).toEqual([{ rel: 'canonical', href: 'https://animes.garden/subject/100' }]);
     expect(head.meta).not.toContainEqual({ name: 'robots', content: 'noindex,follow' });
@@ -241,10 +238,9 @@ describe('SEO metadata', () => {
     const combined = buildResourcesPageHead(
       { subjects: [100], fansubs: ['测试字幕组'] },
       { 100: subject },
-      1,
       true
     );
-    expect(combined.links[0]?.href).toContain('/resources/1?');
+    expect(combined.links[0]?.href).toContain('/resources?');
     expect(combined.meta).not.toContainEqual({ name: 'robots', content: 'noindex,follow' });
   });
 

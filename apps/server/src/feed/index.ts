@@ -36,7 +36,7 @@ export class FeedModule extends Module<System['modules']> {
       return getRssString({
         title: await generateTitleFromFilter(filter, this.system.modules.subjects),
         description: 'Anime Garden 是動漫花園資源網的第三方镜像站',
-        site: `https://${site}/resources/1${search}`,
+        site: `https://${site}/resources${search}`,
         trailingSlash: false,
         xmlns: feedNamespaces,
         items: resp.resources.map((resource) => convertResourceToRssItem(resource, tracker, site))

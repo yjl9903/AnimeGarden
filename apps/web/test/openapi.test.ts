@@ -5,6 +5,22 @@ import { parseCollection, parseURLSearch } from '@animegarden/client';
 import { Route } from '../src/routes/openapi[.]json';
 
 describe('openapi discovery', () => {
+  it('documents a public limit of 100 while the implementation accepts 1000', async () => {
+    const response = await (Route.options.server!.handlers as any).GET({} as any);
+    const { components } = (await response.json()) as any;
+    for (const schema of [
+      components.parameters.LimitParam.schema,
+      components.schemas.ResourcesRequest.properties.limit,
+      components.schemas.PaginationInfo.properties.limit
+    ]) {
+      expect(schema.minimum).toBe(1);
+      expect(schema.maximum).toBe(100);
+    }
+    expect(components.parameters.LimitParam.schema.default).toBe(30);
+    expect(components.schemas.ResourcesRequest.properties.limit.default).toBe(30);
+    expect(parseURLSearch(new URLSearchParams('limit=1000')).pagination.limit).toBe(1000);
+  });
+
   it('publishes only public API metadata for agents', async () => {
     const response = await (Route.options.server!.handlers as any).GET({} as any);
     const spec = (await response.json()) as any;
@@ -127,9 +143,21 @@ describe('openapi discovery', () => {
       expect(result.required).not.toContain('complete');
     }
     expect(spec.components.schemas.PaginationInfo.required).toEqual([
-      'page',
-      'pageSize',
+      'anchor',
+      'limit',
+      'nextCursor',
       'complete'
     ]);
+    expect(spec.components.schemas.PaginationInfo.properties.nextCursor.type).toEqual([
+      'string',
+      'null'
+    ]);
+    expect(spec.components.schemas.PaginationInfo.properties.anchor).toMatchObject({
+      type: 'integer',
+      format: 'int64'
+    });
+    expect(spec.components.schemas.ResourcesRequest.properties).not.toHaveProperty('anchor');
+    expect(spec.components.parameters).not.toHaveProperty('PageParam');
+    expect(spec.components.parameters).not.toHaveProperty('PageSizeParam');
   });
 });

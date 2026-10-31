@@ -72,7 +72,7 @@ describe('Header navigation', () => {
     const index = createRoute({ getParentRoute: () => rootRoute, path: '/' });
     const anime = createRoute({ getParentRoute: () => rootRoute, path: '/anime' });
     const calendar = createRoute({ getParentRoute: () => rootRoute, path: '/calendar/$season' });
-    const resources = createRoute({ getParentRoute: () => rootRoute, path: '/resources/$page' });
+    const resources = createRoute({ getParentRoute: () => rootRoute, path: '/resources' });
     const subject = createRoute({ getParentRoute: () => rootRoute, path: '/subject/$subject' });
     const router = createRouter({
       routeTree: rootRoute.addChildren([index, anime, calendar, resources, subject]),

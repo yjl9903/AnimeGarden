@@ -20,7 +20,7 @@ Example:
 ```ts
 import { fetchResources } from '@animegarden/client';
 
-// Fetch the first page of resources
+// Fetch the first batch of resources
 const result = await fetchResources();
 if (!result.ok) {
   throw result.error;
@@ -28,7 +28,7 @@ if (!result.ok) {
 
 console.log(result.resources);
 
-// Fetch matching resources across pages
+// Fetch matching resources across cursor batches
 const botan = await fetchResources({
   count: -1,
   subject: 543360,
@@ -63,9 +63,9 @@ A successful `fetchResources()` result contains these fields:
 | --- | --- |
 | `ok` | `true` if the request succeeded. |
 | `resources` | Matching resources, deduplicated and sorted from newest to oldest. |
-| `pagination` | The last fetched page number `page` and page size `pageSize`; `complete: true` means there is no next page. |
+| `pagination` | Query version `anchor` in Unix milliseconds, batch `limit`, opaque `nextCursor`, and `complete` (true when nextCursor is null). |
 | `filter` | The filters actually used by the server after parsing. |
-| `timestamp` | The first successful response time. |
+| `timestamp` | The provider data version from the first successful response. |
 
 ## Credits
 

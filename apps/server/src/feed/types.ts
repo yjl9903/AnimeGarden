@@ -1,11 +1,12 @@
-import type { ResolvedFilterOptions, ResolvedPaginationOptions } from '@animegarden/client';
+import type { ResolvedFilterOptions } from '@animegarden/client';
+import type { ResolvedPaginationOptions } from '../resources/types.ts';
 
 /** Parsed subscription options, independent of the request transport. */
 export interface FeedOptions {
   /** Parsed resource filters; set-valued terms are normalized by the feed module. */
   filter: ResolvedFilterOptions;
 
-  /** Resource page and page size, validated by the caller. */
+  /** Resource batch limit and decoded cursor, validated by the caller. */
   pagination: ResolvedPaginationOptions;
 
   /** Whether enclosure magnet links include tracker URLs. */

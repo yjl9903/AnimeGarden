@@ -15,6 +15,7 @@ vi.mock('consola', async (importOriginal) => {
 });
 
 const find = vi.fn();
+const providerTimestamp = new Date('2026-07-11T08:00:00.000Z');
 let app: Awaited<ReturnType<typeof makeServer>>['hono'];
 
 beforeAll(async () => {
@@ -24,14 +25,26 @@ beforeAll(async () => {
         options: { site: 'animes.garden' },
         logger: { info: vi.fn(), error: vi.fn() },
         initialize: vi.fn(),
-        modules: { resources: { query: { find } } }
+        modules: {
+          providers: { timestamp: providerTimestamp },
+          resources: { query: { find } }
+        }
       } as any,
       {}
     )
   ).hono;
 });
 beforeEach(() => {
-  find.mockReset().mockResolvedValue({ resources: [] });
+  find.mockReset().mockResolvedValue({
+    resources: [],
+    pagination: {
+      anchor: providerTimestamp.getTime(),
+      limit: 30,
+      nextCursor: null,
+      complete: true
+    },
+    filter: {}
+  });
   logs.length = 0;
 });
 afterEach(() => vi.restoreAllMocks());
@@ -55,11 +68,54 @@ async function readResult(response: Response) {
 
 describe('MCP requests', () => {
   it('redirects discovery to the web host', async () => {
-    const response = await app.request('/.well-known/mcp/server-card.json');
+    const beforeRequest = Date.now();
+
+    const response = await app.request(
+      new Request('http://localhost/.well-known/mcp/server-card.json', {
+        headers: { Origin: 'https://animes.garden' }
+      })
+    );
+    const afterRequest = Date.now();
+
     expect(response.status).toBe(302);
     expect(response.headers.get('location')).toBe(
       'https://animes.garden/.well-known/mcp/server-card.json'
     );
+    expect(response.headers.get('x-response-timestamp')).toBe(providerTimestamp.toISOString());
+
+    const requestTimestamp = new Date(response.headers.get('x-request-timestamp')!).getTime();
+    expect(requestTimestamp).toBeGreaterThanOrEqual(beforeRequest);
+    expect(requestTimestamp).toBeLessThanOrEqual(afterRequest);
+    expect(response.headers.get('access-control-expose-headers')).toContain('X-Request-Timestamp');
+    expect(response.headers.get('access-control-expose-headers')).toContain('X-Response-Timestamp');
+  });
+
+  it('separates the request time from the provider data timestamp', async () => {
+    const beforeRequest = Date.now();
+
+    const response = await app.request('http://localhost/resources');
+    const afterRequest = Date.now();
+
+    expect(response.status).toBe(200);
+    expect(response.headers.get('x-response-timestamp')).toBe(providerTimestamp.toISOString());
+    const body = await response.json();
+    expect(body).not.toHaveProperty('timestamp');
+    expect(body).toMatchObject({
+      pagination: {
+        anchor: providerTimestamp.getTime()
+      }
+    });
+
+    const requestTimestamp = new Date(response.headers.get('x-request-timestamp')!).getTime();
+    expect(requestTimestamp).toBeGreaterThanOrEqual(beforeRequest);
+    expect(requestTimestamp).toBeLessThanOrEqual(afterRequest);
+  });
+
+  it('prevents caching error responses', async () => {
+    const response = await app.request('http://localhost/not-found');
+
+    expect(response.status).toBe(404);
+    expect(response.headers.get('cache-control')).toBe('no-store');
   });
 
   it('supports initialization, notifications and subsequent calls without sessions', async () => {
@@ -104,6 +160,10 @@ describe('MCP requests', () => {
     await vi.waitFor(() => expect(find).toHaveBeenCalledTimes(1));
     const pendingSecond = request();
     await vi.waitFor(() => expect(find).toHaveBeenCalledTimes(2));
+    expect(find.mock.calls.map(([, pagination]) => pagination)).toEqual([
+      { limit: 30 },
+      { limit: 30 }
+    ]);
     for (const method of ['GET', 'DELETE', 'PUT']) {
       const response = await app.request('/mcp', { method });
       expect(response.status).toBe(405);

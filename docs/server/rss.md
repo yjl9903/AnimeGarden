@@ -1,4 +1,4 @@
-# RSS 扩展字段
+# RSS 输出契约
 
 `/feed.xml` 和 `/collection/:hash/feed.xml` 均输出 RSS 2.0，并在根元素声明
 `xmlns:animegarden="https://animes.garden/ns/rss/1.0"`。该命名空间标识固定，不随服务的
@@ -22,6 +22,14 @@ ETag/Last-Modified 格式化、条件请求判断、200/304 状态码与 Cache-C
 先刷新 resources，再刷新 feed。生成任务结束时只有仍登记在缓存中的 Promise 才能写回，
 避免刷新前启动的旧任务重新填入缓存。QueryManager 不维护 feed 的版本或失效状态。
 
+## 查询范围
+
+`/feed.xml` 与资源接口共用筛选和 cursor 解析，使用 limit 指定单批数量，默认 30，
+实现接受 1–1000。对外公开数量范围沿用[分页契约](../client/pagination.md)的 1–100 约定。
+`/collection/:hash/feed.xml` 汇总收藏夹各筛选项的首批结果，每项最多 100 条。
+
+RSS 返回当前窗口内的条目；订阅方按 guid 或资源链接去重，并处理后续字段修正。
+
 ## Bangumi Subject ID
 
 已绑定 Bangumi 条目的资源在 `<item>` 中包含 `animegarden:subjectId`，值为资源查询返回的
@@ -31,15 +39,12 @@ ETag/Last-Modified 格式化、条件请求判断、200/304 状态码与 Cache-C
 <animegarden:subjectId>123456</animegarden:subjectId>
 ```
 
-未绑定的资源（`subjectId` 为 `null` 或 `undefined`）省略该元素。消费者应将其视为未分类，
-不能假定每条资源都具有 Subject ID。该字段复用现有资源查询数据，无需额外调用 Bangumi API。
+未绑定的资源（`subjectId` 为 `null` 或 `undefined`）省略该元素，订阅方按未分类处理。
+字段值直接来自资源查询结果。
 
 下游工具可读取命名空间 `https://animes.garden/ns/rss/1.0` 下的 `subjectId` 元素，将一次
 RSS 请求中的资源按番剧分类。标准字段 `title`、`link`、`guid`、`pubDate` 和 `enclosure`
 保持原有含义。
-
-全站 RSS 默认返回 100 条，`pageSize` 最大为 1000，两个接口的 HTTP 响应缓存时间均为
-1 小时。消费者仍需处理轮询期间超出返回窗口的资源，以及后续绑定修正。
 
 ## 全站 RSS 缓存与条件请求
 
@@ -58,15 +63,17 @@ RSS 请求中的资源按番剧分类。标准字段 `title`、`link`、`guid`�
 这层缓存复用现有查询和 Redis 通知机制，没有新增数据库版本、迁移或写入路径。
 漏通知时，XML 最迟在自身 60 秒 TTL 到期后重新查询；底层查询仍受其既有缓存与刷新策略约束，
 因此该 TTL 不代表数据库修改在 60 秒内一定可见。HTTP 缓存仍可在上述有效期内复用旧响应。
-收藏夹 RSS 保持原来的查询和 ETag 流程。
+收藏夹 RSS 保持原来的查询和 ETag 流程，缓存为 `public, max-age=3600`。
 
 ## 全站 RSS 参数规范化
 
 `/feed.xml` 在查询和构造 channel link 前，统一参数名大小写，对集合参数排序、去重，
-丢弃未知参数，并省略默认的 `page=1`、`pageSize=100`、`duplicate=true` 和 `tracker=true`。
+丢弃未知参数，并省略默认的 `limit=30`、`duplicate=true` 和 `tracker=true`。
 参数值（如发布者名称和搜索文本）的大小写保持不变，布尔参数另行解析。
-例如 `?subject=2&Subject=1&subject=2&page=1&unused=x` 与 `?subject=1&subject=2`
+例如 `?subject=2&Subject=1&subject=2&limit=30&unused=x` 与 `?subject=1&subject=2`
 共享同一份进程内 XML 缓存、channel link 和 ETag。该规范化不重定向请求，也不修改 CDN 的 URL 缓存键。
+cursor 在 HTTP 边界解码，传给资源查询时保留解析后的对象；构造缓存键和 channel link 时
+编码为规范字符串，使不同版本和位置的订阅分别缓存。channel link 指向 `/resources`。
 
 ## Tracker 参数
 

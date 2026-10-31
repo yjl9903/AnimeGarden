@@ -1,3 +1,5 @@
+import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
+
 import { errorMarkdown, markdownResponse, type MarkdownResult } from './shared.server';
 import { renderAnimeMarkdown } from './anime.server';
 import { renderCollectionMarkdown } from './collection.server';
@@ -29,17 +31,21 @@ async function dispatchMarkdown(url: URL): Promise<MarkdownResult | Response> {
   if (pathname === '/') return renderHomeMarkdown();
   if (pathname === '/anime') return renderAnimeMarkdown();
   if (pathname === '/skills') return renderSkillsMarkdown();
-  if (pathname === '/resources') return renderResourcesMarkdown(url, 1);
+  if (pathname === '/resources') return renderResourcesMarkdown(url);
+  if (/^\/resources\/[^/]+$/.test(pathname)) {
+    const target = new URL('/resources', url.origin);
+    target.search = stringifyURLSearch(parseURLSearch(url.searchParams).filter).toString();
+    return new Response(null, {
+      status: 308,
+      headers: {
+        Location: target.toString(),
+        Vary: 'Accept'
+      }
+    });
+  }
 
   const calendarMatch = pathname.match(/^\/calendar\/(\d{4}-\d{2})$/);
   if (calendarMatch) return renderAnimeMarkdown(calendarMatch[1]);
-
-  const resourcesMatch = pathname.match(/^\/resources\/(-?\d+(?:\.\d*)?)$/);
-  if (resourcesMatch) {
-    const page = Math.floor(+resourcesMatch[1]);
-    if (page <= 0) return redirectResourcesPage(url);
-    return renderResourcesMarkdown(url, page);
-  }
 
   const detailMatch = pathname.match(/^\/detail\/([^/]+)\/([^/]+)$/);
   if (detailMatch) {
@@ -60,17 +66,4 @@ async function dispatchMarkdown(url: URL): Promise<MarkdownResult | Response> {
 
 function normalizePathname(pathname: string) {
   return pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
-}
-
-function redirectResourcesPage(url: URL) {
-  const redirectUrl = new URL(url);
-  redirectUrl.pathname = normalizePathname(redirectUrl.pathname).replace(/\/-?\d+(\.\d*)?$/, '/1');
-  return new Response(null, {
-    status: 302,
-    headers: {
-      Location: `${redirectUrl.pathname}${redirectUrl.search}`,
-      'Cache-Control': 'no-store',
-      Vary: 'Accept'
-    }
-  });
 }

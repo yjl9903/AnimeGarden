@@ -193,10 +193,10 @@
         "tags": ["Resources"],
         "parameters": [
           {
-            "$ref": "#/components/parameters/PageParam"
+            "$ref": "#/components/parameters/CursorParam"
           },
           {
-            "$ref": "#/components/parameters/PageSizeParam"
+            "$ref": "#/components/parameters/LimitParam"
           },
           {
             "$ref": "#/components/parameters/ProviderParam"
@@ -305,8 +305,7 @@
               "example": {
                 "subjects": [543360],
                 "keywords": ["简日"],
-                "page": 1,
-                "pageSize": 20
+                "limit": 20
               }
             }
           }
@@ -367,10 +366,10 @@
             }
           },
           {
-            "$ref": "#/components/parameters/PageParam"
+            "$ref": "#/components/parameters/CursorParam"
           },
           {
-            "$ref": "#/components/parameters/PageSizeParam"
+            "$ref": "#/components/parameters/LimitParam"
           },
           {
             "$ref": "#/components/parameters/SearchParam"
@@ -486,8 +485,7 @@
               "example": {
                 "subjects": [543360],
                 "keywords": ["简日"],
-                "page": 1,
-                "pageSize": 20
+                "limit": 20
               }
             }
           }
@@ -772,9 +770,9 @@
                           }
                         },
                         "required": ["resources", "pagination"],
-                        "description": "complete 为 false 时，将对应 filters[i] 的结构化筛选字段作为 POST /resources 正文，设置 page=2、pageSize=1000 继续查询。"
+                        "description": "每个筛选条件最多返回 100 条。complete 为 false 时，将对应 filters[i] 的结构化筛选字段作为 POST /resources 正文，设置 cursor=pagination.nextCursor、limit=100 继续查询。"
                       },
-                      "description": "与 filters 按顺序对应，每项查询第 1 页、最多 1000 条；不跨项去重。"
+                      "description": "与 filters 按顺序对应，每项查询首批、最多 100 条；不跨项去重。"
                     },
                     "updatedAt": {
                       "type": "string",
@@ -881,10 +879,10 @@
             "$ref": "#/components/parameters/FeedTrackerParam"
           },
           {
-            "$ref": "#/components/parameters/PageParam"
+            "$ref": "#/components/parameters/CursorParam"
           },
           {
-            "$ref": "#/components/parameters/PageSizeParam"
+            "$ref": "#/components/parameters/LimitParam"
           },
           {
             "$ref": "#/components/parameters/ProviderParam"
@@ -955,7 +953,7 @@
         ],
         "responses": {
           "200": {
-            "description": "按筛选项顺序合并各项第 1 页，每项最多 1000 条；不跨项去重或全局排序。",
+            "description": "按筛选项顺序合并各项首批，每项最多 100 条；不跨项去重或全局排序。",
             "content": {
               "application/xml": {
                 "schema": {
@@ -1445,25 +1443,23 @@
       }
     },
     "parameters": {
-      "PageParam": {
-        "name": "page",
+      "CursorParam": {
+        "name": "cursor",
         "in": "query",
-        "description": "页码。",
+        "description": "分页游标，使用上一批响应中的 pagination.nextCursor，首次请求无需填写。查询下一批时保持筛选条件不变。",
         "schema": {
-          "type": "integer",
-          "minimum": 1,
-          "default": 1
+          "type": "string"
         }
       },
-      "PageSizeParam": {
-        "name": "pageSize",
+      "LimitParam": {
+        "name": "limit",
         "in": "query",
-        "description": "每页数量；越界或无效值回退为默认值。",
+        "description": "每批返回的资源数量，范围 1–100，默认 30。",
         "schema": {
           "type": "integer",
           "minimum": 1,
-          "maximum": 1000,
-          "default": 100
+          "maximum": 100,
+          "default": 30
         }
       },
       "ProviderParam": {
@@ -1987,37 +1983,42 @@
       "PaginationInfo": {
         "type": "object",
         "properties": {
-          "page": {
+          "anchor": {
             "type": "integer",
-            "description": "当前页码，从 1 开始。"
+            "format": "int64",
+            "description": "本次查询使用的数据版本，以 Unix 毫秒时间戳表示。"
           },
-          "pageSize": {
+          "limit": {
             "type": "integer",
-            "description": "当前请求的每页数量；实际返回的资源条数可能更少。"
+            "minimum": 1,
+            "maximum": 100,
+            "description": "本次请求的资源数量上限。"
+          },
+          "nextCursor": {
+            "type": ["string", "null"],
+            "description": "用于查询下一批资源的游标，没有更多结果时为 null。"
           },
           "complete": {
             "type": "boolean",
-            "description": "true 表示当前页之后没有更多匹配资源；false 时可使用相同筛选条件和 pageSize，请求 page + 1。"
+            "description": "是否已返回全部结果。为 true 时，nextCursor 为 null；为 false 时，保持筛选条件并使用 nextCursor 查询下一批。"
           }
         },
-        "required": ["page", "pageSize", "complete"],
-        "description": "翻页期间新增或更新的资源可能影响分页结果。"
+        "required": ["anchor", "limit", "nextCursor", "complete"],
+        "description": "本次查询的分页信息。"
       },
       "ResourcesRequest": {
         "type": "object",
         "properties": {
-          "page": {
-            "type": "integer",
-            "minimum": 1,
-            "default": 1,
-            "description": "与 URL 中的 page 同时指定时，URL 值优先。"
+          "cursor": {
+            "type": "string",
+            "description": "分页游标，使用上一批响应中的 pagination.nextCursor，首次请求无需填写。URL 查询参数中的 cursor 优先。"
           },
-          "pageSize": {
+          "limit": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 1000,
-            "default": 100,
-            "description": "越界或无效值回退为默认值；与 URL 中的 pageSize 同时指定时，URL 值优先。"
+            "maximum": 100,
+            "default": 30,
+            "description": "每批返回的资源数量，范围 1–100，默认 30。URL 查询参数中的 limit 优先。"
           },
           "provider": {
             "type": "string",
@@ -2026,7 +2027,7 @@
           },
           "duplicate": {
             "type": "boolean",
-            "description": "是否包含重复资源。仅在查询条件中指定有效 provider 时生效，省略时包含重复资源。正文指定 provider 时，URL duplicate 优先；仅 URL 指定 provider 时，正文 duplicate 优先。"
+            "description": "是否包含重复资源。仅在查询条件中指定有效 provider 时生效，省略时包含重复资源。请求正文中指定 provider 时，URL 查询参数中的 duplicate 优先；仅在 URL 查询参数中指定 provider 时，请求正文中的 duplicate 优先。"
           },
           "after": {
             "type": "string",
@@ -2143,7 +2144,7 @@
             "enum": ["bangumi"]
           }
         },
-        "description": "不同筛选条件取交集，fansubs 与 publishers 取并集。混用 URL 与正文时，有效、非空筛选优先使用正文；分页和 duplicate 的优先级见字段说明。"
+        "description": "不同筛选条件取交集，fansubs 与 publishers 取并集。同时提供 URL 查询参数和请求正文时，请求正文中有效、非空的筛选条件优先；分页和 duplicate 的优先级见字段说明。"
       },
       "ResourcesResponse": {
         "type": "object",
@@ -2391,7 +2392,7 @@
     },
     "headers": {
       "ResponseTimestamp": {
-        "description": "响应生成时间；命中缓存时可能沿用缓存响应的时间。",
+        "description": "当前 provider 数据版本的时间戳。",
         "schema": {
           "type": "string",
           "format": "date-time"

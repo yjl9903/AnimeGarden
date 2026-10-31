@@ -112,9 +112,7 @@ export class CollectionsModule extends Module<System['modules']> {
         const updatedAt = new Date();
 
         const results = await Promise.all(
-          filters.map((f) =>
-            this.system.modules.resources.query.find(f, { page: 1, pageSize: 1000 })
-          )
+          filters.map((filter) => this.system.modules.resources.query.find(filter, { limit: 100 }))
         );
 
         return {

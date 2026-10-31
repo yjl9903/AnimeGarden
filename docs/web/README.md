@@ -1,6 +1,6 @@
 # @animegarden/web 文档索引
 
-本目录承载 `apps/web` 相关的关键架构设计、实现记录、前端交互约定、运行时适配和历史决策日志。后续修改页面路由、数据加载、代理、样式体系、埋点或部署适配时，应优先在这里补充对应文档。
+本目录记录 `apps/web` 的路由、数据状态、页面交互、缓存和输出契约。
 
 ## 架构总览
 
@@ -9,13 +9,20 @@
 | [architecture-overview.md](./architecture-overview.md) | Web 应用运行形态、TanStack Start 路由、数据加载、feed/sitemap、状态和样式目录导览 | 新介入前端代码、调整页面结构或评估影响范围时先读 |
 | [../server/deployment-topology.md](../server/deployment-topology.md) | 线上域名、Fly app、内网后端与 public API 服务关系 | 排查线上可用性或调整跨服务调用时先读 |
 
-## 文档列表
+## 资源查询与页面行为
+
+| 文档 | 内容 |
+| --- | --- |
+| [分页契约](../client/pagination.md) | API 字段、内部 cursor 与 SDK 聚合 |
+| [资源查询与分页](./resources-pagination.md) | Query key、版本旁路、首批刷新、续页和页面规则 |
+| [性能与缓存](./performance.md) | Query 新鲜度、HTTP 缓存、页面数据范围与评估指标 |
+
+## 输出与事件
 
 | 文档 | 内容 | 适用场景 |
 | --- | --- | --- |
-| [umami-tracking.md](./umami-tracking.md) | Umami 已接入事件、事件属性、接入位置和未覆盖点击埋点 TODO | 修改前端导航、资源列表、搜索、收藏夹、详情页或埋点时先读 |
-| [google-search-seo-plan.md](./google-search-seo-plan.md) | Google Search 当前实现进度、方案概述、逐页面 SEO 配置、robots.txt 和 Sitemap 范围 | 修改 title/description、canonical、robots、JSON-LD、Sitemap 或搜索展示时先读 |
-| [tanstack-start-parity-test-paths.md](./tanstack-start-parity-test-paths.md) | TanStack Start 迁移期间本地与线上对齐验证路径、已发现差异和自动化断言建议 | 做迁移回归、补 e2e 测试或核对页面行为时先读 |
+| [umami-tracking.md](./umami-tracking.md) | Umami 事件、字段、触发时机和接入位置 | 修改前端交互或埋点时先读 |
+| [google-search-seo-plan.md](./google-search-seo-plan.md) | 页面文案、索引白名单、canonical、robots 与 Sitemap | 修改 SEO 输出或搜索展示时先读 |
 
 ## 维护约定
 

@@ -2,6 +2,7 @@ import type { Redis } from 'ioredis';
 import type { ConsolaInstance } from 'consola';
 
 import { hash } from 'ohash';
+import { LRUCache } from 'lru-cache';
 import {
   type SQLWrapper,
   sql,
@@ -23,30 +24,35 @@ import {
   type ProviderType,
   type Resource,
   type ResolvedFilterOptions,
-  type ResolvedPaginationOptions,
+  MaxResourcesLimit,
   normalizeTitle,
   transformResourceHref
 } from '@animegarden/client';
-import { removePunctuations } from '@animegarden/shared';
+import {
+  type ResourceCursor,
+  encodeResourcesCursor,
+  removePunctuations
+} from '@animegarden/shared';
 
 import type { Database } from '../connect/database.ts';
 import type { System, Notification } from '../system/index.ts';
 
+import { jieba } from '../utils/index.ts';
 import { resources } from '../schema/resources.ts';
-import { memo, jieba, nextTick } from '../utils/index.ts';
+import { MAX_RESOURCES_TASK_COUNT } from '../constants.ts';
 import { isDatabaseStatementTimeoutError, retryDatabaseFn } from '../utils/database.ts';
-import {
-  MAX_RESOURCES_TASK_COUNT,
-  RESOURCES_TASK_PREFETCH_COUNT,
-  RESOURCES_TASK_PREFETCH_MAX_COUNT
-} from '../constants.ts';
 import { ResourcesSlowQueryBusyError, ResourcesSlowQueryTimeoutError } from '../error.ts';
 
-import type { DatabaseResource, RedisQueryResource, DatabaseFilterOptions } from './types.ts';
+import type {
+  DatabaseResource,
+  RedisQueryResource,
+  DatabaseFilterOptions,
+  ResolvedPaginationOptions
+} from './types.ts';
 
 import { transformDatabaseUser } from './transform.ts';
 import { TitlePool, MagnetPool, TrackerPool } from './pool.ts';
-import { BANGUMI_BANNED_FANSUBS, BANGUMI_BANNED_PUBLISHERS, buildFilterConds } from './filter.ts';
+import { BANGUMI_BANNED_FANSUBS, BANGUMI_BANNED_PUBLISHERS } from './filter.ts';
 
 export type FoundResource = Omit<
   Jsonify<Resource<{ tracker: true; metadata: true }>>,
@@ -67,6 +73,7 @@ export const RESOURCE_SELECTOR = {
   size: resources.size,
   createdAt: resources.createdAt,
   fetchedAt: resources.fetchedAt,
+  indexedAt: resources.indexedAt,
   publisherId: resources.publisherId,
   fansubId: resources.fansubId,
   subjectId: resources.subjectId,
@@ -77,7 +84,9 @@ export const RESOURCE_SELECTOR = {
 
 const RESOURCES_SLOW_QUERY_LOCK_NAMESPACE = 9_201;
 const RESOURCES_SLOW_QUERY_LOCK_KEY = 1;
-
+const RESOURCES_QUERY_CACHE_TTL_SECONDS = 5 * 60;
+const RESOURCES_QUERY_BATCH_LIMIT = MaxResourcesLimit + 1;
+const RESOURCES_TASK_TTL_MILLISECONDS = 2 * 60 * 60 * 1000;
 const REDIS_QUERY_TIMEOUT_MS = 500;
 const REDIS_QUERY_COOLDOWN_MS = 30_000;
 
@@ -86,68 +95,33 @@ export class QueryManager {
 
   private readonly logger: ConsolaInstance;
 
-  private readonly tasks: Map<string, Task> = new Map();
+  private readonly redisQueryCache: RedisQueryCache;
 
-  private readonly downgrade: Set<string> = new Set();
+  /** Exact query tasks retain one resolved batch and never prefetch subsequent cursors. */
+  private readonly tasks = new LRUCache<string, Task>({
+    max: MAX_RESOURCES_TASK_COUNT,
+    ttl: RESOURCES_TASK_TTL_MILLISECONDS,
+    ttlAutopurge: true,
+    dispose: (task) => task.clear()
+  });
 
-  private readonly resources: Map<ProviderType, Map<string, DatabaseResource>> = new Map();
-
-  /** Guards the slow database lane against concurrent queries within this QueryManager. */
   private slowQuerying = false;
-
-  /**
-   * Unix time in milliseconds until which this QueryManager skips Redis query cache reads and writes.
-   * Zero means no cooldown.
-   */
-  private redisQueryDisabledUntil = 0;
 
   public constructor(system: System, logger: ConsolaInstance) {
     this.system = system;
     this.logger = logger.withTag('query');
+    this.redisQueryCache = new RedisQueryCache(system, this.logger);
   }
 
   public async initialize() {
     if (!this.system.options.cron) {
-      this.find(
+      void this.find(
         {
           preset: 'bangumi',
           types: ['动画']
         },
-        { page: 1, pageSize: 100 }
-      );
-    }
-
-    // LRU 垃圾回收, 每小时 1 次
-    {
-      let ev: NodeJS.Timeout;
-      let stopped = false;
-      const TIMEOUT = 60 * 60 * 1000;
-      const handler = async () => {
-        try {
-          await this.clearDeadTasks();
-        } catch (error) {
-          this.logger.error(error);
-        } finally {
-          if (!stopped) {
-            ev = setTimeout(handler, TIMEOUT);
-          }
-        }
-      };
-      ev = setTimeout(handler, TIMEOUT);
-      this.system.disposables.push(() => {
-        stopped = true;
-        clearTimeout(ev);
-      });
-    }
-
-    // 垃圾回收
-    {
-      this.findFromRedis.startGC();
-      this.findFromAccurateQuery.startGC();
-      this.system.disposables.push(() => {
-        this.findFromRedis.stopGC();
-        this.findFromAccurateQuery.stopGC();
-      });
+        { limit: 100 }
+      ).catch((error) => this.logger.error(error));
     }
 
     // 清空字符串常量池
@@ -169,28 +143,42 @@ export class QueryManager {
         }
       };
       ev = setTimeout(handler, TIMEOUT);
+
       this.system.disposables.push(() => {
         stopped = true;
         clearTimeout(ev);
+        this.tasks.clear();
       });
     }
   }
 
+  /** Queries already-resolved pagination; missing cursor selects the latest first batch. */
   public async find(filter: ResolvedFilterOptions, pagination: ResolvedPaginationOptions) {
+    const cursor = pagination.cursor ?? {
+      anchor: this.system.modules.providers.timestamp.getTime()
+    };
     const dbOptions = this.normalizeDatabaseFilterOptions(filter);
-    const { resources, hasMore } = await this.findFromTask(
-      dbOptions,
-      pagination.page,
-      pagination.pageSize
-    );
+    const resp = await this.findFromTask(dbOptions, cursor);
+    const hasMore = resp.length > pagination.limit;
+    const foundResources = resp.slice(0, pagination.limit);
 
     const { users, teams } = this.system.modules;
 
     return {
-      resources: await Promise.all(resources.map(async (r) => this.transform(r))),
+      resources: await Promise.all(foundResources.map(async (r) => this.transform(r))),
       pagination: {
-        page: pagination.page,
-        pageSize: pagination.pageSize,
+        anchor: cursor.anchor,
+        limit: pagination.limit,
+        nextCursor:
+          hasMore && foundResources.length > 0
+            ? encodeResourcesCursor({
+                anchor: cursor.anchor,
+                position: {
+                  createdAt: foundResources.at(-1)!.createdAt.getTime(),
+                  id: foundResources.at(-1)!.id
+                }
+              })
+            : null,
         complete: !hasMore
       },
       filter: {
@@ -227,148 +215,15 @@ export class QueryManager {
     };
   }
 
-  public async findFromTask(dbOptions: DatabaseFilterOptions, page: number, pageSize: number) {
-    const fullKey = `${hash(dbOptions)}:${page}:${pageSize}`;
-
-    if (!this.downgrade.has(fullKey)) {
-      const { search, include, keywords, fansubs, publishers, types, subjects } = dbOptions;
-
-      let task: Task;
-      if (search && search.length > 0) {
-        // 1. 搜索
-        task = this.getTask({ search, exclude: dbOptions.exclude });
-      } else if (include && include.length > 0) {
-        // 2. 标题匹配
-        task = this.getTask({ include, keywords, exclude: dbOptions.exclude });
-      } else if (subjects && subjects.length > 0) {
-        // 3. subject
-        task = this.getTask({ subjects });
-      } else if (types && types.length > 0) {
-        // 4. 类型
-        task = this.getTask({ types });
-      } else if ((fansubs && fansubs.length > 0) || (publishers && publishers.length > 0)) {
-        // 5. 字幕组匹配
-        task = this.getTask({ fansubs, publishers });
-      } else {
-        // 6. 回退到直接缓存数据库
-        task = this.getTask(dbOptions);
-      }
-
-      if (task) {
-        const requiredCount = page * pageSize;
-
-        while (true) {
-          if (task.ok) {
-            const cache = await task.fetch(dbOptions, page, pageSize);
-            if (cache.ok) {
-              return {
-                resources: cache.resources,
-                hasMore: cache.hasMore
-              };
-            }
-            if (!task.canPrefetchMore()) {
-              break;
-            }
-          }
-
-          const cursor = task.prefetchCount;
-
-          try {
-            // 预取缓存
-            await task.prefetch(cursor, requiredCount);
-          } catch (error) {
-            // 预取失败, 回退到 db
-            this.logger.error(`Prefetch failed`, task.key, error);
-            break;
-          }
-
-          const cache = await task.fetch(dbOptions, page, pageSize);
-          if (cache.ok) {
-            return {
-              resources: cache.resources,
-              hasMore: cache.hasMore
-            };
-          }
-          if (!task.canPrefetchMore() || task.prefetchCount <= cursor) {
-            break;
-          }
-        }
-      }
-    }
-
-    // 回退到直接查数据库
-    this.downgrade.add(fullKey);
-    const resp = await this.findFromAccurateQuery(dbOptions, (page - 1) * pageSize, pageSize + 1);
-
-    return {
-      resources: resp.slice(0, pageSize),
-      hasMore: resp.length > pageSize
-    };
-  }
-
-  private getTask(options: DatabaseFilterOptions) {
-    const key = hash(options);
-    if (!this.tasks.has(key)) {
-      const task = new Task(this, key, options);
+  /** Runs one full-filter query task; the task caches only this exact keyset batch. */
+  public async findFromTask(filter: DatabaseFilterOptions, cursor: ResourceCursor) {
+    const key = getQueryHash(filter, cursor, this.system.modules.providers.timestamp.getTime());
+    let task = this.tasks.get(key);
+    if (!task) {
+      task = new Task(this, filter, cursor);
       this.tasks.set(key, task);
     }
-    const task = this.tasks.get(key)!.visit();
-    return task;
-  }
-
-  private async clearDeadTasks() {
-    let tasks = [...this.tasks.values()];
-
-    // 1. 重试过期的缓存
-    const now = new Date();
-    for (const task of tasks) {
-      const delta = now.getTime() - task.fetchedAt.getTime();
-      if (delta > 2 * 60 * 60 * 1000) {
-        this.deleteTask(task);
-      }
-    }
-
-    // 2. 清理多余的缓存
-    tasks = [...this.tasks.values()];
-    if (tasks.length > MAX_RESOURCES_TASK_COUNT) {
-      tasks.sort((lhs, rhs) => {
-        if (lhs.visited.count !== rhs.visited.count) {
-          return rhs.visited.count - lhs.visited.count;
-        } else {
-          return rhs.visited.last.getTime() - lhs.visited.last.getTime();
-        }
-      });
-      for (let i = MAX_RESOURCES_TASK_COUNT; i < tasks.length; i++) {
-        this.deleteTask(tasks[i]);
-      }
-    }
-
-    // 3. 恢复 downgrade task
-    this.downgrade.clear();
-  }
-
-  /** Deletes one live task and releases only intern entries still owned by its resource objects. */
-  private deleteTask(task: Task) {
-    // A stale task must not delete a newer task that already replaced the same key.
-    if (this.tasks.get(task.key) !== task) {
-      return false;
-    }
-
-    this.tasks.delete(task.key);
-    for (const resource of task.resources) {
-      const provider = resource.provider as ProviderType;
-      const providerResources = this.resources.get(provider);
-
-      // Another task may have interned a fresher object for this resource already.
-      if (providerResources?.get(resource.providerId) === resource) {
-        providerResources.delete(resource.providerId);
-        if (providerResources.size === 0) {
-          this.resources.delete(provider);
-        }
-      }
-    }
-    task.clear();
-    return true;
+    return task.fetch();
   }
 
   private normalizeDatabaseFilterOptions(filter: ResolvedFilterOptions): DatabaseFilterOptions {
@@ -378,6 +233,8 @@ export class QueryManager {
       preset: filter.preset,
       provider: filter.provider,
       duplicate: filter.duplicate,
+      // Unknown party names are intentionally discarded. If every supplied name is unknown, the
+      // empty ID list is treated as no party filter rather than an empty result.
       publishers: filter.publishers
         ?.map((p) => users.getByName(p)?.id)
         .filter((p) => p !== undefined),
@@ -417,153 +274,26 @@ export class QueryManager {
     };
   }
 
-  private findFromAccurateQuery = memo(
-    async (filter: DatabaseFilterOptions, offset: number, limit: number) => {
-      const cached = await this.readRedisQueryCache(filter, offset, limit);
-      if (cached) {
-        return cached;
-      }
-
-      const resp = await this.findFromDatabase(filter, offset, limit, {
-        allowSlowQueryFallback: true
-      });
-      // Cache persistence must not delay a successful database response.
-      void this.writeRedisQueryCache(filter, offset, limit, resp);
-      return resp;
-    },
-    {
-      getKey: (filter, offset, limit) => {
-        return hash(filter) + ':' + offset + ':' + limit;
-      },
-      expirationTtl: 5 * 60 * 1000,
-      maxSize: Math.round(MAX_RESOURCES_TASK_COUNT * 1.5),
-      autoStartGC: false
-    }
-  );
-
-  public findFromRedis = memo(
-    async (filter: DatabaseFilterOptions, offset: number, limit: number) => {
-      const cached = await this.readRedisQueryCache(filter, offset, limit);
-      if (cached) {
-        return cached;
-      }
-
-      const resp = await this.findFromDatabase(filter, offset, limit);
-
-      // Cache persistence must not delay a successful database response.
-      void this.writeRedisQueryCache(filter, offset, limit, resp);
-
-      return resp;
-    },
-    {
-      getKey: (filter, offset, limit) => {
-        return hash(filter) + ':' + offset + ':' + limit;
-      },
-      expirationTtl: 5 * 60 * 1000,
-      maxSize: Math.round(MAX_RESOURCES_TASK_COUNT * 1.5),
-      autoStartGC: false
-    }
-  );
-
-  /** Bounds cache latency and bypasses both reads and writes briefly after any cache failure. */
-  private async runRedisQueryCache<T>(operation: (redis: Redis) => Promise<T>) {
-    const redis = this.system.publisherRedis;
-    if (!redis || redis.status !== 'ready' || Date.now() < this.redisQueryDisabledUntil) {
-      return undefined;
+  /** Reads the exact Redis page first, then queries PostgreSQL and writes the same cache key. */
+  public async findFromCacheOrDatabase(filter: DatabaseFilterOptions, cursor: ResourceCursor) {
+    // Capture one cache generation so a provider refresh cannot move this query between keys.
+    const key = this.redisQueryCache.getKey(filter, cursor);
+    const cached = await this.redisQueryCache.read(key);
+    if (cached) {
+      return cached;
     }
 
-    let timer: ReturnType<typeof setTimeout> | undefined;
-    try {
-      const timeout = new Promise<never>((_resolve, reject) => {
-        timer = setTimeout(
-          () => reject(new Error('Redis query cache timed out')),
-          REDIS_QUERY_TIMEOUT_MS
-        );
-      });
-      // The race also handles late command rejections after the timeout has won.
-      return await Promise.race([operation(redis), timeout]);
-    } catch (error) {
-      const now = Date.now();
-      if (now >= this.redisQueryDisabledUntil) {
-        this.logger.warn('Redis query cache unavailable; bypassing for 30 seconds', error);
-      }
-      this.redisQueryDisabledUntil = now + REDIS_QUERY_COOLDOWN_MS;
-      return undefined;
-    } finally {
-      if (timer !== undefined) clearTimeout(timer);
-    }
-  }
-
-  /** Reads shared query results, treating cache failures as misses. */
-  private async readRedisQueryCache(filter: DatabaseFilterOptions, offset: number, limit: number) {
-    return this.runRedisQueryCache(async (redis) => {
-      const timestamp = this.system.modules.providers.timestamp.getTime().toString();
-      const key = this.getRedisQueryCacheKey(filter, offset, limit, timestamp);
-      const cached = await redis.get(key);
-      if (cached) {
-        this.logger.info(`Redis cache hit ${key}`);
-        const parsed = JSON.parse(cached) as RedisQueryResource[];
-        return this.hydrateResources(parsed);
-      }
+    const resp = await this.findFromDatabase(filter, cursor, {
+      allowSlowQueryFallback: true
     });
-  }
-
-  /** Best-effort cache write; all failures are handled so callers can run it in the background. */
-  private async writeRedisQueryCache(
-    filter: DatabaseFilterOptions,
-    offset: number,
-    limit: number,
-    resp: DatabaseResource[]
-  ) {
-    await this.runRedisQueryCache(async (redis) => {
-      const timestamp = this.system.modules.providers.timestamp.getTime().toString();
-      const key = this.getRedisQueryCacheKey(filter, offset, limit, timestamp);
-      await redis.set(key, JSON.stringify(resp), 'EX', 5 * 60);
-    });
-  }
-
-  private getRedisQueryCacheKey(
-    filter: DatabaseFilterOptions,
-    offset: number,
-    limit: number,
-    timestamp: string
-  ) {
-    return `animegarden:resources:query:${hash(filter)}:${timestamp}:${offset}:${limit}`;
-  }
-
-  private hydrateResources(resp: Array<DatabaseResource | RedisQueryResource>) {
-    const normalized = resp.map((resource) => ({
-      ...resource,
-      createdAt: new Date(resource.createdAt),
-      fetchedAt: new Date(resource.fetchedAt)
-    })) as DatabaseResource[];
-
-    for (const resource of normalized) {
-      resource.title = TitlePool.get(resource.title);
-      resource.magnet = MagnetPool.get(resource.magnet);
-      resource.tracker = TrackerPool.get(resource.tracker);
-    }
-
-    const cacheResources = this.resources;
-    return normalized.map((resource) => {
-      const provider = resource.provider as ProviderType;
-      const { providerId } = resource;
-      const cache = cacheResources.get(provider)?.get(providerId);
-      if (cache) {
-        return cache;
-      }
-      if (!cacheResources.has(provider)) {
-        cacheResources.set(provider, new Map());
-      }
-      cacheResources.get(provider)?.set(providerId, resource);
-      return resource;
-    });
+    // A cache outage must never delay a successful database response.
+    void this.redisQueryCache.write(key, resp);
+    return resp;
   }
 
   public async findFromDatabase(
     filter: DatabaseFilterOptions,
-    offset: number,
-    limit: number,
+    cursor: ResourceCursor,
     options: {
       allowSlowQueryFallback?: boolean;
 
@@ -575,6 +305,10 @@ export class QueryManager {
     const database = options.database ?? this.system.database;
     const lane = options.lane ?? 'database';
     const payload = JSON.stringify(filter);
+    const anchor = new Date(cursor.anchor);
+    const createdAt = cursor.position ? new Date(cursor.position.createdAt) : undefined;
+    const id = cursor.position?.id;
+    const limit = RESOURCES_QUERY_BATCH_LIMIT;
 
     const {
       preset,
@@ -592,7 +326,13 @@ export class QueryManager {
       exclude
     } = filter;
 
-    const conds: SQLWrapper[] = [eq(resources.isDeleted, false)];
+    const conds: SQLWrapper[] = [eq(resources.isDeleted, false), lte(resources.indexedAt, anchor)];
+
+    if (createdAt !== undefined && id !== undefined) {
+      conds.push(
+        sql`(${resources.createdAt}, ${resources.id}) < (${sql.param(createdAt, resources.createdAt)}, ${sql.param(id, resources.id)})`
+      );
+    }
 
     if (provider) {
       conds.push(eq(resources.provider, provider));
@@ -694,14 +434,17 @@ export class QueryManager {
           (name) => this.system.modules.teams.getByName(name)?.id
         ).filter((id) => id !== undefined);
         if (bannedFansubs.length > 0) {
-          conds.push(notInArray(resources.fansubId, bannedFansubs));
+          // `fansubId` is nullable; SQL NOT IN alone would discard publisher-only resources.
+          conds.push(
+            or(isNull(resources.fansubId), notInArray(resources.fansubId, bannedFansubs))!
+          );
         }
         break;
       }
     }
 
     try {
-      return await this.executeResourcesQuery(database, conds, offset, limit, payload, lane);
+      return await this.executeResourcesQuery(database, conds, limit, payload, lane);
     } catch (error) {
       if (
         options.allowSlowQueryFallback &&
@@ -711,9 +454,9 @@ export class QueryManager {
         isDatabaseStatementTimeoutError(error)
       ) {
         this.logger.warn(
-          `Resources query timed out on default database lane, retrying with extended timeout: ${payload} (offset: ${offset}, limit: ${limit})`
+          `Resources query timed out on default database lane, retrying with extended timeout: ${payload} (limit: ${limit})`
         );
-        return await this.findFromSlowDatabase(conds, offset, limit, payload);
+        return await this.findFromSlowDatabase(conds, limit, payload);
       }
 
       throw error;
@@ -723,16 +466,13 @@ export class QueryManager {
   private async executeResourcesQuery(
     database: Database,
     conds: SQLWrapper[],
-    offset: number,
     limit: number,
     payload: string,
     lane: string
   ) {
     const now = performance.now();
 
-    this.logger.info(
-      `Start executing resources query on ${lane}: ${payload} (offset: ${offset}, limit: ${limit})`
-    );
+    this.logger.info(`Start executing resources query on ${lane}: ${payload} (limit: ${limit})`);
 
     const resp = await retryDatabaseFn(
       () =>
@@ -740,28 +480,22 @@ export class QueryManager {
           .select(RESOURCE_SELECTOR)
           .from(resources)
           .where(and(...conds))
-          .orderBy(desc(resources.createdAt))
-          .offset(offset)
+          .orderBy(desc(resources.createdAt), desc(resources.id))
           .limit(limit),
       { count: 5 }
     );
 
-    const internedResp = this.hydrateResources(resp);
+    const internedResp = hydrateResources(resp);
     const end = performance.now();
 
     this.logger.info(
-      `Finish selecting ${internedResp.length} resources in ${Math.floor(end - now)} ms from ${lane}: ${payload} (offset: ${offset}, limit: ${limit})`
+      `Finish selecting ${internedResp.length} resources in ${Math.floor(end - now)} ms from ${lane}: ${payload} (limit: ${limit})`
     );
 
     return internedResp;
   }
 
-  private async findFromSlowDatabase(
-    conds: SQLWrapper[],
-    offset: number,
-    limit: number,
-    payload: string
-  ) {
+  private async findFromSlowDatabase(conds: SQLWrapper[], limit: number, payload: string) {
     if (!this.system.slowDatabase || !this.system.slowQueryConnection) {
       throw new ResourcesSlowQueryTimeoutError();
     }
@@ -782,7 +516,6 @@ export class QueryManager {
       return await this.executeResourcesQuery(
         this.system.slowDatabase,
         conds,
-        offset,
         limit,
         payload,
         'slow database'
@@ -817,245 +550,159 @@ export class QueryManager {
     ]);
   }
 
-  public async onNotifications(notification: Notification) {
-    this.findFromRedis.clear();
-    this.findFromAccurateQuery.clear();
+  /** Invalidates exact in-process tasks after the providers module advances the cache generation. */
+  public onNotifications(_notification: Notification) {
+    this.tasks.clear();
+  }
+}
 
-    const removed = new Set([
-      ...notification.resources.deleted,
-      ...notification.resources.updated.map((resource) => resource.id),
-      ...notification.duplicated.attached
-    ]);
+/** Best-effort Redis batch cache; owns wire serialization, TTL and cache-outage isolation. */
+class RedisQueryCache {
+  private readonly system: System;
 
-    const notified = [
-      ...notification.resources.inserted.map((r) => r.id),
-      ...notification.resources.updated.map((resource) => resource.id),
-      ...notification.duplicated.detached
-    ];
+  private readonly logger: ConsolaInstance;
 
-    const resp =
-      notified.length > 0
-        ? await retryDatabaseFn(
-            () =>
-              this.system.database
-                .select(RESOURCE_SELECTOR)
-                .from(resources)
-                .where(
-                  and(
-                    eq(resources.isDeleted, false),
-                    isNull(resources.duplicatedId),
-                    inArray(resources.id, notified)
-                  )
-                )
-                .orderBy(desc(resources.createdAt)),
-            { count: 5 }
-          )
-        : [];
+  private disabledUntil = 0;
 
-    this.logger.info(`Notified ${resp.length} new resources`);
+  public constructor(system: System, logger: ConsolaInstance) {
+    this.system = system;
+    this.logger = logger;
+  }
 
-    const tasks = [...this.tasks.values()];
-    for (const task of tasks) {
-      if (!task.ok) continue;
-      if (!this.tasks.has(task.key)) continue;
+  /** Capture the provider generation once and use this key for both reading and writing. */
+  public getKey(filter: DatabaseFilterOptions, cursor: ResourceCursor) {
+    const queryHash = getQueryHash(
+      filter,
+      cursor,
+      this.system.modules.providers.timestamp.getTime()
+    );
+    return `animegarden:resources:query:${queryHash}`;
+  }
 
-      if (task.options.search) {
-        // 搜索任务不缓存, 强制清除
-        task.clear();
-      } else {
-        // Remove resources
-        const realRemoved = removed.size > 0 ? task.removeResources(removed) : [];
-        for (const r of realRemoved) {
-          this.resources.get(r.provider as ProviderType)?.delete(r.providerId);
-        }
-
-        // Insert resources
-        resp.length > 0 && task.insertResources(resp);
+  /** Cache misses and cache failures both allow the caller to query PostgreSQL. */
+  public async read(key: string) {
+    return this.run(async (redis) => {
+      const cached = await redis.get(key);
+      if (cached) {
+        this.logger.info(`Redis cache hit ${key}`);
+        return hydrateResources(JSON.parse(cached) as RedisQueryResource[]);
       }
-      await nextTick();
+    });
+  }
+
+  /** Handles all write failures internally so persistence can run in the background. */
+  public async write(key: string, resources: DatabaseResource[]) {
+    await this.run(async (redis) => {
+      await redis.set(key, JSON.stringify(resources), 'EX', RESOURCES_QUERY_CACHE_TTL_SECONDS);
+    });
+  }
+
+  /** Bounds cache latency and bypasses reads and writes briefly after any cache failure. */
+  private async run<T>(operation: (redis: Redis) => Promise<T>) {
+    const redis = this.system.publisherRedis;
+    if (!redis || redis.status !== 'ready' || Date.now() < this.disabledUntil) {
+      return undefined;
+    }
+
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      const timeout = new Promise<never>((_resolve, reject) => {
+        timer = setTimeout(
+          () => reject(new Error('Redis query cache timed out')),
+          REDIS_QUERY_TIMEOUT_MS
+        );
+      });
+      return await Promise.race([operation(redis), timeout]);
+    } catch (error) {
+      const now = Date.now();
+      if (now >= this.disabledUntil) {
+        this.logger.warn('Redis query cache unavailable; bypassing for 30 seconds', error);
+      }
+      this.disabledUntil = now + REDIS_QUERY_COOLDOWN_MS;
+      return undefined;
+    } finally {
+      if (timer !== undefined) clearTimeout(timer);
     }
   }
 }
 
+/** Task and Redis caches use the same full-filter, position and provider-generation identity. */
+function getQueryHash(
+  filter: DatabaseFilterOptions,
+  cursor: ResourceCursor,
+  providerTimestamp: number
+) {
+  return hash({ filter, cursor, providerTimestamp });
+}
+
+/** Normalize database/cache rows through the same date and string-pool handling. */
+function hydrateResources(resp: Array<DatabaseResource | RedisQueryResource>): DatabaseResource[] {
+  return resp.map((resource) => ({
+    ...resource,
+    title: TitlePool.get(resource.title),
+    magnet: MagnetPool.get(resource.magnet),
+    tracker: TrackerPool.get(resource.tracker),
+    createdAt: new Date(resource.createdAt),
+    fetchedAt: new Date(resource.fetchedAt),
+    indexedAt: new Date(resource.indexedAt)
+  }));
+}
+
+/**
+ * One exact resource query batch. It deduplicates callers and retains the resolved batch, but it
+ * never broadens filters or prefetches another cursor.
+ */
 export class Task {
   private readonly query: QueryManager;
 
-  private readonly prefetching: Map<number, Promise<void>> = new Map();
+  private readonly filter: DatabaseFilterOptions;
 
-  private prefetchLimited = false;
+  private readonly cursor: ResourceCursor;
 
-  public readonly key: string;
+  private fetching: Promise<DatabaseResource[]> | undefined;
 
-  public readonly options: DatabaseFilterOptions;
+  private revision = 0;
 
-  public readonly conds: Array<(r: DatabaseResource) => boolean>;
+  private resources: DatabaseResource[] | undefined;
 
-  public readonly visited = { count: 0, last: new Date() };
-
-  public fetchedAt: Date = new Date();
-
-  public prefetchCount = 0;
-
-  public ok = false;
-
-  public resources: DatabaseResource[] = [];
-
-  public hasMore = false;
-
-  public constructor(query: QueryManager, key: string, options: DatabaseFilterOptions) {
+  public constructor(query: QueryManager, filter: DatabaseFilterOptions, cursor: ResourceCursor) {
     this.query = query;
-    this.key = key;
-    this.options = options;
-    this.conds = buildFilterConds(query.system, options);
+    this.filter = filter;
+    this.cursor = cursor;
   }
 
-  public visit() {
-    this.visited.count += 1;
-    this.visited.last = new Date();
-    return this;
+  /** Returns this exact batch, sharing both an in-flight query and its resolved result. */
+  public async fetch() {
+    if (this.resources) {
+      return this.resources;
+    }
+    if (this.fetching) {
+      return this.fetching;
+    }
+
+    const revision = this.revision;
+    const fetching = this.query
+      .findFromCacheOrDatabase(this.filter, this.cursor)
+      .then((resources) => {
+        if (this.revision === revision) {
+          this.resources = resources;
+        }
+        return resources;
+      })
+      .finally(() => {
+        if (this.fetching === fetching) {
+          this.fetching = undefined;
+        }
+      });
+
+    this.fetching = fetching;
+    return fetching;
   }
 
+  /** Invalidates the retained batch without allowing an older in-flight query to repopulate it. */
   public clear() {
-    this.prefetching.clear();
-    this.prefetchLimited = false;
-    this.prefetchCount = 0;
-    this.ok = false;
-    this.resources = [];
-    this.hasMore = false;
-    return this;
-  }
-
-  public canPrefetchMore() {
-    return this.hasMore && !this.prefetchLimited;
-  }
-
-  private syncPrefetchState() {
-    this.prefetchCount = this.resources.length;
-    this.prefetchLimited = this.hasMore && this.prefetchCount >= RESOURCES_TASK_PREFETCH_MAX_COUNT;
-  }
-
-  public async prefetch(cursor: number, requiredCount: number) {
-    const nextCursor = Math.max(0, Math.min(cursor, this.prefetchCount));
-
-    if (nextCursor < this.prefetchCount) {
-      return;
-    }
-
-    if (this.prefetchLimited || (!this.hasMore && this.ok)) {
-      return;
-    }
-
-    const pending = this.prefetching.get(nextCursor);
-    if (pending) {
-      await pending;
-      return;
-    }
-
-    const prefetching = (async () => {
-      const rest = RESOURCES_TASK_PREFETCH_MAX_COUNT - nextCursor;
-      if (rest <= 0) {
-        this.prefetchLimited = this.hasMore;
-        return;
-      }
-
-      const prefetchCount = Math.min(this.getPrefetchCount(requiredCount), rest);
-      const resp = await this.query.findFromRedis(this.options, nextCursor, prefetchCount + 1);
-      const hasMore = resp.length > prefetchCount;
-      const fetched = hasMore ? resp.slice(0, prefetchCount) : resp;
-
-      if (nextCursor === 0) {
-        this.resources = fetched;
-      } else {
-        this.resources.push(...fetched);
-      }
-
-      this.hasMore = hasMore;
-      this.syncPrefetchState();
-      this.fetchedAt = new Date();
-      this.ok = true;
-    })().finally(() => {
-      this.prefetching.delete(nextCursor);
-    });
-
-    this.prefetching.set(nextCursor, prefetching);
-    await prefetching;
-  }
-
-  private getPrefetchCount(requiredCount: number) {
-    const normalizedCount = Math.max(1, Math.min(requiredCount, RESOURCES_TASK_PREFETCH_COUNT));
-
-    let multiplier = 3;
-    if (this.options.search && this.options.search.length > 0) {
-      multiplier = 2;
-    } else if (
-      (this.options.include && this.options.include.length > 0) ||
-      (this.options.keywords && this.options.keywords.length > 0) ||
-      (this.options.exclude && this.options.exclude.length > 0)
-    ) {
-      multiplier = 4;
-    }
-
-    return Math.min(Math.max(normalizedCount * multiplier, 30), RESOURCES_TASK_PREFETCH_COUNT);
-  }
-
-  public async fetch(options: DatabaseFilterOptions, page: number, pageSize: number) {
-    const conds = buildFilterConds(this.query.system, options);
-
-    let cursor = 0;
-    let matched = 0;
-    const slice: DatabaseResource[] = [];
-
-    for (; cursor < this.resources.length; cursor++) {
-      const res = this.resources[cursor];
-      const ok = conds.every((c) => c(res));
-      if (ok) {
-        if ((page - 1) * pageSize <= matched && matched < page * pageSize) {
-          slice.push(res);
-        }
-        matched++;
-        if (matched >= page * pageSize) {
-          break;
-        }
-      }
-    }
-
-    const hasMore = matched >= page * pageSize || this.hasMore;
-    const ok = slice.length >= pageSize || !hasMore;
-
-    return {
-      ok,
-      resources: slice,
-      hasMore
-    };
-  }
-
-  public insertResources(resp: DatabaseResource[]) {
-    const visited = new Set(this.resources.map((r) => r.id));
-    let changed = false;
-    for (const r of resp) {
-      if (!visited.has(r.id) && this.conds.every((c) => c(r))) {
-        changed = true;
-        visited.add(r.id);
-        this.resources.push(r);
-      }
-    }
-    if (changed) {
-      this.resources.sort((lhs, rhs) => rhs.createdAt.getTime() - lhs.createdAt.getTime());
-      this.syncPrefetchState();
-    }
-  }
-
-  public removeResources(removed: Set<number>) {
-    const realRemoved: DatabaseResource[] = [];
-    this.resources = this.resources.filter((r) => {
-      if (removed.has(r.id)) {
-        realRemoved.push(r);
-        return false;
-      } else {
-        return true;
-      }
-    });
-    this.syncPrefetchState();
-    return realRemoved;
+    this.revision += 1;
+    this.resources = undefined;
+    this.fetching = undefined;
   }
 }

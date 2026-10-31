@@ -22,7 +22,7 @@
 >
 > **项目文档**: [由 DeepWiki 生成](https://deepwiki.com/yjl9903/AnimeGarden)
 
-[![home](./assets/home.jpeg)](https://animes.garden/resources/1?subject=543360)
+[![home](./assets/home.jpeg)](https://animes.garden/resources?subject=543360)
 
 ## 使用插件
 
@@ -76,12 +76,12 @@ Anime Garden MCP 服务端点: `https://api.animes.garden/mcp`.
 ## 使用开放 API
 
 ```bash
-curl "https://api.animes.garden/resources?page=1&pageSize=10"
+curl "https://api.animes.garden/resources?limit=10"
 ```
 
 你可以在[这里](https://animes.garden/docs/api)找到交互式的 Open API 文档, 以及在本仓库的 [examples/api.http](./examples/api.http) 文件内查看到更多 API 用例.
 
-你也可以直接使用网站, 在资源列表页 (例如 [上伊那牡丹 最新资源](https://animes.garden/resources/1?subject=543360&fansub=%E5%96%B5%E8%90%8C%E5%A5%B6%E8%8C%B6%E5%B1%8B&keyword=%E7%AE%80%E6%97%A5)) 直接复制生成的 cURL、JavaScript 和 Python 的 API 请求代码.
+你也可以直接使用网站, 在资源列表页 (例如 [上伊那牡丹 最新资源](https://animes.garden/resources?subject=543360&fansub=%E5%96%B5%E8%90%8C%E5%A5%B6%E8%8C%B6%E5%B1%8B&keyword=%E7%AE%80%E6%97%A5)) 直接复制生成的 cURL、JavaScript 和 Python 的 API 请求代码.
 
 如果你正在使用 JavaScript 和 TypeScript 进行开发, 那么你可以直接使用 npm 包 [@animegarden/client](https://www.npmjs.com/package/@animegarden/client), 它是对这些 API 请求的上层封装.
 
@@ -143,7 +143,7 @@ console.log(botan.resources);
 | --- | --- |
 | `ok` | `true` 表示请求成功. |
 | `resources` | 匹配的资源数组，去重后按发布时间从新到旧排序. |
-| `pagination` | 最后取得的页码 `page`、每页条数 `pageSize`；`complete: true` 表示没有下一页. |
+| `pagination` | 查询版本 `anchor`、每批条数 `limit`、后续游标 `nextCursor`；`complete: true` 表示没有更多结果. |
 | `filter` | 服务端解析后实际使用的筛选条件. |
 | `timestamp` | 首次成功响应的时间. |
 

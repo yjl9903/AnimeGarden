@@ -23,9 +23,13 @@ vi.mock('~/layouts/Sidebar/Collection', () => ({
 }));
 
 describe('collection page pagination', () => {
-  it.each([true, false])(
-    'renders resource navigation from pagination.complete=%s',
-    async (complete) => {
+  it.each([
+    { complete: true, empty: false },
+    { complete: true, empty: true },
+    { complete: false, empty: false }
+  ])(
+    'renders an unboxed group with complete=$complete and empty=$empty',
+    async ({ complete, empty }) => {
       const data: CollectionData = {
         hash: 'abc',
         name: 'My Collection',
@@ -50,11 +54,17 @@ describe('collection page pagination', () => {
                 fetchedAt: new Date('2026-01-02T03:04:05Z')
               }
             ],
-            pagination: { page: 3, pageSize: 30, complete },
+            pagination: {
+              anchor: Date.parse('2026-01-02T03:04:05Z'),
+              limit: 30,
+              nextCursor: complete ? null : 'next',
+              complete
+            },
             filter: { types: ['动画'] }
           }
         ]
       };
+      if (empty) data.results[0].resources = [];
       const root = createRootRoute({ component: Outlet });
       const collection = createRoute({
         getParentRoute: () => root,
@@ -63,7 +73,7 @@ describe('collection page pagination', () => {
       });
       const resources = createRoute({
         getParentRoute: () => root,
-        path: '/resources/$page'
+        path: '/resources'
       });
       const router = createRouter({
         routeTree: root.addChildren([collection, resources]),
@@ -73,12 +83,16 @@ describe('collection page pagination', () => {
 
       const html = renderToStaticMarkup(<RouterProvider router={router} />);
 
-      expect(html).toContain('Episode 01');
-      expect(html.includes('下一页')).toBe(!complete);
-      expect(html.includes('上一页')).toBe(!complete);
+      expect(html.includes('Episode 01')).toBe(!empty);
+      expect(html).toContain('class="flex flex-col gap-12"');
+      expect(html).toContain('<section><div class="mb-4 pb-4 border-b pl-4 lt-sm:pl-2">');
+      expect(html).not.toContain('class="px-4"');
+      expect(html).not.toContain('class="py-4"');
+      expect(html).not.toContain('drop-md');
+      expect(html.includes('→ 全部资源')).toBe(!complete);
       if (!complete) {
-        expect(html).toMatch(/href="\/resources\/4\?[^"\s]+"[^>]*><span>下一页<\/span>/);
-        expect(html).toMatch(/href="\/resources\/2\?[^"\s]+"[^>]*><span>上一页<\/span>/);
+        expect(html).toContain('class="mt-6 flex justify-end"');
+        expect(html).toMatch(/href="\/resources\?[^"\s]+"/);
       }
     }
   );

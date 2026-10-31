@@ -189,7 +189,7 @@ export type FetchOptions = {
   };
 };
 
-export type FetchResourcesOptions = PaginationOptions &
+export type FetchResourcesOptions = CursorOptions &
   FilterOptions &
   PresetOptions &
   FetchOptions & {
@@ -214,43 +214,44 @@ export type FetchResourcesOptions = PaginationOptions &
     metadata?: boolean;
 
     /**
-     * Progress callback when querying multiple pages
+     * Progress callback when querying multiple batches
      */
     progress?: (
       delta: Resource[],
-      payload: { url: string; searchParams: URLSearchParams; page: number }
+      payload: { anchor?: number; cursor?: string }
     ) => void | Promise<void>;
   };
 
 export type FetchResourceDetailOptions = FetchOptions & {};
 
-export type PaginationOptions = {
+export type CursorOptions = {
   /**
-   * Query the specified page
+   * Maximum resources returned by one request
    *
-   * @default 1
+   * @default 30
    */
-  page?: number;
+  limit?: number;
 
-  /**
-   * Page size
-   *
-   * @default 100
-   */
-  pageSize?: number;
+  /** Opaque cursor returned by the previous batch. */
+  cursor?: string;
 };
 
-export type ResolvedPaginationOptions = Required<PaginationOptions>;
+export type ResolvedCursorOptions = {
+  limit: number;
 
-/** Pagination metadata shared by resource lists and individual collection results. */
-export interface PaginationResult {
-  page: number;
+  cursor?: string;
+};
 
-  pageSize: number;
+/** Pagination for a resource batch; anchor is the actual query version in Unix milliseconds. */
+export type CursorPagination = {
+  anchor: number;
 
-  /** Whether there are no more results after the current page. */
+  limit: number;
+
+  nextCursor: string | null;
+
   complete: boolean;
-}
+};
 
 export type PresetOptions = {
   /**
@@ -456,7 +457,7 @@ export interface CollectionResourcesResult<
 
   results: Array<{
     resources: Resource<T>[];
-    pagination: PaginationResult;
+    pagination: CursorPagination;
     filter: ResolvedFilterOptions | undefined;
   }>;
 
@@ -475,12 +476,12 @@ export type CollectionFilter<
     ? {
         resources: Resource<T>[];
 
-        pagination: PaginationResult;
+        pagination: CursorPagination;
       }
     : R extends false
       ? {}
       : {
           resources?: Resource<T>[];
 
-          pagination?: PaginationResult;
+          pagination?: CursorPagination;
         });

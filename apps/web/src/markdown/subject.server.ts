@@ -5,7 +5,6 @@ import { getSubjectByIdResult } from '~/query/subject.server';
 import { ResponseCacheControl } from '~/utils/response';
 import { getSubjectDisplayName } from '~/utils/subject';
 import { buildSubjectPageSeo } from '~/pages/subject.$subject.($page)/seo';
-
 import {
   errorMarkdown,
   formatResources,
@@ -26,8 +25,7 @@ export async function renderSubjectMarkdown(subjectId: number): Promise<Markdown
   const resp = await fetchResources({
     ...getFetchOptions(),
     subject: subjectId,
-    page: 1,
-    pageSize: 1000,
+    limit: 1000,
     types: ['动画', '合集'],
     tracker: true,
     metadata: true
