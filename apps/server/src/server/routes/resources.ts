@@ -60,10 +60,17 @@ export const defineResourcesRoutes = defineHandler((sys, app) => {
           : 'public, max-age=60, stale-while-revalidate=300'
     );
 
-    return ctx.json({
-      status: 'OK',
-      ...resp
-    });
+    // End legacy page-number loops instead of returning the first batch repeatedly.
+    const page = Number(url.searchParams.get('page') ?? body?.page ?? 1);
+    const result =
+      page >= 2
+        ? {
+            ...resp,
+            resources: [],
+            pagination: { ...resp.pagination, nextCursor: null, complete: true }
+          }
+        : resp;
+    return ctx.json({ status: 'OK', ...result });
   }
 
   const findProviderDetail = memo(

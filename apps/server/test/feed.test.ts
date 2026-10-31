@@ -347,14 +347,26 @@ describe('canonical resources feed cache', () => {
     expect(query.find).toHaveBeenCalledTimes(3);
   });
 
-  it.each(['page=1', 'pageSize=100', 'PAGESIZE=100', 'cursor=invalid'])(
-    'rejects unsupported pagination before querying or caching: %s',
-    async (search) => {
-      const { app, query } = setup();
-      expect((await app.request(`/feed.xml?${search}`)).status).toBe(400);
-      expect(query.find).not.toHaveBeenCalled();
-    }
-  );
+  it.each([
+    { search: 'page=99', limit: 30 },
+    { search: 'page=99&pageSize=100', limit: 100 },
+    { search: 'PAGESIZE=100', limit: 100 }
+  ])('shares cached RSS content with legacy query $search', async ({ search, limit }) => {
+    const { app, query } = setup();
+    const canonical = await app.request(`/feed.xml?limit=${limit}`);
+    const response = await app.request(`/feed.xml?${search}`, {
+      headers: { 'If-None-Match': canonical.headers.get('etag')! }
+    });
+    expect(response.status).toBe(304);
+    expect(query.find).toHaveBeenCalledExactlyOnceWith({}, { limit });
+  });
+
+  it('rejects invalid cursors even when legacy pagination is present', async () => {
+    const { app, query } = setup();
+    const response = await app.request('/feed.xml?page=99&pageSize=100&cursor=invalid');
+    expect(response.status).toBe(400);
+    expect(query.find).not.toHaveBeenCalled();
+  });
 
   it('preserves decoded cursor versions and positions through normalization and cache hits', async () => {
     const { app, query } = setup();
@@ -503,18 +515,18 @@ describe('server slow query errors', () => {
     });
   });
 
-  it('rejects legacy /resources pagination before querying', async () => {
-    const find = vi.fn();
+  it('preserves query errors after translating legacy /resources pagination', async () => {
+    const find = vi.fn().mockRejectedValue(new ResourcesSlowQueryBusyError());
     const app = createResourcesAppWithFind(find);
 
     const response = await app.request('http://localhost/resources?page=101&pageSize=100');
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(503);
     expect(response.headers.get('cache-control')).toBe('no-store');
-    expect(find).not.toHaveBeenCalled();
+    expect(find).toHaveBeenCalledWith({}, { limit: 100 });
     await expect(response.json()).resolves.toMatchObject({
       status: 'ERROR',
-      message: 'page and pageSize are no longer supported.'
+      message: 'Resources slow database query is busy. Please retry later.'
     });
   });
 });

@@ -18,8 +18,8 @@ HTTP 参数
 
 resources 与 feed 共用 `parseResourcesQuery()`：
 
-1. 使用 client parser 归一化筛选和数量。
-2. 检查已停用的 page/pageSize 参数。
+1. 在 HTTP 入参边界将 pageSize 映射为 limit；同一来源的 limit 优先于 pageSize，URL 参数优先于正文。page 不传入查询层。
+2. 使用 client parser 归一化筛选和数量。
 3. 解码 cursor，生成服务端 `ResolvedPaginationOptions`。
 
 ```ts
@@ -32,6 +32,10 @@ interface ResolvedPaginationOptions {
 `QueryManager.find(filter, pagination)` 消费解析后的输入。缺省 cursor 使用当前 provider timestamp
 作为 anchor。fansub、publisher 名称在查询前转为内部 ID；无法识别的名称会被丢弃，
 全部名称都无法识别时，该类筛选按空条件处理。
+
+资源 API 在返回响应前处理旧 page：page=1 正常返回，page>=2 返回空 resources，
+并将 pagination 设为 nextCursor=null、complete=true，保留 anchor 和 limit。
+此处理不修改查询批次，URL page 优先于正文，避免旧页码循环重复读取首批。
 
 ## 数据选择与分页
 

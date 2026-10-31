@@ -135,7 +135,12 @@ count 为 0 时跳过 progress。取消或请求失败返回已获取的部分�
 
 ## 接口兼容与发布依赖
 
-- API query/body 中的 `page`、`pageSize` 返回 400。
+- API query/body 中的 `pageSize` 在 HTTP 边界映射为 `limit`。
+  同一来源同时提供两者时 `limit` 优先，URL 参数优先于正文。
+- 资源 API 的 `page=1` 正常返回；`page >= 2` 在返回响应时改为空 resources、
+  `nextCursor: null`、`complete: true`，终止旧客户端的页码循环。URL page 优先于正文。
+  page 不进入内部查询，也不提供跳页能力；响应仍使用 cursor 分页结构。
+- RSS 继续忽略 page，pageSize 沿用上述数量映射。
 - API `/resources/:page`、`/resources/:provider/:page` 返回 404。
 - Web 旧页码地址的跳转规则见[路由约定](../web/resources-pagination.md#页面与路由)。
 - SDK 分页类型为 `CursorPagination`，数量常量为 `DefaultResourcesLimit` 和 `MaxResourcesLimit`。

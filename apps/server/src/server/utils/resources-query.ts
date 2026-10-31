@@ -19,16 +19,17 @@ export function parseResourcesQuery(
   params: URLSearchParams,
   body: Record<string, unknown> | undefined
 ) {
-  if (
-    params.has('page') ||
-    params.has('pageSize') ||
-    body?.page !== undefined ||
-    body?.pageSize !== undefined
-  ) {
-    throw new ResourcesQueryValidationError('page and pageSize are no longer supported.');
+  // Translate legacy sizes before parsing; page is not part of the internal cursor query.
+  const query = new URLSearchParams(params);
+  if (!query.has('limit') && query.has('pageSize')) {
+    query.set('limit', query.get('pageSize')!);
   }
+  const requestBody: Record<string, unknown> | undefined =
+    body?.limit === undefined && body?.pageSize !== undefined
+      ? { ...body, limit: body.pageSize }
+      : body;
 
-  const { pagination: input, filter } = parseURLSearch(params, body);
+  const { pagination: input, filter } = parseURLSearch(query, requestBody);
   const pagination: ResolvedPaginationOptions = { limit: input.limit };
   if (input.cursor !== undefined) {
     // Translate wire-format errors at the HTTP boundary, not in the shared codec or query layer.

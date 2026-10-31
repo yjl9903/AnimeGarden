@@ -188,23 +188,99 @@ describe('API cursor response contract', () => {
     }
   });
 
-  it.each(['page=1', 'pageSize=30'])('rejects legacy query parameter %s', async (search) => {
-    const { app, find } = createPaginationApp();
-    const response = await app.request(`http://localhost/resources?${search}`);
-    expect(response.status).toBe(400);
-    expect(find).not.toHaveBeenCalled();
-  });
+  it.each(['page=1', 'page=99', 'pageSize=30', 'page=99&pageSize=30'])(
+    'accepts legacy query parameter %s',
+    async (search) => {
+      const { app, find } = createPaginationApp();
+      const response = await app.request(`http://localhost/resources?${search}`);
+      expect(response.status).toBe(200);
+      expect(find).toHaveBeenCalledWith({}, { limit: 30 });
+    }
+  );
 
-  it('rejects legacy body pagination before querying', async () => {
+  it('converts legacy body pagination before querying', async () => {
     const { app, find } = createPaginationApp();
     const response = await app.request('http://localhost/resources', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ page: 7, pageSize: 1 })
     });
-    expect(response.status).toBe(400);
-    expect(find).not.toHaveBeenCalled();
+    expect(response.status).toBe(200);
+    expect(find).toHaveBeenCalledWith({}, { limit: 1 });
   });
+
+  it.each([
+    { path: '/resources?page=1', empty: false },
+    { path: '/resources?page=2', empty: true },
+    { path: '/resources/dmhy?page=100', empty: true },
+    { path: '/resources', body: { page: 1 }, empty: false },
+    { path: '/resources', body: { page: 2 }, empty: true },
+    { path: '/resources?page=1', body: { page: 2 }, empty: false },
+    { path: '/resources?page=2', body: { page: 1 }, empty: true },
+    {
+      path: `/resources?cursor=${encodeResourcesCursor({ anchor: anchor.getTime() })}`,
+      empty: false
+    },
+    {
+      path: `/resources?page=2&cursor=${encodeResourcesCursor({ anchor: anchor.getTime() })}`,
+      empty: true
+    }
+  ])(
+    'terminates legacy pagination at the response boundary: $path ($body)',
+    async ({ path, body, empty }) => {
+      const { app, find } = createPaginationApp();
+      const batch = {
+        resources: [
+          {
+            id: 1,
+            provider: 'dmhy',
+            providerId: '1',
+            title: 'First batch resource',
+            href: 'https://example.com/1',
+            type: '动画',
+            magnet: 'magnet:?xt=urn:btih:1',
+            tracker: '',
+            size: 1024,
+            createdAt: anchor.toISOString(),
+            fetchedAt: anchor.toISOString(),
+            publisher: { id: 1, name: 'Publisher' },
+            metadata: null
+          }
+        ],
+        pagination: { anchor: anchor.getTime(), limit: 30, nextCursor: 'next', complete: false },
+        filter: {
+          publishers: undefined,
+          fansubs: undefined,
+          before: undefined,
+          after: undefined,
+          subjects: undefined
+        }
+      };
+      find.mockResolvedValue(batch);
+      const response = await app.request(
+        `http://localhost${path}`,
+        body
+          ? {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body)
+            }
+          : undefined
+      );
+      expect(response.status).toBe(200);
+      const result = (await response.json()) as Awaited<ReturnType<QueryManager['find']>>;
+      expect(result.resources).toHaveLength(empty ? 0 : 1);
+      expect(result.pagination).toEqual({
+        anchor: anchor.getTime(),
+        limit: 30,
+        nextCursor: empty ? null : 'next',
+        complete: empty
+      });
+      // Ending a legacy request must not modify the underlying batch for other callers.
+      expect(batch.resources).toHaveLength(1);
+      expect(batch.pagination).toMatchObject({ nextCursor: 'next', complete: false });
+    }
+  );
 
   it.each(['/resources/2', '/resources/abc', '/resources/dmhy/2', '/resources/dmhy/abc'])(
     'does not silently return the first batch for removed route %s',
