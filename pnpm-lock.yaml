@@ -260,8 +260,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/anipar
       bgmx:
-        specifier: 0.3.4
-        version: 0.3.4(bangumi-data@0.3.212)
+        specifier: 0.3.5
+        version: 0.3.5(bangumi-data@0.3.212)
       breadc:
         specifier: 1.0.0-beta.23
         version: 1.0.0-beta.23
@@ -386,8 +386,8 @@ importers:
         specifier: workspace:*
         version: link:../../packages/anipar
       bgmx:
-        specifier: 0.3.4
-        version: 0.3.4(bangumi-data@0.3.212)
+        specifier: 0.3.5
+        version: 0.3.5(bangumi-data@0.3.212)
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1
@@ -630,17 +630,17 @@ importers:
   packages/shared:
     dependencies:
       bgmx:
-        specifier: 0.3.4
-        version: 0.3.4(bangumi-data@0.3.212)
+        specifier: 0.3.5
+        version: 0.3.5(bangumi-data@0.3.212)
       simptrad:
         specifier: ^0.3.0
         version: 0.3.0
 
 packages:
 
-  '@animegarden/client@0.5.4':
-    resolution: {integrity: sha512-Q5jgWoChJskTgwki7CyaPGeK5Vl3o9hEre8o1wPDwT8Ojh/w935ljdNiWaf+cuWBQnasLrXC/00mh4wHVbzZaA==}
-    engines: {node: '>=v18.16.0'}
+  '@animegarden/client@0.5.5':
+    resolution: {integrity: sha512-eydoynNs/7+aVvrRPihMi79mqs5r+9h+DLI+4ngZg5pOTfgUbBg57Me32w6K/hC1prxk+ktcQiSrgbfH9xjQvg==}
+    engines: {node: '>=v24.0.0'}
 
   '@antfu/install-pkg@1.1.0':
     resolution: {integrity: sha512-MGQsmw10ZyI+EJo45CdSER4zEb+p31LpDAFp2Z3gkSd1yqVZGi0Ebx++YTEMonJy4oChEMLsxZ64j8FH6sSqtQ==}
@@ -1271,12 +1271,12 @@ packages:
   '@canvas/image-data@1.1.0':
     resolution: {integrity: sha512-QdObRRjRbcXGmM1tmJ+MrHcaz1MftF2+W7YI+MsphnsCrmtyfS0d5qJbk0MeSbUeyM/jCb0hmnkXPsy026L7dA==}
 
-  '@clack/core@1.4.3':
-    resolution: {integrity: sha512-/kr3UWNtdJfxZtPgDqUOmG2pvwlmcLGheex5yiZKdwbzZJxhV+HMNR9QNmyY5cGwTNV6LrR7Jtp+KjhUAP1qBQ==}
+  '@clack/core@1.5.1':
+    resolution: {integrity: sha512-iHTrHA8MtVuLl2TfZySmcKv1qO2PoyC9Z7pfSDozEuV5vtY3/wcOPKJXlqJ5Oq2Cx5DDGQGAMVx6HZfRRoVEbQ==}
     engines: {node: '>= 20.12.0'}
 
-  '@clack/prompts@1.7.0':
-    resolution: {integrity: sha512-y7/yvZ2TPAnR9+jnc00klvNNLkJiXFFrQA/hlLCcxA9a2A4zQIOimyFQ9XfwYKiGD1fb5GY8vbKIIgO8d5Tb2A==}
+  '@clack/prompts@1.8.1':
+    resolution: {integrity: sha512-dlT1m5e/0yUL0kRNcQn7yGLVThkgbB0Ga/1AmfDDC/8ik6AIiSf2QLQO2zPYvefsHP0aFgxO93cVLCCfDp7kzQ==}
     engines: {node: '>= 20.12.0'}
 
   '@cloudflare/build-output-utils@0.9.6':
@@ -4197,9 +4197,9 @@ packages:
   ajv@8.20.0:
     resolution: {integrity: sha512-Thbli+OlOj+iMPYFBVBfJ3OmCAnaSyNn4M1vz9T6Gka5Jt9ba/HIR56joy65tY6kx/FCF5VXNB819Y7/GUrBGA==}
 
-  anipar@0.5.4:
-    resolution: {integrity: sha512-cDoeqMtYehuOZhMgDfMXSchUTXg9EUh7csrwHnPTu0lpDSJwl4Dgbima3rD5E908iKKhEx8/vdTiFJXV4va0HQ==}
-    engines: {node: '>=v18.16.0'}
+  anipar@0.5.5:
+    resolution: {integrity: sha512-wyb2YsIoRw+TBr61Th27j+/bbuCQN+A5VFAghIWtPdddSv3vqVEtxYJJnl8ymIufKW2eMTVDOBF49myCvwyl4A==}
+    engines: {node: '>=v24.0.0'}
 
   ansi-regex@5.0.1:
     resolution: {integrity: sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==}
@@ -4337,8 +4337,8 @@ packages:
     resolution: {integrity: sha512-Jp5xAkMMTEAPiiPaWyZR/Sfc5Dpx5p+zS7SU5kZSFps19+pGdOD0CkB6ED2K1YaMAaj5ztttVJVCg2Q1ijBDKA==}
     engines: {node: '>=24.0.0'}
 
-  bgmx@0.3.4:
-    resolution: {integrity: sha512-IyUUdMIsToTMRy4NFaeT3aaBrrQhzGQV6vN6BlpG80J9uGisrXdp4quAgk3BHmQgCMaCEH8q/ffVcBbAhnqwzg==}
+  bgmx@0.3.5:
+    resolution: {integrity: sha512-R1Qu1plXDhH5Buvvlm9kATNFSVVidB9QtAo5zKEimzgFFrAP42eL59c46wD4Fgr4K1DUuEjG/qawwvHswROVqA==}
     engines: {node: '>=24.0.0'}
     hasBin: true
     peerDependencies:
@@ -4809,10 +4809,6 @@ packages:
 
   dot-case@3.0.4:
     resolution: {integrity: sha512-Kv5nKlh6yRrdrGvxeJ2e5y2eRUpkUosIW4A2AS38zwSz27zu7ufDwQPi5Jhs3XAlGNetl3bmnGhQsMtkKJnj3w==}
-
-  dotenv@17.4.2:
-    resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
-    engines: {node: '>=12'}
 
   drange@1.1.1:
     resolution: {integrity: sha512-pYxfDYpued//QpnLIm4Avk7rsNtAtQkUES2cwAYSvD/wd2pKD71gN2Ebj3e7klzXwjocvE8c5vx/1fxwpqmSxA==}
@@ -5999,8 +5995,8 @@ packages:
       rolldown:
         optional: true
 
-  p-limit@7.3.2:
-    resolution: {integrity: sha512-Ll0w3fU24vYpXoZmjjZIee6bJQDgG0oAyo1PdmFYI8UDwJJddaHAypxIH9avUu+t+lSsAwKVsb1jDCMIIChliw==}
+  p-limit@7.3.3:
+    resolution: {integrity: sha512-SKgVvDU5TNIxQ4r30U75BNLC6a+6GOEjngrk/ysM5+Zu3oJuk1SC5ApzIzY/7PjCEjoVPMWJ0zho/4QUiEB7TQ==}
     engines: {node: '>=20'}
 
   package-json-from-dist@1.0.1:
@@ -6706,9 +6702,6 @@ packages:
 
   simple-git@3.36.0:
     resolution: {integrity: sha512-cGQjLjK8bxJw4QuYT7gxHw3/IouVESbhahSsHrX97MzCL1gu2u7oy38W6L2ZIGECEfIBG4BabsWDPjBxJENv9Q==}
-
-  simptrad@0.2.0:
-    resolution: {integrity: sha512-SADENHX3KNuTLThG/LQCZvIywDOwCFTC2aLufwmSgjVbHUEZKIjRzleb28J856kL4ozkKptv08eR3GyJFRCnMg==}
 
   simptrad@0.3.0:
     resolution: {integrity: sha512-ppFu4RuncoKhXj0wvD2SDZbYKDTGp5JdJrF02AxhUpBsTc8ga5bCYaHZ/QxuZftcsCCoW9tGiMQhhVLQ5euMcw==}
@@ -7616,6 +7609,11 @@ packages:
     engines: {node: '>= 14.6'}
     hasBin: true
 
+  yaml@2.9.1:
+    resolution: {integrity: sha512-3NxN8+78OdzbT7C/WjGsyfPAtJaN3FNDsWxv7Y7mcDsT/oOmgW8BpyQQFFBnvZE3j9Y2Sdz1ULFLezL7Eb2yFw==}
+    engines: {node: '>= 14.6'}
+    hasBin: true
+
   yargs-parser@21.1.1:
     resolution: {integrity: sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==}
     engines: {node: '>=12'}
@@ -7655,13 +7653,16 @@ packages:
   zod@4.6.6:
     resolution: {integrity: sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==}
 
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
+
 snapshots:
 
-  '@animegarden/client@0.5.4':
+  '@animegarden/client@0.5.5':
     dependencies:
-      anipar: 0.5.4
+      anipar: 0.5.5
       ohash: 2.0.12
-      simptrad: 0.2.0
+      simptrad: 0.3.0
       zod: 3.25.76
 
   '@antfu/install-pkg@1.1.0':
@@ -8564,14 +8565,14 @@ snapshots:
 
   '@canvas/image-data@1.1.0': {}
 
-  '@clack/core@1.4.3':
+  '@clack/core@1.5.1':
     dependencies:
       fast-wrap-ansi: 0.2.2
       sisteransi: 1.0.5
 
-  '@clack/prompts@1.7.0':
+  '@clack/prompts@1.8.1':
     dependencies:
-      '@clack/core': 1.4.3
+      '@clack/core': 1.5.1
       fast-string-width: 3.0.2
       fast-wrap-ansi: 0.2.2
       sisteransi: 1.0.5
@@ -11434,7 +11435,7 @@ snapshots:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
 
-  anipar@0.5.4: {}
+  anipar@0.5.5: {}
 
   ansi-regex@5.0.1: {}
 
@@ -11574,25 +11575,25 @@ snapshots:
       bgmc: 0.3.1
       simptrad: 0.3.0
 
-  bgmx@0.3.4(bangumi-data@0.3.212):
+  bgmx@0.3.5(bangumi-data@0.3.212):
     dependencies:
-      '@animegarden/client': 0.5.4
-      '@clack/prompts': 1.7.0
+      '@animegarden/client': 0.5.5
+      '@clack/prompts': 1.8.1
       bangumi-data: 0.3.212
       bgmc: 0.3.1
       bgmt: 0.3.2
       breadc: 1.0.0-beta.23
       consola: 3.4.2
       date-fns: 4.4.0
-      dotenv: 17.4.2
       fastest-levenshtein: 1.0.16
       fs-extra: 11.4.1
       jsdom: 30.1.3
-      p-limit: 7.3.2
+      p-limit: 7.3.3
       rimraf: 6.1.3
       tmdbc: 0.1.0
       undici: 8.12.3
-      yaml: 2.9.0
+      yaml: 2.9.1
+      zod: 4.6.7
     transitivePeerDependencies:
       - '@noble/hashes'
       - canvas
@@ -12081,8 +12082,6 @@ snapshots:
     dependencies:
       no-case: 3.0.4
       tslib: 2.8.1
-
-  dotenv@17.4.2: {}
 
   drange@1.1.1: {}
 
@@ -13304,7 +13303,7 @@ snapshots:
       oxc-parser: 0.153.0
       rolldown: 1.2.14
 
-  p-limit@7.3.2:
+  p-limit@7.3.3:
     dependencies:
       yocto-queue: 1.2.2
 
@@ -14087,8 +14086,6 @@ snapshots:
       debug: 4.4.3(supports-color@10.2.2)
     transitivePeerDependencies:
       - supports-color
-
-  simptrad@0.2.0: {}
 
   simptrad@0.3.0: {}
 
@@ -15110,6 +15107,8 @@ snapshots:
 
   yaml@2.9.0: {}
 
+  yaml@2.9.1: {}
+
   yargs-parser@21.1.1: {}
 
   yargs@17.7.3:
@@ -15150,3 +15149,5 @@ snapshots:
   zod@4.6.5: {}
 
   zod@4.6.6: {}
+
+  zod@4.6.7: {}
