@@ -140,7 +140,7 @@ describe('API CORS', () => {
         headers.set('Origin', 'https://example.com');
         const response = await hono.request(String(input), { ...init, headers });
         expect(response.headers.get('X-Request-Id')).toBe(headers.get('X-Trace-Id'));
-        expect((await response.clone().json()).timestamp).toBeUndefined();
+        expect(await response.clone().json()).not.toHaveProperty('timestamp');
 
         // Model CORS response-header filtering; Node fetch itself does not enforce it.
         const readableHeaders = new Headers();
