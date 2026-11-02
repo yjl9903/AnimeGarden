@@ -14,9 +14,9 @@ export class ResourcesSlowQueryTimeoutError extends Error {
   }
 }
 
-export class ResourcesDeepPaginationError extends Error {
-  public constructor(maxOffsetLimit: number) {
-    super(`Resources pagination is too deep. Please keep offset + limit <= ${maxOffsetLimit}.`);
-    this.name = ResourcesDeepPaginationError.name;
+export class ResourcesQueryValidationError extends Error {
+  public constructor(message: string) {
+    super(message);
+    this.name = ResourcesQueryValidationError.name;
   }
 }

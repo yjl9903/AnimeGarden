@@ -2,76 +2,52 @@ import { describe, it, expect, vi } from 'vitest';
 
 import { fetchStatus } from '../src/api/status';
 import { AnimeGardenError } from '../src/error';
-// import { fetchResources } from '../src/api/resources';
-// import { fetchCollection } from '../src/api/collection';
+import { SupportProviders } from '../src/constants';
 
-const timeout = 30 * 1000;
+describe('API status', () => {
+  it('parses a mocked status response without accessing the live API', async () => {
+    const timestamp = '2026-07-14T00:00:00.000Z';
+    const providers = Object.fromEntries(
+      SupportProviders.map((id) => [id, { id, name: id, refreshedAt: timestamp, isActive: true }])
+    );
+    const fetch = vi.fn(
+      async () =>
+        new Response(JSON.stringify({ providers }), {
+          headers: {
+            'content-type': 'application/json',
+            'x-response-timestamp': timestamp
+          }
+        })
+    );
 
-describe('API', () => {
-  it('should fetch status', { timeout }, async () => {
-    const resp = await fetchStatus({});
-    expect(resp.ok).toBe(true);
-    if (!resp.ok) throw resp.error;
-    expect(resp.timestamp).toBeTruthy();
-    expect(resp.providers).toBeTruthy();
+    const resp = await fetchStatus({
+      fetch,
+      baseURL: 'https://example.com/'
+    });
+
+    expect(fetch).toHaveBeenCalledWith('https://example.com/', expect.any(Object));
+    expect(resp).toEqual({
+      ok: true,
+      timestamp: new Date(timestamp),
+      providers
+    });
   });
 
-  // it('should fetch collection', { timeout }, async () => {
-  //   const resp = await fetchCollection('NxRs-dGspGeA1gr6CrUl81qppmC0J4wcSl9tCxrt1tM');
-  //   expect(resp!.ok).toBe(true);
-  //   expect(resp!.timestamp).toBeTruthy();
-  // });
+  it('returns an unsuccessful result for a mocked API failure', async () => {
+    const fetch = vi.fn(async () => {
+      throw new TypeError('network unavailable');
+    });
 
-  // it('should fetch resources', { timeout }, async () => {
-  //   const resp = await fetchResources({
-  //     subject: 363957,
-  //     after: new Date(1743350400000)
-  //   });
-  //   expect(resp.ok).toBe(true);
-  //   expect(resp.timestamp).toBeTruthy();
-  //   expect(resp.filter!.subjects).toStrictEqual([363957]);
-  //   expect(resp.resources.length > 0).toBeTruthy();
-  // });
+    const resp = await fetchStatus({
+      fetch,
+      baseURL: 'https://example.com/'
+    });
 
-  // it('should handle timeout', { timeout }, async () => {
-  //   const now = new Date();
-
-  //   expect(
-  //     await fetchStatus({
-  //       retry: 5,
-  //       timeout: 1
-  //     })
-  //   ).toMatchInlineSnapshot(`
-  //     {
-  //       "ok": false,
-  //       "providers": undefined,
-  //       "timestamp": undefined,
-  //     }
-  //   `);
-
-  //   expect(new Date().getTime() - now.getTime()).greaterThanOrEqual(500);
-  // });
-
-  // it('should handle abort', { timeout }, async () => {
-  //   const now = new Date();
-  //   const abort = new AbortController();
-  //   setTimeout(() => abort.abort());
-
-  //   expect(
-  //     await fetchStatus({
-  //       retry: 5,
-  //       signal: abort.signal
-  //     })
-  //   ).toMatchInlineSnapshot(`
-  //     {
-  //       "ok": false,
-  //       "providers": undefined,
-  //       "timestamp": undefined,
-  //     }
-  //   `);
-
-  //   expect(new Date().getTime() - now.getTime()).lessThanOrEqual(100);
-  // });
+    expect(resp).toMatchObject({
+      ok: false,
+      code: 'NETWORK_ERROR'
+    });
+  });
 });
 
 describe('fetchStatus Result errors', () => {

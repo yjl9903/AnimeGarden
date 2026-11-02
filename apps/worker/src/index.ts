@@ -98,7 +98,8 @@ export default {
 
       const filter = ManyFilterSchema.safeParse(rawFilter.filter);
       if (filter.success && filter.data.length > 0) {
-        const options = { ...filter.data[0] };
+        // Accept legacy pagination input, but do not forward it to the cursor-only resource API.
+        const { page: _page, pageSize: _pageSize, ...options } = filter.data[0];
         console.log('Filter:', options);
 
         if (options.fansubName) {

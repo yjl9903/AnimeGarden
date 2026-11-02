@@ -2,7 +2,7 @@ import type { ResolvedFilterOptions, Resource } from './types';
 
 import { normalizeTitle } from './utils';
 
-export function makeResourcesFilter(filter: Omit<ResolvedFilterOptions, 'duplicate'>) {
+export function makeResourcesFilter(filter: ResolvedFilterOptions) {
   const conds: Array<(res: Resource) => boolean> = [];
 
   const {

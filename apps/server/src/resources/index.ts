@@ -125,7 +125,8 @@ export class ResourcesModule extends Module<System['modules']> {
 
   public async refresh(notification: Notification) {
     this.logger.info('Refreshing Resources module');
-    await this.query.onNotifications(notification);
+
+    this.query.onNotifications(notification);
     this.logger.success('Refresh Resources module OK');
   }
 
@@ -462,7 +463,7 @@ export class ResourcesModule extends Module<System['modules']> {
               lt(resourceSchema.createdAt, new Date(maxCreatedAt))
             )
           )
-          .orderBy(desc(resourceSchema.createdAt)),
+          .orderBy(desc(resourceSchema.createdAt), desc(resourceSchema.id)),
       { count: 5 }
     ).catch(() => []);
 

@@ -2,14 +2,19 @@ import { z } from 'zod';
 
 import type {
   Jsonify,
-  PaginationOptions,
+  CursorOptions,
   FilterOptions,
   PresetOptions,
   ResolvedFilterOptions,
-  ResolvedPaginationOptions
+  ResolvedCursorOptions
 } from './types';
 
-import { DefaultPageSize, MaxRequestPageSize, SupportPresets, SupportProviders } from './constants';
+import {
+  DefaultResourcesLimit,
+  MaxResourcesLimit,
+  SupportPresets,
+  SupportProviders
+} from './constants';
 
 const dateLike = z.union([
   z.null(),
@@ -24,17 +29,10 @@ const providerEnum = z.enum(SupportProviders);
 
 const presetEnum = z.enum(SupportPresets);
 
-// Parse explicit false values instead of treating every non-empty string as true.
-const duplicateParam = z
-  .string()
-  .transform((value) => !['', 'false', '0', 'off', 'no'].includes(value))
-  .nullish();
-
 const UrlSearchSchema = {
   provider: providerEnum.optional(),
-  duplicate: duplicateParam,
-  page: z.union([z.null(), z.undefined(), z.coerce.number()]).optional(),
-  pageSize: z.union([z.null(), z.undefined(), z.coerce.number()]).optional(),
+  cursor: z.string().optional(),
+  limit: z.union([z.null(), z.undefined(), z.coerce.number()]).optional(),
   fansub: z.string().array().optional(),
   publisher: z.string().array().optional(),
   type: z.string().array().optional(),
@@ -50,9 +48,8 @@ const UrlSearchSchema = {
 
 const BodySchema = {
   provider: providerEnum.optional(),
-  duplicate: z.union([z.boolean(), duplicateParam]),
-  page: z.coerce.number().optional(),
-  pageSize: z.coerce.number().optional(),
+  cursor: z.string().optional(),
+  limit: z.coerce.number().optional(),
   fansub: z.string().optional(),
   fansubs: z.string().array().optional(),
   publisher: z.string().optional(),
@@ -73,14 +70,15 @@ const BodySchema = {
 /** Parse and validate query input, returning deduplicated, sorted filter collections. */
 export function parseURLSearch(
   params?: URLSearchParams,
-  body?: PaginationOptions & FilterOptions & PresetOptions
+  body?: CursorOptions & FilterOptions & PresetOptions
 ) {
+  // TODO: Unify strict input validation and remove silent dropping/defaulting of invalid values.
+  // Keep the existing parser behavior until that change; do not add field-specific boundary checks.
   const res1 = params
     ? {
         provider: UrlSearchSchema.provider.safeParse(params.get('provider')).data,
-        duplicate: UrlSearchSchema.duplicate.safeParse(params.get('duplicate')).data,
-        page: UrlSearchSchema.page.safeParse(params.get('page')).data,
-        pageSize: UrlSearchSchema.pageSize.safeParse(params.get('pageSize')).data,
+        cursor: UrlSearchSchema.cursor.safeParse(params.get('cursor')).data,
+        limit: UrlSearchSchema.limit.safeParse(params.get('limit')).data,
         fansub: UrlSearchSchema.fansub.safeParse(params.getAll('fansub')).data,
         publisher: UrlSearchSchema.publisher.safeParse(params.getAll('publisher')).data,
         type: UrlSearchSchema.type.safeParse(params.getAll('type')).data,
@@ -98,9 +96,8 @@ export function parseURLSearch(
   const res2 = body
     ? {
         provider: BodySchema.provider.safeParse(body.provider).data,
-        duplicate: BodySchema.duplicate.safeParse(body.duplicate).data,
-        page: BodySchema.page.safeParse(body.page).data,
-        pageSize: BodySchema.pageSize.safeParse(body.pageSize).data,
+        cursor: BodySchema.cursor.safeParse(body.cursor).data,
+        limit: BodySchema.limit.safeParse(body.limit).data,
         fansub: BodySchema.fansub.safeParse(body.fansub).data,
         fansubs: BodySchema.fansubs.safeParse(body.fansubs).data,
         publisher: BodySchema.publisher.safeParse(body.publisher).data,
@@ -119,28 +116,21 @@ export function parseURLSearch(
       }
     : undefined;
 
-  const pagination: ResolvedPaginationOptions = {
-    page: res1?.page ?? res2?.page ?? 1,
-    pageSize: res1?.pageSize ?? res2?.pageSize ?? DefaultPageSize
+  const pagination: ResolvedCursorOptions = {
+    limit: res1?.limit ?? res2?.limit ?? DefaultResourcesLimit
   };
+
+  const cursor = res1?.cursor ?? res2?.cursor;
+  if (cursor) pagination.cursor = cursor;
+
   const filter: ResolvedFilterOptions = {};
 
   const isNaN = (d: unknown): boolean => d === undefined || d === null || Number.isNaN(d);
 
-  if (isNaN(pagination.page) || pagination.page < 1) {
-    pagination.page = 1;
+  if (isNaN(pagination.limit) || pagination.limit < 1 || pagination.limit > MaxResourcesLimit) {
+    pagination.limit = DefaultResourcesLimit;
   } else {
-    pagination.page = Math.round(pagination.page);
-  }
-
-  if (
-    isNaN(pagination.pageSize) ||
-    pagination.pageSize < 1 ||
-    pagination.pageSize > MaxRequestPageSize
-  ) {
-    pagination.pageSize = DefaultPageSize;
-  } else {
-    pagination.pageSize = Math.round(pagination.pageSize);
+    pagination.limit = Math.round(pagination.limit);
   }
 
   if (res2?.preset) {
@@ -150,11 +140,9 @@ export function parseURLSearch(
   }
 
   if (res2?.provider) {
-    filter.duplicate = res1?.duplicate ?? res2?.duplicate ?? true;
     filter.provider = res2.provider;
   } else if (res1?.provider) {
     filter.provider = res1.provider;
-    filter.duplicate = res2?.duplicate ?? res1?.duplicate ?? true;
   }
 
   if (res2?.fansub) {
@@ -253,25 +241,21 @@ export function parseURLSearch(
 
 /** Serialize a resource query with sorted sets and omitted default values. */
 export function stringifyURLSearch(
-  options: PaginationOptions & (FilterOptions | Jsonify<FilterOptions>) & PresetOptions
+  options: CursorOptions & (FilterOptions | Jsonify<FilterOptions>) & PresetOptions
 ) {
   const params = new URLSearchParams();
 
-  const { page, pageSize, duplicate, after, before, preset } = options;
+  const { cursor, limit, after, before, preset } = options;
 
   if (preset) {
     params.set('preset', preset);
   }
 
-  if (page && page !== 1) {
-    params.set('page', '' + page);
+  if (cursor) {
+    params.set('cursor', cursor);
   }
-  if (pageSize && pageSize !== DefaultPageSize) {
-    params.set('pageSize', '' + pageSize);
-  }
-  // Preserve explicit false so a URL round trip does not restore the provider default.
-  if (duplicate === false) {
-    params.set('duplicate', 'false');
+  if (limit && limit !== DefaultResourcesLimit) {
+    params.set('limit', '' + limit);
   }
   if (after) {
     const time = after instanceof Date ? after.getTime() : new Date(after).getTime();

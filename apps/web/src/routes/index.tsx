@@ -10,8 +10,7 @@ import { getFeedURL, getTrackingError, serializeError } from '~/utils';
 import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
 
 const indexResourcesFilter = {
-  page: 1,
-  pageSize: 30,
+  limit: 30,
   types: ['动画', '合集'],
   preset: 'bangumi'
 } satisfies ResourcesQueryInput;
@@ -26,10 +25,10 @@ export const loader = async ({
   location: { href: string };
 }) => {
   const [resourcesData, calendar] = await Promise.all([
-    context.queryClient.ensureQueryData(
+    context.queryClient.query(
       resourcesQueryOptions(indexResourcesFilter, indexResourcesQueryOptions)
     ),
-    context.queryClient.ensureQueryData(calendarQueryOptions())
+    context.queryClient.query(calendarQueryOptions())
   ]);
   const { ok, resources, timestamp, error } = resourcesData;
 

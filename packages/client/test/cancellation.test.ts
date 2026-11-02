@@ -70,7 +70,12 @@ const resourcesPage = {
       fetchedAt: '2026-05-08T00:00:00.000Z'
     }
   ],
-  pagination: { page: 1, pageSize: 1, complete: false },
+  pagination: {
+    anchor: Date.parse('2026-05-08T00:00:00.000Z'),
+    limit: 1,
+    nextCursor: 'next',
+    complete: false
+  },
   filter: {},
   timestamp: '2026-05-08T00:00:00.000Z'
 };

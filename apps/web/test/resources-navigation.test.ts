@@ -6,13 +6,16 @@ import {
   createRoute,
   createRouter
 } from '@tanstack/react-router';
-import type { QueryClient } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { stringifyURLSearch } from '@animegarden/client';
 
-import { loader, Route } from '../src/routes/resources/$page';
+import { loader, Route } from '../src/routes/resources/index';
 import type { ResourcesQueryInput } from '../src/query/animegarden';
 import { getFeedURL } from '../src/utils/url';
 import { getResourcesRouteLink } from '../src/utils/routes';
+
+const { fetchResourcesFn } = vi.hoisted(() => ({ fetchResourcesFn: vi.fn() }));
+vi.mock('~/query/proxy', () => ({ fetchResourcesFn }));
 
 vi.mock('~/pages/resources.($page)/route', () => ({
   default: () => null
@@ -31,26 +34,31 @@ describe('resources navigation loader cache', () => {
     'keeps $key filters current after Header-style preloading and navigation',
     async ({ key, first, second, field }) => {
       // Use the real loader and its cache dependencies, replacing only the remote query results.
-      const ensureQueryData = vi.fn(async ({ queryKey }: { queryKey: readonly unknown[] }) => {
-        if (queryKey[1] === 'calendar') return { ok: true, calendar: [] };
-        if (queryKey[1] === 'resources') {
-          const { page, pageSize, ...filter } = queryKey[2] as ResourcesQueryInput;
-          return { ok: true, resources: [], filter };
+      const queryClient = new QueryClient();
+      fetchResourcesFn.mockImplementation(
+        async ({ data }: { data: { filter: ResourcesQueryInput } }) => {
+          const { cursor, limit, ...filter } = data.filter;
+          return {
+            ok: true,
+            resources: [],
+            filter,
+            pagination: { anchor: 0, limit, nextCursor: null, complete: true },
+            timestamp: new Date(0)
+          };
         }
-        throw new Error(`Unexpected query: ${queryKey.join('/')}`);
-      });
+      );
       const root = createRootRouteWithContext<{ queryClient: QueryClient }>()();
       const resources = createRoute({
         getParentRoute: () => root,
-        path: '/resources/$page',
+        path: '/resources',
         loaderDeps: ({ search }) => Route.options.loaderDeps!({ search }),
         loader
       });
       const router = createRouter({
         routeTree: root.addChildren([resources]),
-        context: { queryClient: { ensureQueryData } as unknown as QueryClient },
+        context: { queryClient },
         history: createMemoryHistory({
-          initialEntries: [`/resources/1?${new URLSearchParams({ [key]: first })}`]
+          initialEntries: [`/resources?${new URLSearchParams({ [key]: first })}`]
         })
       });
 
@@ -59,8 +67,7 @@ describe('resources navigation loader cache', () => {
       expect(firstMatch.loaderData).toMatchObject({ filter: { [field]: [first] } });
 
       const destination = {
-        to: '/resources/$page' as const,
-        params: { page: '1' },
+        to: '/resources' as const,
         search: { [key]: second }
       };
       await router.preloadRoute(destination);
@@ -73,14 +80,14 @@ describe('resources navigation loader cache', () => {
       expect(secondMatch.id).not.toBe(firstMatch.id);
       expect(secondMatch.loaderData).toMatchObject({ filter: { [field]: [second] } });
 
-      // RSS and pagination use this normalized loader filter, not the live query's filter.
+      // RSS and resource navigation retain the selected filter.
       const { filter } = secondMatch.loaderData as {
         filter: Parameters<typeof stringifyURLSearch>[0];
       };
       const search = `?${stringifyURLSearch(filter)}`;
       expect(new URL(getFeedURL(search)).searchParams.get(key)).toBe(second);
-      expect(getResourcesRouteLink(2, search)).toMatchObject({
-        params: { page: '2' },
+      expect(getResourcesRouteLink(search)).toMatchObject({
+        to: '/resources',
         search: { [key]: second }
       });
 
@@ -89,6 +96,7 @@ describe('resources navigation loader cache', () => {
       expect(router.state.matches.at(-1)!.loaderData).toMatchObject({
         filter: { [field]: [first] }
       });
+      queryClient.clear();
     }
   );
 });

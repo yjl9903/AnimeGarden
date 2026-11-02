@@ -29,6 +29,12 @@ describe('API status discovery', () => {
       const siteUrl = `https://${site ?? 'animes.garden'}`;
 
       expect(response.status).toBe(200);
+      expect(response.headers.get('X-Response-Timestamp')).toBe(timestamp.toISOString());
+      expect(Number.isNaN(Date.parse(response.headers.get('X-Request-Timestamp')!))).toBe(false);
+      expect(response.headers.get('Access-Control-Expose-Headers')).toContain(
+        'X-Response-Timestamp'
+      );
+      expect(response.headers.get('X-Robots-Tag')).toBe('noindex');
       expect(await response.json()).toEqual({
         ...status,
         links: {

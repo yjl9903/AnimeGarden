@@ -18,22 +18,22 @@ async function submit(urls: string[]) {
 
 const resp1 = await submit([
   `/`,
-  `/resources/1?type=动画`,
-  `/resources/1?type=合集`,
-  `/resources/1?type=音乐`,
-  `/resources/1?type=日剧`,
-  `/resources/1?type=RAW`,
-  `/resources/1?type=漫画`,
-  `/resources/1?type=游戏`,
-  `/resources/1?type=特摄`,
-  `/resources/1?type=其他`
+  `/resources?type=动画`,
+  `/resources?type=合集`,
+  `/resources?type=音乐`,
+  `/resources?type=日剧`,
+  `/resources?type=RAW`,
+  `/resources?type=漫画`,
+  `/resources?type=游戏`,
+  `/resources?type=特摄`,
+  `/resources?type=其他`
 ]);
 
 const { teams } = await fetchAPI<{ teams: any[] }>('teams');
-const resp2 = await submit(teams.map((t) => `/resources/1?fansub=${t.name}`));
+const resp2 = await submit(teams.map((t) => `/resources?fansub=${t.name}`));
 
 const { subjects } = await fetchAPI<any>('sitemaps/subjects');
-const resp3 = await submit(subjects.map((r: any) => `/subject/${r.id}/1`));
+const resp3 = await submit(subjects.map((r: any) => `/subject/${r.id}`));
 
 console.log(resp1, resp2, resp3);
 

@@ -18,7 +18,6 @@ const CollectionSchema = z.object({
           // filters
           preset: z.enum(SupportPresets).optional(),
           provider: z.enum(SupportProviders).optional(),
-          duplicate: z.boolean().optional(),
           types: z.array(z.string()).optional(),
           after: z.coerce.date().optional(),
           before: z.coerce.date().optional(),
@@ -62,6 +61,8 @@ export async function hashCollection(collection: Collection<true>) {
     // Exclude completion metadata persisted by older clients as well.
     // @ts-ignore
     delete r.complete;
+    // @ts-ignore
+    delete r.pagination;
     return r;
   });
 

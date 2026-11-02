@@ -74,7 +74,10 @@ getTrackAttributes(event, { language: 'curl' });
 expectTypeOf<TrackAttributeEventName>().toEqualTypeOf<
   Exclude<
     TrackEventName,
-    'search.suggestion.click' | 'resources.filter.click' | 'anime.calendar.click'
+    | 'search.suggestion.click'
+    | 'resources.filter.click'
+    | 'anime.calendar.click'
+    | 'anime.season.change'
   >
 >();
 
@@ -82,6 +85,18 @@ expectTypeOf<TrackAttributeEventName>().toEqualTypeOf<
 track('search.suggestion.click', { text: 'Example', subjectId: '123' });
 track('resources.filter.click', { filterType: 'type', value: '动画' });
 track('anime.calendar.click', { subjectId: '123', title: 'Example', weekday: 'Monday' });
+track('anime.season.change', { fromSeason: '2026-07', toSeason: '2026-10', source: 'season' });
+track('resources.load-more.click', { path: '/', search: '', kind: 'link' });
+getTrackAttributes('home.calendar.click', { season: '2026-10', source: 'title' });
+
+// @ts-expect-error Scroll loading is not a click event.
+track('resources.load-more.click', { path: '/', search: '', kind: 'scroll' });
+// @ts-expect-error HTML would lowercase the season field names.
+getTrackAttributes('anime.season.change', {
+  fromSeason: '2026-07',
+  toSeason: '2026-10',
+  source: 'year'
+});
 
 // @ts-expect-error HTML would change subjectId to subjectid.
 getTrackAttributes('search.suggestion.click', { text: 'Example', subjectId: '123' });

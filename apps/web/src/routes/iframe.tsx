@@ -1,28 +1,16 @@
 import { createFileRoute, useLocation } from '@tanstack/react-router';
-import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
-import { parseURLSearch, stringifyURLSearch } from '@animegarden/client';
+import { type QueryClient } from '@tanstack/react-query';
+import { parseURLSearch } from '@animegarden/client';
 
 import Page from '~/pages/iframe/route';
 import { buildIframePageHead } from '~/pages/iframe/seo';
 import { APP_HOST } from '~build/env';
+import { resourcesQueryOptions, subjectQueryOptions, type ResourcesQueryInput } from '~/query';
 import { getTrackingError, serializeError } from '~/utils';
 import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils/response';
-import { calendarQueryOptions, resourcesQueryOptions, subjectQueryOptions } from '~/query';
+import { toResourcesRouterSearch, type RouterSearch } from '~/utils/routes';
 
-function getIframeQueryInput(url: URL) {
-  const { filter: parsedFilter, pagination: parsedPagination } = parseURLSearch(url.searchParams);
-
-  return {
-    parsedFilter,
-    queryInput: {
-      ...parsedFilter,
-      ...parsedPagination,
-      pageSize: 30
-    }
-  };
-}
-
-const loader = async ({
+export const loader = async ({
   context,
   location
 }: {
@@ -30,18 +18,21 @@ const loader = async ({
   location: { href: string };
 }) => {
   const url = new URL(location.href, `https://${APP_HOST}`);
-  const { parsedFilter, queryInput } = getIframeQueryInput(url);
+  const parsed = parseURLSearch(url.searchParams);
+  const requestedFilter = {
+    ...parsed.filter,
+    limit: parsed.pagination.limit
+  } satisfies ResourcesQueryInput;
 
-  const [{ ok, resources, pagination, filter, timestamp, error }, , subjectResponses] =
-    await Promise.all([
-      context.queryClient.ensureQueryData(resourcesQueryOptions(queryInput)),
-      context.queryClient.ensureQueryData(calendarQueryOptions()),
-      Promise.all(
-        (parsedFilter.subjects ?? []).map((id) =>
-          context.queryClient.ensureQueryData(subjectQueryOptions(id))
-        )
+  const [data, subjectResponses] = await Promise.all([
+    context.queryClient.query(resourcesQueryOptions(requestedFilter)),
+    Promise.all(
+      (requestedFilter.subjects ?? []).map((id) =>
+        context.queryClient.query(subjectQueryOptions(id))
       )
-    ]);
+    )
+  ]);
+  const { ok, resources, pagination, filter, timestamp, error } = data;
 
   if (error) {
     console.error(location.href, error);
@@ -67,6 +58,10 @@ const loader = async ({
 };
 
 export const Route = createFileRoute('/iframe')({
+  loaderDeps: ({ search }) => ({
+    ...toResourcesRouterSearch(search as RouterSearch),
+    limit: (search as RouterSearch).limit
+  }),
   loader,
   head: ({ loaderData }) => buildIframePageHead(loaderData?.filter, loaderData?.subjects),
   component: IframeRoute
@@ -74,22 +69,14 @@ export const Route = createFileRoute('/iframe')({
 
 function IframeRoute() {
   const location = useLocation();
-  const url = new URL(location.href, `https://${APP_HOST}`);
-  const { parsedFilter, queryInput } = getIframeQueryInput(url);
-  const { data } = useSuspenseQuery(resourcesQueryOptions(queryInput));
-  const pageData = {
-    ...data,
-    error: serializeError(data.error)
-  };
-  const normalizedSearch = stringifyURLSearch(parsedFilter).toString();
-  const normalizedSearchStr = normalizedSearch ? `?${normalizedSearch}` : '';
-
+  const loaderData = Route.useLoaderData();
+  // Embeds render only the loader's first batch; no reactive list or scroll continuation.
   return (
     <Page
-      data={pageData}
-      searchStr={normalizedSearchStr}
+      data={loaderData}
+      searchStr={location.searchStr}
       path={`${location.pathname}${location.searchStr}`}
-      renderError={getTrackingError(pageData.error, 'iframe-render-failed')}
+      renderError={getTrackingError(loaderData.error, 'iframe-render-failed')}
     />
   );
 }

@@ -21,8 +21,8 @@ export const loader = async ({
   }
 
   const [resp] = await Promise.all([
-    context.queryClient.ensureQueryData(collectionQueryOptions(hash)),
-    context.queryClient.ensureQueryData(calendarQueryOptions())
+    context.queryClient.query(collectionQueryOptions(hash)),
+    context.queryClient.query(calendarQueryOptions())
   ]);
   if (resp?.ok) {
     await setCacheControl(ResponseCacheControl.List);

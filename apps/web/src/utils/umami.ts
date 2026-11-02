@@ -34,6 +34,17 @@ const events = {
   'search.suggestion.click': z.object({ text: z.string(), subjectId: z.string() }),
   'search.result.click': z.object({ text: z.string(), resource: z.string() }),
   'resources.detail.click': z.object({ resource: z.string(), type: z.string() }),
+  'resources.load-more.click': z.object({
+    path: z.string(),
+    search: z.string(),
+    kind: z.literal('link')
+  }),
+  'home.calendar.click': z.object({ season: z.string(), source: z.enum(['title', 'link']) }),
+  'anime.season.change': z.object({
+    fromSeason: z.string(),
+    toSeason: z.string(),
+    source: z.enum(['year', 'season'])
+  }),
   'resources.filter.click': z.object({
     filterType: z.enum(['type', 'fansub', 'publisher']),
     value: z.string()

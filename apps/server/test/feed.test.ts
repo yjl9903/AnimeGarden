@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { FeedModule } from '../src/feed';
 import { ResourcesSlowQueryBusyError, ResourcesSlowQueryTimeoutError } from '../src/error';
+import { encodeResourcesCursor } from '@animegarden/shared';
 import { defineFeedRoutes } from '../src/server/routes/feed';
 import { defineResourcesRoutes } from '../src/server/routes/resources';
 import type { AppEnv } from '../src/server/utils/hono';
@@ -24,6 +25,7 @@ function bindSlowQueryErrorHandler(app: Hono<AppEnv>) {
         return c.body(getResourcesQueryErrorXml(queryError.message), queryError.status);
       }
 
+      c.res.headers.set('Cache-Control', 'no-store');
       return c.json(
         {
           status: 'ERROR',
@@ -43,6 +45,9 @@ function createSystem(error: Error) {
       site: 'animes.garden'
     },
     modules: {
+      providers: {
+        timestamp: new Date('2026-07-11T08:00:00.000Z')
+      },
       resources: {
         query: {
           find: vi.fn().mockRejectedValue(error)
@@ -80,6 +85,7 @@ function createResourcesAppWithFind(find: ReturnType<typeof vi.fn>) {
   const app = new Hono<AppEnv>();
   const sys = {
     modules: {
+      providers: { timestamp: new Date('2026-07-11T08:00:00.000Z') },
       resources: {
         query: {
           find
@@ -114,6 +120,7 @@ function createSuccessfulFeedApp(sizeInBytes: number, subjectId?: number | null,
       site: 'animes.garden'
     },
     modules: {
+      providers: { timestamp: new Date('2026-08-19T00:00:00Z') },
       resources: {
         query: {
           find: vi.fn().mockResolvedValue({ resources: [resource] })
@@ -177,7 +184,7 @@ describe('canonical resources feed cache', () => {
     const xml = await first.text();
     const etag = first.headers.get('etag')!;
     const equivalent =
-      '/feed.xml?Subject=2&subject=1&subject=2&publisher=B&Publisher=A&publisher=A&page=1&PAGESIZE=100&tracker=true&unused=yes';
+      '/feed.xml?Subject=2&subject=1&subject=2&publisher=B&Publisher=A&publisher=A&LIMIT=30&tracker=true&unused=yes';
     const second = await app.request(equivalent);
     expect(await second.text()).toBe(xml);
     expect(second.headers.get('etag')).toBe(etag);
@@ -187,11 +194,11 @@ describe('canonical resources feed cache', () => {
     expect(subjects.getSubjectMetadata).toHaveBeenCalledTimes(2);
     expect(query.find).toHaveBeenCalledWith(
       { subjects: [1, 2], publishers: ['A', 'B'] },
-      { page: 1, pageSize: 100 }
+      { limit: 30 }
     );
     const { rss } = new XMLParser().parse(xml);
     expect(rss.channel.link).toBe(
-      'https://animes.garden/resources/1?publisher=A&publisher=B&subject=1&subject=2'
+      'https://animes.garden/resources?publisher=A&publisher=B&subject=1&subject=2'
     );
   });
 
@@ -212,7 +219,7 @@ describe('canonical resources feed cache', () => {
     const feed: FeedModule = sys.modules.feed;
     const options = {
       filter: { subjects: [2, 1, 2] },
-      pagination: { page: 1, pageSize: 100 },
+      pagination: { limit: 30 },
       tracker: false
     };
     const result = await feed.getResourcesFeed(options);
@@ -304,22 +311,19 @@ describe('canonical resources feed cache', () => {
 
   it('keeps meaningful filters and tracker choices in separate cache entries', async () => {
     const { app, query } = setup();
+    const cursor = encodeResourcesCursor({ anchor: Date.parse('2026-07-01') });
     const urls = [
       '/feed.xml?provider=dmhy',
-      '/feed.xml?provider=dmhy&duplicate=false',
+      '/feed.xml?provider=mikan',
       '/feed.xml?provider=dmhy&tracker=false',
-      '/feed.xml?provider=dmhy&page=2',
-      '/feed.xml?provider=dmhy&pageSize=10'
+      `/feed.xml?provider=dmhy&cursor=${cursor}`,
+      '/feed.xml?provider=dmhy&limit=10'
     ];
     const responses = await Promise.all(urls.map((url) => app.request(url)));
     expect(new Set(responses.map((response) => response.headers.get('etag'))).size).toBe(5);
     expect(query.find).toHaveBeenCalledTimes(5);
-    expect(query.find).toHaveBeenCalledWith(
-      { provider: 'dmhy', duplicate: false },
-      { page: 1, pageSize: 100 }
-    );
-    await app.request('/feed.xml?provider=dmhy&duplicate=true');
-    await app.request('/feed.xml?provider=dmhy&duplicate=FALSE');
+    expect(query.find).toHaveBeenCalledWith({ provider: 'dmhy' }, { limit: 30 });
+    await app.request('/feed.xml?provider=dmhy&limit=30');
     expect(query.find).toHaveBeenCalledTimes(5);
   });
 
@@ -343,10 +347,53 @@ describe('canonical resources feed cache', () => {
     expect(query.find).toHaveBeenCalledTimes(3);
   });
 
-  it('rejects deep pagination before querying or caching a result', async () => {
+  it.each([
+    { search: 'page=99', limit: 30 },
+    { search: 'page=99&pageSize=100', limit: 100 },
+    { search: 'PAGESIZE=100', limit: 100 }
+  ])('shares cached RSS content with legacy query $search', async ({ search, limit }) => {
     const { app, query } = setup();
-    expect((await app.request('/feed.xml?page=101&pageSize=100')).status).toBe(400);
+    const canonical = await app.request(`/feed.xml?limit=${limit}`);
+    const response = await app.request(`/feed.xml?${search}`, {
+      headers: { 'If-None-Match': canonical.headers.get('etag')! }
+    });
+    expect(response.status).toBe(304);
+    expect(query.find).toHaveBeenCalledExactlyOnceWith({}, { limit });
+  });
+
+  it('rejects invalid cursors even when legacy pagination is present', async () => {
+    const { app, query } = setup();
+    const response = await app.request('/feed.xml?page=99&pageSize=100&cursor=invalid');
+    expect(response.status).toBe(400);
     expect(query.find).not.toHaveBeenCalled();
+  });
+
+  it('preserves decoded cursor versions and positions through normalization and cache hits', async () => {
+    const { app, query } = setup();
+    const anchor = Date.parse('2026-07-01');
+    const cursors = [
+      { anchor },
+      { anchor: anchor + 1000 },
+      { anchor, position: { createdAt: anchor - 1000, id: 42 } }
+    ];
+    const tags = new Set<string | null>();
+    for (const cursor of cursors) {
+      const token = encodeResourcesCursor(cursor);
+      const response = await app.request(`/feed.xml?Subject=2&subject=1&CURSOR=${token}&LIMIT=10`);
+      expect(response.status).toBe(200);
+      expect(query.find).toHaveBeenLastCalledWith({ subjects: [1, 2] }, { limit: 10, cursor });
+      const { rss } = new XMLParser().parse(await response.text());
+      const link = new URL(rss.channel.link);
+      expect(link.pathname).toBe('/resources');
+      expect(link.searchParams.get('cursor')).toBe(token);
+      tags.add(response.headers.get('etag'));
+      const cached = await app.request(`/feed.xml?subject=1&subject=2&cursor=${token}&limit=10`, {
+        headers: { 'If-None-Match': response.headers.get('etag')! }
+      });
+      expect(cached.status).toBe(304);
+    }
+    expect(query.find).toHaveBeenCalledTimes(3);
+    expect(tags.size).toBe(3);
   });
 });
 
@@ -415,6 +462,23 @@ describe.each(['/feed.xml', '/collection/test/feed.xml'])('feed Subject extensio
 });
 
 describe('server slow query errors', () => {
+  it('rejects a malformed feed cursor before querying and returns an XML error', async () => {
+    const sys = createSystem(new Error('must not query'));
+    const app = new Hono<AppEnv>();
+    defineFeedRoutes(sys, app);
+    bindSlowQueryErrorHandler(app);
+    const cursor = encodeResourcesCursor({
+      anchor: sys.modules.providers.timestamp.getTime() + 1000
+    });
+
+    const response = await app.request(`http://localhost/feed.xml?cursor=${cursor}=`);
+
+    expect(response.status).toBe(400);
+    expect(response.headers.get('content-type')).toContain('application/xml');
+    expect(response.headers.get('cache-control')).toBe('no-store');
+    expect(sys.modules.resources.query.find).not.toHaveBeenCalled();
+  });
+
   it('returns XML 503 when the slow query lane is busy', async () => {
     const app = createFeedApp(new ResourcesSlowQueryBusyError());
 
@@ -444,23 +508,25 @@ describe('server slow query errors', () => {
 
     expect(response.status).toBe(503);
     expect(response.headers.get('content-type')).toContain('application/json');
+    expect(response.headers.get('cache-control')).toBe('no-store');
     await expect(response.json()).resolves.toMatchObject({
       status: 'ERROR',
       message: 'Resources slow database query is busy. Please retry later.'
     });
   });
 
-  it('rejects deep /resources pagination before querying', async () => {
-    const find = vi.fn();
+  it('preserves query errors after translating legacy /resources pagination', async () => {
+    const find = vi.fn().mockRejectedValue(new ResourcesSlowQueryBusyError());
     const app = createResourcesAppWithFind(find);
 
     const response = await app.request('http://localhost/resources?page=101&pageSize=100');
 
-    expect(response.status).toBe(400);
-    expect(find).not.toHaveBeenCalled();
+    expect(response.status).toBe(503);
+    expect(response.headers.get('cache-control')).toBe('no-store');
+    expect(find).toHaveBeenCalledWith({}, { limit: 100 });
     await expect(response.json()).resolves.toMatchObject({
       status: 'ERROR',
-      message: 'Resources pagination is too deep. Please keep offset + limit <= 10000.'
+      message: 'Resources slow database query is busy. Please retry later.'
     });
   });
 });

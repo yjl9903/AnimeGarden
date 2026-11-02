@@ -8,8 +8,8 @@ import { ResponseCacheControl, setCacheControl, setErrorResponse } from '~/utils
 
 const loader = async ({ context }: { context: { queryClient: QueryClient } }) => {
   const [data] = await Promise.all([
-    context.queryClient.ensureQueryData(timestampQueryOptions()),
-    context.queryClient.ensureQueryData(calendarQueryOptions())
+    context.queryClient.query(timestampQueryOptions()),
+    context.queryClient.query(calendarQueryOptions())
   ]);
   if (data.ok) {
     await setCacheControl(ResponseCacheControl.Docs);
