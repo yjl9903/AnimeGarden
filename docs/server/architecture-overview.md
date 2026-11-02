@@ -38,6 +38,13 @@ Hono 入口在 `src/server/index.ts`。`registerHono()` 统一绑定：
 - `users`、`subjects`、`resources`、`collections`、`feed`、`admin`、`sitemaps` 路由。
 - 查询错误到 JSON / XML 的统一转换。
 
+CORS 允许任意来源（`Access-Control-Allow-Origin: *`），并通过
+`Access-Control-Expose-Headers` 显式暴露 `X-Response-Timestamp`、`X-Request-Id` 和
+`ETag`，使浏览器跨域调用能够读取数据时间戳、请求追踪 ID 和缓存校验值。
+该配置也适用于错误和 304 响应；仅允许来源并不会让浏览器 JavaScript 读取这些响应头。
+请求追踪优先使用调用方的 `X-Request-Id`，其次兼容共享 SDK 的 `X-Trace-Id`，
+都未提供时生成 UUID；响应统一返回 `X-Request-Id`。
+
 `/sitemaps/*` 是供 Web 生成站点地图使用的内部契约，不列入公开 `/openapi.json` 或 Swagger 页面。源定义保留在 `apps/web/src/pages/docs.api/spec.json`，由 `getPublicOpenApiSpec()` 过滤后对外发布。
 
 - `GET /sitemaps/subjects` 返回全部条目的 `id`、`activedAt`、`isArchived`，包含已归档条目。

@@ -151,7 +151,9 @@ export class Executor extends Server {
 
 function registerHono(sys: System, app: Hono<AppEnv>) {
   app.use('*', async (ctx, next) => {
-    const requestId = ctx.req.header('X-Request-Id') ?? randomUUID();
+    // Accept the shared client's legacy trace header while preferring an explicit request ID.
+    const requestId =
+      ctx.req.header('X-Request-Id') ?? ctx.req.header('X-Trace-Id') ?? randomUUID();
     ctx.set('requestId', requestId);
 
     try {
@@ -174,6 +176,8 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
     '*',
     cors({
       origin: '*',
+      // Let browser clients read response metadata on cross-origin API requests.
+      exposeHeaders: ['X-Response-Timestamp', 'X-Request-Id', 'ETag'],
       allowMethods: ['GET', 'HEAD', 'PUT', 'POST', 'DELETE', 'PATCH', 'OPTIONS']
     })
   );

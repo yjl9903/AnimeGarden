@@ -105,3 +105,8 @@ try {
 `{ status: 'ERROR' }`。标准取消或超时异常在没有响应上下文、且名称与信号分类一致时保留原对象；
 其他取消原因包装为 `AnimeGardenError`。高级 API 会把这两种异常形式统一转换成失败 Result。
 `fetchAPI` 当前仍从包主入口导出。
+
+响应时间戳优先读取 `X-Response-Timestamp`，缺失或无效时回退到 JSON 的 `timestamp`。
+浏览器跨域请求需要 API 在 `Access-Control-Expose-Headers` 中暴露该响应头。
+资源列表响应体不包含时间戳，若响应头不可读，`fetchResources` 会因缺少有效时间戳返回
+`INVALID_RESPONSE`；仅有 `Access-Control-Allow-Origin: *` 不足以支持该调用。
