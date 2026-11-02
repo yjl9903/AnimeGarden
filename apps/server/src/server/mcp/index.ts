@@ -1,5 +1,6 @@
 import { z } from 'zod/v3';
 import { createConsola } from 'consola';
+import { HTTPException } from 'hono/http-exception';
 import { StreamableHTTPTransport } from '@hono/mcp';
 import {
   McpServer as BaseMcpServer,
@@ -44,6 +45,7 @@ const MCP_SERVER_DESCRIPTION = [
   '- If a resource is not found, treat it as unavailable or stale upstream data.'
 ].join('\n');
 
+/** A stateless MCP server and transport owned by one HTTP request. */
 export class McpServer {
   private readonly system: System;
 
@@ -234,51 +236,75 @@ export class McpServer {
     );
   }
 
-  public isConnected() {
-    return this.mcp.isConnected();
-  }
-
-  public async connect() {
-    return this.mcp.connect(this.transport);
-  }
-
+  /** Preserves protocol errors and keeps the transport alive until its response stream ends. */
   public async handleRequest(c: Context) {
+    const startedAt = performance.now();
     const info = getMcpClientInfo(c);
-    this.logger.info(
-      `incoming mcp request`,
-      info.client,
-      info.sessionId,
-      info.mcpProtocolVersion,
-      `accept: ${info.accept}`,
-      `content-type: ${info.contentType}`,
-      `user-agent: ${info.userAgent}`
-    );
-
-    if (info.accept?.includes('text/html')) {
-      return c.json(
-        {
-          status: 'ERROR',
-          message: 'Please connect /mcp with MCP client'
-        },
-        400
-      );
-    }
+    let response: Response;
+    let errorStatus: number | undefined;
 
     try {
-      // Connect the mcp with the transport
-      if (!this.mcp.isConnected()) {
-        await this.mcp.connect(this.transport);
+      // Stateless requests have no persistent SSE stream or session to terminate.
+      if (c.req.method !== 'POST') {
+        throw new HTTPException(405, {
+          res: c.json(
+            { jsonrpc: '2.0', error: { code: -32000, message: 'Method not allowed.' }, id: null },
+            { status: 405, headers: { Allow: 'POST' } }
+          )
+        });
+      }
+      if (info.accept?.includes('text/html')) {
+        throw new HTTPException(400, {
+          res: c.json({ status: 'ERROR', message: 'Please connect /mcp with MCP client' }, 400)
+        });
       }
 
-      // Handle mcp request
-      return await this.transport.handleRequest(c);
-    } catch (error) {
-      this.logger.error(`handle mcp request error`, info.client, info.sessionId, error);
+      await this.mcp.connect(this.transport);
 
-      return c.json(
-        { status: 'ERROR', message: (error as any)?.message || 'unknown mcp error' },
-        500
-      );
+      const result = await this.transport.handleRequest(c);
+      if (!result) throw new Error('MCP transport returned no response');
+
+      response = result;
+    } catch (error) {
+      if (error instanceof HTTPException) {
+        errorStatus = error.status;
+        response = error.getResponse();
+      } else {
+        errorStatus = 500;
+        this.logger.error('handle mcp request error', info, error);
+        response = c.json({ status: 'ERROR', message: 'Internal server error' }, 500);
+      }
     }
+
+    const finish = async () => {
+      // Cleanup failures must not replace the response.
+      await this.mcp.close().catch((error) => {
+        this.logger.error('close mcp request error', info, error);
+      });
+
+      this.logger.info('mcp request completed', {
+        ...info,
+        status: response.status,
+        errorStatus,
+        durationMs: Math.round(performance.now() - startedAt)
+      });
+    };
+
+    if (response.body && response.headers.get('Content-Type')?.includes('text/event-stream')) {
+      // Forward chunks with backpressure; cancellation propagates to the transport's stream.
+      const stream = new TransformStream<Uint8Array, Uint8Array>();
+      void response.body
+        .pipeTo(stream.writable, { signal: c.req.raw.signal })
+        .catch((error) => {
+          if (error && !c.req.raw.signal.aborted) {
+            this.logger.error('mcp response stream error', info, error);
+          }
+        })
+        .finally(finish);
+      return new Response(stream.readable, response);
+    }
+
+    await finish();
+    return response;
   }
 }
