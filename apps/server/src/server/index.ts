@@ -288,8 +288,6 @@ function registerHono(sys: System, app: Hono<AppEnv>) {
 }
 
 function registerMcp(sys: System, app: Hono<AppEnv>) {
-  const mcp = new McpServer(sys);
-
   app.get('/.well-known/mcp/server-card.json', async (c) => {
     return c.redirect(
       `https://${sys.options.site ?? 'animes.garden'}/.well-known/mcp/server-card.json`,
@@ -298,10 +296,9 @@ function registerMcp(sys: System, app: Hono<AppEnv>) {
   });
 
   app.all('/mcp', async (c) => {
-    return mcp.handleRequest(c);
+    // Isolate SDK state and JSON-RPC ids between clients.
+    return new McpServer(sys).handleRequest(c);
   });
-
-  return mcp;
 }
 
 export async function makeServer(sys: System, options: ServerOptions) {

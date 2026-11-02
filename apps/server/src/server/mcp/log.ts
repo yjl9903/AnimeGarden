@@ -19,6 +19,7 @@ function detectMcpClient(userAgent?: string) {
   return 'unknown';
 }
 
+/** Collects HTTP context for correlating MCP protocol failures with access logs. */
 export function getMcpClientInfo(c: Context) {
   const ua = c.req.header('user-agent');
   const contentType = c.req.header('content-type');
@@ -28,6 +29,8 @@ export function getMcpClientInfo(c: Context) {
     c.req.header('mcp-protocol-version') ?? c.req.header('x-mcp-protocol-version');
 
   return {
+    method: c.req.method,
+    requestId: c.get('requestId'),
     client: detectMcpClient(ua),
     userAgent: ua,
     contentType,

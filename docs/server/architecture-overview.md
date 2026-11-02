@@ -45,6 +45,10 @@ Hono 入口在 `src/server/index.ts`。`registerHono()` 统一绑定：
 
 `makeServer()` 额外注册 `/mcp`，并将 `/.well-known/mcp/server-card.json` 重定向到 Web 站点；`makeExecutor()` 额外注册资源任务 RPC，并由 `Executor.start()` 注册每 5 分钟 fetch、每小时 sync 的 cron job。
 
+`/mcp` 使用无状态 Streamable HTTP：每个请求创建独立的 server/transport，POST 保留 SSE 响应，在流结束、取消或出错后关闭 transport 并记录完成日志；通知和 HTTP 错误在响应生成后清理。不签发 session id；GET 独立 SSE、DELETE 等非 POST 请求返回 405（`Allow: POST`），OPTIONS 仍由全局 CORS 处理。
+
+传输层 `HTTPException` 保留状态码、响应体和响应头，未知异常返回脱敏 500。完成日志记录 HTTP 方法、状态码、异常状态码、request id、UA 和耗时。HTTP 失败应按状态码统计；HTTP 200 中的 MCP `isError` / JSON-RPC 错误属于另一类失败，不能计为 HTTP 500。
+
 ## 代码逻辑分类
 
 | 目录 | 主要职责 |
