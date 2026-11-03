@@ -1,7 +1,6 @@
 # 🌸 Anime Garden for DeepSeek Harness
 
-[![DeepSeek Harness](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fregistry.npmjs.org%2Fdsh-plugin-animegarden%2Flatest&query=%24.engines.dsh&label=DeepSeek%20Harness&logo=deepseek&logoColor=white&color=4D6BFE)](https://www.npmjs.com/package/dsh-plugin-animegarden)
-[![version](https://img.shields.io/npm/v/dsh-plugin-animegarden?label=dsh-plugin-animegarden)](https://www.npmjs.com/package/dsh-plugin-animegarden)
+[![version](https://img.shields.io/npm/v/dsh-plugin-animegarden?label=dsh-plugin-animegarden&logo=deepseek&logoColor=white&color=4D6BFE)](https://www.npmjs.com/package/dsh-plugin-animegarden)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 [![License](https://img.shields.io/npm/l/dsh-plugin-animegarden)](https://github.com/yjl9903/AnimeGarden/blob/main/LICENSE)
 
@@ -10,6 +9,7 @@
 - **会话搜索**：让 AI 能搜索 Anime Garden 资源
 - **搜索面板**：输入即搜, 可按字幕组和类型筛选动画资源
 - **新番周历**：查看当季新番动画, 快速筛选动画资源
+- **浮窗播放**：播放链接直接在 DSH 内以浮窗打开, 边看边聊
 
 ## 安装
 

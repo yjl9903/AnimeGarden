@@ -1,3 +1,5 @@
+import { playbackEn, playbackZh } from './playback/i18n.js';
+
 /** Dictionary namespace owned by this plugin (shared with the sidebar entry). */
 export const NS = 'animegarden';
 
@@ -21,7 +23,7 @@ export interface LocaleHost {
   locale: LocaleService;
 }
 
-/** Simplified Chinese dictionary (the key-set source of truth). */
+/** Simplified Chinese dictionary (the panel key-set source of truth). */
 export const zh: LocaleDictionary = {
   panel: 'Anime Garden',
   title: 'Anime Garden',
@@ -67,7 +69,8 @@ export const zh: LocaleDictionary = {
   size: '大小',
   download: '下载',
   copyMagnetSuccess: '磁力链接已复制',
-  copyMagnetFailed: '复制失败，请手动复制磁力链接'
+  copyMagnetFailed: '复制失败，请手动复制磁力链接',
+  ...playbackZh
 };
 
 /** English dictionary, checked complete against the zh key set. */
@@ -116,7 +119,8 @@ export const en: LocaleDictionary = {
   size: 'Size',
   download: 'Download',
   copyMagnetSuccess: 'Magnet link copied',
-  copyMagnetFailed: 'Copy failed, copy the magnet link manually'
+  copyMagnetFailed: 'Copy failed, copy the magnet link manually',
+  ...playbackEn
 };
 
 /**

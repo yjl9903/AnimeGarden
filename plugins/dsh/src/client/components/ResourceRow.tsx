@@ -33,6 +33,7 @@ export function ResourceRow({ t, resource, onRefineFansub, onCopyMagnet }: Resou
             href={resource.keepshareUrl}
             target="_blank"
             rel="noreferrer noopener"
+            data-agp-playback-title={resource.title}
             onClick={() => track('pikpak', { resource: resourceKey, source: 'title' })}
           >
             {resource.title}
@@ -88,6 +89,7 @@ export function ResourceRow({ t, resource, onRefineFansub, onCopyMagnet }: Resou
             rel="noreferrer noopener"
             aria-label={t('play')}
             title={t('play')}
+            data-agp-playback-title={resource.title}
             onClick={() => track('pikpak', { resource: resourceKey, source: 'play' })}
           >
             <PlayIcon size={18} />

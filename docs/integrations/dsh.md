@@ -4,6 +4,7 @@
 
 - **Host 工具**：向模型注册 `animegarden_search_resources`，查询公开 API 并返回结构化结果。
 - **Client 面板**：在 Harness Web UI 的侧边栏提供搜索、筛选与周历视图。
+- **浮窗播放**：播放链接在整帧浮层中以可拖动/缩放的浮窗打开，不离开当前界面。
 
 用户安装和使用说明见 [plugins/dsh/README.md](../../plugins/dsh/README.md)；本文面向维护者，记录结构、数据流、构建与校验流程。
 
@@ -34,17 +35,18 @@ plugins/dsh/
     ├── shared/                  # Host 与 Client 共用：KeepShare、limit、资源展示与类型目录
     ├── client.ts                # 经典脚本入口，通过 __ModuleLoader__.load 注册
     └── client/
-        ├── index.ts             # 槽位注册、QueryClient 生命周期
+        ├── index.ts             # 面板槽位注册（sidebar/main）、QueryClient 生命周期
         ├── i18n.ts / ui.ts      # 文案与面板 CSS
         ├── react.ts             # 懒加载 loader 注入的 React
         ├── api/                 # animegarden / bgm / umami
-        ├── stores/panel.ts      # 交互状态（@tanstack/store）
+        ├── stores/              # panel 交互状态（@tanstack/store）
         ├── hooks/               # 查询、历史、滚动、周历等行为
-        ├── components/          # 纯展示组件
+        ├── components/          # 面板展示组件与共享图标
+        ├── playback/            # 播放浮窗独立目录：store / window / links / icons / css / i18n
         └── shim/                # 构建期 React/react-dom alias 目标
 ```
 
-Host 与 Client 共用逻辑放在 `src/shared/`，由 unbuild 分别内联进两个产物；新增工具时应按 `host/<tool>/` 独立成模块，并在 `host/index.ts` 注册。
+Host 与 Client 共用逻辑放在 `src/shared/`，由 unbuild 分别内联进两个产物；新增工具时应按 `host/<tool>/` 独立成模块，并在 `host/index.ts` 注册；Client 侧的新功能按 `client/<feature>/` 独立成目录，在 `client/index.ts` 只保留装配。
 
 ## Host：资源搜索工具
 
@@ -98,6 +100,18 @@ Markdown 渲染直接列出原始字段与生成链接（标题、来源 `provid
 
 Client 直接向 `https://umami.animes.garden/api/send` 上报，复用网站 website id、页面路径 `/_/dsh-plugin` 与 `tag: "dsh-plugin"`。事件名与字段严格复用 `apps/web/src/utils/umami.ts`：`search.trigger`、`resources.filter.click`、`pikpak`、`download`、`resources.detail.click`、`anime.calendar.click`、`error.fetch-resources`；`search.trigger` 含搜索文本。进入面板时上报一次 PV（该部署把 pageview 记录为无 `name` 的 `event`）。失败静默，不影响界面。
 
+### 浮窗播放
+
+播放链接统一由 `src/shared/keepshare.ts` 生成（`https://keepshare.cc/gv78k1oi/<编码后的 magnet 前缀>`），插件把「新标签页打开」改成 DSH 内的全局浮窗：
+
+- 浮窗注册在 `shell.overlay`（整帧浮层，位于所有列的滚动容器之外），因此切换面板、切换会话、打开设置都不影响播放；浮窗非模态，底层界面照常操作。该槽位本身 `pointer-events: none`，浮窗显式声明 `pointer-events: auto`。
+- 浮窗逻辑集中在 `src/client/playback/`（`index.ts` 装配、`store.ts` 状态、`window.tsx` 组件、`links.ts` 链接拦截、`icons.tsx`/`css.ts`/`i18n.ts` 资源）；浮窗状态在 `playback/store.ts` 的 `@tanstack/store` 单例中保存（当前 URL/标题、拖拽后的矩形、iframe 重载计数）。拖拽与缩放只更新本地 React 状态，指针抬起时才提交 store 并写入 `localStorage`（键 `animegarden.playback.geometry`）；再次打开恢复位置，并按当前视口夹取，保证标题栏始终在屏幕内。
+- `playback/links.ts` 在 `document` 上注册一次捕获阶段的 click 监听：任意 KeepShare 链接（面板标题/播放按钮、会话中模型输出的 Markdown 播放链接）都会 `preventDefault` 并转交浮窗；带修饰键或非左键的点击保持浏览器原生行为（新标签页/新窗口）。浮窗标题的优先级：面板链接的 `data-agp-playback-title`（资源标题）→ 锚点自带 `title` 属性 → 锚点文本（去掉 `▶` 前缀）；「播放 / Play / Watch」这类通用文案视为无标题，回落到本地化的「播放窗口」，不再把「播放」当资源标题。浮窗自己的「在浏览器打开」按钮带 `data-agp-playback-ignore`，跳过拦截。
+- 播放页通过 iframe 嵌入（`allow="autoplay; fullscreen; picture-in-picture; clipboard-read; clipboard-write; encrypted-media"`、`allowFullScreen`、`referrerPolicy="no-referrer"`）。KeepShare 本身没有播放器：分享就绪时服务端直接 302 到 PikPak 分享页（`https://mypikpak.com/s/<id>`，带 `act=play`）；新磁力先落在 `console/shared/status` 状态页，页面每 2s 轮询 `/api/shared_link`（最多约 20 轮 / 40s），就绪后自己 `location.href` 跳到 PikPak，跳转只改 iframe 自身、不动顶层。KeepShare 全链路与 PikPak 分享页目前都不带 `X-Frame-Options` / CSP `frame-ancestors`，可以整条链放在浮窗里；mega 后端（显式 `?host=mega`）带 `X-Frame-Options: SAMEORIGIN`，不可嵌入，而 AnimeGarden 生成的链接不带该参数。页面样式属于第三方，不继承 DSH 主题。
+- 标题栏左侧是品牌标记与资源标题，右侧只保留窗口控制：`[⋯] [最小化/还原] [关闭]`。页面级操作（重新加载、在浏览器打开）收进 `⋯` 溢出菜单（`role="menu"`，两个 `role="menuitem"`），标题栏因此只剩三个按钮、给标题留出空间；菜单在外部点击、Escape、切换页面、重新加载或最小化时关闭，Escape 会被菜单消费掉、不会连带关闭整个浮窗。关闭恒定在最右，悬停变错误色。整组带 `role="toolbar"`。拖动标题栏移动窗口；浮窗自身持有焦点时 Escape 关闭。关闭即卸载 iframe，停止播放。
+- 四角均可缩放：指针按下任意一角后，对角保持不动，横纵各自夹取最小尺寸（`MIN_PLAYBACK_WIDTH/HEIGHT`）与视口内边距，因此贴边拖拽也不会把窗口拉出屏幕。上两角用 L 形热区（`clip-path`）避开标题栏右侧按钮；角上不画任何标记，靠 `nwse/nesw-resize` 光标提示可缩放。
+- 最小化会把窗口收成右下角一条可拖动的标题条（宽度随视口、约 260–380px），只隐藏 body、不卸载 iframe，因此播放继续；标题条上只保留「还原」和「关闭」两个按钮（溢出菜单同时收起），给标题留出空间。点击标题条任意非按钮区域也会直接还原；点击与拖动用 4px 位移阈值区分——超过阈值才移动标题条，否则松手即还原，不会和拖动冲突。还原回到最小化前的窗口位置与大小，最小化条自己的位置也会记住。每次打开新的播放链接都会自动还原浮窗。
+
 ## React 注入与构建
 
 Harness 只通过 `window.__ModuleLoader__.load` 的 factory 以 `require('react')` 提供 React 18.3.1；而 `@tanstack/react-query`、`sonner` 与 JSX 运行时在源码中静态 import React。因此 `build.config.client.ts` 把：
@@ -117,7 +131,7 @@ Client 必须保持**单入口**：一旦拆成多入口，Rollup 会生成共�
 
 依赖（`@animegarden/client`、`@animegarden/shared`、`@tanstack/react-query@5.105.1`、`@tanstack/store@0.11.2`、`sonner@2.0.8` 等）全部在 `devDependencies`，unbuild 内联后**发布的 npm 包没有运行时依赖**。
 
-当前产物：`dist/client.mjs` 约 492 kB（gzip 约 114 kB），`dist/index.mjs` 约 178 kB。
+当前产物：`dist/client.mjs` 约 510 kB（gzip 约 119 kB），`dist/index.mjs` 约 178 kB。
 
 ## 配置
 
@@ -139,7 +153,7 @@ pnpm plugins:check
 
 - 本地调试：先 `build`，再从 Plugins 页面安装本地目录 `plugins/dsh/`；Host 改动需要重新构建并重启/重载插件，Client 改动需要刷新 Web 页面。
 - 重载插件可用 `plugin_manager` 的 `set_plugin` 先 disable 再 enable；Client 产物带缓存，必要时硬刷新页面。
-- 验收时至少确认：侧边栏入口与图标、搜索防抖/回车、工具栏筛选、星期悬停预览、周历切换与前进/后退、无限滚动、播放/下载/详情链接，以及新会话中模型能调用 `animegarden_search_resources`。
+- 验收时至少确认：侧边栏入口与图标、搜索防抖/回车、工具栏筛选、星期悬停预览、周历切换与前进/后退、无限滚动、播放/下载/详情链接、浮窗播放（面板与会话链接均可打开、四角缩放、最小化后继续播放、点击标题条还原、拖动标题条移动、Escape/关闭、切面板后仍保留），以及新会话中模型能调用 `animegarden_search_resources`。
 - `pnpm plugins:check` 会校验 `icon.png` / `LICENSE` 与仓库源文件一致、`package.json` 的入口 / `dsh.manifestVersion` / `engines.node` / `engines.dsh` 与 `dsh.bundle.patch`、`cordis.patch.yml` 的 id/name、`src/index.ts` / `src/client.ts` / `tsconfig.json` / `build.config.ts` 存在，以及两份 locale 可解析且非空。
 - `.husky/pre-commit` 已把 `plugins/dsh/` 纳入同步触发，并只自动暂存生成的 `icon.png` 与 `LICENSE`。
 
@@ -154,8 +168,14 @@ pnpm --filter dsh-plugin-animegarden publish --access public --no-git-checks
 
 `dist/` 不提交，`prepublishOnly` 会在发布前自动构建。发布前同步递增 `plugins/agents/plugin.json` 与 `plugins/dsh/package.json` 的版本，并按[插件主分支发布流程](./README.md#主分支发布流程)同步、检查和提交。根目录 `release` 只递增主项目的 apps/packages 版本，不修改插件版本。
 
+包内 README 与根目录 README 顶部的版本徽章使用 DeepSeek logo 与品牌色，label 为 `dsh-plugin-animegarden`，数值直接读取 npm 上的插件版本；CI 与许可证徽章与其他包一致。发版后徽章自动更新，不需要手改 README。
+
 ## 已知限制
 
-- Client 产物较大（约 492 kB，gzip 约 114 kB），主要来自内联的 `@animegarden/client`、zod、React Query、sonner、`apps/web` 搜索解析器与内嵌 Quicksand 字体子集；单入口约束下无法拆包。
+- Client 产物较大（约 510 kB，gzip 约 119 kB），主要来自内联的 `@animegarden/client`、zod、React Query、sonner、`apps/web` 搜索解析器与内嵌 Quicksand 字体子集；单入口约束下无法拆包。
 - 运行时依赖 Harness 提供的 React 18.3.1；升级到 React 19 需要重新验证 shim 的元素品牌与 `react-dom` 兼容层。
-- 未做浏览器视觉回归，浅色/深色主题与中英文界面需要人工验收。
+- 浮窗内嵌的是 KeepShare → PikPak 的第三方页面，不继承 DSH 主题；若上游将来加上 `X-Frame-Options` / CSP `frame-ancestors`，嵌入会失败，此时仍可用浮窗头部的「在浏览器打开」。
+- 新磁力第一次打开会先在 KeepShare 状态页等待 PikPak 侧转存（最多约 40s，超时后停在状态页），可用浮窗的重新加载按钮重试；PikPak 分享被删除或地区封禁时，浮窗里显示的是对方的错误页。
+- PikPak 若要求登录，第三方 iframe 内的 Google OAuth 常被浏览器拒绝，需要改用「在浏览器打开」；mega 后端链接（`?host=mega`）无法嵌入。
+- 浮窗播放依赖 iframe 的同源存储与自动播放策略；浏览器可能要求一次用户手势才允许自动播放（点击播放链接本身就是手势），静音策略、弹窗拦截等由上游页面决定。
+- 未做浏览器视觉回归，浅色/深色主题、中英文界面与浮窗交互需要人工验收。

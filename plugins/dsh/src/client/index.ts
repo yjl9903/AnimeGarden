@@ -9,6 +9,7 @@ import { setReact } from './react.js';
 import { AnimeGardenIcon } from './components/SidebarIcon.js';
 import { NS, registerLocale } from './i18n.js';
 import { createAnimeGardenPanel } from './components/AnimeGardenPanel.js';
+import { registerPlaybackFeature } from './playback/index.js';
 
 /** The id shared by the sidebar button and the `main` panel it opens. */
 export const PANEL_ID = 'animegarden';
@@ -68,6 +69,10 @@ export function createPlugin(ReactRuntime: typeof ReactNamespace): AnimeGardenPl
     apply(ctx) {
       // Dictionaries first: the sidebar reads its label through this namespace.
       const t = registerLocale(ctx);
+
+      // The floating player owns its store, overlay entry, and link routing in
+      // `./playback/`; this assembly point stays one line.
+      registerPlaybackFeature(ctx, t);
 
       // The sidebar button; its id doubles as the `main` keyed-slot key.
       ctx.slots.inject('sidebar.panellist', () =>
