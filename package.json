@@ -14,7 +14,6 @@
     "dev:server": "tsx apps/server/src/cli.ts start --port=8080",
     "dev:web": "pnpm -C apps/web dev",
     "dev:worker": "pnpm -C apps/worker dev",
-    "dsh:market": "node scripts/dsh-market.ts",
     "format": "turbo run format --parallel",
     "manager": "tsx apps/server/src/cli.ts",
     "plugins:check": "node scripts/package-plugins.ts --check",
@@ -31,7 +30,6 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "5.20261101.1",
-    "@deepseek-ai/dsh-plugin-market-index": "0.2.1-rc.5",
     "@flydotio/dockerfile": "0.7.12",
     "@total-typescript/ts-reset": "0.6.1",
     "@types/better-sqlite3": "9.6.0",

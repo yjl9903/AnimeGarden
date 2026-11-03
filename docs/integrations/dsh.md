@@ -13,12 +13,13 @@
 - 通过 npm 包名 `dsh-plugin-animegarden` 分发；Harness 从 Plugins 页面或 `plugin_manager` 的 `install_bundle` 安装。官网 `/skills` 页的「安装插件」章节提供可复制的安装提示词，由 Harness 代理调用 `plugin_manager` 完成安装。
 - 与 Codex / Cursor / Claude Code 等适配不同：这里提供原生 Host 工具和 Web UI 面板，不复用 skill 或远程 MCP。
 - 版本需与 [`plugins/agents/plugin.json`](../../plugins/agents/plugin.json) 一致；插件版本独立于主项目版本维护，不参与根目录 `release` 脚本的版本递增。
+- 兼容性：manifest 声明 `dsh.manifestVersion: 1` 与 `engines.dsh: ">=0.2.1-rc.5"`（另有 `engines.node: ">=24"`），插件管理器据此拒绝不兼容的 DSH 版本。
 
 ## 目录结构
 
 ```text
 plugins/dsh/
-├── package.json                 # manifest：exports、dsh.bundle.patch、dsh.client
+├── package.json                 # manifest：exports、dsh.manifestVersion、engines、dsh.bundle/client
 ├── cordis.patch.yml             # Loader 行：baseURL 配置
 ├── build.config.ts              # Host 构建
 ├── build.config.client.ts       # Client 构建（单入口、React alias）
@@ -139,7 +140,7 @@ pnpm plugins:check
 - 本地调试：先 `build`，再从 Plugins 页面安装本地目录 `plugins/dsh/`；Host 改动需要重新构建并重启/重载插件，Client 改动需要刷新 Web 页面。
 - 重载插件可用 `plugin_manager` 的 `set_plugin` 先 disable 再 enable；Client 产物带缓存，必要时硬刷新页面。
 - 验收时至少确认：侧边栏入口与图标、搜索防抖/回车、工具栏筛选、星期悬停预览、周历切换与前进/后退、无限滚动、播放/下载/详情链接，以及新会话中模型能调用 `animegarden_search_resources`。
-- `pnpm plugins:check` 会校验 `icon.png` / `LICENSE` 与仓库源文件一致、`package.json` 的入口与 `dsh.bundle.patch`、`cordis.patch.yml` 的 id/name、`src/index.ts` / `src/client.ts` / `tsconfig.json` / `build.config.ts` 存在，以及两份 locale 可解析且非空。
+- `pnpm plugins:check` 会校验 `icon.png` / `LICENSE` 与仓库源文件一致、`package.json` 的入口 / `dsh.manifestVersion` / `engines.node` / `engines.dsh` 与 `dsh.bundle.patch`、`cordis.patch.yml` 的 id/name、`src/index.ts` / `src/client.ts` / `tsconfig.json` / `build.config.ts` 存在，以及两份 locale 可解析且非空。
 - `.husky/pre-commit` 已把 `plugins/dsh/` 纳入同步触发，并只自动暂存生成的 `icon.png` 与 `LICENSE`。
 
 ## 发布
