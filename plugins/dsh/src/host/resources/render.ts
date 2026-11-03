@@ -63,14 +63,15 @@ export function renderMarkdown(args: unknown, value: SearchResult): ContentBlock
   if (resources.length === 0) {
     lines.push(
       search.length > 0
-        ? `未找到匹配「${search}」的资源（最多 ${limit} 条）。可尝试放宽筛选：`
-        : `未找到匹配资源（最多 ${limit} 条）。可尝试放宽筛选：`
+        ? `未找到匹配「${search}」的资源（最多 ${limit} 条）。`
+        : `未找到匹配资源（最多 ${limit} 条）。`
     );
     lines.push('');
     lines.push(`分页参数：${formatPagination(value.pagination)}`);
     lines.push(`筛选参数：${formatResolvedFilter(value.filter)}`);
     lines.push(`响应时间：\`${value.timestamp}\``);
     lines.push('');
+    lines.push('可尝试放宽筛选：');
     lines.push(...emptyResultHints(input).map((hint) => `- ${hint}`));
     return [{ type: 'text', text: lines.join('\n').trim() }];
   }
