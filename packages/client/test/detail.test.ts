@@ -83,10 +83,7 @@ describe('fetchResourceDetail', () => {
     });
 
     expect(result.ok).toBe(true);
-    expect(fetch).toHaveBeenCalledWith(
-      'https://example.com/detail/dmhy/a%2Fb',
-      expect.any(Object)
-    );
+    expect(fetch).toHaveBeenCalledWith('https://example.com/detail/dmhy/a%2Fb', expect.any(Object));
 
     // The server route receives the original id after decoding the path segment.
     const url = new URL(requestedUrl);

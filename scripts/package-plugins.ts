@@ -19,8 +19,26 @@ type PluginManifest = {
   extensions?: Record<string, unknown>;
 };
 
+/**
+ * Generated platform adapters. The DeepSeek Harness plugin package
+ * (plugins/dsh) is hand-written and published to npm, so it is validated
+ * separately and never archived here.
+ */
 const targets = ['agents', 'claude', 'antigravity'] as const;
 const marketplaceName = 'animegarden';
+
+/** Hand-written DeepSeek Harness plugin manifest; the package is published and installed by name. */
+type DshManifest = {
+  name: string;
+  version: string;
+  private?: boolean;
+  type?: string;
+  exports?: Record<string, string>;
+  dsh?: {
+    bundle?: { patch?: string };
+    client?: { platform?: string; immediately?: boolean; inject?: string[] };
+  };
+};
 
 /** Read a package tree without following links outside its installation boundary. */
 async function readTree(directory: string, prefix = ''): Promise<Map<string, Buffer>> {
@@ -41,6 +59,127 @@ async function readTree(directory: string, prefix = ''): Promise<Map<string, Buf
     }
   }
   return files;
+}
+
+/** Report whether a file exists inside the bundle. */
+async function fileExists(path: string): Promise<boolean> {
+  return readFile(path).then(
+    () => true,
+    () => false
+  );
+}
+
+/**
+ * Validate the hand-written DeepSeek Harness package and queue its generated files.
+ *
+ * The package is published to npm (name `dsh-plugin-animegarden`) and can also be installed from
+ * its built directory, so it has no marketplace entry and no ZIP archive: it must not be folded
+ * into the generated adapters below. The icon and LICENSE are copied from shared sources; the
+ * manifest, Cordis patch, locales, and src/ sources are hand-written. `dist/` is unbuild output
+ * that a clean checkout does not contain, so this check never requires it: build before installing.
+ */
+async function syncDshBundle(
+  root: string,
+  version: string,
+  icon: Buffer,
+  license: Buffer,
+  expected: Map<string, Buffer>
+): Promise<void> {
+  const directory = join(root, 'plugins/dsh');
+  const manifest: DshManifest = JSON.parse(await readFile(join(directory, 'package.json'), 'utf8'));
+  // The package ships the same version as the portable plugin so every distribution matches.
+  assert.equal(manifest.name, 'dsh-plugin-animegarden');
+  assert.equal(
+    manifest.version,
+    version,
+    'plugins/dsh version must match plugins/agents/plugin.json'
+  );
+  assert.notEqual(manifest.private, true, 'plugins/dsh must be publishable');
+  assert.equal(manifest.type, 'module', 'plugins/dsh must be an ESM package');
+
+  // Harness resolves the built Host/Client halves, icon, and locales through these subpaths.
+  const exports = manifest.exports ?? {};
+  for (const subpath of ['.', './client', './icon', './locale/*.json']) {
+    assert.equal(typeof exports[subpath], 'string', `plugins/dsh must export ${subpath}`);
+  }
+  // Runtime entries are unbuild output under dist/, not committed files.
+  for (const subpath of ['.', './client'] as const) {
+    assert(
+      exports[subpath]!.startsWith('./dist/'),
+      `plugins/dsh export ${subpath} must point at a dist/ build output`
+    );
+  }
+  // Keep the icon export name stable: the sync below writes exactly that file.
+  assert.equal(exports['./icon'], './icon.png');
+
+  const bundle = manifest.dsh;
+  assert(bundle, 'plugins/dsh/package.json must declare dsh metadata');
+  // The bundle patch inserts the Host row; it must stay a relative YAML file inside the package.
+  const patchPath = bundle?.bundle?.patch;
+  assert.equal(typeof patchPath, 'string', 'dsh.bundle.patch must be a relative YAML path');
+  assert.match(patchPath!, /^\.\/[\w./-]+\.ya?ml$/);
+  assert(!patchPath!.split('/').includes('..'), 'dsh.bundle.patch must stay inside the package');
+  const patch = await readFile(join(directory, patchPath!.slice(2)), 'utf8');
+  // The Client half renders a Web UI panel and is injected immediately with its host modules.
+  assert.equal(bundle?.client?.platform, 'web', "dsh.client.platform must be 'web'");
+  if (bundle?.client?.immediately !== undefined) {
+    assert.equal(
+      typeof bundle.client.immediately,
+      'boolean',
+      'dsh.client.immediately must be boolean'
+    );
+  }
+  if (bundle?.client?.inject !== undefined) {
+    assert(
+      Array.isArray(bundle.client.inject) &&
+        bundle.client.inject.length > 0 &&
+        bundle.client.inject.every((name) => typeof name === 'string' && name.length > 0),
+      'dsh.client.inject must list Client module package names'
+    );
+  }
+
+  // One inserted Host row; ids and package name are also referenced by the Client and docs.
+  assert(patch.includes('id: animegarden'), 'cordis.patch.yml must insert the animegarden row');
+  assert(
+    patch.includes('name: dsh-plugin-animegarden'),
+    'cordis.patch.yml must reference the dsh-plugin-animegarden package'
+  );
+
+  // Hand-written TypeScript sources and their unbuild config; the published runtime files are
+  // built from them. `src/client/` modules are bundled into the Client entry, not checked here.
+  for (const name of ['src/index', 'src/client']) {
+    let found = false;
+    for (const candidate of [`${name}.ts`, `${name}.js`]) {
+      if (await fileExists(join(directory, candidate))) found = true;
+    }
+    assert(found, `Missing plugin source: plugins/dsh/${name}.ts`);
+  }
+  assert(
+    await fileExists(join(directory, 'tsconfig.json')),
+    'Missing TypeScript config: plugins/dsh/tsconfig.json'
+  );
+  // unbuild accepts either a TypeScript or a JavaScript build config.
+  let hasBuildConfig = false;
+  for (const name of ['build.config.ts', 'build.config.mjs', 'build.config.js']) {
+    if (await fileExists(join(directory, name))) hasBuildConfig = true;
+  }
+  assert(hasBuildConfig, 'Missing unbuild config: plugins/dsh/build.config.ts');
+
+  // Plugin Manager reads display metadata without activating the plugin; keep both locales filled.
+  for (const language of ['en', 'zh']) {
+    const locale = JSON.parse(await readFile(join(directory, `locale/${language}.json`), 'utf8'));
+    for (const field of ['title', 'description']) {
+      const value = locale.meta?.[field];
+      assert(
+        typeof value === 'string' && value.trim().length > 0,
+        `plugins/dsh/locale/${language}.json needs a non-empty meta.${field}`
+      );
+    }
+  }
+
+  // The web app icon and repository LICENSE stay the single sources; regenerate their copies.
+  expected.set('plugins/dsh/icon.png', icon);
+  expected.set('plugins/dsh/LICENSE', license);
 }
 
 /** Generate platform adapters and catalogs; --check compares bytes without changing files. */
@@ -71,6 +210,8 @@ export async function syncPlugins(root: string, check = false): Promise<void> {
   const icon = await readFile(join(root, 'apps/web/public/pwa-512x512.png'));
   expected.set('plugins/agents/assets/icon.png', icon);
   expected.set('plugins/claude/assets/icon.png', icon);
+  // The npm-published Harness package carries the repository license next to its manifest.
+  const license = await readFile(join(root, 'LICENSE'));
   const json = (path: string, value: unknown) => {
     expected.set(path, Buffer.from(JSON.stringify(value, null, 2) + '\n'));
   };
@@ -126,6 +267,8 @@ export async function syncPlugins(root: string, check = false): Promise<void> {
     metadata: { description: 'Anime Garden skills and remote MCP for Cursor.' },
     plugins: [{ name: manifest.name, source: 'plugins/agents', description: manifest.description }]
   });
+  // The hand-written Harness bundle only needs its icon synced; the rest is contract-checked.
+  await syncDshBundle(root, manifest.version, icon, license, expected);
 
   const obsolete: string[] = [];
   // Prune removed skill references, but never silently delete hand-written package files.

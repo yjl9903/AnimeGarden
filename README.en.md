@@ -28,6 +28,12 @@ A third-party [mirror](https://animes.garden) of [動漫花園](https://share.dm
 
 Install the plugin for your Agent client.
 
+**DeepSeek Harness**
+
+Install the npm package `dsh-plugin-animegarden` from the DeepSeek Harness Plugins page.
+
+After installation, an Anime Garden entry appears in the sidebar, and you can search anime resources from Anime Garden in the conversation.
+
 **Codex**
 
 ```bash

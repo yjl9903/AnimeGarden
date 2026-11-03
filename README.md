@@ -28,6 +28,12 @@
 
 选择你使用的 Agent 客户端安装插件.
 
+**DeepSeek Harness**
+
+在 DeepSeek Harness 的插件页面安装 npm 包 `dsh-plugin-animegarden`.
+
+安装成功后, 侧边栏出现 Anime Garden 入口, 对话时可以从 Anime Garden 上检索动画资源.
+
 **Codex**
 
 ```bash

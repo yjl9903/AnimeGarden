@@ -35,8 +35,7 @@ export const defineFeedRoutes = defineHandler((sys, app) =>
         const ifNoneMatch = ctx.req.header('If-None-Match');
         const modifiedSince = Date.parse(ctx.req.header('If-Modified-Since') ?? '');
         // HTTP dates cannot distinguish revisions generated within the same second.
-        const dateValidatorSafe =
-          feed.changedAt !== undefined && feed.changedAt < lastModifiedAt;
+        const dateValidatorSafe = feed.changedAt !== undefined && feed.changedAt < lastModifiedAt;
         // If-None-Match takes precedence, even when none of its tags match.
         const unchanged =
           ifNoneMatch !== undefined

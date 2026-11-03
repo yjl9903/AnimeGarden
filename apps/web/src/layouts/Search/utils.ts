@@ -10,6 +10,10 @@ import { PRESET_DISPLAY_NAME } from '../../utils/constants';
 import { getSubjectDisplayName, type SubjectInfo } from '../../utils/subject';
 import { subjectQueryOptions, subjectsByNameQueryOptions } from '../../query/subject';
 
+import { parseSearchInput } from './parse';
+
+export { parseSearchInput };
+
 export const DMHY_RE = /(?:https:\/\/share.dmhy.org\/topics\/view\/)?(\d+_[a-zA-Z0-9_\-]+\.html)/;
 
 // TODO: support other mikan url
@@ -38,154 +42,6 @@ export function matchDirectDetailURL(search: string) {
 
 export function isDirectDetailURL(search: string) {
   return matchDirectDetailURL(search) !== undefined;
-}
-
-export function parseSearchInput(input: string) {
-  function splitWords(search: string) {
-    const matchQuotes = {
-      '"': ['"'],
-      "'": ["'"],
-      '“': ['”'],
-      '”': ['“']
-    };
-
-    const words: string[] = [];
-    let i = 0;
-    while (i < search.length) {
-      // Skip whitespaces
-      while (i < search.length && /\s/.test(search[i])) i++;
-      if (i >= search.length) break;
-
-      let j = i;
-      let word = '';
-      while (j < search.length && !/\s/.test(search[j])) {
-        if (Object.keys(matchQuotes).includes(search[j])) {
-          // Split by quote "..." or '...'
-          const quote = matchQuotes[search[j] as keyof typeof matchQuotes];
-          j++;
-          let k = j;
-          while (k < search.length) {
-            if (quote.includes(search[k])) {
-              break;
-            } else if (search[k] === '\\' && k + 1 < search.length) {
-              word += search[++k];
-            } else {
-              word += search[k];
-            }
-            k++;
-          }
-          // j -> quote
-          j = k;
-        } else if (search[j] === '\\' && j + 1 < search.length) {
-          // \"
-          j++;
-          word += search[j];
-        } else {
-          // otherwise
-          word += search[j];
-        }
-
-        j++;
-      }
-
-      words.push(word);
-      i = j;
-    }
-    return words;
-  }
-
-  const splitted = splitWords(input);
-
-  const subjects: string[] = [];
-
-  const search: string[] = [];
-  const include: string[] = [];
-  const keywords: string[] = [];
-  const exclude: string[] = [];
-
-  const publishers: string[] = [];
-  const fansubs: string[] = [];
-  const types: string[] = [];
-  const after: Date[] = [];
-  const before: Date[] = [];
-  const presets: PresetType[] = [];
-
-  const handlers: Record<string, (word: string) => void> = {
-    'subject:,动画:': (word) => {
-      subjects.push(word);
-    },
-    'title:,标题:,匹配:': (word) => {
-      include.push(word);
-    },
-    '+,include:,包含:': (word) => {
-      keywords.push(word);
-    },
-    '!,！,-,exclude:,排除:': (word) => {
-      exclude.push(word);
-    },
-    'user:,publisher:,发布:,发布者:,发布人:': (word) => {
-      publishers.push(word);
-    },
-    'team:,fansub:,字幕:,字幕组:': (word) => {
-      fansubs.push(word);
-    },
-    '>=,>,after:,开始:,晚于:': (word) => {
-      after.push(new Date(word));
-    },
-    '<=,<,before:,结束:,早于:': (word) => {
-      before.push(new Date(word));
-    },
-    'type:,类型:': (word) => {
-      types.push(word);
-    },
-    'preset:,预设:': (word) => {
-      for (const [key, name] of Object.entries(PRESET_DISPLAY_NAME)) {
-        if (name === word || name === key) {
-          presets.push(key as PresetType);
-          break;
-        }
-      }
-    }
-  };
-
-  for (const word of splitted) {
-    let found = false;
-    for (const [keys, handler] of Object.entries(handlers)) {
-      for (const key of keys.split(',')) {
-        if (word.startsWith(key) || word.startsWith(key.replace(':', '：'))) {
-          const text = word.slice(key.length);
-          if (text.length > 0) {
-            handler(text);
-            found = true;
-            break;
-          }
-        }
-      }
-      if (found) break;
-    }
-    if (!found) {
-      search.push(word.replace(/\+/g, '%2b'));
-    }
-  }
-
-  if (include.length > 0 || keywords.length > 0 || exclude.length > 0) {
-    include.push(...search);
-    search.splice(0, search.length);
-  }
-
-  return {
-    search,
-    include,
-    keywords,
-    exclude,
-    subjects,
-    publishers,
-    fansubs,
-    after: after.at(-1),
-    before: before.at(-1),
-    types,
-    preset: presets.at(-1)
-  };
 }
 
 export function stringifySearchText(

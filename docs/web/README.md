@@ -20,6 +20,8 @@
 ## 维护约定
 
 - 前端布局与文案遵循 [前端开发规范](../../apps/web/AGENTS.md)：避免不必要的次级标签和说明，让布局本身表达关系与操作。
+- 搜索框的人类可读语法（普通词、`+词`/`-词` 与 `字幕组:`、`类型:` 等前缀操作符）由 [`apps/web/src/layouts/Search/parse.ts`](../../apps/web/src/layouts/Search/parse.ts) 的 `parseSearchInput` 解析（`Search/utils.ts` 继续 re-export）；网站搜索页与 DeepSeek Harness 插件面板都以相对路径复用该模块，修改语法时需同时验证这两处。
+- 同模块的 `setSearchFilters(text, filters)` 通过对象设置动画、字幕组和类型筛选：未提供的字段保持不变，提供的字段整体覆盖，空数组清除。它覆盖所有语法别名并保留其他 token 的原始引号和转义；插件的工具栏筛选复用此方法。
 
 - 新增埋点时记录事件名、触发场景、属性和接入位置。
 - 同类行为优先复用统一事件名和属性结构。

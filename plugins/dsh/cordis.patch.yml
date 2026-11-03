@@ -1,0 +1,10 @@
+# AnimeGarden search for DeepSeek Harness.
+#
+# One Host row registers the `animegarden_search` tool and shares the same
+# public API defaults with the Web UI panel; the Client half is served from
+# this package's `./client` export.
+- insert:
+  - id: animegarden
+    name: dsh-plugin-animegarden
+    config:
+      baseURL: https://api.animes.garden
