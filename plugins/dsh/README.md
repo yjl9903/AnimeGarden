@@ -24,6 +24,8 @@
 
 安装后, 侧边栏出现 🌸 Anime Garden.
 
+[![dsh-plugin](https://github.com/yjl9903/AnimeGarden/raw/main/assets/dsh-plugin.png)](https://www.npmjs.com/package/dsh-plugin-animegarden)
+
 ## 配置
 
 插件行为可以在 Loader 行的 `config` 里开关 (默认值如下), 修改后需要重载插件并刷新页面:
