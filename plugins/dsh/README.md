@@ -1,5 +1,10 @@
 # 🌸 Anime Garden for DeepSeek Harness
 
+[![DeepSeek Harness](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fregistry.npmjs.org%2Fdsh-plugin-animegarden%2Flatest&query=%24.engines.dsh&label=DeepSeek%20Harness&logo=deepseek&logoColor=white&color=4D6BFE)](https://github.com/deepseek-ai/deepseek-harness)
+[![version](https://img.shields.io/npm/v/dsh-plugin-animegarden?label=dsh-plugin-animegarden)](https://www.npmjs.com/package/dsh-plugin-animegarden)
+[![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
+[![License](https://img.shields.io/npm/l/dsh-plugin-animegarden)](https://github.com/yjl9903/AnimeGarden/blob/main/LICENSE)
+
 在 DeepSeek Harness 里搜索 Anime Garden 的动画 BT 资源.
 
 - **会话搜索**：让 AI 能搜索 Anime Garden 资源
