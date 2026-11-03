@@ -45,7 +45,11 @@ export function renderSkillsMarkdown(): MarkdownResult {
       .join('') +
     heading(2, '安装插件') +
     pluginOptions
-      .map((option) => heading(3, option.name) + `\`\`\`sh\n${option.content}\n\`\`\`\n\n`)
+      .map(
+        (option) =>
+          heading(3, option.name) +
+          `\`\`\`${option.kind === 'command' ? 'sh' : 'text'}\n${option.content}\n\`\`\`\n\n`
+      )
       .join('') +
     heading(2, '试着问它') +
     examples

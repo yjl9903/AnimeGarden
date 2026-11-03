@@ -153,7 +153,7 @@ track('nav.click.anime', { item: '动画标题', group: '周一' });
 
 - `kind = prompt / command / example`：分别表示提示词、安装命令和使用示例。
 - `source = hero / online / local`：分别表示首屏对话、直接使用、安装 Skill。
-- `source = mcp.codex / mcp.claude / plugin.codex / plugin.claude`：区分 MCP、插件安装及所选客户端。
+- `source = mcp.codex / mcp.claude / plugin.dsh / plugin.codex / plugin.claude`：区分 MCP、插件安装及所选客户端。
 - `source = example`：试着问它；`example` 为示例标题。
 - 仅在剪贴板写入成功后上报，复制失败不记录；不上传完整提示词、命令或示例正文。
 - 接入位置：`src/pages/skills/route.tsx` 的 `CopyButton`，调用 `track('skills.copy', payload)`。

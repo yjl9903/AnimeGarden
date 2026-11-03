@@ -177,6 +177,10 @@ describe('markdown responses', () => {
         'npx skills add https://github.com/yjl9903/AnimeGarden --skill animegarden'
       );
       expect(body).toContain('codex plugin add animegarden@animegarden');
+      expect(body).toContain('\n### DeepSeek Harness\n');
+      expect(body).toContain(
+        '```text\n从 npm 安装最新版 dsh-plugin-animegarden 到当前运行的 DeepSeek Harness\n```'
+      );
       expect(body).toContain('\n## 安装 MCP\n');
       expect(body.indexOf('## 安装 MCP')).toBeGreaterThan(body.indexOf('## 安装 Skill'));
       expect(body.indexOf('## 安装 MCP')).toBeLessThan(body.indexOf('## 安装插件'));

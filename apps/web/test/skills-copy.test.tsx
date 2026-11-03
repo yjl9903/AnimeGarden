@@ -45,7 +45,7 @@ describe('Skills copy buttons', () => {
     { selector: '#install-skill', kind: 'command', source: 'local' },
     { selector: '#install-mcp', kind: 'command', source: 'mcp.codex' },
     { selector: '#install-mcp', kind: 'command', source: 'mcp.claude', tab: 'Claude Code' },
-    { selector: '#install', kind: 'command', source: 'plugin.codex' },
+    { selector: '#install', kind: 'command', source: 'plugin.codex', tab: 'Codex' },
     { selector: '#install', kind: 'command', source: 'plugin.claude', tab: 'Claude Code' },
     {
       selector: '.skills-example',
@@ -71,6 +71,21 @@ describe('Skills copy buttons', () => {
       ...(example ? { example } : {})
     });
     expect(section.querySelector('.skills-copy')?.getAttribute('aria-label')).toBe('已复制');
+  });
+
+  it('onboards DeepSeek Harness by copying its install prompt', async () => {
+    const section = container.querySelector('#install')!;
+    const prompt = '从 npm 安装最新版 dsh-plugin-animegarden 到当前运行的 DeepSeek Harness';
+
+    expect(section.querySelector('.skills-online-prompt')?.textContent).toBe(prompt);
+
+    await act(async () => section.querySelector<HTMLButtonElement>('.skills-copy')!.click());
+
+    expect(writeText).toHaveBeenCalledExactlyOnceWith(prompt);
+    expect(track).toHaveBeenCalledExactlyOnceWith('skills.copy', {
+      kind: 'prompt',
+      source: 'plugin.dsh'
+    });
   });
 
   it('waits for clipboard success before tracking', async () => {

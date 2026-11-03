@@ -16,6 +16,7 @@ describe('Skills copy tracking', () => {
     { kind: 'command', source: 'local' },
     { kind: 'command', source: 'mcp.codex' },
     { kind: 'command', source: 'plugin.claude' },
+    { kind: 'prompt', source: 'plugin.dsh' },
     { kind: 'example', source: 'example', example: '找一部动画' }
   ])('sends only copy metadata for $source', (payload) => {
     const send = vi.fn();

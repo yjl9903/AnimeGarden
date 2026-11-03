@@ -42,8 +42,14 @@ export const mcpOptions: readonly SetupOption[] = [
   }
 ];
 
-/** Plugin installation commands mirror the repository README. */
+/** Plugin installation mirrors the repository README; DeepSeek Harness installs through its agent. */
 export const pluginOptions: readonly SetupOption[] = [
+  {
+    id: 'dsh',
+    name: 'DeepSeek Harness',
+    content: '从 npm 安装最新版 dsh-plugin-animegarden 到当前运行的 DeepSeek Harness',
+    kind: 'prompt'
+  },
   {
     id: 'codex',
     name: 'Codex',

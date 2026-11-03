@@ -10,7 +10,7 @@
 ## 定位
 
 - 手写维护源，位于 pnpm workspace 的 [`plugins/dsh/`](../../plugins/dsh/package.json)，不从 `plugins/agents/plugin.json` 生成，也不进入 `pnpm plugins:pack` 的归档。
-- 通过 npm 包名 `dsh-plugin-animegarden` 分发；Harness 从 Plugins 页面或 `plugin_manager` 的 `install_bundle` 安装。
+- 通过 npm 包名 `dsh-plugin-animegarden` 分发；Harness 从 Plugins 页面或 `plugin_manager` 的 `install_bundle` 安装。官网 `/skills` 页的「安装插件」章节提供可复制的安装提示词，由 Harness 代理调用 `plugin_manager` 完成安装。
 - 与 Codex / Cursor / Claude Code 等适配不同：这里提供原生 Host 工具和 Web UI 面板，不复用 skill 或远程 MCP。
 - 版本需与 [`plugins/agents/plugin.json`](../../plugins/agents/plugin.json) 一致；插件版本独立于主项目版本维护，不参与根目录 `release` 脚本的版本递增。
 
