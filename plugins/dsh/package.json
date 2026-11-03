@@ -56,12 +56,14 @@
     "sonner": "2.0.8"
   },
   "engines": {
-    "node": ">=24.0.0"
+    "node": ">=24",
+    "dsh": ">=0.2.1-rc.5"
   },
   "publishConfig": {
     "access": "public"
   },
   "dsh": {
+    "manifestVersion": 1,
     "bundle": {
       "patch": "./cordis.patch.yml"
     },

@@ -34,7 +34,9 @@ type DshManifest = {
   private?: boolean;
   type?: string;
   exports?: Record<string, string>;
+  engines?: { node?: string; dsh?: string };
   dsh?: {
+    manifestVersion?: number;
     bundle?: { patch?: string };
     client?: { platform?: string; immediately?: boolean; inject?: string[] };
   };
@@ -114,6 +116,14 @@ async function syncDshBundle(
 
   const bundle = manifest.dsh;
   assert(bundle, 'plugins/dsh/package.json must declare dsh metadata');
+  // Declare the manifest format and the DSH versions this package supports; old hosts must reject it.
+  assert.equal(bundle?.manifestVersion, 1, 'dsh.manifestVersion must be 1');
+  assert.equal(typeof manifest.engines?.node, 'string', 'engines.node must be declared');
+  assert.equal(typeof manifest.engines?.dsh, 'string', 'engines.dsh must be declared');
+  assert(
+    manifest.engines.dsh.trim().length > 0,
+    'engines.dsh must contain a compatible DSH version range'
+  );
   // The bundle patch inserts the Host row; it must stay a relative YAML file inside the package.
   const patchPath = bundle?.bundle?.patch;
   assert.equal(typeof patchPath, 'string', 'dsh.bundle.patch must be a relative YAML path');
