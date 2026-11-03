@@ -17,8 +17,8 @@ import { SupportPresets, SupportProviders } from '@animegarden/client';
 
 import { RESOURCE_TYPE_VALUES } from '../../shared/resource';
 
-/** Name of the resource-search tool exposed to models. */
-export const SEARCH_RESOURCES_TOOL_NAME = 'animegarden_search_resources';
+/** Name of the resource-search tool exposed to models (shared with the Client card). */
+export { SEARCH_RESOURCES_TOOL_NAME } from '../../shared/tool';
 
 /**
  * Model-facing tool description: purpose, returned shape, filter-combination

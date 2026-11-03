@@ -602,6 +602,9 @@ export const PANEL_CSS: string = `
   background: transparent;
   border: none;
 }
+a.agp-icon-link {
+  text-decoration: none;
+}
 .agp-icon-link:hover {
   color: var(--dsw-alias-label-primary);
   background: var(--dsw-alias-interactive-bg-hover);

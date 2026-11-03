@@ -3,8 +3,19 @@
 # One Host row registers the `animegarden_search_resources` tool and shares the same
 # public API defaults with the Web UI panel; the Client half is served from
 # this package's `./client` export.
+#
+# The browser options below are resolved by the Host and injected into the page
+# before the app boots, so changing them needs a plugin reload and a page
+# refresh. A profile patch that overrides this row replaces the complete config,
+# so repeat `baseURL` when overriding it there.
 - insert:
-  - id: animegarden
-    name: dsh-plugin-animegarden
-    config:
-      baseURL: https://api.animes.garden
+    - id: animegarden
+      name: dsh-plugin-animegarden
+      config:
+        baseURL: https://api.animes.garden
+        # KeepShare playback links open in the in-app floating player; false keeps
+        # the browser's native new-tab behavior.
+        embeddedPlayback: true
+        # Magnet links are handed to the OS default BitTorrent client; false
+        # restores the panel/card "copy magnet link" action.
+        openMagnet: true

@@ -5,6 +5,8 @@ import { track } from '../api/umami.js';
 import { getReact } from '../react.js';
 import { formatChinaTime } from '../api/animegarden.js';
 
+import { getPluginOptions } from '../options.js';
+
 import { DownloadIcon, LaunchIcon, PlayIcon } from './icons.js';
 
 /** Props for one resource row. */
@@ -21,6 +23,8 @@ export function ResourceRow({ t, resource, onRefineFansub, onCopyMagnet }: Resou
   const tag = resource.fansub === '' ? resource.publisher : resource.fansub;
   const typeLabel = resource.typeKey !== '' ? t(`type.${resource.typeKey}`) : resource.type;
   const resourceKey = `${resource.provider}:${resource.providerId}`;
+  // `openMagnet: false` restores the copy action this row had before magnet opening existed.
+  const openMagnet = getPluginOptions().openMagnet;
 
   return (
     <li className="agp-row">
@@ -95,7 +99,26 @@ export function ResourceRow({ t, resource, onRefineFansub, onCopyMagnet }: Resou
             <PlayIcon size={18} />
           </a>
         )}
-        {resource.magnet === '' ? null : (
+        {resource.magnet === '' ? null : openMagnet ? (
+          <a
+            className="agp-icon-link"
+            href={resource.magnet}
+            // Keep in sync with MAGNET_LINK_ATTRIBUTE in client/magnet/index.ts.
+            data-agp-magnet-link="true"
+            aria-label={t('openMagnet')}
+            title={t('openMagnetHint')}
+            onClick={(event) => {
+              track('download', { resource: resourceKey, source: 'download' });
+              // Plain clicks are routed by the global magnet interceptor; a
+              // modified click copies the link instead of navigating to it.
+              if (!event.metaKey && !event.ctrlKey && !event.shiftKey) return;
+              event.preventDefault();
+              onCopyMagnet(resource.magnet);
+            }}
+          >
+            <DownloadIcon size={18} />
+          </a>
+        ) : (
           <button
             type="button"
             className="agp-icon-link"
@@ -103,8 +126,8 @@ export function ResourceRow({ t, resource, onRefineFansub, onCopyMagnet }: Resou
               track('download', { resource: resourceKey, source: 'download' });
               onCopyMagnet(resource.magnet);
             }}
-            aria-label={t('download')}
-            title={t('download')}
+            aria-label={t('copyMagnet')}
+            title={t('copyMagnet')}
           >
             <DownloadIcon size={18} />
           </button>

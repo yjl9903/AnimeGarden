@@ -4,7 +4,9 @@
  * Registers the bundle's Host surface: the `animegarden_search_resources` agent
  * tool (queries the public AnimeGarden API at https://api.animes.garden, no
  * authentication, and returns a Markdown table with a KeepShare playback link
- * and a magnet download link per resource) and the same-origin
+ * and a magnet download link per resource) and, in browser profiles, the
+ * same-origin `POST /plugins/dsh-plugin-animegarden/open-magnet` route that
+ * hands a magnet URI to the OS default BitTorrent client.
  *
  * This entry only exports the Cordis plugin shape; the implementation lives in
  * `./host/`, where each capability keeps its schema, argument mapping, API
@@ -21,7 +23,7 @@ import { resolveOptions } from './host/shared/options';
 /** Cordis plugin name used by Loader diagnostics. */
 export const name = 'animegarden';
 
-/** Host services this plugin needs: the tool registry and the web server. */
+/** Host services this plugin needs: the tool registry (web route services are optional). */
 export const inject = ['tools'];
 
 /**

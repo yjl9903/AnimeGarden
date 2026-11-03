@@ -1,7 +1,6 @@
 import type { QueryClient } from '@tanstack/react-query';
 
 import { QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'sonner';
 
 import type { TranslateFunction } from '../i18n.js';
 
@@ -238,7 +237,6 @@ function AnimeGardenPanelContent({ t: translate }: AnimeGardenPanelProps) {
           )}
         </div>
       </div>
-      <Toaster position="bottom-right" theme="system" />
     </div>
   );
 }
