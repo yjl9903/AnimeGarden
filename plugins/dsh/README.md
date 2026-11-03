@@ -1,6 +1,6 @@
 # 🌸 Anime Garden for DeepSeek Harness
 
-[![DeepSeek Harness](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fregistry.npmjs.org%2Fdsh-plugin-animegarden%2Flatest&query=%24.engines.dsh&label=DeepSeek%20Harness&logo=deepseek&logoColor=white&color=4D6BFE)](https://github.com/deepseek-ai/deepseek-harness)
+[![DeepSeek Harness](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fregistry.npmjs.org%2Fdsh-plugin-animegarden%2Flatest&query=%24.engines.dsh&label=DeepSeek%20Harness&logo=deepseek&logoColor=white&color=4D6BFE)](https://www.npmjs.com/package/dsh-plugin-animegarden)
 [![version](https://img.shields.io/npm/v/dsh-plugin-animegarden?label=dsh-plugin-animegarden)](https://www.npmjs.com/package/dsh-plugin-animegarden)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 [![License](https://img.shields.io/npm/l/dsh-plugin-animegarden)](https://github.com/yjl9903/AnimeGarden/blob/main/LICENSE)
@@ -15,7 +15,9 @@
 
 把下面这句发给你的 DeepSeek Harness:
 
-> 从 npm 安装最新版 dsh-plugin-animegarden 到当前运行的 DeepSeek Harness
+```text
+从 npm 安装最新版 dsh-plugin-animegarden 到当前运行的 DeepSeek Harness
+```
 
 也可以手动安装: **Plugins → Add plugin** 输入包名, 或执行 `dsh plugin add dsh-plugin-animegarden`.
 

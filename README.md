@@ -1,7 +1,7 @@
 # 🌸 Anime Garden
 
 [![Group](https://img.shields.io/badge/Telegram-2CA5E0?style=flat&logo=telegram&logoColor=white)](https://t.me/animegarden_dev)
-[![DeepSeek Harness](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fregistry.npmjs.org%2Fdsh-plugin-animegarden%2Flatest&query=%24.engines.dsh&label=DeepSeek%20Harness&logo=deepseek&logoColor=white&color=4D6BFE)](https://github.com/deepseek-ai/deepseek-harness)
+[![DeepSeek Harness](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fregistry.npmjs.org%2Fdsh-plugin-animegarden%2Flatest&query=%24.engines.dsh&label=DeepSeek%20Harness&logo=deepseek&logoColor=white&color=4D6BFE)](https://www.npmjs.com/package/dsh-plugin-animegarden)
 [![version](https://img.shields.io/npm/v/@animegarden/client?label=@animegarden/client)](https://www.npmjs.com/package/@animegarden/client)
 [![CI](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/AnimeGarden/actions/workflows/ci.yml)
 [![Ask DeepWiki](./assets/deepwiki.svg)](https://deepwiki.com/yjl9903/AnimeGarden)
@@ -31,9 +31,11 @@
 
 **DeepSeek Harness**
 
-在 DeepSeek Harness 的插件页面安装 npm 包 `dsh-plugin-animegarden`.
+把下面这句发给你的 DeepSeek Harness:
 
-安装成功后, 侧边栏出现 Anime Garden 入口, 对话时可以从 Anime Garden 上检索动画资源.
+```text
+从 npm 安装最新版 dsh-plugin-animegarden 到当前运行的 DeepSeek Harness
+```
 
 **Codex**
 
