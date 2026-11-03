@@ -45,9 +45,10 @@ const chatApps = [
   {
     id: 'deepseek',
     name: 'DeepSeek',
-    mode: 'copy',
+    mode: 'prefill',
     icon: 'i-simple-icons-deepseek',
-    href: 'https://chat.deepseek.com/'
+    // The web client consumes q at the root route; omit autosend for an editable draft.
+    href: (prompt: string) => `https://chat.deepseek.com/?${new URLSearchParams({ q: prompt })}`
   },
   {
     id: 'doubao',

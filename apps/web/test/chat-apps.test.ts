@@ -19,7 +19,11 @@ describe('chat app prompt links', () => {
         expect(app.prompt).toBe(
           prompt.replace(skillURL, app.name === '智谱清言' ? rawURL : githubURL)
         );
-        expect(new URL(app.href).search).toBe('');
+        if (app.name === 'DeepSeek') {
+          expect(new URL(app.href).searchParams.get('q')).toBe(app.prompt);
+        } else {
+          expect(new URL(app.href).search).toBe('');
+        }
       } else {
         expect(app.prompt).toBe(prompt);
       }
@@ -39,7 +43,7 @@ describe('chat app prompt links', () => {
     expect(new URL(claude.href).searchParams.get('q')).toBe(expectedPrompt);
     expect(claude.prompt).toBe(expectedPrompt);
     expect(deepseek.prompt).toBe(expectedPrompt);
-    expect(new URL(deepseek.href).search).toBe('');
+    expect(new URL(deepseek.href).searchParams.get('q')).toBe(expectedPrompt);
     expect(apps.find((app) => app.name === 'ChatGPT')!.prompt).toBe(prompt);
   });
 
@@ -51,12 +55,19 @@ describe('chat app prompt links', () => {
   it('preserves Markdown links, Chinese and reserved characters in each app parameter', () => {
     const prompt = `${skillPrompt}\n请保留 A&B + #1 / 100%`;
     const links = getChatAppLinks(prompt).filter((app) => app.mode === 'prefill');
-    expect(links.map((app) => app.name)).toEqual(['ChatGPT', 'Codex', 'Claude', 'Cursor']);
+    expect(links.map((app) => app.name)).toEqual([
+      'ChatGPT',
+      'Codex',
+      'Claude',
+      'Cursor',
+      'DeepSeek'
+    ]);
     const expected = [
       ['https:', 'chatgpt.com', '/', 'prompt'],
       ['codex:', 'new', '', 'prompt'],
       ['https:', 'claude.ai', '/new', 'q'],
-      ['https:', 'cursor.com', '/link/prompt', 'text']
+      ['https:', 'cursor.com', '/link/prompt', 'text'],
+      ['https:', 'chat.deepseek.com', '/', 'q']
     ];
     links.forEach((app, index) => {
       const url = new URL(app.href);
@@ -64,10 +75,11 @@ describe('chat app prompt links', () => {
       expect(url.protocol).toBe(protocol);
       expect(url.hostname).toBe(hostname);
       expect(url.pathname).toBe(pathname);
-      expect(url.searchParams.get(parameter)).toBe(prompt);
+      expect(url.searchParams.get(parameter)).toBe(app.prompt);
       expect(url.hash).toBe('');
     });
     expect(new URL(links[0].href).searchParams.get('surface')).toBe('work');
     expect(new URL(links[0].href).searchParams.has('hints')).toBe(false);
+    expect([...new URL(links[4].href).searchParams.keys()]).toEqual(['q']);
   });
 });

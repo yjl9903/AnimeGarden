@@ -45,16 +45,9 @@ describe('clipboard app handoff', () => {
     expect(assign).toHaveBeenCalledWith('https://www.kimi.com/');
   });
 
-  it('keeps clipboard prompts out of domestic app URLs', () => {
+  it('keeps clipboard prompts out of copy-only app URLs', () => {
     const apps = getChatAppLinks('private prompt').filter((app) => app.mode === 'copy');
-    expect(apps.map((app) => app.name)).toEqual([
-      'DeepSeek',
-      '豆包',
-      '千问',
-      'Kimi',
-      '智谱清言',
-      'MiniMax'
-    ]);
+    expect(apps.map((app) => app.name)).toEqual(['豆包', '千问', 'Kimi', '智谱清言', 'MiniMax']);
     for (const app of apps) {
       expect(new URL(app.href).protocol).toBe('https:');
       expect(new URL(app.href).search).toBe('');
