@@ -37,6 +37,8 @@
 从 npm 安装最新版 dsh-plugin-animegarden 到当前运行的 DeepSeek Harness
 ```
 
+[![dsh-plugin](./assets/dsh-plugin.png)](https://www.npmjs.com/package/dsh-plugin-animegarden)
+
 **Codex**
 
 ```bash

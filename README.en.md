@@ -37,6 +37,8 @@ Send this prompt to your DeepSeek Harness:
 Install the latest dsh-plugin-animegarden from npm into the running DeepSeek Harness
 ```
 
+[![dsh-plugin](./assets/dsh-plugin.png)](https://www.npmjs.com/package/dsh-plugin-animegarden)
+
 **Codex**
 
 ```bash
