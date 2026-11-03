@@ -145,6 +145,9 @@ pnpm plugins:check
 ## 发布
 
 ```sh
+# 首次发布前先登录 npm（或配置有效的 NPM_TOKEN）
+npm login
+
 pnpm --filter dsh-plugin-animegarden publish --access public --no-git-checks
 ```
 

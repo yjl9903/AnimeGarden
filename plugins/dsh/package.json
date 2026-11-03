@@ -1,7 +1,7 @@
 {
   "name": "dsh-plugin-animegarden",
   "version": "0.1.5",
-  "description": "Search anime torrent resources from 動漫花園, 蜜柑计划, 萌番组, and ANi through Anime Garden, in DeepSeek Harness.",
+  "description": "Anime Garden 是一个动画 BT 资源聚合站, 你可以在这里聚合搜索来自動漫花園、蜜柑计划、萌番组和 ANi 的动画资源.",
   "keywords": [
     "anime",
     "animegarden",
@@ -20,7 +20,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yjl9903/AnimeGarden.git"
+    "url": "git+https://github.com/yjl9903/AnimeGarden.git",
+    "directory": "plugins/dsh"
   },
   "license": "AGPL-3.0",
   "author": "XLor",
