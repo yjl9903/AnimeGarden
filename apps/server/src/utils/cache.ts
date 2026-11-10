@@ -29,7 +29,11 @@ export interface MemoOptions<F extends AsyncFn> {
 export interface MemoFunc<F extends AsyncFn> {
   (...args: Parameters<F>): ReturnType<F>;
 
+  /** Invalidate all entries, including pending publication. */
   clear: () => void;
+
+  /** Collect expired results without invalidating fresh entries. */
+  gc: () => void;
 
   startGC: () => void;
 
@@ -98,7 +102,7 @@ export function memo<F extends AsyncFn>(fn: F, options: MemoOptions<F>): MemoFun
       // 缓存容量过大, 提前清空
       if (caches.size > options.maxSize * 1.5) {
         setTimeout(() => {
-          memoFunc.clear();
+          memoFunc.gc();
         });
       }
 
@@ -126,7 +130,7 @@ export function memo<F extends AsyncFn>(fn: F, options: MemoOptions<F>): MemoFun
         item.expiration = new Date().getTime() + options.expirationTtl;
 
         // Keep current waiters attached to this failure while allowing the next call to retry.
-        if (options.cacheErrors === false) {
+        if (options.cacheErrors === false && caches.get(key) === item) {
           caches.delete(key);
         }
 
@@ -145,7 +149,10 @@ export function memo<F extends AsyncFn>(fn: F, options: MemoOptions<F>): MemoFun
     }
   } as MemoFunc<F>;
 
-  memoFunc.clear = () => {
+  // Detached calls still resolve their waiters but never reinsert themselves.
+  memoFunc.clear = () => caches.clear();
+
+  memoFunc.gc = () => {
     const now = new Date().getTime();
     const keys = [...caches.keys()];
 
@@ -154,7 +161,7 @@ export function memo<F extends AsyncFn>(fn: F, options: MemoOptions<F>): MemoFun
       if (!item) continue;
       if (item.status === Status.Waiting) continue;
 
-      if (item.expiration && now < item.expiration) {
+      if (item.expiration && now >= item.expiration) {
         caches.delete(key);
       }
     }
@@ -167,7 +174,7 @@ export function memo<F extends AsyncFn>(fn: F, options: MemoOptions<F>): MemoFun
 
         for (let i = 0; i < items.length - options.maxSize; i++) {
           const item = items[i];
-          caches.delete(item[0]);
+          if (caches.get(item[0]) === item[1]) caches.delete(item[0]);
         }
       });
     }
@@ -178,7 +185,7 @@ export function memo<F extends AsyncFn>(fn: F, options: MemoOptions<F>): MemoFun
     if (timeout) return;
 
     const cleaup = () => {
-      memoFunc.clear();
+      memoFunc.gc();
 
       timeout = setTimeout(cleaup, options.expirationTtl);
     };

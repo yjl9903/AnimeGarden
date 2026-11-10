@@ -437,6 +437,7 @@ export class QueryManager {
       },
       expirationTtl: 5 * 60 * 1000,
       maxSize: Math.round(MAX_RESOURCES_TASK_COUNT * 1.5),
+      cacheErrors: false,
       autoStartGC: false
     }
   );
@@ -461,6 +462,7 @@ export class QueryManager {
       },
       expirationTtl: 5 * 60 * 1000,
       maxSize: Math.round(MAX_RESOURCES_TASK_COUNT * 1.5),
+      cacheErrors: false,
       autoStartGC: false
     }
   );
@@ -794,10 +796,14 @@ export class QueryManager {
 
       throw error;
     } finally {
-      if (locked) {
-        await this.releaseSlowQueryLock();
+      try {
+        if (locked) {
+          await this.releaseSlowQueryLock();
+        }
+      } finally {
+        // Unlock errors must not leave this process permanently busy.
+        this.slowQuerying = false;
       }
-      this.slowQuerying = false;
     }
   }
 
@@ -884,6 +890,8 @@ export class Task {
 
   private prefetchLimited = false;
 
+  private generation = 0;
+
   public readonly key: string;
 
   public readonly options: DatabaseFilterOptions;
@@ -916,6 +924,7 @@ export class Task {
   }
 
   public clear() {
+    this.generation++;
     this.prefetching.clear();
     this.prefetchLimited = false;
     this.prefetchCount = 0;
@@ -951,6 +960,7 @@ export class Task {
       return;
     }
 
+    const generation = this.generation;
     const prefetching = (async () => {
       const rest = RESOURCES_TASK_PREFETCH_MAX_COUNT - nextCursor;
       if (rest <= 0) {
@@ -960,6 +970,8 @@ export class Task {
 
       const prefetchCount = Math.min(this.getPrefetchCount(requiredCount), rest);
       const resp = await this.query.findFromRedis(this.options, nextCursor, prefetchCount + 1);
+      // Clear invalidates work already sent to the database or Redis.
+      if (generation !== this.generation) throw new Error('Task invalidated during prefetch');
       const hasMore = resp.length > prefetchCount;
       const fetched = hasMore ? resp.slice(0, prefetchCount) : resp;
 
@@ -974,7 +986,7 @@ export class Task {
       this.fetchedAt = new Date();
       this.ok = true;
     })().finally(() => {
-      this.prefetching.delete(nextCursor);
+      if (this.prefetching.get(nextCursor) === prefetching) this.prefetching.delete(nextCursor);
     });
 
     this.prefetching.set(nextCursor, prefetching);

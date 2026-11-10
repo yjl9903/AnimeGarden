@@ -532,3 +532,51 @@ describe('resources notifications', () => {
     expect(task.resources.map((resource) => resource.id)).toEqual([3, 1]);
   });
 });
+
+it('isolates cleared prefetch completions and does not unregister replacement work', async () => {
+  const { task, findFromRedis } = createTask(0);
+  const old = Promise.withResolvers<DatabaseResource[]>();
+  const fresh = Promise.withResolvers<DatabaseResource[]>();
+  findFromRedis
+    .mockImplementationOnce(() => old.promise)
+    .mockImplementationOnce(() => fresh.promise);
+  const first = task.prefetch(0, 10);
+  task.clear();
+  const next = task.prefetch(0, 10);
+  old.resolve([createResource(1)]);
+  await expect(first).rejects.toThrow('invalidated');
+  expect(task.resources).toEqual([]);
+  const joined = task.prefetch(0, 10);
+  fresh.resolve([createResource(2)]);
+  await Promise.all([next, joined]);
+  expect(findFromRedis).toHaveBeenCalledTimes(2);
+  expect(task.resources.map((r) => r.id)).toEqual([2]);
+});
+
+it.each(['findFromRedis', 'findFromAccurateQuery'])(
+  'retries %s after a transient database failure',
+  async (path) => {
+    const { manager } = createManager(false);
+    const database = vi
+      .spyOn(manager, 'findFromDatabase')
+      .mockRejectedValueOnce(new ResourcesSlowQueryBusyError())
+      .mockResolvedValue([]);
+    await expect(manager[path]({}, 0, 10)).rejects.toThrow('busy');
+    await expect(manager[path]({}, 0, 10)).resolves.toEqual([]);
+    expect(database).toHaveBeenCalledTimes(2);
+  }
+);
+
+it('resets the slow lane even if unlocking fails, allowing subsequent requests', async () => {
+  const { manager } = createManager();
+  manager.system.slowDatabase = {};
+  manager.system.slowQueryConnection = {};
+  vi.spyOn(manager, 'tryAcquireSlowQueryLock').mockResolvedValue(true);
+  vi.spyOn(manager, 'releaseSlowQueryLock')
+    .mockRejectedValueOnce(new Error('unlock failed'))
+    .mockResolvedValue(undefined);
+  vi.spyOn(manager, 'executeResourcesQuery').mockResolvedValue([]);
+  await expect(manager.findFromSlowDatabase([], 0, 10, '{}')).rejects.toThrow('unlock failed');
+  expect(manager.slowQuerying).toBe(false);
+  await expect(manager.findFromSlowDatabase([], 0, 10, '{}')).resolves.toEqual([]);
+});
