@@ -194,10 +194,15 @@ describe('missing API resources', () => {
       app
     );
 
-    const response = await app.request('http://localhost/collection/missing');
+    const response = await app.request(
+      'http://localhost/collection/0123456789012345678901234567890123456789'
+    );
 
     expect(response.status).toBe(404);
     expect(response.headers.get('Cache-Control')).toBe('no-store');
-    await expect(response.json()).resolves.toMatchObject({ status: 'ERROR' });
+    await expect(response.json()).resolves.toMatchObject({
+      status: 'ERROR',
+      message: 'Collection not found: 0123456789012345678901234567890123456789'
+    });
   });
 });

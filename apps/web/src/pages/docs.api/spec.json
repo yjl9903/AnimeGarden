@@ -647,6 +647,16 @@
                 }
               }
             }
+          },
+          "500": {
+            "description": "服务端生成收藏夹失败",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -703,6 +713,16 @@
           },
           "400": {
             "description": "收藏夹格式不符合要求，或服务端未能保存收藏夹。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "服务端生成收藏夹失败",
             "content": {
               "application/json": {
                 "schema": {
@@ -807,8 +827,28 @@
               }
             }
           },
+          "400": {
+            "description": "收藏夹哈希值格式非法",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "404": {
-            "description": "收藏夹不存在",
+            "description": "收藏夹不存在（message 为 Collection not found: <hash>）",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "查询收藏夹失败",
             "content": {
               "application/json": {
                 "schema": {
