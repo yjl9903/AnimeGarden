@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import { parse } from 'anipar';
+import { GrammyError } from 'grammy';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { SubjectMetadata } from '@animegarden/shared';
@@ -1120,6 +1121,159 @@ describe('telegram resource card', () => {
   });
 });
 
+describe('Telegram poster fallback', () => {
+  const large = 'https://bgm.animes.garden/bangumi/subject/587109/poster.jpeg?quality=large';
+  const medium = large.replace('quality=large', 'quality=medium');
+  const options = { parse_mode: 'HTML' as const };
+  const message = { photo: large, fallbackPhoto: medium, text: 'caption', options };
+
+  function createPosterPush(sendPhoto: ReturnType<typeof vi.fn>) {
+    return createPushModule({
+      database: createTelegramDatabase([{ status: TelegramMessageStatus.Pending }]).database,
+      api: { sendPhoto }
+    });
+  }
+
+  function telegramError(description: string, errorCode = 400) {
+    return new GrammyError(
+      description,
+      { ok: false, error_code: errorCode, description },
+      'sendPhoto',
+      {}
+    );
+  }
+
+  it('keeps large when the original send succeeds', async () => {
+    const sent = { message_id: 123 };
+    const sendPhoto = vi.fn().mockResolvedValue(sent);
+    const { mod } = createPosterPush(sendPhoto);
+
+    await expect(mod.sendResourceMessage(1, 1, message)).resolves.toBe(sent);
+
+    expect(sendPhoto).toHaveBeenCalledExactlyOnceWith('@animegarden_test', large, {
+      ...options,
+      caption: 'caption'
+    });
+  });
+
+  it.each([
+    'Bad Request: failed to get HTTP URL content',
+    'Bad Request: IMAGE_PROCESS_FAILED',
+    'Bad Request: PHOTO_INVALID_DIMENSIONS',
+    'Bad Request: file is too big',
+    "Bad Request: can't parse entities"
+  ])('falls back to medium after %s and marks the message sent', async (description) => {
+    const sendPhoto = vi
+      .fn()
+      .mockRejectedValueOnce(telegramError(description))
+      .mockResolvedValueOnce({ message_id: 123 });
+    const { database, records } = createTelegramDatabase();
+    const { mod } = createPushModule({ database, api: { sendPhoto } });
+    vi.spyOn(mod.system.modules.subjects, 'getSubjectMetadata').mockResolvedValue({
+      ...subject,
+      id: 587109,
+      poster: large
+    });
+    vi.spyOn(mod.logger, 'warn').mockImplementation(() => {});
+
+    await mod.pushResourceMessage(1);
+
+    expect(sendPhoto.mock.calls.map((call) => call[1])).toEqual([large, medium]);
+    expect(sendPhoto.mock.calls[1][0]).toBe(sendPhoto.mock.calls[0][0]);
+    expect(sendPhoto.mock.calls[1][2]).toEqual(sendPhoto.mock.calls[0][2]);
+    expect(records[0]).toMatchObject({
+      status: TelegramMessageStatus.Sent,
+      telegramMessageId: 123
+    });
+  });
+
+  it('propagates medium failure and leaves the message failed', async () => {
+    const error = telegramError('Bad Request: failed to get HTTP URL content');
+    const sendPhoto = vi.fn().mockRejectedValue(error);
+    const { database, records } = createTelegramDatabase();
+    const { mod } = createPushModule({ database, api: { sendPhoto } });
+    vi.spyOn(mod.system.modules.subjects, 'getSubjectMetadata').mockResolvedValue({
+      ...subject,
+      id: 587109,
+      poster: large
+    });
+    vi.spyOn(mod.logger, 'warn').mockImplementation(() => {});
+
+    await expect(mod.pushResourceMessage(1)).rejects.toBe(error);
+
+    expect(sendPhoto.mock.calls.map((call) => call[1])).toEqual([large, medium]);
+    expect(records[0].status).toBe(TelegramMessageStatus.Failed);
+  });
+
+  it.each([
+    new Error('network failed'),
+    telegramError('Forbidden: bot was blocked by the user', 403)
+  ])('propagates unrelated errors without retrying (%s)', async (error) => {
+    const sendPhoto = vi.fn().mockRejectedValue(error);
+    const { mod } = createPosterPush(sendPhoto);
+
+    await expect(mod.sendResourceMessage(1, 1, message)).rejects.toBe(error);
+
+    expect(sendPhoto).toHaveBeenCalledOnce();
+  });
+
+  it.each([
+    medium,
+    'https://example.com/bangumi/subject/587109/poster.jpeg?quality=large',
+    'file_id'
+  ])('does not invent a fallback for a noncanonical poster (%s)', async (poster) => {
+    const error = telegramError('Bad Request: failed to get HTTP URL content');
+    const sendPhoto = vi.fn().mockRejectedValue(error);
+    const { mod } = createPosterPush(sendPhoto);
+    const resource = createPushResource();
+    const card = buildResourceCardMessage(
+      resource,
+      { ...subject, id: 587109, poster },
+      parse(resource.title)!
+    );
+
+    expect(card.fallbackPhoto).toBeUndefined();
+    await expect(mod.sendResourceMessage(1, 1, card)).rejects.toBe(error);
+    expect(sendPhoto).toHaveBeenCalledOnce();
+  });
+
+  it('honors rate limits on both large and medium sends', async () => {
+    vi.useFakeTimers();
+    try {
+      const rateLimit = new GrammyError(
+        'Too Many Requests',
+        {
+          ok: false,
+          error_code: 429,
+          description: 'Too Many Requests',
+          parameters: { retry_after: 1 }
+        },
+        'sendPhoto',
+        {}
+      );
+      const sendPhoto = vi
+        .fn()
+        .mockRejectedValueOnce(rateLimit)
+        .mockRejectedValueOnce(telegramError('Bad Request: failed to get HTTP URL content'))
+        .mockRejectedValueOnce(rateLimit)
+        .mockResolvedValueOnce({ message_id: 123 });
+      const { mod } = createPosterPush(sendPhoto);
+      vi.spyOn(mod.logger, 'warn').mockImplementation(() => {});
+
+      const sending = mod.sendResourceMessage(1, 1, message);
+      await vi.advanceTimersByTimeAsync(0);
+      expect(sendPhoto).toHaveBeenCalledOnce();
+      await vi.advanceTimersByTimeAsync(2000);
+      expect(sendPhoto.mock.calls.map((call) => call[1])).toEqual([large, large, medium]);
+      await vi.advanceTimersByTimeAsync(2000);
+      await expect(sending).resolves.toEqual({ message_id: 123 });
+      expect(sendPhoto.mock.calls.map((call) => call[1])).toEqual([large, large, medium, medium]);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
+
 describe('dynamic subjects in Telegram preparation', () => {
   it('prepares and builds a message for a new subject absent from the old static release', async () => {
     const resource = createPushResource({ subjectId: 9000001 });
@@ -1140,5 +1294,8 @@ describe('dynamic subjects in Telegram preparation', () => {
     expect(message.text).toContain('动态十月新番');
     expect(message.text).toContain('#2026年10月新番');
     expect(message.photo).toBe(metadata.poster);
+    expect(message.fallbackPhoto).toBe(
+      'https://bgm.animes.garden/bangumi/subject/9000001/poster.jpeg?quality=medium'
+    );
   });
 });

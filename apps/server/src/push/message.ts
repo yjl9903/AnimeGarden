@@ -5,10 +5,20 @@ import { formatInTimeZone } from 'date-fns-tz';
 import type { ParseResult } from 'anipar';
 import type { SubjectMetadata } from '@animegarden/shared';
 
+import { getSubjectPosterURL } from '@animegarden/shared';
+
 import type { SystemOptions } from '../system/system.ts';
 import type { FoundResource } from '../resources/query.ts';
 
 import { getKeepShareURL } from '../utils/keepshare.ts';
+
+/** Resource card content, including an optional smaller poster for rejected sends. */
+export interface ResourceCardMessage {
+  photo: string;
+  fallbackPhoto?: string;
+  text: string;
+  options: { parse_mode: 'HTML' };
+}
 
 /**
  * Telegram photo caption format:
@@ -27,7 +37,7 @@ export function buildResourceCardMessage(
   subject: SubjectMetadata,
   parsed: ParseResult,
   options: Pick<SystemOptions, 'site' | 'keepshare'> = {}
-) {
+): ResourceCardMessage {
   const detailUrl = getResourceDetailUrl(resource, options.site);
   const magnetUrl = resource.magnet + (resource.tracker ?? '');
   const playUrl = getKeepShareURL(options.keepshare, magnetUrl);
@@ -49,6 +59,11 @@ export function buildResourceCardMessage(
 
   return {
     photo: subject.poster,
+    // Only the canonical large poster has a known medium alternative.
+    fallbackPhoto:
+      subject.poster === getSubjectPosterURL(subject.id)
+        ? getSubjectPosterURL(subject.id, 'medium')
+        : undefined,
     text: lines.join('\n'),
     options: messageOptions
   };

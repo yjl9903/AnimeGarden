@@ -15,7 +15,8 @@ import { Module } from '../system/module.ts';
 import { resources } from '../schema/resources.ts';
 import { TelegramMessageStatus, telegramMessages } from '../schema/telegram.ts';
 
-import { buildResourceCardMessage } from './message.ts';
+import type { ResourceCardMessage } from './message.ts';
+
 import { type PushOptions, PushContext } from './push.ts';
 import { isUniqueTelegramMessageConflict, TelegramMessageLockLostError } from './error.ts';
 
@@ -415,7 +416,7 @@ export class PushModule extends Module<System['modules']> {
   public async sendResourceMessage(
     telegramMessageId: number,
     resourceId: number,
-    message: ReturnType<typeof buildResourceCardMessage>
+    message: ResourceCardMessage
   ) {
     const chatId = this.system.options.telegram?.chatId;
     if (!chatId) throw new Error('telegram chat is not configured');
@@ -428,7 +429,21 @@ export class PushModule extends Module<System['modules']> {
       if (!sending) {
         throw new TelegramMessageLockLostError(telegramMessageId, resourceId);
       }
-      const resp = await this.sendPhoto(chatId, message.photo, message.text, message.options);
+
+      let resp;
+      try {
+        resp = await this.sendPhoto(chatId, message.photo, message.text, message.options);
+      } catch (error) {
+        // A 400 confirms rejection, so retrying a smaller poster cannot duplicate a sent message.
+        if (!message.fallbackPhoto || !(error instanceof GrammyError) || error.error_code !== 400) {
+          throw error;
+        }
+
+        this.logger.warn(
+          `Retry sending telegram message ${telegramMessageId} with fallback poster`
+        );
+        resp = await this.sendPhoto(chatId, message.fallbackPhoto, message.text, message.options);
+      }
 
       this.logger.success(`Finish sending telegram message ${telegramMessageId} `);
 
@@ -441,7 +456,7 @@ export class PushModule extends Module<System['modules']> {
     resourceId: number,
     chatId: number,
     messageId: number,
-    message: ReturnType<typeof buildResourceCardMessage>
+    message: ResourceCardMessage
   ) {
     // 编辑和发送共用同一个队列，保证同一频道内的写操作按本进程提交顺序执行。
     return await this.queue.add(async () => {

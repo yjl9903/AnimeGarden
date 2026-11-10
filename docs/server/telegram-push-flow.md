@@ -374,6 +374,18 @@ publisherId + subjectId + episode
 
 当前发送的是 photo message，正文写入 caption。
 
+海报优先使用 subject 的原始 URL（标准 bgmx 海报为 `quality=large`）。消息构造层通过
+`getSubjectPosterURL(subject.id, 'medium')` 为标准 large 海报提供 `fallbackPhoto`；
+自定义地址和已是 medium 的海报不设置回退地址。
+
+`sendResourceMessage` 在 Telegram 返回 400 明确拒绝请求时，使用 `fallbackPhoto` 再发送一次，
+caption 和其他发送选项保持一致。回退不依赖错误文案匹配。`sendPhoto` 只负责 API 调用和
+一次 429 `retry_after` 等待重试，不解析图片 URL，也不决定海报尺寸。medium 仍失败则按
+原流程写入 `Failed`，等待失败补偿。网络或非 400 错误不触发回退。
+
+这覆盖了原图尺寸过大的情况：例如 Subject `587109` 的 large 海报为 6083 × 8598，
+宽高之和超过 Telegram 的 10000 限制，而 medium 为 800 × 1131。
+
 caption 包含：
 
 - subject hashtag 和季度 hashtag。
@@ -423,6 +435,7 @@ caption 使用 Telegram HTML parse mode，因此业务文本需要 HTML escape�
 - guard：非动画跳过、字幕组白名单跳过、无 fansub 时使用 publisher 名称。
 - 首次发送：无历史记录时创建 `Pending`，进入 Telegram 队列后变 `Sending`，成功后变 `Sent`。
 - 失败：Telegram API 抛错后变 `Failed`。
+- 海报回退：large 成功则不降级，400 拒绝请求后回退 medium；回退成功写 `Sent`，两次均失败写 `Failed`；无关错误不回退，large/medium 均遵循 429 等待重试。
 - `Pending/Sending`：低优先级跳过，高优先级用 `resource_id` 乐观锁抢占；旧 worker 失锁后不再写状态，必要时删除陈旧新消息。
 - `Failed`：旧资源和当前资源按优先级比较后重试。
 - `Sent`：低优先级跳过，高优先级编辑。
@@ -444,7 +457,9 @@ caption 使用 Telegram HTML parse mode，因此业务文本需要 HTML escape�
 
 ### Telegram 限流策略
 
-当前只用 `newQueue(1)` 保守串行，没有实现按 Telegram 返回的 retry-after 做退避。如果后续频道规模扩大，可以在 `sendPhoto` / `editMessageCaption` 外层增加限流错误识别和延迟重试。
+当前用 `newQueue(1)` 保守串行；Telegram 返回 429 时，按 `retry_after`（缺省 60 秒）
+额外等待 1 秒后重试一次。`sendPhoto` 的 large 和 medium 请求分别遵循这一策略，
+不做无限重试。如果后续频道规模扩大，可以进一步评估队列层面的限流和退避。
 
 ### 消息格式演进
 

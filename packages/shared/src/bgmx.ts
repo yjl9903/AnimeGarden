@@ -14,9 +14,9 @@ export interface SubjectMetadata {
   search: DatabaseSubject['search'];
 }
 
-/** Canonical poster endpoint; availability still depends on the mirror and Telegram. */
-export function getSubjectPosterURL(subjectId: number) {
-  return `https://bgm.animes.garden/bangumi/subject/${subjectId}/poster.jpeg?quality=large`;
+/** Canonical poster endpoint with an explicit size; defaults to the original large poster. */
+export function getSubjectPosterURL(subjectId: number, quality: 'large' | 'medium' = 'large') {
+  return `https://bgm.animes.garden/bangumi/subject/${subjectId}/poster.jpeg?quality=${quality}`;
 }
 
 /** Normalize live bgmx records without changing resource search semantics. */
