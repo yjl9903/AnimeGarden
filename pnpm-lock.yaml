@@ -444,7 +444,7 @@ importers:
         version: 3.7.0
       tailwindcss-animate:
         specifier: 1.0.7
-        version: 1.0.7(tailwindcss@4.3.4)
+        version: 1.0.7(tailwindcss@4.3.5)
       zod:
         specifier: 3.25.76
         version: 3.25.76
@@ -510,8 +510,8 @@ importers:
         specifier: 8.5.32
         version: 8.5.32
       tailwindcss:
-        specifier: 4.3.4
-        version: 4.3.4
+        specifier: 4.3.5
+        version: 4.3.5
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -6941,8 +6941,8 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders'
 
-  tailwindcss@4.3.4:
-    resolution: {integrity: sha512-PCJZTFFdG+sL3gvnP1Do9o6GbkvH2q0p04xSs3f7cSvmAeK+sttG+/7ncK1fdRwKFfC7n+wDDJaOMBSefkI9ow==}
+  tailwindcss@4.3.5:
+    resolution: {integrity: sha512-FcQk9BuffmEHJP2G0XmB2SplU1aLTI7j07Kunk+U74Ny+XiWOtzXz9aujFZ/avntw1e2cOv/3PkgzflQ7gX2vQ==}
 
   temp-dir@2.0.0:
     resolution: {integrity: sha512-aoBAniQmmwtcKp/7BzsH8Cxzv8OL736p7v1ihGb5e9DJ9kTwGWHrQrVB5+lfVDzfGrdRzXch+ig7LHaY1JTOrg==}
@@ -14464,11 +14464,11 @@ snapshots:
 
   tailwind-merge@3.7.0: {}
 
-  tailwindcss-animate@1.0.7(tailwindcss@4.3.4):
+  tailwindcss-animate@1.0.7(tailwindcss@4.3.5):
     dependencies:
-      tailwindcss: 4.3.4
+      tailwindcss: 4.3.5
 
-  tailwindcss@4.3.4: {}
+  tailwindcss@4.3.5: {}
 
   temp-dir@2.0.0: {}
 
