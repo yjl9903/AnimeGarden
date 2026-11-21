@@ -203,8 +203,8 @@ importers:
         specifier: latest
         version: 12.3.0
       cf:
-        specifier: 1.0.0-rc.1
-        version: 1.0.0-rc.1(@types/node@26.6.6)
+        specifier: 1.0.0-rc.2
+        version: 1.0.0-rc.2(@types/node@26.6.6)
       drizzle-kit:
         specifier: 0.31.11
         version: 0.31.11
@@ -4497,8 +4497,8 @@ packages:
   caniuse-lite@1.0.30001810:
     resolution: {integrity: sha512-TITQPUkaz+aVk5GL6NhOdwk1aEaNTSDPsGFWrTuhKGtjTF70jL/Oht2W4c6rXUe5fu7Ie19VIahAXHIIiWWNeg==}
 
-  cf@1.0.0-rc.1:
-    resolution: {integrity: sha512-mQ9X/FVE1QP2ebXVF/9tlbqoO0TB3tKxUJocaWsic6IuNvThmJc/Ou/4ABJNB/Sj8HxEzvrjT1PRqjySVO5YoA==}
+  cf@1.0.0-rc.2:
+    resolution: {integrity: sha512-dOqCCL2eYPXU9+Q/i6urS9NxWqd3fstzbbGKtLCR07mJV2sQoEOZclm/85uoLF+k3ZaxIvPxrr6O4r2LqwF3uA==}
     engines: {node: ^22.23.0 || ^24.22.0 || ^26.12.0}
     hasBin: true
 
@@ -11830,7 +11830,7 @@ snapshots:
 
   caniuse-lite@1.0.30001810: {}
 
-  cf@1.0.0-rc.1(@types/node@26.6.6):
+  cf@1.0.0-rc.2(@types/node@26.6.6):
     dependencies:
       '@cloudflare/build-output-utils': 1.0.0-rc.1
       '@cloudflare/config': 1.0.0-rc.1
