@@ -11,6 +11,12 @@ import {
   handleSitemapRequest
 } from '../src/sitemap/index.server';
 
+// Exercise the published detail behavior independently of the current site setting.
+vi.mock(import('../src/utils/constants'), async (original) => ({
+  ...(await original()),
+  RESOURCE_DETAIL_PAGES_ENABLED: true
+}));
+
 vi.mock('@animegarden/client', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@animegarden/client')>();
 

@@ -15,6 +15,7 @@ import {
   useState
 } from 'react';
 
+import { RESOURCE_DETAIL_PAGES_ENABLED } from '~/utils/constants';
 import { track, type TrackPayload } from '~/utils';
 import { resourcesQueryOptions, subjectSearchQueryOptions } from '~/query';
 import {
@@ -275,7 +276,7 @@ export const Search = memo(() => {
             onSelect={selectStatic}
           ></SearchSubject>
         )}
-        {enable && input && (
+        {RESOURCE_DETAIL_PAGES_ENABLED && enable && input && (
           <SearchResult
             search={search}
             signals={signals.current}

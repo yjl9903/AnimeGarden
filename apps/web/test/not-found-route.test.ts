@@ -7,6 +7,12 @@ const { setCacheControl, setErrorResponse } = vi.hoisted(() => ({
   setErrorResponse: vi.fn()
 }));
 
+// Exercise the published detail behavior independently of the current site setting.
+vi.mock(import('../src/utils/constants'), async (original) => ({
+  ...(await original()),
+  RESOURCE_DETAIL_PAGES_ENABLED: true
+}));
+
 vi.mock('~/pages/detail.$provider.$providerId/route', () => ({ default: () => null }));
 vi.mock('~/pages/collection.$hash/route', () => ({ default: () => null }));
 vi.mock('~/pages/subject.$subject.($page)/route', () => ({ default: () => null }));

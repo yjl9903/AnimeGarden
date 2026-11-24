@@ -5,6 +5,12 @@
 
 本文只记录 Anime Garden 当前已经生效的 SEO 行为、页面配置和仍待处理的问题，不描述未采用的方案。
 
+## 资源详情页发布开关
+
+`apps/web/src/utils/constants.ts` 中的 `RESOURCE_DETAIL_PAGES_ENABLED` 控制 Web 详情页、站内链接和月度 sitemap。
+设为 `false` 时暂时下架，详情页（HTML 和 Markdown）及旧月度分片直达均返回 404，HTML 使用通用 404 的 noindex。
+改回 `true` 并重新构建发布 Web，即可恢复下文记录的详情页 SEO 和站内入口。
+
 ## 实现进度
 
 ### 已实现

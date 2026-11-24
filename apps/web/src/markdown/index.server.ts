@@ -1,3 +1,4 @@
+import { RESOURCE_DETAIL_PAGES_ENABLED } from '~/utils/constants';
 import { errorMarkdown, markdownResponse, type MarkdownResult } from './shared.server';
 import { renderAnimeMarkdown } from './anime.server';
 import { renderCollectionMarkdown } from './collection.server';
@@ -43,6 +44,9 @@ async function dispatchMarkdown(url: URL): Promise<MarkdownResult | Response> {
 
   const detailMatch = pathname.match(/^\/detail\/([^/]+)\/([^/]+)$/);
   if (detailMatch) {
+    // 暂时下架：与 HTML 共用开关，恢复后继续使用下方的详情渲染器。
+    if (!RESOURCE_DETAIL_PAGES_ENABLED) return errorMarkdown('页面不存在', '请求的资源不存在', 404);
+
     return renderDetailMarkdown(
       decodeURIComponent(detailMatch[1]),
       decodeURIComponent(detailMatch[2])

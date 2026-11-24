@@ -1,5 +1,8 @@
 import type { PresetType } from '@animegarden/client';
 
+/** 资源详情页暂时下架。改为 true 并重新构建 Web 即可恢复页面、SEO 和站内入口。 */
+export const RESOURCE_DETAIL_PAGES_ENABLED: boolean = false;
+
 export const PRESET_DISPLAY_NAME: Record<PresetType, string> = {
   bangumi: '番剧'
 };

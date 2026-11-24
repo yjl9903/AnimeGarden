@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from '@tanstack/react-router';
+import { ResourceDetailLink } from '~/components/Resources/ResourceDetailLink';
 import { ArrowDown, Check, Copy, Wrench } from 'lucide-react';
 
 import Layout from '~/layouts/Layout';
@@ -246,15 +246,9 @@ export default function SkillsPage() {
                     {demoResources.map((resource) => (
                       <tr key={resource.providerId}>
                         <td>
-                          <Link
-                            to="/detail/$provider/$providerId"
-                            params={{
-                              provider: resource.provider,
-                              providerId: resource.providerId
-                            }}
-                          >
+                          <ResourceDetailLink resource={resource}>
                             {resource.fansub}
-                          </Link>
+                          </ResourceDetailLink>
                         </td>
                         <td>{resource.specs}</td>
                         <td>{resource.size}</td>

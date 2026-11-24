@@ -3,6 +3,7 @@ import { useSuspenseQuery, type QueryClient } from '@tanstack/react-query';
 
 import { SupportProviders } from '@animegarden/client';
 
+import { RESOURCE_DETAIL_PAGES_ENABLED } from '~/utils/constants';
 import Page from '~/pages/detail.$provider.$providerId/route';
 import { buildDetailPageHead } from '~/pages/detail.$provider.$providerId/seo';
 import NotFoundPage, { buildNotFoundPageHeaders, throwNotFoundPage } from '~/pages/not-found/route';
@@ -17,6 +18,9 @@ export const loader = async ({
   context: { queryClient: QueryClient };
   params: { provider?: string; providerId?: string };
 }) => {
+  // 暂时下架：恢复 Web 的 RESOURCE_DETAIL_PAGES_ENABLED 后重新启用原 loader 和页面 SEO。
+  if (!RESOURCE_DETAIL_PAGES_ENABLED) throwNotFoundPage('resource');
+
   const { provider, providerId } = params;
   if (provider && providerId && SupportProviders.includes(provider)) {
     const [data] = await Promise.all([

@@ -7,6 +7,7 @@ import type {
 
 import { FEED_HOST, WEB_SERVER_URL, APP_HOST } from '~build/env';
 
+import { RESOURCE_DETAIL_PAGES_ENABLED } from '~/utils/constants';
 import { formatChinaTime } from '~/utils/date';
 import { ResponseCacheControl } from '~/utils/response';
 import { parseSize } from '~/utils/string';
@@ -107,9 +108,14 @@ export function resourceUrl(resource: Pick<Resource, 'provider' | 'providerId'>)
   return `${siteOrigin}/detail/${resource.provider}/${resource.providerId}`;
 }
 
+// 暂时下架：列表与演示表共用此处；恢复 Web 开关后，标题重新链接到站内详情。
+export function resourceLink(label: string, resource: Pick<Resource, 'provider' | 'providerId'>) {
+  return RESOURCE_DETAIL_PAGES_ENABLED ? link(label, resourceUrl(resource)) : escapeMarkdown(label);
+}
+
 export function formatResource(resource: Resource<{ tracker: true; metadata: true }>) {
   const parts = [
-    link(resource.title, resourceUrl(resource)),
+    resourceLink(resource.title, resource),
     escapeMarkdown(resource.type),
     parseSize(resource.size),
     resource.fansub?.name ? `字幕组: ${escapeMarkdown(resource.fansub.name)}` : undefined,

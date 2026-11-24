@@ -21,6 +21,7 @@ import {
 } from '~/utils';
 import { toResourcesRouterSearch } from '~/utils/routes';
 
+import { ResourceDetailLink } from './ResourceDetailLink';
 import { Tag } from './tag';
 import { Pagination, PaginationProps } from './pagination';
 
@@ -36,13 +37,6 @@ export interface ResourcesTableProps extends Partial<PaginationProps> {
      * @default true
      */
     fansub?: boolean;
-  };
-}
-
-function getDetailRouteLink(r: Pick<Resource, 'provider' | 'providerId'>) {
-  return {
-    to: '/detail/$provider/$providerId' as const,
-    params: { provider: r.provider, providerId: r.providerId }
   };
 }
 
@@ -182,24 +176,23 @@ export const ResourceItem = memo(
                         </a>
                       </>
                     ) : (
-                      <Link
-                        {...getDetailRouteLink(r)}
+                      <ResourceDetailLink
+                        resource={r}
                         className="text-link"
                         aria-label={`Go to resource detail of ${r.title}`}
                       >
                         {r.title}
-                      </Link>
+                      </ResourceDetailLink>
                     )}
                   </span>
                 </div>
               </div>
               <div className="mt1 flex items-center gap-4">
-                <Link
-                  {...getDetailRouteLink(r)}
-                  className="text-link-secondary-hover-base text-xs text-zinc-400"
-                >
-                  发布于 {formatChinaTime(new Date(r.createdAt))}
-                </Link>
+                <span className="text-xs text-zinc-400">
+                  <ResourceDetailLink resource={r} className="text-link-secondary-hover-base">
+                    发布于 {formatChinaTime(new Date(r.createdAt))}
+                  </ResourceDetailLink>
+                </span>
                 <a
                   href={magnetHref}
                   onClick={(event) =>
@@ -211,8 +204,9 @@ export const ResourceItem = memo(
                 >
                   大小 {parseSize(r.size)}
                 </a>
-                <Link
-                  {...getDetailRouteLink(r)}
+                <ResourceDetailLink
+                  resource={r}
+                  hideWhenUnavailable
                   onClick={() =>
                     track('resources.detail.click', {
                       resource: `${r.provider}:${r.providerId}`,
@@ -225,7 +219,7 @@ export const ResourceItem = memo(
                   <CarbonLaunch className="vertical-middle relative bottom-[1px] inline-block"></CarbonLaunch>
                   <span> </span>
                   <span className="more">详情</span>
-                </Link>
+                </ResourceDetailLink>
               </div>
             </div>
           </div>

@@ -18,7 +18,7 @@ import {
   paragraph,
   link,
   escapeMarkdown,
-  resourceUrl,
+  resourceLink,
   type MarkdownResult
 } from './shared.server';
 
@@ -67,7 +67,7 @@ export function renderSkillsMarkdown(): MarkdownResult {
     demoResources
       .map(
         (resource) =>
-          `| ${link(resource.fansub, resourceUrl(resource))} | ${escapeMarkdown(resource.specs)} | ${escapeMarkdown(resource.size)} | ${link('播放', getKeepShareURL(resource.magnet))} / ${link('下载', resource.magnet)} |\n`
+          `| ${resourceLink(resource.fansub, resource)} | ${escapeMarkdown(resource.specs)} | ${escapeMarkdown(resource.size)} | ${link('播放', getKeepShareURL(resource.magnet))} / ${link('下载', resource.magnet)} |\n`
       )
       .join('');
 

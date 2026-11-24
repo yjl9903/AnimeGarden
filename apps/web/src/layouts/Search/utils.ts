@@ -6,7 +6,7 @@ import {
 } from '@animegarden/client';
 import type { QueryClient } from '@tanstack/react-query';
 
-import { PRESET_DISPLAY_NAME } from '../../utils/constants';
+import { PRESET_DISPLAY_NAME, RESOURCE_DETAIL_PAGES_ENABLED } from '../../utils/constants';
 import { getSubjectDisplayName, type SubjectInfo } from '../../utils/subject';
 import { subjectQueryOptions, subjectsByNameQueryOptions } from '../../query/subject';
 
@@ -21,6 +21,9 @@ export const MIKAN_RE =
   /(?:https?:\/\/mikanani\.kas\.pub\/Home\/Episode\/|\/Home\/Episode\/)?([0-9a-fA-F]{40})/;
 
 export function matchDirectDetailURL(search: string) {
+  // 暂时下架：恢复 Web 开关后，来源站链接可再次直达站内详情。
+  if (!RESOURCE_DETAIL_PAGES_ENABLED) return undefined;
+
   const dmhy = DMHY_RE.exec(search);
   if (dmhy) {
     return {

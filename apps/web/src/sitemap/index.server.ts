@@ -7,6 +7,7 @@ import {
 } from '@animegarden/server';
 
 import { APP_HOST, WEB_SERVER_URL } from '~build/env';
+import { RESOURCE_DETAIL_PAGES_ENABLED } from '~/utils/constants';
 import { getCalendars } from '~/query/subject.server';
 
 const SITE = `https://${APP_HOST}`;
@@ -45,6 +46,8 @@ function isValidSitemapPathname(pathname: string) {
     return true;
   }
 
+  // 暂时下架：月度分片直达也返回 404；恢复 Web 开关后再查询详情。
+  if (!RESOURCE_DETAIL_PAGES_ENABLED) return false;
   const match = /^\/sitemap-(\d{4})-(\d{2})\.xml$/.exec(pathname);
   return !!match && isValidMonth(+match[1], +match[2]);
 }
@@ -56,6 +59,7 @@ async function getSitemapIndexUrls() {
     'sitemap-fansubs.xml',
     'sitemap-subjects.xml'
   ];
+  if (!RESOURCE_DETAIL_PAGES_ENABLED) return pages.map((url) => `${SITE}/${url}`);
   const months: string[] = [];
   const now = new Date();
 
