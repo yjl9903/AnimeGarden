@@ -24,7 +24,7 @@ const savedFilters = [
 function createPaginationApp() {
   const where = vi.fn().mockResolvedValue([
     {
-      hash: 'collection-hash',
+      hash: '0123456789012345678901234567890123456789',
       name: '收藏夹',
       createdAt: new Date('2026-09-08T00:00:00.000Z'),
       filters: savedFilters
@@ -87,7 +87,9 @@ describe('API pagination response contract', () => {
 
   it('keeps collection result pagination identical to resource lists for each saved filter', async () => {
     const { app, find } = createPaginationApp();
-    const response = await app.request('http://localhost/collection/collection-hash');
+    const response = await app.request(
+      'http://localhost/collection/0123456789012345678901234567890123456789'
+    );
     const collection = (await response.json()) as { results: ResourceQueryResult[] };
 
     expect(response.status).toBe(200);
